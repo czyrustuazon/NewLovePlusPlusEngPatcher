@@ -35,7 +35,7 @@ Title ID: `00040000000F4E00`
 2. Drop your `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
-**Gold bake rebuild can take about 2 hours** (`python tools/rebuild_bake_img.py`) — PNG pack + deploy chrome + SMS/day-counter → `release/bake_img.bin`. Drop-bat then reuses that bake in a few minutes. Scripts-only: `set NLPP_WITH_IMAGES=0`.
+**Gold bake rebuild can take about 16 hours** (`python tools/rebuild_bake_img.py`) — PNG pack + deploy chrome + SMS/day-counter → `release/bake_img.bin`. Drop-bat then reuses that bake in a few minutes. Scripts-only: `set NLPP_WITH_IMAGES=0`.
 
 ### Required dump
 
@@ -132,7 +132,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 - **Gold path:** `python tools/rebuild_bake_img.py` → `release/bake_img.bin` (PNG pack + main TRB from `assets/textresource/translations.json` + deploy chrome + SMS/day-counter + overlay). Self-contained; Azahar not required.  
 - Drop-bat **auto-runs a full rebuild** if `release/bake_img.bin` is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present.  
-- **Expect about 2 hours** for a full bake rebuild (CPU-bound zopfli). Progress lines mean it is still working.  
+- **Expect about 16 hours** for a full bake rebuild (CPU-bound zopfli). Progress lines mean it is still working.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
 - Parallel convert: `--workers` / `--image-workers`. Fine-tune opt-in: `--fine-tune` / `--image-fine-tune` (very slow).  

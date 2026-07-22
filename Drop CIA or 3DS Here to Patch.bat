@@ -174,7 +174,7 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     echo.
     echo No gold bake at release\bake_img.bin — running full tools\rebuild_bake_img.py
     echo This regenerates bake + textresource TRBs from sources.
-    echo First full rebuild often takes ~2 hours. Leave this window open.
+    echo First full rebuild often takes ~16 hours. Leave this window open.
     echo.
     "%PYTHON%" "%~dp0tools\rebuild_bake_img.py"
     if errorlevel 1 (

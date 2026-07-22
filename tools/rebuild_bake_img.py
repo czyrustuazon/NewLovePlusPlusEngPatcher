@@ -256,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
             )
     else:
         print(
-            "[rebuild] PNG pack starting (often ~2 hours). "
+            "[rebuild] PNG pack starting (often ~16 hours). "
             "Progress lines mean it is still working.",
             flush=True,
         )

@@ -20,3 +20,4 @@ python tools/rebuild_bake_img.py
 ```
 
 Requires vanilla dump at sibling `New Love Plus Plus/extracted/` (or `NLPP_VANILLA_IMG` / `NLPP_VANILLA_TRB`).
+First full rebuild often takes **~16 hours** (CPU-bound PNG pack / exact-zlib).
