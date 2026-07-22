@@ -1,0 +1,257 @@
+#!/usr/bin/env python3
+"""EN boyfriend-power / status stat labels.
+
+KareshiPower.arc pkg 5501 — ``stat_tex_{undo,chisiki,kanse,miryoku}``
+ScdStatus.arc pkg 5255 — ``Scd_Status_Tit_{M,K,S,C}`` (Mv/Kw/Sn/Cm)
+"""
+from __future__ import annotations
+
+import os
+import struct
+import sys
+import zlib
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
+
+from bclimutil import parse_bclim, png_to_bclim_etc1a4_same_size  # noqa: E402
+from darcutil import DarcArchive  # noqa: E402
+from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
+from pack_images import PackError, splice_packages_into_img  # noqa: E402
+
+from deploy_common import (  # noqa: E402
+    iter_deploy_targets,
+    resolve_img_paths,
+)
+
+MOD_IMG, VANILLA = resolve_img_paths()
+
+OUT = ROOT / "out" / "status_stats_en"
+FONT = Path(r"C:\Windows\Fonts\YuGothR.ttc")
+# TRB already uses fitness / knowledge / sense / charm.
+PKG_LABELS: list[tuple[int, list[tuple[str, str]]]] = [
+    (
+        5501,
+        [
+            # 32x14 — "Knowledge" won't fit at readable size; "Intel" matches TRB meaning.
+            ("timg/stat_tex_undo.bclim", "Fitness"),
+            ("timg/stat_tex_chisiki.bclim", "Intel"),
+            ("timg/stat_tex_kanse.bclim", "Sense"),
+            ("timg/stat_tex_miryoku.bclim", "Charm"),
+        ],
+    ),
+    (
+        5255,
+        [
+            # Hearts: Mv=運動, Kw=知識, Sn=感性, Cm=魅力 — 52x28 has room for full words.
+            ("timg/Scd_Status_Tit_M.bclim", "Fitness"),
+            ("timg/Scd_Status_Tit_K.bclim", "Knowledge"),
+            ("timg/Scd_Status_Tit_S.bclim", "Sense"),
+            ("timg/Scd_Status_Tit_C.bclim", "Charm"),
+        ],
+    ),
+]
+INK = (40, 40, 40)
+
+
+def font(size: int) -> ImageFont.FreeTypeFont:
+    return ImageFont.truetype(str(FONT), size=size, index=0)
+
+
+def render_label(w: int, h: int, text: str) -> Image.Image:
+    for size in range(min(14, h + 1), 6, -1):
+        scale = 2
+        big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
+        dr = ImageDraw.Draw(big)
+        f = font(size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > w * scale - 2 or th > h * scale - 1:
+            continue
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=INK + (255,))
+        return big.resize((w, h), Image.Resampling.BILINEAR)
+    raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+
+
+def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
+    darc = DarcArchive(data)
+    spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
+    gaps: list[tuple[int, int]] = []
+    for (_a0, a1), (b0, _b1) in zip(spans, spans[1:]):
+        if b0 > a1:
+            gaps.append((a1, b0))
+    if spans and spans[-1][1] < len(data):
+        gaps.append((spans[-1][1], len(data)))
+    out: list[tuple[int, int]] = []
+    for g0, g1 in gaps:
+        chunk = data[g0:g1]
+        if len(chunk) >= 4 and chunk == b"\x00" * len(chunk):
+            out.append((g1 - g0, g0))
+    out.sort(reverse=True)
+    return out
+
+
+def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
+    runs = interfile_zero_gaps(data)
+    t = bytearray(data)
+    left = n_bytes
+    off = 0
+    for sz, po in runs:
+        take = min(left, sz)
+        if take:
+            t[po : po + take] = pad_rng[off : off + take]
+        left -= take
+        off += sz
+        if left <= 0:
+            break
+    return bytes(t)
+
+
+def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
+    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
+    bodies: list[bytes] = []
+    for level in range(10):
+        co = zlib.compressobj(level, wbits=-15)
+        bodies.append(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
+    hdrs = (b"\x78\x9c", b"\x78\xda", b"\x78\x5e", b"\x78\x01")
+    for body in bodies:
+        for hdr in hdrs:
+            remain = exact_len - len(hdr) - 4 - len(body)
+            if remain < 5 or remain % 5 != 0:
+                continue
+            n_empty = remain // 5
+            out = (
+                hdr
+                + body
+                + b"\x00\x00\x00\xff\xff" * (n_empty - 1)
+                + b"\x01\x00\x00\xff\xff"
+                + adler
+            )
+            if len(out) != exact_len:
+                continue
+            d = zlib.decompressobj()
+            try:
+                got = d.decompress(out)
+            except zlib.error:
+                continue
+            if got == data and not d.unused_data and d.eof:
+                return out
+    return None
+
+
+def compress_exact_with_gap_tune(data: bytes, exact_len: int) -> tuple[bytes, bytes]:
+    runs = interfile_zero_gaps(data)
+    cap = sum(sz for sz, _ in runs)
+    pad_rng = os.urandom(cap) if cap else b""
+    print(f"  gap capacity={cap}; tuning…", flush=True)
+    if not cap:
+        slot = compress_exact_empty_blocks(data, exact_len)
+        if slot is None:
+            raise SystemExit("no gaps and empty-block pad failed")
+        return data, slot
+    step = max(1, cap // 400)
+    for n in list(range(cap, -1, -step)) + list(range(cap, -1, -1)):
+        cand = apply_gap_pad(data, n, pad_rng)
+        slot = compress_exact_empty_blocks(cand, exact_len)
+        if slot is not None:
+            print(f"  hit pad_bytes={n}", flush=True)
+            return cand, slot
+    raise SystemExit("could not build exact zlib stream")
+
+
+def patch_pkg(pkg_id: int, labels: list[tuple[str, str]]) -> None:
+    vanilla = VANILLA if VANILLA.is_file() else MOD_IMG
+    vraw = vanilla.read_bytes()
+    vimg = ImgBin(str(vanilla))
+    vimg.parse(False)
+    res = vimg.entries[pkg_id]
+    pkg_dir = OUT / "img_data"
+    pkg_dir.mkdir(parents=True, exist_ok=True)
+    src_pkg = pkg_dir / f"{pkg_id:04d}"
+    src_pkg.write_bytes(vraw[res.fw.base_offset : res.fw.base_offset + res.fw.len()])
+
+    pkg = Package(FileWindow(str(src_pkg)), 0)
+    pkg.parse(False)
+    arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))
+    cmp_len = arc_elem.fw.len()
+    print(f"pkg {pkg_id} dec={len(arc_elem.parsed())} slot={cmp_len}", flush=True)
+
+    tmp = OUT / f"_fit_{pkg_id}"
+    tmp.mkdir(parents=True, exist_ok=True)
+    darc = DarcArchive(bytearray(arc_elem.parsed()))
+    for path, en in labels:
+        entry = darc.find(path) or darc.find(Path(path).name)
+        if entry is None:
+            raise SystemExit(f"missing {path}")
+        raw_b = darc.extract_file(entry)
+        _pix, w, h, fmt, _ = parse_bclim(raw_b)
+        if fmt != 0xB:
+            raise SystemExit(f"{path} fmt {fmt} not ETC1A4")
+        rgba = render_label(w, h, en)
+        png = tmp / "t.png"
+        orig = tmp / "o.bclim"
+        rgba.save(png)
+        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        orig.write_bytes(raw_b)
+        darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
+        print(f"OK {path} -> {en!r} ({w}x{h})", flush=True)
+
+    tuned, slot = compress_exact_with_gap_tune(bytes(darc.data), cmp_len)
+    do = zlib.decompressobj()
+    got = do.decompress(slot)
+    if got != tuned or do.unused_data or not do.eof:
+        raise SystemExit(f"pkg {pkg_id} zlib verify failed")
+    print(f"  ARC exact {len(slot)}", flush=True)
+
+    blob = bytearray(src_pkg.read_bytes())
+    entry_off = Package.ENTRY_SIZE
+    _typ, dec_len, _do, _fl, is_cmp, slot_len, cmp_off = Package.parse_entry(
+        bytes(blob[entry_off : entry_off + Package.ENTRY_SIZE])
+    )
+    if not is_cmp or slot_len != cmp_len or len(tuned) != dec_len:
+        raise SystemExit(f"pkg {pkg_id} ARC entry mismatch")
+    blob[cmp_off : cmp_off + cmp_len] = slot
+    new_pkg = pkg_dir / f"new_{pkg_id:04d}"
+    new_pkg.write_bytes(blob)
+
+    pkg2 = Package(FileWindow(str(new_pkg)), 0)
+    pkg2.parse(False)
+    for a, b in zip(pkg.entries, pkg2.entries):
+        if isinstance(a, ARC):
+            if b.parsed() != tuned:
+                raise SystemExit(f"pkg {pkg_id} ARC mismatch")
+        elif a.parsed() != b.parsed():
+            raise SystemExit(f"pkg {pkg_id} DMST changed")
+    print("  DMST OK", flush=True)
+
+    try:
+        for _dest in iter_deploy_targets(MOD_IMG):
+            splice_packages_into_img(_dest, pkg_dir, [pkg_id], _dest)
+    except PackError as exc:
+        raise SystemExit(f"splice {pkg_id} failed: {exc}") from exc
+
+
+def main() -> None:
+    if not MOD_IMG.is_file():
+        raise SystemExit(f"missing {MOD_IMG}")
+    bak = MOD_IMG.with_suffix(".bin.bak_pre_status_stats")
+    if not bak.is_file():
+        bak.write_bytes(MOD_IMG.read_bytes())
+        print("created", bak, flush=True)
+    OUT.mkdir(parents=True, exist_ok=True)
+
+    for pkg_id, labels in PKG_LABELS:
+        patch_pkg(pkg_id, labels)
+    print("deployed status stats EN ->", MOD_IMG, flush=True)
+    print("Rollback:", bak, flush=True)
+
+
+if __name__ == "__main__":
+    main()

@@ -35,14 +35,18 @@ SEEDDB = CIA_TOOLS / "seeddb.bin"
 
 DEFAULT_DBIN = ROOT / "rebuild_dbin2"
 DEFAULT_EXTRACTED = ROOT.parent / "New Love Plus Plus" / "extracted"
-DEFAULT_MAIN_CXI = Path(r"C:\Users\Zepse\nlpp_work\main.cxi")
-DEFAULT_ROMFS = Path(r"C:\Users\Zepse\nlpp_work\romfs")
+# Optional RomFS template (sibling dump). Copied by patch_cia — never mutated in-place.
+DEFAULT_ROMFS = DEFAULT_EXTRACTED / "romfs"
+DEFAULT_MAIN_CXI = DEFAULT_EXTRACTED / "main.cxi"
 DEFAULT_IMG_BIN = DEFAULT_EXTRACTED / "romfs" / "img.bin"
 DEFAULT_IMAGES = ROOT / "assets" / "images"
+# Optional PNG-pack intermediate (not gold).
 DEFAULT_PACKED_IMG = ROOT / "cache" / "new_img.bin"
+# Gold bake + TRB overlay (durable release artifacts).
+DEFAULT_BAKE_IMG = ROOT / "release" / "bake_img.bin"
+DEFAULT_ROMFS_OVERLAY = ROOT / "release" / "romfs_overlay"
+_LEGACY_ROMFS_OVERLAY = ROOT / "cache" / "romfs_overlay"
 DEFAULT_CODE_BIN = DEFAULT_EXTRACTED / "exefs" / "code.bin"
-# Legacy fallback when sibling extracted/ is absent (dev machines).
-_LEGACY_IMG_BIN = Path(r"C:\Users\Zepse\nlpp_work\romfs\img.bin")
 TITLE_ID = "00040000000F4E00"
 PACKS = ("NLP_01", "NLP_02", "script")
 
@@ -829,39 +833,71 @@ def _resolve_source_img_bin(args: argparse.Namespace) -> Path:
         return explicit
     if DEFAULT_IMG_BIN.is_file():
         return DEFAULT_IMG_BIN.resolve()
-    if _LEGACY_IMG_BIN.is_file():
-        return _LEGACY_IMG_BIN.resolve()
     raise PatchError(
         "No source img.bin for UI packing. Pass --img-bin path/to/romfs/img.bin "
         f"(tried {explicit})."
     )
 
 
+def resolve_inject_img(args: argparse.Namespace) -> Path:
+    """Prefer release/bake_img.bin; fall back to cache/new_img.bin / --packed-img."""
+    explicit = Path(args.packed_img).resolve() if args.packed_img else None
+    default_packed = DEFAULT_PACKED_IMG.resolve()
+    # --repack-images always targets the optional PNG path (not gold bake).
+    if args.repack_images:
+        return explicit if explicit is not None else default_packed
+    # Explicit non-default --packed-img wins.
+    if explicit is not None and explicit != default_packed:
+        return explicit
+    if DEFAULT_BAKE_IMG.is_file():
+        return DEFAULT_BAKE_IMG.resolve()
+    if explicit is not None:
+        return explicit
+    return default_packed
+
+
 def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
-    """Pack assets/images PNGs into cache/new_img.bin (same-size BCLIM only)."""
+    """Inject gold bake, or pack assets/images into cache/new_img.bin."""
     from pack_images import PackError, pack_images
 
     images = Path(args.images).resolve()
-    out_img = (
-        Path(args.packed_img).resolve()
-        if args.packed_img
-        else DEFAULT_PACKED_IMG
-    )
+    out_img = resolve_inject_img(args)
     out_img.parent.mkdir(parents=True, exist_ok=True)
     img_work = work / "img_work"
 
-    # Default: reuse cache when present. --repack-images forces a rebuild.
+    # Gold bake: inject as-is (regenerate via tools/rebuild_bake_img.py).
+    if (
+        not args.repack_images
+        and out_img.resolve() == DEFAULT_BAKE_IMG.resolve()
+        and DEFAULT_BAKE_IMG.is_file()
+    ):
+        print(f"[images] using gold bake: {out_img}")
+        print("         (rebuild with: python tools/rebuild_bake_img.py)")
+        return out_img
+
+    # Default: reuse PNG cache when present. --repack-images forces a rebuild.
     reuse = (not args.repack_images) and (
         args.reuse_packed_img or out_img.is_file()
     )
     if reuse and out_img.is_file():
         print(f"[images] reusing packed img.bin: {out_img}")
         print("         (delete it or pass --repack-images to rebuild from assets/images)")
+        print(
+            "         (gold bake: python tools/rebuild_bake_img.py "
+            "→ release/bake_img.bin)"
+        )
         return out_img
 
     src_img = _resolve_source_img_bin(args)
     workers = getattr(args, "image_workers", None)
     fine_tune = bool(getattr(args, "image_fine_tune", False))
+    if not DEFAULT_BAKE_IMG.is_file():
+        print(
+            "[images] NOTE: release/bake_img.bin missing — packing PNG-only "
+            "cache/new_img.bin (incomplete vs gold). "
+            "Prefer: python tools/rebuild_bake_img.py",
+            flush=True,
+        )
     print(f"[images] packing UI PNGs from {images}")
     print(f"         base img.bin: {src_img}")
     print(f"         output:       {out_img}")
@@ -1078,7 +1114,15 @@ def cmd_patch(args: argparse.Namespace) -> int:
         shutil.copy2(packed_img, dest_img)
 
     if args.romfs_overlay:
-        apply_romfs_overlay(romfs_dir, Path(args.romfs_overlay))
+        overlay = Path(args.romfs_overlay).resolve()
+    elif DEFAULT_ROMFS_OVERLAY.is_dir():
+        overlay = DEFAULT_ROMFS_OVERLAY
+    elif _LEGACY_ROMFS_OVERLAY.is_dir():
+        overlay = _LEGACY_ROMFS_OVERLAY
+    else:
+        overlay = None
+    if overlay is not None:
+        apply_romfs_overlay(romfs_dir, overlay)
 
     # Heroine names: plain English in dialog scripts + UI name tables.
     apply_name_patches(romfs_dir, skip=args.skip_name_patches)
@@ -1293,7 +1337,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--with-images",
         action="store_true",
         default=True,
-        help="Pack assets/images into cache/new_img.bin and inject (default: on)",
+        help="Inject release/bake_img.bin when present, else pack cache/new_img.bin (default: on)",
     )
     p.add_argument(
         "--no-images",
@@ -1313,7 +1357,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--packed-img",
         default=str(DEFAULT_PACKED_IMG),
-        help="Output/cache path for packed img.bin (default: cache/new_img.bin)",
+        help="Packed img path (default: cache/new_img.bin; bake preferred when present)",
     )
     p.add_argument(
         "--reuse-packed-img",
@@ -1323,7 +1367,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--repack-images",
         action="store_true",
-        help="Force rebuild cache/new_img.bin from assets/images even if cache exists",
+        help="Force rebuild cache/new_img.bin from assets/images (does not refresh gold bake)",
     )
     p.add_argument(
         "--image-workers",
@@ -1372,8 +1416,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "--romfs-overlay",
-        help="Copy files from this directory onto RomFS after script/img inject "
-        "(e.g. Azahar mod SystemData/TextResource)",
+        default=None,
+        help="RomFS overlay dir (default: release/romfs_overlay if present; "
+        "e.g. SystemData/TextResource TRBs)",
     )
     p.add_argument(
         "--code-bin",

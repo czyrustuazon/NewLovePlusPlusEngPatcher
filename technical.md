@@ -18,7 +18,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 2. Skim Cursor rules: `read-docs-first`, `patch-safety`, `ghidra-mcp`, `ui-localization-method`, `nlpp-repo-workflow`, `clock-confirm-ui-localization`.
 3. Reuse EngPatcher work products before regenerating them:
    - `out/clock_recheck/` — scans, header/date viz, pkg 5238 extract
-   - `out/textresource/` — TRB dumps / `translations.json`
+   - `release/textresource/` — durable TRB dumps / `translations.json` (not under wipeable `out/`)
    - `assets/images/*.check/` — decoded UI masters (prefer over guessing filenames)
 
 **Already settled (do not rediscover):**
@@ -162,7 +162,7 @@ Example known IDs (from earlier RE):
 
 ### 3.4 Translation quirks
 
-- EngPatcher translations: `out/textresource/translations.json`.
+- EngPatcher translations: `release/textresource/translations.json`.
 - Many UI strings are already EN in the Azahar LayeredFS TRB overlay; if a screen stays JP, **do not assume missing TRB** — check textures / DrawText source.
 - Closest TRB string to the clock header: `ＤＳ本体の時計と同じ` (different wording; not the confirm title).
 - `３ＤＳ本体時計` was **not** found as UTF-8, UTF-16LE, Shift-JIS, or NLP codebook index sequence in `code.bin`, `img.bin`, main TRB, resident TRB, or BCLYT files.
@@ -560,7 +560,7 @@ Numbered To-Do rows (e.g. 021–024) draw titles via `FUN_005c0e7c(..., pack=0x0
 | 023 | 22 | 2837 | カノジョ専属カメラマン | Girlfriend's Personal Photographer (**overflows** capsule) |
 | 024 | 23 | 2838 | 全スポットを解禁 | Unlock All Spots |
 
-Also reused at pack `0x0601` slot 22. Source: `out/textresource/translations.json` → rebuild TRB with `patch_textresource.py`.
+Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations.json` → rebuild TRB with `patch_textresource.py`.
 
 **Overflow fix:** shorten EN string — font size is **pane-global**, not per-line. Prefer e.g. `Personal Photographer` over shrinking every list row.
 

@@ -129,32 +129,73 @@ echo Accepts encrypted or decrypted .cia and .3ds/.cci.
 echo This can take several minutes and needs a few GB free disk.
 echo.
 
-REM Use extracted RomFS as a *source copy* only — never --in-place-romfs
+REM Use sibling extracted RomFS as a *source copy* only — never --in-place-romfs
 REM (in-place previously overwrote img.bin with a bad UI pack).
 set "EXTRA_ROMFS="
-if exist "C:\Users\Zepse\nlpp_work\romfs\script\bin\script" (
-  echo Using RomFS template from C:\Users\Zepse\nlpp_work\romfs ^(copied, not in-place^)
-  set "EXTRA_ROMFS=--romfs C:\Users\Zepse\nlpp_work\romfs"
+set "SIBLING_ROMFS=%~dp0..\New Love Plus Plus\extracted\romfs"
+if exist "%SIBLING_ROMFS%\script\bin\script" (
+  echo Using RomFS template from sibling extracted ^(copied, not in-place^)
+  set "EXTRA_ROMFS=--romfs %SIBLING_ROMFS%"
 )
 
-REM UI packing ON by default: packs assets/images → cache/new_img.bin (same-size BCLIM only).
-REM Opt out: set NLPP_WITH_IMAGES=0. Force rebuild: set NLPP_REPACK_IMAGES=1.
+REM UI ON by default. Durable release artifacts (not wipeable like out/):
+REM   release\bake_img.bin     — gold bake (preferred)
+REM   release\romfs_overlay\   — TRB overlays (auto-applied when present)
+REM Optional PNG scratch:
+REM   cache\new_img.bin        — PNG pack only (incomplete vs gold)
+REM Opt out: set NLPP_WITH_IMAGES=0
+REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
+REM Missing gold bake auto-runs: python tools\rebuild_bake_img.py
 if not exist "%~dp0cache" mkdir "%~dp0cache"
+if not exist "%~dp0release" mkdir "%~dp0release"
 set "PACKED_IMG=%~dp0cache\new_img.bin"
+if exist "%~dp0release\bake_img.bin" (
+  set "PACKED_IMG=%~dp0release\bake_img.bin"
+  echo Using gold bake: release\bake_img.bin
+) else if exist "%~dp0cache\bake_img.bin" (
+  REM legacy path during transition
+  set "PACKED_IMG=%~dp0cache\bake_img.bin"
+  echo Using legacy bake: cache\bake_img.bin ^(move to release\^)
+)
+if exist "%~dp0release\romfs_overlay\SystemData" (
+  echo TRB overlay will auto-apply from release\romfs_overlay
+) else if exist "%~dp0cache\romfs_overlay\SystemData" (
+  echo TRB overlay will auto-apply from cache\romfs_overlay ^(legacy^)
+)
 if /i "%NLPP_WITH_IMAGES%"=="0" (
   echo Scripts-only patch ^(NLPP_WITH_IMAGES=0 — UI pack skipped^)
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images %EXTRA_ROMFS% %SKIP_HASH%
 ) else if /i "%NLPP_REPACK_IMAGES%"=="1" (
-  echo UI packing — rebuilding cache\new_img.bin from assets\images
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%PACKED_IMG%" --repack-images %EXTRA_ROMFS% %SKIP_HASH%
+  echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images %EXTRA_ROMFS% %SKIP_HASH%
 ) else (
-  echo UI packing enabled — translated PNGs from assets\images
-  if exist "%PACKED_IMG%" (
-    echo Reusing cache\new_img.bin ^(set NLPP_REPACK_IMAGES=1 to rebuild^)
-  ) else (
-    echo First pack will write cache\new_img.bin ^(several minutes^)
+  REM Auto-build gold bake when missing (full: PNG pack + TRB + deploys + SMS).
+  if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+    echo.
+    echo No gold bake at release\bake_img.bin — running full tools\rebuild_bake_img.py
+    echo This regenerates bake + textresource TRBs from sources.
+    echo First full rebuild often takes ~2 hours. Leave this window open.
+    echo.
+    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py"
+    if errorlevel 1 (
+      echo [!] rebuild_bake_img.py failed.
+      pause
+      exit /b 1
+    )
+    if not exist "%~dp0release\bake_img.bin" (
+      echo [!] rebuild finished but release\bake_img.bin is still missing.
+      pause
+      exit /b 1
+    )
+    set "PACKED_IMG=%~dp0release\bake_img.bin"
+    echo Using newly built gold bake: release\bake_img.bin
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%PACKED_IMG%" %EXTRA_ROMFS% %SKIP_HASH%
+  if exist "!PACKED_IMG!" (
+    echo Reusing packed img: !PACKED_IMG!
+  ) else (
+    set "PACKED_IMG=%~dp0release\bake_img.bin"
+  )
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" %EXTRA_ROMFS% %SKIP_HASH%
 )
 set ERR=%ERRORLEVEL%
 

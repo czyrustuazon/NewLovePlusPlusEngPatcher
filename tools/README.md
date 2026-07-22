@@ -5,7 +5,9 @@
 | Path | Source | Role |
 |------|--------|------|
 | `cia/` | [3dstool](https://github.com/dnasdw/3dstool), Batch CIA 3DS Decryptor Redux | Decrypt CIA, split/rebuild NCCH/RomFS, makerom CIA |
-| `nlpp-tools/` | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** (original) | `img.bin` / package / BCLIM helpers (`ie`, `pe`, `png2bclim`, …) |
+| `nlpp-tools/` | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** (vendored in-tree) | `img.bin` / package / BCLIM helpers (`ie`, `pe`, `png2bclim`, …) |
+| `mdcutil.py` | EngPatcher | SMS maildic MDC pack / unpack |
+| `Trb2xlsx/` | trb2xlsx lookup data | codebook for `patch_textresource.py` rebuild |
 | `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | XML ↔ `.dbin2` (needs .NET SDK to build) |
 | `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Older `img.bin` unpacker (C#) |
 

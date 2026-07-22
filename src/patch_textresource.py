@@ -21,7 +21,9 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
 LOOKUP_PATH = ROOT / "tools" / "Trb2xlsx" / "TrbExport" / "lookup.txt"
-OUT_DIR = ROOT / "out" / "textresource"
+OUT_DIR = ROOT / "release" / "textresource"  # durable generated TRBs
+ASSETS_TR_DIR = ROOT / "assets" / "textresource"  # commit-worthy translations source
+DEFAULT_TRANSLATIONS = ASSETS_TR_DIR / "translations.json"
 
 DEFAULT_TRB = (
     ROOT.parent
@@ -849,12 +851,12 @@ def build_parser() -> argparse.ArgumentParser:
         / "TextResource"
         / "textresource_jpn.trb",
     )
-    p.add_argument("--translations", type=Path, default=OUT_DIR / "translations.json")
+    p.add_argument("--translations", type=Path, default=DEFAULT_TRANSLATIONS)
     p.set_defaults(func=cmd_seed)
 
     p = sub.add_parser("translate", help="OpenAI-translate remaining JP strings")
     p.add_argument("--trb", type=Path, default=DEFAULT_TRB)
-    p.add_argument("--translations", type=Path, default=OUT_DIR / "translations.json")
+    p.add_argument("--translations", type=Path, default=DEFAULT_TRANSLATIONS)
     p.add_argument("--batch-size", type=int, default=40)
     p.add_argument("--sleep", type=float, default=0.05)
     p.add_argument("--workers", type=int, default=6, help="parallel OpenAI batch workers")
@@ -870,7 +872,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("rebuild", help="Apply translations.json and rebuild TRB")
     p.add_argument("--trb", type=Path, default=DEFAULT_TRB)
-    p.add_argument("--translations", type=Path, default=OUT_DIR / "translations.json")
+    p.add_argument("--translations", type=Path, default=DEFAULT_TRANSLATIONS)
     p.add_argument("--out", type=Path, default=OUT_DIR / "textresource_jpn.trb")
     p.add_argument("--config", type=Path, default=None)
     p.add_argument("--config-out", type=Path, default=OUT_DIR / "textresource_config.trb")
@@ -890,7 +892,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("stats", help="Coverage stats for translations map")
     p.add_argument("--trb", type=Path, default=DEFAULT_TRB)
-    p.add_argument("--translations", type=Path, default=OUT_DIR / "translations.json")
+    p.add_argument("--translations", type=Path, default=DEFAULT_TRANSLATIONS)
     p.set_defaults(func=cmd_stats)
 
     p = sub.add_parser(

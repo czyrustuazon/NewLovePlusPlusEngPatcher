@@ -27,7 +27,9 @@ PNG2BCLIM = NLPP_TOOLS / "opt" / "bin" / "png2bclim.exe"
 IE = NLPP_TOOLS / "bin" / "ie"
 PE = NLPP_TOOLS / "bin" / "pe"
 
-DEFAULT_IMG_BIN = Path(r"C:\Users\Zepse\nlpp_work\romfs\img.bin")
+DEFAULT_IMG_BIN = (
+    ROOT.parent / "New Love Plus Plus" / "extracted" / "romfs" / "img.bin"
+)
 SKIP_DIR_RE = re.compile(r"(timg\s*-\s*copy|__pycache__|\.git)", re.I)
 SKIP_PNG_RE = re.compile(r"(\(2\)|_jpn|_bak|copy)", re.I)
 DEFAULT_WORKERS = max(1, min(32, (os.cpu_count() or 4)))

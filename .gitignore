@@ -11,12 +11,27 @@ venv/
 # Patcher build / work products (CIAs, RomFS trees, LayeredFS, reports)
 out/
 
-# Local packed img.bin cache (new_img.bin / bake_img.bin — large, not source)
+# Optional PNG-pack scratch (not gold)
 cache/
 
-# Downloaded / cloned tooling — keep docs only
+# Release artifacts: keep docs + translation source; ignore large generated bins
+release/**
+!release/README.md
+
+# Downloaded / cloned tooling — keep EngPatcher-owned scripts + vendored pack/SMS deps
 tools/*
 !tools/README.md
+!tools/deploy_*.py
+!tools/deploy_common.py
+!tools/rebuild_bake_img.py
+!tools/restore_*.ps1
+!tools/nuclear_jp_to_x.py
+!tools/mdcutil.py
+!tools/translate_sms_en.py
+!tools/nlpp-tools/
+!tools/nlpp-tools/**
+!tools/Trb2xlsx/
+!tools/Trb2xlsx/**
 
 # Game dumps & intermediates (never commit)
 *.cia
