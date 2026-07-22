@@ -17,6 +17,7 @@ from nlpp_paths import (  # noqa: E402
     ROMFS_OVERLAY,
     TEXTRESOURCE,
     find_vanilla_img,
+    find_vanilla_resident_trb,
     require_vanilla_img,
 )
 
@@ -111,7 +112,9 @@ def iter_deploy_targets(primary: Path) -> list[Path]:
 
 
 def resolve_resident_trb() -> Path:
-    """Best available resident TRB for day-counter / sync (no Azahar required)."""
+    """Working resident TRB for day-counter (prefers release/; seeds from vanilla)."""
+    import shutil
+
     env = os.environ.get("NLPP_RESIDENT_TRB")
     if env:
         p = Path(env)
@@ -119,21 +122,34 @@ def resolve_resident_trb() -> Path:
             return p.resolve()
         raise SystemExit(f"NLPP_RESIDENT_TRB not found: {p}")
 
+    durable = TEXTRESOURCE / "textresource_resident_jpn.trb"
     for c in (
+        durable,
         OVERLAY_TRB_DIR / "textresource_resident_jpn.trb",
-        TEXTRESOURCE / "textresource_resident_jpn.trb",
         AZAHAR_MOD_TRB_DIR / "textresource_resident_jpn.trb",
-        ROOT.parent
-        / "New Love Plus Plus"
-        / "extracted"
-        / "romfs"
-        / "SystemData"
-        / "TextResource"
-        / "textresource_resident_jpn.trb",
     ):
         if c.is_file():
+            # Prefer a writable release copy; seed durable if we only have overlay.
+            if c.resolve() != durable.resolve():
+                TEXTRESOURCE.mkdir(parents=True, exist_ok=True)
+                if not durable.is_file():
+                    shutil.copy2(c, durable)
+                    print(f"[trb] seeded resident -> {durable}", flush=True)
+                return durable.resolve()
             return c.resolve()
+
+    vanilla = find_vanilla_resident_trb()
+    if vanilla is not None:
+        TEXTRESOURCE.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(vanilla, durable)
+        print(f"[trb] seeded resident from vanilla -> {durable}", flush=True)
+        return durable.resolve()
+
     raise SystemExit(
-        "resident TRB not found under release/ or extracted/. "
-        "Set NLPP_RESIDENT_TRB or run rebuild with textresource present."
+        "resident TRB not found.\n"
+        "Provide one of:\n"
+        "  • set NLPP_RESIDENT_TRB\n"
+        "  • place at release/textresource/textresource_resident_jpn.trb\n"
+        "  • extract via rebuild --rom (cache/vanilla_from_rom/.../textresource_resident_jpn.trb)\n"
+        "  • sibling New Love Plus Plus/extracted/romfs/SystemData/TextResource/"
     )

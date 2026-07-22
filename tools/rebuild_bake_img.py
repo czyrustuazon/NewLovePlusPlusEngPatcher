@@ -41,6 +41,7 @@ from nlpp_paths import (  # noqa: E402
     TEXTRESOURCE,
     TRANSLATIONS_JSON,
     find_vanilla_main_trb,
+    find_vanilla_resident_trb,
     require_translations_json,
 )
 from patch_cia import PatchError  # noqa: E402
@@ -129,6 +130,19 @@ def rebuild_main_trb() -> None:
     if not out_trb.is_file():
         raise SystemExit(f"TRB rebuild did not write {out_trb}")
     print(f"[trb] rebuilt main TRB -> {out_trb}", flush=True)
+
+    # Resident TRB is not rebuilt from translations.json; seed virgin bytes for
+    # deploy_day_counter_en.py (日目 → Day) when release/ lacks it.
+    resident_out = TEXTRESOURCE / "textresource_resident_jpn.trb"
+    if not resident_out.is_file():
+        vanilla_resident = find_vanilla_resident_trb()
+        if vanilla_resident is None:
+            raise SystemExit(
+                "vanilla textresource_resident_jpn.trb not found.\n"
+                "Pass --rom path\\to\\game.cia|.3ds|.cci, or set NLPP_VANILLA_RESIDENT_TRB."
+            )
+        shutil.copy2(vanilla_resident, resident_out)
+        print(f"[trb] seeded resident TRB -> {resident_out}", flush=True)
 
 
 def pack_ui(vanilla: Path, *, workers: int | None, fine_tune: bool) -> Path:

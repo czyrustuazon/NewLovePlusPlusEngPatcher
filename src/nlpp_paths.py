@@ -22,6 +22,12 @@ CACHE_VANILLA_IMG = CACHE_VANILLA_ROMFS / "img.bin"
 CACHE_VANILLA_MAIN_TRB = (
     CACHE_VANILLA_ROMFS / "SystemData" / "TextResource" / "textresource_jpn.trb"
 )
+CACHE_VANILLA_RESIDENT_TRB = (
+    CACHE_VANILLA_ROMFS
+    / "SystemData"
+    / "TextResource"
+    / "textresource_resident_jpn.trb"
+)
 
 # Scratch
 OUT = ROOT / "out"
@@ -126,6 +132,27 @@ def find_vanilla_main_trb() -> Path | None:
         DEFAULT_VANILLA_MAIN_TRB,
         ROOT / "extracted" / "romfs" / "SystemData" / "TextResource" / "textresource_jpn.trb",
         CACHE_VANILLA_MAIN_TRB,
+    ):
+        if c.is_file():
+            return c.resolve()
+    return None
+
+
+def find_vanilla_resident_trb() -> Path | None:
+    env = os.environ.get("NLPP_VANILLA_RESIDENT_TRB")
+    if env:
+        p = Path(env)
+        if p.is_file():
+            return p.resolve()
+    for c in (
+        DEFAULT_VANILLA_RESIDENT_TRB,
+        ROOT
+        / "extracted"
+        / "romfs"
+        / "SystemData"
+        / "TextResource"
+        / "textresource_resident_jpn.trb",
+        CACHE_VANILLA_RESIDENT_TRB,
     ):
         if c.is_file():
             return c.resolve()
