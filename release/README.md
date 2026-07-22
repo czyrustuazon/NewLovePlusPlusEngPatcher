@@ -17,7 +17,9 @@ Regenerate everything (also auto-run by the drop bat when bake is missing):
 
 ```bash
 python tools/rebuild_bake_img.py
+python tools/rebuild_bake_img.py --rom path\to\game.cia
+python tools/rebuild_bake_img.py --rom path\to\game.3ds
 ```
 
-Requires vanilla dump at sibling `New Love Plus Plus/extracted/` (or `NLPP_VANILLA_IMG` / `NLPP_VANILLA_TRB`).
+Vanilla `img.bin` comes from (first match): `NLPP_VANILLA_IMG`, sibling `New Love Plus Plus/extracted/`, `cache/vanilla_from_rom/` (auto-filled from `--rom`), or the dropped ROM when the bat auto-rebuilds.
 First full rebuild often takes **~16 hours** (CPU-bound PNG pack / exact-zlib).

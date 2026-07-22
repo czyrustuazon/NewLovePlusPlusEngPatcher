@@ -16,6 +16,12 @@ OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
 # Optional PNG-pack intermediate (may be wiped; not gold).
 CACHE = ROOT / "cache"
 CACHE_NEW_IMG = CACHE / "new_img.bin"
+# Vanilla RomFS extracted from a dropped .cia/.3ds when sibling dump is absent.
+CACHE_VANILLA_ROMFS = CACHE / "vanilla_from_rom" / "romfs"
+CACHE_VANILLA_IMG = CACHE_VANILLA_ROMFS / "img.bin"
+CACHE_VANILLA_MAIN_TRB = (
+    CACHE_VANILLA_ROMFS / "SystemData" / "TextResource" / "textresource_jpn.trb"
+)
 
 # Scratch
 OUT = ROOT / "out"
@@ -61,6 +67,7 @@ def find_vanilla_img() -> Path | None:
     for c in (
         DEFAULT_VANILLA_IMG,
         ROOT / "extracted" / "romfs" / "img.bin",
+        CACHE_VANILLA_IMG,
     ):
         if c.is_file():
             return c.resolve()
@@ -71,8 +78,14 @@ def require_vanilla_img() -> Path:
     p = find_vanilla_img()
     if p is None:
         raise FileNotFoundError(
-            "vanilla romfs/img.bin not found. Set NLPP_VANILLA_IMG or place the dump at:\n"
-            f"  {DEFAULT_VANILLA_IMG}"
+            "vanilla romfs/img.bin not found.\n"
+            "Provide one of:\n"
+            "  • python tools/rebuild_bake_img.py --rom path\\to\\game.cia|.3ds|.cci\n"
+            "  • set NLPP_VANILLA_IMG to a vanilla img.bin\n"
+            "  • place a dump at:\n"
+            f"      {DEFAULT_VANILLA_IMG}\n"
+            f"  • or cache extract at:\n"
+            f"      {CACHE_VANILLA_IMG}"
         )
     return p
 
@@ -112,6 +125,7 @@ def find_vanilla_main_trb() -> Path | None:
     for c in (
         DEFAULT_VANILLA_MAIN_TRB,
         ROOT / "extracted" / "romfs" / "SystemData" / "TextResource" / "textresource_jpn.trb",
+        CACHE_VANILLA_MAIN_TRB,
     ):
         if c.is_file():
             return c.resolve()

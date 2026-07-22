@@ -13,6 +13,7 @@ Self-contained (no Azahar required):
 
 Usage:
   python tools/rebuild_bake_img.py
+  python tools/rebuild_bake_img.py --rom game.cia|.3ds|.cci   # extract vanilla from ROM
   python tools/rebuild_bake_img.py --skip-pack          # keep bake; re-run TRB/deploys/SMS
   python tools/rebuild_bake_img.py --reseed-from-pack   # force bake <- cache/new_img.bin
 """
@@ -29,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
+from extract_vanilla_from_rom import resolve_vanilla_img  # noqa: E402
 from nlpp_paths import (  # noqa: E402
     ASSETS_TEXTRESOURCE,
     BAKE_IMG,
@@ -40,8 +42,8 @@ from nlpp_paths import (  # noqa: E402
     TRANSLATIONS_JSON,
     find_vanilla_main_trb,
     require_translations_json,
-    require_vanilla_img,
 )
+from patch_cia import PatchError  # noqa: E402
 
 # Shared-ARC-safe order (canonical last-writers for 5245/5247/5380/5575/5253).
 DEPLOY_SCRIPTS: list[str] = [
@@ -94,8 +96,8 @@ def rebuild_main_trb() -> None:
     vanilla_trb = find_vanilla_main_trb()
     if vanilla_trb is None:
         raise SystemExit(
-            "vanilla textresource_jpn.trb not found under sibling extracted/. "
-            "Set NLPP_VANILLA_TRB."
+            "vanilla textresource_jpn.trb not found.\n"
+            "Pass --rom path\\to\\game.cia|.3ds|.cci, or set NLPP_VANILLA_TRB."
         )
 
     TEXTRESOURCE.mkdir(parents=True, exist_ok=True)
@@ -178,6 +180,12 @@ def main(argv: list[str] | None = None) -> int:
         help="vanilla romfs/img.bin (default: sibling extracted/ or NLPP_VANILLA_IMG)",
     )
     ap.add_argument(
+        "--rom",
+        type=Path,
+        default=None,
+        help="extract vanilla img.bin + TRBs from this .cia / .3ds / .cci when needed",
+    )
+    ap.add_argument(
         "--skip-pack",
         action="store_true",
         help="skip PNG pack; keep existing bake, or seed from cache/new_img.bin if bake missing",
@@ -220,16 +228,31 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    vanilla = args.vanilla.resolve() if args.vanilla else require_vanilla_img()
-    if not vanilla.is_file():
-        raise SystemExit(f"vanilla img.bin missing: {vanilla}")
-
     RELEASE.mkdir(parents=True, exist_ok=True)
     CACHE.mkdir(parents=True, exist_ok=True)
 
+    if args.vanilla is not None:
+        vanilla = args.vanilla.resolve()
+    else:
+        try:
+            vanilla = resolve_vanilla_img(rom=args.rom.resolve() if args.rom else None)
+        except (FileNotFoundError, PatchError, OSError) as exc:
+            raise SystemExit(str(exc)) from exc
+    if not vanilla.is_file():
+        raise SystemExit(f"vanilla img.bin missing: {vanilla}")
+
+    # If we extracted from --rom, also point TRB lookup at the same cache tree.
     env = os.environ.copy()
     env["NLPP_VANILLA_IMG"] = str(vanilla)
     env["NLPP_DEPLOY_IMG"] = str(BAKE_IMG)
+    if find_vanilla_main_trb() is None and args.rom is not None:
+        raise SystemExit(
+            "vanilla textresource_jpn.trb missing after ROM extract. "
+            "Re-run with --rom, or set NLPP_VANILLA_TRB."
+        )
+    trb = find_vanilla_main_trb()
+    if trb is not None:
+        env["NLPP_VANILLA_TRB"] = str(trb)
     if args.also_azahar:
         env["NLPP_ALSO_AZAHAR"] = "1"
     else:

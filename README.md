@@ -37,7 +37,7 @@ Title ID: `00040000000F4E00`
 2. Drop your `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
-**Gold bake rebuild can take about 16 hours** (`python tools/rebuild_bake_img.py`) — PNG pack + deploy chrome + SMS/day-counter → `release/bake_img.bin`. Drop-bat then reuses that bake in a few minutes. Scripts-only: `set NLPP_WITH_IMAGES=0`.
+**Gold bake rebuild can take about 16 hours** (`python tools/rebuild_bake_img.py` / auto on first drop) — PNG pack + deploy chrome + SMS/day-counter → `release/bake_img.bin`. If sibling `extracted/` is missing, vanilla `img.bin` is taken from the dropped `.cia` / `.3ds` / `.cci`. Drop-bat then reuses that bake in a few minutes. Scripts-only: `set NLPP_WITH_IMAGES=0`.
 
 ### Required dump
 

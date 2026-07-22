@@ -139,13 +139,17 @@ echo Accepts encrypted or decrypted .cia and .3ds/.cci.
 echo This can take several minutes and needs a few GB free disk.
 echo.
 
-REM Use sibling extracted RomFS as a *source copy* only — never --in-place-romfs
+REM Use an extracted RomFS as a *source copy* only — never --in-place-romfs
 REM (in-place previously overwrote img.bin with a bad UI pack).
 set "EXTRA_ROMFS="
 set "SIBLING_ROMFS=%~dp0..\New Love Plus Plus\extracted\romfs"
+set "CACHE_ROMFS=%~dp0cache\vanilla_from_rom\romfs"
 if exist "%SIBLING_ROMFS%\script\bin\script" (
   echo Using RomFS template from sibling extracted ^(copied, not in-place^)
   set "EXTRA_ROMFS=--romfs %SIBLING_ROMFS%"
+) else if exist "%CACHE_ROMFS%\script\bin\script" (
+  echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+  set "EXTRA_ROMFS=--romfs %CACHE_ROMFS%"
 )
 
 REM UI ON by default. Durable release artifacts (not wipeable like out/):
@@ -184,11 +188,13 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     echo.
     echo No gold bake at release\bake_img.bin — running full tools\rebuild_bake_img.py
     echo This regenerates bake + textresource TRBs from sources.
+    echo If sibling extracted\ is missing, vanilla img.bin is taken from the dropped ROM.
     echo First full rebuild often takes ~16 hours. Leave this window open.
     echo.
-    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py"
+    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
     if errorlevel 1 (
       echo [!] rebuild_bake_img.py failed.
+      echo     Need a New Love Plus+ .cia / .3ds / .cci ^(or set NLPP_VANILLA_IMG^).
       pause
       exit /b 1
     )
@@ -199,13 +205,18 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     )
     set "PACKED_IMG=%~dp0release\bake_img.bin"
     echo Using newly built gold bake: release\bake_img.bin
+    REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
+    if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
+      echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+      set "EXTRA_ROMFS=--romfs %CACHE_ROMFS%"
+    )
   )
   if exist "!PACKED_IMG!" (
     echo Reusing packed img: !PACKED_IMG!
   ) else (
     set "PACKED_IMG=%~dp0release\bake_img.bin"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" %EXTRA_ROMFS% %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH%
 )
 set ERR=%ERRORLEVEL%
 
