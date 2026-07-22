@@ -8,9 +8,7 @@ Packages (A8 Text BCLIMs, same pattern as Options pkg 5245):
 """
 from __future__ import annotations
 
-import os
 import sys
-import zlib
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +28,7 @@ from bclimutil import (  # noqa: E402
     png_to_bclim_a8_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
@@ -222,78 +221,6 @@ def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
     return safe
 
 
-def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
-    base_z = len(zopfli_zlib.compress(data))
-    if base_z > target:
-        raise SystemExit(f"zopfli {base_z} already exceeds slot {target}")
-    if base_z == target:
-        slot = zopfli_zlib.compress(data)
-        return data, slot
-
-    runs = interfile_zero_gaps(data)
-    if not runs:
-        raise SystemExit("no inter-file zero gaps to pad")
-    cap = sum(sz for sz, _ in runs)
-    rng = os.urandom(cap)
-    chunks: list[tuple[int, int, bytes]] = []
-    off = 0
-    for sz, po in runs:
-        chunks.append((po, sz, rng[off : off + sz]))
-        off += sz
-
-    def apply_prefix(n_bytes: int) -> bytes:
-        t = bytearray(data)
-        left = n_bytes
-        for po, sz, ch in chunks:
-            take = min(left, sz)
-            if take:
-                t[po : po + take] = ch[:take]
-            left -= take
-            if left <= 0:
-                break
-        return bytes(t)
-
-    lo, hi = 0, cap
-    hit: bytes | None = None
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        cand = apply_prefix(mid)
-        cl = len(zopfli_zlib.compress(cand))
-        print(f"    pad_bytes={mid} zopfli={cl}")
-        if cl == target:
-            hit = cand
-            break
-        if cl < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-
-    if hit is None:
-        t = bytearray(apply_prefix(max(hi, 0)))
-        for po, sz, ch in chunks:
-            for i in range(sz):
-                if t[po + i] != 0:
-                    continue
-                t[po + i] = ch[i]
-                cl = len(zopfli_zlib.compress(bytes(t)))
-                if cl == target:
-                    hit = bytes(t)
-                    break
-                if cl > target:
-                    t[po + i] = 0
-            if hit is not None:
-                break
-        if hit is None:
-            raise SystemExit("could not hit exact zopfli length")
-
-    slot = zopfli_zlib.compress(hit)
-    do = zlib.decompressobj()
-    got = do.decompress(slot)
-    if got != hit or do.unused_data or not do.eof:
-        raise SystemExit("exact stream verify failed")
-    return hit, slot
-
-
 def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
     blob = bytearray(src_pkg.read_bytes())
     entry_off = Package.ENTRY_SIZE
@@ -305,7 +232,10 @@ def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
     if len(patched_arc) != dec_len:
         raise SystemExit(f"ARC dec size {len(patched_arc)} != {dec_len}")
 
-    tuned, slot = compress_exact_zopfli(patched_arc, cmp_len)
+    try:
+        tuned, slot = compress_exact_zopfli(patched_arc, cmp_len)
+    except RuntimeError as exc:
+        raise SystemExit(str(exc)) from exc
     print(f"  ARC exact zopfli {len(slot)} unused_data=0")
     blob[cmp_off : cmp_off + cmp_len] = slot
 
