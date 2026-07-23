@@ -23,3 +23,5 @@ python tools/rebuild_bake_img.py --rom path\to\game.3ds
 
 Vanilla `img.bin` comes from (first match): `NLPP_VANILLA_IMG`, sibling `New Love Plus Plus/extracted/`, `cache/vanilla_from_rom/` (auto-filled from `--rom`), or the dropped ROM when the bat auto-rebuilds.
 First full rebuild often takes **~16 hours** (CPU-bound PNG pack / exact-zlib).
+
+**Handing off without the 16h wait:** these large binaries are gitignored. Zip this `release/` folder (at least `bake_img.bin` + `romfs_overlay/`) with a clone of the repo. Recipients drop their own dump on the bat and patch in minutes. Safe to delete `bake_img.bin.bak_pre_*` sidecars before sharing.
