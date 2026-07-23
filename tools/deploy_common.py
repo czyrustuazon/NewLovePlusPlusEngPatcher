@@ -95,7 +95,11 @@ def resolve_img_paths() -> tuple[Path, Path]:
 
 
 def iter_deploy_targets(primary: Path) -> list[Path]:
-    """Imgs to splice into: primary, then bake/Azahar mirrors when distinct."""
+    """Imgs to splice into: primary, bake, and Azahar LayeredFS when present.
+
+    Azahar is mirrored by default so in-emulator tests match the gold bake.
+    Opt out: set NLPP_ALSO_AZAHAR=0.
+    """
     targets: list[Path] = [primary.resolve()]
     seen = {targets[0]}
 
@@ -106,7 +110,8 @@ def iter_deploy_targets(primary: Path) -> list[Path]:
             seen.add(rp)
 
     _add(BAKE_IMG)
-    if os.environ.get("NLPP_ALSO_AZAHAR", "").strip() in ("1", "true", "yes"):
+    also = os.environ.get("NLPP_ALSO_AZAHAR", "1").strip().lower()
+    if also not in ("0", "false", "no", "off"):
         _add(AZAHAR_MOD_IMG)
     return targets
 
