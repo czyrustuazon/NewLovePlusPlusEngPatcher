@@ -27,6 +27,8 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - Header `３ＤＳ本体時計` is **not** a contiguous string in romfs/`code.bin`/`img.bin` (any common encoding) — see §9.
 - Global MakeStr hook and full `img.bin` rewrite are banned — see §11.
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
+- **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
+- Gold bake / clone pitfalls and fixes: **§15**.
 
 ---
 
@@ -583,9 +585,14 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 | `src/patch_cesa.py` | Boot CESA TEX + `compress_zlib_exact` helper |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
-| `tools/deploy_msel_menus_en.py` | Gallery/Comm/Data A8 → pkgs **5244/5241/5242** |
-| `tools/deploy_msel_opt_plates_en.py` | Extra Options plates on live **5245** |
-| `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** |
+| `tools/deploy_msel_menus_en.py` | Gallery/Comm/Data A8 → pkgs **5244/5241/5242** (+ Business Card **5240**) |
+| `tools/deploy_msel_opt_plates_en.py` | Soft re-render Options plates on live **5245** (best-effort; uses shared `exact_zlib`) |
+| `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** (lean trials + shared exact zlib) |
+| `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (`Title.arc` / `Lyt_Tit02`) |
+| `tools/deploy_cesa_en.py` | Boot CESA warning PNG → pkg **90** (`patch_cesa` exact zlib) |
+| `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` |
+| `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
+| `src/exact_zlib.py` | Shared exact-length zopfli / gap-tune / empty-block / near-miss |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
@@ -649,4 +656,74 @@ DrawText remapper remains useful for true DrawText titles (Gallery strings, some
 
 ---
 
-*Last updated 2026-07-20 — Confirm/Options/Display panels/My Data softkeys; exact-zlib playbook + bak-wipe ban (§12.5); To-Do TRB overflow (§12.6).*
+## 15. Gold bake / clone readiness retrospective (2026-07-22)
+
+First successful **self-contained** gold bake on a clean clone (no sibling `New Love Plus Plus/extracted/`), then CIA patch. Record of what failed, what fixed it, and what not to repeat.
+
+### 15.1 What we got wrong
+
+| Mistake | Symptom | Root cause |
+|---------|---------|------------|
+| Assumed sibling dump always exists | `FileNotFoundError: vanilla … img.bin` on first drop | Clone only had EngPatcher + ROM; path `../New Love Plus Plus/extracted/` missing |
+| Omitted `etcpak` from `requirements.txt` | `ModuleNotFoundError: etcpak` mid PNG pack | ETC1A4 BCLIM encode needs it; bat pip install couldn’t pull what wasn’t listed |
+| Local exact-zlib forks in deploy scripts | `could not build exact zlib` / `could not hit exact zopfli` on **5245** plates, **5242**, etc. | Hand-rolled binary search without empty-block / near-miss; after Options filled the slot, soft plates overshot congruence |
+| Confirm deploy: one heavy ETC1A4 style only | `zopfli 23082 exceeds slot 23047` @ **5238** | Live ARC already fat from PNG pack; no lean trials / zero-gaps / vanilla base |
+| Day-counter assumed release resident TRB | `resident TRB not found` | Main TRB rebuild doesn’t emit resident; clone never copied `textresource_resident_jpn.trb` into `release/` |
+| Treated NCommonMSel deploys as “main menu” | Hub rows stayed JP while Gallery submenu was EN | **Main Menu list = `Title.arc` pkg 5261** (`Title_btn02_t01..t06`), not Text02/03/04/05 plates |
+| CESA left opt-in / off rebuild path | Boot warning stayed JP or vanished after ad-hoc patch | `pack_images` skips CESA unless `--only cesa` (white-boot history); no deploy until late |
+| Patched bake but not Azahar LayeredFS | Emulator still showed JP hub + old CESA after “success” | `iter_deploy_targets` only mirrored Azahar when `NLPP_ALSO_AZAHAR=1`; bake ≠ what Azahar loaded |
+| Misleading bat error after deploy failure | “Need a .cia / set NLPP_VANILLA_IMG” after zlib fail | Generic message ignored the real traceback |
+| Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
+
+**Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
+
+| BCLIM | JP | EN (deploy) |
+|-------|----|-------------|
+| `t01` | オプション | Options |
+| `t02` | ゲームスタート | Game Start |
+| `t03` | ギャラリー | Gallery |
+| `t04` | データ管理 | Data Management |
+| `t05` | コミュニケーション | Communication |
+| `t06` | どこでもデート | Anywhere Date |
+
+(`Title_btn02_01..06` are **32×32 icons**, not labels. Header “Main Menu” is TRB / `Title_menu_word`, already EN.)
+
+### 15.2 What we got right
+
+| Practice | Why it worked |
+|----------|----------------|
+| `release/bake_img.bin` as gold; `cache/` scratch | Drop-bat reuses bake in minutes; rebuild is the long path |
+| `tools/rebuild_bake_img.py --rom <cia\|3ds>` + `extract_vanilla_from_rom.py` | Clone can seed vanilla from the dropped ROM → `cache/vanilla_from_rom/` |
+| `--skip-pack` after PNG pack finished | Resume deploys/TRB/SMS without another ~16h pack |
+| Shared `src/exact_zlib.py` for deploys | Gap-tune, empty-block, near-miss close 1–2 B misses local forks can’t |
+| Soft-then-hard glyph trials | Soft AA prettier; hard 1-bit often the only fit under slot |
+| Zero DARC inter-file gaps before measuring zopfli | Prior urandom salt inflates zlib on shared ARCs |
+| Seed resident TRB into `release/textresource/` from vanilla/cache | Day-counter + pkg **5508** stay in sync without sibling extract |
+| `deploy_title_main_menu_en.py` + `deploy_cesa_en.py` on rebuild list | Hub + boot warning covered in gold path |
+| Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
+| Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
+
+### 15.3 Clone / first-drop checklist
+
+1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
+2. Drop known-dump `.cia` / `.3ds` / `.cci` on the bat (or `rebuild_bake_img.py --rom …`).
+3. First gold rebuild: expect **~16 hours** PNG pack, then deploys. Leave the window open.
+4. After bake exists: drop again → minutes (no rebuild).
+5. Resume mid-deploy: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
+6. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
+7. CESA: use `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`.
+
+### 15.4 Package quick map (hub vs submenu)
+
+| UI | Package | Deploy / note |
+|----|---------|----------------|
+| Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
+| Main Menu **rows** | **5261** Title.arc | `deploy_title_main_menu_en.py` |
+| Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
+| Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
+| Confirm OK | **5238** | `deploy_confirm_btn_en.py` |
+| “Main Menu” title string | TRB / Title_menu_word | Already EN via textresource |
+
+---
+
+*Last updated 2026-07-22 — Gold-bake clone retrospective (§15); Title **5261** + CESA **90** deploys; shared exact_zlib; Azahar mirror default.*
