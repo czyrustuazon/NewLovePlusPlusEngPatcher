@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import shutil
 import subprocess
@@ -32,6 +33,9 @@ CTRTOOL = CIA_TOOLS / "ctrtool.exe"
 MAKEROM = CIA_TOOLS / "makerom.exe"
 DECRYPT = CIA_TOOLS / "decrypt.exe"
 SEEDDB = CIA_TOOLS / "seeddb.bin"
+# Prefer real Windows cmd.exe — PATH often puts MSYS/Git "cmd" first, which
+# breaks Batch Decryptor Redux (decrypt.exe → "Input files don't exist").
+WIN_CMD = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "cmd.exe"
 
 DEFAULT_DBIN = ROOT / "rebuild_dbin2"
 DEFAULT_EXTRACTED = ROOT.parent / "New Love Plus Plus" / "extracted"
@@ -159,14 +163,29 @@ def is_encrypted_cia(cia: Path) -> bool:
 is_encrypted_rom = is_encrypted_cia
 
 
+def _ascii_work_rom_name(rom: Path) -> str:
+    """ASCII-only basename for decrypt.exe (rejects Unicode / odd names)."""
+    ext = rom.suffix.lower()
+    if ext not in (".cia", ".3ds", ".cci"):
+        ext = ".cia"
+    return f"nlpp_input{ext}"
+
+
 def _prepare_decrypt_workdir(rom: Path, work: Path) -> tuple[Path, Path]:
-    """Copy decryptor bins + rom into work/; return (work_rom, bin_dir)."""
+    """Copy decryptor bins + rom into work/bin/; return (work_rom, bin_dir).
+
+    Batch CIA 3DS Decryptor Redux's ``decrypt.exe`` resolves the input relative
+    to its own directory (not the process cwd). The rom must sit next to
+    ``decrypt.exe``. Also use an ASCII-only filename — dumps with Japanese
+    product titles (e.g. ``…NEWラブプラス＋….cia``) otherwise print
+    ``Input files don't exist`` and produce no NCCH.
+    """
     bin_dir = work / "bin"
     bin_dir.mkdir(parents=True, exist_ok=True)
     for name in ("ctrtool.exe", "makerom.exe", "decrypt.exe", "seeddb.bin"):
         shutil.copy2(CIA_TOOLS / name, bin_dir / name)
 
-    work_rom = work / rom.name
+    work_rom = bin_dir / _ascii_work_rom_name(rom)
     if work_rom.resolve() != rom.resolve():
         shutil.copy2(rom, work_rom)
     return work_rom, bin_dir
@@ -200,7 +219,8 @@ def _rename_decrypt_ncchs(bin_dir: Path) -> None:
 
 def decrypt_cia(cia: Path, work: Path) -> Path:
     """Decrypt an encrypted CIA into work/, return path to *-decrypted.cia."""
-    out_name = f"{cia.stem}-decrypted.cia"
+    # Keep output ASCII — original stems may be Japanese / pirate-release names.
+    out_name = "nlpp-decrypted.cia"
     out_path = work / out_name
     if out_path.is_file():
         print(f"[decrypt] using existing {out_path.name}")
@@ -209,8 +229,10 @@ def decrypt_cia(cia: Path, work: Path) -> Path:
     print(f"[decrypt] decrypting {cia.name} ...")
     work_cia, bin_dir = _prepare_decrypt_workdir(cia, work)
 
-    # decrypt.exe writes tmp.*.ncch into bin\
-    _run(["cmd", "/c", f'echo.| bin\\decrypt.exe "{work_cia.name}"'], cwd=work)
+    # decrypt.exe reads the CIA from *its* directory and writes *.N.ncch there.
+    # Do NOT quote the ASCII basename — decrypt.exe treats quotes as part of the
+    # path and prints "Input files don't exist".
+    _run([WIN_CMD, "/c", f"echo.| decrypt.exe {work_cia.name}"], cwd=bin_dir)
     _rename_decrypt_ncchs(bin_dir)
 
     ncchs = _collect_decrypt_ncchs(bin_dir)
@@ -235,11 +257,11 @@ def decrypt_cia(cia: Path, work: Path) -> Path:
         "-target",
         "p",
         "-o",
-        out_name,
+        str(out_path),
     ]
     for i, ncch in enumerate(normalized):
-        args.extend(["-i", f"{ncch}:{i}:{i}"])
-    _run(args, cwd=work)
+        args.extend(["-i", f"{ncch.name}:{i}:{i}"])
+    _run(args, cwd=bin_dir)
 
     if not out_path.is_file():
         raise PatchError("makerom failed to write decrypted CIA")
@@ -262,7 +284,7 @@ def decrypt_3ds_to_cxi(cci: Path, work: Path) -> tuple[Path, Path | None]:
 
     print(f"[decrypt] decrypting {cci.name} (CCI/3DS) ...")
     work_cci, bin_dir = _prepare_decrypt_workdir(cci, work)
-    _run(["cmd", "/c", f'echo.| bin\\decrypt.exe "{work_cci.name}"'], cwd=work)
+    _run([WIN_CMD, "/c", f"echo.| decrypt.exe {work_cci.name}"], cwd=bin_dir)
     _rename_decrypt_ncchs(bin_dir)
 
     main = bin_dir / "tmp.Main.ncch"

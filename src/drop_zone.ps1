@@ -1,5 +1,6 @@
-# WinForms drop target for New Love Plus+ CIA / 3DS patching.
+﻿# WinForms drop target for New Love Plus+ CIA / 3DS patching.
 # Drag a .cia / .3ds / .cci onto the window, or click Browse.
+# Saved UTF-8 with BOM so Windows PowerShell 5.1 parses Unicode correctly.
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -9,6 +10,28 @@ $root = Split-Path -Parent $src
 $bat = Join-Path $root "Drop CIA or 3DS Here to Patch.bat"
 if (-not (Test-Path -LiteralPath $bat)) {
     $bat = Join-Path $root "Drop CIA Here to Patch.bat"
+}
+
+# 8.3 / TEMP staging — Japanese names + parentheses break cmd.exe
+# (e.g. "...NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0) (J).piratelegit.cia").
+$shortPathPs1 = Join-Path $src "short_path.ps1"
+
+function Get-SafeRomPath([string]$path) {
+    if ([string]::IsNullOrWhiteSpace($path)) { return $path }
+    if (-not (Test-Path -LiteralPath $path)) { return $path }
+    if (-not (Test-Path -LiteralPath $shortPathPs1)) {
+        return $path
+    }
+    $env:NLPP_ROM = $path
+    try {
+        $resolved = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $shortPathPs1
+        if ($resolved) {
+            return [string]$resolved
+        }
+    } finally {
+        Remove-Item Env:NLPP_ROM -ErrorAction SilentlyContinue
+    }
+    return $path
 }
 
 $form = New-Object System.Windows.Forms.Form
@@ -31,7 +54,7 @@ $label.Height = 70
 $label.Padding = New-Object System.Windows.Forms.Padding(12)
 
 $hint = New-Object System.Windows.Forms.Label
-$hint.Text = "CIA or 3DS dump → decrypt → inject → out\NewLovePlusPlus-EN.cia"
+$hint.Text = "CIA or 3DS dump -> decrypt -> inject -> out\NewLovePlusPlus-EN.cia"
 $hint.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hint.ForeColor = [System.Drawing.Color]::FromArgb(80, 90, 100)
 $hint.AutoSize = $false
@@ -93,7 +116,7 @@ function Set-Cia([string]$path) {
     $script:ciaPath = $path
     $pathBox.Text = $path
     $go.Enabled = $true
-    $status.Text = "Ready — click Patch (or drop another dump)."
+    $status.Text = "Ready - click Patch (or drop another dump)."
     $form.BackColor = [System.Drawing.Color]::FromArgb(230, 245, 235)
 }
 
@@ -125,9 +148,11 @@ $go.Add_Click({
     if (-not $script:ciaPath) { return }
     $go.Enabled = $false
     $browse.Enabled = $false
-    $status.Text = "Patching… a console window will show progress."
+    $status.Text = "Patching... a console window will show progress."
     $form.Refresh()
-    $p = Start-Process -FilePath $bat -ArgumentList "`"$($script:ciaPath)`"" -WorkingDirectory $root -PassThru -Wait
+    $launchPath = Get-SafeRomPath $script:ciaPath
+    # Pass as a single argument; staged path has no spaces/parens/Unicode.
+    $p = Start-Process -FilePath $bat -ArgumentList @($launchPath) -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
         $status.Text = "Done. See out\NewLovePlusPlus-EN.cia"
         [System.Windows.Forms.MessageBox]::Show(
