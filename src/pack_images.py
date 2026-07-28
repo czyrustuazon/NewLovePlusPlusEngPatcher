@@ -77,9 +77,11 @@ def _run(cmd: list[str | Path], cwd: Path | None = None) -> None:
 
 
 def _require_tools() -> None:
-    missing = [p for p in (IE, PE, PNG2BCLIM) if not p.is_file()]
+    missing = [p for p in (IE, PE) if not p.is_file()]
     if missing:
         raise PackError(f"missing tools: {', '.join(p.name for p in missing)}")
+    # png2bclim.exe is Windows-only and only needed for rare BCLIM formats
+    # outside bclimutil (A8/RGB565/RGBA4444/ETC1A4/A4). Linux gold packs OK without it.
 
 
 def prefer_asset_folders(images_root: Path) -> dict[str, Path]:
@@ -207,6 +209,11 @@ def convert_png_to_bclim(
 
     staged_png = work / f"{orig_bclim.stem}.png"
     staged_bclim = work / f"{orig_bclim.stem}.bclim"
+    if not PNG2BCLIM.is_file():
+        raise PackError(
+            f"unsupported BCLIM fmt {fmt} for {png.name}; "
+            f"need {PNG2BCLIM.name} (Windows) or extend bclimutil"
+        )
     shutil.copy2(png, staged_png)
     shutil.copy2(orig_bclim, staged_bclim)
     _run([PNG2BCLIM, staged_png], cwd=work)

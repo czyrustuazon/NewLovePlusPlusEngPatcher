@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""Fetch / wire local tools needed by patch_cia.py and the drop bat.
+"""Wire local tools needed by patch_cia.py and the drop bat.
 
-Auto-downloads open-source binaries where licensing is clear:
-  - 3dstool (dnasdw/3dstool)
-  - ctrtool / makerom (3DSGuy/Project_CTR)
-  - seeddb.bin (ihaveamac/3DS-rom-tools)
+CIA bins are **vendored** under tools/cia/ (see tools/cia/CREDITS.md).
+This script verifies they exist, copies decrypt.exe from the Batch-CIA
+folder, and only downloads from GitHub if something is missing.
 
-decrypt.exe is vendored under tools/Batch-CIA-3DS-Decryptor-Redux/
-(credit: davidmorom / xxmichibxx Batch CIA 3DS Decryptor Redux) and copied
-into tools/cia/ for the patcher.
+Offline / dead-upstream: pass --offline (or set NLPP_OFFLINE=1) so a
+missing file fails instead of fetching.
 """
 
 from __future__ import annotations
 
+import argparse
+import os
 import shutil
 import sys
 import tempfile
@@ -48,9 +48,18 @@ SEEDDB_URL = (
 
 EXTRACT_ROMFS_SRC = ROOT.parent / "New Love Plus Plus" / "tools" / "extract_romfs.py"
 
+_OFFLINE = False
+
 
 def download(url: str, dest: Path) -> None:
-    print(f"downloading {url}")
+    if _OFFLINE:
+        raise SystemExit(
+            f"Missing {dest.name} and offline mode is on "
+            f"(--offline / NLPP_OFFLINE=1).\n"
+            f"Expected vendored file at: {dest}\n"
+            f"See tools/cia/CREDITS.md"
+        )
+    print(f"downloading {url}  (not in tree; fallback fetch)")
     dest.parent.mkdir(parents=True, exist_ok=True)
     req = urllib.request.Request(
         url,
@@ -79,7 +88,7 @@ def _extract_exe_from_zip(zpath: Path, exe_name: str, dest: Path) -> None:
 def ensure_3dstool() -> None:
     exe = CIA_TOOLS / "3dstool" / "3dstool.exe"
     if exe.is_file():
-        print(f"ok: {exe}")
+        print(f"ok (vendored): {exe}")
         return
     zpath = CIA_TOOLS / "3dstool.zip"
     download(THREEDS_URL, zpath)
@@ -92,13 +101,13 @@ def ensure_3dstool() -> None:
         if matches[0].parent != CIA_TOOLS / "3dstool":
             for p in matches[0].parent.iterdir():
                 shutil.move(str(p), CIA_TOOLS / "3dstool" / p.name)
-    print(f"ok: {exe}")
+    print(f"ok: {exe} (downloaded)")
 
 
 def ensure_project_ctr_bin(name: str, url: str) -> None:
     dest = CIA_TOOLS / name
     if dest.is_file():
-        print(f"ok: {dest}")
+        print(f"ok (vendored): {dest}")
         return
     with tempfile.TemporaryDirectory(prefix="nlpp_ctr_") as tmp:
         zpath = Path(tmp) / f"{name}.zip"
@@ -110,14 +119,14 @@ def ensure_project_ctr_bin(name: str, url: str) -> None:
 def ensure_seeddb() -> None:
     dest = CIA_TOOLS / "seeddb.bin"
     if dest.is_file():
-        print(f"ok: {dest}")
+        print(f"ok (vendored): {dest}")
         return
     download(SEEDDB_URL, dest)
     print(f"ok: {dest} (downloaded)")
 
 
 def ensure_decrypt_exe() -> None:
-    """Install vendored decrypt.exe into tools/cia/."""
+    """Install vendored decrypt.exe into tools/cia/ (local copy, no network)."""
     dest = CIA_TOOLS / "decrypt.exe"
     if dest.is_file():
         print(f"ok: {dest}")
@@ -179,8 +188,20 @@ def ensure_python_deps() -> None:
         raise SystemExit("Python dependencies missing")
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    global _OFFLINE
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--offline",
+        action="store_true",
+        help="Never download; fail if a vendored CIA binary is missing",
+    )
+    args = ap.parse_args(argv)
+    _OFFLINE = bool(args.offline or os.environ.get("NLPP_OFFLINE", "").strip() in ("1", "true", "yes"))
+
     print("Setting up CIA patch tools...")
+    if _OFFLINE:
+        print("(offline: no GitHub fallback fetches)")
     CIA_TOOLS.mkdir(parents=True, exist_ok=True)
     ensure_python_deps()
     ensure_3dstool()
@@ -192,6 +213,7 @@ def main() -> int:
     print()
     print("nlpp-tools (vendored):", ROOT / "tools" / "nlpp-tools")
     print("UI font (OFL):", ROOT / "assets" / "fonts" / "MPLUS1p-Regular.ttf")
+    print("CIA bins (vendored):", CIA_TOOLS / "CREDITS.md")
     print(
         "decrypt.exe credit: davidmorom / xxmichibxx "
         "(tools/Batch-CIA-3DS-Decryptor-Redux/CREDITS.md)"

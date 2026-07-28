@@ -100,7 +100,7 @@ Many other decrypted CIAs will fail the hash check (by design). The patcher decr
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
 - `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak** — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
-- First run auto-fetches OSS CIA tools (`3dstool`, `ctrtool`, `makerom`, `seeddb.bin`) and installs vendored `decrypt.exe`  
+- First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`) and copies `decrypt.exe`; downloads only if a bin is missing  
 - `decrypt.exe` credit: [davidmorom](https://github.com/davidmorom) / [Batch CIA 3DS Decryptor Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux) (`tools/Batch-CIA-3DS-Decryptor-Redux/`)  
 - UI glyph font is bundled: `assets/fonts/MPLUS1p-Regular.ttf` (SIL OFL)  
 
@@ -215,7 +215,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 
 | Component | Credit |
 |-----------|--------|
-| `3dstool` | [dnasdw/3dstool](https://github.com/dnasdw/3dstool) (auto-fetched by `setup_tools.py`) |
+| `3dstool` / `ctrtool` / `makerom` / `seeddb.bin` | Vendored under `tools/cia/` ([CREDITS](tools/cia/CREDITS.md)); `setup_tools.py` fetches only if missing |
 | `ctrtool` / `makerom` | [3DSGuy/Project_CTR](https://github.com/3DSGuy/Project_CTR) (auto-fetched) |
 | `seeddb.bin` | [ihaveamac/3DS-rom-tools](https://github.com/ihaveamac/3DS-rom-tools) (auto-fetched) |
 | `decrypt.exe` | [davidmorom](https://github.com/davidmorom); packaged in [xxmichibxx/Batch-CIA-3DS-Decryptor-Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux); original batch decryptor [matiffeder/3DS-stuff](https://github.com/matiffeder/3DS-stuff). Vendored at `tools/Batch-CIA-3DS-Decryptor-Redux/` — see `CREDITS.md` |
@@ -264,7 +264,7 @@ src/
   exact_zlib.py              exact-length zlib/zopfli for ARC slots
   extract_vanilla_from_rom.py  vanilla img/TRB from dropped ROM
   darcutil.py / bclimutil.py / image_map.py
-  setup_tools.py             fetch 3dstool + wire decryptor bins
+  setup_tools.py             verify vendored CIA bins + wire decrypt.exe
   drop_zone.ps1              WinForms drop window
 tools/
   rebuild_bake_img.py        regenerate bake + TRBs from sources

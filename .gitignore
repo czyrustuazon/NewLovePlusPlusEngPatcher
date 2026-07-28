@@ -44,6 +44,17 @@ tools/Trb2xlsx/**/.vs/
 !tools/Batch-CIA-3DS-Decryptor-Redux/
 !tools/Batch-CIA-3DS-Decryptor-Redux/**
 
+# Vendored CIA patch bins (3dstool / ctrtool / makerom / seeddb)
+!tools/cia/
+!tools/cia/**
+# Runtime / download scratch under tools/cia
+tools/cia/3dstool.zip
+tools/cia/3dstool/ext_key.txt
+tools/cia/3dstool/ignore_3dstool.txt
+tools/cia/*.partial
+# decrypt.exe is copied here from Batch-CIA… by setup_tools (source of truth is that folder)
+tools/cia/decrypt.exe
+
 # Game dumps & intermediates (never commit)
 *.cia
 *.cxi

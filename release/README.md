@@ -26,4 +26,13 @@ First full rebuild often takes **~16 hours** (CPU-bound PNG pack / exact-zlib).
 A second full pack with unchanged assets reuses ``cache/img_pack/`` (BCLIM + exact-zlib
 slots) and is typically minutes. Wipe that dir or pass ``--no-cache`` to force re-encode.
 
-**Handing off without the 16h wait:** these large binaries are gitignored. Zip this `release/` folder (at least `bake_img.bin` + `romfs_overlay/`) with a clone of the repo. Recipients drop their own dump on the bat and patch in minutes. Safe to delete `bake_img.bin.bak_pre_*` sidecars before sharing.
+**Handing off without the 16h wait:** the **nlpp-gold** repo’s Ubuntu self-hosted CI
+uploads `bake_img.bin` + `romfs_overlay.zip` to GitHub Releases on tags `v*` (see
+`infra/` pointer + nlpp-gold docs), or zip those with a clone. Recipients:
+
+```bash
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold
+```
+
+then drop their CIA on the bat (Windows). Safe to delete `bake_img.bin.bak_pre_*`
+sidecars before sharing.
