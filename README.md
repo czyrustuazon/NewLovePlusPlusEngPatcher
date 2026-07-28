@@ -44,7 +44,16 @@ With a ready gold bake (`release/bake_img.bin` + overlay), patching usually fini
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
-To let someone else patch without rebuilding gold:
+**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold** Ubuntu runner
+builds `release/` and updates GitHub Release tag `gold`. See
+[`infra/README.md`](infra/README.md). Collaborators:
+
+```bash
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
+# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold
+```
+
+Manual handoff still works:
 
 1. Clone / zip this repo (includes `assets/`, scripts, tools).  
 2. Also give them your finished **`release/`** pack:
@@ -53,7 +62,7 @@ To let someone else patch without rebuilding gold:
    - `release/textresource/` — optional but useful  
 3. They supply **their own** matching dump and run the drop bat.
 
-Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars.
+Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA patching stays on **Windows**.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 

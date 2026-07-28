@@ -18,6 +18,8 @@ from pathlib import Path
 
 from darcutil import DarcArchive
 from image_map import normalize_folder_key, resolve_folder
+from img_pack_cache import ImgPackCache, compress_to_exact_slot_cached
+from nlpp_paths import CACHE_IMG_PACK
 
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
@@ -159,7 +161,13 @@ def _bclim_looks_valid(path: Path, orig_size: int) -> tuple[bool, str]:
     return True, ""
 
 
-def convert_png_to_bclim(png: Path, orig_bclim: Path, work: Path) -> Path:
+def convert_png_to_bclim(
+    png: Path,
+    orig_bclim: Path,
+    work: Path,
+    *,
+    cache: ImgPackCache | None = None,
+) -> Path:
     """Convert PNG to BCLIM; keep same file size for DARC inject."""
     from bclimutil import parse_bclim, png_to_bclim_same_size
 
@@ -169,18 +177,29 @@ def convert_png_to_bclim(png: Path, orig_bclim: Path, work: Path) -> Path:
             old.unlink()
     orig_size = orig_bclim.stat().st_size
     produced = work / f"{orig_bclim.stem}X.bclim"
+    png_bytes = png.read_bytes()
+    orig_bytes = orig_bclim.read_bytes()
+
+    if cache is not None:
+        hit = cache.get_bclim(png_bytes, orig_bytes)
+        if hit is not None:
+            produced.write_bytes(hit)
+            return produced
 
     try:
-        _pix, _w, _h, fmt, _footer = parse_bclim(orig_bclim.read_bytes())
+        _pix, _w, _h, fmt, _footer = parse_bclim(orig_bytes)
     except Exception:
         fmt = -1
 
     # fmt 8 = RGBA4444; fmt 0xB = ETC1A4; fmt 1 = A8; fmt 3 = RGB565; fmt 0xD = A4.
     if fmt in (1, 3, 8, 0xB, 0xD):
         try:
-            produced.write_bytes(png_to_bclim_same_size(png, orig_bclim))
+            encoded = png_to_bclim_same_size(png, orig_bclim)
+            produced.write_bytes(encoded)
             ok, reason = _bclim_looks_valid(produced, orig_size)
             if ok:
+                if cache is not None:
+                    cache.put_bclim(png_bytes, orig_bytes, encoded)
                 return produced
             raise PackError(reason)
         except Exception as exc:
@@ -199,6 +218,8 @@ def convert_png_to_bclim(png: Path, orig_bclim: Path, work: Path) -> Path:
     ok, reason = _bclim_looks_valid(produced, orig_size)
     if not ok:
         raise PackError(f"bad BCLIM for {png.name}: {reason}")
+    if cache is not None:
+        cache.put_bclim(png_bytes, orig_bytes, produced.read_bytes())
     return produced
 
 
@@ -251,10 +272,11 @@ def _convert_one_png(
     png: Path,
     dest_bclim: Path,
     work: Path,
+    cache: ImgPackCache | None = None,
 ) -> tuple[str, bytes | None, str | None]:
     """Worker: convert one PNG. Returns (status, bclim_bytes, warning)."""
     try:
-        new_bclim = convert_png_to_bclim(png, dest_bclim, work)
+        new_bclim = convert_png_to_bclim(png, dest_bclim, work, cache=cache)
         return "ok", new_bclim.read_bytes(), None
     except PackError as exc:
         return "skip", None, str(exc)
@@ -268,6 +290,7 @@ def patch_arc_with_pngs(
     work_dir: Path,
     *,
     workers: int = 1,
+    cache: ImgPackCache | None = None,
 ) -> tuple[int, int, list[str]]:
     """Convert PNGs (optionally in parallel) and same-size-inject into the .arc."""
     darc = DarcArchive.load(arc_path)
@@ -302,7 +325,9 @@ def patch_arc_with_pngs(
     total_jobs = len(jobs)
     if workers == 1 or total_jobs == 1:
         for i, (png, entry, dest_bclim) in enumerate(jobs, 1):
-            status, data, warn = _convert_one_png(png, dest_bclim, conv_dir / png.stem)
+            status, data, warn = _convert_one_png(
+                png, dest_bclim, conv_dir / png.stem, cache
+            )
             results.append((entry, status, data, warn))
             _progress_bar(i, total_jobs, prefix=f"[convert] {total_jobs} PNG  ")
     else:
@@ -319,6 +344,7 @@ def patch_arc_with_pngs(
                     png,
                     dest_bclim,
                     conv_dir / png.stem,
+                    cache,
                 ): entry
                 for png, entry, dest_bclim in jobs
             }
@@ -354,6 +380,7 @@ def repack_package(
     index: int,
     *,
     fine_tune: bool = False,
+    cache: ImgPackCache | None = None,
 ) -> Path:
     """Write new_XXXX keeping original PACK layout / compressed slot sizes.
 
@@ -361,7 +388,9 @@ def repack_package(
     img.bin package slot. Same-size BCLIM patches keep decompressed size fixed,
     so we splice exact-length zlib back into the original package bytes.
     """
-    return repack_package_exact_slots(img_data, index, fine_tune=fine_tune)
+    return repack_package_exact_slots(
+        img_data, index, fine_tune=fine_tune, cache=cache
+    )
 
 
 def repack_package_exact_slots(
@@ -369,10 +398,10 @@ def repack_package_exact_slots(
     index: int,
     *,
     fine_tune: bool = False,
+    cache: ImgPackCache | None = None,
 ) -> Path:
     if str(NLPP_TOOLS) not in sys.path:
         sys.path.insert(0, str(NLPP_TOOLS))
-    from exact_zlib import compress_to_exact_slot
     from img import Package, FileWindow  # type: ignore
 
     img_data = img_data.resolve()
@@ -421,8 +450,11 @@ def repack_package_exact_slots(
                 flush=True,
             )
             try:
-                slot = compress_to_exact_slot(
-                    new_data, slot_len, fine_tune=fine_tune
+                slot = compress_to_exact_slot_cached(
+                    new_data,
+                    slot_len,
+                    fine_tune=fine_tune,
+                    cache=cache,
                 )
             except Exception as exc:
                 # Don't abort the whole UI pack for one stubborn ARC — leave
@@ -566,6 +598,8 @@ def pack_images(
     splice: bool = True,
     workers: int | None = None,
     fine_tune: bool = False,
+    cache: ImgPackCache | None | bool = True,
+    cache_dir: Path | None = None,
 ) -> dict[str, int]:
     _require_tools()
     if not img_bin.is_file():
@@ -583,7 +617,22 @@ def pack_images(
     img_bin = img_bin.resolve()
     images_root = images_root.resolve()
     work.mkdir(parents=True, exist_ok=True)
-    print(f"[pack] async PNG→BCLIM workers={workers} fine_tune={fine_tune}")
+
+    pack_cache: ImgPackCache | None
+    if cache is False or cache is None:
+        pack_cache = None
+    elif isinstance(cache, ImgPackCache):
+        pack_cache = cache
+    else:
+        pack_cache = ImgPackCache(Path(cache_dir) if cache_dir else CACHE_IMG_PACK)
+
+    cache_msg = (
+        f"cache={pack_cache.root}" if pack_cache is not None else "cache=off"
+    )
+    print(
+        f"[pack] async PNG→BCLIM workers={workers} fine_tune={fine_tune} {cache_msg}",
+        flush=True,
+    )
     img_data = work / "img_data"
     conv = work / "bclim_tmp"
     report_lines: list[str] = []
@@ -634,6 +683,7 @@ def pack_images(
                     pngs,
                     conv / f"{index:04d}_{key}",
                     workers=workers,
+                    cache=pack_cache,
                 )
                 pkg_ok += ok
                 pkg_skip += skipped
@@ -647,7 +697,9 @@ def pack_images(
             totals["png_ok"] += pkg_ok
             totals["png_skip"] += pkg_skip
             if touched:
-                repack_package(img_data, index, fine_tune=fine_tune)
+                repack_package(
+                    img_data, index, fine_tune=fine_tune, cache=pack_cache
+                )
                 patched_indices.append(index)
                 totals["packages"] += 1
                 report_lines.append(f"[ok] package {index:04d}: {pkg_ok} replaced, {pkg_skip} skipped")
@@ -680,6 +732,9 @@ def pack_images(
         raise PackError("no textures were injected; aborting img.bin rebuild")
 
     report_path = work / "image_pack_report.txt"
+    cache_line = (
+        pack_cache.stats.summary() if pack_cache is not None else "cache=off"
+    )
     report_path.write_text(
         "\n".join(
             [
@@ -689,6 +744,7 @@ def pack_images(
                 f"png replaced:     {totals['png_ok']}",
                 f"png skipped:      {totals['png_skip']}",
                 f"cesa patched:     {totals['cesa']}",
+                f"cache:            {cache_line}",
                 f"output:           {out_img}",
                 "",
                 *report_lines,
@@ -700,7 +756,7 @@ def pack_images(
     print(f"[report] {report_path}")
     print(
         f"[done] packages={totals['packages']} replaced={totals['png_ok']} "
-        f"skipped={totals['png_skip']} cesa={totals['cesa']}"
+        f"skipped={totals['png_skip']} cesa={totals['cesa']} {cache_line}"
     )
     return totals
 
@@ -767,6 +823,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Opt-in per-byte zopfli fine-tune (very slow; default uses empty-block pad)",
     )
+    p.add_argument(
+        "--cache-dir",
+        default=str(CACHE_IMG_PACK),
+        help="content cache for BCLIM + exact-zlib (default: cache/img_pack)",
+    )
+    p.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="disable BCLIM/exact-zlib content cache",
+    )
     return p
 
 
@@ -788,6 +854,8 @@ def main(argv: list[str] | None = None) -> int:
             splice=not args.full_repack,
             workers=args.workers,
             fine_tune=args.fine_tune,
+            cache=False if args.no_cache else True,
+            cache_dir=Path(args.cache_dir),
         )
         if args.deploy_azahar:
             AZAHAR_IMG.parent.mkdir(parents=True, exist_ok=True)

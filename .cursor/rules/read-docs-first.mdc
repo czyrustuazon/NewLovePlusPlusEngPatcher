@@ -19,6 +19,8 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 
 **Do not** re-run full romfs string hunts for `３ＤＳ本体時計` / `本体時計` — absent as text; title is A8 BCLIM @ pkg **5245** (see `technical.md` §§9, 12.4–12.5).
 
+**Do not** treat RomFS `textresource_resident_jpn.trb` as a runtime TextResource — unused leftover; live TOP blob is **img.bin pkg 5508** (`nlpp-repo-workflow` TextResource section). Pending collaborator notes (pre-merged / ~30k→45–50k / ID→text table) live there as **unverified** — don’t promote to fact until checked.
+
 **Do not** rediscover NCommonIcon `Com_btn_m01_b` / `t01_b` as the clock Back/Next source — already verified EN (pkg 5238).
 
 **Do not** treat MyroomHeader `optn_tex_*` or DrawText as Options/clock menu chrome — wrong path.
