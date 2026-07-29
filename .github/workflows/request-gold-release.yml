@@ -1,0 +1,94 @@
+# Push to main (EngPatcher) → ping nlpp-gold to bake + publish Releases.
+# Other branches do not trigger this.
+#
+# Once: EngPatcher secret NLPP_GOLD_DISPATCH_TOKEN = PAT that can
+#   POST /repos/OWNER/nlpp-gold/dispatches
+# Optional var: NLPP_GOLD_REPO=OWNER/nlpp-gold (default: <owner>/nlpp-gold)
+#
+# Rolling Release tag on nlpp-gold: "gold" (assets overwritten each run).
+# Consumers: python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
+
+name: Request gold Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      skip_pack:
+        description: "Ask nlpp-gold to skip PNG pack (TRB/deploys only)"
+        type: boolean
+        default: false
+      engpatcher_ref:
+        description: "EngPatcher ref/SHA to build (default: this SHA / main)"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve payload
+        id: meta
+        run: |
+          set -euo pipefail
+          # Always publish to the rolling "gold" Release on nlpp-gold.
+          TAG=gold
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.engpatcher_ref }}" ]; then
+            REF="${{ inputs.engpatcher_ref }}"
+          else
+            REF="${{ github.sha }}"
+          fi
+
+          SKIP=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.skip_pack }}" = "true" ]; then
+            SKIP=true
+          fi
+
+          GOLD="${{ vars.NLPP_GOLD_REPO }}"
+          if [ -z "$GOLD" ]; then
+            GOLD="${{ github.repository_owner }}/nlpp-gold"
+          fi
+
+          {
+            echo "tag=$TAG"
+            echo "ref=$REF"
+            echo "skip_pack=$SKIP"
+            echo "gold_repo=$GOLD"
+          } >> "$GITHUB_OUTPUT"
+          echo "Dispatch → $GOLD  release_tag=$TAG  engpatcher_ref=$REF  skip_pack=$SKIP"
+
+      - name: repository_dispatch → nlpp-gold
+        env:
+          GH_TOKEN: ${{ secrets.NLPP_GOLD_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "Missing EngPatcher secret NLPP_GOLD_DISPATCH_TOKEN" >&2
+            exit 1
+          fi
+          GOLD="${{ steps.meta.outputs.gold_repo }}"
+          BODY=$(jq -n \
+            --arg tag "${{ steps.meta.outputs.tag }}" \
+            --arg ref "${{ steps.meta.outputs.ref }}" \
+            --arg skip "${{ steps.meta.outputs.skip_pack }}" \
+            --arg sha "${{ github.sha }}" \
+            --arg repo "${{ github.repository }}" \
+            '{
+              event_type: "engpatcher-release",
+              client_payload: {
+                tag: $tag,
+                engpatcher_ref: $ref,
+                skip_pack: ($skip == "true"),
+                source_sha: $sha,
+                source_repo: $repo
+              }
+            }')
+          gh api --method POST "repos/${GOLD}/dispatches" --input - <<<"$BODY"
+          echo "Pinged ${GOLD}. Watch nlpp-gold Actions → Release gold bake."

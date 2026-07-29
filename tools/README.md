@@ -4,7 +4,7 @@
 
 | Path | Source | Role |
 |------|--------|------|
-| `cia/` | [3dstool](https://github.com/dnasdw/3dstool), [Project_CTR](https://github.com/3DSGuy/Project_CTR), vendored decrypt | Decrypt CIA, split/rebuild NCCH/RomFS, makerom CIA |
+| `cia/` | Vendored [3dstool](https://github.com/dnasdw/3dstool) / [Project_CTR](https://github.com/3DSGuy/Project_CTR) / `seeddb.bin` (see `cia/CREDITS.md`); `decrypt.exe` copied from Batch-CIA folder | Decrypt CIA, split/rebuild NCCH/RomFS, makerom CIA |
 | `Batch-CIA-3DS-Decryptor-Redux/` | [davidmorom](https://github.com/davidmorom) / [xxmichibxx](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux) | Vendored `decrypt.exe` + `CREDITS.md` |
 | `nlpp-tools/` | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** (vendored) | `img.bin` / package / BCLIM helpers (`ie`, `pe`, `png2bclim`, …) |
 | `mdcutil.py` | EngPatcher | SMS maildic MDC pack / unpack |
@@ -19,9 +19,11 @@ Full credit list: see root [`README.md`](../README.md#credits).
 
 ```bash
 python src/setup_tools.py
+python src/setup_tools.py --offline   # no GitHub fallback
 ```
 
-Auto-fetches `3dstool`, `ctrtool`, `makerom`, `seeddb.bin`, and copies vendored `decrypt.exe` into `tools/cia/`.
+Verifies vendored `tools/cia/` bins, copies `decrypt.exe` into place, and only
+downloads OSS CIA tools if something is missing (skipped with `--offline`).
 
 ## Notes on Makein/NLPPGit
 
