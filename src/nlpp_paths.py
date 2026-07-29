@@ -16,6 +16,8 @@ OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
 # Optional PNG-pack intermediate (may be wiped; not gold).
 CACHE = ROOT / "cache"
 CACHE_NEW_IMG = CACHE / "new_img.bin"
+# Content-addressed BCLIM + exact-zlib slots for pack_images (see img_pack_cache.py).
+CACHE_IMG_PACK = CACHE / "img_pack"
 # Vanilla RomFS extracted from a dropped .cia/.3ds when sibling dump is absent.
 CACHE_VANILLA_ROMFS = CACHE / "vanilla_from_rom" / "romfs"
 CACHE_VANILLA_IMG = CACHE_VANILLA_ROMFS / "img.bin"

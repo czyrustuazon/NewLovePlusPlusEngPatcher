@@ -44,7 +44,16 @@ With a ready gold bake (`release/bake_img.bin` + overlay), patching usually fini
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
-To let someone else patch without rebuilding gold:
+**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold** Ubuntu runner
+builds `release/` and updates GitHub Release tag `gold`. See
+[`infra/README.md`](infra/README.md). Collaborators:
+
+```bash
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
+# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold
+```
+
+Manual handoff still works:
 
 1. Clone / zip this repo (includes `assets/`, scripts, tools).  
 2. Also give them your finished **`release/`** pack:
@@ -53,7 +62,7 @@ To let someone else patch without rebuilding gold:
    - `release/textresource/` — optional but useful  
 3. They supply **their own** matching dump and run the drop bat.
 
-Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars.
+Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA patching stays on **Windows**.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
@@ -91,7 +100,7 @@ Many other decrypted CIAs will fail the hash check (by design). The patcher decr
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
 - `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak** — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
-- First run auto-fetches OSS CIA tools (`3dstool`, `ctrtool`, `makerom`, `seeddb.bin`) and installs vendored `decrypt.exe`  
+- First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`) and copies `decrypt.exe`; downloads only if a bin is missing  
 - `decrypt.exe` credit: [davidmorom](https://github.com/davidmorom) / [Batch CIA 3DS Decryptor Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux) (`tools/Batch-CIA-3DS-Decryptor-Redux/`)  
 - UI glyph font is bundled: `assets/fonts/MPLUS1p-Regular.ttf` (SIL OFL)  
 
@@ -116,6 +125,10 @@ If you see **Python not found**: install from [python.org](https://www.python.or
 - **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
 
 Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). Fully quit Azahar after updating mods.
+
+### Known issues
+
+- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
 
 ---
 
@@ -202,7 +215,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 
 | Component | Credit |
 |-----------|--------|
-| `3dstool` | [dnasdw/3dstool](https://github.com/dnasdw/3dstool) (auto-fetched by `setup_tools.py`) |
+| `3dstool` / `ctrtool` / `makerom` / `seeddb.bin` | Vendored under `tools/cia/` ([CREDITS](tools/cia/CREDITS.md)); `setup_tools.py` fetches only if missing |
 | `ctrtool` / `makerom` | [3DSGuy/Project_CTR](https://github.com/3DSGuy/Project_CTR) (auto-fetched) |
 | `seeddb.bin` | [ihaveamac/3DS-rom-tools](https://github.com/ihaveamac/3DS-rom-tools) (auto-fetched) |
 | `decrypt.exe` | [davidmorom](https://github.com/davidmorom); packaged in [xxmichibxx/Batch-CIA-3DS-Decryptor-Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux); original batch decryptor [matiffeder/3DS-stuff](https://github.com/matiffeder/3DS-stuff). Vendored at `tools/Batch-CIA-3DS-Decryptor-Redux/` — see `CREDITS.md` |
@@ -212,6 +225,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 | Component | Credit |
 |-----------|--------|
 | `nlpp-tools` (`ie`, `pe`, `png2bclim`, `png2texi`, …) | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** — thank you to **kiwiz** |
+| Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
 
@@ -250,7 +264,7 @@ src/
   exact_zlib.py              exact-length zlib/zopfli for ARC slots
   extract_vanilla_from_rom.py  vanilla img/TRB from dropped ROM
   darcutil.py / bclimutil.py / image_map.py
-  setup_tools.py             fetch 3dstool + wire decryptor bins
+  setup_tools.py             verify vendored CIA bins + wire decrypt.exe
   drop_zone.ps1              WinForms drop window
 tools/
   rebuild_bake_img.py        regenerate bake + TRBs from sources

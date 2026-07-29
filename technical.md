@@ -39,8 +39,8 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 | Title ID | `00040000000F4E00` |
 | Main code | `extracted/exefs/code.bin` |
 | Image archive | `extracted/romfs/img.bin` (~712 MB) |
-| TextResource | `extracted/romfs/SystemData/TextResource/textresource_jpn.trb` |
-| Resident strings | `…/textresource_resident_jpn.trb` (not STRI; custom `TOP` chunks) |
+| TextResource | `extracted/romfs/SystemData/TextResource/textresource_jpn.trb` (+ `textresource_config.trb`) |
+| Resident / TOP blob | **Runtime:** `img.bin` pkg **5508** (custom `TOP` chunks). RomFS `textresource_resident_jpn.trb` is the same format but **unused** — not referenced in `code.bin` (dev leftover). |
 | Ghidra image base | `0` |
 | Runtime VA | **file offset + `0x100000`** |
 
@@ -49,6 +49,12 @@ Pointers stored in `code.bin` are usually **runtime VAs**. Convert before seekin
 ```text
 file_offset = runtime_va - 0x100000
 ```
+
+#### TextResource notes (2026-07-28)
+
+- `code.bin` string table under `/SystemData/TextResource/` names only `textresource_config.trb` and `textresource_jpn.trb` — **no** `textresource_resident*`.
+- Day-counter / resident name TOP data: patch **pkg 5508**; optional `release/textresource/textresource_resident_jpn.trb` is an edit convenience only.
+- **Pending (unverified collaborator notes):** resident may be a pre-merged dev dump; main TRB ≈30k entries with reuse → ~45–50k uses; an ID→text map exists (improved `trb2xlsx` forthcoming). See Cursor rule `nlpp-repo-workflow` § Unverified / pending.
 
 ### Useful restore points
 
@@ -494,7 +500,7 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Status / boyfriend-power stats | ETC1A4 `stat_tex_{undo,chisiki,kanse,miryoku}` @ **5501** + `Scd_Status_Tit_{M,K,S,C}` @ **5255** | Deployed (`Fitness` / `Intel`* / `Sense` / `Charm`; schedule titles use full `Knowledge`) — `tools/deploy_status_stats_en.py` |
 | To-Do submenu | ETC1A4 `mydata_toptex_01..06` @ **5575** + RGBA4444 `Que_Txt01{b,d}` @ Quest **5253** | Deployed (headers + `To-Do List` / `History`) — `tools/deploy_todo_en.py` |
 | To-Do History points | RGBA4444 `Que_Txt01c` @ Quest **5253** | Deployed (`Earned ToDo Points:`) — `tools/deploy_todo_hist_en.py` (rebuilds Quest from vanilla with 01b/01c/01d) |
-| Play-day counter `N日目(曜)` | Resident TRB TOP `日目` + weekday `(月)`… @ romfs **and** raw dup pkg **5508** | Deployed (`N Day  (Mon)`) — `tools/deploy_day_counter_en.py` (must keep TRB ↔ 5508 in sync) |
+| Play-day counter `N日目(曜)` | TOP `日目` + weekday `(月)`… inside **img.bin pkg 5508** (loose RomFS resident TRB is unused leftover) | Deployed (`N Day  (Mon)`) — `tools/deploy_day_counter_en.py` (**5508** is what matters; release resident file is only a convenient edit source) |
 | Girl SMS / mail bodies | MDC `maildic_{m,n,r}.mdc` @ img.bin pkg **92** (UTF-8 records; **not** `dictionary/all2_u.bin`) | Deployed EN — `tools/translate_sms_en.py` → `tools/deploy_sms_maildic_en.py` (FF-pad to slot) |
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
 
@@ -698,7 +704,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Shared `src/exact_zlib.py` for deploys | Gap-tune, empty-block, near-miss close 1–2 B misses local forks can’t |
 | Soft-then-hard glyph trials | Soft AA prettier; hard 1-bit often the only fit under slot |
 | Zero DARC inter-file gaps before measuring zopfli | Prior urandom salt inflates zlib on shared ARCs |
-| Seed resident TRB into `release/textresource/` from vanilla/cache | Day-counter + pkg **5508** stay in sync without sibling extract |
+| Seed resident TRB into `release/textresource/` from vanilla/cache | Convenient same-size TOP blob to patch before splicing into pkg **5508** (RomFS resident path itself unused at runtime) |
 | `deploy_title_main_menu_en.py` + `deploy_cesa_en.py` on rebuild list | Hub + boot warning covered in gold path |
 | Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
@@ -708,6 +714,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on the bat (or `rebuild_bake_img.py --rom …`).
 3. First gold rebuild: expect **~16 hours** PNG pack, then deploys. Leave the window open.
+   Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
 4. After bake exists: drop again → minutes (no rebuild).
 5. Resume mid-deploy: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
 6. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.

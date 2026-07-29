@@ -23,12 +23,26 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%SRC%\drop_zone.ps1"
 exit /b %ERRORLEVEL%
 
 :run_patch
-set "CIA=%~1"
-set "EXT=%~x1"
+REM Stage dump path via PowerShell first. Names with Japanese glyphs or parentheses
+REM (e.g. piratelegit "NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0)...") break cmd parsing
+REM if we expand %~1 / %~nx1 inside IF blocks.
+set "NLPP_ROM=%~1"
+set "CIA="
+for /f "usebackq delims=" %%S in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\short_path.ps1"`) do set "CIA=%%S"
+set "NLPP_ROM="
+if not defined CIA (
+  echo [!] Could not resolve dump path.
+  pause
+  exit /b 1
+)
+for %%I in ("%CIA%") do (
+  set "EXT=%%~xI"
+  set "CIA_NAME=%%~nxI"
+)
 
 if /i not "%EXT%"==".cia" if /i not "%EXT%"==".3ds" if /i not "%EXT%"==".cci" (
   echo.
-  echo [!] Drop a .cia / .3ds / .cci file ^(got: %~nx1^)
+  echo [!] Drop a .cia / .3ds / .cci file ^(got: !CIA_NAME!^)
   echo.
   pause
   exit /b 1
@@ -36,7 +50,7 @@ if /i not "%EXT%"==".cia" if /i not "%EXT%"==".3ds" if /i not "%EXT%"==".cci" (
 
 if not exist "%CIA%" (
   echo [!] File not found:
-  echo     %CIA%
+  echo     "%CIA%"
   pause
   exit /b 1
 )
@@ -67,7 +81,7 @@ echo   New Love Plus+ English Patcher
 echo  ============================================
 echo.
 echo  Dropped:
-echo    %CIA%
+echo    "%CIA%"
 echo  Using:
 echo    %PYTHON%
 echo.
@@ -146,10 +160,11 @@ set "SIBLING_ROMFS=%~dp0..\New Love Plus Plus\extracted\romfs"
 set "CACHE_ROMFS=%~dp0cache\vanilla_from_rom\romfs"
 if exist "%SIBLING_ROMFS%\script\bin\script" (
   echo Using RomFS template from sibling extracted ^(copied, not in-place^)
-  set "EXTRA_ROMFS=--romfs %SIBLING_ROMFS%"
+  REM Keep quotes inside the value so paths with spaces survive expansion.
+  set EXTRA_ROMFS=--romfs "%SIBLING_ROMFS%"
 ) else if exist "%CACHE_ROMFS%\script\bin\script" (
   echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-  set "EXTRA_ROMFS=--romfs %CACHE_ROMFS%"
+  set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
 )
 
 REM UI ON by default. Durable release artifacts (not wipeable like out/):
@@ -178,10 +193,10 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
 )
 if /i "%NLPP_WITH_IMAGES%"=="0" (
   echo Scripts-only patch ^(NLPP_WITH_IMAGES=0 — UI pack skipped^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images %EXTRA_ROMFS% %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images !EXTRA_ROMFS! %SKIP_HASH%
 ) else if /i "%NLPP_REPACK_IMAGES%"=="1" (
   echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images %EXTRA_ROMFS% %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH%
 ) else (
   REM Auto-build gold bake when missing (full: PNG pack + TRB + deploys + SMS).
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
@@ -211,7 +226,7 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
     if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
       echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-      set "EXTRA_ROMFS=--romfs %CACHE_ROMFS%"
+      set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
     )
   )
   if exist "!PACKED_IMG!" (

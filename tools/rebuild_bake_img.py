@@ -4,7 +4,7 @@
 Self-contained (no Azahar required):
 
   vanilla img.bin
-    → pack_images (assets/images)           # long; also writes cache/new_img.bin
+    → pack_images (assets/images)           # long first time; caches under cache/img_pack/
     → rebuild textresource_jpn.trb from assets/textresource/translations.json
     → ordered deploy_*_en.py chrome (+ day-counter resident TRB)
     → SMS maildic
@@ -16,6 +16,7 @@ Usage:
   python tools/rebuild_bake_img.py --rom game.cia|.3ds|.cci   # extract vanilla from ROM
   python tools/rebuild_bake_img.py --skip-pack          # keep bake; re-run TRB/deploys/SMS
   python tools/rebuild_bake_img.py --reseed-from-pack   # force bake <- cache/new_img.bin
+  python tools/rebuild_bake_img.py --no-cache           # ignore BCLIM/zlib content cache
 """
 from __future__ import annotations
 
@@ -148,7 +149,14 @@ def rebuild_main_trb() -> None:
         print(f"[trb] seeded resident TRB -> {resident_out}", flush=True)
 
 
-def pack_ui(vanilla: Path, *, workers: int | None, fine_tune: bool) -> Path:
+def pack_ui(
+    vanilla: Path,
+    *,
+    workers: int | None,
+    fine_tune: bool,
+    no_cache: bool = False,
+    cache_dir: Path | None = None,
+) -> Path:
     """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake."""
     CACHE.mkdir(parents=True, exist_ok=True)
     RELEASE.mkdir(parents=True, exist_ok=True)
@@ -173,6 +181,10 @@ def pack_ui(vanilla: Path, *, workers: int | None, fine_tune: bool) -> Path:
         cmd.extend(["--workers", str(workers)])
     if fine_tune:
         cmd.append("--fine-tune")
+    if no_cache:
+        cmd.append("--no-cache")
+    elif cache_dir is not None:
+        cmd.extend(["--cache-dir", str(cache_dir)])
     run(cmd)
     if not CACHE_NEW_IMG.is_file():
         raise SystemExit(f"pack_images did not write {CACHE_NEW_IMG}")
@@ -239,6 +251,17 @@ def main(argv: list[str] | None = None) -> int:
         help="opt-in pack_images fine-tune (very slow)",
     )
     ap.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="disable pack_images BCLIM/exact-zlib content cache",
+    )
+    ap.add_argument(
+        "--cache-dir",
+        type=Path,
+        default=None,
+        help="override pack cache dir (default: cache/img_pack)",
+    )
+    ap.add_argument(
         "--also-azahar",
         action="store_true",
         help="mirror deploy splices into Azahar LayeredFS when present",
@@ -300,7 +323,13 @@ def main(argv: list[str] | None = None) -> int:
             "Progress lines mean it is still working.",
             flush=True,
         )
-        pack_ui(vanilla, workers=args.workers, fine_tune=args.fine_tune)
+        pack_ui(
+            vanilla,
+            workers=args.workers,
+            fine_tune=args.fine_tune,
+            no_cache=args.no_cache,
+            cache_dir=args.cache_dir,
+        )
 
     seed_vanilla_bak(vanilla, BAKE_IMG)
 
