@@ -59,6 +59,15 @@ TOKEN_REPLACEMENTS: list[tuple[str, str]] = [
 ]
 
 NAME_REPLACEMENTS: list[tuple[str, str]] = [
+    # Spaced "family given］" rows (save-select / cast) — must run before short
+    # family/given replaces, or 小早川→Kobayaka leaves a stray byte and breaks 凛子.
+    ("高嶺 愛花］", "Takane Manaka］"),
+    ("小早川 凛子］", "Kobayakawa Rinko］"),
+    ("姉ヶ崎 寧々］", "Anegasaki Nene］"),
+    ("高嶺 愛花", "Takane Manaka"),
+    ("小早川 凛子", "Kobayakawa Rinko"),
+    ("姉ヶ崎 寧々", "Anegasaki Nene"),
+    # Compact full names (no space)
     ("高嶺愛花", "ManakaTakane"),
     ("小早川凛子", "Rinko Kobayaka"),
     ("姉ヶ崎寧々", "Nene Anegasaki"),
@@ -67,6 +76,7 @@ NAME_REPLACEMENTS: list[tuple[str, str]] = [
     ("高嶺くん", "Takane-kun"),
     ("高嶺選手", "Takane"),
     ("高嶺様", "Takane"),
+    # Family alone: 小早川 is 9 UTF-8 bytes → "Kobayaka\0"
     ("小早川", "Kobayaka"),
     ("姉ヶ崎", "Anegasaki"),
     ("高嶺", "Takane"),

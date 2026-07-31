@@ -29,6 +29,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15**.
+- SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 
 ---
 
@@ -488,6 +489,8 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Options help line | DrawText / TRB | Already EN |
 | 年 / 月 / 日 | Option06 A4 @ 5248 + date-format bytes | EN `Y`/`M`/`D` verified |
 | Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
+| Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
+| Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Girlfriend Comm. / Business Card / Wireless Battle) |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
@@ -594,7 +597,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/deploy_msel_menus_en.py` | Gallery/Comm/Data A8 → pkgs **5244/5241/5242** (+ Business Card **5240**) |
 | `tools/deploy_msel_opt_plates_en.py` | Soft re-render Options plates on live **5245** (best-effort; uses shared `exact_zlib`) |
 | `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** (lean trials + shared exact zlib) |
-| `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (`Title.arc` / `Lyt_Tit02`) |
+| `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 | `tools/deploy_cesa_en.py` | Boot CESA warning PNG → pkg **90** (`patch_cesa` exact zlib) |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
@@ -612,6 +615,8 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/mdcutil.py` + `deploy_sms_maildic_en.py` | Pack EN SMS into MDC + splice img.bin pkg **92** |
 | `tools/deploy_day_counter_en.py` | Play-day counter TRB + pkg **5508** |
 | `tools/deploy_card_flist_en.py` | Friends list sort label |
+| `tools/build_spotpass_inject.py` | SpotPass boss `info.dat` → `out/spotpass_*` (+ optional Azahar SDMC) |
+| `tools/spotpass/` | Archived BOSS dump (`info.dat`, `.boss`, decrypted container) |
 | `tools/restore_img_pre_msel5245.ps1` | Restore LayeredFS `img.bin` from pre-5245 bak |
 | `tools/gdb_drawtext_capture.py` | GDB capture of DrawTextToPane `[r3+4]` + LR |
 
@@ -680,6 +685,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Patched bake but not Azahar LayeredFS | Emulator still showed JP hub + old CESA after “success” | `iter_deploy_targets` only mirrored Azahar when `NLPP_ALSO_AZAHAR=1`; bake ≠ what Azahar loaded |
 | Misleading bat error after deploy failure | “Need a .cia / set NLPP_VANILLA_IMG” after zlib fail | Generic message ignored the real traceback |
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
+| Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) | Title logo / chrome went **black** | Custom BCLIM + BCLYT/DARC insert in **5261** not safe yet — stick to same-size replaces |
 
 **Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
 
@@ -725,7 +731,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | UI | Package | Deploy / note |
 |----|---------|----------------|
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
-| Main Menu **rows** | **5261** Title.arc | `deploy_title_main_menu_en.py` |
+| Main Menu **rows** | **5261** Title.arc | `deploy_title_main_menu_en.py` (labels only) |
 | Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
 | Confirm OK | **5238** | `deploy_confirm_btn_en.py` |
@@ -733,4 +739,118 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 ---
 
-*Last updated 2026-07-22 — Gold-bake clone retrospective (§15); Title **5261** + CESA **90** deploys; shared exact_zlib; Azahar mirror default.*
+## 16. SpotPass (BOSS NsData / とわのウォッチャー)
+
+### 16.1 What this is (and is not)
+
+| Item | Detail |
+|------|--------|
+| Feature | SpotPass / いつの間に通信 — boot-time BOSS NsData check |
+| **Not** | In-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle = StreetPass / local wireless) |
+| Title | `00040000000F4E00` |
+| Boss extdata ID | **`0x321`** (`extdata/00000000/00000321/boss/`) |
+| NsDataId | **`1`** |
+| Datatype | `0x10001` |
+| Payload version | `0x500` |
+| On-disk name | `info.dat` (game string + Azahar/Citra boss scan) |
+| Archived content | 「とわのウォッチャー」第28号 |
+| Dump credit | **Cetaceaqua** (provided the SpotPass archive) |
+
+Vendored sources: EngPatcher `tools/spotpass/` (`info.dat`, `info.dat.boss`, `info.dat.boss.decrypted`). Builder: `tools/build_spotpass_inject.py` (default mode **`real3ds`**). These paths are tracked in git (see `.gitignore` exceptions) so a **GitHub clone can rebuild injects** with `python tools/build_spotpass_inject.py` after the SpotPass commit lands — no separate download.
+
+`src/patch_cia.py` (and the drop bat) call this automatically after a successful patch → `out/spotpass_real3ds/`. Flags: `--skip-spotpass`, `--spotpass-mode {real3ds,azahar,azahar_exact}`, `--spotpass-install-azahar`.
+
+### 16.2 How the inject file is made (shareable summary)
+
+For title `00040000000F4E00`, the archived payload is a raw NsData blob (`tools/spotpass/info.dat`, **2324** bytes). The game does not use that file alone on disk — BOSS expects it as extdata:
+
+`extdata/00000000/00000321/boss/info.dat`
+
+**What we do to the file:** we do **not** change the payload contents. We prepend a **0x34-byte Boss header** (program ID, datatype `0x10001`, size, NsDataId `1`, version `0x500`) in front of the original 2324 bytes → **2376** bytes total for hardware / exact mode.
+
+**On Azahar**, stock HLE has two issues:
+
+1. The game tries to `ReadNsData` with a huge buffer (`0x7D004`) while the real payload is small — so we **zero-pad** the file to that size for the emulator (`--azahar`), or use an Azahar build that allows short reads (`--azahar-exact`).
+2. `GetNsDataNewFlag` always returns `0`, so the boot prompt never treats the data as new — that needs a small Azahar fix/patch so the flag returns `1` when NsDataId `1` exists.
+
+**On a real 3DS**, use the **exact** (unpadded) header+payload file, and put it **only** under `…/00000321/boss/` (create `boss` on PC/GodMode9 if FBI does not show it). Do **not** paste it into normal Extra Data / `user/` or you will break additional data.
+
+### 16.3 How we accomplished the Azahar inject (RE detail)
+
+1. **Located the payload** in Cetaceaqua’s archived CDN dump:
+   - `info.dat.boss` — encrypted BOSS container (`boss` magic)
+   - `info.dat.boss.decrypted` — cleartext container (headers + UTF-16 notification)
+   - `info.dat` — NsData body, **2324** bytes (`0x914`)
+2. **Parsed** the payload content header (program ID + size + NsDataId + version) from the decrypted container.
+3. **Built** a Citra/Azahar `BossHeader` (**0x34** bytes = 0x18 extdata prefix + 0x1C payload content header fields, big-endian) + payload, matching Azahar `OnlineService::BossHeader`.
+4. **Installed** under Azahar SDMC:
+
+   `%AppData%\Azahar\sdmc\Nintendo 3DS\…\extdata\00000000\00000321\boss\info.dat`
+
+5. **Hit two stock Azahar HLE bugs** (game path is correct; emulator stubs are not):
+
+| Bug | Symptom | Workaround / fix |
+|-----|---------|------------------|
+| `ReadNsData` rejects short reads when the title asks for buffer **`0x7D004`** but payload is `0x914` | Log: `Invalid request to read 0x7D004 … payload length is 0x914` | Pad header+file to `0x7D004` (`--azahar`), **or** patch Azahar `online_service.cpp` to clamp/short-read like real BOSS |
+| `GetNsDataNewFlag` always returns module default **`0`** | Boot dialog **“No SpotPass data found.”**; no `ReadNsData` | Return **`1`** when NsDataId exists under boss extdata (source map in `boss.cpp`), **or** binary-patch the stub so the IPC reply flag is `1` |
+
+6. With both addressed (padded inject + flag returning `1`), cold boot proceeds past the “not found” gate and can `ReadNsData`.
+
+**Ghidra / game anchors (image base 0):** `info.dat` consumers around `FUN_00608cac` / `FUN_00609ef4`; `SpotPass_TryReadNsData` @ `00609c98`; ReadNsData wrappers `FUN_0051eb8c` / IPC `FUN_0051f238`. CDN task strings include `PTASK01` / `PTASK02` and `https://npdl.cdn.nintendowifi.net/p01/nsa/QwyHOPV4LsvQ2I3U/`.
+
+### 16.4 Implement in Azahar
+
+```bash
+cd NewLovePlusPlusEngPatcher
+python tools/build_spotpass_inject.py --azahar
+# exact size if your Azahar has the short-read clamp:
+python tools/build_spotpass_inject.py --azahar-exact
+```
+
+- `--azahar` writes `out/spotpass_azahar/` and syncs live SDMC (unless `--no-install-azahar`).
+- Fully quit Azahar after replacing `info.dat`.
+- Confirm the **running** `azahar.exe` is the one with the `GetNsDataNewFlag` fix (Programs install vs Documents build vs Desktop Localization Studio Fork are different binaries).
+- Expect log: `GetNsDataNewFlag` with `ns_data_new_flag=0x01`, then `ReadNsData` success — not the ERROR dialog alone.
+
+Upstream-style source fixes (for a proper rebuild):
+
+- `core/hle/service/boss/online_service.cpp` — clamp `ReadNsData` length to remaining payload.
+- `core/hle/service/boss/boss.cpp` / `boss.h` — per-NsDataId new-flag map; if uncached and entry exists → return `1`.
+
+### 16.5 Implement on real hardware (CFW)
+
+Nintendo’s SpotPass CDN will not re-serve this archive. Inject cleartext boss extdata (same approach as community Puzzle Swap BOSS pastes).
+
+```bash
+python tools/build_spotpass_inject.py
+# → out/spotpass_real3ds/info.dat          (flat)
+# → out/spotpass_real3ds/00000321/boss/info.dat
+# → out/spotpass_real3ds/README.txt
+```
+
+Exact size only: **2376** bytes (`0x34 + 0x914`). **Never** use the Azahar HLE-padded ~512 KiB blob on a console.
+
+1. Luma CFW; NLPP installed / run once so extdata `00000321` exists.
+2. Enable SpotPass in the game’s **network / communication settings** if present (again: not the StreetPass Communication submenu).
+3. Put `info.dat` **only** under `…/00000321/boss/` (create `boss` via PC or GodMode9 — FBI often has no SpotPass browse path). Leave `user/` alone.
+4. Fully close the title, cold-boot, watch for the SpotPass apply prompt.
+
+SD layout (ID0/ID1 are console-specific):
+
+`Nintendo 3DS/<ID0>/<ID1>/extdata/00000000/00000321/boss/info.dat`
+
+**Caveat:** Real BOSS also tracks “new” / arrived state in sysmodule DBs. Azahar invents entries by scanning boss files; hardware may still report “not found” if NsDataId `1` is not marked new. If paste alone fails, next steps are BOSS DB / proper container install paths (Luma unsigned BOSS), not re-padding the file. Pasting into Ext Save Data **without** `/boss` can corrupt **additional data** (追加データ) and show a “not compatible / not from this game card” style error.
+
+### 16.6 File / size cheat sheet
+
+| Artifact | Bytes | Notes |
+|----------|------:|-------|
+| `tools/spotpass/info.dat` | 2324 | Raw NsData payload (Cetaceaqua) |
+| `tools/spotpass/info.dat.boss` | 9414 | Encrypted CDN container |
+| `tools/spotpass/info.dat.boss.decrypted` | 9414 | Header source for builder |
+| `out/spotpass_real3ds/info.dat` | 2376 | Hardware / exact |
+| `out/spotpass_azahar/info.dat` | ~512056 | Stock Azahar HLE pad |
+
+---
+
+*Last updated 2026-07-31 — SpotPass shareable how-to + Cetaceaqua credit (§16); gitignore exceptions for clone rebuild; gold-bake (§15).*

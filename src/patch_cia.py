@@ -997,6 +997,35 @@ def verify_cia_sha1(
     return digest
 
 
+def emit_spotpass_inject(args: argparse.Namespace) -> None:
+    """Build SpotPass boss info.dat into out/ (default: real3ds). Soft-fail on errors."""
+    if getattr(args, "skip_spotpass", False):
+        print("[spotpass] skipped (--skip-spotpass)")
+        return
+    mode = getattr(args, "spotpass_mode", "real3ds") or "real3ds"
+    script = TOOLS / "build_spotpass_inject.py"
+    if not script.is_file():
+        print(f"[spotpass] warning: missing {script}")
+        return
+    # Importable API (same process) so patch_cia does not depend on PATH.
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("nlpp_build_spotpass_inject", script)
+    if spec is None or spec.loader is None:
+        print(f"[spotpass] warning: cannot load {script}")
+        return
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+        install = None
+        if getattr(args, "spotpass_install_azahar", False):
+            install = True
+        flat = mod.build_inject(mode, install_azahar_sdmc=install)
+        print(f"[spotpass] wrote {flat}")
+    except Exception as exc:
+        print(f"[spotpass] warning: {exc}")
+
+
 def cmd_patch(args: argparse.Namespace) -> int:
     _require_tools()
 
@@ -1064,6 +1093,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
+        emit_spotpass_inject(args)
         return 0
 
     # 1–2) Decrypt (CIA or encrypted .3ds) → game CXI (+ optional manual)
@@ -1196,6 +1226,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     else:
         print("  - UI images were packed from assets/images into romfs/img.bin.")
         print("    Some BCLIMs expand in size (png2bclim); that is expected.")
+    emit_spotpass_inject(args)
     return 0
 
 
@@ -1446,6 +1477,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--code-bin",
         default=str(DEFAULT_CODE_BIN),
         help="Vanilla code.bin for LayeredFS --patch-code (default: sibling extracted/exefs/code.bin)",
+    )
+    p.add_argument(
+        "--skip-spotpass",
+        action="store_true",
+        help="Skip building SpotPass boss info.dat into out/spotpass_*/",
+    )
+    p.add_argument(
+        "--spotpass-mode",
+        choices=("real3ds", "azahar", "azahar_exact"),
+        default="real3ds",
+        help="SpotPass inject mode (default: real3ds -> out/spotpass_real3ds/)",
+    )
+    p.add_argument(
+        "--spotpass-install-azahar",
+        action="store_true",
+        help="Also sync SpotPass info.dat into Azahar AppData sdmc extdata 00000321/boss/",
     )
     return p
 

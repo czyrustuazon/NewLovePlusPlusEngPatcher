@@ -20,7 +20,8 @@ Drop in a known dump (`.cia` or encrypted/decrypted `.3ds` / `.cci`) and it will
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean up** the scratch work dir afterward (keeps the finished CIA; pass `--keep-work` / `--layeredfs-out` if you also want those)
+9. **Build SpotPass inject** (`out/spotpass_real3ds/`) for real-hardware FBI paste  
+10. **Clean up** the scratch work dir afterward (keeps the finished CIA + SpotPass out; pass `--keep-work` / `--layeredfs-out` if you also want those)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -111,6 +112,7 @@ If you see **Python not found**: install from [python.org](https://www.python.or
 | Path | Description |
 |------|-------------|
 | `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
+| `out/spotpass_real3ds/` | SpotPass `info.dat` for FBI Ext Save Data (built by default with each patch) |
 | `out/layeredfs/…` | Optional (`--layeredfs-out`); not written by the drop bat by default |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
@@ -129,6 +131,81 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 ### Known issues
 
 - **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
+
+---
+
+## SpotPass (とわのウォッチャー / boot check)
+
+SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle — those are StreetPass / local wireless). NLPP checks for SpotPass NsData at **cold boot** and shows either an apply prompt or **“No SpotPass data found.”**
+
+Archived BOSS content (「とわのウォッチャー」第28号) is vendored under `tools/spotpass/` — **thank you to Cetaceaqua** for providing that SpotPass dump. Full RE notes: [`technical.md` §16](technical.md).
+
+**Included in the patch workflow:** after a successful `patch_cia` / drop-bat run, SpotPass inject is built automatically in **`--real3ds`** mode → `out/spotpass_real3ds/`. Opt out with `--skip-spotpass`, or use `--spotpass-mode azahar` / `--spotpass-install-azahar`.
+
+**Fresh GitHub clone:** after this tree is committed (`tools/spotpass/*` + `tools/build_spotpass_inject.py`), a clone can regenerate injects with no extra downloads:
+
+```bash
+python tools/build_spotpass_inject.py          # → out/spotpass_real3ds/info.dat
+python tools/build_spotpass_inject.py --azahar # emulator-padded + optional SDMC sync
+```
+
+### How the inject file is made (shareable summary)
+
+For title `00040000000F4E00`, the archived payload is a raw NsData blob (`tools/spotpass/info.dat`, **2324** bytes). The game does not use that file alone on disk — BOSS expects it as extdata:
+
+`extdata/00000000/00000321/boss/info.dat`
+
+**What we do to the file:** we do **not** change the payload contents. We prepend a **0x34-byte Boss header** (program ID, datatype `0x10001`, size, NsDataId `1`, version `0x500`) in front of the original 2324 bytes → **2376** bytes total for hardware / exact mode.
+
+**On Azahar**, stock HLE has two issues:
+
+1. The game tries to `ReadNsData` with a huge buffer (`0x7D004`) while the real payload is small — so we **zero-pad** the file to that size for the emulator (`--azahar`), or use an Azahar build that allows short reads (`--azahar-exact`).
+2. `GetNsDataNewFlag` always returns `0`, so the boot prompt never treats the data as new — that needs a small Azahar fix/patch so the flag returns `1` when NsDataId `1` exists.
+
+**On a real 3DS**, use the **exact** (unpadded) header+payload file, and put it **only** under `…/00000321/boss/` (create `boss` on PC/GodMode9 if FBI does not show it). Do **not** paste it into normal Extra Data / `user/` or you will break additional data.
+
+### Build inject files (standalone)
+
+```bash
+# Real 3DS (default — exact size)
+python tools/build_spotpass_inject.py
+python tools/build_spotpass_inject.py --real3ds
+
+# Azahar stock HLE (pads ReadNsData buffer to 0x7D004; also syncs AppData sdmc)
+python tools/build_spotpass_inject.py --azahar
+
+# Azahar with short-read HLE fix (exact size)
+python tools/build_spotpass_inject.py --azahar-exact
+```
+
+| Mode | Output | Size | Use on |
+|------|--------|-----:|--------|
+| `--real3ds` (default) | `out/spotpass_real3ds/` | 2376 B | CFW 3DS |
+| `--azahar` | `out/spotpass_azahar/` + live SDMC | ~512 KiB | Stock Azahar |
+| `--azahar-exact` | `out/spotpass_azahar_exact/` | 2376 B | Azahar with short-read patch |
+
+### Azahar
+
+1. Build with `--azahar` (or `--azahar-exact` if your build clamps `ReadNsData`).
+2. Default install path:
+
+   `%AppData%\Azahar\sdmc\Nintendo 3DS\…\extdata\00000000\00000321\boss\info.dat`
+
+3. **Stock Azahar** also stubs `GetNsDataNewFlag` as always `0`, so the game never treats injected data as new. You need either:
+   - a build where `GetNsDataNewFlag` returns `1` when NsDataId `1` exists under boss extdata, or  
+   - a binary patch of that stub (same idea as the Localization Studio fork patch used during RE).
+4. Fully quit Azahar, cold-boot NLPP, confirm log lines show `ns_data_new_flag=0x01` and a successful `ReadNsData`.
+
+### Real 3DS (CFW)
+
+1. `python tools/build_spotpass_inject.py` (default = real3ds).
+2. Run NLPP once so extdata **`00000321`** exists; enable SpotPass in network settings if the game exposes it.
+3. Put `out/spotpass_real3ds/info.dat` **only** under  
+   `Nintendo 3DS/<ID0>/<ID1>/extdata/00000000/00000321/boss/`  
+   (create `boss` via PC or GodMode9 — FBI often has no SpotPass/`boss` browse path).
+4. Leave `user/` alone. Fully close the game, cold-boot.
+
+Do **not** paste the Azahar-padded (~512 KiB) file onto hardware. If the boot dialog still says no data was found, BOSS may not have marked NsDataId `1` as “new” (hardware tracks that separately from the file bytes).
 
 ---
 
@@ -238,6 +315,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 | NLPUnpacker | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) (orig. [gdkchan](https://github.com/gdkchan)) |
 | Translation asset repo (reference) | [Makein/NLPPGit](https://github.com/Makein/NLPPGit) |
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
+| SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
 
 Deploy NLPPATCH dialogue with: `python src/deploy_nlppatch_scripts.py`.
 
@@ -250,7 +328,7 @@ Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](h
 ```
 Drop CIA or 3DS Here to Patch.bat   ← only user-facing entry point
 README.md
-technical.md                 RE notes + gold-bake retrospective (§15)
+technical.md                 RE notes + gold-bake (§15) + SpotPass (§16)
 assets/
   scripts/                   finished DBIN2 XML
   images/                    finished UI PNGs (+ editor sources)
@@ -269,6 +347,8 @@ src/
 tools/
   rebuild_bake_img.py        regenerate bake + TRBs from sources
   deploy_*.py                chrome / Title / CESA / SMS / day-counter
+  build_spotpass_inject.py   SpotPass boss info.dat for Azahar / real 3DS
+  spotpass/                  archived BOSS dump + README
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   Batch-CIA-3DS-Decryptor-Redux/  vendored decrypt.exe + CREDITS
 rebuild_dbin2/               finished English .dbin2 scripts
@@ -319,6 +399,12 @@ python src/patch_names.py --dbin rebuild_dbin2
 # Hub main menu / CESA only (onto release/bake_img.bin)
 python tools/deploy_title_main_menu_en.py
 python tools/deploy_cesa_en.py
+
+# SpotPass inject (boot NsData — see technical.md §16)
+# Default after patch_cia / drop-bat: real3ds → out/spotpass_real3ds/
+python tools/build_spotpass_inject.py
+python tools/build_spotpass_inject.py --azahar
+# patch_cia flags: --skip-spotpass | --spotpass-mode azahar | --spotpass-install-azahar
 
 # Patch code.bin only
 python src/patch_code.py "..\New Love Plus Plus\extracted\exefs\code.bin"

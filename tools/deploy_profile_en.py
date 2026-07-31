@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EN Profile UI: A8 header (pkg 5246) + sharp RGB565 field atlas (pkg 5252)."""
+"""EN Profile UI: A8 header (pkg 5246) + RGB565 atlas/call labels (pkg 5252)."""
 from __future__ import annotations
 
 import os
@@ -65,6 +65,24 @@ ATLAS_MD: tuple[int, int, int, int, int, int] = (110, 122, 106, 118, 144, 156)
 # Shared glyph height for main field labels (M/D stay slightly smaller).
 ATLAS_LABEL_SIZE = 12
 ATLAS_MD_SIZE = 11
+
+# Profile Call panels (yellow key + green plate + cyan ink).
+CALL_YELLOW = (255, 226, 0)
+CALL_GREEN = (49, 129, 0)
+CALL_INK = (49, 157, 255)
+# (y0, y1, x0, x1, text) on Profile_Info_Call01_t — 苗字/名前 + 表記/呼ばれ方
+CALL01_LABELS: list[tuple[int, int, int, int, str]] = [
+    (1, 14, 95, 146, "Last Name"),
+    (22, 34, 17, 78, "Written"),
+    (45, 57, 17, 78, "Called"),
+    (77, 89, 95, 146, "First Name"),
+    (98, 110, 17, 78, "Written"),
+    (121, 133, 17, 78, "Called"),
+]
+CALL02_LABELS: list[tuple[int, int, int, int, str]] = [
+    (2, 17, 50, 190, "Your nickname"),
+    (58, 72, 60, 180, "Her nickname"),
+]
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -248,14 +266,97 @@ def make_atlas_en(raw: bytes, tmp: Path) -> bytes:
     # Full clear yellow first so no JP stain remains.
     ImageDraw.Draw(img).rectangle((0, 0, w - 1, h - 1), fill=BG)
     for y0, y1, x0, x1, text in ATLAS_LABELS:
-        paste_label(img, y0, y1, x0, x1, text, prefer_size=ATLAS_LABEL_SIZE)
-    y0, y1, mx0, mx1, dx0, dx1 = ATLAS_MD
-    paste_label(img, y0, y1, mx0, mx1, "M", prefer_size=ATLAS_MD_SIZE)
-    paste_label(img, y0, y1, dx0, dx1, "D", prefer_size=ATLAS_MD_SIZE)
+        paste_label(
+            img, y0, y1, x0, x1, text, prefer_size=ATLAS_LABEL_SIZE
+        )
+    # M/D under Birthday
+    my0, my1, mx0, mx1, dx0, dx1 = ATLAS_MD
+    paste_label(img, my0, my1, mx0, mx1, "M", prefer_size=ATLAS_MD_SIZE)
+    paste_label(img, my0, my1, dx0, dx1, "D", prefer_size=ATLAS_MD_SIZE)
     png = tmp / "atlas.png"
     orig = tmp / "atlas_o.bclim"
     img.save(png)
     img.save(OUT / "Profile_Info_Profile_t_en.png")
+    orig.write_bytes(raw)
+    return png_to_bclim_rgb565_same_size(png, orig)
+
+
+def decode_rgb565(raw: bytes) -> tuple[Image.Image, int, int]:
+    pix, w, h, fmt, _ft = parse_bclim(raw)
+    if fmt != 3:
+        raise SystemExit(f"expected RGB565, got {fmt}")
+    n = len(pix) // 2
+    if n == w * h:
+        pot_w, pot_h = w, h
+    elif n == 256 * 128:
+        pot_w, pot_h = 256, 128
+    elif n == 256 * 256:
+        pot_w, pot_h = 256, 256
+    else:
+        pot_w, pot_h = canvas_for_pixel_bytes(len(pix), w, h, 2)
+    canvas = np.zeros((pot_h, pot_w, 3), dtype=np.uint8)
+    tiles_x = max(1, gcm(pot_w, 8) // 8)
+    for i in range(n):
+        v = pix[i * 2] | (pix[i * 2 + 1] << 8)
+        r = ((v >> 11) & 0x1F) * 255 // 31
+        g = ((v >> 5) & 0x3F) * 255 // 63
+        b = (v & 0x1F) * 255 // 31
+        mx, my = d2xy(i % 64)
+        tile = i // 64
+        x = mx + (tile % tiles_x) * 8
+        y = my + (tile // tiles_x) * 8
+        if x < pot_w and y < pot_h:
+            canvas[y, x] = (r, g, b)
+    return Image.fromarray(canvas[:h, :w], "RGB"), w, h
+
+
+def render_call_label(
+    w: int, h: int, text: str, *, plate: bool
+) -> Image.Image:
+    """Cyan glyphs on green plate (or yellow) — hard mask, no AA mush."""
+    fill = CALL_GREEN if plate else CALL_YELLOW
+    for size in range(min(14, h + 1), 7, -1):
+        scale = 4
+        mw, mh = w * scale, h * scale
+        mask = Image.new("L", (mw, mh), 0)
+        dr = ImageDraw.Draw(mask)
+        f = font(size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > mw - 4 or th > mh - 2:
+            continue
+        x = (mw - tw) // 2 - b[0]
+        y = (mh - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        m = (np.array(mask) >= 140).astype(np.uint8) * 255
+        small = Image.fromarray(m, "L").resize((w, h), Image.Resampling.NEAREST)
+        g = np.array(small) >= 128
+        out = np.empty((h, w, 3), dtype=np.uint8)
+        out[:, :] = fill
+        out[g] = CALL_INK
+        return Image.fromarray(out, "RGB")
+    raise RuntimeError(f"cannot fit call label {text!r} in {w}x{h}")
+
+
+def make_call_en(
+    raw: bytes, labels: list[tuple[int, int, int, int, str]], tmp: Path, stem: str
+) -> bytes:
+    img, w, h = decode_rgb565(raw)
+    # Keep yellow field; repaint each green label box.
+    for y0, y1, x0, x1, text in labels:
+        plate = True  # all Call01/02 text sits on green (or dark) ink boxes
+        # Call02 titles are freestanding on yellow — detect by wide box.
+        if x1 - x0 > 100:
+            plate = False
+            ImageDraw.Draw(img).rectangle((x0, y0, x1, y1), fill=CALL_YELLOW)
+        else:
+            ImageDraw.Draw(img).rectangle((x0, y0, x1, y1), fill=CALL_GREEN)
+        label = render_call_label(x1 - x0 + 1, y1 - y0 + 1, text, plate=plate)
+        img.paste(label, (x0, y0))
+    png = tmp / f"{stem}.png"
+    orig = tmp / f"{stem}_o.bclim"
+    img.save(png)
+    img.save(OUT / f"{stem}_en.png")
     orig.write_bytes(raw)
     return png_to_bclim_rgb565_same_size(png, orig)
 
@@ -456,6 +557,28 @@ def patch_atlas_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
         raise SystemExit("missing atlas")
     darc.replace_same_size(atlas, make_atlas_en(darc.extract_file(atlas), tmp))
     print("OK Profile_Info_Profile_t (hard ink)", flush=True)
+
+    call01 = darc.find("timg/Profile_Info_Call01_t.bclim")
+    if call01 is None:
+        raise SystemExit("missing Call01_t")
+    darc.replace_same_size(
+        call01,
+        make_call_en(
+            darc.extract_file(call01), CALL01_LABELS, tmp, "Profile_Info_Call01_t"
+        ),
+    )
+    print("OK Profile_Info_Call01_t", flush=True)
+
+    call02 = darc.find("timg/Profile_Info_Call02_t.bclim")
+    if call02 is None:
+        raise SystemExit("missing Call02_t")
+    darc.replace_same_size(
+        call02,
+        make_call_en(
+            darc.extract_file(call02), CALL02_LABELS, tmp, "Profile_Info_Call02_t"
+        ),
+    )
+    print("OK Profile_Info_Call02_t", flush=True)
     return bytes(darc.data)
 
 

@@ -249,6 +249,10 @@ echo [+] Patched CIA:
 echo     %~dp0out\NewLovePlusPlus-EN.cia
 echo     ^(scratch work dir cleaned up^)
 echo.
+echo [+] SpotPass inject ^(real 3DS / FBI^):
+echo     %~dp0out\spotpass_real3ds\info.dat
+echo     Paste via FBI -^> Ext Save Data -^> SpotPass/boss
+echo.
 pause
 exit /b 0
 

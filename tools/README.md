@@ -12,8 +12,18 @@
 | `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | XML ↔ `.dbin2` (needs .NET SDK to build) |
 | `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Older `img.bin` unpacker (C#) |
 | `../assets/fonts/MPLUS1p-Regular.ttf` | M PLUS 1p (SIL OFL) | UI glyph renders for deploy scripts |
+| `spotpass/` + `build_spotpass_inject.py` | Archived NLPP SpotPass BOSS dump | Build `info.dat` inject for Azahar or real 3DS (`--real3ds` → `out/spotpass_real3ds/`) |
 
 Full credit list: see root [`README.md`](../README.md#credits).
+
+### SpotPass inject
+
+```bash
+python tools/build_spotpass_inject.py --real3ds    # CFW + FBI Ext Save Data
+python tools/build_spotpass_inject.py --azahar     # emulator (HLE-padded)
+```
+
+Details: [`spotpass/README.md`](spotpass/README.md).
 
 ## Setup
 

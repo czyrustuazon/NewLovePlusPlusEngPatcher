@@ -25,6 +25,9 @@ tools/*
 !tools/deploy_common.py
 !tools/rebuild_bake_img.py
 !tools/fetch_release_bake.py
+!tools/build_spotpass_inject.py
+!tools/spotpass/
+!tools/spotpass/**
 !tools/restore_*.ps1
 !tools/nuclear_jp_to_x.py
 !tools/mdcutil.py
