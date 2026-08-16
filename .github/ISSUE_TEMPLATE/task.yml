@@ -1,0 +1,42 @@
+name: Volunteer task
+description: Propose or define a piece of work — translation, RE, graphics, QA, tooling.
+labels: ["help-wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        See [CONTRIBUTING.md](../../CONTRIBUTING.md) for how tasks get claimed.
+
+  - type: dropdown
+    id: track
+    attributes:
+      label: Track
+      options:
+        - translation
+        - editing
+        - reverse-engineering
+        - graphics
+        - qa-testing
+        - tooling
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What's needed
+      description: Be specific enough that someone unfamiliar with this part of the project could pick it up.
+    validations:
+      required: true
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Files / area involved
+      description: Which script files, textures, or code this touches, if known.
+
+  - type: textarea
+    id: verify
+    attributes:
+      label: How to verify it's done
+      description: What "finished" looks like — e.g. "text displays correctly in-game with no overflow."

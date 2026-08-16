@@ -1,0 +1,33 @@
+name: Bug report
+description: Something broke — the patcher crashed, or a translation is bugged in-game.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is for "something is broken," not for volunteer task tracking — see
+        [CONTRIBUTING.md](../../CONTRIBUTING.md) if you're looking to pick up work instead.
+        You can also report bugs in the project Discord.
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Game revision/region, CFW version, patcher version — whatever's relevant.
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
