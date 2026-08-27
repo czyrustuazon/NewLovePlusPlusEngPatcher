@@ -30,6 +30,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15**.
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
+- **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
 ---
 
@@ -853,4 +854,143 @@ SD layout (ID0/ID1 are console-specific):
 
 ---
 
-*Last updated 2026-07-31 — SpotPass shareable how-to + Cetaceaqua credit (§16); gitignore exceptions for clone rebuild; gold-bake (§15).*
+## 17. Profile name-input (gojūon + kanji candidates) — 2026-08-16
+
+Screen: Profile → First Name (same ML 60-cell grid for gojūon keyboard and kanji candidate popup).
+
+### 17.1 Verified working LayeredFS stack
+
+**One-shot deploy** (idempotent):
+
+```bash
+python tools/deploy_name_input_en.py
+```
+
+| # | Patch | Script | Role |
+|---|-------|--------|------|
+| 1 | Pane attach null parent | `src/patch_input_pane_registry_nullguard.py` | Skip `Pane_AttachToParent` @ `0x1fa790` when parent is 0 |
+| 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
+| 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
+| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels; insert stays kana; `@0x006FBB08` |
+| 5 | C4 left-column candidates | `src/patch_input_candlist_noshow.py` | ≤6 kanji @ cells `9..4`; cave `@0x006FC000` |
+
+Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Mode-tab BCLIM labels: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
+
+**Note:** `deploy_name_input_en.py` currently applies steps **1–4** only. After that, run:
+
+```bash
+python src/patch_input_candlist_noshow.py --deploy-azahar
+```
+
+**Live checklist (2026-08-16):** romaji gojūon; pager OK; kana → **left-column** kanji list (~5–6); empty tiles elsewhere; insert **kana**; return to gojūon; touches OK.
+
+### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
+
+`src/patch_input_candmode_reset.py` **must not be deployed.** Bisect (vanilla → add one patch at a time):
+
+- pane nullguard → taps OK  
+- \+ candidate nullguard → taps OK  
+- \+ **candmode_reset** → **taps dead**  
+- fillflag_reset **without** candmode_reset → taps OK  
+
+`nameInputObj+0x24` selects keyboard vs candidate identification/lookup tables inside `NameInput_OnCellTap` / fill helpers. Vanilla often shows stale non-zero heap (e.g. `0xffffffa6`) and **still works**. Forcing `+0x24=0` on every redraw makes OnCellTap match the wrong pane-name table → silent no-op taps.
+
+Related obsolete scripts (removed from tree; depended on mllist reshape and/or candmode_reset):
+
+- `patch_input_celltap_name_fix.py` (`Bod_MLp_V` template)  
+- `patch_input_candidate_tick_guard.py` (poller vs mllist candidate column)
+
+### 17.3 Architecture notes (verified)
+
+**Addresses (file / Ghidra base 0; VA = file + `0x100000`):**
+
+| Name | File |
+|------|------|
+| Pane warmup / create+attach loop | `0x1fa2d0` … (absorbed into bogus mega-fn `FUN_000f9ea8` in Ghidra — re-split later) |
+| `Pane_AttachToParent` call (create path) | `0x1fa790` |
+| `NameInput_RedrawKeyboard` | `0x1fa81c` |
+| `NameInput_FillKeyboard_Kanji` | `0x1fa918` (tail before shared epilogue `0x1faa20`) |
+| `NameInput_OnCellTap` | `0x1faee4` |
+| `NameInput_SetDisplayMode` | `0x1fba38` |
+| `NameInput_FillCandidates` | `0x1fb438` (tail `strb +0x44=1` @ `0x1fb724`) |
+| `NameInput_FillGridFromResourceTable` | (fills all 60 from TRB when tick allows) |
+| `NameInput_TickDeferredGridFill` | `0x1fb964` (vtable; if `+0x44!=0` && `+0x540==0` → FillGrid…) |
+| `NameInput_DrawCell` | `0x1fc304` |
+| `Delegate_BindByKey` | `0x005eba00` |
+| `Pane_AttachToParent` | `0x00545550` |
+
+**Parent for attach is not “uninitialized luck” alone:** `Delegate_BindByKey` writes an out-struct at `sp+0x38`; field at `+4` (`sp+0x3c`) is the parent passed to attach. Live vanilla/modded (when Bind succeeds): `sp+0x38` stable (e.g. `0x82ee38`), `sp+0x3c` = per-cell parent stepping by `0x250`.
+
+**Candidate packs:** runtime pack table for candidates is `0x7008`–`0x7033` (not keyboard-label pack `0x7002`). Cell metadata at `nameInputObj + cellIdx*0x10 + 0x180` (string / flags / pack / slot).
+
+**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until full Azahar quit / clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
+
+**LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present — disable/rename that folder to test true vanilla.
+
+**Shared cave map `@0x006E6A38` (do not collide):**
+
+| Offset | Patch |
+|--------|--------|
+| `+0x40` / `+0x60` | candidate nullguard |
+| `+0x90` | pane-registry nullguard |
+| `+0xC0` | fillflag_reset (`+0x44` / `+0x30`) |
+| ~~`+0xA0`~~ | ~~candmode_reset — banned / removed~~ |
+
+Romaji DrawCell uses a **separate** pad `@0x006FBB08` (does not share `0x006E6A38`).
+C4 candlist placer uses **`@0x006FC000`** (after romaji blob; romaji ends ~`0x6fbf54` — do not overlap).
+
+### 17.4 TRB
+
+`tools/deploy_name_kanji_trb.py` — keep single CJK **and** single hiragana/katakana as JP for name-input keys (Latin-only EN mappings blank this font). Candidate content packs are separate from gojūon label pack `0x7002`. Romaji labels do **not** require changing those TRB slots (DrawCell rewrite).
+
+### 17.5 B_Place-style candidate list (superseded by C4)
+
+B_Place overlay insert worked; dismiss did not. **C4** owns `@0x006FC000` now — do not redeploy B_Place on top of it. Keep scripts as archaeology: `src/patch_input_bplace_list.py`, rollback `exefs/code.bin.bak_pre_bplace_list`.
+
+**Hard bans:** hometown slots 1/7; `ProfileField_TickPoller`; `restore_mllist()`; vanilla `BPlace_OnRowSelect`; `candmode_reset` (`+0x24=0`); grow Input.arc; CreateTextPane `+0x28`/`+0xb7` hide hacks; any Close/Redraw/ClearPane/hide against SHOW slot `0x1E` (ClearPane null vtable, `lr≈0x64B734`).
+
+### 17.6 Path C — custom candidate list
+
+| Milestone | What | Status |
+|-----------|------|--------|
+| **C1** | B_Place hide dismiss | **failed** |
+| C2 | Cave descriptor + thin factory | deferred |
+| C3 | Own BCLYT same-size splice | **next chrome path** |
+| **C4** | No-SHOW; ≤6 ML left-column; vanilla select | **verified 2026-08-16** |
+
+#### C4 mechanics (`src/patch_input_candlist_noshow.py`)
+
+| Item | Detail |
+|------|--------|
+| Hook | `FillCandidates` @ `0x1fb618` → cave `@0x006FC000` (skips nested loops) |
+| Cave | Wipe 60 × `DrawCell("")`; place ≤6; `strb [r6,#0x540]=1`; join `0x1fb6ec` |
+| Cells | Left col top→bottom **`9,8,7,6,5,4`** (`cell = row + col*10`; row0 = bottom) |
+| Slot | `page * stride[bank] + *baseSlot + (i+1)` — `mul r0,r0,r1` (**not** `r1*r1`) |
+| Stack | `r6=obj`, `r8=bank`; `sp+0x20` stride; `sp+0x4c` pack*; `sp+0x60` base-slot* |
+| `+0x540` | Must be 1 after place or tick `NameInput_TickDeferredGridFill` @ `0x1fb964` → `FillGridFromResourceTable` repaints **all 60** |
+| Romaji | Display-only; wrong TRB slot → reading kana → **SU** labels |
+| Rollback | `exefs/code.bin.bak_pre_candlist_noshow` |
+
+**Do not revive:** in-loop cellIdx hacks; post-fill reshape; outer-only max gate; continue-gate without `+0x540`; B_Place SHOW.
+
+### 17.7 Next steps (handoff for next agent)
+
+**Done:** §17.1 steps 1–4 + C4 left-column list; insert + return to gojūon.
+
+1. **Hometown chrome** — hide unused checkerboard panes, or C3 same-size BCLYT list (no SHOW `0x1E`).
+2. **Fold C4 into** `tools/deploy_name_input_en.py` as idempotent step 5.
+3. **Paging / >6 rows** — optional cells `9..0` (10) or keep pager.
+4. **Header cleanup** — title can show stray kanji + `す` (DrawText, not DrawCell).
+
+**Verify:** full Azahar quit; romaji canary; kana → left column only; tap → insert + keyboard.
+
+| Symbol | File |
+|--------|------|
+| `UIWindowMgr_TouchHitDispatch` | `0x5c6eec` |
+| ClearPane | `0x54b5fc` |
+| `Pane_SetVisibleBit` | `0x5e7d18` |
+| B_Place SHOW slot | `0x1E` — banned while C4 live |
+
+---
+
+*Last updated 2026-08-26 — §17 C4 verified; handoff §17.7.*
