@@ -57,15 +57,17 @@ just because they sit in this repository. See `README.md` (Credits) and any
 | Path / component | Upstream (see Credits for links) |
 |------------------|----------------------------------|
 | `tools/nlpp-tools/` | kiwiz/nlpp-tools |
-| `tools/Batch-CIA-3DS-Decryptor-Redux/` (`decrypt.exe`) | davidmorom; xxmichibxx/Batch-CIA-3DS-Decryptor-Redux; matiffeder |
 | `tools/Trb2xlsx/` | deaknaew/Trb2xlsx |
 | `tools/NLPTextTool/`, `tools/NLPUnpacker/` | LovePlusProject / gdkchan |
-| `vendor/NLPPATCH/` | LovePlusProject/NLPPATCH |
 | `assets/fonts/MPLUS1p-Regular.ttf` (+ `OFL.txt`) | M PLUS 1p (SIL OFL 1.1) |
 | Other fonts under `assets/fonts/` | Google Fonts / respective OFL authors |
 | `tools/cia/3dstool/` (when downloaded) | dnasdw/3dstool |
 | `tools/cia/ctrtool.exe`, `makerom.exe` (when downloaded) | 3DSGuy/Project_CTR |
 | `tools/cia/seeddb.bin` (when downloaded) | ihaveamac/3DS-rom-tools |
+| `tools/spotpass/` | Archived SpotPass dump (Cetaceaqua) |
+
+Historical upstreams credited in `README.md` but **not** shipped in-tree:
+LovePlusProject/NLPPATCH; davidmorom / Batch CIA 3DS Decryptor Redux (`decrypt.exe`).
 
 If a third-party tree ships its own license file, that file controls for that
 tree.

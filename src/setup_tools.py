@@ -2,11 +2,13 @@
 """Wire local tools needed by patch_cia.py and the drop bat.
 
 CIA bins are **vendored** under tools/cia/ (see tools/cia/CREDITS.md).
-This script verifies they exist, copies decrypt.exe from the Batch-CIA
-folder, and only downloads from GitHub if something is missing.
+This script verifies they exist and only downloads from GitHub if something
+is missing.
 
 Offline / dead-upstream: pass --offline (or set NLPP_OFFLINE=1) so a
 missing file fails instead of fetching.
+
+Decrypt your ROM yourself before patching — this repo does not ship decrypt.exe.
 """
 
 from __future__ import annotations
@@ -23,14 +25,6 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
 CIA_TOOLS = ROOT / "tools" / "cia"
-VENDORED_DECRYPT = ROOT / "tools" / "Batch-CIA-3DS-Decryptor-Redux" / "decrypt.exe"
-SIBLING_DECRYPTOR = (
-    ROOT.parent
-    / "New Love Plus Plus"
-    / "tools"
-    / "Batch-CIA-3DS-Decryptor-Redux-1.0.6.2"
-    / "bin"
-)
 
 THREEDS_URL = "https://github.com/dnasdw/3dstool/releases/download/v1.2.6/3dstool.zip"
 CTRTOOL_URL = (
@@ -125,36 +119,6 @@ def ensure_seeddb() -> None:
     print(f"ok: {dest} (downloaded)")
 
 
-def ensure_decrypt_exe() -> None:
-    """Install vendored decrypt.exe into tools/cia/ (local copy, no network)."""
-    dest = CIA_TOOLS / "decrypt.exe"
-    if dest.is_file():
-        print(f"ok: {dest}")
-        return
-
-    candidates = [
-        VENDORED_DECRYPT,
-        SIBLING_DECRYPTOR / "decrypt.exe",
-        ROOT.parent
-        / "New Love Plus Plus"
-        / "tools"
-        / "Batch-CIA-3DS-Decryptor-Redux-1.0.6.2"
-        / "decrypt.exe",
-    ]
-    for src in candidates:
-        if src.is_file():
-            CIA_TOOLS.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, dest)
-            print(f"copied: {dest} <- {src}")
-            return
-
-    raise SystemExit(
-        "decrypt.exe missing. Expected vendored copy at:\n"
-        f"  {VENDORED_DECRYPT}\n"
-        "See tools/Batch-CIA-3DS-Decryptor-Redux/CREDITS.md"
-    )
-
-
 def ensure_extract_romfs() -> None:
     dest = CIA_TOOLS / "extract_romfs.py"
     if dest.is_file():
@@ -208,16 +172,12 @@ def main(argv: list[str] | None = None) -> int:
     ensure_project_ctr_bin("ctrtool.exe", CTRTOOL_URL)
     ensure_project_ctr_bin("makerom.exe", MAKEROM_URL)
     ensure_seeddb()
-    ensure_decrypt_exe()
     ensure_extract_romfs()
     print()
     print("nlpp-tools (vendored):", ROOT / "tools" / "nlpp-tools")
     print("UI font (OFL):", ROOT / "assets" / "fonts" / "MPLUS1p-Regular.ttf")
     print("CIA bins (vendored):", CIA_TOOLS / "CREDITS.md")
-    print(
-        "decrypt.exe credit: davidmorom / xxmichibxx "
-        "(tools/Batch-CIA-3DS-Decryptor-Redux/CREDITS.md)"
-    )
+    print("Note: decrypt your ROM yourself - no decrypt.exe ships with this repo.")
     print()
     print("Done.")
     return 0

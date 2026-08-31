@@ -63,7 +63,7 @@ RESUME2 = 0x001FBD28
 POST2 = 0x001FBD4C
 REG2 = 11
 
-# Shared free vanilla pad @0x006E6A38 (technical.md §17 cave map).
+# Shared free vanilla pad @0x006E6A38 (technical.md §17 live cave map).
 # Sub-range +0x40/+0x60 — keep clear of pane nullguard (+0x90) and fillflag (+0xC0).
 ADDR_CAVE = 0x006E6A38
 CAVE1 = ADDR_CAVE + 0x40

@@ -10,18 +10,17 @@ Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.co
 
 ## What it can do
 
-Drop in a known dump (`.cia` or encrypted/decrypted `.3ds` / `.cci`) and it will:
+Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
-2. **Decrypt** if needed (CIA or cartridge NCCH via Batch Decryptor tools)  
+2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
 3. **Inject English scripts** (pre-packed `.dbin2` from finished XML)  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Build SpotPass inject** (`out/spotpass_real3ds/`) for real-hardware FBI paste  
-10. **Clean up** the scratch work dir afterward (keeps the finished CIA + SpotPass out; pass `--keep-work` / `--layeredfs-out` if you also want those)
+9. **Clean** `out/` to the finished CIA + `luma/` LayeredFS (optional SpotPass via `build_spotpass_inject.py`)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -36,7 +35,7 @@ Title ID: `00040000000F4E00`
 ## Quick start (drag and drop)
 
 1. Double-click **`Drop CIA or 3DS Here to Patch.bat`**
-2. Drop your `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
+2. Drop your **decrypted** `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
 With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
@@ -65,6 +64,19 @@ Manual handoff still works:
 
 Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA patching stays on **Windows**.
 
+### Azahar a/b testing (devs / agents)
+
+Dual isolated Azahar user dirs for LayeredFS experiments (no fighting roaming AppData):
+
+```powershell
+.\make.ps1 instances
+.\make.ps1 deploy-a    # default: name-input stack → instance A
+.\make.ps1 launch-a
+.\make.ps1 restore-a
+```
+
+Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1`. Name-input RE: `technical.md` §17.
+
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
 If bake is absent, the drop bat auto-runs:
@@ -83,17 +95,19 @@ Details / pitfalls: `technical.md` §15, `release/README.md`.
 
 ### Required dump
 
-Only these known New Love Plus+ dumps are accepted (SHA-1):
+**Decrypt the dump yourself first.** This patcher does not ship `decrypt.exe`.
+
+Known New Love Plus+ dumps (SHA-1). Encrypted hashes may still match the allowlist but are **rejected** at the crypto gate:
 
 ```
-a9fbd2e6d790b6cb6194f7820e1a71f597160f2b  # encrypted CIA
+a9fbd2e6d790b6cb6194f7820e1a71f597160f2b  # encrypted CIA (decrypt first)
 811d2f0f72c2a1437997256f30b18fbb2dea6cda  # decrypted CIA
 6af1751f8b4f9d074311f3a7cf2b5d3c5e807cc8
 d138d92fd9d522827cb9665bc2c954f1e8ba1f92  # decrypted full .3ds
-6428e72eefec31d19282d2c7f0cb5082723a3206  # encrypted trim .3ds
+6428e72eefec31d19282d2c7f0cb5082723a3206  # encrypted trim .3ds (decrypt first)
 ```
 
-Many other decrypted CIAs will fail the hash check (by design). The patcher decrypts encrypted dumps for you after verification. Use `--expect-sha1 <hash>` to require one specific dump, or `--skip-hash` to bypass (not recommended).
+Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sha1 <hash>` to require one specific dump, or `--skip-hash` to bypass (not recommended).
 
 ### Requirements
 
@@ -101,8 +115,8 @@ Many other decrypted CIAs will fail the hash check (by design). The patcher decr
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
 - `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak** — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
-- First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`) and copies `decrypt.exe`; downloads only if a bin is missing  
-- `decrypt.exe` credit: [davidmorom](https://github.com/davidmorom) / [Batch CIA 3DS Decryptor Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux) (`tools/Batch-CIA-3DS-Decryptor-Redux/`)  
+- A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
+- First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
 - UI glyph font is bundled: `assets/fonts/MPLUS1p-Regular.ttf` (SIL OFL)  
 
 If you see **Python not found**: install from [python.org](https://www.python.org/downloads/) with **Add python.exe to PATH** checked, open a **new** Command Prompt, and confirm `py -3 --version` works. Turning off Windows “App execution aliases” for `python.exe` only helps after a real install exists.
@@ -112,21 +126,22 @@ If you see **Python not found**: install from [python.org](https://www.python.or
 | Path | Description |
 |------|-------------|
 | `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
-| `out/spotpass_real3ds/` | SpotPass `info.dat` for FBI Ext Save Data (built by default with each patch) |
-| `out/layeredfs/…` | Optional (`--layeredfs-out`); not written by the drop bat by default |
+| `out/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` |
+| `out/luma/README.txt` | Install steps for Luma / Azahar |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
 | `release/textresource/` | Durable TRB / translation work |
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
-| `out/cia_work/` | Scratch only — deleted after a successful CIA unless `--keep-work` |
+
+After a successful patch, `out/` is cleaned to **CIA + `luma/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
-- **Luma (3DS):** copy `00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
+- **Luma (3DS):** copy `out/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
 - **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
 
-Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). Fully quit Azahar after updating mods.
+Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
 
 ### Known issues
 
@@ -140,14 +155,14 @@ SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Busine
 
 Archived BOSS content (「とわのウォッチャー」第28号) is vendored under `tools/spotpass/` — **thank you to Cetaceaqua** for providing that SpotPass dump. Full RE notes: [`technical.md` §16](technical.md).
 
-**Included in the patch workflow:** after a successful `patch_cia` / drop-bat run, SpotPass inject is built automatically in **`--real3ds`** mode → `out/spotpass_real3ds/`. Opt out with `--skip-spotpass`, or use `--spotpass-mode azahar` / `--spotpass-install-azahar`.
-
-**Fresh GitHub clone:** after this tree is committed (`tools/spotpass/*` + `tools/build_spotpass_inject.py`), a clone can regenerate injects with no extra downloads:
+**Included in the patch workflow:** LayeredFS + CIA by default. SpotPass inject is **optional** afterward:
 
 ```bash
 python tools/build_spotpass_inject.py          # → out/spotpass_real3ds/info.dat
 python tools/build_spotpass_inject.py --azahar # emulator-padded + optional SDMC sync
 ```
+
+Or pass `--keep-work` to `patch_cia` / use `--spotpass-mode` with `--keep-work` if you want inject left under `out/` after a patch.
 
 ### How the inject file is made (shareable summary)
 
@@ -194,7 +209,7 @@ python tools/build_spotpass_inject.py --azahar-exact
 3. **Stock Azahar** also stubs `GetNsDataNewFlag` as always `0`, so the game never treats injected data as new. You need either:
    - a build where `GetNsDataNewFlag` returns `1` when NsDataId `1` exists under boss extdata, or  
    - a binary patch of that stub (same idea as the Localization Studio fork patch used during RE).
-4. Fully quit Azahar, cold-boot NLPP, confirm log lines show `ns_data_new_flag=0x01` and a successful `ReadNsData`.
+4. Relaunch Azahar, cold-boot NLPP, confirm log lines show `ns_data_new_flag=0x01` and a successful `ReadNsData`.
 
 ### Real 3DS (CFW)
 
@@ -212,18 +227,16 @@ Do **not** paste the Azahar-padded (~512 KiB) file onto hardware. If the boot di
 ## Pipeline (what runs under the hood)
 
 ```
-encrypted/decrypted .cia  OR  encrypted/decrypted .3ds/.cci
+decrypted .cia  OR  decrypted .3ds/.cci
   → SHA-1 check
-  → decrypt if needed (Batch CIA 3DS Decryptor tools)
-       CIA  → decrypted CIA → content0 CXI
-       .3ds → tmp.Main.ncch (CXI) [+ Manual]
-       already-decrypted .3ds → 3dstool partition0/1
+  → crypto gate (refuse if still encrypted)
+  → extract CXI (ctrtool contents / 3dstool partitions)
   → extract RomFS (3dstool)
   → inject rebuild_dbin2/*.dbin2 into script/bin/{NLP_01,NLP_02,script}/
   → name patches (plain Takane/Rinko/Nene in scripts + resident/img tables)
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
-  → delete scratch work dir (keep finished CIA)
+  → clean out/ (keep *.cia + luma/; azahar_instances/ preserved)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -252,8 +265,8 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 
 **Encryption notes**
 
-- Input must be the hashed encrypted dump; decryption is automatic.  
-- Output is a **decrypted** CIA (`Crypto Key: None`) — correct for CFW and emulators.  
+- Input must already be **decrypted** (`Crypto Key: None`). Encrypted dumps are refused.  
+- Output is a **decrypted** CIA — correct for CFW and emulators.  
 - True retail NCCH re-encryption is **not** done here; use Decrypt9WIP *CIA Encryptor (NCCH)* on a console if you specifically need that.
 
 **UI bake (gold `img.bin`)**
@@ -295,7 +308,6 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 | `3dstool` / `ctrtool` / `makerom` / `seeddb.bin` | Vendored under `tools/cia/` ([CREDITS](tools/cia/CREDITS.md)); `setup_tools.py` fetches only if missing |
 | `ctrtool` / `makerom` | [3DSGuy/Project_CTR](https://github.com/3DSGuy/Project_CTR) (auto-fetched) |
 | `seeddb.bin` | [ihaveamac/3DS-rom-tools](https://github.com/ihaveamac/3DS-rom-tools) (auto-fetched) |
-| `decrypt.exe` | [davidmorom](https://github.com/davidmorom); packaged in [xxmichibxx/Batch-CIA-3DS-Decryptor-Redux](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux); original batch decryptor [matiffeder/3DS-stuff](https://github.com/matiffeder/3DS-stuff). Vendored at `tools/Batch-CIA-3DS-Decryptor-Redux/` — see `CREDITS.md` |
 
 ### Image packing / UI
 
@@ -310,14 +322,12 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 
 | Component | Credit |
 |-----------|--------|
-| NLPPATCH (scripts / TRB / code plugin; offline under `vendor/NLPPATCH/`) | [LovePlusProject/NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) and contributors (see [their credits](https://github.com/LovePlusProject/NLPPATCH/issues/1)) |
+| NLPPATCH (historical community patch) | [LovePlusProject/NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) and contributors (see [their credits](https://github.com/LovePlusProject/NLPPATCH/issues/1)) — EngPatcher ships its own `rebuild_dbin2/` + `assets/` |
 | NLPTextTool (XML ↔ `.dbin2`) | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) (orig. [gdkchan](https://github.com/gdkchan)) |
 | NLPUnpacker | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) (orig. [gdkchan](https://github.com/gdkchan)) |
 | Translation asset repo (reference) | [Makein/NLPPGit](https://github.com/Makein/NLPPGit) |
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
 | SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
-
-Deploy NLPPATCH dialogue with: `python src/deploy_nlppatch_scripts.py`.
 
 Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM).
 
@@ -326,36 +336,42 @@ Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](h
 ## Layout
 
 ```
-Drop CIA or 3DS Here to Patch.bat   ← only user-facing entry point
+Drop CIA or 3DS Here to Patch.bat   ← only end-user entry point
+Makefile / make.ps1                 ← shim → ab_test/make.ps1
 README.md
-technical.md                 RE notes + gold-bake (§15) + SpotPass (§16)
+technical.md                 RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
+ab_test/
+  README.md                  Azahar dual-instance workflow
+  make.ps1                   instances / seed / deploy / launch / restore
+  setup_azahar_instances.ps1
+  paths.local.ps1.example    → paths.local.ps1 (gitignored)
 assets/
   scripts/                   finished DBIN2 XML
   images/                    finished UI PNGs (+ editor sources)
   textresource/              translations.json (source for main TRB rebuild)
   fonts/                     MPLUS1p + OFL (UI deploy glyph font)
 src/
-  patch_cia.py               CIA decrypt → inject → rebuild
+  patch_cia.py               CIA extract → inject → rebuild (decrypted input only)
   patch_names.py             heroine names (dbin2 / resident TRB / img.bin)
   patch_code.py              single-pane name draw (ExeFS code.bin)
+  patch_input_*.py           Profile name-input code.bin patches (§17)
   pack_images.py             PNG → img.bin
   exact_zlib.py              exact-length zlib/zopfli for ARC slots
   extract_vanilla_from_rom.py  vanilla img/TRB from dropped ROM
   darcutil.py / bclimutil.py / image_map.py
-  setup_tools.py             verify vendored CIA bins + wire decrypt.exe
+  setup_tools.py             verify vendored CIA bins (no decrypt.exe)
   drop_zone.ps1              WinForms drop window
 tools/
   rebuild_bake_img.py        regenerate bake + TRBs from sources
-  deploy_*.py                chrome / Title / CESA / SMS / day-counter
+  deploy_*.py / restore_*.py / rebuild_test_cia.py
   build_spotpass_inject.py   SpotPass boss info.dat for Azahar / real 3DS
   spotpass/                  archived BOSS dump + README
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
-  Batch-CIA-3DS-Decryptor-Redux/  vendored decrypt.exe + CREDITS
+  cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
-vendor/NLPPATCH/             offline NLPPATCH snapshot
-out/                         wipeable scratch (gitignored)
+out/                         wipeable scratch + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
@@ -396,6 +412,11 @@ python src/patch_cia.py --cia "..." --skip-hash
 python src/patch_names.py --romfs "path\to\romfs"
 python src/patch_names.py --dbin rebuild_dbin2
 
+# Name-input LayeredFS (Azahar a/b)
+.\make.ps1 deploy-a
+.\make.ps1 launch-a
+# or: python tools/deploy_name_input_en.py
+
 # Hub main menu / CESA only (onto release/bake_img.bin)
 python tools/deploy_title_main_menu_en.py
 python tools/deploy_cesa_en.py
@@ -423,6 +444,7 @@ python src/patcher.py build --clean
 ## What this is not
 
 - A full 100% translation of every line and texture (skipped UI formats stay Japanese).  
-- A dump of the game — you must supply your own matching CIA / `.3ds`.  
+- A dump of the game — you must supply your own matching **decrypted** CIA / `.3ds`.  
+- A ROM decryptor — decrypt outside this tool, then drop the clear dump.  
 - An on-console retail re-encryptor.  
 - A GitHub-hosted gold bake — ship `release/bake_img.bin` separately if you want others to skip the ~16h rebuild.

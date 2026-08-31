@@ -24,11 +24,13 @@ tools/*
 !tools/deploy_*.py
 !tools/deploy_common.py
 !tools/rebuild_bake_img.py
+!tools/rebuild_test_cia.py
 !tools/fetch_release_bake.py
 !tools/build_spotpass_inject.py
 !tools/spotpass/
 !tools/spotpass/**
 !tools/restore_*.ps1
+!tools/restore_*.py
 !tools/nuclear_jp_to_x.py
 !tools/mdcutil.py
 !tools/translate_sms_en.py
@@ -43,11 +45,7 @@ tools/Trb2xlsx/**/packages/
 tools/Trb2xlsx/.vs/
 tools/Trb2xlsx/**/.vs/
 
-# Vendored decrypt.exe + credits (Batch CIA 3DS Decryptor Redux)
-!tools/Batch-CIA-3DS-Decryptor-Redux/
-!tools/Batch-CIA-3DS-Decryptor-Redux/**
-
-# Vendored CIA patch bins (3dstool / ctrtool / makerom / seeddb)
+# Vendored CIA toolchain + credits
 !tools/cia/
 !tools/cia/**
 # Runtime / download scratch under tools/cia
@@ -55,8 +53,6 @@ tools/cia/3dstool.zip
 tools/cia/3dstool/ext_key.txt
 tools/cia/3dstool/ignore_3dstool.txt
 tools/cia/*.partial
-# decrypt.exe is copied here from Batch-CIA… by setup_tools (source of truth is that folder)
-tools/cia/decrypt.exe
 
 # Game dumps & intermediates (never commit)
 *.cia
@@ -71,8 +67,6 @@ img.bin
 *.rar
 *.7z
 *.zip
-# Keep vendored NLPPATCH plugin/note zips trackable
-!vendor/**/*.zip
 
 # OS / editor
 .DS_Store
@@ -82,5 +76,14 @@ desktop.ini
 *~
 .idea/
 .vscode/
+
+# Local a/b workflow overrides (copy from ab_test/paths.local.ps1.example)
+paths.local.*
+!paths.local.*.example
+ab_test/paths.local.ps1
+!ab_test/paths.local.ps1.example
+
+# Local agent / MCP config (machine-specific)
+.mcp.json
 
 tools/Trb2xlsx/**/*.csproj.user

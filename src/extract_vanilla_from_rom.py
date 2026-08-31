@@ -154,7 +154,7 @@ def main(argv: list[str] | None = None) -> int:
         "--rom",
         type=Path,
         required=True,
-        help="input .cia / .3ds / .cci (encrypted or decrypted)",
+        help="input decrypted .cia / .3ds / .cci",
     )
     ap.add_argument(
         "--force",

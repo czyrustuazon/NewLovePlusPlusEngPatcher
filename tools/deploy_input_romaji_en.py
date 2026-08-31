@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Deploy gojūon keyboard romaji display patch to Azahar LayeredFS code.bin.
 
-See src/patch_input_romaji.py. Fully quit Azahar after running.
+Prefer the full stack: tools/deploy_name_input_en.py (or .\\make.ps1 deploy-a).
+This wrapper only runs src/patch_input_romaji.py.
 """
 from __future__ import annotations
 

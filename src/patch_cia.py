@@ -2,22 +2,23 @@
 """One-click New Love Plus+ English patcher (CIA or 3DS/CCI in → CIA out).
 
 Pipeline:
-  encrypted CIA or .3ds/.cci -> decrypt -> extract CXI/RomFS -> inject EN .dbin2
+  decrypted CIA or .3ds/.cci -> extract CXI/RomFS -> inject EN .dbin2
   -> English heroine-name patches (scripts / resident TRB / img.bin table)
   -> optional single-pane name code.bin patch (--patch-code)
   -> rebuild RomFS/CXI/CIA (decrypted, CFW/emulator ready)
 
+Decrypt your dump yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.).
+This tool does not ship or run proprietary decryptors.
+
 NLPPGit (https://github.com/Makein/NLPPGit) is translation assets only.
 img.bin helpers from kiwiz/nlpp-tools (https://github.com/kiwiz/nlpp-tools);
-also NLPTextTool / LovePlusProject refs plus ctrtool / makerom / 3dstool /
-Batch CIA Decryptor.
+also NLPTextTool / LovePlusProject refs plus ctrtool / makerom / 3dstool.
 """
 
 from __future__ import annotations
 
 import argparse
 import hashlib
-import os
 import re
 import shutil
 import subprocess
@@ -31,11 +32,7 @@ CIA_TOOLS = TOOLS / "cia"
 TOOL_3DS = CIA_TOOLS / "3dstool" / "3dstool.exe"
 CTRTOOL = CIA_TOOLS / "ctrtool.exe"
 MAKEROM = CIA_TOOLS / "makerom.exe"
-DECRYPT = CIA_TOOLS / "decrypt.exe"
 SEEDDB = CIA_TOOLS / "seeddb.bin"
-# Prefer real Windows cmd.exe — PATH often puts MSYS/Git "cmd" first, which
-# breaks Batch Decryptor Redux (decrypt.exe → "Input files don't exist").
-WIN_CMD = Path(os.environ.get("SystemRoot", r"C:\Windows")) / "System32" / "cmd.exe"
 
 DEFAULT_DBIN = ROOT / "rebuild_dbin2"
 DEFAULT_EXTRACTED = ROOT.parent / "New Love Plus Plus" / "extracted"
@@ -55,15 +52,16 @@ TITLE_ID = "00040000000F4E00"
 PACKS = ("NLP_01", "NLP_02", "script")
 
 # Accepted SHA-1 digests for known New Love Plus+ dumps (CIA and/or .3ds/.cci).
-# Typical decrypted CIAs will not match (by design) — the patcher decrypts after verify.
+# Typical decrypted CIAs will not match (by design).
 # Some decrypted full .3ds dumps are listed (e.g. d138…) so cartridge dumps can hash-check.
+# Encrypted dumps may still match SHA-1 but are rejected — decrypt yourself first.
 ALLOWED_CIA_SHA1 = frozenset(
     {
-        "a9fbd2e6d790b6cb6194f7820e1a71f597160f2b",  # encrypted CIA (headmasta)
+        "a9fbd2e6d790b6cb6194f7820e1a71f597160f2b",  # encrypted CIA (headmasta) — hash only; reject at crypto gate
         "811d2f0f72c2a1437997256f30b18fbb2dea6cda",  # decrypted CIA
         "6af1751f8b4f9d074311f3a7cf2b5d3c5e807cc8",
         "d138d92fd9d522827cb9665bc2c954f1e8ba1f92",  # decrypted full .3ds
-        "6428e72eefec31d19282d2c7f0cb5082723a3206",  # encrypted trim .3ds
+        "6428e72eefec31d19282d2c7f0cb5082723a3206",  # encrypted trim .3ds — hash only; reject at crypto gate
     }
 )
 ALLOWED_DUMP_SHA1 = ALLOWED_CIA_SHA1
@@ -72,16 +70,12 @@ EXPECTED_CIA_SHA1 = "a9fbd2e6d790b6cb6194f7820e1a71f597160f2b"
 
 _CCI_EXTS = {".3ds", ".cci"}
 _CIA_EXTS = {".cia"}
-# Batch Decryptor Redux partition name → CCI slot index.
-_CCI_NCCH_SLOTS = (
-    ("Main", 0),
-    ("Manual", 1),
-    ("DownloadPlay", 2),
-    ("Partition4", 3),
-    ("Partition5", 4),
-    ("Partition6", 5),
-    ("N3DSUpdateData", 6),
-    ("UpdateData", 7),
+
+ENCRYPTED_ROM_HELP = (
+    "Input ROM is still encrypted. Decrypt it yourself first "
+    "(GodMode9, Batch CIA 3DS Decryptor Redux, etc.), "
+    "then drop the decrypted .cia or .3ds/.cci.\n"
+    "This patcher does not include a decryptor."
 )
 
 
@@ -110,7 +104,7 @@ def _run(cmd: list[str | Path], cwd: Path | None = None, check: bool = True) -> 
 
 
 def _require_tools() -> None:
-    missing = [p for p in (TOOL_3DS, CTRTOOL, MAKEROM, DECRYPT, SEEDDB) if not p.is_file()]
+    missing = [p for p in (TOOL_3DS, CTRTOOL, MAKEROM, SEEDDB) if not p.is_file()]
     if missing:
         names = ", ".join(p.name for p in missing)
         raise PatchError(
@@ -154,7 +148,6 @@ def is_encrypted_cia(cia: Path) -> bool:
         return False
     if re.search(r"Crypto Key\s+(Secure|Fixed|Key 0x)", info):
         return True
-    # Fallback: Batch Decryptor style — treat unknown as encrypted
     if "NCCH" in info and "Crypto Key" in info:
         return "None" not in info.split("Crypto Key", 1)[-1][:40]
     raise PatchError(f"could not determine encryption state of {cia}")
@@ -163,151 +156,21 @@ def is_encrypted_cia(cia: Path) -> bool:
 is_encrypted_rom = is_encrypted_cia
 
 
-def _ascii_work_rom_name(rom: Path) -> str:
-    """ASCII-only basename for decrypt.exe (rejects Unicode / odd names)."""
-    ext = rom.suffix.lower()
-    if ext not in (".cia", ".3ds", ".cci"):
-        ext = ".cia"
-    return f"nlpp_input{ext}"
-
-
-def _prepare_decrypt_workdir(rom: Path, work: Path) -> tuple[Path, Path]:
-    """Copy decryptor bins + rom into work/bin/; return (work_rom, bin_dir).
-
-    Batch CIA 3DS Decryptor Redux's ``decrypt.exe`` resolves the input relative
-    to its own directory (not the process cwd). The rom must sit next to
-    ``decrypt.exe``. Also use an ASCII-only filename — dumps with Japanese
-    product titles (e.g. ``…NEWラブプラス＋….cia``) otherwise print
-    ``Input files don't exist`` and produce no NCCH.
-    """
-    bin_dir = work / "bin"
-    bin_dir.mkdir(parents=True, exist_ok=True)
-    for name in ("ctrtool.exe", "makerom.exe", "decrypt.exe", "seeddb.bin"):
-        shutil.copy2(CIA_TOOLS / name, bin_dir / name)
-
-    work_rom = bin_dir / _ascii_work_rom_name(rom)
-    if work_rom.resolve() != rom.resolve():
-        shutil.copy2(rom, work_rom)
-    return work_rom, bin_dir
-
-
-def _collect_decrypt_ncchs(bin_dir: Path) -> list[Path]:
-    """Find NCCH blobs written by decrypt.exe (tmp.* or named partitions)."""
-    named = sorted(bin_dir.glob("tmp.*.ncch"))
-    if named:
-        return named
-    named = sorted(p for p in bin_dir.glob("*.ncch") if p.stat().st_size > 0)
-    return named
-
-
-def _rename_decrypt_ncchs(bin_dir: Path) -> None:
-    """Match Batch Decryptor Redux :subroutineRename (foo.Main.ncch → tmp.Main.ncch)."""
-    for src in list(bin_dir.glob("*.ncch")):
-        name = src.name
-        if name.startswith("tmp."):
-            continue
-        # e.g. Game.Main.ncch / 00040000….Main.ncch → tmp.Main.ncch
-        for label, _slot in _CCI_NCCH_SLOTS:
-            if name.endswith(f".{label}.ncch") or name == f"{label}.ncch":
-                dest = bin_dir / f"tmp.{label}.ncch"
-                if dest.exists() and dest.resolve() != src.resolve():
-                    dest.unlink()
-                if src.resolve() != dest.resolve():
-                    src.rename(dest)
-                break
-
-
-def decrypt_cia(cia: Path, work: Path) -> Path:
-    """Decrypt an encrypted CIA into work/, return path to *-decrypted.cia."""
-    # Keep output ASCII — original stems may be Japanese / pirate-release names.
-    out_name = "nlpp-decrypted.cia"
-    out_path = work / out_name
-    if out_path.is_file():
-        print(f"[decrypt] using existing {out_path.name}")
-        return out_path
-
-    print(f"[decrypt] decrypting {cia.name} ...")
-    work_cia, bin_dir = _prepare_decrypt_workdir(cia, work)
-
-    # decrypt.exe reads the CIA from *its* directory and writes *.N.ncch there.
-    # Do NOT quote the ASCII basename — decrypt.exe treats quotes as part of the
-    # path and prints "Input files don't exist".
-    _run([WIN_CMD, "/c", f"echo.| decrypt.exe {work_cia.name}"], cwd=bin_dir)
-    _rename_decrypt_ncchs(bin_dir)
-
-    ncchs = _collect_decrypt_ncchs(bin_dir)
-    if not ncchs:
-        raise PatchError("decrypt.exe produced no NCCH partitions")
-
-    # Normalize names like the Batch Decryptor (numeric slots for CIA rebuild).
-    normalized: list[Path] = []
-    for i, src in enumerate(ncchs):
-        dest = bin_dir / f"tmp.{i}.ncch"
-        if src.resolve() != dest.resolve():
-            if dest.exists():
-                dest.unlink()
-            src.rename(dest)
-        normalized.append(dest)
-
-    args: list[str | Path] = [
-        bin_dir / "makerom.exe",
-        "-f",
-        "cia",
-        "-ignoresign",
-        "-target",
-        "p",
-        "-o",
-        str(out_path),
-    ]
-    for i, ncch in enumerate(normalized):
-        args.extend(["-i", f"{ncch.name}:{i}:{i}"])
-    _run(args, cwd=bin_dir)
-
-    if not out_path.is_file():
-        raise PatchError("makerom failed to write decrypted CIA")
-    print(f"[decrypt] wrote {out_path}")
-    return out_path
-
-
-def decrypt_3ds_to_cxi(cci: Path, work: Path) -> tuple[Path, Path | None]:
-    """Decrypt an encrypted .3ds/.cci; return (main CXI, manual CFA|None).
-
-    Uses Batch CIA 3DS Decryptor Redux's decrypt.exe partition naming
-    (tmp.Main.ncch / tmp.Manual.ncch), then copies those blobs for the
-    existing CXI patch path. Does not keep an encrypted cartridge image.
-    """
-    out_main = work / "main.cxi"
-    out_manual = work / "manual.cfa"
-    if out_main.is_file():
-        print(f"[decrypt] using existing {out_main.name}")
-        return out_main, (out_manual if out_manual.is_file() else None)
-
-    print(f"[decrypt] decrypting {cci.name} (CCI/3DS) ...")
-    work_cci, bin_dir = _prepare_decrypt_workdir(cci, work)
-    _run([WIN_CMD, "/c", f"echo.| decrypt.exe {work_cci.name}"], cwd=bin_dir)
-    _rename_decrypt_ncchs(bin_dir)
-
-    main = bin_dir / "tmp.Main.ncch"
-    if not main.is_file():
-        # Fallback: first NCCH blob
-        ncchs = _collect_decrypt_ncchs(bin_dir)
-        if not ncchs:
-            raise PatchError(
-                "decrypt.exe produced no NCCH partitions from .3ds/.cci "
-                "(is the dump encrypted with seed crypto? seeddb.bin required)"
-            )
-        main = ncchs[0]
-        print(f"[decrypt] warning: no tmp.Main.ncch; using {main.name}")
-
-    shutil.copy2(main, out_main)
-    manual_src = bin_dir / "tmp.Manual.ncch"
-    manual: Path | None = None
-    if manual_src.is_file():
-        shutil.copy2(manual_src, out_manual)
-        manual = out_manual
-
-    print(f"[decrypt] wrote decrypted CXI ({out_main.stat().st_size:,} bytes)")
-    return out_main, manual
+def require_decrypted_rom(rom: Path, *, assume_decrypted: bool = False) -> None:
+    """Refuse encrypted dumps — user must decrypt outside this tool."""
+    if assume_decrypted or ("decrypted" in rom.name.lower()):
+        print("[crypto] skipped check (flag / filename assumes decrypted)")
+        return
+    try:
+        encrypted = is_encrypted_rom(rom)
+    except PatchError as exc:
+        raise PatchError(
+            f"{exc}\n"
+            "Pass --assume-decrypted only if you are sure the dump is already decrypted."
+        ) from exc
+    if encrypted:
+        raise PatchError(ENCRYPTED_ROM_HELP)
+    print("[crypto] OK — dump is decrypted")
 
 
 def extract_cci_partitions(cci: Path, out_dir: Path) -> tuple[Path, Path | None]:
@@ -342,53 +205,17 @@ def prepare_cxi_from_rom(
     *,
     kind: str,
     assume_decrypted: bool = False,
-    force_decrypt: bool = False,
 ) -> tuple[Path, Path | None, int | None]:
-    """Decrypt/extract rom → (cxi, manual, title_version)."""
+    """Extract rom → (cxi, manual, title_version). Requires a decrypted dump."""
+    require_decrypted_rom(rom, assume_decrypted=assume_decrypted)
     title_ver = parse_title_version(rom)
 
     if kind == "cia":
-        sibling_dec = (
-            ROOT.parent / "New Love Plus Plus" / "NewLovePlusPlus-decrypted.cia"
-        )
-        if assume_decrypted or ("decrypted" in rom.name.lower()):
-            decrypted = rom
-            print("[decrypt] skipped (flag / filename)")
-        else:
-            try:
-                encrypted = is_encrypted_rom(rom)
-            except PatchError as exc:
-                print(f"[decrypt] warning: {exc}; attempting decrypt")
-                encrypted = True
-            if encrypted and sibling_dec.is_file() and not force_decrypt:
-                decrypted = sibling_dec
-                print(f"[decrypt] reusing sibling decrypted CIA: {sibling_dec}")
-            elif encrypted:
-                decrypted = decrypt_cia(rom, work / "decrypt")
-            else:
-                decrypted = rom
-                print("[decrypt] CIA already decrypted")
-        title_ver = parse_title_version(decrypted) or title_ver
-        cxi, manual = extract_cia_contents(decrypted, work / "contents")
+        cxi, manual = extract_cia_contents(rom, work / "contents")
+        title_ver = parse_title_version(rom) or title_ver
         return cxi, manual, title_ver
 
-    # CCI / .3ds
-    if assume_decrypted or ("decrypted" in rom.name.lower()):
-        print("[decrypt] skipped (flag / filename); extracting CCI partitions")
-        cxi, manual = extract_cci_partitions(rom, work / "cci_parts")
-        return cxi, manual, title_ver
-
-    try:
-        encrypted = is_encrypted_rom(rom)
-    except PatchError as exc:
-        print(f"[decrypt] warning: {exc}; attempting decrypt")
-        encrypted = True
-
-    if encrypted:
-        cxi, manual = decrypt_3ds_to_cxi(rom, work / "decrypt_3ds")
-    else:
-        print("[decrypt] .3ds/.cci already decrypted; extracting partitions")
-        cxi, manual = extract_cci_partitions(rom, work / "cci_parts")
+    cxi, manual = extract_cci_partitions(rom, work / "cci_parts")
     return cxi, manual, title_ver
 
 
@@ -735,6 +562,18 @@ def inject_exefs_code(exefs_bin: Path, work: Path, code_src: Path) -> Path:
     return _repack_exefs(exefs_dir, header, work / "exefs_injected.bin")
 
 
+def resolve_romfs_overlay(args: argparse.Namespace) -> Path | None:
+    """Release/cache TRB overlay dir, if any."""
+    if args.romfs_overlay:
+        overlay = Path(args.romfs_overlay).resolve()
+        return overlay if overlay.is_dir() else None
+    if DEFAULT_ROMFS_OVERLAY.is_dir():
+        return DEFAULT_ROMFS_OVERLAY
+    if _LEGACY_ROMFS_OVERLAY.is_dir():
+        return _LEGACY_ROMFS_OVERLAY
+    return None
+
+
 def apply_romfs_overlay(romfs_dir: Path, overlay: Path) -> int:
     """Copy files from overlay onto romfs_dir (files only; keeps relative paths)."""
     overlay = overlay.resolve()
@@ -762,6 +601,7 @@ def write_layeredfs(
     code_bin_src: Path | None = None,
     patch_code: bool = False,
     skip_name_patches: bool = False,
+    romfs_overlay: Path | None = None,
 ) -> int:
     """Emit a Luma/Azahar LayeredFS drop (same format as Makein/NLPPATCH releases)."""
     title_root = out_dir / TITLE_ID
@@ -810,40 +650,68 @@ def write_layeredfs(
         write_patched_code_bin(src, dest_code, force=True)
         print(f"[layeredfs] code.bin (single-pane name draw)")
 
+    if romfs_overlay is not None:
+        apply_romfs_overlay(title_romfs, romfs_overlay)
+
     # Patch names in the overlay tree (dbin tokens → plain Takane/Rinko/Nene, etc.)
     apply_name_patches(title_romfs, skip=skip_name_patches)
 
-    readme = out_dir / "LAYEREDFS_README.txt"
+    readme = out_dir / "README.txt"
+    title_folder = f"{TITLE_ID}"
     readme.write_text(
         "\n".join(
             [
-                "New Love Plus+ English LayeredFS overlay",
+                "New Love Plus+ English — Luma / LayeredFS install",
                 f"Title ID: {TITLE_ID}",
                 "",
-                "Luma (3DS): copy the title folder to SD:/luma/titles/",
-                "  and enable 'Enable game patching' in Luma settings.",
+                "=== Real 3DS (Luma CFW) ===",
                 "",
-                "Azahar / Citra: copy the title folder to:",
+                "1. You need New Love Plus+ already installed on the console",
+                "   (retail cartridge or CIA from your own dump).",
+                "",
+                "2. On your SD card, open:",
+                "     luma/titles/",
+                "   (create the folders if they are missing)",
+                "",
+                f"3. Copy this entire folder onto the SD card:",
+                f"     {title_folder}",
+                "   so you end up with:",
+                f"     SD:/luma/titles/{title_folder}/",
+                "   (the folder must contain romfs/ and optionally code.bin)",
+                "",
+                "4. In Luma configuration, enable:",
+                "     Enable game patching",
+                "",
+                "5. Boot the game from the Home Menu as usual.",
+                "   LayeredFS overlays the English files on top of the install.",
+                "",
+                "=== Emulator (Azahar / Citra) ===",
+                "",
+                f"Copy the {title_folder} folder to:",
                 "  %AppData%/Azahar/load/mods/",
-                "  (or Citra's load/mods equivalent)",
+                "  (or your Citra load/mods/ folder)",
                 "",
-                "Contains:",
-                "  - romfs/script/bin/{NLP_01,NLP_02,script}/*.dbin2",
-                "  - romfs/SystemData/.../textresource_resident_jpn.trb (heroine names)",
-                "  - romfs/img.bin (when built with --with-images / --name-img)",
-                "  - code.bin (when built with --patch-code; single-pane name UI)",
+                "=== What is inside ===",
                 "",
-                "Heroine dialog tokens (▲高嶺＊＊▲ etc.) are rewritten to plain",
-                "English names at build time — see src/patch_names.py.",
-                "Optional ExeFS name-draw patch — see src/patch_code.py.",
+                "  romfs/script/bin/{NLP_01,NLP_02,script}/*.dbin2  — English dialog",
+                "  romfs/SystemData/.../textresource_resident_jpn.trb — heroine names",
+                "  romfs/img.bin — English UI textures (when UI bake was included)",
+                "  code.bin — optional name-input fix (only with --patch-code)",
                 "",
-                "This matches the install style used by Makein/NLPPGit releases",
-                "and LovePlusProject/NLPPATCH — no CIA rebuild required.",
+                "No CIA reinstall is required when using LayeredFS.",
+                "Same install style as LovePlusProject/NLPPATCH releases.",
+                "",
+                "Note: the drop patcher writes this folder before rebuilding the CIA.",
+                "If the CIA step fails, this Luma overlay is still kept on disk.",
                 "",
             ]
         ),
         encoding="utf-8",
     )
+    # Legacy name for anyone following older docs.
+    legacy_readme = out_dir / "LAYEREDFS_README.txt"
+    if legacy_readme != readme:
+        legacy_readme.write_text(readme.read_text(encoding="utf-8"), encoding="utf-8")
     print(f"[layeredfs] wrote {count} scripts under {title_root}")
     return count
 
@@ -942,6 +810,152 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     return out_img
 
 
+def _layeredfs_img_fallback(args: argparse.Namespace) -> Path | None:
+    """Existing bake/packed img when live UI packing failed."""
+    try:
+        candidate = resolve_inject_img(args)
+        if candidate.is_file():
+            return candidate
+    except (OSError, PatchError):
+        pass
+    if args.packed_img:
+        explicit = Path(args.packed_img).resolve()
+        if explicit.is_file():
+            return explicit
+    if args.name_img:
+        img_src = Path(args.img_bin).resolve()
+        if img_src.is_file():
+            return img_src
+    return None
+
+
+def _layeredfs_title_dir(out_dir: Path) -> Path:
+    return out_dir / TITLE_ID
+
+
+def _print_layeredfs_recovery(out_dir: Path) -> None:
+    title_dir = _layeredfs_title_dir(out_dir)
+    if not title_dir.is_dir():
+        return
+    print()
+    print("=== Luma LayeredFS still available ===")
+    print(f"Folder:  {title_dir}")
+    print(f"Install: SD:/luma/titles/{TITLE_ID}/  (see {out_dir / 'README.txt'})")
+    print("The CIA rebuild failed, but this overlay can still be used on Luma CFW.")
+
+
+def rebuild_patched_cia(
+    args: argparse.Namespace,
+    *,
+    rom_in: Path,
+    kind: str,
+    dbin_root: Path,
+    work: Path,
+    out_cia: Path,
+    packed_img: Path | None,
+    romfs_overlay: Path | None,
+) -> None:
+    """Extract, inject, and rebuild the output CIA. Raises PatchError on failure."""
+    # 1–2) Extract game CXI (+ optional manual) from decrypted rom
+    title_ver: int | None = None
+    if args.cxi and Path(args.cxi).is_file():
+        cxi = Path(args.cxi).resolve()
+        manual = Path(args.manual).resolve() if args.manual else None
+        title_ver = parse_title_version(rom_in)
+        print(f"[extract] using provided CXI: {cxi}")
+    elif (
+        kind == "cia"
+        and DEFAULT_EXTRACTED.is_dir()
+        and any(DEFAULT_EXTRACTED.glob("content.0000.*"))
+    ):
+        c0 = sorted(DEFAULT_EXTRACTED.glob("content.0000.*"))[0]
+        c1s = sorted(DEFAULT_EXTRACTED.glob("content.0001.*"))
+        cxi, manual = c0, (c1s[0] if c1s else None)
+        title_ver = parse_title_version(rom_in)
+        print(f"[extract] using sibling extracted/: {cxi.name}")
+    else:
+        cxi, manual, title_ver = prepare_cxi_from_rom(
+            rom_in,
+            work,
+            kind=kind,
+            assume_decrypted=args.assume_decrypted,
+        )
+
+    parts = split_cxi(cxi, work / "ncch_parts")
+
+    # 3) RomFS tree + inject
+    reuse = Path(args.romfs).resolve() if args.romfs else (
+        DEFAULT_ROMFS if DEFAULT_ROMFS.is_dir() else None
+    )
+    # Prefer linking/copying an existing RomFS tree; fall back to extracting romfs.bin.
+    if args.in_place_romfs and reuse:
+        romfs_dir = reuse
+        print(f"[romfs] in-place inject into {romfs_dir}")
+    else:
+        romfs_work = work / "romfs"
+        if reuse and (reuse / "script" / "bin" / "script").is_dir():
+            if args.link_romfs:
+                if romfs_work.exists():
+                    # Only remove empty junction/dir we created previously
+                    try:
+                        romfs_work.rmdir()
+                    except OSError:
+                        shutil.rmtree(romfs_work)
+                print(f"[romfs] junction -> {reuse}")
+                _run(["cmd", "/c", "mklink", "/J", str(romfs_work), str(reuse)])
+                romfs_dir = romfs_work
+            elif (romfs_work / "script" / "bin" / "script").is_dir():
+                print(f"[romfs] reusing work tree: {romfs_work}")
+                romfs_dir = romfs_work
+            else:
+                print(f"[romfs] copying base tree from {reuse} (slow once) ...")
+                if romfs_work.exists():
+                    shutil.rmtree(romfs_work)
+                shutil.copytree(reuse, romfs_work)
+                romfs_dir = romfs_work
+        else:
+            romfs_dir = ensure_romfs_dir(parts["romfs"], romfs_work, reuse=None)
+
+    injected = inject_dbin2(romfs_dir, dbin_root)
+    print(f"[inject] total .dbin2 files: {injected}")
+
+    if packed_img is not None:
+        dest_img = romfs_dir / "img.bin"
+        print(f"[inject] img.bin -> {dest_img}")
+        shutil.copy2(packed_img, dest_img)
+
+    if romfs_overlay is not None:
+        apply_romfs_overlay(romfs_dir, romfs_overlay)
+
+    # Heroine names: plain English in dialog scripts + UI name tables.
+    apply_name_patches(romfs_dir, skip=args.skip_name_patches)
+
+    if args.inject_code and args.patch_code:
+        raise PatchError("use either --inject-code or --patch-code, not both")
+    if args.inject_code:
+        parts = dict(parts)
+        parts["exefs"] = inject_exefs_code(parts["exefs"], work, Path(args.inject_code))
+    elif args.patch_code:
+        parts = dict(parts)
+        parts["exefs"] = patch_exefs_code(parts["exefs"], work)
+
+    # 4) Rebuild containers
+    new_romfs = work / "romfs_patched.bin"
+    rebuild_romfs(romfs_dir, new_romfs)
+
+    patched_cxi = work / "patched.cxi"
+    rebuild_cxi(parts, new_romfs, patched_cxi)
+
+    rebuild_cia(patched_cxi, manual, out_cia, title_ver)
+
+    if not args.keep_work:
+        cleanup_patch_artifacts(
+            work,
+            out_cia=out_cia,
+            packed_img=packed_img,
+        )
+
+
 def parse_title_version(cia: Path) -> int | None:
     info = _ctrtool_info(cia)
     m = re.search(r"TitleVersion:\s*.*?\((\d+)\)", info)
@@ -981,7 +995,7 @@ def verify_cia_sha1(
         only = next(iter(allowed_set))
         print(f"[hash] expected: {only}")
     else:
-        print(f"[hash] allowed:  {len(allowed_set)} known encrypted dumps")
+        print(f"[hash] allowed:  {len(allowed_set)} known dumps")
 
     if digest.lower() not in allowed_set:
         listed = "\n".join(f"    {h}" for h in sorted(allowed_set))
@@ -1047,7 +1061,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"output: {out_cia}")
     print()
 
-    # Verify dump identity before any decrypt / image / RomFS work.
+    # Verify dump identity before extract / image / RomFS work.
     if args.skip_hash:
         print("[hash] skipped (--skip-hash)")
     else:
@@ -1055,8 +1069,19 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print()
 
     packed_img: Path | None = None
+    layered_img: Path | None = None
     if args.with_images and not args.no_images:
-        packed_img = pack_ui_images(args, work)
+        try:
+            packed_img = pack_ui_images(args, work)
+            layered_img = packed_img
+        except PatchError as exc:
+            print(f"[images] warning: {exc}")
+            layered_img = _layeredfs_img_fallback(args)
+            if layered_img is not None:
+                print(f"[layeredfs] fallback img.bin: {layered_img}")
+            else:
+                print("[layeredfs] scripts-only overlay (no img.bin)")
+            print("[cia] continuing scripts-only (no img.bin inject)")
     elif args.no_images:
         print("[images] skipped (--no-images)")
 
@@ -1065,8 +1090,6 @@ def cmd_patch(args: argparse.Namespace) -> int:
     )
     resident_src = _resolve_resident_trb(romfs_hint)
 
-    # Optional: ship img.bin in LayeredFS just to patch the name table (no UI pack).
-    layered_img = packed_img
     if layered_img is None and args.name_img:
         img_src = Path(args.img_bin).resolve()
         if img_src.is_file():
@@ -1077,132 +1100,51 @@ def cmd_patch(args: argparse.Namespace) -> int:
     code_bin_src = Path(args.code_bin).resolve() if args.code_bin else DEFAULT_CODE_BIN
 
     if args.layeredfs_only and not args.layeredfs_out:
-        args.layeredfs_out = str(ROOT / "out" / "layeredfs")
+        args.layeredfs_out = str(ROOT / "out" / "luma")
 
+    romfs_overlay = resolve_romfs_overlay(args)
+
+    layeredfs_out: Path | None = None
+    layeredfs_written = False
     if args.layeredfs_out:
+        layeredfs_out = Path(args.layeredfs_out).resolve()
         write_layeredfs(
-            Path(args.layeredfs_out).resolve(),
+            layeredfs_out,
             dbin_root,
             layered_img,
             resident_src=resident_src,
             code_bin_src=code_bin_src,
             patch_code=args.patch_code,
             skip_name_patches=args.skip_name_patches,
+            romfs_overlay=romfs_overlay,
         )
+        layeredfs_written = _layeredfs_title_dir(layeredfs_out).is_dir()
 
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
-        emit_spotpass_inject(args)
+        if args.keep_work:
+            emit_spotpass_inject(args)
+        else:
+            cleanup_out_dir(out_cia=out_cia)
+            print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
         return 0
 
-    # 1–2) Decrypt (CIA or encrypted .3ds) → game CXI (+ optional manual)
-    title_ver: int | None = None
-    if args.cxi and Path(args.cxi).is_file():
-        cxi = Path(args.cxi).resolve()
-        manual = Path(args.manual).resolve() if args.manual else None
-        title_ver = parse_title_version(rom_in)
-        print(f"[extract] using provided CXI: {cxi}")
-    elif (
-        kind == "cia"
-        and DEFAULT_EXTRACTED.is_dir()
-        and any(DEFAULT_EXTRACTED.glob("content.0000.*"))
-    ):
-        c0 = sorted(DEFAULT_EXTRACTED.glob("content.0000.*"))[0]
-        c1s = sorted(DEFAULT_EXTRACTED.glob("content.0001.*"))
-        cxi, manual = c0, (c1s[0] if c1s else None)
-        title_ver = parse_title_version(rom_in)
-        print(f"[extract] using sibling extracted/: {cxi.name}")
-    else:
-        cxi, manual, title_ver = prepare_cxi_from_rom(
-            rom_in,
-            work,
+    try:
+        rebuild_patched_cia(
+            args,
+            rom_in=rom_in,
             kind=kind,
-            assume_decrypted=args.assume_decrypted,
-            force_decrypt=args.force_decrypt,
-        )
-
-    parts = split_cxi(cxi, work / "ncch_parts")
-
-    # 3) RomFS tree + inject
-    reuse = Path(args.romfs).resolve() if args.romfs else (
-        DEFAULT_ROMFS if DEFAULT_ROMFS.is_dir() else None
-    )
-    # Prefer linking/copying an existing RomFS tree; fall back to extracting romfs.bin.
-    if args.in_place_romfs and reuse:
-        romfs_dir = reuse
-        print(f"[romfs] in-place inject into {romfs_dir}")
-    else:
-        romfs_work = work / "romfs"
-        if reuse and (reuse / "script" / "bin" / "script").is_dir():
-            if args.link_romfs:
-                if romfs_work.exists():
-                    # Only remove empty junction/dir we created previously
-                    try:
-                        romfs_work.rmdir()
-                    except OSError:
-                        shutil.rmtree(romfs_work)
-                print(f"[romfs] junction -> {reuse}")
-                _run(["cmd", "/c", "mklink", "/J", str(romfs_work), str(reuse)])
-                romfs_dir = romfs_work
-            elif (romfs_work / "script" / "bin" / "script").is_dir():
-                print(f"[romfs] reusing work tree: {romfs_work}")
-                romfs_dir = romfs_work
-            else:
-                print(f"[romfs] copying base tree from {reuse} (slow once) ...")
-                if romfs_work.exists():
-                    shutil.rmtree(romfs_work)
-                shutil.copytree(reuse, romfs_work)
-                romfs_dir = romfs_work
-        else:
-            romfs_dir = ensure_romfs_dir(parts["romfs"], romfs_work, reuse=None)
-
-    injected = inject_dbin2(romfs_dir, dbin_root)
-    print(f"[inject] total .dbin2 files: {injected}")
-
-    if packed_img is not None:
-        dest_img = romfs_dir / "img.bin"
-        print(f"[inject] img.bin -> {dest_img}")
-        shutil.copy2(packed_img, dest_img)
-
-    if args.romfs_overlay:
-        overlay = Path(args.romfs_overlay).resolve()
-    elif DEFAULT_ROMFS_OVERLAY.is_dir():
-        overlay = DEFAULT_ROMFS_OVERLAY
-    elif _LEGACY_ROMFS_OVERLAY.is_dir():
-        overlay = _LEGACY_ROMFS_OVERLAY
-    else:
-        overlay = None
-    if overlay is not None:
-        apply_romfs_overlay(romfs_dir, overlay)
-
-    # Heroine names: plain English in dialog scripts + UI name tables.
-    apply_name_patches(romfs_dir, skip=args.skip_name_patches)
-
-    if args.inject_code and args.patch_code:
-        raise PatchError("use either --inject-code or --patch-code, not both")
-    if args.inject_code:
-        parts = dict(parts)
-        parts["exefs"] = inject_exefs_code(parts["exefs"], work, Path(args.inject_code))
-    elif args.patch_code:
-        parts = dict(parts)
-        parts["exefs"] = patch_exefs_code(parts["exefs"], work)
-
-    # 4) Rebuild containers
-    new_romfs = work / "romfs_patched.bin"
-    rebuild_romfs(romfs_dir, new_romfs)
-
-    patched_cxi = work / "patched.cxi"
-    rebuild_cxi(parts, new_romfs, patched_cxi)
-
-    rebuild_cia(patched_cxi, manual, out_cia, title_ver)
-
-    if not args.keep_work:
-        cleanup_patch_artifacts(
-            work,
+            dbin_root=dbin_root,
+            work=work,
             out_cia=out_cia,
             packed_img=packed_img,
+            romfs_overlay=romfs_overlay,
         )
+    except PatchError:
+        if layeredfs_written and layeredfs_out is not None:
+            _print_layeredfs_recovery(layeredfs_out)
+        raise
 
     print()
     print("=== Done ===")
@@ -1210,23 +1152,25 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"Size:        {out_cia.stat().st_size:,} bytes")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
-    if args.layeredfs_out:
-        layered_path = Path(args.layeredfs_out).resolve()
-        if layered_path.is_dir():
-            print(f"LayeredFS:   {layered_path}")
+    if layeredfs_out is not None and layeredfs_out.is_dir():
+        print(f"LayeredFS:   {layeredfs_out}")
     print()
     print("Notes:")
     print("  - Output is a decrypted CIA (works with FBI on CFW, Azahar, Citra).")
     print("  - Retail NCCH re-encryption is not done here; use Decrypt9WIP")
     print("    'CIA Encryptor (NCCH)' on a 3DS if you specifically need that.")
-    if not args.keep_work:
-        print("  - Scratch work dir was removed (pass --keep-work to retain).")
     if packed_img is None:
         print("  - UI images were not packed (pass --with-images).")
     else:
         print("  - UI images were packed from assets/images into romfs/img.bin.")
         print("    Some BCLIMs expand in size (png2bclim); that is expected.")
-    emit_spotpass_inject(args)
+    if args.keep_work:
+        print("  - Scratch kept (--keep-work).")
+        emit_spotpass_inject(args)
+    else:
+        cleanup_out_dir(out_cia=out_cia)
+        print("  - out/ cleaned (kept *.cia, luma/, azahar_instances/).")
+        print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     return 0
 
 
@@ -1317,17 +1261,82 @@ def cleanup_patch_artifacts(
         print(f"[cleanup] warning: work dir: {exc}")
 
 
+# Dirs under out/ that survive post-patch cleanup (not patch scratch).
+_OUT_KEEP_DIRS = frozenset(
+    {
+        "luma",  # LayeredFS drop
+        "azahar_instances",  # a/b test workflow (ab_test/)
+    }
+)
+
+
+def cleanup_out_dir(*, out_cia: Path) -> None:
+    """Wipe EngPatcher out/ except finished CIA(s), luma/, and a/b instances."""
+    out_root = (ROOT / "out").resolve()
+    if not out_root.is_dir():
+        return
+
+    keep: set[Path] = set()
+    try:
+        keep.add(out_cia.resolve())
+    except OSError:
+        pass
+    for cia in out_root.glob("*.cia"):
+        try:
+            keep.add(cia.resolve())
+        except OSError:
+            pass
+    for name in _OUT_KEEP_DIRS:
+        p = out_root / name
+        if p.exists():
+            try:
+                keep.add(p.resolve())
+            except OSError:
+                pass
+
+    removed = 0
+    for child in list(out_root.iterdir()):
+        try:
+            resolved = child.resolve()
+        except OSError:
+            continue
+        if resolved in keep or child.name in _OUT_KEEP_DIRS:
+            continue
+        if child.is_file() and child.suffix.lower() == ".cia":
+            continue
+        try:
+            if child.is_dir():
+                print(f"[cleanup] removing out/{child.name}/")
+                shutil.rmtree(child, ignore_errors=True)
+            else:
+                print(f"[cleanup] removing out/{child.name}")
+                try:
+                    child.unlink()
+                except FileNotFoundError:
+                    pass
+            removed += 1
+        except OSError as exc:
+            print(f"[cleanup] warning: {child.name}: {exc}")
+    if removed:
+        print(
+            f"[cleanup] out/ kept: *.cia, luma/, azahar_instances/ "
+            f"({removed} other item(s) removed)"
+        )
+    else:
+        print("[cleanup] out/ already clean (CIA + luma + azahar_instances only)")
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description=(
-            "Decrypt/patch New Love Plus+ from .cia or .3ds/.cci and rebuild a "
-            "decrypted English CIA."
+            "Patch New Love Plus+ from a decrypted .cia or .3ds/.cci and rebuild "
+            "a decrypted English CIA. Decrypt the dump yourself first."
         ),
     )
     p.add_argument(
         "--cia",
         required=True,
-        help="Path to input .cia / .3ds / .cci (encrypted or decrypted)",
+        help="Path to decrypted input .cia / .3ds / .cci",
     )
     p.add_argument(
         "--out",
@@ -1363,12 +1372,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--assume-decrypted",
         action="store_true",
-        help="Skip encryption detection / decrypt step",
-    )
-    p.add_argument(
-        "--force-decrypt",
-        action="store_true",
-        help="Decrypt even if a sibling *-decrypted.cia already exists",
+        help="Skip encryption check (only if you are sure the dump is decrypted)",
     )
     p.add_argument(
         "--layeredfs-out",
@@ -1383,8 +1387,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--keep-work",
         action="store_true",
-        help="Keep scratch work dir after a successful CIA build "
-        "(default: delete out/cia_work and leave the finished CIA)",
+        help="Keep out/ scratch after a successful build "
+        "(default: leave only *.cia, out/luma/, out/azahar_instances/)",
     )
     p.add_argument(
         "--with-images",

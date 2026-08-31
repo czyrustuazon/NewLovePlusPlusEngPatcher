@@ -94,8 +94,8 @@ if errorlevel 1 (
   exit /b 1
 )
 echo.
-echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb, decrypt^) ...
-echo decrypt.exe is vendored from Batch CIA 3DS Decryptor Redux ^(see tools\Batch-CIA-3DS-Decryptor-Redux\CREDITS.md^).
+echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb^) ...
+echo Decrypt your dump yourself first - this patcher does not include decrypt.exe.
 "%PYTHON%" "%SRC%\setup_tools.py"
 if errorlevel 1 (
   echo [!] Tool setup failed.
@@ -148,8 +148,8 @@ if "!HASH_ERR!"=="0" (
 )
 
 echo.
-echo Decrypting / injecting scripts + UI / rebuilding CIA...
-echo Accepts encrypted or decrypted .cia and .3ds/.cci.
+echo Injecting scripts + UI / rebuilding CIA...
+echo Requires a decrypted .cia or .3ds/.cci ^(decrypt yourself first^).
 echo This can take several minutes and needs a few GB free disk.
 echo.
 
@@ -177,6 +177,8 @@ REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
 REM Missing gold bake auto-runs: python tools\rebuild_bake_img.py
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"
+if not exist "%~dp0out" mkdir "%~dp0out"
+set "LAYEREDFS_OUT=--layeredfs-out %~dp0out\luma"
 set "PACKED_IMG=%~dp0cache\new_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   set "PACKED_IMG=%~dp0release\bake_img.bin"
@@ -191,12 +193,17 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
 ) else if exist "%~dp0cache\romfs_overlay\SystemData" (
   echo TRB overlay will auto-apply from cache\romfs_overlay ^(legacy^)
 )
+set "INJECT_CODE="
+if exist "%~dp0release\name_input_code.bin" (
+  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  echo Including Profile name-input code.bin from release\name_input_code.bin
+)
 if /i "%NLPP_WITH_IMAGES%"=="0" (
   echo Scripts-only patch ^(NLPP_WITH_IMAGES=0 — UI pack skipped^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images !EXTRA_ROMFS! %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else if /i "%NLPP_REPACK_IMAGES%"=="1" (
   echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
   REM Auto-build gold bake when missing (full: PNG pack + TRB + deploys + SMS).
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
@@ -234,12 +241,19 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
   ) else (
     set "PACKED_IMG=%~dp0release\bake_img.bin"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH%
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
 set ERR=%ERRORLEVEL%
 
 echo.
 if not "%ERR%"=="0" (
+  if exist "%~dp0out\luma\00040000000F4E00" (
+    echo.
+    echo [!] CIA rebuild failed, but Luma LayeredFS was written:
+    echo     %~dp0out\luma\00040000000F4E00
+    echo     See out\luma\README.txt — copy to SD:/luma/titles/
+  )
+  echo.
   echo [!] Patch failed ^(exit %ERR%^).
   pause
   exit /b %ERR%
@@ -247,11 +261,14 @@ if not "%ERR%"=="0" (
 
 echo [+] Patched CIA:
 echo     %~dp0out\NewLovePlusPlus-EN.cia
-echo     ^(scratch work dir cleaned up^)
 echo.
-echo [+] SpotPass inject ^(real 3DS / FBI^):
-echo     %~dp0out\spotpass_real3ds\info.dat
-echo     Paste via FBI -^> Ext Save Data -^> SpotPass/boss
+echo [+] Luma LayeredFS ^(real 3DS^):
+echo     %~dp0out\luma\00040000000F4E00
+echo     Copy that folder to SD:/luma/titles/
+echo     Enable "Enable game patching" in Luma settings.
+echo.
+echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
+echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 pause
 exit /b 0

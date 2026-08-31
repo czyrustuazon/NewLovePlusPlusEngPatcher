@@ -1,12 +1,8 @@
 # New Love Plus+ — reverse engineering notes
 
-Technical reference from localization / RE work on title `00040000000F4E00` (New Love Plus+), focused on UI text, textures, and the bottom-screen system clock confirm chrome.
+Technical reference from localization / RE work on title `00040000000F4E00` (New Love Plus+), focused on UI text, textures, name-input, and system chrome. This file lives in **NewLovePlusPlusEngPatcher** (with the patcher tooling).
 
-Companion tooling lives in the sibling repo:
-
-`../NewLovePlusPlusEngPatcher/`
-
-This file is the long-form source of truth. Cursor rules under `.cursor/rules/` (mirrored in EngPatcher) summarize the same material for agents — keep them in sync when you learn something new.
+Cursor rules under `.cursor/rules/` summarize the same material for agents — keep them in sync when you learn something new.
 
 ---
 
@@ -15,8 +11,9 @@ This file is the long-form source of truth. Cursor rules under `.cursor/rules/` 
 Before hunting strings, re-extracting packages, or inventing a new “global text fix”:
 
 1. Read **this file** end-to-end (especially §§5–6, 9, 11–12).
-2. Skim Cursor rules: `read-docs-first`, `patch-safety`, `ghidra-mcp`, `ui-localization-method`, `nlpp-repo-workflow`, `clock-confirm-ui-localization`.
-3. Reuse EngPatcher work products before regenerating them:
+2. Skim Cursor rules: `read-docs-first`, `patch-safety`, `ghidra-mcp`, `ui-localization-method`, `nlpp-repo-workflow`, `clock-confirm-ui-localization`, `azahar-test-workflow`.
+3. For LayeredFS iteration: **`ab_test/README.md`**.
+4. Reuse EngPatcher work products before regenerating them:
    - `out/clock_recheck/` — scans, header/date viz, pkg 5238 extract
    - `release/textresource/` — durable TRB dumps / `translations.json` (not under wipeable `out/`)
    - `assets/images/*.check/` — decoded UI masters (prefer over guessing filenames)
@@ -30,7 +27,9 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15**.
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
-- **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
+- **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
+- **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
+- **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
 
 ---
 
@@ -809,7 +808,7 @@ python tools/build_spotpass_inject.py --azahar-exact
 ```
 
 - `--azahar` writes `out/spotpass_azahar/` and syncs live SDMC (unless `--no-install-azahar`).
-- Fully quit Azahar after replacing `info.dat`.
+- Relaunch Azahar after replacing `info.dat` (cold-boot NLPP to re-check SpotPass).
 - Confirm the **running** `azahar.exe` is the one with the `GetNsDataNewFlag` fix (Programs install vs Documents build vs Desktop Localization Studio Fork are different binaries).
 - Expect log: `GetNsDataNewFlag` with `ns_data_new_flag=0x01`, then `ReadNsData` success — not the ERROR dialog alone.
 
@@ -854,35 +853,34 @@ SD layout (ID0/ID1 are console-specific):
 
 ---
 
-## 17. Profile name-input (gojūon + kanji candidates) — 2026-08-16
+## 17. Profile name-input (gojūon romaji + direct insert) — 2026-08-31
 
-Screen: Profile → First Name (same ML 60-cell grid for gojūon keyboard and kanji candidate popup).
+Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji into the name field. Kanji candidate list is suppressed.
+
+**Outcome:** scrap the candidate-list caves (C3/C4/B_Place @ `0x006FC000` etc.) — ship nullguards + romaji DrawCell cave + one NOP so mode-0 uses the ABC insert path.
 
 ### 17.1 Verified working LayeredFS stack
 
-**One-shot deploy** (idempotent):
-
 ```bash
 python tools/deploy_name_input_en.py
+# or Azahar instance A:
+.\make.ps1 deploy-a
+.\make.ps1 launch-a
 ```
+
+a/b workflow (isolated Azahar user dirs): **`ab_test/README.md`**.
 
 | # | Patch | Script | Role |
 |---|-------|--------|------|
 | 1 | Pane attach null parent | `src/patch_input_pane_registry_nullguard.py` | Skip `Pane_AttachToParent` @ `0x1fa790` when parent is 0 |
 | 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
-| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels; insert stays kana; `@0x006FBB08` |
-| 5 | C4 left-column candidates | `src/patch_input_candlist_noshow.py` | ≤6 kanji @ cells `9..4`; cave `@0x006FC000` |
+| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x006FBB08` |
+| 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 
-Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Mode-tab BCLIM labels: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
+Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
-**Note:** `deploy_name_input_en.py` currently applies steps **1–4** only. After that, run:
-
-```bash
-python src/patch_input_candlist_noshow.py --deploy-azahar
-```
-
-**Live checklist (2026-08-16):** romaji gojūon; pager OK; kana → **left-column** kanji list (~5–6); empty tiles elsewhere; insert **kana**; return to gojūon; touches OK.
+**Live checklist:** romaji keys; tap → romaji in name field; no left-column kanji list; checkerboard chrome OK; name length still ≤8 chars.
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
@@ -894,11 +892,6 @@ python src/patch_input_candlist_noshow.py --deploy-azahar
 - fillflag_reset **without** candmode_reset → taps OK  
 
 `nameInputObj+0x24` selects keyboard vs candidate identification/lookup tables inside `NameInput_OnCellTap` / fill helpers. Vanilla often shows stale non-zero heap (e.g. `0xffffffa6`) and **still works**. Forcing `+0x24=0` on every redraw makes OnCellTap match the wrong pane-name table → silent no-op taps.
-
-Related obsolete scripts (removed from tree; depended on mllist reshape and/or candmode_reset):
-
-- `patch_input_celltap_name_fix.py` (`Bod_MLp_V` template)  
-- `patch_input_candidate_tick_guard.py` (poller vs mllist candidate column)
 
 ### 17.3 Architecture notes (verified)
 
@@ -923,74 +916,79 @@ Related obsolete scripts (removed from tree; depended on mllist reshape and/or c
 
 **Candidate packs:** runtime pack table for candidates is `0x7008`–`0x7033` (not keyboard-label pack `0x7002`). Cell metadata at `nameInputObj + cellIdx*0x10 + 0x180` (string / flags / pack / slot).
 
-**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until full Azahar quit / clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
+**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
 
-**LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present — disable/rename that folder to test true vanilla.
+**LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `out/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 
-**Shared cave map `@0x006E6A38` (do not collide):**
+**Live code caves (shipped stack only):**
+
+| Pad | Contents |
+|-----|----------|
+| `@0x006E6A38` | Shared nullguard / fillflag caves (do not collide offsets below) |
+| `@0x006FBB08` | Romaji DrawCell blob only (~4 KiB vanilla zero pad; RX — build strings on stack, not by storing into the cave) |
+| `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
+
+Shared map `@0x006E6A38`:
 
 | Offset | Patch |
 |--------|--------|
 | `+0x40` / `+0x60` | candidate nullguard |
 | `+0x90` | pane-registry nullguard |
 | `+0xC0` | fillflag_reset (`+0x44` / `+0x30`) |
-| ~~`+0xA0`~~ | ~~candmode_reset — banned / removed~~ |
+| ~~`+0xA0`~~ | ~~candmode_reset — banned / never ship~~ |
 
-Romaji DrawCell uses a **separate** pad `@0x006FBB08` (does not share `0x006E6A38`).
-C4 candlist placer uses **`@0x006FC000`** (after romaji blob; romaji ends ~`0x6fbf54` — do not overlap).
+**Scrapped caves (do not revive):** `@0x006FC000` was reserved for B_Place / C4 candidate-list placers (`FillCandidates` hooks, wipe+place ≤6 cells, SHOW/`+0x540` gymnastics). That whole path was abandoned — we **skip the kanji list** with the NOP at `@0x1fb070` and insert romaji via the DrawCell cave instead. Leave `@0x006FC000` empty unless a new experiment documents a fresh carve.
 
 ### 17.4 TRB
 
-`tools/deploy_name_kanji_trb.py` — keep single CJK **and** single hiragana/katakana as JP for name-input keys (Latin-only EN mappings blank this font). Candidate content packs are separate from gojūon label pack `0x7002`. Romaji labels do **not** require changing those TRB slots (DrawCell rewrite).
+`tools/deploy_name_kanji_trb.py` — keep single CJK **and** single hiragana/katakana as JP for name-input keys (Latin-only EN mappings blank this font). Romaji path does **not** require changing gojūon TRB slots (DrawCell rewrite).
 
-### 17.5 B_Place-style candidate list (superseded by C4)
+### 17.5 Abandoned approaches (removed from tree 2026-08-31)
 
-B_Place overlay insert worked; dismiss did not. **C4** owns `@0x006FC000` now — do not redeploy B_Place on top of it. Keep scripts as archaeology: `src/patch_input_bplace_list.py`, rollback `exefs/code.bin.bak_pre_bplace_list`.
+We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-column placer @ `0x006FC000`) and various hide/redraw hacks. **Scrapped** — product path is romaji keyboard + direct insert (§17.1). Do not revive without a fresh bisect:
 
-**Hard bans:** hometown slots 1/7; `ProfileField_TickPoller`; `restore_mllist()`; vanilla `BPlace_OnRowSelect`; `candmode_reset` (`+0x24=0`); grow Input.arc; CreateTextPane `+0x28`/`+0xb7` hide hacks; any Close/Redraw/ClearPane/hide against SHOW slot `0x1E` (ClearPane null vtable, `lr≈0x64B734`).
+- B_Place SHOW slot `0x1E` / hometown slots 1/7
+- C3 `MList` stripe img splice (shared UV with gojūon → hybrid chrome)
+- C4 left-column kanji placer (`FillCandidates` cave @ `0x006FC000`)
+- Hide empty panes via `pane+0xb7`; SetDisplayMode → RedrawKeyboard/FillCandidates
+- `candmode_reset` (`+0x24=0`)
 
-### 17.6 Path C — custom candidate list
+### 17.6 Next steps
 
-| Milestone | What | Status |
-|-----------|------|--------|
-| **C1** | B_Place hide dismiss | **failed** |
-| C2 | Cave descriptor + thin factory | deferred |
-| C3 | Own BCLYT same-size splice | **next chrome path** |
-| **C4** | No-SHOW; ≤6 ML left-column; vanilla select | **verified 2026-08-16** |
-
-#### C4 mechanics (`src/patch_input_candlist_noshow.py`)
-
-| Item | Detail |
-|------|--------|
-| Hook | `FillCandidates` @ `0x1fb618` → cave `@0x006FC000` (skips nested loops) |
-| Cave | Wipe 60 × `DrawCell("")`; place ≤6; `strb [r6,#0x540]=1`; join `0x1fb6ec` |
-| Cells | Left col top→bottom **`9,8,7,6,5,4`** (`cell = row + col*10`; row0 = bottom) |
-| Slot | `page * stride[bank] + *baseSlot + (i+1)` — `mul r0,r0,r1` (**not** `r1*r1`) |
-| Stack | `r6=obj`, `r8=bank`; `sp+0x20` stride; `sp+0x4c` pack*; `sp+0x60` base-slot* |
-| `+0x540` | Must be 1 after place or tick `NameInput_TickDeferredGridFill` @ `0x1fb964` → `FillGridFromResourceTable` repaints **all 60** |
-| Romaji | Display-only; wrong TRB slot → reading kana → **SU** labels |
-| Rollback | `exefs/code.bin.bak_pre_candlist_noshow` |
-
-**Do not revive:** in-loop cellIdx hacks; post-fill reshape; outer-only max gate; continue-gate without `+0x540`; B_Place SHOW.
-
-### 17.7 Next steps (handoff for next agent)
-
-**Done:** §17.1 steps 1–4 + C4 left-column list; insert + return to gojūon.
-
-1. **Hometown chrome** — hide unused checkerboard panes, or C3 same-size BCLYT list (no SHOW `0x1E`).
-2. **Fold C4 into** `tools/deploy_name_input_en.py` as idempotent step 5.
-3. **Paging / >6 rows** — optional cells `9..0` (10) or keep pager.
-4. **Header cleanup** — title can show stray kanji + `す` (DrawText, not DrawCell).
-
-**Verify:** full Azahar quit; romaji canary; kana → left column only; tap → insert + keyboard.
+1. Header cleanup — title can show stray kanji + reading (DrawText, not DrawCell).
+2. Name length — 8-char pane budget vs multi-letter Hepburn syllables.
+3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
 
 | Symbol | File |
 |--------|------|
-| `UIWindowMgr_TouchHitDispatch` | `0x5c6eec` |
-| ClearPane | `0x54b5fc` |
-| `Pane_SetVisibleBit` | `0x5e7d18` |
-| B_Place SHOW slot | `0x1E` — banned while C4 live |
+| `NameInput_OnCellTap` | `0x1faee4` |
+| Kana-direct NOP site | `0x1fb070` |
+| `NameInput_DrawCell` | `0x1fc304` |
+| Romaji cave | `0x006FBB08` |
 
 ---
 
-*Last updated 2026-08-26 — §17 C4 verified; handoff §17.7.*
+## 18. Azahar a/b + CIA input policy (2026-08-31)
+
+### 18.1 Dual Azahar instances
+
+Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test/README.md`**.
+
+| Item | Path / note |
+|------|-------------|
+| Instance user dirs | `out/azahar_instances/{a,b}/user` |
+| Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
+| Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
+| Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
+
+Do **not** tell the user to quit Azahar between deploys (standing preference).
+
+### 18.2 CIA patcher — no decryptor
+
+`src/patch_cia.py` / drop bat accept **decrypted** `.cia` / `.3ds` / `.cci` only (`Crypto Key: None`). Encrypted input fails with a short “decrypt yourself first” message. `decrypt.exe` / Batch CIA 3DS Decryptor Redux were **removed** from the tree — users decrypt outside EngPatcher (GodMode9, etc.). Still vendored: `tools/cia/` `3dstool` / `ctrtool` / `makerom` / `seeddb`.
+
+Offline `vendor/NLPPATCH/` snapshot was also **removed** (2026-08-31). Dialogue/TRB live in `rebuild_dbin2/` + `assets/`. Optional: `patch_textresource.py seed --alt-trb <other.trb>` if you bring an external EN TRB.
+
+---
+
+*Last updated 2026-08-31 — §17 live caves only (scrapped C4 @0x006FC000); §18 a/b + no decrypt/vendor.*

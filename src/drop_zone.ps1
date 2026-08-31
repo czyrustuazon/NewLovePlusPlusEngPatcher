@@ -54,7 +54,7 @@ $label.Height = 70
 $label.Padding = New-Object System.Windows.Forms.Padding(12)
 
 $hint = New-Object System.Windows.Forms.Label
-$hint.Text = "CIA or 3DS dump -> decrypt -> inject -> out\NewLovePlusPlus-EN.cia"
+$hint.Text = "Decrypted CIA or 3DS -> inject -> out\NewLovePlusPlus-EN.cia + out\luma\"
 $hint.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hint.ForeColor = [System.Drawing.Color]::FromArgb(80, 90, 100)
 $hint.AutoSize = $false
@@ -154,15 +154,20 @@ $go.Add_Click({
     # Pass as a single argument; staged path has no spaces/parens/Unicode.
     $p = Start-Process -FilePath $bat -ArgumentList @($launchPath) -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
-        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia"
+        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia and out\luma\"
         [System.Windows.Forms.MessageBox]::Show(
-            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nScratch work files were cleaned up.",
+            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nLuma LayeredFS:`n$root\out\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nScratch work files were cleaned up.",
             "Patch complete",
             [Windows.Forms.MessageBoxButtons]::OK,
             [Windows.Forms.MessageBoxIcon]::Information
         ) | Out-Null
     } else {
-        $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
+        $luma = Join-Path $root "out\luma\00040000000F4E00"
+        if (Test-Path -LiteralPath $luma) {
+            $status.Text = "CIA failed; Luma overlay at out\luma\ — see console log."
+        } else {
+            $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
+        }
     }
     $go.Enabled = $true
     $browse.Enabled = $true

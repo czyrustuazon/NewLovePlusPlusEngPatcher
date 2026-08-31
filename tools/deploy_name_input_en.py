@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 """Deploy the verified Profile name-input EN stack to Azahar LayeredFS.
 
-Applies, in order (technical.md §17):
+Verified stack (2026-08-31):
 
   1. patch_input_pane_registry_nullguard
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
-  4. patch_input_romaji                    # display Hepburn; insert stays kana
-
-Idempotent: skips a step if that site is already patched.
-Does not touch img.bin (mode-tab textures: tools/deploy_input_keyboard_en.py).
+  4. patch_input_romaji                    # Hepburn labels + romaji insert
+  5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
 
   python tools/deploy_name_input_en.py
   python tools/deploy_name_input_en.py --dry-run
 
-Fully quit Azahar after deploy. Ban: patch_input_candmode_reset.py (deleted).
+Rollback: python tools/restore_name_input_baseline.py
 """
 from __future__ import annotations
 
@@ -42,6 +40,12 @@ from patch_input_candmode_fillflag_reset import (  # noqa: E402
     b_ins as fill_b_ins,
     build_cave as build_fillflag_cave,
 )
+from patch_input_kana_direct_insert import (  # noqa: E402
+    SITE as KANA_SITE,
+    PATCHED as KANA_PATCHED,
+    apply_patch as apply_kana_direct,
+    restore_bind_sites,
+)
 from patch_input_pane_registry_nullguard import (  # noqa: E402
     CAVE as PANE_CAVE,
     SITE as PANE_SITE,
@@ -50,13 +54,14 @@ from patch_input_pane_registry_nullguard import (  # noqa: E402
     build_cave as build_pane_cave,
 )
 from patch_input_romaji import (  # noqa: E402
-    ADDR_DRAW_CELL,
     is_romaji_patched,
     patch_input_romaji,
 )
 
-MOD = Path.home() / "AppData/Roaming/Azahar/load/mods/00040000000F4E00"
-DEST = MOD / "exefs" / "code.bin"
+from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT
+
+MOD = AZAHAR_MOD_ROOT
+DEST = AZAHAR_MOD_CODE
 
 
 def _u32_at(data: bytes, off: int) -> int:
@@ -68,12 +73,15 @@ def pane_already(data: bytes) -> bool:
 
 
 def cand_already(data: bytes) -> bool:
-    # Either site branched off vanilla ldr
     return data[CAND_SITE1 : CAND_SITE1 + 4] != bytes.fromhex("1010b0e5")
 
 
 def fillflag_already(data: bytes) -> bool:
     return _u32_at(data, FILL_SITE) == struct.unpack("<I", fill_b_ins(FILL_SITE, FILL_CAVE))[0]
+
+
+def kana_already(data: bytes) -> bool:
+    return data[KANA_SITE : KANA_SITE + 4] == KANA_PATCHED
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -119,18 +127,27 @@ def main(argv: list[str] | None = None) -> int:
         steps += 1
 
     if is_romaji_patched(data):
-        print("[skip] romaji DrawCell already applied")
+        # Force refresh so insert buffer matches display (romaji, not kana).
+        patch_input_romaji(data, force=True)
+        print("[input-romaji] refreshed (insert=display)")
+        steps += 1
     else:
         if not patch_input_romaji(data, force=False):
             raise SystemExit("romaji patch failed")
         print("[input-romaji] applied")
         steps += 1
 
+    restore_bind_sites(data)
+    if kana_already(data):
+        print("[skip] kana_direct_insert already applied")
+    else:
+        apply_kana_direct(data)
+        steps += 1
+
     DEST.write_bytes(data)
     shutil.copy2(DEST, MOD / "code.bin")
     print(f"wrote {DEST} ({steps} new step(s))")
-    print("Fully quit Azahar to reload exefs/code.bin.")
-    print("Rollback: copy bak_pre_name_input_en -> exefs/code.bin (+ mods/.../code.bin)")
+    print("Rollback: python tools/restore_name_input_baseline.py")
     return 0
 
 

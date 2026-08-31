@@ -1,0 +1,5 @@
+# Copy to paths.local.ps1 in this folder (ab_test/) and edit.
+$Paths.AzaharSrc   = "C:\Users\Zepse\Documents\azahar"
+$Paths.AzaharBuild = "$($Paths.AzaharSrc)\build"
+$Paths.AzaharExe   = "$($Paths.AzaharBuild)\bin\Release\azahar.exe"
+$Paths.VanillaDump = "C:\Users\Zepse\Documents\New Love Plus Plus\extracted"

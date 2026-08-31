@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Display-only Hepburn romaji for the name-input gojūon grid (technical.md §17).
+Hepburn romaji for the name-input gojūon grid (technical.md §17).
 
-Rewrites NameInput_DrawCell (0x1fc304) so DrawText shows romaji while the
-7-byte insert buffer still stores original kana from TextResource.
+Rewrites NameInput_DrawCell (0x1fc304) so DrawText shows romaji AND the
+7-byte insert buffer stores the same display string (so kana-direct /
+ABC-style insert writes romaji into the name field).
 
 Romaji is built on a stack buffer (not the code cave): ExeFS .code is RX
 under Azahar — stores into the cave are dropped.
@@ -290,7 +291,7 @@ def _assemble(base: int, stream: list) -> bytes:
     return bytes(out)
 
 
-def build_romaji_blob() -> bytes:
+def build_romaji_blob(*, canary: bool = False) -> bytes:
     hira_tab = b"".join(
         _pad4(HIRA_ROMAJI.get(cp, "")) for cp in range(0x3041, 0x3041 + 0x56)
     )
@@ -338,9 +339,16 @@ def build_romaji_blob() -> bytes:
 
     # r0 = kana_to_romaji(dst=sp+0x34, src=orig)
     OP(add_imm(0, 13, 0x34))
+    if canary:
+        OP(cmp_imm(5, 0))
+        B("do_romaji", cond=0x1)  # ne
+        LDR(10, "ok_str")
+        B("after_kana")
+        L("do_romaji")
     OP(mov_reg(1, 9))
     stream.append(("bl_lab", "kana"))
     OP(mov_reg(10, 0))  # display cstr
+    L("after_kana")
 
     # Always maxGlyphs=0 (unlimited UTF-8 / short ASCII romaji).
     # maxGlyphs=1 truncates multi-byte UTF-8 to the first byte (blank/junk).
@@ -366,12 +374,13 @@ def build_romaji_blob() -> bytes:
     OP(add_imm(0, 13, 0x18))
     BL(ADDR_FREE_STR)
 
-    # memcpy(obj+idx*8+0x541, ORIG, 7)
+    # memcpy(obj+idx*8+0x541, DISPLAY, 7) — insert matches on-screen label
+    # (romaji for gojuon; original kana/kanji/latin when unmapped).
     OP(add_reg(0, 6, 5, shift=3))
     OP(add_imm(0, 0, 0x500))
     OP(add_imm(0, 0, 0x41))
     OP(mov_imm(2, 7))
-    OP(mov_reg(1, 9))
+    OP(mov_reg(1, 10))
     BL(ADDR_MEMCPY7)
     OP(mov_reg(0, 7))
 
@@ -457,6 +466,8 @@ def build_romaji_blob() -> bytes:
     LIT("kata_hi", 0x30F6)
     LIT("hira_tab", 0)
     LIT("kata_tab", 0)
+    if canary:
+        LIT("ok_str", 0)
 
     # First pass to measure code size / table offsets
     code = _assemble(ADDR_CAVE, stream)
@@ -464,6 +475,8 @@ def build_romaji_blob() -> bytes:
         code += b"\0"
     hira_off = len(code)
     kata_off = hira_off + len(hira_tab)
+    ok_off = kata_off + len(kata_tab) if canary else 0
+    ok_bytes = b"OK\x00" if canary else b""
 
     stream2: list = []
     for it in stream:
@@ -471,6 +484,8 @@ def build_romaji_blob() -> bytes:
             stream2.append(("lit", "hira_tab", 0x100000 + ADDR_CAVE + hira_off))
         elif it[0] == "lit" and it[1] == "kata_tab":
             stream2.append(("lit", "kata_tab", 0x100000 + ADDR_CAVE + kata_off))
+        elif it[0] == "lit" and it[1] == "ok_str":
+            stream2.append(("lit", "ok_str", 0x100000 + ADDR_CAVE + ok_off))
         else:
             stream2.append(it)
 
@@ -479,7 +494,7 @@ def build_romaji_blob() -> bytes:
         code += b"\0"
     if len(code) != hira_off:
         raise RuntimeError(f"code size drift {len(code)} != {hira_off}")
-    code += hira_tab + kata_tab
+    code += hira_tab + kata_tab + ok_bytes
     if len(code) > CAVE_MAX:
         raise ValueError(f"cave too large: {len(code):#x}")
     return bytes(code)
@@ -501,14 +516,14 @@ def is_romaji_patched(data: bytes | bytearray) -> bool:
     return ADDR_DRAW_CELL + 8 + (imm << 2) == ADDR_CAVE
 
 
-def patch_input_romaji(data: bytearray, *, force: bool = False) -> bool:
-    if is_romaji_patched(data) and not force:
+def patch_input_romaji(data: bytearray, *, force: bool = False, canary: bool = False) -> bool:
+    if is_romaji_patched(data) and not force and not canary:
         return False
     head = bytes(data[ADDR_DRAW_CELL : ADDR_DRAW_CELL + 8])
     if not is_romaji_patched(data) and head != VANILLA_HEAD and not force:
         raise ValueError(f"unexpected FUN_001fc304 head {head.hex()}")
 
-    cave = build_romaji_blob()
+    cave = build_romaji_blob(canary=canary)
     region = bytes(data[ADDR_CAVE : ADDR_CAVE + len(cave)])
     if (
         region != b"\x00" * len(cave)
