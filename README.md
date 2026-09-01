@@ -17,7 +17,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 3. **Inject English scripts** (pre-packed `.dbin2` from finished XML)  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
-6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
+6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
 9. **Clean** `out/` to the finished CIA + `luma/` LayeredFS (optional SpotPass via `build_spotpass_inject.py`)
@@ -272,11 +272,11 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 **UI bake (gold `img.bin`)**
 
 - Put translated UI PNGs under `assets/images`.  
-- **Gold path:** `python tools/rebuild_bake_img.py` → `release/bake_img.bin`  
-  PNG pack + main TRB from `assets/textresource/translations.json` + ordered `deploy_*` chrome (Options / menus / Confirm / Title main menu / CESA / …) + SMS + day-counter + overlay.  
+- **Gold path:** `python tools/rebuild_bake_img.py` → `release/bake_img.bin` (+ `release/name_input_code.bin`)  
+  PNG pack + main TRB from `assets/textresource/translations.json` + ordered `deploy_*` chrome (Options / menus / Confirm / softkeys / multiwin / gallery / UI buttons / keyboard tabs / Title / CESA / …) + SMS + day-counter + overlay + Profile name-input `code.bin`.  
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
-- Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present.  
+- Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
 - **Expect about 16 hours** for a full bake rebuild. Progress lines mean it is still working.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
@@ -291,8 +291,11 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 |--------|---------|--------|
 | Main Menu **rows** (Game Start, Options, …) | **5261** `Title.arc` | `deploy_title_main_menu_en.py` |
 | Gallery / Communication / Data Management homes | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
+| Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
+| Softkeys Back / Next / Confirm | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
+| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
 | “Main Menu” title string | TRB | Already EN via textresource |
 
 ---

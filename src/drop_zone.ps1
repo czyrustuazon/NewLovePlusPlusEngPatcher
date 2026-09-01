@@ -14,6 +14,8 @@ if (-not (Test-Path -LiteralPath $bat)) {
 
 # 8.3 / TEMP staging — Japanese names + parentheses break cmd.exe
 # (e.g. "...NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0) (J).piratelegit.cia").
+# Result is read from a path file (not powershell stdout) so cmdlet error
+# text like "Copy-Item" cannot poison the launch argument.
 $shortPathPs1 = Join-Path $src "short_path.ps1"
 
 function Get-SafeRomPath([string]$path) {
@@ -22,14 +24,30 @@ function Get-SafeRomPath([string]$path) {
     if (-not (Test-Path -LiteralPath $shortPathPs1)) {
         return $path
     }
+    $pathFile = Join-Path $env:TEMP "nlpp_drop_path.txt"
     $env:NLPP_ROM = $path
+    $env:NLPP_DROP_PATH_FILE = $pathFile
+    $prevEap = $ErrorActionPreference
     try {
-        $resolved = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $shortPathPs1
-        if ($resolved) {
-            return [string]$resolved
+        if (Test-Path -LiteralPath $pathFile) {
+            Remove-Item -LiteralPath $pathFile -Force -ErrorAction SilentlyContinue
+        }
+        # Child may write host messages; never let stderr NativeCommandError
+        # become terminating under $ErrorActionPreference=Stop.
+        $ErrorActionPreference = "Continue"
+        $null = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $shortPathPs1 2>&1
+        $ErrorActionPreference = $prevEap
+        if (Test-Path -LiteralPath $pathFile) {
+            $resolved = [IO.File]::ReadAllText($pathFile).Trim()
+            Remove-Item -LiteralPath $pathFile -Force -ErrorAction SilentlyContinue
+            if (-not [string]::IsNullOrWhiteSpace($resolved)) {
+                return $resolved
+            }
         }
     } finally {
+        $ErrorActionPreference = $prevEap
         Remove-Item Env:NLPP_ROM -ErrorAction SilentlyContinue
+        Remove-Item Env:NLPP_DROP_PATH_FILE -ErrorAction SilentlyContinue
     }
     return $path
 }
@@ -151,8 +169,8 @@ $go.Add_Click({
     $status.Text = "Patching... a console window will show progress."
     $form.Refresh()
     $launchPath = Get-SafeRomPath $script:ciaPath
-    # Pass as a single argument; staged path has no spaces/parens/Unicode.
-    $p = Start-Process -FilePath $bat -ArgumentList @($launchPath) -WorkingDirectory $root -PassThru -Wait
+    # Quote explicitly — Start-Process ArgumentList does not protect spaces/parens.
+    $p = Start-Process -FilePath $bat -ArgumentList "`"$launchPath`"" -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
         $status.Text = "Done. See out\NewLovePlusPlus-EN.cia and out\luma\"
         [System.Windows.Forms.MessageBox]::Show(

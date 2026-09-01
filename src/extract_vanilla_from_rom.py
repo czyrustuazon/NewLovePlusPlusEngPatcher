@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract vanilla romfs/img.bin (+ TextResource TRBs) from a .cia / .3ds / .cci.
+"""Extract vanilla romfs/img.bin (+ TextResource TRBs + ExeFS code.bin) from a ROM.
 
 Used when sibling New Love Plus Plus/extracted/ is absent — e.g. a clone that
 only has the EngPatcher tree and the ROM the user dropped on the bat.
@@ -15,10 +15,18 @@ SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
 sys.path.insert(0, str(SRC))
 
-from nlpp_paths import CACHE, find_vanilla_img  # noqa: E402
+from nlpp_paths import (  # noqa: E402
+    CACHE,
+    CACHE_VANILLA_CODE,
+    CACHE_VANILLA_EXEFS,
+    find_vanilla_code,
+    find_vanilla_img,
+)
 from patch_cia import (  # noqa: E402
     PatchError,
+    _blz_uncompress,
     _require_tools,
+    _unpack_exefs,
     detect_rom_kind,
     ensure_romfs_dir,
     prepare_cxi_from_rom,
@@ -31,6 +39,7 @@ VANILLA_IMG = VANILLA_ROMFS / "img.bin"
 VANILLA_MAIN_TRB = (
     VANILLA_ROMFS / "SystemData" / "TextResource" / "textresource_jpn.trb"
 )
+VANILLA_CODE = CACHE_VANILLA_CODE
 MARKER = VANILLA_ROOT / ".source_rom.txt"
 
 # Keep these after extract so rebuild/deploys work without a multi-GB full tree
@@ -54,6 +63,24 @@ def vanilla_cache_ready(rom: Path | None = None) -> bool:
     if rom is None or not MARKER.is_file():
         return True
     return MARKER.read_text(encoding="utf-8").strip() == _rom_fingerprint(rom)
+
+
+def _write_decompressed_code(exefs_bin: Path, work: Path) -> Path:
+    """Unpack ExeFS .code, BLZ-decompress → cache/vanilla_from_rom/exefs/code.bin."""
+    exefs_dir = work / "exefs_unpack"
+    code_cmp, _header = _unpack_exefs(exefs_bin, exefs_dir)
+    CACHE_VANILLA_EXEFS.mkdir(parents=True, exist_ok=True)
+    dest = VANILLA_CODE
+    if dest.exists():
+        dest.unlink()
+    _blz_uncompress(code_cmp, dest)
+    if not dest.is_file():
+        raise PatchError(f"failed to write decompressed code.bin: {dest}")
+    print(
+        f"[vanilla] wrote {dest} ({dest.stat().st_size:,} bytes, BLZ-decompressed)",
+        flush=True,
+    )
+    return dest.resolve()
 
 
 def ensure_vanilla_from_rom(
@@ -104,6 +131,11 @@ def ensure_vanilla_from_rom(
             f"RomFS extract missing textresource_jpn.trb under {romfs_dir}"
         )
 
+    try:
+        _write_decompressed_code(parts["exefs"], work)
+    except (PatchError, OSError) as exc:
+        print(f"[vanilla] warning: code.bin extract failed: {exc}", flush=True)
+
     if slim:
         _slim_romfs(romfs_dir)
 
@@ -111,6 +143,37 @@ def ensure_vanilla_from_rom(
     print(f"[vanilla] wrote {img} ({img.stat().st_size:,} bytes)", flush=True)
     print(f"[vanilla] wrote {trb.name}", flush=True)
     return img.resolve()
+
+
+def ensure_vanilla_code_from_rom(rom: Path, *, force: bool = False) -> Path:
+    """Return decompressed vanilla code.bin, extracting from ROM if needed."""
+    rom = rom.resolve()
+    fp = _rom_fingerprint(rom)
+
+    if VANILLA_CODE.is_file() and not force:
+        if not MARKER.is_file() or MARKER.read_text(encoding="utf-8").strip() == fp:
+            return VANILLA_CODE.resolve()
+
+    existing = find_vanilla_code()
+    if existing is not None and not force and existing.resolve() != VANILLA_CODE.resolve():
+        # Sibling dump / NLPP_VANILLA_CODE — fine for bake without re-extract.
+        return existing
+
+    if not VANILLA_IMG.is_file() or force:
+        ensure_vanilla_from_rom(rom, force=force)
+        if VANILLA_CODE.is_file():
+            return VANILLA_CODE.resolve()
+
+    # RomFS cache may predate ExeFS extract — pull code only.
+    _require_tools()
+    kind = detect_rom_kind(rom)
+    work = ROOT / "out" / "extract_vanilla_code_work"
+    if work.exists():
+        shutil.rmtree(work)
+    work.mkdir(parents=True, exist_ok=True)
+    cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
+    parts = split_cxi(cxi, work / "ncch_parts")
+    return _write_decompressed_code(parts["exefs"], work)
 
 
 def _slim_romfs(romfs_dir: Path) -> None:

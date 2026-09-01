@@ -26,10 +26,19 @@ exit /b %ERRORLEVEL%
 REM Stage dump path via PowerShell first. Names with Japanese glyphs or parentheses
 REM (e.g. piratelegit "NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0)...") break cmd parsing
 REM if we expand %~1 / %~nx1 inside IF blocks.
+REM Read the result from a temp file — never for /f over powershell stdout
+REM (error text like "Copy-Item" can leak into the captured path).
 set "NLPP_ROM=%~1"
-set "CIA="
-for /f "usebackq delims=" %%S in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\short_path.ps1"`) do set "CIA=%%S"
+set "NLPP_DROP_PATH_FILE=%TEMP%\nlpp_drop_path.txt"
+if exist "%NLPP_DROP_PATH_FILE%" del /f /q "%NLPP_DROP_PATH_FILE%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\short_path.ps1"
 set "NLPP_ROM="
+set "CIA="
+if exist "%NLPP_DROP_PATH_FILE%" (
+  set /p CIA=<"%NLPP_DROP_PATH_FILE%"
+  del /f /q "%NLPP_DROP_PATH_FILE%" >nul 2>&1
+)
+set "NLPP_DROP_PATH_FILE="
 if not defined CIA (
   echo [!] Could not resolve dump path.
   pause

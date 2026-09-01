@@ -1,21 +1,85 @@
 ﻿# Resolve a dump path to something cmd.exe can safely consume.
-# Prefer 8.3 short path; otherwise hardlink (or copy) to %TEMP%\nlpp_drop_input.<ext>.
+# Prefer 8.3 short path; otherwise hardlink / copy to an ASCII stage name.
+#
+# Contract:
+#   In:  $Path arg, or env NLPP_ROM
+#   Out: env NLPP_DROP_PATH_FILE (default %TEMP%\nlpp_drop_path.txt) — single-line path
+#        also stdout (same path) for callers that want it
+# Never write progress to stderr (parents with $ErrorActionPreference=Stop treat it
+# as a terminating NativeCommandError and can poison the resolved path).
 param(
     [Parameter(Position = 0)]
     [string]$Path
 )
-$ErrorActionPreference = "Stop"
+
+$ErrorActionPreference = "Continue"
+
+function Write-Result([string]$resultPath) {
+    $outFile = $env:NLPP_DROP_PATH_FILE
+    if ([string]::IsNullOrWhiteSpace($outFile)) {
+        $outFile = Join-Path $env:TEMP "nlpp_drop_path.txt"
+    }
+    $dir = [IO.Path]::GetDirectoryName($outFile)
+    if ($dir -and -not (Test-Path -LiteralPath $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+    [IO.File]::WriteAllText($outFile, $resultPath)
+    [Console]::Out.Write($resultPath)
+}
+
+function Test-SameVolume([string]$a, [string]$b) {
+    $ra = [IO.Path]::GetPathRoot($a)
+    $rb = [IO.Path]::GetPathRoot($b)
+    if ([string]::IsNullOrEmpty($ra) -or [string]::IsNullOrEmpty($rb)) { return $false }
+    return ($ra.TrimEnd('\').ToUpperInvariant() -eq $rb.TrimEnd('\').ToUpperInvariant())
+}
+
+function Remove-StageFile([string]$dest) {
+    if (-not (Test-Path -LiteralPath $dest)) { return }
+    try { [IO.File]::Delete($dest) } catch {
+        try { Remove-Item -LiteralPath $dest -Force -ErrorAction Stop } catch { }
+    }
+}
+
+function Try-HardLink([string]$dest, [string]$target) {
+    try {
+        New-Item -ItemType HardLink -Path $dest -Target $target -ErrorAction Stop | Out-Null
+        return (Test-Path -LiteralPath $dest)
+    } catch {
+        return $false
+    }
+}
+
+function Try-SymLink([string]$dest, [string]$target) {
+    try {
+        New-Item -ItemType SymbolicLink -Path $dest -Target $target -ErrorAction Stop | Out-Null
+        return (Test-Path -LiteralPath $dest)
+    } catch {
+        return $false
+    }
+}
+
+function Try-FileCopy([string]$dest, [string]$target) {
+    try {
+        Write-Host "Staging dump copy to $dest (may take a minute for large CIAs)..."
+        [IO.File]::Copy($target, $dest, $true)
+        return (Test-Path -LiteralPath $dest)
+    } catch {
+        Write-Host ("Copy failed: " + $_.Exception.Message)
+        return $false
+    }
+}
+
 if (-not $Path) {
     $Path = $env:NLPP_ROM
 }
 if (-not $Path) {
-    [Console]::Error.WriteLine("no path")
+    Write-Host "no path"
     exit 1
 }
 if (-not (Test-Path -LiteralPath $Path)) {
-    [Console]::Error.WriteLine("not found: $Path")
-    # Still emit something so the bat can report it
-    [Console]::Out.Write($Path)
+    Write-Host "not found: $Path"
+    Write-Result $Path
     exit 0
 }
 
@@ -39,7 +103,7 @@ public static extern uint GetShortPathName(string lpszLongPath, System.Text.Stri
         $short = $sb.ToString()
         # Only accept if it actually looks like 8.3 (contains ~) OR has no spaces/parens
         if (($short -match '~') -or ($short -notmatch '[\s()]')) {
-            [Console]::Out.Write($short)
+            Write-Result $short
             exit 0
         }
     }
@@ -47,33 +111,63 @@ public static extern uint GetShortPathName(string lpszLongPath, System.Text.Stri
     # fall through
 }
 
-# 2) Hardlink / symlink / copy into %TEMP% with an ASCII name
-$dest = Join-Path $env:TEMP ("nlpp_drop_input" + $ext)
-if (Test-Path -LiteralPath $dest) {
-    try { Remove-Item -LiteralPath $dest -Force } catch { }
-}
+# 2) Stage to an ASCII filename. Prefer same volume as the ROM so hardlinks work
+#    (CIA on D: + %TEMP% on C: cannot hardlink).
+$stageName = "nlpp_drop_input" + $ext
+$romDir = [IO.Path]::GetDirectoryName($full)
+$romRoot = [IO.Path]::GetPathRoot($full).TrimEnd('\')
+$candidates = @(
+    (Join-Path $env:TEMP $stageName),
+    (Join-Path $romDir $stageName),
+    (Join-Path (Join-Path $romRoot "nlpp_patcher_temp") $stageName)
+)
 
-$linked = $false
-try {
-    # Same-volume hardlink is instant even for multi-GB CIAs
-    New-Item -ItemType HardLink -Path $dest -Target $full -ErrorAction Stop | Out-Null
-    $linked = $true
-} catch {
-    try {
-        New-Item -ItemType SymbolicLink -Path $dest -Target $full -ErrorAction Stop | Out-Null
-        $linked = $true
-    } catch {
-        # Last resort: copy (slow for ~1.7GB)
-        [Console]::Error.WriteLine("hardlink/symlink failed; copying dump to TEMP (may take a minute)...")
-        Copy-Item -LiteralPath $full -Destination $dest -Force
-        $linked = $true
+# Same-volume destinations first (hardlink-friendly), stable order otherwise
+$candidates = @(
+    $candidates |
+        Select-Object -Unique |
+        Sort-Object -Property @{
+            Expression = { if (Test-SameVolume $_ $full) { 0 } else { 1 } }
+        }, @{ Expression = { $_ } }
+)
+
+foreach ($dest in $candidates) {
+    $parent = [IO.Path]::GetDirectoryName($dest)
+    if ($parent -and -not (Test-Path -LiteralPath $parent)) {
+        try {
+            New-Item -ItemType Directory -Path $parent -Force -ErrorAction Stop | Out-Null
+        } catch {
+            continue
+        }
+    }
+    Remove-StageFile $dest
+    if (Try-HardLink $dest $full) {
+        Write-Result $dest
+        exit 0
     }
 }
 
-if (-not $linked -or -not (Test-Path -LiteralPath $dest)) {
-    [Console]::Error.WriteLine("failed to stage dump path")
-    [Console]::Out.Write($full)
-    exit 1
+foreach ($dest in $candidates) {
+    $parent = [IO.Path]::GetDirectoryName($dest)
+    if ($parent -and -not (Test-Path -LiteralPath $parent)) { continue }
+    Remove-StageFile $dest
+    if (Try-SymLink $dest $full) {
+        Write-Result $dest
+        exit 0
+    }
 }
-[Console]::Out.Write($dest)
-exit 0
+
+# Last resort: byte copy. Same-volume first so free space is on the right drive.
+foreach ($dest in $candidates) {
+    $parent = [IO.Path]::GetDirectoryName($dest)
+    if ($parent -and -not (Test-Path -LiteralPath $parent)) { continue }
+    Remove-StageFile $dest
+    if (Try-FileCopy $dest $full) {
+        Write-Result $dest
+        exit 0
+    }
+}
+
+Write-Host "failed to stage dump path"
+Write-Result $full
+exit 1

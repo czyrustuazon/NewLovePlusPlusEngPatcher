@@ -10,6 +10,7 @@ Self-contained (no Azahar required):
     → SMS maildic
     → sync TRBs into release/romfs_overlay
     → release/bake_img.bin
+    → release/name_input_code.bin (Profile romaji stack; drop-bat --inject-code)
 
 Usage:
   python tools/rebuild_bake_img.py
@@ -37,22 +38,25 @@ from nlpp_paths import (  # noqa: E402
     BAKE_IMG,
     CACHE,
     CACHE_NEW_IMG,
+    NAME_INPUT_CODE,
     OVERLAY_TRB_DIR,
     RELEASE,
     TEXTRESOURCE,
     TRANSLATIONS_JSON,
+    find_vanilla_code,
     find_vanilla_main_trb,
     find_vanilla_resident_trb,
     require_translations_json,
 )
 from patch_cia import PatchError  # noqa: E402
 
-# Shared-ARC-safe order (canonical last-writers for 5245/5247/5380/5575/5253).
+# Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
 DEPLOY_SCRIPTS: list[str] = [
     "deploy_msel_options_en.py",
     "deploy_msel_opt_plates_en.py",
     "deploy_msel_menus_en.py",
     "deploy_confirm_btn_en.py",
+    "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
     "deploy_display_settings_en.py",
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
@@ -65,6 +69,11 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_todo_hist_en.py",
     "deploy_schedule_header_en.py",
     "deploy_day_counter_en.py",
+    "deploy_datadelete_en.py",  # 4187 + 5237 Text05
+    "deploy_multiwin_headers_en.py",  # 5237 after datadelete (keeps Text05)
+    "deploy_gallery_common_en.py",  # 5153
+    "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
+    "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
     # Hub main-menu rows (Title.arc) + boot CESA — not covered by NCommonMSel deploys.
     "deploy_title_main_menu_en.py",
     "deploy_cesa_en.py",
@@ -200,6 +209,41 @@ def seed_vanilla_bak(vanilla: Path, bake: Path) -> None:
     print(f"[bake] vanilla bak -> {bak}", flush=True)
 
 
+def build_name_input_code(*, rom: Path | None) -> Path | None:
+    """Patch vanilla ExeFS code.bin → release/name_input_code.bin for CIA inject."""
+    from extract_vanilla_from_rom import ensure_vanilla_code_from_rom  # noqa: PLC0415
+
+    src = find_vanilla_code()
+    if src is None and rom is not None:
+        try:
+            src = ensure_vanilla_code_from_rom(rom)
+        except (FileNotFoundError, PatchError, OSError) as exc:
+            print(f"[name-input] skip code.bin build: {exc}", flush=True)
+            return None
+    if src is None:
+        print(
+            "[name-input] skip: vanilla exefs/code.bin not found "
+            "(set NLPP_VANILLA_CODE or pass --rom).",
+            flush=True,
+        )
+        return None
+    RELEASE.mkdir(parents=True, exist_ok=True)
+    run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "deploy_name_input_en.py"),
+            "--src",
+            str(src),
+            "--out",
+            str(NAME_INPUT_CODE),
+        ]
+    )
+    if not NAME_INPUT_CODE.is_file():
+        raise SystemExit(f"name-input code build did not write {NAME_INPUT_CODE}")
+    print(f"[name-input] -> {NAME_INPUT_CODE}", flush=True)
+    return NAME_INPUT_CODE
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -265,6 +309,11 @@ def main(argv: list[str] | None = None) -> int:
         "--also-azahar",
         action="store_true",
         help="mirror deploy splices into Azahar LayeredFS when present",
+    )
+    ap.add_argument(
+        "--skip-name-input-code",
+        action="store_true",
+        help="skip building release/name_input_code.bin (Profile romaji stack)",
     )
     args = ap.parse_args(argv)
 
@@ -361,6 +410,13 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     sync_trb_overlay()
+
+    name_code: Path | None = None
+    if not args.skip_name_input_code:
+        name_code = build_name_input_code(
+            rom=args.rom.resolve() if args.rom else None
+        )
+
     if not BAKE_IMG.is_file():
         raise SystemExit(f"bake missing after rebuild: {BAKE_IMG}")
     main_trb = TEXTRESOURCE / "textresource_jpn.trb"
@@ -371,6 +427,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
+    if name_code is not None:
+        print(f"  name-input:    {name_code}", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
     return 0
 

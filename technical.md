@@ -599,7 +599,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** (lean trials + shared exact zlib) |
 | `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 | `tools/deploy_cesa_en.py` | Boot CESA warning PNG → pkg **90** (`patch_cesa` exact zlib) |
-| `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` |
+| `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Shared exact-length zopfli / gap-tune / empty-block / near-miss |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
@@ -712,6 +712,8 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Zero DARC inter-file gaps before measuring zopfli | Prior urandom salt inflates zlib on shared ARCs |
 | Seed resident TRB into `release/textresource/` from vanilla/cache | Convenient same-size TOP blob to patch before splicing into pkg **5508** (RomFS resident path itself unused at runtime) |
 | `deploy_title_main_menu_en.py` + `deploy_cesa_en.py` on rebuild list | Hub + boot warning covered in gold path |
+| Softkeys / multiwin / gallery / UI buttons / keyboard tabs on rebuild list | Remaining chrome deploy scripts in `DEPLOY_SCRIPTS` |
+| `release/name_input_code.bin` from bake | Drop-bat `--inject-code` for Profile romaji name-input |
 | Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
 
@@ -733,8 +735,12 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Main Menu **rows** | **5261** Title.arc | `deploy_title_main_menu_en.py` (labels only) |
 | Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
+| Gallery girl-select | **5153** | `deploy_gallery_common_en.py` |
+| MultiWin headers (+ Delete Save Data) | **5237** | `deploy_datadelete_en.py` then `deploy_multiwin_headers_en.py` |
+| Softkeys Back / Next / Confirm | **5238** | `deploy_confirm_btn_en.py` then `deploy_softkey_back_next_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
-| Confirm OK | **5238** | `deploy_confirm_btn_en.py` |
+| Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
+| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`) |
 | “Main Menu” title string | TRB / Title_menu_word | Already EN via textresource |
 
 ---

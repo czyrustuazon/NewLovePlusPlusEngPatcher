@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Durable release artifacts (gold bake + RomFS overlays). Not wipeable scratch.
 RELEASE = ROOT / "release"
 BAKE_IMG = RELEASE / "bake_img.bin"
+NAME_INPUT_CODE = RELEASE / "name_input_code.bin"
 ROMFS_OVERLAY = RELEASE / "romfs_overlay"
 TEXTRESOURCE = RELEASE / "textresource"
 OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
@@ -24,6 +25,8 @@ CACHE_VANILLA_IMG = CACHE_VANILLA_ROMFS / "img.bin"
 CACHE_VANILLA_MAIN_TRB = (
     CACHE_VANILLA_ROMFS / "SystemData" / "TextResource" / "textresource_jpn.trb"
 )
+CACHE_VANILLA_EXEFS = CACHE / "vanilla_from_rom" / "exefs"
+CACHE_VANILLA_CODE = CACHE_VANILLA_EXEFS / "code.bin"
 CACHE_VANILLA_RESIDENT_TRB = (
     CACHE_VANILLA_ROMFS
     / "SystemData"
@@ -89,6 +92,7 @@ def find_vanilla_code() -> Path | None:
         DEFAULT_VANILLA_CODE,
         ROOT / "extracted" / "exefs" / "code.bin.bak",
         ROOT / "extracted" / "exefs" / "code.bin",
+        CACHE_VANILLA_CODE,
     ):
         if c.is_file():
             return c.resolve()
