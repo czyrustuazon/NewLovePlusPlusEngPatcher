@@ -9,7 +9,7 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 
 1. Read **`technical.md`** (this repo and/or `../NewLovePlusPlusEngPatcher/technical.md`) — addresses, BCLIM quirks, TRB/INDX, softkeys, dead ends.
 2. Skim Cursor rules:
-   - `nlpp-repo-workflow` — how to pack/deploy/address-convert
+   - `nlpp-repo-workflow` — how to pack/deploy/address-convert; **gold bake / Drop CIA (§15.5)**
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)
    - `ui-localization-method` — texture vs TRB vs DrawText decision tree
    - `img-exact-zlib-deploy` — exact-length zlib/zopfli splice; **never bak→MOD wipe**
@@ -26,3 +26,5 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 **Do not** treat MyroomHeader `optn_tex_*` or DrawText as Options/clock menu chrome — wrong path.
 
 Prefer extending documented next steps over opening a fresh “find the string” investigation.
+
+**Gold bake / Drop CIA (2026-09):** read `technical.md` **§15.5–15.6** before diagnosing “names EN, menus JP” on a clean clone. `release/bake_img.bin` is **gitignored** — not in clone. Run `python -m pytest tests/ -v` after changing fetch/bat/inject logic.

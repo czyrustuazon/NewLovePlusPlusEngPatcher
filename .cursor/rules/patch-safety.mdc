@@ -16,6 +16,7 @@ alwaysApply: true
 - **Short zlib into a compressed ARC/TEX slot with trailing NUL**, or **shrinking entry `cmp_len`** — freezes/crashes (Options, CESA). Stream length must equal the slot with `unused_data == 0`.
 - Treating MyroomHeader `optn_tex_optionmenu_*` as Options/clock titles (wrong; use NCommonMSel **5245**).
 - **`splice_packages_into_img(bak, …, MOD_IMG)`** when `bak != MOD` — copies the whole bak over live and **wipes later EN packages**. Splice into live `MOD_IMG`; extract vanilla packages from bak only.
+- **Patch CIA with UI on the normal Drop CIA path without `release/bake_img.bin`** — causes English dialog/names but **Japanese menus** (menu chrome is bake-only). Bat must hard-stop if bake missing after fetch + rebuild.
 
 ## Always
 
@@ -25,6 +26,7 @@ alwaysApply: true
 - When deploying images, prefer splicing onto the current Azahar mod `img.bin` if it already has other patches (CESA, etc.), not only vanilla.
 - Treat dump `extracted/` as mostly read-only; write patches through EngPatcher → Azahar mods.
 - Fully quit Azahar after `img.bin` changes so LayeredFS reloads.
+- On **Drop CIA** normal path: prefer `release/bake_img.bin`; if absent, poll CI (`fetch_release_bake.py --best-effort`) then `rebuild_bake_img.py --rom` — see `nlpp-repo-workflow` gold bake section.
 
 ## LayeredFS layout
 
