@@ -171,6 +171,10 @@ def canvas_for_pixel_bytes(
     pot_w, pot_h = rectangular_pot(width, height)
     if pot_w * pot_h == px:
         return pot_w, pot_h
+    # Per-axis POT (e.g. Profile_Info_Call02_t: 240x104 display, 256x128 buffer).
+    rect_w, rect_h = nlpo2(width), nlpo2(height)
+    if rect_w * rect_h == px:
+        return rect_w, rect_h
     for cand in (
         (256, 512),
         (512, 256),
