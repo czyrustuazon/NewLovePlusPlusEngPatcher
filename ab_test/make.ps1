@@ -191,6 +191,9 @@ See ab_test\README.md
   launch-a/b     Start Azahar instance A or B
   all-a / all-b  instances + seed + deploy
 
+  progress       Diff release EN TRB vs vanilla, POST script-text % to the site
+  progress-dry   Same, but just print the numbers (no POST)
+
 Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
 "@
     }
@@ -209,6 +212,8 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
     "launch-b" = { Launch-Instance "b" }
     "all-a" = { Setup-Instances; Seed-Instance "a"; Deploy-NameInput "a" }
     "all-b" = { Setup-Instances; Seed-Instance "b"; Deploy-NameInput "b" }
+    "progress" = { Invoke-Python @("src\report_progress.py") }
+    "progress-dry" = { Invoke-Python @("src\report_progress.py", "--dry-run") }
 }
 
 if (-not $handlers.ContainsKey($Target)) {

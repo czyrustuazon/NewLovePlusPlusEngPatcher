@@ -279,6 +279,13 @@ echo.
 echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
+
+REM Soft-update companion site script-text progress bar (optional .env /
+REM NLPP_PROGRESS_*). Missing config or network must never fail the patch.
+echo Reporting script-text progress ^(optional^)...
+"%PYTHON%" "%SRC%\report_progress.py" --best-effort
+if errorlevel 1 echo [progress] optional update skipped ^(patch still OK^)
+echo.
 pause
 exit /b 0
 

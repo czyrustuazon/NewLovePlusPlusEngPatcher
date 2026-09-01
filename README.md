@@ -77,6 +77,15 @@ Dual isolated Azahar user dirs for LayeredFS experiments (no fighting roaming Ap
 
 Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1`. Name-input RE: `technical.md` §17.
 
+### Companion site progress bar
+
+Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed by
+`src/report_progress.py` (EN TRB vs vanilla JP). It auto-POSTs after a TRB
+`rebuild`, after a successful Drop CIA run, and from **nlpp-gold** CI — when
+`NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
+nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin.
+See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
+
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
 If bake is absent, the drop bat auto-runs:

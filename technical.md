@@ -138,6 +138,13 @@ Codebook file used by EngPatcher:
 
 `NewLovePlusPlusEngPatcher/tools/Trb2xlsx/TrbExport/lookup.txt` (~3445 entries, 1-based indices in NLP encoding).
 
+**Companion site progress (script text):** `src/report_progress.py` diffs
+`release/textresource/textresource_jpn.trb` vs vanilla JP — count of non-empty
+`JP_RE` entries whose text changed → `scriptPercent`. POSTs to the site Worker
+KV (`POST /api/admin/progress`). Auto after `rebuild`, Drop CIA.bat, and
+nlpp-gold CI when `NLPP_PROGRESS_*` is set. Resident TOP TRB is **out of scope**.
+Graphics track is manual. See `infra/README.md`.
+
 ### 3.2 Pack / hierarchy lookup
 
 ```c

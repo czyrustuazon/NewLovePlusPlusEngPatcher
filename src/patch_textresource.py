@@ -447,6 +447,15 @@ def cmd_rebuild(args: argparse.Namespace) -> int:
             cfg_dest = AZAHAR_DIR / "textresource_config.trb"
             shutil.copy2(args.config_out, cfg_dest)
             print(f"[trb] deployed {cfg_dest}")
+
+    # Soft-report script % to companion site (no-op without .env / CI secrets).
+    # Lazy import: report_progress imports this module at load time.
+    try:
+        import report_progress as rp
+
+        rp.try_report_progress(en_trb=args.out)
+    except Exception as exc:  # noqa: BLE001 — never fail rebuild on reporter
+        print(f"[progress] soft-fail: {exc}", file=sys.stderr)
     return 0
 
 
