@@ -177,20 +177,20 @@ if exist "%SIBLING_ROMFS%\script\bin\script" (
 )
 
 REM UI ON by default. Durable release artifacts (not wipeable like out/):
-REM   release\bake_img.bin     — gold bake (preferred)
+REM   release\bake_img.bin     — gold bake (built locally; gitignored)
 REM   release\romfs_overlay\   — TRB overlays (auto-applied when present)
 REM Optional PNG scratch:
-REM   cache\new_img.bin        — PNG pack only (incomplete vs gold)
+REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Missing gold bake auto-runs: python tools\rebuild_bake_img.py
+REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (~16h)
+REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"
 if not exist "%~dp0out" mkdir "%~dp0out"
 set "LAYEREDFS_OUT=--layeredfs-out %~dp0out\luma"
-set "PACKED_IMG=%~dp0cache\new_img.bin"
+set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
-  set "PACKED_IMG=%~dp0release\bake_img.bin"
   echo Using gold bake: release\bake_img.bin
 ) else if exist "%~dp0cache\bake_img.bin" (
   REM legacy path during transition
@@ -214,42 +214,63 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
   echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
-  REM Auto-build gold bake when missing (full: PNG pack + TRB + deploys + SMS).
+  REM Gold bake required. Try CI Release first, then build from assets.
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
-    echo.
-    echo No gold bake at release\bake_img.bin — running full tools\rebuild_bake_img.py
-    echo This regenerates bake + textresource TRBs from sources.
-    echo If sibling extracted\ is missing, vanilla img.bin is taken from the dropped ROM.
-    echo First full rebuild often takes ~16 hours. Leave this window open.
-    echo.
-    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
-    if errorlevel 1 (
-      echo [!] rebuild_bake_img.py failed — see traceback above.
-      echo     Common fixes:
-      echo       pip install -r requirements.txt
-      echo       ^(needs Pillow numpy zopfli etcpak^)
-      echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
+    if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
+      echo.
+      echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
+      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold if auto-detect fails^)
+      echo.
+      "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
+      if errorlevel 1 (
+        echo [fetch] No published gold bake — will build locally from assets.
+      )
+    )
+    if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+      echo.
+      echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
+      echo This builds bake + textresource TRBs from assets\ ^(PNG pack + deploy chrome^).
+      echo Vanilla img.bin comes from the dropped ROM if no sibling extracted\ exists.
+      echo First full rebuild often takes ~16 hours. Leave this window open.
+      echo.
+      "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
+      if errorlevel 1 (
+        echo [!] rebuild_bake_img.py failed — see traceback above.
+        echo     Common fixes:
+        echo       pip install -r requirements.txt
+        echo       ^(needs Pillow numpy zopfli etcpak^)
+        echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
+        pause
+        exit /b 1
+      )
+      REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
+      if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
+        echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+        set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
+      )
+    )
+    if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+      echo.
+      echo [!] No gold bake available. English menus need release\bake_img.bin.
+      echo     Run: python tools\rebuild_bake_img.py --rom your.cia
+      echo     ^(must finish — first run is often ~16 hours^)
+      echo     Or scripts-only: set NLPP_WITH_IMAGES=0
       pause
       exit /b 1
     )
-    if not exist "%~dp0release\bake_img.bin" (
-      echo [!] rebuild finished but release\bake_img.bin is still missing.
-      pause
-      exit /b 1
+    if exist "%~dp0release\bake_img.bin" (
+      set "PACKED_IMG=%~dp0release\bake_img.bin"
+    ) else (
+      set "PACKED_IMG=%~dp0cache\bake_img.bin"
     )
-    set "PACKED_IMG=%~dp0release\bake_img.bin"
-    echo Using newly built gold bake: release\bake_img.bin
-    REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
-    if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
-      echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-      set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
-    )
+    echo Using gold bake: !PACKED_IMG!
   )
-  if exist "!PACKED_IMG!" (
-    echo Reusing packed img: !PACKED_IMG!
-  ) else (
-    set "PACKED_IMG=%~dp0release\bake_img.bin"
+  if not exist "!PACKED_IMG!" (
+    echo [!] Gold bake path missing: !PACKED_IMG!
+    pause
+    exit /b 1
   )
+  echo Injecting gold bake: !PACKED_IMG!
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
 set ERR=%ERRORLEVEL%
