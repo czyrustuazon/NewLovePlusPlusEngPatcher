@@ -25,7 +25,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - Global MakeStr hook and full `img.bin` rewrite are banned — see §11.
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
-- Gold bake / clone pitfalls and fixes: **§15**.
+- Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**).
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
@@ -607,6 +607,8 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 | `tools/deploy_cesa_en.py` | Boot CESA warning PNG → pkg **90** (`patch_cesa` exact zlib) |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
+| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from nlpp-gold GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
+| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (+ `out/luma/` LayeredFS) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Shared exact-length zopfli / gap-tune / empty-block / near-miss |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
@@ -691,6 +693,8 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | CESA left opt-in / off rebuild path | Boot warning stayed JP or vanished after ad-hoc patch | `pack_images` skips CESA unless `--only cesa` (white-boot history); no deploy until late |
 | Patched bake but not Azahar LayeredFS | Emulator still showed JP hub + old CESA after “success” | `iter_deploy_targets` only mirrored Azahar when `NLPP_ALSO_AZAHAR=1`; bake ≠ what Azahar loaded |
 | Misleading bat error after deploy failure | “Need a .cia / set NLPP_VANILLA_IMG” after zlib fail | Generic message ignored the real traceback |
+| Old Drop CIA fell through without bake | English dialog + heroine names OK, **menus still JP** | Bat defaulted `PACKED_IMG` to `cache/new_img.bin` and could patch without `release/bake_img.bin`; menu chrome lives only in gold bake |
+| Assumed git clone includes English menus | Clean machine “patched in minutes” with JP UI | `release/bake_img.bin` is **gitignored** (~680 MB); clone has sources + scripts, not the pre-baked `img.bin` |
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
 | Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) | Title logo / chrome went **black** | Custom BCLIM + BCLYT/DARC insert in **5261** not safe yet — stick to same-size replaces |
 
@@ -723,17 +727,22 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | `release/name_input_code.bin` from bake | Drop-bat `--inject-code` for Profile romaji name-input |
 | Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
+| Drop CIA polls CI then rebuild; hard-stop without bake | Prevents silent “scripts-only” CIAs that look partially EN (§15.5) |
+| `fetch_release_bake.py --best-effort` + `try_fetch_gold()` | 404 / missing Release → exit 1 quietly; bat falls back to local rebuild |
+| `pytest` suite under `tests/` (§15.6) | Guards gold-bake resolution, fetch fallback, bat workflow strings |
 
 ### 15.3 Clone / first-drop checklist
 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
-2. Drop known-dump `.cia` / `.3ds` / `.cci` on the bat (or `rebuild_bake_img.py --rom …`).
-3. First gold rebuild: expect **~16 hours** PNG pack, then deploys. Leave the window open.
+2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
+3. **If `release/bake_img.bin` is missing** (normal on a fresh clone), the bat runs the acquisition chain in **§15.5** — do **not** expect a finished CIA in minutes unless step 3a (CI download) succeeds or you already built a bake on that machine.
+4. First **local** gold rebuild: expect **~16 hours** PNG pack, then deploys. Leave the window open.
    Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
-4. After bake exists: drop again → minutes (no rebuild).
-5. Resume mid-deploy: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
-6. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
-7. CESA: use `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`.
+5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
+6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
+7. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
+8. CESA: use `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`.
+9. Dev sanity: `pip install -r requirements-dev.txt && python -m pytest tests/ -v` (§15.6).
 
 ### 15.4 Package quick map (hub vs submenu)
 
@@ -749,6 +758,93 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`) |
 | “Main Menu” title string | TRB / Title_menu_word | Already EN via textresource |
+
+### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
+
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the ~16h first run when that infra exists.
+
+#### What git contains vs what a patched CIA needs
+
+| Layer | In git? | Role |
+|-------|---------|------|
+| English dialog `.dbin2` | Yes (`rebuild_dbin2/`) | Injected into RomFS `script/bin/` |
+| TRB overlay source | Yes (`assets/textresource/translations.json`) | Rebuilt into `release/romfs_overlay/` during bake |
+| UI PNG sources | Yes (`assets/images/`) | Packed into `img.bin` during bake |
+| Deploy scripts | Yes (`tools/deploy_*_en.py`) | Menu chrome splices during bake |
+| **`release/bake_img.bin`** | **No** (gitignored) | Pre-packed English `img.bin` — **all menu textures** |
+| **`release/romfs_overlay/`** | **No** (generated) | Patched TRBs auto-applied by `patch_cia` |
+| **`release/name_input_code.bin`** | **No** (generated) | Profile romaji stack → ExeFS inject |
+
+**Symptom cheat sheet:** English dialog + heroine name rewrites but **Japanese menus** → `img.bin` menu chrome never landed. Scripts/TRB/name patches do not replace bake.
+
+#### Default Drop CIA flow (`Drop CIA or 3DS Here to Patch.bat`)
+
+```text
+decrypted .cia / .3ds / .cci dropped
+  → pip install requirements.txt + setup_tools.py
+  → SHA-1 gate (known dumps)
+  → if release/bake_img.bin exists:
+        use gold bake → patch CIA in minutes
+  → else (fresh clone):
+        1. fetch_release_bake.py --best-effort
+             poll GitHub Release {owner}/nlpp-gold @ tag gold
+             (owner from git remote or NLPP_GITHUB_REPO)
+           success → release/bake_img.bin + romfs_overlay/
+           fail (404, no repo, network) → continue
+        2. if still no bake:
+             rebuild_bake_img.py --rom <dropped ROM>
+             (~16h first time; vanilla from cache/vanilla_from_rom/)
+        3. if still no bake:
+             HARD STOP — do not patch (prevents half-EN CIA)
+  → patch_cia.py:
+        inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
+        + apply_name_patches + optional --inject-code name_input_code.bin
+  → out/NewLovePlusPlus-EN.cia + out/luma/
+```
+
+There is **no saved patch log file** by default — output is the console window only. Re-run with redirection if you need `[images]` / `[inject]` lines for diagnosis.
+
+#### Environment overrides
+
+| Variable | Effect |
+|----------|--------|
+| `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override nlpp-gold repo (`OWNER/nlpp-gold`) |
+| `NLPP_GOLD_TAG` | Release tag (default `gold`) |
+| `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
+| `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
+| `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+
+#### nlpp-gold CI (optional accelerator)
+
+When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. The Drop CIA bat **polls this automatically** when local bake is absent.
+
+**Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold`.
+
+#### `patch_cia.py` image resolution
+
+`resolve_inject_img()` prefers `release/bake_img.bin` over `cache/new_img.bin` unless `--repack-images`. The bat always passes `--packed-img release/bake_img.bin` on the normal path.
+
+### 15.6 Unit tests and CI (2026-09-01)
+
+Regression guards for the gold-bake workflow and core helpers:
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest tests/ -v
+```
+
+| Test module | Guards |
+|-------------|--------|
+| `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
+| `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback |
+| `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
+| `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |
+| Others | `patch_names`, `exact_zlib`, `nlpp_paths`, `image_map`, `img_pack_cache`, … |
+
+GitHub Actions: `.github/workflows/test.yml` on push/PR to `main` / `Bleeding-Edge`.
+
+**Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify, individual `deploy_*` texture splices.
 
 ---
 
@@ -1004,4 +1100,4 @@ Offline `vendor/NLPPATCH/` snapshot was also **removed** (2026-08-31). Dialogue/
 
 ---
 
-*Last updated 2026-08-31 — §17 live caves only (scrapped C4 @0x006FC000); §18 a/b + no decrypt/vendor.*
+*Last updated 2026-09-01 — §15.5 Drop CIA gold-bake acquisition (CI poll → local rebuild → hard-stop); §15.6 pytest suite; §17 live caves only (scrapped C4 @0x006FC000); §18 a/b + no decrypt/vendor.*

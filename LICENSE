@@ -40,8 +40,12 @@ Examples of EngPatcher original work (non-exhaustive):
   - `src/` EngPatcher Python modules (except where a file is a thin wrap of
     upstream logic and notes otherwise)
   - `tools/deploy_*.py`, `tools/deploy_common.py`, `tools/rebuild_bake_img.py`,
-    `tools/mdcutil.py`, and other EngPatcher-authored helpers under `tools/`
-  - `Drop CIA or 3DS Here to Patch.bat`, project docs authored here
+    `tools/fetch_release_bake.py`, `tools/mdcutil.py`, and other
+    EngPatcher-authored helpers under `tools/`
+  - `tests/` unit tests and `pytest.ini`, `requirements-dev.txt` (test harness only)
+  - `.github/workflows/` CI definitions for this repo (not third-party Actions themselves)
+  - `Drop CIA or 3DS Here to Patch.bat`, project docs authored here (`README.md`,
+    `technical.md`, `release/README.md`, …)
   - Finished translation / patch assets authored for this project under
     `assets/`, `rebuild_dbin2/`, and similar project paths (not third-party trees)
 
