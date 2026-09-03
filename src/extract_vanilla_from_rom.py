@@ -51,6 +51,12 @@ KEEP_RELATIVE = (
     Path("SystemData") / "TextResource" / "textresource_resident_jpn.trb",
     Path("SystemData") / "TextResource" / "textresource_config.trb",
 )
+# Dialogue .dbin2 trees (JP baseline for volunteer Scripts kit / NLPTextTool).
+KEEP_DIRS = (
+    Path("script") / "bin" / "script",
+    Path("script") / "bin" / "NLP_01",
+    Path("script") / "bin" / "NLP_02",
+)
 
 
 def _rom_fingerprint(rom: Path) -> str:
@@ -206,7 +212,7 @@ def ensure_vanilla_code_from_rom(rom: Path, *, force: bool = False) -> Path:
 
 
 def _slim_romfs(romfs_dir: Path) -> None:
-    """Drop everything except img.bin + TextResource TRBs to save disk."""
+    """Drop everything except img.bin + TRBs + script .dbin2 trees."""
     staging = romfs_dir.parent / "_slim_staging"
     if staging.exists():
         shutil.rmtree(staging)
@@ -219,6 +225,17 @@ def _slim_romfs(romfs_dir: Path) -> None:
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
         print(f"[vanilla] keep {rel.as_posix()}", flush=True)
+    for rel in KEEP_DIRS:
+        src = romfs_dir / rel
+        if not src.is_dir():
+            continue
+        dest = staging / rel
+        if dest.exists():
+            shutil.rmtree(dest)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(src, dest)
+        n = sum(1 for _ in dest.rglob("*") if _.is_file())
+        print(f"[vanilla] keep {rel.as_posix()}/ ({n} files)", flush=True)
     shutil.rmtree(romfs_dir)
     staging.rename(romfs_dir)
 
@@ -256,7 +273,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--slim",
         action="store_true",
-        help="keep only img.bin + TextResource TRBs (saves disk; not usable as --romfs)",
+        help=(
+            "keep only img.bin + TextResource TRBs + script/bin/{script,NLP_*} "
+            "(saves disk; not a full --romfs)"
+        ),
     )
     args = ap.parse_args(argv)
     try:
