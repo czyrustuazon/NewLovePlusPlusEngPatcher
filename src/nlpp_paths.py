@@ -33,6 +33,7 @@ CACHE_VANILLA_RESIDENT_TRB = (
     / "TextResource"
     / "textresource_resident_jpn.trb"
 )
+CACHE_VANILLA_SCRIPT = CACHE_VANILLA_ROMFS / "script" / "bin" / "script"
 
 # Scratch
 OUT = ROOT / "out"
@@ -50,6 +51,7 @@ DEFAULT_VANILLA_RESIDENT_TRB = (
 DEFAULT_VANILLA_MAIN_TRB = (
     DEFAULT_EXTRACTED / "romfs" / "SystemData" / "TextResource" / "textresource_jpn.trb"
 )
+DEFAULT_VANILLA_SCRIPT = DEFAULT_EXTRACTED / "romfs" / "script" / "bin" / "script"
 
 TITLE_ID = "00040000000F4E00"
 
@@ -202,5 +204,19 @@ def find_vanilla_resident_trb() -> Path | None:
         CACHE_VANILLA_RESIDENT_TRB,
     ):
         if c.is_file():
+            return c.resolve()
+    return None
+
+
+def find_vanilla_script_dir() -> Path | None:
+    """Directory of Japanese .dbin2 scripts (prefer CIA cache over EN-patched dump)."""
+    env = os.environ.get("NLPP_VANILLA_SCRIPT")
+    if env:
+        p = Path(env)
+        if p.is_dir():
+            return p.resolve()
+    # Cache from extract_vanilla_from_rom first — sibling extracted/ is often EN-overwritten.
+    for c in (CACHE_VANILLA_SCRIPT, DEFAULT_VANILLA_SCRIPT):
+        if c.is_dir() and any(c.glob("*.dbin2")):
             return c.resolve()
     return None
