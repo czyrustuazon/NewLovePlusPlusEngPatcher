@@ -20,6 +20,7 @@ from darcutil import DarcArchive
 from image_map import normalize_folder_key, resolve_folder
 from img_pack_cache import ImgPackCache, compress_to_exact_slot_cached
 from nlpp_paths import CACHE_IMG_PACK
+from run_timer import RunTimer
 
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
@@ -764,6 +765,7 @@ def pack_images(
     cache_msg = (
         f"cache={pack_cache.root}" if pack_cache is not None else "cache=off"
     )
+    timer = RunTimer("PNG pack", heartbeat_s=60.0)
     print(
         f"[pack] pkg_workers={pkg_workers} png_workers={png_workers} "
         f"fine_tune={fine_tune} {cache_msg}",
@@ -786,147 +788,159 @@ def pack_images(
         by_pkg[index].append((key, folder, arc_name))
 
     if not by_pkg and not patch_cesa:
+        timer.finish("PNG pack failed (no packages)")
         raise PackError("no mapped image folders found (and no assets/images/cesa PNG)")
 
     totals = {"packages": 0, "png_ok": 0, "png_skip": 0, "arcs": 0, "cesa": 0}
     patched_indices: list[int] = []
 
-    if by_pkg:
-        unpack_packages(img_bin, img_data, set(by_pkg))
-        # pe-unpack all packages on the main thread (avoids concurrent pe races).
-        for index in sorted(by_pkg):
-            ensure_package_data(img_data, index)
+    try:
+        if by_pkg:
+            unpack_packages(img_bin, img_data, set(by_pkg))
+            # pe-unpack all packages on the main thread (avoids concurrent pe races).
+            for index in sorted(by_pkg):
+                ensure_package_data(img_data, index)
 
-        jobs: list[tuple[int, list[tuple[str, str, str]]]] = []
-        for index, items in sorted(by_pkg.items()):
-            jobs.append(
-                (
-                    index,
-                    [(k, str(folder.resolve()), arc) for k, folder, arc in items],
-                )
-            )
-
-        results: list[dict] = []
-        cache_dir_s = str(cache_dir_p) if cache_dir_p is not None else None
-
-        if pkg_workers <= 1 or len(jobs) <= 1:
-            for index, items in jobs:
-                results.append(
-                    _process_one_package(
+            jobs: list[tuple[int, list[tuple[str, str, str]]]] = []
+            for index, items in sorted(by_pkg.items()):
+                jobs.append(
+                    (
                         index,
-                        items,
-                        str(img_data),
-                        str(conv),
-                        png_workers=png_workers,
-                        fine_tune=fine_tune,
-                        cache_dir=cache_dir_s,
+                        [(k, str(folder.resolve()), arc) for k, folder, arc in items],
                     )
                 )
-        else:
-            print(
-                f"[pack] ProcessPool: {len(jobs)} packages, "
-                f"workers={min(pkg_workers, len(jobs))}",
-                flush=True,
-            )
-            with ProcessPoolExecutor(
-                max_workers=min(pkg_workers, len(jobs))
-            ) as pool:
-                futures = {
-                    pool.submit(
-                        _process_one_package,
-                        index,
-                        items,
-                        str(img_data),
-                        str(conv),
-                        png_workers=png_workers,
-                        fine_tune=fine_tune,
-                        cache_dir=cache_dir_s,
-                    ): index
-                    for index, items in jobs
-                }
-                done = 0
-                for fut in as_completed(futures):
-                    done += 1
-                    res = fut.result()
-                    results.append(res)
-                    status = "ok" if res.get("ok") else "FAIL"
-                    print(
-                        f"[pack] [{done}/{len(jobs)}] pkg {res['index']:04d} "
-                        f"{status} touched={res.get('touched')}",
-                        flush=True,
+
+            results: list[dict] = []
+            cache_dir_s = str(cache_dir_p) if cache_dir_p is not None else None
+
+            if pkg_workers <= 1 or len(jobs) <= 1:
+                for index, items in jobs:
+                    results.append(
+                        _process_one_package(
+                            index,
+                            items,
+                            str(img_data),
+                            str(conv),
+                            png_workers=png_workers,
+                            fine_tune=fine_tune,
+                            cache_dir=cache_dir_s,
+                        )
                     )
-
-        results.sort(key=lambda r: r["index"])
-        for res in results:
-            report_lines.extend(res.get("report") or [])
-            totals["png_ok"] += int(res.get("png_ok") or 0)
-            totals["png_skip"] += int(res.get("png_skip") or 0)
-            totals["arcs"] += int(res.get("arcs") or 0)
-            if not res.get("ok"):
-                raise PackError(
-                    f"package {res['index']:04d} failed: {res.get('error')}"
-                )
-            if res.get("touched"):
-                patched_indices.append(int(res["index"]))
-                totals["packages"] += 1
-
-        if pack_cache is not None and cache_dir_p is not None:
-            # Re-open so report can read the shared on-disk cache root.
-            pack_cache = ImgPackCache(cache_dir_p)
-
-        if patched_indices:
-            if splice:
-                splice_packages_into_img(img_bin, img_data, patched_indices, out_img)
             else:
-                selective_ie_repack(img_bin, img_data, out_img, patched_indices)
-        elif not patch_cesa:
-            raise PackError("no textures were injected; aborting img.bin rebuild")
+                print(
+                    f"[pack] ProcessPool: {len(jobs)} packages, "
+                    f"workers={min(pkg_workers, len(jobs))}",
+                    flush=True,
+                )
+                with ProcessPoolExecutor(
+                    max_workers=min(pkg_workers, len(jobs))
+                ) as pool:
+                    futures = {
+                        pool.submit(
+                            _process_one_package,
+                            index,
+                            items,
+                            str(img_data),
+                            str(conv),
+                            png_workers,
+                            fine_tune,
+                            cache_dir_s,
+                        ): index
+                        for index, items in jobs
+                    }
+                    done = 0
+                    for fut in as_completed(futures):
+                        done += 1
+                        res = fut.result()
+                        results.append(res)
+                        status = "ok" if res.get("ok") else "FAIL"
+                        print(
+                            f"[pack] [{done}/{len(jobs)}] pkg {res['index']:04d} "
+                            f"{status} touched={res.get('touched')} "
+                            f"elapsed={timer.elapsed_str()}",
+                            flush=True,
+                        )
+
+            results.sort(key=lambda r: r["index"])
+            for res in results:
+                report_lines.extend(res.get("report") or [])
+                totals["png_ok"] += int(res.get("png_ok") or 0)
+                totals["png_skip"] += int(res.get("png_skip") or 0)
+                totals["arcs"] += int(res.get("arcs") or 0)
+                if not res.get("ok"):
+                    raise PackError(
+                        f"package {res['index']:04d} failed: {res.get('error')}"
+                    )
+                if res.get("touched"):
+                    patched_indices.append(int(res["index"]))
+                    totals["packages"] += 1
+
+            if pack_cache is not None and cache_dir_p is not None:
+                # Re-open so report can read the shared on-disk cache root.
+                pack_cache = ImgPackCache(cache_dir_p)
+
+            if patched_indices:
+                if splice:
+                    splice_packages_into_img(
+                        img_bin, img_data, patched_indices, out_img
+                    )
+                else:
+                    selective_ie_repack(img_bin, img_data, out_img, patched_indices)
+            elif not patch_cesa:
+                raise PackError("no textures were injected; aborting img.bin rebuild")
+            else:
+                shutil.copy2(img_bin, out_img)
         else:
             shutil.copy2(img_bin, out_img)
-    else:
-        shutil.copy2(img_bin, out_img)
 
-    if patch_cesa:
-        from patch_cesa import patch_img_bin
+        if patch_cesa:
+            from patch_cesa import patch_img_bin
 
-        print(f"[cesa] patching boot warning from {cesa_png}")
-        patched = work / "img_cesa.bin"
-        patch_img_bin(out_img, cesa_png, patched, work=work / "cesa_work")
-        shutil.move(str(patched), str(out_img))
-        totals["cesa"] = 1
-        report_lines.append("[ok] package 0090: CESA_240X400.texi (boot warning)")
+            print(f"[cesa] patching boot warning from {cesa_png}")
+            patched = work / "img_cesa.bin"
+            patch_img_bin(out_img, cesa_png, patched, work=work / "cesa_work")
+            shutil.move(str(patched), str(out_img))
+            totals["cesa"] = 1
+            report_lines.append("[ok] package 0090: CESA_240X400.texi (boot warning)")
 
-    if not patched_indices and not patch_cesa:
-        raise PackError("no textures were injected; aborting img.bin rebuild")
+        if not patched_indices and not patch_cesa:
+            raise PackError("no textures were injected; aborting img.bin rebuild")
 
-    report_path = work / "image_pack_report.txt"
-    cache_line = (
-        pack_cache.stats.summary() if pack_cache is not None else "cache=off"
-    )
-    report_path.write_text(
-        "\n".join(
-            [
-                "NLPP image pack report",
-                f"packages patched: {totals['packages']}",
-                f"arcs touched:     {totals['arcs']}",
-                f"png replaced:     {totals['png_ok']}",
-                f"png skipped:      {totals['png_skip']}",
-                f"cesa patched:     {totals['cesa']}",
-                f"cache:            {cache_line}",
-                f"output:           {out_img}",
-                "",
-                *report_lines,
-                "",
-            ]
-        ),
-        encoding="utf-8",
-    )
-    print(f"[report] {report_path}")
-    print(
-        f"[done] packages={totals['packages']} replaced={totals['png_ok']} "
-        f"skipped={totals['png_skip']} cesa={totals['cesa']} {cache_line}"
-    )
-    return totals
+        report_path = work / "image_pack_report.txt"
+        cache_line = (
+            pack_cache.stats.summary() if pack_cache is not None else "cache=off"
+        )
+        report_path.write_text(
+            "\n".join(
+                [
+                    "NLPP image pack report",
+                    f"packages patched: {totals['packages']}",
+                    f"arcs touched:     {totals['arcs']}",
+                    f"png replaced:     {totals['png_ok']}",
+                    f"png skipped:      {totals['png_skip']}",
+                    f"cesa patched:     {totals['cesa']}",
+                    f"cache:            {cache_line}",
+                    f"elapsed:          {timer.elapsed_str()}",
+                    f"output:           {out_img}",
+                    "",
+                    *report_lines,
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        print(f"[report] {report_path}")
+        print(
+            f"[done] packages={totals['packages']} replaced={totals['png_ok']} "
+            f"skipped={totals['png_skip']} cesa={totals['cesa']} {cache_line}"
+        )
+        timer.finish(
+            f"PNG pack OK packages={totals['packages']} replaced={totals['png_ok']}"
+        )
+        return totals
+    except Exception:
+        timer.finish("PNG pack failed")
+        raise
 
 
 AZAHAR_IMG = (

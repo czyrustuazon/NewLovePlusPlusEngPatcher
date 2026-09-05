@@ -49,6 +49,7 @@ from nlpp_paths import (  # noqa: E402
     require_translations_json,
 )
 from patch_cia import PatchError  # noqa: E402
+from run_timer import RunTimer  # noqa: E402
 
 # Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
 DEPLOY_SCRIPTS: list[str] = [
@@ -328,6 +329,21 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
+    timer = RunTimer("gold rebuild", heartbeat_s=60.0)
+    try:
+        return _main_rebuild(args, timer)
+    except SystemExit:
+        timer.finish(f"gold rebuild stopped (elapsed {timer.elapsed_str()})")
+        raise
+    except Exception:
+        timer.finish("gold rebuild failed")
+        raise
+    except KeyboardInterrupt:
+        timer.finish("gold rebuild aborted")
+        raise
+
+
+def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     RELEASE.mkdir(parents=True, exist_ok=True)
     CACHE.mkdir(parents=True, exist_ok=True)
 
@@ -366,6 +382,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(f"--reseed-from-pack needs {CACHE_NEW_IMG}")
         shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
         print(f"[bake] reseeded from PNG pack -> {BAKE_IMG}", flush=True)
+        timer.mark("reseeded bake from cache/new_img.bin")
     elif args.skip_pack:
         if BAKE_IMG.is_file():
             print(f"[bake] keeping existing gold bake: {BAKE_IMG}", flush=True)
@@ -377,13 +394,16 @@ def main(argv: list[str] | None = None) -> int:
                 "no bake and no cache/new_img.bin — run without --skip-pack "
                 "or provide release/bake_img.bin"
             )
+        timer.mark("skipped PNG pack")
     else:
         print(
-            "[rebuild] PNG pack starting (historically ~16h; now empty-block-first "
-            "+ package ProcessPool — see technical.md §12.5.3). "
-            "Progress lines mean it is still working.",
+            "[rebuild] PNG pack starting (historically ~16h; now expect ~2–4h total "
+            "on a typical multi-core desktop — empty-block-first + package ProcessPool; "
+            "see technical.md §12.5.3). Watch [timer] lines for live elapsed.",
             flush=True,
         )
+        timer.mark("PNG pack starting")
+        timer.stop_heartbeat()  # pack_images has its own [timer] heartbeat
         pack_ui(
             vanilla,
             workers=args.workers,
@@ -392,10 +412,13 @@ def main(argv: list[str] | None = None) -> int:
             no_cache=args.no_cache,
             cache_dir=args.cache_dir,
         )
+        timer.start_heartbeat()
+        timer.mark("PNG pack done")
 
     seed_vanilla_bak(vanilla, BAKE_IMG)
 
     if not args.skip_trb:
+        timer.mark("rebuilding main TRB")
         rebuild_main_trb()
     sync_trb_overlay()
 
@@ -404,13 +427,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.include_sound_settings:
             idx = scripts.index("deploy_display_settings_en.py") + 1
             scripts.insert(idx, "deploy_sound_settings_en.py")
+        timer.mark(f"running {len(scripts)} deploy scripts")
         for name in scripts:
             script = ROOT / "tools" / name
             if not script.is_file():
                 raise SystemExit(f"missing deploy script: {script}")
             run([sys.executable, str(script)], env=env)
+            timer.mark(f"deploy done: {name}")
 
     if not args.skip_sms:
+        timer.mark("SMS maildic deploy")
         run(
             [
                 sys.executable,
@@ -426,6 +452,7 @@ def main(argv: list[str] | None = None) -> int:
 
     name_code: Path | None = None
     if not args.skip_name_input_code:
+        timer.mark("building name-input code.bin")
         name_code = build_name_input_code(
             rom=args.rom.resolve() if args.rom else None
         )
@@ -443,6 +470,7 @@ def main(argv: list[str] | None = None) -> int:
     if name_code is not None:
         print(f"  name-input:    {name_code}", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
+    timer.finish("gold rebuild OK")
     return 0
 
 

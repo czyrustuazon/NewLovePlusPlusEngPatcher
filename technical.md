@@ -602,7 +602,17 @@ python src/pack_images.py --pkg-workers 1          # sequential packages (debug)
 python tools/rebuild_bake_img.py --rom game.cia --pkg-workers 4
 ```
 
-Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on how many ARCs miss the zlib fast path (tight ETC1A4 softkeys still often need zopfli). Expect **much less than 16h** on a multi-core machine; measure rather than quoting a new fixed number until a full cold bake is timed on this tree.
+Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on how many ARCs miss the zlib fast path (tight ETC1A4 softkeys still often need zopfli).
+
+**Live elapsed timer:** `pack_images`, `rebuild_bake_img`, and `patch_cia` print ``[timer]`` lines — start wall-clock, stage marks, a heartbeat every 60s while still running, and ``[timer] total …`` at finish. Watch those for actual runtime (do not rely on a fixed hour estimate).
+
+**Ballpark (cold, no bake cache) — engineering estimate only:**
+
+| Machine | Cold full gold rebuild (`rebuild_bake_img.py`) |
+|---------|--------------------------------------------------|
+| Typical modern multi-core desktop (e.g. 8-core / `--pkg-workers` default) | Often **~2–4 hours** end-to-end if many ARCs hit the zlib fast path |
+| Low-core / `--pkg-workers 1` | Longer — can still approach historical ~16h if every tight ARC hits zopfli |
+| Warm `cache/img_pack/` + bake present | **Minutes** (Drop CIA reuses bake) |
 
 ### 12.6 To-Do list titles (TRB, not BCLIM)
 
@@ -648,6 +658,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (+ `out/luma/` LayeredFS) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
+| `src/run_timer.py` | Live ``[timer]`` elapsed / 60s heartbeat for pack, gold rebuild, CIA patcher |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
@@ -787,7 +798,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **If `release/bake_img.bin` is missing** (normal on a fresh clone), the bat runs the acquisition chain in **§15.5** — do **not** expect a finished CIA in minutes unless step 3a (CI download) succeeds or you already built a bake on that machine.
-4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool should be **substantially faster** on multi-core CPUs (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.
+4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool → expect **~2–4 hours** total on a typical multi-core desktop (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.
    Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.

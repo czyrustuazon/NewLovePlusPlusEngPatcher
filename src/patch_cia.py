@@ -25,6 +25,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from run_timer import RunTimer
+
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
 TOOLS = ROOT / "tools"
@@ -1297,6 +1299,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     out_cia = Path(args.out).resolve()
     out_cia.parent.mkdir(parents=True, exist_ok=True)
 
+    timer = RunTimer("CIA patcher", heartbeat_s=60.0)
     print("=== NLPP English Patcher (→ CIA) ===")
     print(f"input:  {rom_in} ({kind})")
     print(f"dbin:   {dbin_root}")
@@ -1304,12 +1307,32 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"output: {out_cia}")
     print()
 
+    try:
+        return _cmd_patch_body(args, rom_in, kind, dbin_root, work, out_cia, timer)
+    except Exception:
+        timer.finish("CIA patcher failed")
+        raise
+    except KeyboardInterrupt:
+        timer.finish("CIA patcher aborted")
+        raise
+
+
+def _cmd_patch_body(
+    args: argparse.Namespace,
+    rom_in: Path,
+    kind: str,
+    dbin_root: Path,
+    work: Path,
+    out_cia: Path,
+    timer: RunTimer,
+) -> int:
     # Verify dump identity before extract / image / RomFS work.
     if args.skip_hash:
         print("[hash] skipped (--skip-hash)")
     else:
         verify_cia_sha1(rom_in, expected=args.expect_sha1)
     print()
+    timer.mark("hash OK")
 
     packed_img: Path | None = None
     layered_img: Path | None = None
@@ -1317,8 +1340,10 @@ def cmd_patch(args: argparse.Namespace) -> int:
         # Hard-fail on image errors. Swallowing PatchError and continuing
         # scripts-only ships name-input code.bin + vanilla JP menus / no Eng
         # Patch badge — the Sep 2026 Desktop CIA regression.
+        timer.mark("resolving / packing UI img.bin")
         packed_img = pack_ui_images(args, work)
         layered_img = packed_img
+        timer.mark("UI img.bin ready")
     elif args.no_images:
         print("[images] skipped (--no-images)")
 
@@ -1345,6 +1370,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     layeredfs_written = False
     if args.layeredfs_out:
         layeredfs_out = Path(args.layeredfs_out).resolve()
+        timer.mark("writing LayeredFS")
         write_layeredfs(
             layeredfs_out,
             dbin_root,
@@ -1376,9 +1402,11 @@ def cmd_patch(args: argparse.Namespace) -> int:
         else:
             cleanup_out_dir(out_cia=out_cia)
             print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
+        timer.finish("CIA patcher OK (LayeredFS only)")
         return 0
 
     try:
+        timer.mark("rebuilding patched CIA")
         rebuild_patched_cia(
             args,
             rom_in=rom_in,
@@ -1430,6 +1458,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
         cleanup_out_dir(out_cia=out_cia)
         print("  - out/ cleaned (kept *.cia, luma/, azahar_instances/).")
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
+    timer.finish("CIA patcher OK")
     return 0
 
 
