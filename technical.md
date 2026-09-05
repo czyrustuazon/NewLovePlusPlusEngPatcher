@@ -698,6 +698,17 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
 | Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) without abs BCLIM align | Title logo / chrome went **black** | Need `DarcArchive.insert_file_entry` + `rebuild_from_dir(..., align_mode="absolute")` + Pts_Copyright wire; bake now uses `deploy_title_engpatch_en.py` |
 
+**Eng Patch badge (verified standalone — do not merge into `Copyright.bclim`):**
+
+| Piece | Role |
+|-------|------|
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc1`); **white glyphs + dark fringe** matching vanilla Konami plate |
+| `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
+| `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
+| Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
+
+Working recipe locked in commit `49036b3` / LayeredFS confirm (“copyright text now shows”). Do **not** dual-line into Copyright or dark-ink “fixes” that change the plate pairing.
+
 **Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
 
 | BCLIM | JP | EN (deploy) |
