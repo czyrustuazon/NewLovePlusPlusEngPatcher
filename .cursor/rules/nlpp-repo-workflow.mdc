@@ -65,7 +65,7 @@ Rules:
 
 - Main table: `extracted/romfs/SystemData/TextResource/textresource_jpn.trb` (STRI/STRB/INDX/…). `code.bin` loads this plus `textresource_config.trb` under `/SystemData/TextResource/`.
 - **Resident / TOP blob (verified 2026-07-28):** RomFS `textresource_resident_jpn.trb` is **not** referenced in `code.bin` — treat as a **dev leftover**. Same custom `TOP` format (date/time fragments, name tables, day-counter `日目`) ships live as **`img.bin` pkg 5508**. Patch **5508** for runtime; the loose file is only a convenient same-size edit source (`deploy_day_counter_en.py`).
-- Lookup codebook: `EngPatcher/tools/Trb2xlsx/TrbExport/lookup.txt`.
+- Lookup codebook: `EngPatcher/tools/Trb2xlsx/TrbExport/lookup.txt` (deaknaew/Trb2xlsx; **`Trb2xlsx.exe` not invoked** — rebuild is `patch_textresource.py`).
 - Scripts: `python src/patch_textresource.py dump|inplace|rebuild|…` from EngPatcher.
 - Hierarchy: `FUN_005c0e7c(dst, maxlen, pack, slot)` → cat=`(pack>>8)&0xff`, sub=`pack&0xff`, then INDX slot. Flat STRI idx ≠ hierarchy pack.
 - If TRB already has EN but UI stays JP, the chrome is likely a **texture** or **runtime DrawText** from another source — don’t keep re-translating the same TRB keys.

@@ -63,6 +63,7 @@ just because they sit in this repository. See `README.md` (Credits) and any
 | `tools/nlpp-tools/` | kiwiz/nlpp-tools |
 | `tools/Trb2xlsx/` | deaknaew/Trb2xlsx |
 | `tools/NLPTextTool/`, `tools/NLPUnpacker/` | LovePlusProject / gdkchan |
+| `vendor/NLPPATCH/` (optional re-vendor) | LovePlusProject/NLPPATCH |
 | `assets/fonts/MPLUS1p-Regular.ttf` (+ `OFL.txt`) | M PLUS 1p (SIL OFL 1.1) |
 | Other fonts under `assets/fonts/` | Google Fonts / respective OFL authors |
 | `tools/cia/3dstool/` (when downloaded) | dnasdw/3dstool |

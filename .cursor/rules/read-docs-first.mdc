@@ -7,7 +7,7 @@ alwaysApply: true
 
 Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searching for the Japanese string again”:
 
-1. Read **`technical.md`** (this repo and/or `../NewLovePlusPlusEngPatcher/technical.md`) — addresses, BCLIM quirks, TRB/INDX, softkeys, dead ends.
+1. Read **`technical.md`** (this repo and/or `../NewLovePlusPlusEngPatcher/technical.md`) — addresses, BCLIM quirks, TRB/INDX, softkeys, dead ends, §13.3 third-party stack.
 2. Skim Cursor rules:
    - `nlpp-repo-workflow` — how to pack/deploy/address-convert; **gold bake / Drop CIA (§15.5)**
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)

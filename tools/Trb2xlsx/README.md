@@ -1,4 +1,8 @@
 # Trb2xlsx
+
+**EngPatcher note:** the CIA patcher uses **`TrbExport/lookup.txt` only** (TRB character codebook for `src/patch_textresource.py`). It does **not** invoke `Trb2xlsx.exe` at build time. See root [`README.md` Credits](../../README.md#credits).
+
+---
 TRB Export Tool (to/from EXCEL) for 3DS game [「NEWラブプラス+」/「NEWLOVEPLUS+」](https://youtu.be/Sz6p45GsLJQ?si=p1IOx1_ORt1iHWpl).
 
 
