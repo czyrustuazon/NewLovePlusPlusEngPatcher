@@ -696,7 +696,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Old Drop CIA fell through without bake | English dialog + heroine names OK, **menus still JP** | Bat defaulted `PACKED_IMG` to `cache/new_img.bin` and could patch without `release/bake_img.bin`; menu chrome lives only in gold bake |
 | Assumed git clone includes English menus | Clean machine “patched in minutes” with JP UI | `release/bake_img.bin` is **gitignored** (~680 MB); clone has sources + scripts, not the pre-baked `img.bin` |
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
-| Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) | Title logo / chrome went **black** | Custom BCLIM + BCLYT/DARC insert in **5261** not safe yet — stick to same-size replaces |
+| Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) without abs BCLIM align | Title logo / chrome went **black** | Need `DarcArchive.insert_file_entry` + `rebuild_from_dir(..., align_mode="absolute")` + Pts_Copyright wire; bake now uses `deploy_title_engpatch_en.py` |
 
 **Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
 
@@ -749,7 +749,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | UI | Package | Deploy / note |
 |----|---------|----------------|
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
-| Main Menu **rows** | **5261** Title.arc | `deploy_title_main_menu_en.py` (labels only) |
+| Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 | Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select | **5153** | `deploy_gallery_common_en.py` |
 | MultiWin headers (+ Delete Save Data) | **5237** | `deploy_datadelete_en.py` then `deploy_multiwin_headers_en.py` |

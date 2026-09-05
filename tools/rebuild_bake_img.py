@@ -74,8 +74,8 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_gallery_common_en.py",  # 5153
     "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
-    # Hub main-menu rows (Title.arc) + boot CESA — not covered by NCommonMSel deploys.
-    "deploy_title_main_menu_en.py",
+    # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
+    "deploy_title_engpatch_en.py",
     "deploy_cesa_en.py",
 ]
 

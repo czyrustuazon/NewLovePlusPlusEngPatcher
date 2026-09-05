@@ -25,7 +25,11 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
 from bclimutil import parse_bclim, png_to_bclim_rgba4444_same_size  # noqa: E402
 from darcutil import DarcArchive  # noqa: E402
-from exact_zlib import _force_zero_gaps, compress_exact_zopfli  # noqa: E402
+from exact_zlib import (  # noqa: E402
+    _force_zero_gaps,
+    compress_exact_empty_blocks,
+    compress_exact_zopfli,
+)
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
@@ -219,12 +223,20 @@ def main() -> int:
         print(f"ARC {elem.fn} slot={cmp_len} dec={len(elem.parsed())}", flush=True)
         tuned = _patch_arc(bytes(elem.parsed()), use_dir, tmp)
         tuned = _force_zero_gaps(tuned)
-        tuned2, slot = compress_exact_zopfli(tuned, cmp_len)
+        # InputN slot is tight — empty-block first (seconds) before zopfli search
+        # (can hang for many minutes on near-miss binary search).
+        eb = compress_exact_empty_blocks(tuned, cmp_len)
+        if eb is not None:
+            tuned2, slot = tuned, eb
+            print(f"  exact zlib empty-block {len(slot)}", flush=True)
+        else:
+            print("  empty-block miss; trying zopfli…", flush=True)
+            tuned2, slot = compress_exact_zopfli(tuned, cmp_len)
+            print(f"  exact zlib zopfli {len(slot)}", flush=True)
         do = zlib.decompressobj()
         got = do.decompress(slot)
         if got != tuned2 or do.unused_data or not do.eof:
             raise SystemExit(f"zlib verify failed for {elem.fn}")
-        print(f"  exact zlib {len(slot)}", flush=True)
         _write_arc_slot(blob, i, tuned2, slot)
         patched_any = True
 

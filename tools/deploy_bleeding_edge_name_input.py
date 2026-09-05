@@ -141,7 +141,11 @@ def deploy_combined(*, also_code_bak: bool = True) -> None:
             shutil.copy2(dest_code, bak)
             print(f"[combine] bak code -> {bak.name}", flush=True)
     shutil.copy2(NAME_INPUT_CODE, dest_code)
-    print(f"[combine] code <- {NAME_INPUT_CODE.name}", flush=True)
+    # Azahar also loads mods/<tid>/code.bin (mod root). Stale root with scrapped
+    # 0x006FC000 caves blanks the Profile keyboard while exefs looks fine.
+    root_code = mod / "code.bin"
+    shutil.copy2(NAME_INPUT_CODE, root_code)
+    print(f"[combine] code <- {NAME_INPUT_CODE.name} (exefs + mod root)", flush=True)
 
     dest_trb = trb_dir / "textresource_jpn.trb"
     if dest_trb.is_file():

@@ -46,42 +46,9 @@ ENG_LINE = "Eng Patch v1.0.0-rc1"
 ENG_REL = "timg/Eng_Patch.bclim"
 
 
-def insert_file_entry(darc: DarcArchive, rel: str, after_rel: str) -> None:
-    rel = rel.replace("\\", "/").lstrip("/")
-    after_rel = after_rel.replace("\\", "/").lstrip("/")
-    dir_name, file_name = rel.split("/")
-    insert_at = None
-    for i, e in enumerate(darc.entries):
-        if not e["isdir"] and e.get("rel") == after_rel:
-            insert_at = i + 1
-            break
-    if insert_at is None:
-        raise FileNotFoundError(after_rel)
-    darc.entries.insert(
-        insert_at,
-        {
-            "isdir": False,
-            "name": file_name,
-            "dir": dir_name,
-            "rel": rel,
-            "file": DarcFile(rel, 0, 0, 0),
-        },
-    )
-    for e in darc.entries:
-        if not e["isdir"]:
-            continue
-        if e["file_len"] >= insert_at:
-            e["file_len"] += 1
-        if e["file_off"] >= insert_at:
-            e["file_off"] += 1
-    darc.files = [e["file"] for e in darc.entries if not e["isdir"]]
-    for e in darc.entries:
-        if not e["isdir"]:
-            e["file"].name = e["rel"]
-    darc._by_name = {f.name.lower(): f for f in darc.files}
-    darc._by_base = {}
-    for f in darc.files:
-        darc._by_base.setdefault(Path(f.name).name.lower(), []).append(f)
+def insert_file_entry_legacy(darc: DarcArchive, rel: str, after_rel: str) -> None:
+    """Deprecated local helper — use DarcArchive.insert_file_entry."""
+    darc.insert_file_entry(rel, after_rel=after_rel)
 
 
 def render_eng(w: int, h: int) -> Image.Image:
@@ -149,7 +116,7 @@ def main() -> int:
     # Ensure BCLYT untouched
     lyt_before = (extract_dir / "blyt" / "Lyt_Copyright.bclyt").read_bytes()
 
-    insert_file_entry(darc, ENG_REL, "timg/Copyright.bclim")
+    darc.insert_file_entry(ENG_REL, after_rel="timg/Copyright.bclim")
     rebuilt = OUT / "Title_insert_only.arc"
     darc.rebuild_from_dir(extract_dir, rebuilt)
     cand = _force_zero_gaps(rebuilt.read_bytes())
