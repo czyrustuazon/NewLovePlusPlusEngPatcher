@@ -26,6 +26,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**).
+- Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
@@ -553,19 +554,55 @@ Incident (2026-07-20): Options redeploy used bak as splice base → Options EN r
 
 #### 12.5.2 Compression strategies
 
-| Situation | Strategy |
-|-----------|----------|
-| zopfli length == slot | Use zopfli |
-| Slight undershoot; zero gaps remain | Binary-search **urandom gap salt**; **retry seeds**. Avoid per-byte fine loops (hang on large ARCs) |
-| Undershoot; zlib SYNC_FLUSH body fits under slot | `compress_exact_empty_blocks`: SYNC_FLUSH body + empty stored blocks (`remain >= 5` and `remain % 5 == 0`) |
-| Large ARC (5380); zlib body > slot after prior EN | **Zero all inter-file pads first** (old urandom hurts zlib), then empty-block — worked for To-Do/Status |
-| Shared header ARC **5575** | Rebuild all known `*_toptex_*` EN labels from vanilla in one pass; live single-label patches can clobber siblings |
-| Soft AA overshoots slot | Trial hard edges / smaller glyphs (`deploy_msel_menus_en.py` pattern) |
+**Cold-build order in `compress_to_exact_slot` (2026-09-05):** fast → slow. Do **not** start with zopfli.
 
-**Do not:** `pe` repack (grows PACK); trailing NUL after short zlib; shrink `cmp_len`; bak→MOD wipe.
+| Priority | Situation | Strategy |
+|----------|-----------|----------|
+| 1 | Level-9 SYNC_FLUSH body fits under slot | `compress_exact_empty_blocks` (stdlib zlib + empty stored blocks; `remain >= 5` and `remain % 5 == 0`) — **no zopfli** |
+| 2 | Fits but congruence miss | Gap-salt + empty-block (`compress_exact_with_gap_tune`) — still zlib-speed |
+| 3 | Large ARC; prior urandom salt bloated body | **Zero all inter-file pads**, then empty-block again |
+| 4 | zlib body already larger than slot budget | Escalate to **zopfli**; binary-search gap salt / near-miss for exact length |
+| — | Soft AA overshoots slot | Trial hard edges / smaller glyphs (`deploy_msel_menus_en.py` pattern) |
+| — | Shared header ARC **5575** | Rebuild all known `*_toptex_*` EN labels from vanilla in one pass |
+
+`try_fast_exact_slot` / `zlib_body_fits_slot` gate step 1–3. Finished `zlib.compress()` / zopfli blobs **cannot** have empty blocks appended (stream already closed with final block + Adler) — empty pads only apply to SYNC_FLUSH raw bodies.
+
+**Do not:** `pe` repack (grows PACK); trailing NUL after short zlib; shrink `cmp_len`; bak→MOD wipe; per-byte zopfli fine-tune on large ARCs (`--fine-tune` is opt-in only).
 
 Tools: `deploy_msel_options_en.py`, `deploy_msel_menus_en.py`, `deploy_confirm_btn_en.py`, `deploy_mydata_en.py`, …  
 Rollbacks: `img.bin.bak_pre_<feature>` under LayeredFS `romfs/`.
+
+#### 12.5.3 Cold PNG-pack speedup (2026-09-05)
+
+Historical first-run gold bake was **~16 hours**, dominated by sequential **zopfli** exact-length searches (one heavy compress per binary-search / near-miss trial per changed ARC element). Two changes cut that without relaxing slot constraints:
+
+**A. Empty-block / zlib before zopfli** (`src/exact_zlib.py`)
+
+Previously `compress_to_exact_slot` always ran zopfli first, then fell back to empty-block. That paid zopfli’s CPU cost even when stdlib zlib already fit under `cmp_len`. New order:
+
+1. `zlib_body_fits_slot` — if level-9 SYNC_FLUSH + one empty block already exceeds the slot, skip straight toward zopfli (after a zero-gaps retry).
+2. Else `try_fast_exact_slot` → empty-block → gap-tune empty-block → zeroed-gaps empty-block.
+3. Only then `compress_exact_zopfli` (binary-search salt, bounded near-miss ThreadPool, then empty-block fallback).
+
+Game constraints unchanged: stream length == slot, `unused_data == 0`, same-size BCLIM / package splice.
+
+**B. Package-level `ProcessPoolExecutor`** (`src/pack_images.py`)
+
+PNG→BCLIM was already threaded; packages were sequential. Now:
+
+- Main thread: `ie` unpack + `pe` unpack all packages, then splice finished blobs into `img.bin`.
+- Workers (`_process_one_package`): convert PNGs + exact-zlib repack; return picklable result dicts.
+- `--pkg-workers` (default `min(8, cpu//2)`); `--workers` = per-package PNG threads (lowered automatically when `pkg_workers > 1` to avoid oversubscribe).
+- Shared `cache/img_pack/` still content-addressed with atomic writes (safe across processes).
+- Near-miss zopfli pool capped at ~4 threads (was 8) so package workers do not multiply into dozens of concurrent zopflis.
+
+```bash
+python src/pack_images.py --img-bin <vanilla> --out cache/new_img.bin
+python src/pack_images.py --pkg-workers 1          # sequential packages (debug)
+python tools/rebuild_bake_img.py --rom game.cia --pkg-workers 4
+```
+
+Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on how many ARCs miss the zlib fast path (tight ETC1A4 softkeys still often need zopfli). Expect **much less than 16h** on a multi-core machine; measure rather than quoting a new fixed number until a full cold bake is timed on this tree.
 
 ### 12.6 To-Do list titles (TRB, not BCLIM)
 
@@ -590,7 +627,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 
 | Script | Purpose |
 |--------|---------|
-| `src/pack_images.py` | PNG → BCLIM → DARC same-size → img splice |
+| `src/pack_images.py` | PNG → BCLIM → DARC same-size → img splice; `--pkg-workers` ProcessPool |
 | `src/bclimutil.py` | BCLIM parse/encode helpers |
 | `src/darcutil.py` | DARC extract / same-size replace |
 | `src/image_map.py` | Folder key → package index |
@@ -610,7 +647,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from nlpp-gold GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (+ `out/luma/` LayeredFS) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
-| `src/exact_zlib.py` | Shared exact-length zopfli / gap-tune / empty-block / near-miss |
+| `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
@@ -730,10 +767,11 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 |----------|----------------|
 | `release/bake_img.bin` as gold; `cache/` scratch | Drop-bat reuses bake in minutes; rebuild is the long path |
 | `tools/rebuild_bake_img.py --rom <cia\|3ds>` + `extract_vanilla_from_rom.py` | Clone can seed vanilla from the dropped ROM → `cache/vanilla_from_rom/` |
-| `--skip-pack` after PNG pack finished | Resume deploys/TRB/SMS without another ~16h pack |
-| Shared `src/exact_zlib.py` for deploys | Gap-tune, empty-block, near-miss close 1–2 B misses local forks can’t |
+| `--skip-pack` after PNG pack finished | Resume deploys/TRB/SMS without another long pack |
+| Shared `src/exact_zlib.py` for deploys | Gap-tune, empty-block, near-miss; **zlib/empty-block before zopfli** (§12.5.3) |
 | Soft-then-hard glyph trials | Soft AA prettier; hard 1-bit often the only fit under slot |
 | Zero DARC inter-file gaps before measuring zopfli | Prior urandom salt inflates zlib on shared ARCs |
+| Package ProcessPool (`--pkg-workers`) | Parallel exact-zlib across packages; main thread splices (§12.5.3) |
 | Seed resident TRB into `release/textresource/` from vanilla/cache | Convenient same-size TOP blob to patch before splicing into pkg **5508** (RomFS resident path itself unused at runtime) |
 | `deploy_title_main_menu_en.py` + `deploy_cesa_en.py` on rebuild list | Hub + boot warning covered in gold path |
 | Softkeys / multiwin / gallery / UI buttons / keyboard tabs on rebuild list | Remaining chrome deploy scripts in `DEPLOY_SCRIPTS` |
@@ -749,7 +787,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **If `release/bake_img.bin` is missing** (normal on a fresh clone), the bat runs the acquisition chain in **§15.5** — do **not** expect a finished CIA in minutes unless step 3a (CI download) succeeds or you already built a bake on that machine.
-4. First **local** gold rebuild: expect **~16 hours** PNG pack, then deploys. Leave the window open.
+4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool should be **substantially faster** on multi-core CPUs (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.
    Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
@@ -806,7 +844,8 @@ decrypted .cia / .3ds / .cci dropped
            fail (404, no repo, network) → continue
         2. if still no bake:
              rebuild_bake_img.py --rom <dropped ROM>
-             (~16h first time; vanilla from cache/vanilla_from_rom/)
+             (long first time; vanilla from cache/vanilla_from_rom/;
+              §12.5.3 empty-block-first + pkg ProcessPool)
         3. if still no bake:
              HARD STOP — do not patch (prevents half-EN CIA)
   → patch_cia.py:
@@ -1123,4 +1162,4 @@ Offline `vendor/NLPPATCH/` snapshot was also **removed** (2026-08-31). Dialogue/
 
 ---
 
-*Last updated 2026-09-01 — §15.5 Drop CIA gold-bake acquisition (CI poll → local rebuild → hard-stop); §15.6 pytest suite; §17 live caves only (scrapped C4 @0x006FC000); §18 a/b + no decrypt/vendor.*
+*Last updated 2026-09-05 — §12.5.3 cold PNG-pack speedup (empty-block-before-zopfli + `--pkg-workers` ProcessPool); §15.5 Drop CIA gold-bake acquisition; §15.6 pytest; §17 name-input; §18 a/b.*

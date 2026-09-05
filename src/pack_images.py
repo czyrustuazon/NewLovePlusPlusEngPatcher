@@ -13,7 +13,7 @@ import shutil
 import subprocess
 import sys
 from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from darcutil import DarcArchive
@@ -34,11 +34,18 @@ DEFAULT_IMG_BIN = (
 )
 SKIP_DIR_RE = re.compile(r"(timg\s*-\s*copy|__pycache__|\.git)", re.I)
 SKIP_PNG_RE = re.compile(r"(\(2\)|_jpn|_bak|copy)", re.I)
-DEFAULT_WORKERS = max(1, min(32, (os.cpu_count() or 4)))
+_CPU = os.cpu_count() or 4
+DEFAULT_WORKERS = max(1, min(32, _CPU))
+# Package-level pool: leave headroom so nested PNG/zopfli threads do not thrash.
+DEFAULT_PKG_WORKERS = max(1, min(8, _CPU // 2 if _CPU > 2 else _CPU))
 
 
 def default_workers() -> int:
     return DEFAULT_WORKERS
+
+
+def default_pkg_workers() -> int:
+    return DEFAULT_PKG_WORKERS
 
 
 def _progress_bar(done: int, total: int, *, prefix: str = "", width: int = 28) -> None:
@@ -595,6 +602,113 @@ def selective_ie_repack(img_bin: Path, img_data: Path, dst: Path, patched: list[
         raise PackError("selective ie repack failed")
 
 
+def _process_one_package(
+    index: int,
+    items: list[tuple[str, str, str]],
+    img_data: str,
+    conv_root: str,
+    png_workers: int = 1,
+    fine_tune: bool = False,
+    cache_dir: str | None = None,
+) -> dict:
+    """Worker: PNG inject + exact-zlib repack for one package (ProcessPool-safe).
+
+    ``items`` is a list of (key, folder_path, arc_name). Returns a picklable dict.
+    """
+    # Child processes need src/ on sys.path (Windows spawn re-imports cleanly).
+    src_dir = str(Path(__file__).resolve().parent)
+    if src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
+
+    img_data_p = Path(img_data)
+    conv_p = Path(conv_root)
+    pack_cache = ImgPackCache(Path(cache_dir)) if cache_dir else None
+    report: list[str] = []
+    pkg_ok = pkg_skip = arcs = 0
+
+    try:
+        pkg_dir = ensure_package_data(img_data_p, index)
+        touched = False
+        for key, folder_s, arc_name in items:
+            folder = Path(folder_s)
+            arc_path = pkg_dir / arc_name
+            if not arc_path.is_file():
+                hits = [
+                    p
+                    for p in pkg_dir.glob("*.arc")
+                    if p.name.lower() == arc_name.lower()
+                ]
+                if not hits:
+                    report.append(
+                        f"[miss-arc] {key}: {arc_name} not in package {index:04d}"
+                    )
+                    continue
+                arc_path = hits[0]
+
+            pngs = iter_asset_pngs(folder)
+            if not pngs:
+                report.append(f"[empty] {folder.name}: no PNGs")
+                continue
+
+            print(
+                f"[arc] {arc_path.name} <- {folder.name} ({len(pngs)} png) "
+                f"[pkg {index:04d}]",
+                flush=True,
+            )
+            ok, skipped, warnings = patch_arc_with_pngs(
+                arc_path,
+                pngs,
+                conv_p / f"{index:04d}_{key}",
+                workers=png_workers,
+                cache=pack_cache,
+            )
+            pkg_ok += ok
+            pkg_skip += skipped
+            touched = touched or ok > 0
+            arcs += 1
+            for w in warnings[:12]:
+                report.append(f"[warn] {key}: {w}")
+            if len(warnings) > 12:
+                report.append(f"[warn] {key}: ... +{len(warnings) - 12} more")
+
+        if touched:
+            print(
+                f"[pkg] {index:04d}: exact-zlib repack "
+                f"({pkg_ok} png, {pkg_skip} skip)…",
+                flush=True,
+            )
+            repack_package(
+                img_data_p, index, fine_tune=fine_tune, cache=pack_cache
+            )
+            report.append(
+                f"[ok] package {index:04d}: {pkg_ok} replaced, {pkg_skip} skipped"
+            )
+        else:
+            report.append(f"[skip] package {index:04d}: nothing replaced")
+
+        return {
+            "index": index,
+            "ok": True,
+            "touched": touched,
+            "png_ok": pkg_ok,
+            "png_skip": pkg_skip,
+            "arcs": arcs,
+            "report": report,
+            "error": None,
+        }
+    except Exception as exc:  # noqa: BLE001 — surface to parent pool
+        return {
+            "index": index,
+            "ok": False,
+            "touched": False,
+            "png_ok": pkg_ok,
+            "png_skip": pkg_skip,
+            "arcs": arcs,
+            "report": report,
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
+
 def pack_images(
     images_root: Path,
     img_bin: Path,
@@ -604,6 +718,7 @@ def pack_images(
     *,
     splice: bool = True,
     workers: int | None = None,
+    pkg_workers: int | None = None,
     fine_tune: bool = False,
     cache: ImgPackCache | None | bool = True,
     cache_dir: Path | None = None,
@@ -619,6 +734,9 @@ def pack_images(
         folders = {k: v for k, v in folders.items() if k in only_keys}
 
     workers = default_workers() if workers is None else max(1, int(workers))
+    pkg_workers = (
+        default_pkg_workers() if pkg_workers is None else max(1, int(pkg_workers))
+    )
     work = work.resolve()
     out_img = out_img.resolve()
     img_bin = img_bin.resolve()
@@ -626,18 +744,29 @@ def pack_images(
     work.mkdir(parents=True, exist_ok=True)
 
     pack_cache: ImgPackCache | None
+    cache_dir_p: Path | None
     if cache is False or cache is None:
         pack_cache = None
+        cache_dir_p = None
     elif isinstance(cache, ImgPackCache):
         pack_cache = cache
+        cache_dir_p = cache.root
     else:
-        pack_cache = ImgPackCache(Path(cache_dir) if cache_dir else CACHE_IMG_PACK)
+        cache_dir_p = Path(cache_dir) if cache_dir else CACHE_IMG_PACK
+        pack_cache = ImgPackCache(cache_dir_p)
+
+    # Nested pools: when packing packages in parallel, keep per-pkg PNG workers low.
+    if pkg_workers > 1:
+        png_workers = max(1, min(workers, max(1, _CPU // pkg_workers)))
+    else:
+        png_workers = workers
 
     cache_msg = (
         f"cache={pack_cache.root}" if pack_cache is not None else "cache=off"
     )
     print(
-        f"[pack] async PNG→BCLIM workers={workers} fine_tune={fine_tune} {cache_msg}",
+        f"[pack] pkg_workers={pkg_workers} png_workers={png_workers} "
+        f"fine_tune={fine_tune} {cache_msg}",
         flush=True,
     )
     img_data = work / "img_data"
@@ -664,54 +793,86 @@ def pack_images(
 
     if by_pkg:
         unpack_packages(img_bin, img_data, set(by_pkg))
+        # pe-unpack all packages on the main thread (avoids concurrent pe races).
+        for index in sorted(by_pkg):
+            ensure_package_data(img_data, index)
 
+        jobs: list[tuple[int, list[tuple[str, str, str]]]] = []
         for index, items in sorted(by_pkg.items()):
-            pkg_dir = ensure_package_data(img_data, index)
-            pkg_ok = pkg_skip = 0
-            touched = False
-            for key, folder, arc_name in items:
-                arc_path = pkg_dir / arc_name
-                if not arc_path.is_file():
-                    # case-insensitive search
-                    hits = [p for p in pkg_dir.glob("*.arc") if p.name.lower() == arc_name.lower()]
-                    if not hits:
-                        report_lines.append(f"[miss-arc] {key}: {arc_name} not in package {index:04d}")
-                        continue
-                    arc_path = hits[0]
-
-                pngs = iter_asset_pngs(folder)
-                if not pngs:
-                    report_lines.append(f"[empty] {folder.name}: no PNGs")
-                    continue
-
-                print(f"[arc] {arc_path.name} <- {folder.name} ({len(pngs)} png)")
-                ok, skipped, warnings = patch_arc_with_pngs(
-                    arc_path,
-                    pngs,
-                    conv / f"{index:04d}_{key}",
-                    workers=workers,
-                    cache=pack_cache,
+            jobs.append(
+                (
+                    index,
+                    [(k, str(folder.resolve()), arc) for k, folder, arc in items],
                 )
-                pkg_ok += ok
-                pkg_skip += skipped
-                touched = touched or ok > 0
-                totals["arcs"] += 1
-                for w in warnings[:12]:
-                    report_lines.append(f"[warn] {key}: {w}")
-                if len(warnings) > 12:
-                    report_lines.append(f"[warn] {key}: ... +{len(warnings) - 12} more")
+            )
 
-            totals["png_ok"] += pkg_ok
-            totals["png_skip"] += pkg_skip
-            if touched:
-                repack_package(
-                    img_data, index, fine_tune=fine_tune, cache=pack_cache
+        results: list[dict] = []
+        cache_dir_s = str(cache_dir_p) if cache_dir_p is not None else None
+
+        if pkg_workers <= 1 or len(jobs) <= 1:
+            for index, items in jobs:
+                results.append(
+                    _process_one_package(
+                        index,
+                        items,
+                        str(img_data),
+                        str(conv),
+                        png_workers=png_workers,
+                        fine_tune=fine_tune,
+                        cache_dir=cache_dir_s,
+                    )
                 )
-                patched_indices.append(index)
+        else:
+            print(
+                f"[pack] ProcessPool: {len(jobs)} packages, "
+                f"workers={min(pkg_workers, len(jobs))}",
+                flush=True,
+            )
+            with ProcessPoolExecutor(
+                max_workers=min(pkg_workers, len(jobs))
+            ) as pool:
+                futures = {
+                    pool.submit(
+                        _process_one_package,
+                        index,
+                        items,
+                        str(img_data),
+                        str(conv),
+                        png_workers=png_workers,
+                        fine_tune=fine_tune,
+                        cache_dir=cache_dir_s,
+                    ): index
+                    for index, items in jobs
+                }
+                done = 0
+                for fut in as_completed(futures):
+                    done += 1
+                    res = fut.result()
+                    results.append(res)
+                    status = "ok" if res.get("ok") else "FAIL"
+                    print(
+                        f"[pack] [{done}/{len(jobs)}] pkg {res['index']:04d} "
+                        f"{status} touched={res.get('touched')}",
+                        flush=True,
+                    )
+
+        results.sort(key=lambda r: r["index"])
+        for res in results:
+            report_lines.extend(res.get("report") or [])
+            totals["png_ok"] += int(res.get("png_ok") or 0)
+            totals["png_skip"] += int(res.get("png_skip") or 0)
+            totals["arcs"] += int(res.get("arcs") or 0)
+            if not res.get("ok"):
+                raise PackError(
+                    f"package {res['index']:04d} failed: {res.get('error')}"
+                )
+            if res.get("touched"):
+                patched_indices.append(int(res["index"]))
                 totals["packages"] += 1
-                report_lines.append(f"[ok] package {index:04d}: {pkg_ok} replaced, {pkg_skip} skipped")
-            else:
-                report_lines.append(f"[skip] package {index:04d}: nothing replaced")
+
+        if pack_cache is not None and cache_dir_p is not None:
+            # Re-open so report can read the shared on-disk cache root.
+            pack_cache = ImgPackCache(cache_dir_p)
 
         if patched_indices:
             if splice:
@@ -823,7 +984,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--workers",
         type=int,
         default=DEFAULT_WORKERS,
-        help=f"parallel PNG→BCLIM conversions (default: {DEFAULT_WORKERS})",
+        help=f"parallel PNG→BCLIM conversions per package (default: {DEFAULT_WORKERS})",
+    )
+    p.add_argument(
+        "--pkg-workers",
+        type=int,
+        default=DEFAULT_PKG_WORKERS,
+        help=(
+            f"parallel packages via ProcessPool (default: {DEFAULT_PKG_WORKERS}); "
+            "use 1 for sequential"
+        ),
     )
     p.add_argument(
         "--fine-tune",
@@ -860,6 +1030,7 @@ def main(argv: list[str] | None = None) -> int:
             only_keys=only,
             splice=not args.full_repack,
             workers=args.workers,
+            pkg_workers=args.pkg_workers,
             fine_tune=args.fine_tune,
             cache=False if args.no_cache else True,
             cache_dir=Path(args.cache_dir),

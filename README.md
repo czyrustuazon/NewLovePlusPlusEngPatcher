@@ -94,7 +94,7 @@ If bake is absent, the drop bat auto-runs:
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. **Often ~16 hours** (CPU-bound PNG pack / exact-zlib). Progress lines mean it is still working.
+That regenerates bake + TRBs from sources. Historically **~16 hours** when every ARC ran zopfli sequentially; as of 2026-09-05 the pack prefers stdlib zlib empty-block padding and parallelizes packages (`--pkg-workers`) — see `technical.md` §12.5.3. Progress lines mean it is still working.
 
 - Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
@@ -286,7 +286,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Expect about 16 hours** for a full bake rebuild. Progress lines mean it is still working.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Warm `cache/img_pack/` re-packs are typically minutes. Progress lines mean it is still working.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
@@ -459,4 +459,4 @@ python src/patcher.py build --clean
 - A dump of the game — you must supply your own matching **decrypted** CIA / `.3ds`.  
 - A ROM decryptor — decrypt outside this tool, then drop the clear dump.  
 - An on-console retail re-encryptor.  
-- A GitHub-hosted gold bake — ship `release/bake_img.bin` separately if you want others to skip the ~16h rebuild.
+- A GitHub-hosted gold bake — ship `release/bake_img.bin` separately if you want others to skip a cold local rebuild.

@@ -167,6 +167,7 @@ def pack_ui(
     fine_tune: bool,
     no_cache: bool = False,
     cache_dir: Path | None = None,
+    pkg_workers: int | None = None,
 ) -> Path:
     """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake."""
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -190,6 +191,8 @@ def pack_ui(
     ]
     if workers is not None:
         cmd.extend(["--workers", str(workers)])
+    if pkg_workers is not None:
+        cmd.extend(["--pkg-workers", str(pkg_workers)])
     if fine_tune:
         cmd.append("--fine-tune")
     if no_cache:
@@ -292,6 +295,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--workers", type=int, default=None)
     ap.add_argument(
+        "--pkg-workers",
+        type=int,
+        default=None,
+        help="parallel packages for pack_images ProcessPool (default: cpu/2, max 8)",
+    )
+    ap.add_argument(
         "--fine-tune",
         action="store_true",
         help="opt-in pack_images fine-tune (very slow)",
@@ -370,13 +379,15 @@ def main(argv: list[str] | None = None) -> int:
             )
     else:
         print(
-            "[rebuild] PNG pack starting (often ~16 hours). "
+            "[rebuild] PNG pack starting (historically ~16h; now empty-block-first "
+            "+ package ProcessPool — see technical.md §12.5.3). "
             "Progress lines mean it is still working.",
             flush=True,
         )
         pack_ui(
             vanilla,
             workers=args.workers,
+            pkg_workers=args.pkg_workers,
             fine_tune=args.fine_tune,
             no_cache=args.no_cache,
             cache_dir=args.cache_dir,

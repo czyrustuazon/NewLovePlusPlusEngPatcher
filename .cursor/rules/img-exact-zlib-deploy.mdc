@@ -19,16 +19,17 @@ splice_packages_into_img(MOD_IMG, img_data, [5245], MOD_IMG)
 
 `splice_packages_into_img(src, …, dst)` **copies `src` → `dst` when paths differ**, then overlays packages. Vanilla bak is only for *extracting* a clean package blob, not as the splice base.
 
-## Compression playbook (pick by undershoot)
+## Compression playbook (fast → slow)
 
-| Situation | Strategy |
-|-----------|----------|
-| zopfli == slot | Use zopfli as-is |
-| zopfli slightly under; gaps left | Binary-search **gap salt** (urandom in inter-file pads); retry seeds. **No** per-byte fine loop (hangs for minutes on large ARCs) |
-| zopfli far under; zlib SYNC_FLUSH body fits | `compress_exact_empty_blocks` (SYNC_FLUSH body + empty stored blocks; `remain % 5 == 0`) |
-| Large ARC (e.g. **5380**); zlib body > slot | **Zero inter-file pads first** (prior EN urandom makes zlib worse), then empty-block |
-| Gaps already salted / zero-cap too small | Treat **all** inter-file regions as re-saltable; or rebuild package from vanilla with full label set |
-| Shared header ARC (**5575**) | Rebuild **all** known EN toptex from vanilla together — patching one from live can wipe others |
+| Priority | Situation | Strategy |
+|----------|-----------|----------|
+| 1 | zlib SYNC_FLUSH body fits slot | `compress_exact_empty_blocks` (**before** zopfli) |
+| 2 | Fits but length congruence miss | Gap-salt + empty-block (still zlib-speed) |
+| 3 | Large ARC; prior urandom bloated body | **Zero inter-file pads first**, then empty-block |
+| 4 | zlib body already > slot | Zopfli; binary-search gap salt / near-miss. **No** per-byte fine loop |
+| — | Shared header ARC (**5575**) | Rebuild **all** known EN toptex from vanilla together |
+
+Cold pack also parallelizes packages via `pack_images --pkg-workers` (see `technical.md` §12.5.3).
 
 Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 
