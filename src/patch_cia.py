@@ -1089,6 +1089,200 @@ def emit_spotpass_inject(args: argparse.Namespace) -> None:
         print(f"[spotpass] warning: {exc}")
 
 
+def _summary_line(status: str, label: str, detail: str = "") -> str:
+    """One summary row: status is OK / SKIPPED / OFF / WARN."""
+    mark = {
+        "OK": "[OK]     ",
+        "SKIPPED": "[SKIPPED]",
+        "OFF": "[OFF]    ",
+        "WARN": "[WARN]   ",
+    }.get(status, f"[{status}]")
+    if detail:
+        return f"  {mark} {label}: {detail}"
+    return f"  {mark} {label}"
+
+
+def build_patch_summary(
+    *,
+    out_cia: Path | None,
+    packed_img: Path | None,
+    layered_img: Path | None,
+    layeredfs_out: Path | None,
+    romfs_overlay: Path | None,
+    args: argparse.Namespace,
+    layeredfs_only: bool = False,
+    eng_patch: bool | None = None,
+) -> list[str]:
+    """Human-readable include/skip report for the end of a patch run.
+
+    Callers may pass ``eng_patch`` when already known; otherwise the packed img
+    is probed (None = not applicable / not checked).
+    """
+    lines: list[str] = [
+        "",
+        "=" * 60,
+        "  PATCH SUMMARY — read this before testing",
+        "=" * 60,
+    ]
+
+    lines.append(_summary_line("OK", "Dialog scripts (.dbin2)", "injected"))
+
+    if args.no_images or not args.with_images:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "UI img.bin (menus / Eng Patch)",
+                "--no-images or images disabled — menus stay JP",
+            )
+        )
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "Eng Patch title badge",
+                "needs gold bake img.bin",
+            )
+        )
+    elif packed_img is not None and packed_img.is_file():
+        kind = (
+            "gold bake"
+            if packed_img.resolve() == DEFAULT_BAKE_IMG.resolve()
+            else "packed img"
+        )
+        lines.append(
+            _summary_line("OK", "UI img.bin (menus / chrome)", f"{kind}: {packed_img}")
+        )
+        if eng_patch is None:
+            try:
+                eng_patch = _title_pkg_has_eng_patch(packed_img)
+            except Exception:  # noqa: BLE001 — summary must not crash the run
+                eng_patch = None
+        if eng_patch is True:
+            lines.append(
+                _summary_line(
+                    "OK", "Eng Patch title badge", "Title pkg 5261 has Eng_Patch"
+                )
+            )
+        elif eng_patch is False:
+            lines.append(
+                _summary_line(
+                    "WARN",
+                    "Eng Patch title badge",
+                    "MISSING in injected img — should have hard-failed",
+                )
+            )
+        else:
+            lines.append(
+                _summary_line("WARN", "Eng Patch title badge", "could not verify")
+            )
+    else:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "UI img.bin (menus / Eng Patch)",
+                "not injected — menus stay JP",
+            )
+        )
+
+    if getattr(args, "inject_code", None):
+        p = Path(args.inject_code)
+        if p.is_file():
+            lines.append(_summary_line("OK", "Profile name-input code.bin", str(p)))
+        else:
+            lines.append(
+                _summary_line("WARN", "Profile name-input code.bin", f"missing: {p}")
+            )
+    elif getattr(args, "patch_code", False):
+        lines.append(
+            _summary_line("OK", "Profile name-input", "--patch-code (single-pane)")
+        )
+    else:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "Profile name-input code.bin",
+                "no --inject-code / --patch-code",
+            )
+        )
+
+    if romfs_overlay is not None and Path(romfs_overlay).is_dir():
+        lines.append(
+            _summary_line("OK", "RomFS overlay (TRB etc.)", str(romfs_overlay))
+        )
+    else:
+        lines.append(
+            _summary_line("SKIPPED", "RomFS overlay (TRB etc.)", "none applied")
+        )
+
+    if getattr(args, "skip_name_patches", False):
+        lines.append(
+            _summary_line(
+                "SKIPPED", "Heroine name table patches", "--skip-name-patches"
+            )
+        )
+    else:
+        lines.append(_summary_line("OK", "Heroine name table patches", "applied"))
+
+    if getattr(args, "skip_hash", False):
+        lines.append(_summary_line("SKIPPED", "Input CIA SHA-1 check", "--skip-hash"))
+    else:
+        lines.append(_summary_line("OK", "Input CIA SHA-1 check", "verified"))
+
+    if layeredfs_only:
+        lines.append(_summary_line("OFF", "Output CIA", "LayeredFS-only mode"))
+    elif out_cia is not None and out_cia.is_file():
+        lines.append(
+            _summary_line(
+                "OK",
+                "Output CIA",
+                f"{out_cia} ({out_cia.stat().st_size:,} bytes)",
+            )
+        )
+    else:
+        lines.append(_summary_line("WARN", "Output CIA", "missing"))
+
+    if layeredfs_out is not None and _layeredfs_title_dir(layeredfs_out).is_dir():
+        lines.append(
+            _summary_line(
+                "OK",
+                "Luma LayeredFS",
+                str(_layeredfs_title_dir(layeredfs_out)),
+            )
+        )
+    elif layeredfs_out is not None and layered_img is None:
+        lines.append(
+            _summary_line(
+                "WARN",
+                "Luma LayeredFS",
+                "path set but UI img.bin was not included",
+            )
+        )
+    elif layeredfs_out is not None:
+        lines.append(_summary_line("OK", "Luma LayeredFS", str(layeredfs_out)))
+    else:
+        lines.append(_summary_line("SKIPPED", "Luma LayeredFS", "not requested"))
+
+    lines.append("=" * 60)
+    images_off = args.no_images or not args.with_images or packed_img is None
+    name_on = bool(
+        getattr(args, "inject_code", None) or getattr(args, "patch_code", False)
+    )
+    if images_off and name_on:
+        lines.append(
+            "  !! Name-input ON but UI img OFF → JP menus, no Eng Patch badge."
+        )
+        lines.append(
+            "  !! That is not a full English patch. Re-run with release/bake_img.bin."
+        )
+        lines.append("=" * 60)
+    lines.append("")
+    return lines
+
+
+def print_patch_summary(lines: list[str]) -> None:
+    for line in lines:
+        print(line, flush=True)
+
+
 def cmd_patch(args: argparse.Namespace) -> int:
     _require_tools()
 
@@ -1120,17 +1314,11 @@ def cmd_patch(args: argparse.Namespace) -> int:
     packed_img: Path | None = None
     layered_img: Path | None = None
     if args.with_images and not args.no_images:
-        try:
-            packed_img = pack_ui_images(args, work)
-            layered_img = packed_img
-        except PatchError as exc:
-            print(f"[images] warning: {exc}")
-            layered_img = _layeredfs_img_fallback(args)
-            if layered_img is not None:
-                print(f"[layeredfs] fallback img.bin: {layered_img}")
-            else:
-                print("[layeredfs] scripts-only overlay (no img.bin)")
-            print("[cia] continuing scripts-only (no img.bin inject)")
+        # Hard-fail on image errors. Swallowing PatchError and continuing
+        # scripts-only ships name-input code.bin + vanilla JP menus / no Eng
+        # Patch badge — the Sep 2026 Desktop CIA regression.
+        packed_img = pack_ui_images(args, work)
+        layered_img = packed_img
     elif args.no_images:
         print("[images] skipped (--no-images)")
 
@@ -1172,6 +1360,17 @@ def cmd_patch(args: argparse.Namespace) -> int:
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
+        print_patch_summary(
+            build_patch_summary(
+                out_cia=None,
+                packed_img=packed_img,
+                layered_img=layered_img,
+                layeredfs_out=layeredfs_out,
+                romfs_overlay=romfs_overlay,
+                args=args,
+                layeredfs_only=True,
+            )
+        )
         if args.keep_work:
             emit_spotpass_inject(args)
         else:
@@ -1203,16 +1402,27 @@ def cmd_patch(args: argparse.Namespace) -> int:
         print(f"Packed UI:   {packed_img}")
     if layeredfs_out is not None and layeredfs_out.is_dir():
         print(f"LayeredFS:   {layeredfs_out}")
-    print()
+    print_patch_summary(
+        build_patch_summary(
+            out_cia=out_cia,
+            packed_img=packed_img,
+            layered_img=layered_img,
+            layeredfs_out=layeredfs_out,
+            romfs_overlay=romfs_overlay,
+            args=args,
+            layeredfs_only=False,
+        )
+    )
     print("Notes:")
     print("  - Output is a decrypted CIA (works with FBI on CFW, Azahar, Citra).")
     print("  - Retail NCCH re-encryption is not done here; use Decrypt9WIP")
     print("    'CIA Encryptor (NCCH)' on a 3DS if you specifically need that.")
     if packed_img is None:
-        print("  - UI images were not packed (pass --with-images).")
+        print("  - UI images were SKIPPED — Main Menu stays Japanese.")
+    elif packed_img.resolve() == DEFAULT_BAKE_IMG.resolve():
+        print("  - UI images from gold bake (release/bake_img.bin), not PNG scratch.")
     else:
-        print("  - UI images were packed from assets/images into romfs/img.bin.")
-        print("    Some BCLIMs expand in size (png2bclim); that is expected.")
+        print(f"  - UI images from packed img: {packed_img}")
     if args.keep_work:
         print("  - Scratch kept (--keep-work).")
         emit_spotpass_inject(args)

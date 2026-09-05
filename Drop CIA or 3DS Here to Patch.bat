@@ -297,6 +297,9 @@ echo     %~dp0out\luma\00040000000F4E00
 echo     Copy that folder to SD:/luma/titles/
 echo     Enable "Enable game patching" in Luma settings.
 echo.
+echo [+] Scroll up for PATCH SUMMARY ^([OK] / [SKIPPED]^).
+echo     If UI img.bin was SKIPPED, menus stay Japanese — not a full patch.
+echo.
 echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
