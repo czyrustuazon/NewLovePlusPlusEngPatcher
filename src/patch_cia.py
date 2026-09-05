@@ -746,6 +746,38 @@ def resolve_inject_img(args: argparse.Namespace) -> Path:
     return default_packed
 
 
+def _title_pkg_has_eng_patch(img_path: Path, *, pkg_idx: int = 5261) -> bool:
+    """True if Title.arc pkg contains ``timg/Eng_Patch.bclim`` (gold Eng badge)."""
+    # Local imports: nlpp-tools + darcutil are heavy; only needed for this check.
+    sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
+    sys.path.insert(0, str(ROOT / "src"))
+    from darcutil import DarcArchive  # noqa: WPS433
+    from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: WPS433
+
+    raw = img_path.read_bytes()
+    im = ImgBin(str(img_path))
+    im.parse(False)
+    if pkg_idx >= len(im.entries) or im.entries[pkg_idx] is None:
+        return False
+    res = im.entries[pkg_idx]
+    blob = raw[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
+    tmp = img_path.parent / f"_engpatch_check_{pkg_idx}.bin"
+    tmp.write_bytes(blob)
+    try:
+        pkg = Package(FileWindow(str(tmp)), 0)
+        pkg.parse(False)
+        arc = next((e for e in pkg.entries if isinstance(e, ARC)), None)
+        if arc is None:
+            return False
+        darc = DarcArchive(bytearray(arc.parsed()))
+        return darc.find("timg/Eng_Patch.bclim") is not None
+    finally:
+        try:
+            tmp.unlink()
+        except OSError:
+            pass
+
+
 def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     """Inject gold bake, or pack assets/images into cache/new_img.bin."""
     from pack_images import PackError, pack_images
@@ -763,6 +795,13 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     ):
         print(f"[images] using gold bake: {out_img}")
         print("         (rebuild with: python tools/rebuild_bake_img.py)")
+        if not _title_pkg_has_eng_patch(out_img):
+            raise PatchError(
+                f"gold bake missing Title Eng_Patch badge (pkg 5261): {out_img}\n"
+                "  Run: python tools/deploy_title_engpatch_en.py\n"
+                "  (with NLPP_DEPLOY_IMG=release/bake_img.bin)"
+            )
+        print("[images] Eng Patch badge present in Title pkg 5261")
         return out_img
 
     # Default: reuse PNG cache when present. --repack-images forces a rebuild.
@@ -923,6 +962,13 @@ def rebuild_patched_cia(
         dest_img = romfs_dir / "img.bin"
         print(f"[inject] img.bin -> {dest_img}")
         shutil.copy2(packed_img, dest_img)
+        if (
+            packed_img.resolve() == DEFAULT_BAKE_IMG.resolve()
+            and not _title_pkg_has_eng_patch(dest_img)
+        ):
+            raise PatchError(
+                "injected img.bin lost Title Eng_Patch after copy — refuse to ship CIA"
+            )
 
     if romfs_overlay is not None:
         apply_romfs_overlay(romfs_dir, romfs_overlay)
