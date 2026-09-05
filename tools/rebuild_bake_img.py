@@ -105,7 +105,7 @@ def sync_trb_overlay() -> None:
         print(f"[trb] overlay <- {src.name}", flush=True)
 
 
-def rebuild_main_trb() -> None:
+def rebuild_main_trb(*, env: dict[str, str] | None = None) -> None:
     """Regenerate textresource_jpn.trb (+ config) from translations.json.
 
     Uses the name-input filter (skip single kana/CJK keys) so gojūon cells stay
@@ -130,11 +130,13 @@ def rebuild_main_trb() -> None:
     shutil.copy2(translations, TEXTRESOURCE / "translations.json")
 
     # Name-input-safe rebuild (filters kana/CJK single-glyph EN glosses).
+    # Pass env so NLPP_VANILLA_TRB from --rom / cache/vanilla_from_rom is visible.
     run(
         [
             sys.executable,
             str(ROOT / "tools" / "deploy_name_kanji_trb.py"),
-        ]
+        ],
+        env=env,
     )
     namekanji = ROOT / "out" / "textresource_jpn_namekanji.trb"
     namekanji_cfg = ROOT / "out" / "textresource_config_namekanji.trb"
@@ -419,7 +421,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     if not args.skip_trb:
         timer.mark("rebuilding main TRB")
-        rebuild_main_trb()
+        rebuild_main_trb(env=env)
     sync_trb_overlay()
 
     if not args.skip_deploys:

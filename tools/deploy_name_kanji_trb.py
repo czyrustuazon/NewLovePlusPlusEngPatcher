@@ -6,6 +6,9 @@ entry. Rebuild from vanilla TRB applying translations.json but **skipping**
 single CJK keys except a small UI allowlist (seasons / weekdays).
 
 Deploys to Azahar LayeredFS romfs TextResource.
+
+Vanilla TRB resolution (same as rebuild_bake_img / Drop from-scratch):
+  NLPP_VANILLA_TRB → sibling extracted/ → cache/vanilla_from_rom/
 """
 from __future__ import annotations
 
@@ -17,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from nlpp_paths import find_vanilla_main_trb  # noqa: E402
 from patch_textresource import (  # noqa: E402
     AZAHAR_DIR,
     DEFAULT_TRANSLATIONS,
@@ -27,17 +31,21 @@ from patch_textresource import (  # noqa: E402
 )
 import shutil
 
-VANILLA_TRB = (
-    ROOT.parents[0]
-    / "New Love Plus Plus"
-    / "extracted"
-    / "romfs"
-    / "SystemData"
-    / "TextResource"
-    / "textresource_jpn.trb"
-)
-VANILLA_CFG = VANILLA_TRB.parent / "textresource_config.trb"
 LOOKUP = ROOT / "tools" / "Trb2xlsx" / "TrbExport" / "lookup.txt"
+
+
+def resolve_vanilla_trb_and_cfg() -> tuple[Path, Path]:
+    trb = find_vanilla_main_trb()
+    if trb is None:
+        raise SystemExit(
+            "missing vanilla textresource_jpn.trb.\n"
+            "Pass --rom to rebuild_bake_img / Drop (fills cache/vanilla_from_rom), "
+            "or set NLPP_VANILLA_TRB."
+        )
+    cfg = trb.parent / "textresource_config.trb"
+    if not cfg.is_file():
+        raise SystemExit(f"missing vanilla textresource_config.trb next to {trb}")
+    return trb, cfg
 
 # Keep these single-kanji EN strings for chrome (not name candidates).
 UI_KANJI_ALLOW = set("冬春夏秋日月火水木金土")
@@ -66,14 +74,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
 
-    if not VANILLA_TRB.is_file():
-        raise SystemExit(f"missing vanilla TRB {VANILLA_TRB}")
+    vanilla_trb, vanilla_cfg = resolve_vanilla_trb_and_cfg()
+    print(f"[name-kanji-trb] vanilla: {vanilla_trb}", flush=True)
     mapping = filter_mapping(load_translations(DEFAULT_TRANSLATIONS))
     if args.dry_run:
         return 0
 
     lookup = load_lookup(LOOKUP)
-    rebuilt, stats = rebuild_trb(VANILLA_TRB.read_bytes(), mapping, lookup)
+    rebuilt, stats = rebuild_trb(vanilla_trb.read_bytes(), mapping, lookup)
     out = ROOT / "out" / "textresource_jpn_namekanji.trb"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(rebuilt)
@@ -81,7 +89,7 @@ def main(argv: list[str] | None = None) -> int:
 
     cfg_out = ROOT / "out" / "textresource_config_namekanji.trb"
     size_value = max(len(rebuilt), 0xC0000)
-    cfg_out.write_bytes(update_config_size(VANILLA_CFG.read_bytes(), size_value))
+    cfg_out.write_bytes(update_config_size(vanilla_cfg.read_bytes(), size_value))
     print(f"[name-kanji-trb] config SIZE={size_value} -> {cfg_out}")
 
     if args.deploy_azahar:
