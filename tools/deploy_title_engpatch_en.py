@@ -7,7 +7,7 @@ must be wired in the Parts layout.
 
 Separate ``timg/Eng_Patch.bclim`` + pic under ``Nul_Copyright``, taller Nul so
 the Eng strip is not clipped. Konami stays on vanilla ``Copyright.bclim``.
-Eng strip is transparent + copyright-matched gray text (no black plate).
+Eng strip uses dark ink (Main Menu is a white column — white glyphs vanish).
 
 Usage:
   python tools/deploy_title_engpatch_en.py
@@ -90,13 +90,15 @@ def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
 
 
 def render_eng_strip(w: int, h: int) -> Image.Image:
-    """Match Copyright.bclim: bright white glyphs + soft dark fringe (readable).
+    """Dark ink for Eng Patch — Main Menu chrome is a white column.
 
-    Not a black plate. Not a washed light-gray shadow — Konami uses near-white
-    fill with a dark AA edge so it stays legible on the title BG.
+    Vanilla Konami ``Copyright.bclim`` is near-white (title splash / dark BG).
+    Eng Patch sits on the same Pts under Main Menu where white-on-white
+    vanishes; use menu-label dark ink + light fringe so it stays visible
+    next to the © line.
     """
-    fill_rgb = (255, 255, 255)
-    fringe_rgb = (28, 28, 28)
+    fill_rgb = (48, 48, 48)
+    fringe_rgb = (220, 220, 220)
 
     def _etc1a4_alpha(a: int) -> int:
         if a < 12:
