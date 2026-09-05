@@ -778,6 +778,18 @@ def _title_pkg_has_eng_patch(img_path: Path, *, pkg_idx: int = 5261) -> bool:
             pass
 
 
+def _require_eng_patch(img_path: Path, *, context: str) -> None:
+    if _title_pkg_has_eng_patch(img_path):
+        print(f"[images] Eng Patch badge present in Title pkg 5261 ({context})")
+        return
+    raise PatchError(
+        f"{context} missing Title Eng_Patch badge (pkg 5261): {img_path}\n"
+        "  Stale LayeredFS/luma imgs often have EN menus but no badge.\n"
+        "  Fix: python tools/deploy_title_engpatch_en.py\n"
+        "       (NLPP_DEPLOY_IMG=release/bake_img.bin), then Drop with that bake."
+    )
+
+
 def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     """Inject gold bake, or pack assets/images into cache/new_img.bin."""
     from pack_images import PackError, pack_images
@@ -795,13 +807,7 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     ):
         print(f"[images] using gold bake: {out_img}")
         print("         (rebuild with: python tools/rebuild_bake_img.py)")
-        if not _title_pkg_has_eng_patch(out_img):
-            raise PatchError(
-                f"gold bake missing Title Eng_Patch badge (pkg 5261): {out_img}\n"
-                "  Run: python tools/deploy_title_engpatch_en.py\n"
-                "  (with NLPP_DEPLOY_IMG=release/bake_img.bin)"
-            )
-        print("[images] Eng Patch badge present in Title pkg 5261")
+        _require_eng_patch(out_img, context="gold bake")
         return out_img
 
     # Default: reuse PNG cache when present. --repack-images forces a rebuild.
@@ -815,6 +821,9 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
             "         (gold bake: python tools/rebuild_bake_img.py "
             "→ release/bake_img.bin)"
         )
+        # Explicit --packed-img (rebuild_test_cia / luma / Azahar) must still
+        # carry the Eng Patch badge — stale Aug LayeredFS imgs omit it.
+        _require_eng_patch(out_img, context=f"packed img {out_img}")
         return out_img
 
     src_img = _resolve_source_img_bin(args)
@@ -962,13 +971,7 @@ def rebuild_patched_cia(
         dest_img = romfs_dir / "img.bin"
         print(f"[inject] img.bin -> {dest_img}")
         shutil.copy2(packed_img, dest_img)
-        if (
-            packed_img.resolve() == DEFAULT_BAKE_IMG.resolve()
-            and not _title_pkg_has_eng_patch(dest_img)
-        ):
-            raise PatchError(
-                "injected img.bin lost Title Eng_Patch after copy — refuse to ship CIA"
-            )
+        _require_eng_patch(dest_img, context="injected img.bin")
 
     if romfs_overlay is not None:
         apply_romfs_overlay(romfs_dir, romfs_overlay)

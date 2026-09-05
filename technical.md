@@ -709,7 +709,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only fringe **vanishes** on Main Menu even when bake/CIA contain the strip — outline strength is the visibility fix, not “merge into Copyright.”
 
-**Bake vs CIA mismatch (2026-09-05):** `release/bake_img.bin` pkg **5261** can contain `Eng_Patch` while a Drop’d CIA does not. Extracted Desktop `NewLovePlusPlus-EN.cia` had Title sha=`2701cb9640eb` (**no** Eng; matches `bake_img.bin.bak_pre_title_engpatch`) while live bake had sha=`8b9916be34b2` (**with** Eng). `out/NewLovePlusPlus-EN.cia` was still dated Aug 30 — that Drop did not refresh repo `out/`. `patch_cia.py` now **refuses** gold inject if Title lacks `Eng_Patch`. Always launch the CIA under `out\NewLovePlusPlus-EN.cia` after a successful Drop from this repo.
+**Bake vs CIA mismatch (2026-09-05):** `release/bake_img.bin` pkg **5261** can contain `Eng_Patch` while a Drop’d CIA does not. Desktop `NewLovePlusPlus-EN.cia` (6:08pm) matched **`out/luma/.../img.bin`** (Aug 30 Title sha=`37dad8c6aca1`, **no** Eng) on 5701/5704 packages — not the live bake (`8b9916be34b2`, **with** Eng). Repo `out/NewLovePlusPlus-EN.cia` was still Aug 30. Root cause: shipping a **stale LayeredFS/luma img** (EN menus, no badge), not a bake failure. `patch_cia.py` now **refuses any** injected img lacking `Eng_Patch`; `rebuild_test_cia.py` prefers bake over Azahar/luma. Always launch `out\NewLovePlusPlus-EN.cia` after Drop from this repo confirms the badge.
 
 **Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
 

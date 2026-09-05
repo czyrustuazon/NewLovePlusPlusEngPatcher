@@ -84,14 +84,17 @@ def resolve_rom(explicit: Path | None) -> Path:
 
 
 def resolve_img() -> Path:
-    """Prefer live Azahar mod img (latest splices), else gold bake."""
-    if AZAHAR_MOD_IMG.is_file():
-        if not BAKE_IMG.is_file() or AZAHAR_MOD_IMG.stat().st_mtime >= BAKE_IMG.stat().st_mtime:
-            print(f"[img] using Azahar mod {AZAHAR_MOD_IMG}")
-            return AZAHAR_MOD_IMG.resolve()
+    """Prefer gold bake (has Eng Patch badge). Azahar mod only if explicitly newer chrome.
+
+    Stale ``out/luma`` / Roaming mods without ``Eng_Patch`` have shipped CIAs that
+    looked fully EN but omitted the title badge — never prefer those over bake.
+    """
     if BAKE_IMG.is_file():
         print(f"[img] using bake {BAKE_IMG}")
         return BAKE_IMG.resolve()
+    if AZAHAR_MOD_IMG.is_file():
+        print(f"[img] bake missing — falling back to Azahar mod {AZAHAR_MOD_IMG}")
+        return AZAHAR_MOD_IMG.resolve()
     raise SystemExit(f"no img.bin — deploy UI packages or create {BAKE_IMG}")
 
 
