@@ -44,8 +44,18 @@ Each has its own `load/mods/00040000000F4E00/` LayeredFS tree and
 | Fresh A from scratch | `.\make.ps1 all-a` |
 
 **Default `deploy-*` / `restore-*` today** wire the Profile name-input stack
-(`tools/deploy_name_input_en.py` + kanji TRB). That is a convenience target,
-not the only thing a/b can test — see below.
+(`tools/deploy_name_input_en.py` + kanji TRB) on whatever img is already in the
+instance (usually vanilla from `seed-*`).
+
+**Combine Bleeding-Edge bake + name-input:**
+
+```powershell
+.\make.ps1 combine-a    # bake img + name_input_code.bin + name-kanji TRB → A
+.\make.ps1 combine      # same → roaming AppData
+```
+
+Script: `tools/deploy_bleeding_edge_name_input.py`. That is bake **UI** plus the
+verified ExeFS/TRB name-input pieces — not “bake TRB alone.”
 
 ## Point any script at instance A or B
 

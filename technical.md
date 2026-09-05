@@ -970,14 +970,24 @@ Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji i
 
 ### 17.1 Verified working LayeredFS stack
 
+**Isolation (how name-input was proven):** Azahar **a/b** + **vanilla** `img.bin` / `code.bin.bak` — **not** bake alone. Full EN TRB maps gojūon `あ→A` and blanks those cells.
+
 ```bash
-python tools/deploy_name_input_en.py
-# or Azahar instance A:
-.\make.ps1 deploy-a
+.\make.ps1 deploy-a      # name-input + name-kanji TRB on vanilla img
 .\make.ps1 launch-a
 ```
 
-a/b workflow (isolated Azahar user dirs): **`ab_test/README.md`**.
+**Combine with Bleeding-Edge bake UI** (EN chrome + working Profile keyboard):
+
+```bash
+.\make.ps1 combine-a     # instance A
+.\make.ps1 combine       # roaming AppData
+# or: python tools/deploy_bleeding_edge_name_input.py --refresh-artifacts
+```
+
+Writes: `bake_img.bin` + `name_input_code.bin` + **name-kanji** TRB (not full EN TRB). Drop-bat already injects `release/name_input_code.bin`; bake rebuild uses name-kanji TRB via `rebuild_bake_img.py`.
+
+a/b guide: **`ab_test/README.md`**.
 
 | # | Patch | Script | Role |
 |---|-------|--------|------|
@@ -989,7 +999,7 @@ a/b workflow (isolated Azahar user dirs): **`ab_test/README.md`**.
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
-**Live checklist:** romaji keys; tap → romaji in name field; no left-column kanji list; checkerboard chrome OK; name length still ≤8 chars.
+**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower still show Latin; name length still ≤8 chars.
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 

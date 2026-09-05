@@ -105,7 +105,12 @@ def sync_trb_overlay() -> None:
 
 
 def rebuild_main_trb() -> None:
-    """Regenerate textresource_jpn.trb (+ config) from translations.json."""
+    """Regenerate textresource_jpn.trb (+ config) from translations.json.
+
+    Uses the name-input filter (skip single kana/CJK keys) so gojūon cells stay
+    JP glyphs for DrawCell/romaji — full EN TRB blanks the Profile keyboard.
+    See tools/deploy_name_kanji_trb.py / technical.md §17.
+    """
     translations = require_translations_json()
     vanilla_trb = find_vanilla_main_trb()
     if vanilla_trb is None:
@@ -123,26 +128,23 @@ def rebuild_main_trb() -> None:
         translations = TRANSLATIONS_JSON
     shutil.copy2(translations, TEXTRESOURCE / "translations.json")
 
-    out_trb = TEXTRESOURCE / "textresource_jpn.trb"
-    out_cfg = TEXTRESOURCE / "textresource_config.trb"
+    # Name-input-safe rebuild (filters kana/CJK single-glyph EN glosses).
     run(
         [
             sys.executable,
-            str(ROOT / "src" / "patch_textresource.py"),
-            "rebuild",
-            "--trb",
-            str(vanilla_trb),
-            "--translations",
-            str(translations),
-            "--out",
-            str(out_trb),
-            "--config-out",
-            str(out_cfg),
+            str(ROOT / "tools" / "deploy_name_kanji_trb.py"),
         ]
     )
-    if not out_trb.is_file():
-        raise SystemExit(f"TRB rebuild did not write {out_trb}")
-    print(f"[trb] rebuilt main TRB -> {out_trb}", flush=True)
+    namekanji = ROOT / "out" / "textresource_jpn_namekanji.trb"
+    namekanji_cfg = ROOT / "out" / "textresource_config_namekanji.trb"
+    if not namekanji.is_file():
+        raise SystemExit(f"name-kanji TRB rebuild did not write {namekanji}")
+    out_trb = TEXTRESOURCE / "textresource_jpn.trb"
+    out_cfg = TEXTRESOURCE / "textresource_config.trb"
+    shutil.copy2(namekanji, out_trb)
+    if namekanji_cfg.is_file():
+        shutil.copy2(namekanji_cfg, out_cfg)
+    print(f"[trb] name-kanji main TRB -> {out_trb}", flush=True)
 
     # Resident TRB is not rebuilt from translations.json; seed virgin bytes for
     # deploy_day_counter_en.py (日目 → Day) when release/ lacks it.

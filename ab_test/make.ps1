@@ -101,6 +101,9 @@ function Seed-Instance([string]$Id) {
     $exefs = Join-Path $mod "exefs"
     $code = Join-Path $exefs "code.bin"
     $vanilla = Join-Path $Paths.VanillaDump "exefs\code.bin"
+    $vanillaBak = Join-Path $Paths.VanillaDump "exefs\code.bin.bak"
+    # Prefer untouched bak — extracted/code.bin is often already name-input patched.
+    if (Test-Path $vanillaBak) { $vanilla = $vanillaBak }
     New-Item -ItemType Directory -Force -Path $exefs | Out-Null
     New-Item -ItemType Directory -Force -Path (Join-Path $mod "romfs") | Out-Null
     if (-not (Test-Path $vanilla)) {
@@ -109,7 +112,7 @@ function Seed-Instance([string]$Id) {
     if (-not (Test-Path $code)) {
         Copy-Item $vanilla $code
         Copy-Item $vanilla (Join-Path $mod "code.bin")
-        Write-Host "Seeded $code from vanilla dump"
+        Write-Host "Seeded $code from $vanilla"
     } else {
         Write-Host "Already exists: $code"
     }
@@ -163,6 +166,23 @@ function Deploy-NameInput([string]$InstanceId) {
     }
 }
 
+function Deploy-Combined([string]$InstanceId) {
+    if ($InstanceId) {
+        $user = Set-DeployEnv $InstanceId
+        Write-Host "Combine deploy target: $user"
+        Seed-Instance $InstanceId
+    } else {
+        Clear-DeployEnv
+        Write-Host "Combine deploy target: roaming Azahar (default)"
+    }
+    try {
+        Invoke-Python @("tools\deploy_bleeding_edge_name_input.py")
+        Write-Host "Done. Bake UI + name-input code + name-kanji TRB."
+    } finally {
+        if ($InstanceId) { Clear-DeployEnv }
+    }
+}
+
 function Launch-Instance([string]$Id) {
     $bat = Join-Path $Paths.Instances "$Id\Launch-$Id.bat"
     if (Test-Path $bat) {
@@ -183,8 +203,10 @@ See ab_test\README.md
   instances      Create dual test instances + Launch-a/b.bat
   seed-a / seed-b  Copy vanilla code.bin + img.bin into instance mod
 
-  deploy-a/b     Default stack (name-input) -> instance A or B
-  deploy         Default stack -> roaming %AppData%\Azahar
+  deploy-a/b     Name-input only (vanilla img stay) -> instance A/B
+  deploy         Name-input only -> roaming %AppData%\Azahar
+  combine-a/b    Bleeding-Edge bake img + name-input + name-kanji TRB -> A/B
+  combine        Same combine stack -> roaming Azahar
   restore-a/b    Restore default-stack baseline in instance
   restore        Restore baseline in roaming Azahar
 
@@ -204,6 +226,9 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
     "seed-b" = { Seed-Instance "b" }
     "deploy-a" = { Deploy-NameInput "a" }
     "deploy-b" = { Deploy-NameInput "b" }
+    "combine-a" = { Deploy-Combined "a" }
+    "combine-b" = { Deploy-Combined "b" }
+    "combine" = { Deploy-Combined "" }
     "restore-a" = { Restore-NameInput "a" }
     "restore-b" = { Restore-NameInput "b" }
     "restore" = { Restore-NameInput "" }
