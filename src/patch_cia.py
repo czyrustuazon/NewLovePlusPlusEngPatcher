@@ -11,8 +11,10 @@ Decrypt your dump yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.).
 This tool does not ship or run proprietary decryptors.
 
 NLPPGit (https://github.com/Makein/NLPPGit) is translation assets only.
-img.bin helpers from kiwiz/nlpp-tools (https://github.com/kiwiz/nlpp-tools);
-also NLPTextTool / LovePlusProject refs plus ctrtool / makerom / 3dstool.
+img.bin: kiwiz/nlpp-tools (ie, pe, png2bclim, img module); TRB codebook: Trb2xlsx
+lookup.txt only; DARC: src/darcutil.py. DBIN2 format: NLPTextTool lineage (pre-built
+rebuild_dbin2/). CIA: ctrtool / makerom / 3dstool (no in-tree decryptor).
+See README.md Credits for full third-party list.
 """
 
 from __future__ import annotations
@@ -293,8 +295,14 @@ def ensure_romfs_dir(romfs_bin: Path, romfs_dir: Path, reuse: Path | None) -> Pa
     return romfs_dir
 
 
+# Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% (see script_inject.py).
+from script_inject import resolve_script_source  # noqa: E402
+
+
 def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
     total = 0
+    layers: dict[str, int] = {"manaka": 0, "eng_p": 0, "nlppatch": 0}
+    skipped = 0
     for pack in PACKS:
         src_dir = dbin_root / pack
         if not src_dir.is_dir():
@@ -305,10 +313,30 @@ def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
         files = sorted(src_dir.glob("*.dbin2"))
         if not files:
             raise PatchError(f"no .dbin2 files in {src_dir}")
+        injected = 0
+        pack_layers: dict[str, int] = {}
         for src in files:
-            shutil.copy2(src, dest_dir / src.name)
+            chosen, tag = resolve_script_source(pack, src.stem, dbin_root)
+            if chosen is None:
+                skipped += 1
+                continue
+            shutil.copy2(chosen, dest_dir / src.name)
             total += 1
-        print(f"[inject] {pack}: {len(files)} file(s)")
+            injected += 1
+            if tag in layers:
+                layers[tag] += 1
+                pack_layers[tag] = pack_layers.get(tag, 0) + 1
+        layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
+        print(
+            f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"
+            f" — {len(files) - injected} JP (base ROM)"
+        )
+    print(
+        f"[inject] total EN: {total} "
+        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, nlppatch={layers['nlppatch']})"
+    )
+    if skipped:
+        print(f"[inject] {skipped} script slot(s) left Japanese")
     return total
 
 
@@ -376,6 +404,13 @@ def rebuild_cia(cxi: Path, manual: Path | None, out_cia: Path, title_ver: int | 
 
 def _resolve_resident_trb(romfs_hint: Path | None) -> Path | None:
     candidates = []
+    for overlay in (DEFAULT_ROMFS_OVERLAY, _LEGACY_ROMFS_OVERLAY):
+        candidates.append(
+            overlay
+            / "SystemData"
+            / "TextResource"
+            / "textresource_resident_jpn.trb"
+        )
     if romfs_hint is not None:
         candidates.append(
             romfs_hint
@@ -617,10 +652,22 @@ def write_layeredfs(
         dest = title_dir / pack
         dest.mkdir(parents=True, exist_ok=True)
         files = sorted(src_dir.glob("*.dbin2"))
+        pack_injected = 0
+        pack_layers: dict[str, int] = {}
         for src in files:
-            shutil.copy2(src, dest / src.name)
+            chosen, tag = resolve_script_source(pack, src.stem, dbin_root)
+            if chosen is None:
+                continue
+            shutil.copy2(chosen, dest / src.name)
             count += 1
-        print(f"[layeredfs] {pack}: {len(files)} file(s)")
+            pack_injected += 1
+            if tag != "jp":
+                pack_layers[tag] = pack_layers.get(tag, 0) + 1
+        skipped = len(files) - pack_injected
+        layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
+        note = f" ({layer_note})" if layer_note else ""
+        skip_note = f", {skipped} JP" if skipped else ""
+        print(f"[layeredfs] {pack}: {pack_injected} EN{note}{skip_note}")
 
     if resident_src and resident_src.is_file():
         dest_trb = (
@@ -699,6 +746,8 @@ def write_layeredfs(
                 "  romfs/SystemData/.../textresource_resident_jpn.trb — heroine names",
                 "  romfs/img.bin — English UI textures (when UI bake was included)",
                 "  code.bin — optional name-input fix (only with --patch-code)",
+                "Dialog nickname tokens (▲高嶺＊＊▲ etc.) are kept in scripts;",
+                "resident TRB / img.bin use plain English heroine names — see src/patch_names.py.",
                 "",
                 "No CIA reinstall is required when using LayeredFS.",
                 "Same install style as LovePlusProject/NLPPATCH releases.",

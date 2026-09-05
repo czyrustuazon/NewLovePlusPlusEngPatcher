@@ -943,17 +943,7 @@ def pack_images(
         raise
 
 
-AZAHAR_IMG = (
-    Path.home()
-    / "AppData"
-    / "Roaming"
-    / "Azahar"
-    / "load"
-    / "mods"
-    / "00040000000F4E00"
-    / "romfs"
-    / "img.bin"
-)
+from nlpp_paths import AZAHAR_MOD_IMG as AZAHAR_IMG  # noqa: E402
 
 VANILLA_IMG = (
     ROOT.parent
@@ -1032,7 +1022,8 @@ def main(argv: list[str] | None = None) -> int:
     only = {normalize_folder_key(k) for k in args.only} if args.only else None
     img_bin = Path(args.img_bin)
     # Prefer current Azahar overlay as source when deploying (keeps CESA splice).
-    if args.deploy_azahar and AZAHAR_IMG.is_file():
+    prefer = os.environ.get("NLPP_PREFER_AZAHAR_SRC", "1").strip().lower()
+    if args.deploy_azahar and prefer not in ("0", "false", "no", "off") and AZAHAR_IMG.is_file():
         img_bin = AZAHAR_IMG
         print(f"[img] using Azahar overlay as source: {img_bin}")
     try:

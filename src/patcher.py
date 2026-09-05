@@ -31,6 +31,10 @@ JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 PLACEHOLDER_RE = re.compile(r"[○●…]{2,}|TODO|FIXME|MTL", re.I)
 
 
+# Script inject policy (see script_inject.py): Manaka t* + p* + NLPPPATCH ~28%.
+TRANSLATION_PREFIXES = frozenset({"t", "p"})
+
+
 def iter_scripts() -> list[Path]:
     if not SCRIPTS.is_dir():
         return []
@@ -44,7 +48,32 @@ def cmd_status(_: argparse.Namespace) -> int:
     if IMAGES.is_dir():
         for ext in ("*.psd", "*.pdn", "*.xcf"):
             sources.extend(IMAGES.rglob(ext))
-    print(f"scripts (xml): {len(scripts)}")
+    by_prefix: dict[str, int] = {}
+    for path in scripts:
+        pref = path.stem[0].lower() if path.stem else "?"
+        by_prefix[pref] = by_prefix.get(pref, 0) + 1
+    manaka = by_prefix.get("t", 0)
+    common = by_prefix.get("p", 0)
+    nene = by_prefix.get("a", 0)
+    rinko = by_prefix.get("k", 0)
+    print(f"scripts (xml): {len(scripts)} in assets/scripts/")
+    print(f"  t* Manaka:  {manaka}")
+    print(f"  p* common:  {common}")
+    print(f"  a* Nene:    {nene} (WIP if present - not gold-injected)")
+    print(f"  k* Rinko:   {rinko} (WIP if present - not gold-injected)")
+    print(f"Manaka layer: {manaka} t* from rebuild_dbin2 (overrides NLPPATCH)")
+    try:
+        from script_inject import coverage_summary, nlppatch_script_dir
+
+        cov = coverage_summary()
+        nlp = nlppatch_script_dir()
+        print(f"NLPPPATCH vendor:    {nlp or '(missing — python tools/fetch_nlppatch_release.py)'}")
+        print(
+            f"script pack inject:  {cov['english_stems']}/{cov['total_stems']} EN "
+            f"({cov['english_pct']}%) — nlppatch={cov['nlppatch']}, jp={cov['jp']}"
+        )
+    except ImportError:
+        pass
     print(f"images (png):  {len(pngs)}")
     print(f"image sources: {len(sources)}  (psd/pdn/xcf, not used by build)")
     print(f"scripts dir:   {SCRIPTS}")
@@ -66,6 +95,8 @@ def cmd_validate(_: argparse.Namespace) -> int:
     total_dialogs = 0
 
     for path in iter_scripts():
+        if path.stem and path.stem[0].lower() not in TRANSLATION_PREFIXES:
+            continue
         try:
             dialogs = _dialog_texts(path)
         except ValueError as exc:
@@ -96,8 +127,12 @@ def cmd_validate(_: argparse.Namespace) -> int:
             if len(hits) > 8:
                 print(f"  ... +{len(hits) - 8} more")
 
+    en_scripts = [
+        p for p in iter_scripts()
+        if p.stem and p.stem[0].lower() in TRANSLATION_PREFIXES
+    ]
     print()
-    print(f"checked scripts: {len(iter_scripts())}")
+    print(f"checked scripts: {len(en_scripts)} (t*/p* only; k*/a* out of scope)")
     print(f"dialog lines:    {total_dialogs}")
     print(f"xml errors:      {bad_xml}")
     print(f"scripts flagged: {flagged}")

@@ -46,3 +46,15 @@ this repo does not ship `decrypt.exe`.
 - In-tree `opt/bin/darctool` is a **Linux ELF**; Windows packing uses `darcutil.py` instead.
 - `png2bclim.exe` often expands compressed BCLIM formats (size grows) — DARC rebuild handles that.
 - `pack_images.py` does selective `img.bin` rewrite (only patched package indices).
+
+
+## Optional local clones / one-off imports (not required for Drop CIA)
+
+| Path / script | Source | Note |
+|------|--------|------|
+| `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | Rebuild `assets/scripts/*.xml` → `.dbin2` offline; patch pipeline injects pre-built `rebuild_dbin2/` |
+| `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Legacy img.bin unpacker; superseded by `nlpp-tools` `ie`/`pe` |
+| `import_nlppctr_textures.py` | uses [LovePlusProject/NLPPCTR](https://github.com/LovePlusProject/NLPPCTR) | Dev-only texture import / A/B compare (`ab_test/`) |
+| `import_ui_buttons_bundle.py` | `NLPP_English_UI_Buttons_only.zip` | Copy keyboard/SysPopup/Back/Album PNGs → `assets/images/*.check/timg/` |
+| `deploy_ui_buttons_en.py` | EngPatcher | Pack imported UI Buttons (pkg 5190/5259/5380/4149) |
+| `src/deploy_nlppatch_scripts.py` | optional `vendor/NLPPATCH/` | LayeredFS deploy of community baseline scripts |

@@ -1,5 +1,9 @@
 # NLPP #
 
+**EngPatcher note:** invoked tools are **`ie`**, **`pe`**, **`png2bclim.exe`**, and the Python **`img`** module. On Windows, DARC work uses EngPatcher `src/darcutil.py` instead of in-tree `darctool` (Linux ELF). `png2texi.exe` is not used on the gold UI path. Upstream: [kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools). Credits: root [`README.md`](../../README.md#credits).
+
+---
+
 ## Setup ##
 
 - Download and install [Python 3](https://www.python.org/downloads/). Make sure to check the "Add to PATH" option!

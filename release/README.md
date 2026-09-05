@@ -5,7 +5,7 @@ Unlike `out/` (wipeable scratch) and `cache/` (optional PNG pack), treat these a
 
 | Path | Role |
 |------|------|
-| `bake_img.bin` | Gold English `img.bin` (PNG pack + deploy chrome + SMS/day-counter) |
+| `bake_img.bin` | Gold English `img.bin` (PNG pack + deploy chrome + day-counter; SMS **off** unless `--include-sms`) |
 | `name_input_code.bin` | Profile name-input ExeFS stack (romaji + direct insert); drop-bat `--inject-code` |
 | `romfs_overlay/` | RomFS files auto-injected by `patch_cia` (TRBs under `SystemData/TextResource/`) |
 | `textresource/` | Regenerated TRBs / working copies (from `assets/textresource/translations.json`) |
@@ -37,3 +37,5 @@ python tools/fetch_release_bake.py --repo OWNER/nlpp-gold
 
 then drop their CIA on the bat (Windows). Safe to delete `bake_img.bin.bak_pre_*`
 sidecars before sharing.
+
+**Progress metrics:** `python tools/export_progress_metrics.py` — see `docs/TRANSLATION_PROGRESS.md`.

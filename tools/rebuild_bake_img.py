@@ -7,7 +7,6 @@ Self-contained (no Azahar required):
     → pack_images (assets/images)           # long first time; caches under cache/img_pack/
     → rebuild textresource_jpn.trb from assets/textresource/translations.json
     → ordered deploy_*_en.py chrome (+ day-counter resident TRB)
-    → SMS maildic
     → sync TRBs into release/romfs_overlay
     → release/bake_img.bin
     → release/name_input_code.bin (Profile romaji stack; drop-bat --inject-code)
@@ -65,6 +64,8 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_card_flist_en.py",
     "deploy_status_stats_en.py",
     "deploy_myroom_main_en.py",
+    # NLPP English UI Buttons bundle (keyboard 5190, SysPopup, scoped Back, Album delete).
+    "deploy_ui_buttons_en.py",
     "deploy_mail_home_en.py",
     "deploy_mydata_en.py",
     "deploy_todo_en.py",
@@ -312,9 +313,9 @@ def main(argv: list[str] | None = None) -> int:
         help="skip deploy_* chrome (still rebuilds main TRB unless --skip-trb)",
     )
     ap.add_argument(
-        "--skip-sms",
+        "--include-sms",
         action="store_true",
-        help="skip SMS maildic deploy",
+        help="deploy English SMS maildic (assets/sms_en/; off by default for JP audit)",
     )
     ap.add_argument(
         "--skip-trb",
@@ -462,7 +463,13 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             run([sys.executable, str(script)], env=env)
             timer.mark(f"deploy done: {name}")
 
-    if not args.skip_sms:
+    if args.include_sms:
+        en_dir = ROOT / "assets" / "sms_en"
+        if not (en_dir / "maildic_m.en.xml").is_file():
+            raise SystemExit(
+                "assets/sms_en/ missing — run tools/translate_sms_en.py first, "
+                "or omit --include-sms"
+            )
         timer.mark("SMS maildic deploy")
         run(
             [
