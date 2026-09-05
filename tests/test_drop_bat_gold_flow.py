@@ -44,3 +44,14 @@ def test_bat_requires_packed_img_before_patch():
     text = _bat_text()
     assert "Gold bake path missing" in text
     assert "Injecting gold bake" in text
+
+
+def test_bat_finishes_incomplete_bake_missing_eng_patch():
+    """PNG-seeded bake without Eng_Patch must --skip-pack before inject."""
+    text = _bat_text()
+    assert "_title_pkg_has_eng_patch" in text
+    assert "--skip-pack" in text
+    check_idx = text.index("_title_pkg_has_eng_patch")
+    inject_idx = text.index("Injecting gold bake")
+    assert check_idx < inject_idx
+    assert text.index("--skip-pack") < inject_idx

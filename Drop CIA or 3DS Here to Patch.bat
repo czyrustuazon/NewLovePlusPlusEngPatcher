@@ -270,6 +270,30 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     pause
     exit /b 1
   )
+  REM Incomplete bake: PNG pack often seeds release\bake_img.bin before deploys.
+  REM Mid-rebuild failure leaves EN menus but no Title Eng_Patch — finish chrome.
+  "%PYTHON%" -c "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); from patch_cia import _title_pkg_has_eng_patch; raise SystemExit(0 if _title_pkg_has_eng_patch(Path(sys.argv[2])) else 2)" "%SRC%" "!PACKED_IMG!" >nul 2>&1
+  if errorlevel 2 (
+    echo.
+    echo Gold bake incomplete ^(missing Title Eng_Patch badge in pkg 5261^).
+    echo Finishing TRB + deploy chrome with --skip-pack ^(keeps PNG pack^)...
+    echo.
+    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" --skip-pack
+    if errorlevel 1 (
+      echo [!] rebuild_bake_img.py --skip-pack failed — see traceback above.
+      echo     Manual: python tools\deploy_title_engpatch_en.py
+      echo             ^(set NLPP_DEPLOY_IMG=release\bake_img.bin^)
+      pause
+      exit /b 1
+    )
+    if exist "%~dp0release\bake_img.bin" (
+      set "PACKED_IMG=%~dp0release\bake_img.bin"
+    )
+    if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
+      echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+      set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
+    )
+  )
   echo Injecting gold bake: !PACKED_IMG!
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
