@@ -7,7 +7,9 @@ must be wired in the Parts layout.
 
 Separate ``timg/Eng_Patch.bclim`` + pic under ``Nul_Copyright``, taller Nul so
 the Eng strip is not clipped. Konami stays on vanilla ``Copyright.bclim``.
-Eng strip is transparent + copyright-matched gray text (no black plate).
+Eng strip stays a separate BCLIM (not merged into Copyright). Main Menu is a
+white column — soft white-on-white vanishes; use white glyphs + strong black
+outline (Aug 2026 confirm) so it stays readable above Konami.
 
 Usage:
   python tools/deploy_title_engpatch_en.py
@@ -90,13 +92,14 @@ def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
 
 
 def render_eng_strip(w: int, h: int) -> Image.Image:
-    """Match Copyright.bclim: bright white glyphs + soft dark fringe (readable).
+    """Standalone Eng line: white fill + thick black outline (Main Menu readable).
 
-    Not a black plate. Not a washed light-gray shadow — Konami uses near-white
-    fill with a dark AA edge so it stays legible on the title BG.
+    Soft copyright-matched white-only fringe vanishes on the Main Menu white
+    column. Aug 2026 confirm used a strong black outline on a separate
+    ``Eng_Patch.bclim`` — keep that; do not dual-line into Copyright.
     """
     fill_rgb = (255, 255, 255)
-    fringe_rgb = (28, 28, 28)
+    outline_rgb = (0, 0, 0)
 
     def _etc1a4_alpha(a: int) -> int:
         if a < 12:
@@ -117,8 +120,12 @@ def render_eng_strip(w: int, h: int) -> Image.Image:
         fmask = Image.new("L", (w, h), 0)
         od = ImageDraw.Draw(omask)
         fd = ImageDraw.Draw(fmask)
-        # Soft ring (cardinals + diagonals); keep font AA — no hard 255 threshold.
+        # Thick outline ring (cardinals + diagonals + 2px cardinals).
         for ox, oy in (
+            (-2, 0),
+            (2, 0),
+            (0, -2),
+            (0, 2),
             (-1, 0),
             (1, 0),
             (0, -1),
@@ -127,25 +134,30 @@ def render_eng_strip(w: int, h: int) -> Image.Image:
             (-1, 1),
             (1, -1),
             (1, 1),
+            (-2, -1),
+            (-2, 1),
+            (2, -1),
+            (2, 1),
+            (-1, -2),
+            (1, -2),
+            (-1, 2),
+            (1, 2),
         ):
-            od.text((x + ox, y + oy), ENG_PATCH_LINE, font=font, fill=220)
+            od.text((x + ox, y + oy), ENG_PATCH_LINE, font=font, fill=255)
         fd.text((x, y), ENG_PATCH_LINE, font=font, fill=255)
         fbody = fmask.point(lambda p: 255 if p >= 64 else 0)
         omask = ImageChops.subtract(omask, fbody)
-        # Mid-strength dark fringe (readable, not ink-black plate).
-        omask = omask.point(lambda p: min(255, (p * 200) // 255))
 
         im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        # Fringe first (dark), then white body.
-        fringe = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        fp = fringe.load()
+        outline = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        op = outline.load()
         om = omask.load()
         for yy in range(h):
             for xx in range(w):
                 a = _etc1a4_alpha(om[xx, yy])
                 if a:
-                    fp[xx, yy] = (*fringe_rgb, a)
-        im = Image.alpha_composite(im, fringe)
+                    op[xx, yy] = (*outline_rgb, a)
+        im = Image.alpha_composite(im, outline)
         im.paste(Image.new("RGBA", (w, h), (*fill_rgb, 255)), (0, 0), fbody)
         px = im.load()
         for yy in range(h):
