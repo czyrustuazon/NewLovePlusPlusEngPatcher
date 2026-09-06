@@ -23,7 +23,8 @@ def test_bat_defaults_packed_img_to_release_bake():
 def test_bat_polls_ci_before_local_rebuild():
     text = _bat_text()
     fetch_idx = text.index("fetch_release_bake.py")
-    rebuild_idx = text.index("rebuild_bake_img.py")
+    # Full rebuild when bake is missing (not the --skip-pack recovery path).
+    rebuild_idx = text.index("running tools\\rebuild_bake_img.py")
     assert fetch_idx < rebuild_idx
     assert "--best-effort" in text
 
@@ -51,7 +52,16 @@ def test_bat_finishes_incomplete_bake_missing_eng_patch():
     text = _bat_text()
     assert "_title_pkg_has_eng_patch" in text
     assert "--skip-pack" in text
+    assert "name_input_code.bin" in text
     check_idx = text.index("_title_pkg_has_eng_patch")
     inject_idx = text.index("Injecting gold bake")
     assert check_idx < inject_idx
     assert text.index("--skip-pack") < inject_idx
+
+
+def test_bat_requires_name_input_and_rejects_images_off():
+    text = _bat_text()
+    assert "NLPP_WITH_IMAGES=0 is not allowed" in text
+    assert "name_input_code.bin still missing after rebuild" in text
+    assert "INJECT_CODE=--inject-code" in text
+    assert "Scripts-only patch" not in text

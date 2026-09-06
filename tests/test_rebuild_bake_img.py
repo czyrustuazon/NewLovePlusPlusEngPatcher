@@ -20,6 +20,13 @@ def test_deploy_scripts_include_menu_chrome():
         assert name in scripts, f"missing deploy script: {name}"
 
 
+def test_rebuild_name_input_is_required_not_optional():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
+    assert "--skip-name-input-code" not in text
+    assert "build_name_input_code" in text
+    assert "required name-input missing" in text
+
+
 def test_softkey_deploy_after_confirm():
     scripts = rebuild.DEPLOY_SCRIPTS
     confirm = scripts.index("deploy_confirm_btn_en.py")

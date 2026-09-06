@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
+import time
 from pathlib import Path
 
 SRC = Path(__file__).resolve().parent
@@ -58,11 +59,33 @@ def _rom_fingerprint(rom: Path) -> str:
 
 
 def vanilla_cache_ready(rom: Path | None = None) -> bool:
-    if not VANILLA_IMG.is_file() or not VANILLA_MAIN_TRB.is_file():
+    """True when img + main TRB + decompressed ExeFS code.bin are present."""
+    if (
+        not VANILLA_IMG.is_file()
+        or not VANILLA_MAIN_TRB.is_file()
+        or not VANILLA_CODE.is_file()
+    ):
         return False
     if rom is None or not MARKER.is_file():
         return True
     return MARKER.read_text(encoding="utf-8").strip() == _rom_fingerprint(rom)
+
+
+def _retry(op, *, attempts: int = 3, delay_s: float = 2.0, what: str):
+    """Run ``op`` until it succeeds; raise after ``attempts`` failures."""
+    last: BaseException | None = None
+    for i in range(1, attempts + 1):
+        try:
+            return op()
+        except (PatchError, OSError, FileNotFoundError, RuntimeError) as exc:
+            last = exc
+            print(
+                f"[retry] {what} attempt {i}/{attempts} failed: {exc}",
+                flush=True,
+            )
+            if i < attempts:
+                time.sleep(delay_s * i)
+    raise PatchError(f"{what} failed after {attempts} attempts: {last}") from last
 
 
 def _write_decompressed_code(exefs_bin: Path, work: Path) -> Path:
@@ -131,10 +154,13 @@ def ensure_vanilla_from_rom(
             f"RomFS extract missing textresource_jpn.trb under {romfs_dir}"
         )
 
-    try:
-        _write_decompressed_code(parts["exefs"], work)
-    except (PatchError, OSError) as exc:
-        print(f"[vanilla] warning: code.bin extract failed: {exc}", flush=True)
+    # ExeFS code.bin is required (Profile name-input). Keep retrying — never soft-skip.
+    _retry(
+        lambda: _write_decompressed_code(parts["exefs"], work),
+        what="ExeFS code.bin extract",
+    )
+    if not VANILLA_CODE.is_file():
+        raise PatchError(f"vanilla code.bin missing after extract: {VANILLA_CODE}")
 
     if slim:
         _slim_romfs(romfs_dir)
@@ -173,7 +199,10 @@ def ensure_vanilla_code_from_rom(rom: Path, *, force: bool = False) -> Path:
     work.mkdir(parents=True, exist_ok=True)
     cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
     parts = split_cxi(cxi, work / "ncch_parts")
-    return _write_decompressed_code(parts["exefs"], work)
+    return _retry(
+        lambda: _write_decompressed_code(parts["exefs"], work),
+        what="ExeFS code.bin extract",
+    )
 
 
 def _slim_romfs(romfs_dir: Path) -> None:

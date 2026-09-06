@@ -26,6 +26,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -217,39 +218,68 @@ def seed_vanilla_bak(vanilla: Path, bake: Path) -> None:
     print(f"[bake] vanilla bak -> {bak}", flush=True)
 
 
-def build_name_input_code(*, rom: Path | None) -> Path | None:
-    """Patch vanilla ExeFS code.bin → release/name_input_code.bin for CIA inject."""
+def build_name_input_code(*, rom: Path | None) -> Path:
+    """Patch vanilla ExeFS code.bin → release/name_input_code.bin for CIA inject.
+
+    Always required for a complete gold bake. Retries extract + deploy; never soft-skips.
+    """
     from extract_vanilla_from_rom import ensure_vanilla_code_from_rom  # noqa: PLC0415
 
-    src = find_vanilla_code()
-    if src is None and rom is not None:
+    def _resolve_src() -> Path:
+        src = find_vanilla_code()
+        if src is not None:
+            return src
+        if rom is None:
+            raise SystemExit(
+                "vanilla exefs/code.bin not found.\n"
+                "Pass --rom path\\to\\game.cia|.3ds|.cci (required for from-scratch), "
+                "or set NLPP_VANILLA_CODE."
+            )
+        return ensure_vanilla_code_from_rom(rom, force=False)
+
+    last_exc: BaseException | None = None
+    for attempt in range(1, 4):
         try:
-            src = ensure_vanilla_code_from_rom(rom)
-        except (FileNotFoundError, PatchError, OSError) as exc:
-            print(f"[name-input] skip code.bin build: {exc}", flush=True)
-            return None
-    if src is None:
-        print(
-            "[name-input] skip: vanilla exefs/code.bin not found "
-            "(set NLPP_VANILLA_CODE or pass --rom).",
-            flush=True,
-        )
-        return None
-    RELEASE.mkdir(parents=True, exist_ok=True)
-    run(
-        [
-            sys.executable,
-            str(ROOT / "tools" / "deploy_name_input_en.py"),
-            "--src",
-            str(src),
-            "--out",
-            str(NAME_INPUT_CODE),
-        ]
+            src = _resolve_src()
+            RELEASE.mkdir(parents=True, exist_ok=True)
+            if NAME_INPUT_CODE.is_file():
+                NAME_INPUT_CODE.unlink()
+            run(
+                [
+                    sys.executable,
+                    str(ROOT / "tools" / "deploy_name_input_en.py"),
+                    "--src",
+                    str(src),
+                    "--out",
+                    str(NAME_INPUT_CODE),
+                ]
+            )
+            if not NAME_INPUT_CODE.is_file():
+                raise SystemExit(
+                    f"name-input code build did not write {NAME_INPUT_CODE}"
+                )
+            print(f"[name-input] -> {NAME_INPUT_CODE}", flush=True)
+            return NAME_INPUT_CODE
+        except (SystemExit, PatchError, OSError, subprocess.CalledProcessError) as exc:
+            last_exc = exc
+            print(
+                f"[retry] name-input code.bin attempt {attempt}/3 failed: {exc}",
+                flush=True,
+            )
+            if attempt < 3:
+                # Force re-extract code on next try when ROM is available.
+                if rom is not None:
+                    try:
+                        ensure_vanilla_code_from_rom(rom, force=True)
+                    except (PatchError, OSError) as extract_exc:
+                        print(
+                            f"[retry] force code extract failed: {extract_exc}",
+                            flush=True,
+                        )
+                time.sleep(2.0 * attempt)
+    raise SystemExit(
+        f"required release/name_input_code.bin failed after 3 attempts: {last_exc}"
     )
-    if not NAME_INPUT_CODE.is_file():
-        raise SystemExit(f"name-input code build did not write {NAME_INPUT_CODE}")
-    print(f"[name-input] -> {NAME_INPUT_CODE}", flush=True)
-    return NAME_INPUT_CODE
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -323,11 +353,6 @@ def main(argv: list[str] | None = None) -> int:
         "--also-azahar",
         action="store_true",
         help="mirror deploy splices into Azahar LayeredFS when present",
-    )
-    ap.add_argument(
-        "--skip-name-input-code",
-        action="store_true",
-        help="skip building release/name_input_code.bin (Profile romaji stack)",
     )
     args = ap.parse_args(argv)
 
@@ -452,12 +477,10 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     sync_trb_overlay()
 
-    name_code: Path | None = None
-    if not args.skip_name_input_code:
-        timer.mark("building name-input code.bin")
-        name_code = build_name_input_code(
-            rom=args.rom.resolve() if args.rom else None
-        )
+    timer.mark("building name-input code.bin")
+    name_code = build_name_input_code(rom=args.rom.resolve() if args.rom else None)
+    if not NAME_INPUT_CODE.is_file():
+        raise SystemExit(f"required name-input missing: {NAME_INPUT_CODE}")
 
     if not BAKE_IMG.is_file():
         raise SystemExit(f"bake missing after rebuild: {BAKE_IMG}")
@@ -469,8 +492,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
-    if name_code is not None:
-        print(f"  name-input:    {name_code}", flush=True)
+    print(f"  name-input:    {name_code}", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
     timer.finish("gold rebuild OK")
     return 0

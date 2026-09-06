@@ -203,15 +203,26 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
   echo TRB overlay will auto-apply from cache\romfs_overlay ^(legacy^)
 )
 set "INJECT_CODE="
+REM Profile name-input is required for a complete Drop (built by rebuild_bake_img).
 if exist "%~dp0release\name_input_code.bin" (
   set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
 )
 if /i "%NLPP_WITH_IMAGES%"=="0" (
-  echo Scripts-only patch ^(NLPP_WITH_IMAGES=0 — UI pack skipped^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
-) else if /i "%NLPP_REPACK_IMAGES%"=="1" (
+  echo.
+  echo [!] NLPP_WITH_IMAGES=0 is not allowed — incomplete patches are disabled.
+  echo     Drop always builds a full CIA ^(UI gold bake + Eng Patch + name-input^).
+  echo.
+  pause
+  exit /b 1
+)
+if /i "%NLPP_REPACK_IMAGES%"=="1" (
   echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
+  if not defined INJECT_CODE (
+    echo [!] release\name_input_code.bin required. Run rebuild_bake_img.py --rom first.
+    pause
+    exit /b 1
+  )
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
   REM Gold bake required. Try CI Release first, then build from assets.
@@ -270,19 +281,21 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
     pause
     exit /b 1
   )
-  REM Incomplete bake: PNG pack often seeds release\bake_img.bin before deploys.
-  REM Mid-rebuild failure leaves EN menus but no Title Eng_Patch — finish chrome.
+  REM Incomplete gold artifacts: finish rebuild (keeps PNG pack) until Eng_Patch
+  REM and name_input_code.bin both exist — never inject a partial CIA.
+  set "NEED_FINISH="
   "%PYTHON%" -c "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); from patch_cia import _title_pkg_has_eng_patch; raise SystemExit(0 if _title_pkg_has_eng_patch(Path(sys.argv[2])) else 2)" "%SRC%" "!PACKED_IMG!" >nul 2>&1
-  if errorlevel 2 (
+  if errorlevel 2 set "NEED_FINISH=1"
+  if not exist "%~dp0release\name_input_code.bin" set "NEED_FINISH=1"
+  if defined NEED_FINISH (
     echo.
-    echo Gold bake incomplete ^(missing Title Eng_Patch badge in pkg 5261^).
-    echo Finishing TRB + deploy chrome with --skip-pack ^(keeps PNG pack^)...
+    echo Gold artifacts incomplete ^(Eng Patch and/or name_input_code.bin missing^).
+    echo Finishing with rebuild_bake_img.py --skip-pack ^(retries; no soft skips^)...
     echo.
     "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" --skip-pack
     if errorlevel 1 (
       echo [!] rebuild_bake_img.py --skip-pack failed — see traceback above.
-      echo     Manual: python tools\deploy_title_engpatch_en.py
-      echo             ^(set NLPP_DEPLOY_IMG=release\bake_img.bin^)
+      echo     Re-run Drop after fixing the error; incomplete CIAs are not emitted.
       pause
       exit /b 1
     )
@@ -294,6 +307,13 @@ if /i "%NLPP_WITH_IMAGES%"=="0" (
       set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
     )
   )
+  if not exist "%~dp0release\name_input_code.bin" (
+    echo [!] release\name_input_code.bin still missing after rebuild — aborting.
+    pause
+    exit /b 1
+  )
+  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
@@ -321,8 +341,7 @@ echo     %~dp0out\luma\00040000000F4E00
 echo     Copy that folder to SD:/luma/titles/
 echo     Enable "Enable game patching" in Luma settings.
 echo.
-echo [+] Scroll up for PATCH SUMMARY ^([OK] / [SKIPPED]^).
-echo     If UI img.bin was SKIPPED, menus stay Japanese — not a full patch.
+echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
 echo.
 echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py

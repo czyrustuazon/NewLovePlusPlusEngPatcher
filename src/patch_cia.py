@@ -1344,6 +1344,19 @@ def _cmd_patch_body(
         packed_img = pack_ui_images(args, work)
         layered_img = packed_img
         timer.mark("UI img.bin ready")
+        # Full UI CIA always requires Profile name-input ExeFS inject.
+        if not args.inject_code and not args.patch_code:
+            raise PatchError(
+                "Profile name-input code.bin is required for a full UI patch.\n"
+                "  Missing --inject-code / --patch-code.\n"
+                "  Fix: python tools/rebuild_bake_img.py --rom your.cia|.3ds\n"
+                "       (writes release/name_input_code.bin), then Drop again."
+            )
+        if args.inject_code and not Path(args.inject_code).is_file():
+            raise PatchError(
+                f"Profile name-input missing: {args.inject_code}\n"
+                "  Fix: python tools/rebuild_bake_img.py --rom your.cia|.3ds"
+            )
     elif args.no_images:
         print("[images] skipped (--no-images)")
 

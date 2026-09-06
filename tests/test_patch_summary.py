@@ -94,4 +94,27 @@ def test_drop_bat_mentions_patch_summary():
         encoding="utf-8", errors="replace"
     )
     assert "PATCH SUMMARY" in bat
-    assert "UI img.bin was SKIPPED" in bat
+    assert "incomplete patches abort" in bat
+
+
+def test_patch_cia_requires_name_input_for_ui_inject():
+    src = (SRC / "patch_cia.py").read_text(encoding="utf-8")
+    assert "Profile name-input code.bin is required for a full UI patch" in src
+
+
+def test_rebuild_always_builds_name_input():
+    text = (SRC.parent / "tools" / "rebuild_bake_img.py").read_text(
+        encoding="utf-8", errors="replace"
+    )
+    assert "skip-name-input-code" not in text
+    assert "required release/name_input_code.bin failed after 3 attempts" in text
+    assert "name-input] skip" not in text
+
+
+def test_vanilla_extract_requires_code_bin():
+    text = (SRC.parent / "src" / "extract_vanilla_from_rom.py").read_text(
+        encoding="utf-8", errors="replace"
+    )
+    assert "warning: code.bin extract failed" not in text
+    assert "ExeFS code.bin extract" in text
+    assert "VANILLA_CODE.is_file()" in text
