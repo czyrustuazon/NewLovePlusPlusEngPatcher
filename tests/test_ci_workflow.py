@@ -10,9 +10,11 @@ WORKFLOW = ROOT / ".github" / "workflows" / "test.yml"
 
 def test_ci_workflow_checks_out_with_plain_git():
     text = WORKFLOW.read_text(encoding="utf-8")
-    assert "actions/checkout" not in text
-    assert "actions/setup-python" not in text
+    # Must not *use* third-party checkout/setup actions (comments may name them).
+    assert "uses: actions/checkout" not in text
+    assert "uses: actions/setup-python" not in text
     assert "git fetch" in text
+    assert "git checkout" in text
     assert "requirements-dev.txt" in text
     assert "pytest" in text
     # Must verify tree is present before pip install.
