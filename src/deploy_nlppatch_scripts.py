@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Deploy vendored NLPPATCH English .dbin2 scripts to Azahar LayeredFS.
+"""Deploy community (ex-NLPPATCH) English .dbin2 scripts to Azahar LayeredFS.
 
-Source of truth (offline copy):
-  vendor/NLPPATCH/release/romfs/script/bin/script/*.dbin2
+Source of truth (integrated into EngPatcher):
+  rebuild_dbin2/script/*.dbin2 stems listed in assets/nlppatch/stems.json
 
-NLPPATCH only translated the ``script`` pack (not NLP_01 / NLP_02).
+Legacy fallback: vendor/NLPPATCH/release/romfs/script/bin/script/*.dbin2
+
+Community scripts only cover the ``script`` pack (not NLP_01 / NLP_02).
 After copy, dialog tokens are kept (nickname slots). Use ``--strip-dialog-tokens``
 only for legacy testing.
 """
@@ -15,11 +17,14 @@ import shutil
 from pathlib import Path
 
 from patch_names import patch_dbin2_tree  # noqa: F401 — legacy --strip-dialog-tokens
+from script_inject import community_stems  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_SRC = (
+DEFAULT_REBUILD = ROOT / "rebuild_dbin2" / "script"
+LEGACY_SRC = (
     ROOT / "vendor" / "NLPPATCH" / "release" / "romfs" / "script" / "bin" / "script"
 )
+DEFAULT_SRC = DEFAULT_REBUILD
 AZAHAR_SCRIPT = (
     Path.home()
     / "AppData"
@@ -35,12 +40,26 @@ AZAHAR_SCRIPT = (
 )
 
 
+def resolve_src(src: Path) -> Path:
+    if src.is_dir() and any(src.glob("*.dbin2")):
+        return src
+    if LEGACY_SRC.is_dir() and any(LEGACY_SRC.glob("*.dbin2")):
+        return LEGACY_SRC
+    raise SystemExit(
+        "community scripts missing — expected rebuild_dbin2/script stems from "
+        "assets/nlppatch/stems.json (or legacy vendor/NLPPATCH). "
+        "Run: python tools/integrate_nlppatch_into_rebuild.py"
+    )
+
+
 def deploy(src_dir: Path, dest_dir: Path) -> int:
-    if not src_dir.is_dir():
-        raise SystemExit(f"vendored NLPPATCH scripts missing: {src_dir}")
+    src_dir = resolve_src(src_dir)
+    allow = community_stems()
     files = sorted(src_dir.glob("*.dbin2"))
+    if allow:
+        files = [f for f in files if f.stem in allow]
     if not files:
-        raise SystemExit(f"no .dbin2 files in {src_dir}")
+        raise SystemExit(f"no community .dbin2 files in {src_dir}")
     dest_dir.mkdir(parents=True, exist_ok=True)
     for src in files:
         shutil.copy2(src, dest_dir / src.name)
@@ -59,7 +78,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     n = deploy(args.src.resolve(), args.azahar.resolve())
-    print(f"[deploy] {n} scripts -> {args.azahar}")
+    print(f"[deploy] {n} community scripts -> {args.azahar}")
 
     if args.strip_dialog_tokens:
         touched, repl = patch_dbin2_tree(args.azahar.resolve(), strip_tokens=True)

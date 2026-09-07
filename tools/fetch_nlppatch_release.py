@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Fetch LovePlusProject NLPPPATCH.2017.08.15 release into vendor/.
+"""Optional: fetch historical NLPPATCH-era scripts into vendor/.
 
-Extracts ``release/romfs/script/bin/script/*.dbin2`` (~168 scripts) for the
-28% community layer. Manaka ``t*`` still comes from ``rebuild_dbin2/``.
+EngPatcher ships the community ~28% layer inside `rebuild_dbin2` after
+`tools/integrate_nlppatch_into_rebuild.py`. Drop CIA does **not** need this
+fetch or `vendor/NLPPATCH`.
 
   python tools/fetch_nlppatch_release.py
-  python tools/fetch_nlppatch_release.py --zip path\\to\\NLPPPATCH.2017.08.15.zip
+  python tools/integrate_nlppatch_into_rebuild.py
 """
 from __future__ import annotations
 

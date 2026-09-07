@@ -682,7 +682,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `tools/gdb_drawtext_capture.py` | GDB capture of DrawTextToPane `[r3+4]` + LR |
 | `src/patch_names.py` | Heroine names in `.dbin2`, resident TRB, `img.bin` table (NLPTextTool XOR reimplemented) |
 | `src/script_inject.py` | Layered `.dbin2` inject used by `patch_cia` (`rebuild_dbin2` → optional NLPPATCH → ROM) |
-| `src/deploy_nlppatch_scripts.py` | Optional deploy of vendored `vendor/NLPPATCH/` `.dbin2` to LayeredFS |
+| `src/deploy_nlppatch_scripts.py` | Optional deploy of community (ex-NLPPATCH) `.dbin2` from rebuild_dbin2 / assets/nlppatch |
 | `tools/deploy_ui_buttons_en.py` | UI Buttons bundle: keyboard **5190**, SysPopup **5259**, scoped Back **5380**, Album delete **4149** |
 | `tools/import_ui_buttons_bundle.py` | One-time import from `NLPP_English_UI_Buttons_only.zip` → `assets/images/*.check/timg/` |
 | `tools/import_nlppctr_textures.py` | Optional dev: import [LovePlusProject/NLPPCTR](https://github.com/LovePlusProject/NLPPCTR) Citra textures for A/B compare (`ab_test/`) |
@@ -1215,15 +1215,15 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 |----------|--------|-------|
 | 1 | `rebuild_dbin2/<pack>/t*.dbin2` | Manaka 100% (175 in `script` pack) |
 | 2 | `rebuild_dbin2/<pack>/p*.dbin2` | Common 100% (55) |
-| 3 | `vendor/NLPPPATCH/.../script/*.dbin2` | Early Rinko/Nene/common overlap (~96 NLPPPATCH-only in `script` pack) |
-| 4 | Base ROM | Everything else JP |
-
-**Not injected from XML:** Nene (`a*`) / Rinko (`k*`) — use NLPPATCH / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
-
-**NLPPPATCH vendor:** ~169 stems. Original GitHub release 404s; hydrate from [NLPPCTR](https://github.com/LovePlusProject/NLPPCTR) English patch when needed.
-
-**Headline script-pack coverage:** **326 / 578 (56.4%)**. Legacy “28%” = NLPPPATCH alone (~169/578).
-
+| 3 | `rebuild_dbin2/script/{a,k}*.dbin2` | Community ~28% (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`, ~96 stems) |
+| 4 | Base ROM | Everything else JP |
+
+**Not injected from XML:** Nene (`a*`) / Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
+
+**Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (NLPPCTR fallback if the old release zip 404s).
+
+**Headline script-pack coverage:** **326 / 578 (56.4%)**. Legacy "28%" = community layer alone (~169 stems upstream / ~96 injected after Manaka/`p*` override).
+
 ### 19.2 Nickname / name-table fix
 
 | Issue | Fix |

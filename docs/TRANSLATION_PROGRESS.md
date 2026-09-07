@@ -35,7 +35,7 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 | Rinko | `k*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
 | Nene | `a*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
 
-**Not injected from XML:** Rinko/Nene — NLPPATCH / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
+**Not injected from XML:** Rinko/Nene — community layer in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
 
 **Inject policy:** `src/script_inject.py` → `resolve_script_source()` (used by `patch_cia.py`).
 

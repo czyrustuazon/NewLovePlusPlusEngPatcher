@@ -46,6 +46,8 @@ tools/*
 !tools/rebuild_dbin2_from_xml.py
 !tools/verify_nickname_tokens.py
 !tools/fetch_nlppatch_release.py
+!tools/integrate_nlppatch_into_rebuild.py
+!tools/audit_manaka_vs_makein.py
 !tools/nlpp-tools/
 !tools/nlpp-tools/**
 !tools/Trb2xlsx/
@@ -100,7 +102,7 @@ paths.local.*
 ab_test/paths.local.ps1
 !ab_test/paths.local.ps1.example
 
-# Local agent / MCP config (machine-specific)
-.mcp.json
+# Optional offline NLPPATCH mirror (not required — community scripts live in rebuild_dbin2)
+vendor/NLPPATCH/
 
 tools/Trb2xlsx/**/*.csproj.user
