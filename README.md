@@ -132,17 +132,37 @@ If you see **Python not found**: install from [python.org](https://www.python.or
 
 ### Git commit signing (contributors)
 
-PRs into `main` require **verified** commit signatures. Use SSH signing with your GitHub key (same key can be added twice on GitHub: Authentication + **Signing**):
+PRs into `main` require **verified** commit signatures. Prefer **GPG** (GitHub verifies these reliably). Use the same email as your commits (GitHub noreply is fine).
 
 ```bash
-# SSH signing with your existing GitHub key
-git config --global gpg.format ssh
-git config --global user.signingkey "C:/Users/<username>/.ssh/id_ed25519_github"
+# 1) Create a key (interactive). Choose RSA 4096, set email to your GitHub noreply
+#    e.g. 12345678+USERNAME@users.noreply.github.com
+gpg --full-generate-key
+
+# 2) Copy the KEYID from the sec line (example: rsa4096/ABCDEF1234567890 → ABCDEF1234567890)
+gpg --list-secret-keys --keyid-format LONG
+
+# 3) Upload the public key: GitHub → Settings → SSH and GPG keys → New GPG key
+gpg --armor --export KEYID
+
+# 4) Tell git to sign with that key (replace KEYID with the real id from step 2)
+git config --global gpg.format openpgp
+git config --global user.signingkey KEYID
 git config --global commit.gpgsign true
 git config --global tag.gpgsign true
 ```
 
-Replace the `user.signingkey` path with your own private key if different (often `~/.ssh/id_ed25519` or `~/.ssh/id_ed25519_github`). Unlock once per session: `ssh-add path\to\private_key`.
+Probe: `git commit --allow-empty -S -m "gpg probe"` then `git log -1 --show-signature` (should show a good signature). Remove the probe with `git reset --hard HEAD~1`.
+
+To re-sign an existing PR branch onto `main` after enabling GPG:
+
+```bash
+git fetch origin
+git rebase --force-rebase -S origin/main
+git push --force-with-lease origin HEAD
+```
+
+SSH commit signing is optional and not documented here — GitHub may leave SSH-signed commits **Unverified** (`unknown_key`) even when the Signing key fingerprint matches.
 
 ### Outputs
 
