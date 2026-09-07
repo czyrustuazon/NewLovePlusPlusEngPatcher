@@ -14,6 +14,8 @@ if (-not (Test-Path -LiteralPath $bat)) {
 
 # 8.3 / TEMP staging — Japanese names + parentheses break cmd.exe
 # (e.g. "...NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0) (J).piratelegit.cia").
+# Result is read from a path file (not powershell stdout) so cmdlet error
+# text like "Copy-Item" cannot poison the launch argument.
 $shortPathPs1 = Join-Path $src "short_path.ps1"
 
 function Get-SafeRomPath([string]$path) {
@@ -22,14 +24,30 @@ function Get-SafeRomPath([string]$path) {
     if (-not (Test-Path -LiteralPath $shortPathPs1)) {
         return $path
     }
+    $pathFile = Join-Path $env:TEMP "nlpp_drop_path.txt"
     $env:NLPP_ROM = $path
+    $env:NLPP_DROP_PATH_FILE = $pathFile
+    $prevEap = $ErrorActionPreference
     try {
-        $resolved = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $shortPathPs1
-        if ($resolved) {
-            return [string]$resolved
+        if (Test-Path -LiteralPath $pathFile) {
+            Remove-Item -LiteralPath $pathFile -Force -ErrorAction SilentlyContinue
+        }
+        # Child may write host messages; never let stderr NativeCommandError
+        # become terminating under $ErrorActionPreference=Stop.
+        $ErrorActionPreference = "Continue"
+        $null = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $shortPathPs1 2>&1
+        $ErrorActionPreference = $prevEap
+        if (Test-Path -LiteralPath $pathFile) {
+            $resolved = [IO.File]::ReadAllText($pathFile).Trim()
+            Remove-Item -LiteralPath $pathFile -Force -ErrorAction SilentlyContinue
+            if (-not [string]::IsNullOrWhiteSpace($resolved)) {
+                return $resolved
+            }
         }
     } finally {
+        $ErrorActionPreference = $prevEap
         Remove-Item Env:NLPP_ROM -ErrorAction SilentlyContinue
+        Remove-Item Env:NLPP_DROP_PATH_FILE -ErrorAction SilentlyContinue
     }
     return $path
 }
@@ -54,7 +72,7 @@ $label.Height = 70
 $label.Padding = New-Object System.Windows.Forms.Padding(12)
 
 $hint = New-Object System.Windows.Forms.Label
-$hint.Text = "CIA or 3DS dump -> decrypt -> inject -> out\NewLovePlusPlus-EN.cia"
+$hint.Text = "Decrypted CIA or 3DS -> inject -> out\NewLovePlusPlus-EN.cia + out\luma\"
 $hint.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hint.ForeColor = [System.Drawing.Color]::FromArgb(80, 90, 100)
 $hint.AutoSize = $false
@@ -151,18 +169,23 @@ $go.Add_Click({
     $status.Text = "Patching... a console window will show progress."
     $form.Refresh()
     $launchPath = Get-SafeRomPath $script:ciaPath
-    # Pass as a single argument; staged path has no spaces/parens/Unicode.
-    $p = Start-Process -FilePath $bat -ArgumentList @($launchPath) -WorkingDirectory $root -PassThru -Wait
+    # Quote explicitly — Start-Process ArgumentList does not protect spaces/parens.
+    $p = Start-Process -FilePath $bat -ArgumentList "`"$launchPath`"" -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
-        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia"
+        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia and out\luma\"
         [System.Windows.Forms.MessageBox]::Show(
-            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nScratch work files were cleaned up.",
+            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nLuma LayeredFS:`n$root\out\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nScratch work files were cleaned up.",
             "Patch complete",
             [Windows.Forms.MessageBoxButtons]::OK,
             [Windows.Forms.MessageBoxIcon]::Information
         ) | Out-Null
     } else {
-        $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
+        $luma = Join-Path $root "out\luma\00040000000F4E00"
+        if (Test-Path -LiteralPath $luma) {
+            $status.Text = "CIA failed; Luma overlay at out\luma\ — see console log."
+        } else {
+            $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
+        }
     }
     $go.Enabled = $true
     $browse.Enabled = $true

@@ -35,18 +35,7 @@ DEFAULT_TRB = (
     / "textresource_jpn.trb"
 )
 
-AZAHAR_DIR = (
-    Path.home()
-    / "AppData"
-    / "Roaming"
-    / "Azahar"
-    / "load"
-    / "mods"
-    / "00040000000F4E00"
-    / "romfs"
-    / "SystemData"
-    / "TextResource"
-)
+from nlpp_paths import AZAHAR_MOD_TRB_DIR as AZAHAR_DIR
 
 JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
 # SpotPass one-liner kept for backwards-compatible --inplace
@@ -372,12 +361,12 @@ def save_translations(path: Path, mapping: dict[str, str]) -> None:
     tmp.replace(path)
 
 
-def seed_from_nlppatch(
+def seed_from_alt_trb(
     vanilla: bytes,
     patched: bytes,
     lookup: list[str],
 ) -> dict[str, str]:
-    """Align by entry index; take EN where NLPPATCH removed Japanese."""
+    """Align by entry index; take EN where alt TRB removed Japanese."""
     v = dump_entries(vanilla, lookup)
     p = dump_entries(patched, lookup)
     if len(v) != len(p):
@@ -411,14 +400,14 @@ def cmd_dump(args: argparse.Namespace) -> int:
 def cmd_seed(args: argparse.Namespace) -> int:
     lookup = load_lookup(args.lookup.resolve())
     vanilla = args.trb.resolve().read_bytes()
-    patched = args.nlppatch.resolve().read_bytes()
-    seeded = seed_from_nlppatch(vanilla, patched, lookup)
+    patched = args.alt_trb.resolve().read_bytes()
+    seeded = seed_from_alt_trb(vanilla, patched, lookup)
     existing = load_translations(args.translations)
     # Seed does not overwrite manual/better translations already present.
     merged = dict(seeded)
     merged.update(existing)
     save_translations(args.translations, merged)
-    print(f"[trb] seeded {len(seeded)} from NLPPATCH; total map {len(merged)} -> {args.translations}")
+    print(f"[trb] seeded {len(seeded)} from alt TRB; total map {len(merged)} -> {args.translations}")
     return 0
 
 
@@ -442,7 +431,7 @@ def cmd_rebuild(args: argparse.Namespace) -> int:
         if guess.is_file():
             config_src = guess
     if config_src is not None:
-        # Match NLPPATCH: SIZE may be >= file size (allocator headroom).
+        # SIZE may be >= file size (allocator headroom used by some patches).
         size_value = max(len(rebuilt), args.min_config_size)
         cfg = update_config_size(config_src.resolve().read_bytes(), size_value)
         args.config_out.parent.mkdir(parents=True, exist_ok=True)
@@ -458,6 +447,15 @@ def cmd_rebuild(args: argparse.Namespace) -> int:
             cfg_dest = AZAHAR_DIR / "textresource_config.trb"
             shutil.copy2(args.config_out, cfg_dest)
             print(f"[trb] deployed {cfg_dest}")
+
+    # Soft-report script % to companion site (no-op without .env / CI secrets).
+    # Lazy import: report_progress imports this module at load time.
+    try:
+        import report_progress as rp
+
+        rp.try_report_progress(en_trb=args.out)
+    except Exception as exc:  # noqa: BLE001 — never fail rebuild on reporter
+        print(f"[progress] soft-fail: {exc}", file=sys.stderr)
     return 0
 
 
@@ -837,19 +835,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out", type=Path, default=OUT_DIR / "dump.jsonl")
     p.set_defaults(func=cmd_dump)
 
-    p = sub.add_parser("seed", help="Seed translations from NLPPATCH TRB by index")
+    p = sub.add_parser(
+        "seed",
+        help="Seed translations from an alternate EN TRB by entry index",
+    )
     p.add_argument("--trb", type=Path, default=DEFAULT_TRB)
     p.add_argument(
-        "--nlppatch",
+        "--alt-trb",
         type=Path,
-        default=ROOT
-        / "vendor"
-        / "NLPPATCH"
-        / "release"
-        / "romfs"
-        / "SystemData"
-        / "TextResource"
-        / "textresource_jpn.trb",
+        required=True,
+        help="Alternate textresource_jpn.trb with EN strings at matching indices",
     )
     p.add_argument("--translations", type=Path, default=DEFAULT_TRANSLATIONS)
     p.set_defaults(func=cmd_seed)
@@ -880,7 +875,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--min-config-size",
         type=int,
         default=0,
-        help="minimum SIZE written to config (NLPPATCH used headroom)",
+        help="minimum SIZE written to config (allocator headroom)",
     )
     p.add_argument("--deploy-azahar", action="store_true")
     p.set_defaults(func=cmd_rebuild)

@@ -1,0 +1,20 @@
+# Azahar a/b testing
+
+Full workflow for agents: **`ab_test/README.md`**.
+
+## Hard prefs
+
+- **Never** tell the user to “fully quit Azahar” between tests — they already do.
+- Do not put quit/restart Azahar in checklists unless diagnosing a proven LayeredFS reload failure.
+
+## Quick commands
+
+```powershell
+.\make.ps1 instances
+.\make.ps1 deploy-a    # current default stack → instance A
+.\make.ps1 launch-a
+.\make.ps1 restore-a
+```
+
+Instance roots: `out/azahar_instances/{a,b}/user` (`NLPP_AZAHAR_USER_DIR`).
+Scripts: `ab_test/`. Feature details: `technical.md`.

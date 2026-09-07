@@ -4,16 +4,25 @@
 
 | Path | Source | Role |
 |------|--------|------|
-| `cia/` | Vendored [3dstool](https://github.com/dnasdw/3dstool) / [Project_CTR](https://github.com/3DSGuy/Project_CTR) / `seeddb.bin` (see `cia/CREDITS.md`); `decrypt.exe` copied from Batch-CIA folder | Decrypt CIA, split/rebuild NCCH/RomFS, makerom CIA |
-| `Batch-CIA-3DS-Decryptor-Redux/` | [davidmorom](https://github.com/davidmorom) / [xxmichibxx](https://github.com/xxmichibxx/Batch-CIA-3DS-Decryptor-Redux) | Vendored `decrypt.exe` + `CREDITS.md` |
+| `cia/` | Vendored [3dstool](https://github.com/dnasdw/3dstool) / [Project_CTR](https://github.com/3DSGuy/Project_CTR) / `seeddb.bin` (see `cia/CREDITS.md`) | Split/rebuild NCCH/RomFS, makerom CIA |
 | `nlpp-tools/` | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** (vendored) | `img.bin` / package / BCLIM helpers (`ie`, `pe`, `png2bclim`, …) |
 | `mdcutil.py` | EngPatcher | SMS maildic MDC pack / unpack |
 | `Trb2xlsx/` | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) | `lookup.txt` codebook for `patch_textresource.py` |
 | `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | XML ↔ `.dbin2` (needs .NET SDK to build) |
 | `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Older `img.bin` unpacker (C#) |
 | `../assets/fonts/MPLUS1p-Regular.ttf` | M PLUS 1p (SIL OFL) | UI glyph renders for deploy scripts |
+| `spotpass/` + `build_spotpass_inject.py` | Archived NLPP SpotPass BOSS dump | Build `info.dat` inject for Azahar or real 3DS (`--real3ds` → `out/spotpass_real3ds/`) |
 
 Full credit list: see root [`README.md`](../README.md#credits).
+
+### SpotPass inject
+
+```bash
+python tools/build_spotpass_inject.py --real3ds    # CFW + FBI Ext Save Data
+python tools/build_spotpass_inject.py --azahar     # emulator (HLE-padded)
+```
+
+Details: [`spotpass/README.md`](spotpass/README.md).
 
 ## Setup
 
@@ -22,8 +31,9 @@ python src/setup_tools.py
 python src/setup_tools.py --offline   # no GitHub fallback
 ```
 
-Verifies vendored `tools/cia/` bins, copies `decrypt.exe` into place, and only
-downloads OSS CIA tools if something is missing (skipped with `--offline`).
+Verifies vendored `tools/cia/` bins and only downloads OSS CIA tools if
+something is missing (skipped with `--offline`). **Decrypt your ROM yourself** —
+this repo does not ship `decrypt.exe`.
 
 ## Notes on Makein/NLPPGit
 

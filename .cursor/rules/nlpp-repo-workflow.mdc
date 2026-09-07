@@ -100,3 +100,47 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 - Redeploy abandoned global MakeStr cave (`patch_clock_text.py` as-is).
 - Assume OptionClock / SysPopup / MyroomHeader `optn_tex_optionmenu_05` fix every “Japanese chrome” screen.
 - Commit secrets, huge `img.bin` copies, or texture dump folders unless the user asks.
+
+## Gold bake + Drop CIA (self-contained clone)
+
+`release/bake_img.bin` (~680 MB) is **gitignored**. A fresh clone has sources (`assets/images/`, `translations.json`, `rebuild_dbin2/`) but **not** the pre-baked English `img.bin`. Menu chrome lives only in the bake.
+
+**Symptom:** English dialog + heroine names OK, **menus still JP** → bake never injected. Do not re-translate TRB or re-hunt strings; fix bake acquisition.
+
+### Drop CIA acquisition chain (`Drop CIA or 3DS Here to Patch.bat`)
+
+1. **`release/bake_img.bin` exists** → inject as-is; patch finishes in minutes.
+2. **Missing** (normal on clean clone):
+   - `tools/fetch_release_bake.py --best-effort` — poll `{owner}/nlpp-gold` Release tag `gold` (404 OK → fall through).
+   - Still missing → `tools/rebuild_bake_img.py --rom <dropped.cia|.3ds>` (~16h first time; vanilla → `cache/vanilla_from_rom/`).
+   - Still missing → **hard stop** (do not emit half-EN CIA).
+3. `patch_cia.py` injects: `rebuild_dbin2` + gold `img.bin` + `release/romfs_overlay/` + name patches + optional `release/name_input_code.bin`.
+
+**nlpp-gold CI** is an optional accelerator (`infra/README.md`) — **not required**; local rebuild is the fallback when Release 404.
+
+### Env overrides
+
+| Variable | Effect |
+|----------|--------|
+| `NLPP_SKIP_GOLD_FETCH=1` | Offline: skip GitHub poll, go straight to local rebuild |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override nlpp-gold repo |
+| `NLPP_WITH_IMAGES=0` | Scripts-only (explicit; no menus) |
+| `NLPP_REPACK_IMAGES=1` | Dev PNG scratch `cache/new_img.bin` only — incomplete vs gold |
+
+### Rebuild / resume
+
+```bash
+python tools/rebuild_bake_img.py --rom path/to/game.cia   # full (~16h first time)
+python tools/rebuild_bake_img.py --skip-pack              # resume deploys only (repo root)
+```
+
+`resolve_inject_img()` in `patch_cia.py` prefers `release/bake_img.bin` over `cache/new_img.bin`.
+
+### Unit tests
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest tests/ -v
+```
+
+Guards: `test_drop_bat_gold_flow.py`, `test_fetch_release_bake.py`, `test_patch_cia_gold_bake.py`. Update tests when changing bat/fetch/inject behavior. Details: `technical.md` §15.6.

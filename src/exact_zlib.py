@@ -1,8 +1,13 @@
 """Exact-length zlib helpers for NLPP img.bin package elements.
 
 Game slots require ``unused_data == 0`` and exact compressed length — trailing
-NUL padding after a short zlib stream soft-locks UI. Prefer zopfli when it
-undershoots, then empty-block pad / gap-salt as needed.
+NUL padding after a short zlib stream soft-locks UI.
+
+Cold-build order (fast → slow):
+  1. SYNC_FLUSH + empty stored blocks (stdlib zlib) when the body fits
+  2. Gap-salt + empty-block (still zlib-speed)
+  3. Zero DARC pads then retry empty-block (large-ARC playbook)
+  4. Zopfli only when zlib cannot fit under the slot
 """
 from __future__ import annotations
 
@@ -17,6 +22,18 @@ try:
     import zopfli.zlib as zopfli_zlib
 except ImportError:  # pragma: no cover
     zopfli_zlib = None  # type: ignore
+
+
+def _min_empty_block_stream_len(data: bytes, *, level: int = 9) -> int:
+    """Lower bound on an empty-block zlib stream (hdr + SYNC_FLUSH body + final + adler)."""
+    co = zlib.compressobj(level, wbits=-15)
+    body = co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH)
+    return 2 + len(body) + 5 + 4
+
+
+def zlib_body_fits_slot(data: bytes, exact_len: int) -> bool:
+    """True when level-9 SYNC_FLUSH empty-block could possibly reach exact_len."""
+    return _min_empty_block_stream_len(data) <= exact_len
 
 
 def interfile_zero_gaps(data: bytes, min_len: int = 4) -> list[tuple[int, int]]:
@@ -335,11 +352,14 @@ def _bounded_near_miss_tune(
     cap: int,
     *,
     max_tries: int = 256,
-    workers: int = 8,
+    workers: int | None = None,
 ) -> tuple[bytes, bytes] | None:
     """Close a small undershoot (e.g. 42515→42517) via parallel single-byte flips."""
     if zopfli_zlib is None or cap <= 0:
         return None
+    if workers is None:
+        # Keep modest — package ProcessPool already multiplies concurrency.
+        workers = max(1, min(4, (os.cpu_count() or 4) // 2))
     base = apply_gap_pad(data, preferred_pad, rng)
     z0 = zopfli_zlib.compress(base)
     if len(z0) == target:
@@ -527,19 +547,73 @@ def compress_exact_zopfli(
     )
 
 
-def compress_to_exact_slot(
-    data: bytes,
-    exact_len: int,
-    *,
-    fine_tune: bool = False,
-) -> bytes:
-    """Return a zlib stream of length exact_len that decompresses to data (or tuned)."""
-    tuned, slot = compress_exact_zopfli(data, exact_len, fine_tune=fine_tune)
+def _verify_exact_slot(tuned: bytes, slot: bytes, exact_len: int) -> bytes:
     d = zlib.decompressobj()
     got = d.decompress(slot)
     if got != tuned or d.unused_data or not d.eof:
         raise RuntimeError("exact zlib verify failed")
     if len(slot) != exact_len:
         raise RuntimeError(f"exact zlib length {len(slot)} != {exact_len}")
-    _zlib_progress(f"done slot={exact_len}", newline=True)
     return slot
+
+
+def try_fast_exact_slot(
+    data: bytes,
+    exact_len: int,
+) -> tuple[bytes, bytes] | None:
+    """Try zlib empty-block / gap-tune only (no zopfli). Returns (tuned, slot) or None."""
+    if zlib_body_fits_slot(data, exact_len):
+        _zlib_progress("fast-path empty-block (no zopfli)…")
+        slot = compress_exact_empty_blocks(data, exact_len, thorough=False)
+        if slot is not None:
+            _zlib_progress(f"fast-path hit slot={exact_len}", newline=True)
+            return data, slot
+        try:
+            _zlib_progress("fast-path gap-tune empty-block…", newline=True)
+            return compress_exact_with_gap_tune(data, exact_len)
+        except RuntimeError:
+            pass
+    else:
+        _zlib_progress(
+            f"fast-path skip (zlib body too large for slot={exact_len})…",
+            newline=True,
+        )
+
+    zeroed = _force_zero_gaps(data)
+    if zeroed != data and zlib_body_fits_slot(zeroed, exact_len):
+        try:
+            _zlib_progress(
+                "fast-path empty-block on zeroed DARC gaps…", newline=True
+            )
+            return compress_exact_with_gap_tune(zeroed, exact_len, preferred_pad=0)
+        except RuntimeError:
+            pass
+    return None
+
+
+def compress_to_exact_slot(
+    data: bytes,
+    exact_len: int,
+    *,
+    fine_tune: bool = False,
+) -> bytes:
+    """Return a zlib stream of length exact_len that decompresses to data (or tuned).
+
+    Prefers stdlib zlib + empty-block padding; escalates to zopfli only when the
+    zlib body cannot fit under the slot (typical cold-build speedup).
+    """
+    fast = try_fast_exact_slot(data, exact_len)
+    if fast is not None:
+        tuned, slot = fast
+        out = _verify_exact_slot(tuned, slot, exact_len)
+        _zlib_progress(f"done slot={exact_len} (fast-path)", newline=True)
+        return out
+
+    _zlib_progress(
+        "escalating to zopfli (zlib cannot fit / congruence miss)…",
+        newline=True,
+    )
+    tuned, slot = compress_exact_zopfli(data, exact_len, fine_tune=fine_tune)
+    out = _verify_exact_slot(tuned, slot, exact_len)
+    _zlib_progress(f"done slot={exact_len}", newline=True)
+    return out

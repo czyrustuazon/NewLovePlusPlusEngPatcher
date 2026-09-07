@@ -146,6 +146,52 @@ class DarcArchive:
             )
         self.data[entry.offset : entry.offset + entry.length] = new_data
 
+    def insert_file_entry(self, rel: str, after_rel: str) -> None:
+        """Insert a new file slot in the entry table (payload supplied via rebuild_from_dir).
+
+        Used by Title Eng Patch: add ``timg/Eng_Patch.bclim`` after Copyright, then
+        ``rebuild_from_dir`` reads the new file from the extract tree.
+        """
+        rel = rel.replace("\\", "/").lstrip("/")
+        after_rel = after_rel.replace("\\", "/").lstrip("/")
+        if "/" not in rel:
+            raise ValueError(f"rel must include directory: {rel!r}")
+        dir_name, file_name = rel.rsplit("/", 1)
+        insert_at = None
+        for i, e in enumerate(self.entries):
+            if not e["isdir"] and e.get("rel") == after_rel:
+                insert_at = i + 1
+                break
+        if insert_at is None:
+            raise FileNotFoundError(after_rel)
+        if any(not e["isdir"] and e.get("rel") == rel for e in self.entries):
+            return  # already present
+        self.entries.insert(
+            insert_at,
+            {
+                "isdir": False,
+                "name": file_name,
+                "dir": dir_name,
+                "rel": rel,
+                "file": DarcFile(rel, 0, 0, 0),
+            },
+        )
+        for e in self.entries:
+            if not e["isdir"]:
+                continue
+            if e["file_len"] >= insert_at:
+                e["file_len"] += 1
+            if e["file_off"] >= insert_at:
+                e["file_off"] += 1
+        self.files = [e["file"] for e in self.entries if not e["isdir"]]
+        for e in self.entries:
+            if not e["isdir"]:
+                e["file"].name = e["rel"]
+        self._by_name = {f.name.lower(): f for f in self.files}
+        self._by_base = {}
+        for f in self.files:
+            self._by_base.setdefault(Path(f.name).name.lower(), []).append(f)
+
     def save(self, path: Path) -> None:
         path.write_bytes(self.data)
 
@@ -155,8 +201,16 @@ class DarcArchive:
         out_path: Path,
         default_align: int = 0x20,
         type_align: dict[str, int] | None = None,
+        align_mode: str = "relative",
+        **_kwargs,
     ) -> None:
-        """Rebuild archive from extracted directory; keep original dir table metadata."""
+        """Rebuild archive from extracted directory; keep original dir table metadata.
+
+        align_mode:
+          relative — pad within the data blob (default)
+          absolute — pad so file absolute offsets meet type_align (needed when
+            inserting BCLIM into Title.arc so every .bclim stays 0x80-aligned)
+        """
         type_align = type_align or {".bclim": 0x80, ".bcfnt": 0x80}
         endian = self.endian
 
@@ -204,9 +258,16 @@ class DarcArchive:
                 if lower.endswith(ext):
                     align = al
                     break
-            pos = _align(len(data_blob), align)
-            if pos > len(data_blob):
-                data_blob.extend(b"\x00" * (pos - len(data_blob)))
+            if align_mode == "absolute":
+                cur_abs = data_start + len(data_blob)
+                aligned_abs = _align(cur_abs, align)
+                pad = aligned_abs - cur_abs
+                if pad:
+                    data_blob.extend(b"\x00" * pad)
+            else:
+                pos = _align(len(data_blob), align)
+                if pos > len(data_blob):
+                    data_blob.extend(b"\x00" * (pos - len(data_blob)))
             abs_offs.append(data_start + len(data_blob))
             abs_lens.append(len(payload))
             data_blob.extend(payload)

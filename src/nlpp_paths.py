@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 # Durable release artifacts (gold bake + RomFS overlays). Not wipeable scratch.
 RELEASE = ROOT / "release"
 BAKE_IMG = RELEASE / "bake_img.bin"
+NAME_INPUT_CODE = RELEASE / "name_input_code.bin"
 ROMFS_OVERLAY = RELEASE / "romfs_overlay"
 TEXTRESOURCE = RELEASE / "textresource"
 OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
@@ -24,6 +25,8 @@ CACHE_VANILLA_IMG = CACHE_VANILLA_ROMFS / "img.bin"
 CACHE_VANILLA_MAIN_TRB = (
     CACHE_VANILLA_ROMFS / "SystemData" / "TextResource" / "textresource_jpn.trb"
 )
+CACHE_VANILLA_EXEFS = CACHE / "vanilla_from_rom" / "exefs"
+CACHE_VANILLA_CODE = CACHE_VANILLA_EXEFS / "code.bin"
 CACHE_VANILLA_RESIDENT_TRB = (
     CACHE_VANILLA_ROMFS
     / "SystemData"
@@ -49,21 +52,63 @@ DEFAULT_VANILLA_MAIN_TRB = (
 )
 
 TITLE_ID = "00040000000F4E00"
-AZAHAR_MOD_IMG = (
-    Path.home() / "AppData" / "Roaming" / "Azahar" / "load" / "mods" / TITLE_ID / "romfs" / "img.bin"
-)
-AZAHAR_MOD_TRB_DIR = (
-    Path.home()
-    / "AppData"
-    / "Roaming"
-    / "Azahar"
-    / "load"
-    / "mods"
-    / TITLE_ID
-    / "romfs"
-    / "SystemData"
-    / "TextResource"
-)
+
+
+def azahar_user_dir() -> Path:
+    """Azahar user root (mods, saves, config). Override with NLPP_AZAHAR_USER_DIR."""
+    env = os.environ.get("NLPP_AZAHAR_USER_DIR") or os.environ.get("AZAHAR_USER_DIR")
+    if env:
+        return Path(env).expanduser().resolve()
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        return (Path(appdata) / "Azahar").resolve()
+    return (Path.home() / "AppData" / "Roaming" / "Azahar").resolve()
+
+
+def azahar_mod_root(title_id: str = TITLE_ID, user_dir: Path | None = None) -> Path:
+    root = user_dir or azahar_user_dir()
+    return root / "load" / "mods" / title_id
+
+
+_AZAHAR_MOD = azahar_mod_root()
+AZAHAR_MOD_ROOT = _AZAHAR_MOD
+AZAHAR_MOD_EXEFS = _AZAHAR_MOD / "exefs"
+AZAHAR_MOD_CODE = AZAHAR_MOD_EXEFS / "code.bin"
+AZAHAR_MOD_ROMFS = _AZAHAR_MOD / "romfs"
+AZAHAR_MOD_IMG = AZAHAR_MOD_ROMFS / "img.bin"
+AZAHAR_MOD_TRB_DIR = AZAHAR_MOD_ROMFS / "SystemData" / "TextResource"
+DEFAULT_VANILLA_CODE = DEFAULT_EXTRACTED / "exefs" / "code.bin"
+DEFAULT_VANILLA_CODE_BAK = DEFAULT_EXTRACTED / "exefs" / "code.bin.bak"
+
+
+def find_vanilla_code() -> Path | None:
+    env = os.environ.get("NLPP_VANILLA_CODE")
+    if env:
+        p = Path(env)
+        if p.is_file():
+            return p.resolve()
+    for c in (
+        DEFAULT_VANILLA_CODE_BAK,
+        DEFAULT_VANILLA_CODE,
+        ROOT / "extracted" / "exefs" / "code.bin.bak",
+        ROOT / "extracted" / "exefs" / "code.bin",
+        CACHE_VANILLA_CODE,
+    ):
+        if c.is_file():
+            return c.resolve()
+    return None
+
+
+def require_vanilla_code() -> Path:
+    p = find_vanilla_code()
+    if p is None:
+        raise FileNotFoundError(
+            "vanilla exefs/code.bin not found.\n"
+            "Provide one of:\n"
+            "  • set NLPP_VANILLA_CODE\n"
+            f"  • place a dump at {DEFAULT_VANILLA_CODE_BAK} or {DEFAULT_VANILLA_CODE}"
+        )
+    return p
 
 
 def find_vanilla_img() -> Path | None:

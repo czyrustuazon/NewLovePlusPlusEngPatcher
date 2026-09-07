@@ -42,11 +42,12 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "msel_menus_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
-# Prefer pre-Options bak for virgin ARC bytes; fall back to current mod.
+# Prefer true vanilla img; never use a bak that was snapshotted from an
+# already-EN bake (that double-encodes and blows the zlib slot).
 VANILLA_CANDIDATES = [
+    VANILLA,
     MOD_IMG.with_suffix(".bin.bak_pre_msel5245"),
-    MOD_IMG.with_suffix(".bin.bak_pre_msel_menus"),
-    MOD_IMG,
+    Path(r"C:\Users\Zepse\nlpp_work\romfs\img.bin"),
 ]
 # Per-package: (basename, English). Home-screen chrome only (plates of the same
 # labels skipped — EN AA glyphs compress worse than JP and blow the zlib slot).
@@ -66,17 +67,31 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Btn_Text02_01_00.bclim", "Event Gallery"),
         ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
         ("Com_M_Sel_Btn_Text02_01_05.bclim", "Gallery Options"),
+        # Submenu headers (plates; MultiWin Text02_* @ 5237 is the live white strip)
+        ("Com_M_Sel_Plate_Text02_01_00.bclim", "Event Gallery"),
+        ("Com_M_Sel_Plate_Text02_01_05.bclim", "Gallery Options"),
+        ("Com_M_Sel_Plate_Text02_02_00.bclim", "Illustration Gallery"),
+        ("Com_M_Sel_Btn_Text02_02_01.bclim", "Dream Gallery"),
+        ("Com_M_Sel_Btn_Text02_02_02.bclim", "Special Gallery"),
+        ("Com_M_Sel_Plate_Text02_02_01.bclim", "Dream Gallery"),
+        ("Com_M_Sel_Plate_Text02_02_02.bclim", "Special Gallery"),
+        ("Com_M_Sel_Plate_Text02_02_02_00.bclim", "Special Gallery"),
     ],
     5241: [  # Communication
         ("Com_M_Sel_Plate_Text04_00_00.bclim", "Communication"),
         ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Comm."),
         ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
         ("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle"),
+        # Girlfriend Comm. / Wireless Battle submenu headers
+        ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Comm."),
+        ("Com_M_Sel_Plate_Text04_03_00.bclim", "Wireless Battle"),
     ],
     5242: [  # Data Management
         ("Com_M_Sel_Plate_Text05_00_00.bclim", "Data Management"),
         ("Com_M_Sel_Btn_Text05_02_00.bclim", "Delete Save Data"),
         ("Com_M_Sel_Btn_Text05_01_01.bclim", "Export Save Data"),
+        # Delete submenu header (DataManageDataDelete → plate family 02)
+        ("Com_M_Sel_Plate_Text05_02_00.bclim", "Delete Save Data"),
     ],
 }
 

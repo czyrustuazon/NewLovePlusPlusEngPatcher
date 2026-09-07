@@ -26,10 +26,19 @@ exit /b %ERRORLEVEL%
 REM Stage dump path via PowerShell first. Names with Japanese glyphs or parentheses
 REM (e.g. piratelegit "NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0)...") break cmd parsing
 REM if we expand %~1 / %~nx1 inside IF blocks.
+REM Read the result from a temp file — never for /f over powershell stdout
+REM (error text like "Copy-Item" can leak into the captured path).
 set "NLPP_ROM=%~1"
-set "CIA="
-for /f "usebackq delims=" %%S in (`powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\short_path.ps1"`) do set "CIA=%%S"
+set "NLPP_DROP_PATH_FILE=%TEMP%\nlpp_drop_path.txt"
+if exist "%NLPP_DROP_PATH_FILE%" del /f /q "%NLPP_DROP_PATH_FILE%" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0src\short_path.ps1"
 set "NLPP_ROM="
+set "CIA="
+if exist "%NLPP_DROP_PATH_FILE%" (
+  set /p CIA=<"%NLPP_DROP_PATH_FILE%"
+  del /f /q "%NLPP_DROP_PATH_FILE%" >nul 2>&1
+)
+set "NLPP_DROP_PATH_FILE="
 if not defined CIA (
   echo [!] Could not resolve dump path.
   pause
@@ -94,8 +103,8 @@ if errorlevel 1 (
   exit /b 1
 )
 echo.
-echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb, decrypt^) ...
-echo decrypt.exe is vendored from Batch CIA 3DS Decryptor Redux ^(see tools\Batch-CIA-3DS-Decryptor-Redux\CREDITS.md^).
+echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb^) ...
+echo Decrypt your dump yourself first - this patcher does not include decrypt.exe.
 "%PYTHON%" "%SRC%\setup_tools.py"
 if errorlevel 1 (
   echo [!] Tool setup failed.
@@ -148,8 +157,8 @@ if "!HASH_ERR!"=="0" (
 )
 
 echo.
-echo Decrypting / injecting scripts + UI / rebuilding CIA...
-echo Accepts encrypted or decrypted .cia and .3ds/.cci.
+echo Injecting scripts + UI / rebuilding CIA...
+echo Requires a decrypted .cia or .3ds/.cci ^(decrypt yourself first^).
 echo This can take several minutes and needs a few GB free disk.
 echo.
 
@@ -168,18 +177,20 @@ if exist "%SIBLING_ROMFS%\script\bin\script" (
 )
 
 REM UI ON by default. Durable release artifacts (not wipeable like out/):
-REM   release\bake_img.bin     — gold bake (preferred)
+REM   release\bake_img.bin     — gold bake (built locally; gitignored)
 REM   release\romfs_overlay\   — TRB overlays (auto-applied when present)
 REM Optional PNG scratch:
-REM   cache\new_img.bin        — PNG pack only (incomplete vs gold)
+REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Missing gold bake auto-runs: python tools\rebuild_bake_img.py
+REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (~16h)
+REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"
-set "PACKED_IMG=%~dp0cache\new_img.bin"
+if not exist "%~dp0out" mkdir "%~dp0out"
+set "LAYEREDFS_OUT=--layeredfs-out %~dp0out\luma"
+set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
-  set "PACKED_IMG=%~dp0release\bake_img.bin"
   echo Using gold bake: release\bake_img.bin
 ) else if exist "%~dp0cache\bake_img.bin" (
   REM legacy path during transition
@@ -191,55 +202,132 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
 ) else if exist "%~dp0cache\romfs_overlay\SystemData" (
   echo TRB overlay will auto-apply from cache\romfs_overlay ^(legacy^)
 )
+set "INJECT_CODE="
+REM Profile name-input is required for a complete Drop (built by rebuild_bake_img).
+if exist "%~dp0release\name_input_code.bin" (
+  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  echo Including Profile name-input code.bin from release\name_input_code.bin
+)
 if /i "%NLPP_WITH_IMAGES%"=="0" (
-  echo Scripts-only patch ^(NLPP_WITH_IMAGES=0 — UI pack skipped^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --no-images !EXTRA_ROMFS! %SKIP_HASH%
-) else if /i "%NLPP_REPACK_IMAGES%"=="1" (
+  echo.
+  echo [!] NLPP_WITH_IMAGES=0 is not allowed — incomplete patches are disabled.
+  echo     Drop always builds a full CIA ^(UI gold bake + Eng Patch + name-input^).
+  echo.
+  pause
+  exit /b 1
+)
+if /i "%NLPP_REPACK_IMAGES%"=="1" (
   echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH%
+  if not defined INJECT_CODE (
+    echo [!] release\name_input_code.bin required. Run rebuild_bake_img.py --rom first.
+    pause
+    exit /b 1
+  )
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
-  REM Auto-build gold bake when missing (full: PNG pack + TRB + deploys + SMS).
+  REM Gold bake required. Try CI Release first, then build from assets.
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+    if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
+      echo.
+      echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
+      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold if auto-detect fails^)
+      echo.
+      "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
+      if errorlevel 1 (
+        echo [fetch] No published gold bake — will build locally from assets.
+      )
+    )
+    if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+      echo.
+      echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
+      echo This builds bake + textresource TRBs from assets\ ^(PNG pack + deploy chrome^).
+      echo Vanilla img.bin comes from the dropped ROM if no sibling extracted\ exists.
+      echo First full rebuild often takes ~16 hours. Leave this window open.
+      echo.
+      "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
+      if errorlevel 1 (
+        echo [!] rebuild_bake_img.py failed — see traceback above.
+        echo     Common fixes:
+        echo       pip install -r requirements.txt
+        echo       ^(needs Pillow numpy zopfli etcpak^)
+        echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
+        pause
+        exit /b 1
+      )
+      REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
+      if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
+        echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+        set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
+      )
+    )
+    if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
+      echo.
+      echo [!] No gold bake available. English menus need release\bake_img.bin.
+      echo     Run: python tools\rebuild_bake_img.py --rom your.cia
+      echo     ^(must finish — first run is often ~16 hours^)
+      echo     Or scripts-only: set NLPP_WITH_IMAGES=0
+      pause
+      exit /b 1
+    )
+    if exist "%~dp0release\bake_img.bin" (
+      set "PACKED_IMG=%~dp0release\bake_img.bin"
+    ) else (
+      set "PACKED_IMG=%~dp0cache\bake_img.bin"
+    )
+    echo Using gold bake: !PACKED_IMG!
+  )
+  if not exist "!PACKED_IMG!" (
+    echo [!] Gold bake path missing: !PACKED_IMG!
+    pause
+    exit /b 1
+  )
+  REM Incomplete gold artifacts: finish rebuild (keeps PNG pack) until Eng_Patch
+  REM and name_input_code.bin both exist — never inject a partial CIA.
+  set "NEED_FINISH="
+  "%PYTHON%" -c "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); from patch_cia import _title_pkg_has_eng_patch; raise SystemExit(0 if _title_pkg_has_eng_patch(Path(sys.argv[2])) else 2)" "%SRC%" "!PACKED_IMG!" >nul 2>&1
+  if errorlevel 2 set "NEED_FINISH=1"
+  if not exist "%~dp0release\name_input_code.bin" set "NEED_FINISH=1"
+  if defined NEED_FINISH (
     echo.
-    echo No gold bake at release\bake_img.bin — running full tools\rebuild_bake_img.py
-    echo This regenerates bake + textresource TRBs from sources.
-    echo If sibling extracted\ is missing, vanilla img.bin is taken from the dropped ROM.
-    echo First full rebuild often takes ~16 hours. Leave this window open.
+    echo Gold artifacts incomplete ^(Eng Patch and/or name_input_code.bin missing^).
+    echo Finishing with rebuild_bake_img.py --skip-pack ^(retries; no soft skips^)...
     echo.
-    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
+    "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" --skip-pack
     if errorlevel 1 (
-      echo [!] rebuild_bake_img.py failed — see traceback above.
-      echo     Common fixes:
-      echo       pip install -r requirements.txt
-      echo       ^(needs Pillow numpy zopfli etcpak^)
-      echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
+      echo [!] rebuild_bake_img.py --skip-pack failed — see traceback above.
+      echo     Re-run Drop after fixing the error; incomplete CIAs are not emitted.
       pause
       exit /b 1
     )
-    if not exist "%~dp0release\bake_img.bin" (
-      echo [!] rebuild finished but release\bake_img.bin is still missing.
-      pause
-      exit /b 1
+    if exist "%~dp0release\bake_img.bin" (
+      set "PACKED_IMG=%~dp0release\bake_img.bin"
     )
-    set "PACKED_IMG=%~dp0release\bake_img.bin"
-    echo Using newly built gold bake: release\bake_img.bin
-    REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
     if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
       echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
       set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
     )
   )
-  if exist "!PACKED_IMG!" (
-    echo Reusing packed img: !PACKED_IMG!
-  ) else (
-    set "PACKED_IMG=%~dp0release\bake_img.bin"
+  if not exist "%~dp0release\name_input_code.bin" (
+    echo [!] release\name_input_code.bin still missing after rebuild — aborting.
+    pause
+    exit /b 1
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH%
+  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  echo Including Profile name-input code.bin from release\name_input_code.bin
+  echo Injecting gold bake: !PACKED_IMG!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
 set ERR=%ERRORLEVEL%
 
 echo.
 if not "%ERR%"=="0" (
+  if exist "%~dp0out\luma\00040000000F4E00" (
+    echo.
+    echo [!] CIA rebuild failed, but Luma LayeredFS was written:
+    echo     %~dp0out\luma\00040000000F4E00
+    echo     See out\luma\README.txt — copy to SD:/luma/titles/
+  )
+  echo.
   echo [!] Patch failed ^(exit %ERR%^).
   pause
   exit /b %ERR%
@@ -247,7 +335,23 @@ if not "%ERR%"=="0" (
 
 echo [+] Patched CIA:
 echo     %~dp0out\NewLovePlusPlus-EN.cia
-echo     ^(scratch work dir cleaned up^)
+echo.
+echo [+] Luma LayeredFS ^(real 3DS^):
+echo     %~dp0out\luma\00040000000F4E00
+echo     Copy that folder to SD:/luma/titles/
+echo     Enable "Enable game patching" in Luma settings.
+echo.
+echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
+echo.
+echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
+echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
+echo.
+
+REM Soft-update companion site script-text progress bar (optional .env /
+REM NLPP_PROGRESS_*). Missing config or network must never fail the patch.
+echo Reporting script-text progress ^(optional^)...
+"%PYTHON%" "%SRC%\report_progress.py" --best-effort
+if errorlevel 1 echo [progress] optional update skipped ^(patch still OK^)
 echo.
 pause
 exit /b 0

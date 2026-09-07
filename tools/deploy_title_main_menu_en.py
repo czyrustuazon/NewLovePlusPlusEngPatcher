@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""EN main-menu hub labels — Title.arc pkg 5261 (Title_btn02_t01..t06).
+"""EN Title.arc pkg 5261 — hub menu labels only (safe path).
 
-These are NOT NCommonMSel plates. Submenus (Gallery/Options/…) use other pkgs;
-the six hub rows + CESA are separate. RGBA4444 (fmt 8) same-size splice + exact zlib.
+Same-size RGBA4444 splice for Title_btn02_t01..t06 + exact zlib.
+Does NOT add custom BCLIMs or edit BCLYT (that black-screened title).
 """
 from __future__ import annotations
 
@@ -49,7 +49,6 @@ LABELS: list[tuple[str, str]] = [
 
 
 def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
-    """Black ink + alpha AA, matching existing Title EN masters."""
     for size in range(13, 8, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
@@ -84,7 +83,6 @@ def main() -> int:
     tmp = OUT / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
 
-    # Prefer vanilla Title ARC so PNG-pack leftovers don't blow the slot.
     src_img = VANILLA if VANILLA.is_file() else MOD_IMG
     print(f"Title ARC source: {src_img}", flush=True)
     raw = src_img.read_bytes()
@@ -160,7 +158,7 @@ def main() -> int:
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 
-    print("deployed Title main-menu EN ->", MOD_IMG, flush=True)
+    print("deployed Title main-menu EN (labels only) ->", MOD_IMG, flush=True)
     print("Rollback:", bak, flush=True)
     return 0
 

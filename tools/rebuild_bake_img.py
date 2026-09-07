@@ -10,6 +10,7 @@ Self-contained (no Azahar required):
     → SMS maildic
     → sync TRBs into release/romfs_overlay
     → release/bake_img.bin
+    → release/name_input_code.bin (Profile romaji stack; drop-bat --inject-code)
 
 Usage:
   python tools/rebuild_bake_img.py
@@ -25,6 +26,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,22 +39,26 @@ from nlpp_paths import (  # noqa: E402
     BAKE_IMG,
     CACHE,
     CACHE_NEW_IMG,
+    NAME_INPUT_CODE,
     OVERLAY_TRB_DIR,
     RELEASE,
     TEXTRESOURCE,
     TRANSLATIONS_JSON,
+    find_vanilla_code,
     find_vanilla_main_trb,
     find_vanilla_resident_trb,
     require_translations_json,
 )
 from patch_cia import PatchError  # noqa: E402
+from run_timer import RunTimer  # noqa: E402
 
-# Shared-ARC-safe order (canonical last-writers for 5245/5247/5380/5575/5253).
+# Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
 DEPLOY_SCRIPTS: list[str] = [
     "deploy_msel_options_en.py",
     "deploy_msel_opt_plates_en.py",
     "deploy_msel_menus_en.py",
     "deploy_confirm_btn_en.py",
+    "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
     "deploy_display_settings_en.py",
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
@@ -65,8 +71,13 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_todo_hist_en.py",
     "deploy_schedule_header_en.py",
     "deploy_day_counter_en.py",
-    # Hub main-menu rows (Title.arc) + boot CESA — not covered by NCommonMSel deploys.
-    "deploy_title_main_menu_en.py",
+    "deploy_datadelete_en.py",  # 4187 + 5237 Text05
+    "deploy_multiwin_headers_en.py",  # 5237 after datadelete (keeps Text05)
+    "deploy_gallery_common_en.py",  # 5153
+    "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
+    "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
+    # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
+    "deploy_title_engpatch_en.py",
     "deploy_cesa_en.py",
 ]
 
@@ -95,8 +106,13 @@ def sync_trb_overlay() -> None:
         print(f"[trb] overlay <- {src.name}", flush=True)
 
 
-def rebuild_main_trb() -> None:
-    """Regenerate textresource_jpn.trb (+ config) from translations.json."""
+def rebuild_main_trb(*, env: dict[str, str] | None = None) -> None:
+    """Regenerate textresource_jpn.trb (+ config) from translations.json.
+
+    Uses the name-input filter (skip single kana/CJK keys) so gojūon cells stay
+    JP glyphs for DrawCell/romaji — full EN TRB blanks the Profile keyboard.
+    See tools/deploy_name_kanji_trb.py / technical.md §17.
+    """
     translations = require_translations_json()
     vanilla_trb = find_vanilla_main_trb()
     if vanilla_trb is None:
@@ -114,26 +130,25 @@ def rebuild_main_trb() -> None:
         translations = TRANSLATIONS_JSON
     shutil.copy2(translations, TEXTRESOURCE / "translations.json")
 
-    out_trb = TEXTRESOURCE / "textresource_jpn.trb"
-    out_cfg = TEXTRESOURCE / "textresource_config.trb"
+    # Name-input-safe rebuild (filters kana/CJK single-glyph EN glosses).
+    # Pass env so NLPP_VANILLA_TRB from --rom / cache/vanilla_from_rom is visible.
     run(
         [
             sys.executable,
-            str(ROOT / "src" / "patch_textresource.py"),
-            "rebuild",
-            "--trb",
-            str(vanilla_trb),
-            "--translations",
-            str(translations),
-            "--out",
-            str(out_trb),
-            "--config-out",
-            str(out_cfg),
-        ]
+            str(ROOT / "tools" / "deploy_name_kanji_trb.py"),
+        ],
+        env=env,
     )
-    if not out_trb.is_file():
-        raise SystemExit(f"TRB rebuild did not write {out_trb}")
-    print(f"[trb] rebuilt main TRB -> {out_trb}", flush=True)
+    namekanji = ROOT / "out" / "textresource_jpn_namekanji.trb"
+    namekanji_cfg = ROOT / "out" / "textresource_config_namekanji.trb"
+    if not namekanji.is_file():
+        raise SystemExit(f"name-kanji TRB rebuild did not write {namekanji}")
+    out_trb = TEXTRESOURCE / "textresource_jpn.trb"
+    out_cfg = TEXTRESOURCE / "textresource_config.trb"
+    shutil.copy2(namekanji, out_trb)
+    if namekanji_cfg.is_file():
+        shutil.copy2(namekanji_cfg, out_cfg)
+    print(f"[trb] name-kanji main TRB -> {out_trb}", flush=True)
 
     # Resident TRB is not rebuilt from translations.json; seed virgin bytes for
     # deploy_day_counter_en.py (日目 → Day) when release/ lacks it.
@@ -156,6 +171,7 @@ def pack_ui(
     fine_tune: bool,
     no_cache: bool = False,
     cache_dir: Path | None = None,
+    pkg_workers: int | None = None,
 ) -> Path:
     """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake."""
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -179,6 +195,8 @@ def pack_ui(
     ]
     if workers is not None:
         cmd.extend(["--workers", str(workers)])
+    if pkg_workers is not None:
+        cmd.extend(["--pkg-workers", str(pkg_workers)])
     if fine_tune:
         cmd.append("--fine-tune")
     if no_cache:
@@ -198,6 +216,70 @@ def seed_vanilla_bak(vanilla: Path, bake: Path) -> None:
     bak = bake.with_suffix(".bin.bak_pre_msel5245")
     shutil.copy2(vanilla, bak)
     print(f"[bake] vanilla bak -> {bak}", flush=True)
+
+
+def build_name_input_code(*, rom: Path | None) -> Path:
+    """Patch vanilla ExeFS code.bin → release/name_input_code.bin for CIA inject.
+
+    Always required for a complete gold bake. Retries extract + deploy; never soft-skips.
+    """
+    from extract_vanilla_from_rom import ensure_vanilla_code_from_rom  # noqa: PLC0415
+
+    def _resolve_src() -> Path:
+        src = find_vanilla_code()
+        if src is not None:
+            return src
+        if rom is None:
+            raise SystemExit(
+                "vanilla exefs/code.bin not found.\n"
+                "Pass --rom path\\to\\game.cia|.3ds|.cci (required for from-scratch), "
+                "or set NLPP_VANILLA_CODE."
+            )
+        return ensure_vanilla_code_from_rom(rom, force=False)
+
+    last_exc: BaseException | None = None
+    for attempt in range(1, 4):
+        try:
+            src = _resolve_src()
+            RELEASE.mkdir(parents=True, exist_ok=True)
+            if NAME_INPUT_CODE.is_file():
+                NAME_INPUT_CODE.unlink()
+            run(
+                [
+                    sys.executable,
+                    str(ROOT / "tools" / "deploy_name_input_en.py"),
+                    "--src",
+                    str(src),
+                    "--out",
+                    str(NAME_INPUT_CODE),
+                ]
+            )
+            if not NAME_INPUT_CODE.is_file():
+                raise SystemExit(
+                    f"name-input code build did not write {NAME_INPUT_CODE}"
+                )
+            print(f"[name-input] -> {NAME_INPUT_CODE}", flush=True)
+            return NAME_INPUT_CODE
+        except (SystemExit, PatchError, OSError, subprocess.CalledProcessError) as exc:
+            last_exc = exc
+            print(
+                f"[retry] name-input code.bin attempt {attempt}/3 failed: {exc}",
+                flush=True,
+            )
+            if attempt < 3:
+                # Force re-extract code on next try when ROM is available.
+                if rom is not None:
+                    try:
+                        ensure_vanilla_code_from_rom(rom, force=True)
+                    except (PatchError, OSError) as extract_exc:
+                        print(
+                            f"[retry] force code extract failed: {extract_exc}",
+                            flush=True,
+                        )
+                time.sleep(2.0 * attempt)
+    raise SystemExit(
+        f"required release/name_input_code.bin failed after 3 attempts: {last_exc}"
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -246,6 +328,12 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--workers", type=int, default=None)
     ap.add_argument(
+        "--pkg-workers",
+        type=int,
+        default=None,
+        help="parallel packages for pack_images ProcessPool (default: cpu/2, max 8)",
+    )
+    ap.add_argument(
         "--fine-tune",
         action="store_true",
         help="opt-in pack_images fine-tune (very slow)",
@@ -268,6 +356,21 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
+    timer = RunTimer("gold rebuild", heartbeat_s=60.0)
+    try:
+        return _main_rebuild(args, timer)
+    except SystemExit:
+        timer.finish(f"gold rebuild stopped (elapsed {timer.elapsed_str()})")
+        raise
+    except Exception:
+        timer.finish("gold rebuild failed")
+        raise
+    except KeyboardInterrupt:
+        timer.finish("gold rebuild aborted")
+        raise
+
+
+def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     RELEASE.mkdir(parents=True, exist_ok=True)
     CACHE.mkdir(parents=True, exist_ok=True)
 
@@ -306,6 +409,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(f"--reseed-from-pack needs {CACHE_NEW_IMG}")
         shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
         print(f"[bake] reseeded from PNG pack -> {BAKE_IMG}", flush=True)
+        timer.mark("reseeded bake from cache/new_img.bin")
     elif args.skip_pack:
         if BAKE_IMG.is_file():
             print(f"[bake] keeping existing gold bake: {BAKE_IMG}", flush=True)
@@ -317,24 +421,32 @@ def main(argv: list[str] | None = None) -> int:
                 "no bake and no cache/new_img.bin — run without --skip-pack "
                 "or provide release/bake_img.bin"
             )
+        timer.mark("skipped PNG pack")
     else:
         print(
-            "[rebuild] PNG pack starting (often ~16 hours). "
-            "Progress lines mean it is still working.",
+            "[rebuild] PNG pack starting (historically ~16h; now expect ~2–4h total "
+            "on a typical multi-core desktop — empty-block-first + package ProcessPool; "
+            "see technical.md §12.5.3). Watch [timer] lines for live elapsed.",
             flush=True,
         )
+        timer.mark("PNG pack starting")
+        timer.stop_heartbeat()  # pack_images has its own [timer] heartbeat
         pack_ui(
             vanilla,
             workers=args.workers,
+            pkg_workers=args.pkg_workers,
             fine_tune=args.fine_tune,
             no_cache=args.no_cache,
             cache_dir=args.cache_dir,
         )
+        timer.start_heartbeat()
+        timer.mark("PNG pack done")
 
     seed_vanilla_bak(vanilla, BAKE_IMG)
 
     if not args.skip_trb:
-        rebuild_main_trb()
+        timer.mark("rebuilding main TRB")
+        rebuild_main_trb(env=env)
     sync_trb_overlay()
 
     if not args.skip_deploys:
@@ -342,13 +454,16 @@ def main(argv: list[str] | None = None) -> int:
         if args.include_sound_settings:
             idx = scripts.index("deploy_display_settings_en.py") + 1
             scripts.insert(idx, "deploy_sound_settings_en.py")
+        timer.mark(f"running {len(scripts)} deploy scripts")
         for name in scripts:
             script = ROOT / "tools" / name
             if not script.is_file():
                 raise SystemExit(f"missing deploy script: {script}")
             run([sys.executable, str(script)], env=env)
+            timer.mark(f"deploy done: {name}")
 
     if not args.skip_sms:
+        timer.mark("SMS maildic deploy")
         run(
             [
                 sys.executable,
@@ -361,6 +476,12 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     sync_trb_overlay()
+
+    timer.mark("building name-input code.bin")
+    name_code = build_name_input_code(rom=args.rom.resolve() if args.rom else None)
+    if not NAME_INPUT_CODE.is_file():
+        raise SystemExit(f"required name-input missing: {NAME_INPUT_CODE}")
+
     if not BAKE_IMG.is_file():
         raise SystemExit(f"bake missing after rebuild: {BAKE_IMG}")
     main_trb = TEXTRESOURCE / "textresource_jpn.trb"
@@ -371,7 +492,9 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
+    print(f"  name-input:    {name_code}", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
+    timer.finish("gold rebuild OK")
     return 0
 
 
