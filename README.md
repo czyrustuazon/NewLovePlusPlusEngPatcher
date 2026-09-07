@@ -130,6 +130,20 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 If you see **Python not found**: install from [python.org](https://www.python.org/downloads/) with **Add python.exe to PATH** checked, open a **new** Command Prompt, and confirm `py -3 --version` works. Turning off Windows “App execution aliases” for `python.exe` only helps after a real install exists.
 
+### Git commit signing (contributors)
+
+PRs into `main` require **verified** commit signatures. Use SSH signing with your GitHub key (same key can be added twice on GitHub: Authentication + **Signing**):
+
+```bash
+# SSH signing with your existing GitHub key
+git config --global gpg.format ssh
+git config --global user.signingkey "C:/Users/<username>/.ssh/id_ed25519_github"
+git config --global commit.gpgsign true
+git config --global tag.gpgsign true
+```
+
+Replace the `user.signingkey` path with your own private key if different (often `~/.ssh/id_ed25519` or `~/.ssh/id_ed25519_github`). Unlock once per session: `ssh-add path\to\private_key`.
+
 ### Outputs
 
 | Path | Description |
