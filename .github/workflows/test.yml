@@ -1,6 +1,6 @@
 # Org policy allows only actions owned by czyrustuazon — no actions/checkout or
-# actions/setup-python. push/pull_request jobs already have the repo in
-# GITHUB_WORKSPACE; ubuntu-latest ships Python 3.12+.
+# actions/setup-python. Clone with plain git + GITHUB_TOKEN instead.
+# ubuntu-latest ships Python 3.12+.
 #
 # Runs on main merges and PRs targeting main only (not Bleeding-Edge pushes).
 
@@ -12,10 +12,34 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   pytest:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Fresh clone into workspace (runner starts empty without actions/checkout).
+          rm -rf "${GITHUB_WORKSPACE:?}/.git" "${GITHUB_WORKSPACE}"/* "${GITHUB_WORKSPACE}"/.[!.]* 2>/dev/null || true
+          git init
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            # PR merge commit (base + head) — same as default actions/checkout behavior.
+            git fetch --no-tags --depth=1 origin "+${GITHUB_REF}:refs/remotes/origin/pr"
+            git checkout --force -B ci "refs/remotes/origin/pr"
+          else
+            git fetch --no-tags --depth=1 origin "+${GITHUB_SHA}:refs/remotes/origin/sha"
+            git checkout --force -B ci "refs/remotes/origin/sha"
+          fi
+          test -f requirements-dev.txt
+          echo "Checked out $(git rev-parse --short HEAD)"
+          ls -la requirements-dev.txt requirements.txt pytest.ini tests | head -n 40
+
       - name: Verify Python
         run: |
           set -euo pipefail
