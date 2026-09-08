@@ -27,6 +27,7 @@ release/**
 tools/*
 !tools/README.md
 !tools/deploy_*.py
+!tools/import_*.py
 !tools/deploy_common.py
 !tools/rebuild_bake_img.py
 !tools/rebuild_test_cia.py
@@ -39,6 +40,14 @@ tools/*
 !tools/nuclear_jp_to_x.py
 !tools/mdcutil.py
 !tools/translate_sms_en.py
+!tools/export_progress_metrics.py
+!tools/script_coverage_report.py
+!tools/restore_*.py
+!tools/rebuild_dbin2_from_xml.py
+!tools/verify_nickname_tokens.py
+!tools/fetch_nlppatch_release.py
+!tools/integrate_nlppatch_into_rebuild.py
+!tools/audit_manaka_vs_makein.py
 !tools/nlpp-tools/
 !tools/nlpp-tools/**
 !tools/Trb2xlsx/
@@ -68,10 +77,15 @@ tools/cia/*.partial
 img.bin
 *.ncch
 
-# Archives
+!docs/
+!docs/**
 *.rar
 *.7z
 *.zip
+
+# Local secrets / machine-specific IDE config
+.env
+.mcp.json
 
 # OS / editor
 .DS_Store
@@ -88,7 +102,7 @@ paths.local.*
 ab_test/paths.local.ps1
 !ab_test/paths.local.ps1.example
 
-# Local agent / MCP config (machine-specific)
-.mcp.json
+# Optional offline NLPPATCH mirror (not required — community scripts live in rebuild_dbin2)
+vendor/NLPPATCH/
 
 tools/Trb2xlsx/**/*.csproj.user

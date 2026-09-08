@@ -2,19 +2,22 @@
 """
 English heroine-name patches for New Love Plus+.
 
-Three layers (all needed for a complete result):
+Two active layers (dialog keeps JP control tokens for nickname substitution):
 
-1. **`.dbin2` scripts** — dialog embeds control tokens like ``▲高嶺＊＊▲``.
-   The game only recognizes the Japanese token form; ASCII inside the markers
-   prints literally (triangles/stars visible). We strip markers and write plain
-   ``Takane`` / ``Rinko`` / ``Nene``, rebuilding SDL2 buffers (length may shrink).
+1. **`.dbin2` / `assets/scripts` XML** — leave ``▲高嶺＊＊▲`` / ``▲小早川＊▲`` /
+   ``▲姉ヶ崎＊▲`` in dialogue. The engine resolves the inner JP key through the
+   name table; ``＊＊`` slots still receive the player nickname. Plain ASCII
+   inside markers (e.g. ``▲Takane＊＊▲``) prints literally — do not use that
+   form in scripts.
 
-2. **`textresource_resident_jpn.trb`** — menus / some UI name strings.
+2. **`textresource_resident_jpn.trb`** + **`img.bin` name table** — map JP keys
+   to English display (``高嶺`` → ``Takane``, token rows → ``▲Takane＊＊▲``).
 
-3. **`img.bin` name table** — duplicate name/nickname bank used by UI.
-
-Fixed-width slots in (2)/(3): English must fit the original UTF-8 byte budget;
+Fixed-width slots in (2): English must fit the original UTF-8 byte budget;
 shorter strings are NUL-padded at the end of the span.
+
+Legacy ``--strip-dialog-tokens`` still expands tokens to plain English in dbin2
+( breaks nicknames — avoid on gold-path builds).
 """
 from __future__ import annotations
 
@@ -313,7 +316,9 @@ def replace_dialog_tokens(text: str) -> tuple[str, int]:
     return text2, n + m
 
 
-def patch_dbin2_file(path: Path) -> int:
+def patch_dbin2_file(path: Path, *, strip_tokens: bool = False) -> int:
+    if not strip_tokens:
+        return 0
     key, unknown, entries = parse_dbin2(path.read_bytes())
     total = 0
     for entry in entries:
@@ -327,8 +332,10 @@ def patch_dbin2_file(path: Path) -> int:
     return total
 
 
-def patch_dbin2_tree(root: Path) -> tuple[int, int]:
+def patch_dbin2_tree(root: Path, *, strip_tokens: bool = False) -> tuple[int, int]:
     """Patch NLP_01/NLP_02/script under root (or a flat tree of *.dbin2)."""
+    if not strip_tokens:
+        return 0, 0
     files: list[Path] = []
     for pack in PACKS:
         pack_dir = root / pack
@@ -339,7 +346,7 @@ def patch_dbin2_tree(root: Path) -> tuple[int, int]:
     touched = 0
     replacements = 0
     for path in files:
-        n = patch_dbin2_file(path)
+        n = patch_dbin2_file(path, strip_tokens=True)
         if n:
             touched += 1
             replacements += n
@@ -394,15 +401,21 @@ def patch_img_name_table(path: Path) -> int:
     return total
 
 
-def apply_romfs_name_patches(romfs_dir: Path) -> dict[str, int]:
-    """Patch scripts + resident + img.bin inside an extracted RomFS tree."""
+def apply_romfs_name_patches(
+    romfs_dir: Path,
+    *,
+    strip_dialog_tokens: bool = False,
+) -> dict[str, int]:
+    """Patch resident TRB + img.bin; optionally legacy dbin2 token stripping."""
     stats = {"dbin_files": 0, "dbin_repl": 0, "resident": 0, "img": 0}
     script_root = romfs_dir / "script" / "bin"
-    if script_root.is_dir():
-        touched, repl = patch_dbin2_tree(script_root)
+    if script_root.is_dir() and strip_dialog_tokens:
+        touched, repl = patch_dbin2_tree(script_root, strip_tokens=True)
         stats["dbin_files"] = touched
         stats["dbin_repl"] = repl
-        print(f"[names] dbin2: {touched} files, {repl} replacements")
+        print(f"[names] dbin2 (strip): {touched} files, {repl} replacements")
+    elif script_root.is_dir():
+        print("[names] dbin2: kept dialog tokens (nickname slots)")
 
     resident = (
         romfs_dir / "SystemData" / "TextResource" / "textresource_resident_jpn.trb"
@@ -422,21 +435,6 @@ def apply_romfs_name_patches(romfs_dir: Path) -> dict[str, int]:
     return stats
 
 
-def patch_xml_scripts(scripts_dir: Path) -> tuple[int, int]:
-    """Replace heroine tokens in finished XML (source of truth for rebuilds)."""
-    files = sorted(scripts_dir.glob("*.xml"))
-    touched = 0
-    replacements = 0
-    for path in files:
-        text = path.read_text(encoding="utf-8")
-        new, n = replace_dialog_tokens(text)
-        if n:
-            path.write_text(new, encoding="utf-8", newline="\n")
-            touched += 1
-            replacements += n
-    return touched, replacements
-
-
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -452,19 +450,28 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--resident", type=Path, help="textresource_resident_jpn.trb")
     ap.add_argument("--img", type=Path, help="img.bin")
     ap.add_argument(
-        "--xml",
-        type=Path,
-        help="assets/scripts — rewrite ▲高嶺＊＊▲ tokens to plain English",
+        "--strip-dialog-tokens",
+        action="store_true",
+        help="legacy: expand ▲高嶺＊＊▲ to plain Takane in dbin2 (breaks nicknames)",
     )
     args = ap.parse_args(argv)
 
     did = False
     if args.romfs:
-        apply_romfs_name_patches(args.romfs.resolve())
+        apply_romfs_name_patches(
+            args.romfs.resolve(),
+            strip_dialog_tokens=args.strip_dialog_tokens,
+        )
         did = True
     if args.dbin:
-        touched, repl = patch_dbin2_tree(args.dbin.resolve())
-        print(f"[names] dbin2: {touched} files, {repl} replacements")
+        touched, repl = patch_dbin2_tree(
+            args.dbin.resolve(),
+            strip_tokens=args.strip_dialog_tokens,
+        )
+        if args.strip_dialog_tokens:
+            print(f"[names] dbin2: {touched} files, {repl} replacements")
+        else:
+            print("[names] dbin2: no changes (pass --strip-dialog-tokens to expand)")
         did = True
     if args.resident:
         n = patch_resident_file(args.resident.resolve())
@@ -474,12 +481,8 @@ def main(argv: list[str] | None = None) -> int:
         n = patch_img_name_table(args.img.resolve())
         print(f"[names] img.bin: {n} replacements")
         did = True
-    if args.xml:
-        touched, repl = patch_xml_scripts(args.xml.resolve())
-        print(f"[names] xml: {touched} files, {repl} replacements")
-        did = True
     if not did:
-        ap.error("pass at least one of --romfs / --dbin / --resident / --img / --xml")
+        ap.error("pass at least one of --romfs / --dbin / --resident / --img")
     return 0
 
 

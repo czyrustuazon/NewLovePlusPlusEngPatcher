@@ -2,7 +2,9 @@
 
 One-click English patcher for **New Love Plus+** (3DS), plus the finished translation assets it ships.
 
-Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.com/Makein/NLPPGit), localization project). This repo holds **completed** scripts/images and a toolchain that turns an official **CIA or .3ds/.cci** dump into a playable English **CIA**.
+Fansite & community hub: [newloveplus.loc.moe](https://newloveplus.loc.moe)
+
+Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.com/Makein/NLPPGit), localization project) and in the **volunteer HTML workbench** (see [Volunteer localization workbench](#volunteer-localization-workbench)). This repo holds **completed** scripts/images, HTML *templates*, and a toolchain that turns an official **CIA or .3ds/.cci** dump into a playable English **CIA**.
 
 **License:** EngPatcher original work is [MIT](LICENSE) for the community. That license covers **only** this project’s own code and assets — not third-party tools, fonts, or vendored trees (see [Credits](#credits) and `LICENSE`).
 
@@ -14,7 +16,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-3. **Inject English scripts** (pre-packed `.dbin2` from finished XML)  
+3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
@@ -421,6 +423,100 @@ out/                         wipeable scratch + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
+
+---
+
+## Volunteer localization workbench
+
+
+
+Browser kits so translators can help **without Python**. Three sibling trees:
+
+
+
+| Tree | Who | What |
+
+|------|-----|------|
+
+| [`nlpp-localization-workbench`](https://github.com/czyrustuazon/nlpp-localization-workbench) | Volunteers | Hub + built kits under `kit/` — open `index.html` |
+
+| `nlpp-localization-workbench-parser` | Maintainers | `export_*.py` / `ingest_*.py` only (no HTML) |
+
+| This repo `tools/localization_workbench/` | Maintainers | HTML **templates** the exporters inject into |
+
+
+
+### For volunteers
+
+
+
+1. Clone / unzip the workbench folder (keep `kit/NLPP_Translate_Images/media/` next to its `index.html`).
+
+2. Open **`index.html`** → tabs:
+
+   - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
+
+   - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
+
+   - **Images** — **full UI PNG audit** (~1210 masters / ~68 folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …)
+
+3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
+
+4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
+
+
+
+Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. Image replacements must match original width × height.
+
+
+
+**What’s in the kits (sources):** see **`technical.md` §17.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompt: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md`.
+
+
+
+### For maintainers
+
+
+
+Configure `paths.local.json` in the parser (see `.example`):
+
+
+
+```json
+
+{ "eng_patcher": "C:/path/to/NewLovePlusPlusEngPatcher", "workbench": "C:/path/to/nlpp-localization-workbench" }
+
+```
+
+
+
+```bash
+
+cd nlpp-localization-workbench-parser
+
+python export_workkit.py      # → kit/NLPP_Translate.html (assets/scripts + dump/NLPPATCH dbin2)
+
+python export_strings.py      # → kit/NLPP_Translate_Strings.html
+
+python export_images.py       # → kit/NLPP_Translate_Images/ (+ zip)
+
+python sync_hub.py            # → workbench/index.html from EngPatcher template
+
+
+
+python ingest_pack.py their-nlpp-contrib.json --apply
+
+python ingest_strings.py their-nlpp-strings.json --apply
+
+python ingest_images.py their-nlpp-images.json --apply
+
+```
+
+
+
+Edit kit UI in EngPatcher `tools/localization_workbench/*.html`, then re-export. Full pack schema, validation rules, and session notes: **`technical.md` §17**.
+
+
 
 ---
 

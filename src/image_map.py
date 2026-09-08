@@ -70,6 +70,8 @@ IMAGE_MAP: dict[str, tuple[int, str]] = {
     "camera_btn04": (5326, "Camera_Btn04.arc"),
     "camera_pv03": (5351, "Camera_Pv03.arc"),
     "myroom": (5380, "Myroom.arc"),
+    # Scoped subset: MyroomBack.check/timg/ (Back softkey only; from UI Buttons bundle).
+    "myroomback": (5380, "Myroom.arc"),
     "dateedit": (5382, "DateEdit.arc"),
     "dateeditalbum": (5383, "DateEditAlbum.arc"),
     "dateeditcamera": (5384, "DateEditCamera.arc"),

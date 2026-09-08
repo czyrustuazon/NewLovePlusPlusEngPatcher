@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Install English SMS maildic into LayeredFS img.bin (package 92).
 
+Opt-in only (gold bake uses --include-sms). To revert EN SMS for nickname audit:
+  python tools/restore_sms_maildic_jpn.py --all-targets
+
 Game storage (NOT romfs/dictionary/all2_u.bin — that is an IME font dict):
 
   img.bin package index **92** (uncompressed PACK, 142080 bytes)
