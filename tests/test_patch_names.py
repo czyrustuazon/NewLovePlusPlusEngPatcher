@@ -65,9 +65,20 @@ def test_dbin2_roundtrip_and_patch(tmp_path: Path):
 
     path = tmp_path / "test.dbin2"
     path.write_bytes(blob)
-    repl = names.patch_dbin2_file(path)
+    repl = names.patch_dbin2_file(path, strip_tokens=True)
     assert repl == 1
 
     key, unknown, entries = names.parse_dbin2(path.read_bytes())
     assert key == 0xDEADBEEF
     assert entries[0].sdl2.dialogs == ["Takane speaks"]
+
+
+def test_patch_dbin2_preserves_tokens_by_default(tmp_path: Path):
+    dialog = "▲高嶺＊＊▲ speaks"
+    sdl2 = names.SDL2Data(key=0xAABBCCDD, unknown=[], dialogs=[dialog])
+    path = tmp_path / "test.dbin2"
+    path.write_bytes(names.build_dbin2(0xDEADBEEF, 0, [names.DbinEntry(1, 2, sdl2)]))
+
+    assert names.patch_dbin2_file(path) == 0
+    _, _, entries = names.parse_dbin2(path.read_bytes())
+    assert entries[0].sdl2.dialogs == [dialog]
