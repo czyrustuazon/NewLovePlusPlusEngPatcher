@@ -29,6 +29,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -227,7 +228,8 @@ def main() -> None:
         png = tmp / f"{Path(path).stem}.png"
         orig = tmp / f"{Path(path).stem}.bclim"
         orig.write_bytes(raw)
-        rgba = render_header_label(w, h, en)
+        master = find_ui_png(("NCommon.check",), Path(path).stem, (w, h))
+        rgba = Image.open(master).convert("RGBA") if master else render_header_label(w, h, en)
         rgba.save(png)
         new = png_to_bclim_etc1a4_same_size(png, orig)
         rgba.save(OUT / f"{Path(path).stem}_en.png")

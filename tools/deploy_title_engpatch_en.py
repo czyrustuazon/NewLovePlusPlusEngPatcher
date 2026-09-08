@@ -44,6 +44,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -412,12 +413,15 @@ def main() -> int:
         if darc.find(path) is None:
             raise SystemExit(f"missing {path}")
         raw_b = (extract_dir / path).read_bytes()
-        rgba = render_label(en)
-        png = tmp / f"{Path(path).stem}.png"
-        orig = tmp / f"{Path(path).stem}.bclim"
+        stem = Path(path).stem
+        master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
+        rgba = Image.open(master).convert("RGBA") if master else render_label(en)
+        png = tmp / f"{stem}.png"
+        orig = tmp / f"{stem}.bclim"
         rgba.save(png)
-        rgba.save(ASSET / f"{Path(path).stem}.png")
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        if master is None:
+            rgba.save(ASSET / f"{stem}.png")
+        rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         (extract_dir / path).write_bytes(png_to_bclim_rgba4444_same_size(png, orig))
         print(f"OK {Path(path).name} -> {en!r}", flush=True)

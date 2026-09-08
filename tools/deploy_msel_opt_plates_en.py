@@ -34,6 +34,7 @@ from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -97,8 +98,15 @@ def render(w: int, h: int, text: str, target_h: int, *, hard: bool) -> np.ndarra
     raise RuntimeError(text)
 
 
-def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool) -> bytes:
+def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, stem: str | None = None) -> bytes:
     canvas, w, h = decode_a8(raw)
+    png = tmp / "t.png"
+    orig = tmp / "o.bclim"
+    orig.write_bytes(raw)
+    master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
+    if master is not None:
+        Image.open(master).convert("RGBA").save(png)
+        return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)
     th = int(ys.max() - ys.min() + 1) if len(ys) else h // 2
@@ -108,12 +116,9 @@ def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool) -> bytes:
         "RGBA",
         (Image.new("L", (w, h), 255),) * 3 + (Image.fromarray(out, "L"),),
     )
-    png = tmp / "t.png"
-    orig = tmp / "o.bclim"
     rgba.save(png)
-    stem = en.replace(" ", "_")
-    rgba.save(OUT / f"{stem}.png")
-    orig.write_bytes(raw)
+    save_stem = en.replace(" ", "_")
+    rgba.save(OUT / f"{save_stem}.png")
     return png_to_bclim_a8_same_size(png, orig)
 
 
@@ -124,7 +129,14 @@ def _patch_candidate(arc_bytes: bytes, tmp: Path, *, hard: bool) -> bytes:
         if entry is None:
             raise SystemExit(f"missing {path}")
         darc.replace_same_size(
-            entry, make_bclim(darc.extract_file(entry), en, tmp, hard=hard)
+            entry,
+            make_bclim(
+                darc.extract_file(entry),
+                en,
+                tmp,
+                hard=hard,
+                stem=Path(path).stem,
+            ),
         )
         print(f"OK {path} -> {en!r} hard={hard}", flush=True)
     return bytes(darc.data)

@@ -95,15 +95,24 @@ def render_label(w: int, h: int, text: str) -> Image.Image:
 def write_asset_pngs(w: int = 48, h: int = 24) -> None:
     sheet_rows: list[Image.Image] = []
     for stem, text in LABELS:
-        im = render_label(w, h, text)
+        existing = next((d / f"{stem}.png" for d in ASSET_DIRS if (d / f"{stem}.png").is_file()), None)
+        if existing is not None:
+            im = Image.open(existing).convert("RGBA")
+            if im.size != (w, h):
+                im = render_label(w, h, text)
+            print(f"  keep {stem} -> {text!r}", flush=True)
+        else:
+            im = render_label(w, h, text)
+            print(f"  render {stem} -> {text!r}", flush=True)
         for d in ASSET_DIRS:
             d.mkdir(parents=True, exist_ok=True)
-            im.save(d / f"{stem}.png")
+            dest = d / f"{stem}.png"
+            if not dest.is_file():
+                im.save(dest)
         preview = Image.new("RGBA", (w, h), (245, 245, 245, 255))
         preview.alpha_composite(im)
         sheet_rows.append(preview)
         im.save(OUT / f"{stem}_en.png")
-        print(f"  render {stem} -> {text!r}", flush=True)
 
     gap = 4
     sheet = Image.new(
