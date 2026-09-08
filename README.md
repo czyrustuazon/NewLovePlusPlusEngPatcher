@@ -357,7 +357,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 
 | Person | Contribution |
 |--------|----------------|
-| **[Zhoumaru](https://www.youtube.com/@AndiKurniawanNarutama)** | A large UI overhaul and translation work |
+| **Zhoumaru** | A large UI overhaul and translation work |
 
 ### CIA / RomFS tooling
 
