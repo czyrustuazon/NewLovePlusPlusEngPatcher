@@ -55,7 +55,7 @@ OUT = ROOT / "out" / "title_engpatch_en"
 ASSET = ROOT / "assets" / "images" / "Title"
 PKG = 5261
 
-ENG_PATCH_LINE = "Eng Patch v1.0.0-rc1"
+ENG_PATCH_LINE = "Eng Patch v1.0.0-rc2"
 ENG_PATCH_REL = "timg/Eng_Patch.bclim"
 ENG_PATCH_BCLIM_NAME = "Eng_Patch.bclim"
 
