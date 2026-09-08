@@ -37,6 +37,19 @@ def test_bat_polls_ci_before_local_rebuild():
     assert "--best-effort" in text
 
 
+def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
+    text = _bat_text()
+    assert "patcher_version.py" in text
+    assert "BAKE_STALE" in text
+    assert "NLPP_REUSE_BAKE" in text
+    assert "NLPP_USE_PACK_CACHE" in text
+    assert "from scratch" in text.lower() or "from-scratch" in text
+    # Reuse leftover bake is opt-in; default is stamp-check then rebuild.
+    stale_idx = text.index("BAKE_STALE")
+    inject_idx = text.index("Injecting gold bake")
+    assert stale_idx < inject_idx
+
+
 def test_bat_fetch_is_automatic_not_opt_in():
     text = _bat_text()
     assert "NLPP_FETCH_GOLD" not in text

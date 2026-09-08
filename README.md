@@ -90,7 +90,9 @@ See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
-If bake is absent, the drop bat auto-runs:
+**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc2`). That forces a from-scratch pack (no `cache/img_pack`) so updating the patcher cannot silently keep yesterday’s menus. Same-RC second drop reuses the stamped bake. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`.
+
+If bake is absent (or stamp mismatches), the drop bat auto-runs:
 
 ```bash
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci

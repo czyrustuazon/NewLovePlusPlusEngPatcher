@@ -71,6 +71,25 @@ def test_summary_ok_for_gold_bake_with_eng(tmp_path: Path, monkeypatch):
     assert "Name-input ON but UI img OFF" not in text
 
 
+def test_summary_includes_time_to_finish(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "bake.bin"
+    bake.write_bytes(b"gold")
+    monkeypatch.setattr(patch_cia, "DEFAULT_BAKE_IMG", bake)
+    lines = patch_cia.build_patch_summary(
+        out_cia=None,
+        packed_img=bake,
+        layered_img=bake,
+        layeredfs_out=None,
+        romfs_overlay=None,
+        args=_args(),
+        eng_patch=True,
+        elapsed="4m32s",
+        started_at="2026-09-08 00:12:03",
+    )
+    text = "\n".join(lines)
+    assert "[OK]      Time to finish: 4m32s  (started 2026-09-08 00:12:03)" in text
+
+
 def test_summary_warns_if_eng_missing_despite_img(tmp_path: Path, monkeypatch):
     img = tmp_path / "img.bin"
     img.write_bytes(b"x")
@@ -95,6 +114,9 @@ def test_drop_bat_mentions_patch_summary():
     )
     assert "PATCH SUMMARY" in bat
     assert "incomplete patches abort" in bat
+    assert "Time to finish" in bat
+    assert "NLPP_T0" in bat
+    assert "run_timer.py" in bat
 
 
 def test_patch_cia_requires_name_input_for_ui_inject():

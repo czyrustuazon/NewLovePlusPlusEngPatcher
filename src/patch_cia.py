@@ -1179,6 +1179,8 @@ def build_patch_summary(
     args: argparse.Namespace,
     layeredfs_only: bool = False,
     eng_patch: bool | None = None,
+    elapsed: str | None = None,
+    started_at: str | None = None,
 ) -> list[str]:
     """Human-readable include/skip report for the end of a patch run.
 
@@ -1328,6 +1330,10 @@ def build_patch_summary(
     else:
         lines.append(_summary_line("SKIPPED", "Luma LayeredFS", "not requested"))
 
+    if elapsed:
+        detail = elapsed if not started_at else f"{elapsed}  (started {started_at})"
+        lines.append(_summary_line("OK", "Time to finish", detail))
+
     lines.append("=" * 60)
     images_off = args.no_images or not args.with_images or packed_img is None
     name_on = bool(
@@ -1452,6 +1458,7 @@ def _cmd_patch_body(
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
+        print(f"Time: {timer.elapsed_str()}  (started {timer.started_at})")
         print_patch_summary(
             build_patch_summary(
                 out_cia=None,
@@ -1461,6 +1468,8 @@ def _cmd_patch_body(
                 romfs_overlay=romfs_overlay,
                 args=args,
                 layeredfs_only=True,
+                elapsed=timer.elapsed_str(),
+                started_at=timer.started_at,
             )
         )
         if args.keep_work:
@@ -1492,6 +1501,7 @@ def _cmd_patch_body(
     print("=== Done ===")
     print(f"Patched CIA: {out_cia}")
     print(f"Size:        {out_cia.stat().st_size:,} bytes")
+    print(f"Time:        {timer.elapsed_str()}  (started {timer.started_at})")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
     if layeredfs_out is not None and layeredfs_out.is_dir():
@@ -1505,6 +1515,8 @@ def _cmd_patch_body(
             romfs_overlay=romfs_overlay,
             args=args,
             layeredfs_only=False,
+            elapsed=timer.elapsed_str(),
+            started_at=timer.started_at,
         )
     )
     print("Notes:")

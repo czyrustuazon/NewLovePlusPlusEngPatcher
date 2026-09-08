@@ -4,11 +4,12 @@
 Self-contained (no Azahar required):
 
   vanilla img.bin
-    → pack_images (assets/images)           # long first time; caches under cache/img_pack/
+    → pack_images (assets/images)           # RC default: from-scratch (--no-cache)
     → rebuild textresource_jpn.trb from assets/textresource/translations.json
     → ordered deploy_*_en.py chrome (+ day-counter resident TRB)
     → sync TRBs into release/romfs_overlay
     → release/bake_img.bin
+    → release/bake_stamp.txt (PATCHER_RELEASE; Drop ignores leftover bake if mismatch)
     → release/name_input_code.bin (Profile romaji stack; drop-bat --inject-code)
 
 Usage:
@@ -16,7 +17,7 @@ Usage:
   python tools/rebuild_bake_img.py --rom game.cia|.3ds|.cci   # extract vanilla from ROM
   python tools/rebuild_bake_img.py --skip-pack          # keep bake; re-run TRB/deploys/SMS
   python tools/rebuild_bake_img.py --reseed-from-pack   # force bake <- cache/new_img.bin
-  python tools/rebuild_bake_img.py --no-cache           # ignore BCLIM/zlib content cache
+  python tools/rebuild_bake_img.py --use-cache          # reuse cache/img_pack (off during RC)
 """
 from __future__ import annotations
 
@@ -49,6 +50,7 @@ from nlpp_paths import (  # noqa: E402
     require_translations_json,
 )
 from patch_cia import PatchError  # noqa: E402
+from patcher_version import PATCHER_RELEASE, write_bake_stamp  # noqa: E402
 from run_timer import RunTimer  # noqa: E402
 
 # Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
@@ -342,7 +344,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--no-cache",
         action="store_true",
-        help="disable pack_images BCLIM/exact-zlib content cache",
+        help="from-scratch PNG pack (default during RC; ignore cache/img_pack)",
+    )
+    ap.add_argument(
+        "--use-cache",
+        action="store_true",
+        help="reuse cache/img_pack (faster). Off by default while we are RC.",
     )
     ap.add_argument(
         "--cache-dir",
@@ -425,6 +432,11 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         timer.mark("skipped PNG pack")
     else:
         print(
+            f"[rebuild] RC {PATCHER_RELEASE}: PNG pack is from-scratch "
+            "(cache/img_pack ignored). Pass --use-cache to reuse a warm pack.",
+            flush=True,
+        )
+        print(
             "[rebuild] PNG pack starting (historically ~16h; now expect ~2–4h total "
             "on a typical multi-core desktop — empty-block-first + package ProcessPool; "
             "see technical.md §12.5.3). Watch [timer] lines for live elapsed.",
@@ -437,7 +449,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             workers=args.workers,
             pkg_workers=args.pkg_workers,
             fine_tune=args.fine_tune,
-            no_cache=args.no_cache,
+            no_cache=(not args.use_cache) or args.no_cache,
             cache_dir=args.cache_dir,
         )
         timer.start_heartbeat()
@@ -500,6 +512,8 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
     print(f"  name-input:    {name_code}", flush=True)
+    stamp = write_bake_stamp()
+    print(f"  bake stamp:    {stamp} ({PATCHER_RELEASE})", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
     timer.finish("gold rebuild OK")
     return 0

@@ -275,6 +275,8 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
             skip_hash=True,
         ),
         eng_patch=True,
+        elapsed="3m05s",
+        started_at="2026-09-08 00:12:03",
     )
     text = "\n".join(lines)
     assert "[OK]" in text and "Dialog scripts" in text
@@ -286,3 +288,4 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
     assert "[OK]" in text and "Output CIA" in text
     assert "[SKIPPED]" in text and "Input CIA SHA-1" in text  # bat pre-checked
     assert "no --inject-code" not in text
+    assert "[OK]" in text and "Time to finish: 3m05s" in text

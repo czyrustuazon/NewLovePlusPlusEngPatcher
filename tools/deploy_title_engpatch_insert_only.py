@@ -38,11 +38,11 @@ from deploy_common import (  # noqa: E402
     iter_deploy_targets,
     resolve_img_paths,
 )
+from patcher_version import ENG_PATCH_LINE as ENG_LINE  # noqa: E402
 
 MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "title_engpatch_bisect"
 PKG = 5261
-ENG_LINE = "Eng Patch v1.0.0-rc2"
 ENG_REL = "timg/Eng_Patch.bclim"
 
 
