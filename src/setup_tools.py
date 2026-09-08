@@ -138,6 +138,7 @@ def ensure_python_deps() -> None:
         ("numpy", "numpy"),
         ("zopfli", "zopfli"),
         ("etcpak", "etcpak"),
+        ("yaml", "PyYAML"),
     ):
         try:
             __import__(mod)

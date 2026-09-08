@@ -760,6 +760,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 |---------|---------|------------|
 | Assumed sibling dump always exists | `FileNotFoundError: vanilla … img.bin` on first drop | Clone only had EngPatcher + ROM; path `../New Love Plus Plus/extracted/` missing |
 | Omitted `etcpak` from `requirements.txt` | `ModuleNotFoundError: etcpak` mid PNG pack | ETC1A4 BCLIM encode needs it; bat pip install couldn’t pull what wasn’t listed |
+| Omitted `PyYAML` from `requirements.txt` | `ModuleNotFoundError: yaml` in `ie` / `img/__init__.py` at gold unpack | Vendored nlpp-tools imports `yaml`; drop-bat only pip’d Pillow/numpy/zopfli/etcpak |
 | Local exact-zlib forks in deploy scripts | `could not build exact zlib` / `could not hit exact zopfli` on **5245** plates, **5242**, etc. | Hand-rolled binary search without empty-block / near-miss; after Options filled the slot, soft plates overshot congruence |
 | Confirm deploy: one heavy ETC1A4 style only | `zopfli 23082 exceeds slot 23047` @ **5238** | Live ARC already fat from PNG pack; no lean trials / zero-gaps / vanilla base |
 | Day-counter assumed release resident TRB | `resident TRB not found` | Main TRB rebuild doesn’t emit resident; clone never copied `textresource_resident_jpn.trb` into `release/` |
@@ -821,7 +822,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.3 Clone / first-drop checklist
 
-1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
+1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **If `release/bake_img.bin` is missing** (normal on a fresh clone), the bat runs the acquisition chain in **§15.5** — do **not** expect a finished CIA in minutes unless step 3a (CI download) succeeds or you already built a bake on that machine.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool → expect **~2–4 hours** total on a typical multi-core desktop (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.

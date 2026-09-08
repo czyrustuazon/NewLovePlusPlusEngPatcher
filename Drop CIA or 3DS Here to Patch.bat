@@ -249,7 +249,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
         echo       pip install -r requirements.txt
-        echo       ^(needs Pillow numpy zopfli etcpak^)
+        echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
         exit /b 1

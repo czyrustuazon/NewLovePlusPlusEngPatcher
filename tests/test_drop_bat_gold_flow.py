@@ -13,6 +13,14 @@ def _bat_text() -> str:
     return BAT.read_text(encoding="utf-8", errors="replace")
 
 
+def test_requirements_include_nlpp_tools_yaml():
+    """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
+    req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    assert "PyYAML" in req
+    setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
+    assert '("yaml", "PyYAML")' in setup
+
+
 def test_bat_defaults_packed_img_to_release_bake():
     text = _bat_text()
     assert 'set "PACKED_IMG=%~dp0release\\bake_img.bin"' in text

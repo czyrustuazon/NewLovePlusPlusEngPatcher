@@ -124,7 +124,7 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 - Windows x64  
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
-- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak** — drop-bat runs this)  
+- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
 - A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
 - First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
@@ -349,6 +349,14 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 
 Thank you to everyone whose work this patcher builds on. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
 
+### EngPatcher contributors
+
+New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in the tables below.
+
+| Person | Contribution |
+|--------|----------------|
+| **[Zhoumaru](https://www.youtube.com/@AndiKurniawanNarutama)** | A large UI overhaul and translation work |
+
 ### CIA / RomFS tooling
 
 | Component | Credit |
@@ -377,7 +385,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
 | SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
 
-Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM).
+Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM), [PyYAML](https://pyyaml.org/) (`yaml` — required by vendored `ie` / nlpp-tools).
 
 ---
 
