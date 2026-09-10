@@ -22,7 +22,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to the finished CIA + `luma/` LayeredFS (optional SpotPass via `build_spotpass_inject.py`)
+9. **Clean** `out/` to the finished CIA + `luma/` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
+10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -175,13 +176,14 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
 | `out/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` |
 | `out/luma/README.txt` | Install steps for Luma / Azahar |
+| `out/logs/latest.txt` | PATCH SUMMARY from the last successful run (timestamped copies alongside) |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
 | `release/textresource/` | Durable TRB / translation work |
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
@@ -283,7 +285,8 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → name patches (plain Takane/Rinko/Nene in scripts + resident/img tables)
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
-  → clean out/ (keep *.cia + luma/; azahar_instances/ preserved)
+  → write PATCH SUMMARY log to out/logs/
+  → clean out/ (keep *.cia + luma/ + logs/; azahar_instances/ preserved)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -429,7 +432,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + azahar_instances (gitignored)
+out/                         wipeable scratch + CIA + luma/ + logs/ + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
@@ -543,6 +546,9 @@ python tools/rebuild_bake_img.py --skip-pack          # resume after PNG pack
 
 # Full CIA patch (prefers release/bake_img.bin; same as the .bat)
 python src/patch_cia.py --cia "path\to\game.cia"
+# PATCH SUMMARY log: out/logs/patch_YYYYMMDD_HHMMSS.txt + latest.txt
+# python src/patch_cia.py --cia "path\to\game.cia" --log D:\patch.txt
+# python src/patch_cia.py --cia "path\to\game.cia" --no-log
 
 # Optional PNG-only scratch rebuild (does not refresh gold bake)
 python src/patch_cia.py --cia "path\to\game.cia" --repack-images

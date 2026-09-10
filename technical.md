@@ -892,7 +892,7 @@ decrypted .cia / .3ds / .cci dropped
   → out/NewLovePlusPlus-EN.cia + out/luma/
 ```
 
-There is **no saved patch log file** by default — output is the console window only. Re-run with redirection if you need `[images]` / `[inject]` lines for diagnosis.
+Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
 #### Environment overrides
 
@@ -903,7 +903,8 @@ There is **no saved patch log file** by default — output is the console window
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
-| `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+| `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+| `NLPP_NO_LOG=1` | Skip writing `out/logs/` PATCH SUMMARY files |
 
 #### nlpp-gold CI (optional accelerator)
 
@@ -926,7 +927,8 @@ python -m pytest tests/ -v
 
 | Test module | Guards |
 |-------------|--------|
-| `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
+| `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
+| `test_patch_summary.py` | PATCH SUMMARY rows + `out/logs/` write / `--no-log` / cleanup keeps `logs/` |
 | `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback |
 | `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
 | `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |

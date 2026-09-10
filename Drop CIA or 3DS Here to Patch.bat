@@ -389,8 +389,11 @@ echo     Copy that folder to SD:/luma/titles/
 echo     Enable "Enable game patching" in Luma settings.
 echo.
 echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
+echo [+] Patch log ^(same summary^):
+echo     %~dp0out\logs\latest.txt
+echo     ^(timestamped copies stay in out\logs\^)
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
+echo [+] out\ cleaned ^(scratch removed; kept CIA + luma + logs^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 
