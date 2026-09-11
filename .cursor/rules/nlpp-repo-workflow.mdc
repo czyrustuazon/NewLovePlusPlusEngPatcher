@@ -112,9 +112,11 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 1. **`release/bake_img.bin` exists** → inject as-is; patch finishes in minutes.
 2. **Missing** (normal on clean clone):
    - `tools/fetch_release_bake.py --best-effort` — poll `{owner}/nlpp-gold` Release tag `gold` (404 OK → fall through).
-   - Still missing → `tools/rebuild_bake_img.py --rom <dropped.cia|.3ds>` (~16h first time; vanilla → `cache/vanilla_from_rom/`).
+   - Still missing → `tools/rebuild_bake_img.py --rom <dropped.cia|.3ds>` (cold PNG pack ~2–4h; vanilla → `cache/vanilla_from_rom/`).
    - Still missing → **hard stop** (do not emit half-EN CIA).
-3. `patch_cia.py` injects: `rebuild_dbin2` + gold `img.bin` + `release/romfs_overlay/` + name patches + optional `release/name_input_code.bin`.
+3. `patch_cia.py` injects: `rebuild_dbin2` + gold `img.bin` + `romfs_overlay/` + **`release/name_input_code.bin`** (always rebuilt at the end of `rebuild_bake_img.py` from vanilla `code.bin.bak`).
+
+Name-input caves must be in `.text` RX (`patch_input_cave_map.py`). See rule `from-scratch-bake`.
 
 **nlpp-gold CI** is an optional accelerator (`infra/README.md`) — **not required**; local rebuild is the fallback when Release 404.
 
@@ -130,8 +132,8 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 ### Rebuild / resume
 
 ```bash
-python tools/rebuild_bake_img.py --rom path/to/game.cia   # full (~16h first time)
-python tools/rebuild_bake_img.py --skip-pack              # resume deploys only (repo root)
+python tools/rebuild_bake_img.py --rom path/to/game.cia   # full from-scratch pack
+python tools/rebuild_bake_img.py --skip-pack              # keep bake; still rebuilds name-input + deploys
 ```
 
 `resolve_inject_img()` in `patch_cia.py` prefers `release/bake_img.bin` over `cache/new_img.bin`.

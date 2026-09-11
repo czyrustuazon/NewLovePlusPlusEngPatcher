@@ -43,7 +43,7 @@ Title ID: `00040000000F4E00`
 
 With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
 
-### Sharing a build (skip the 16-hour bake)
+### Sharing a build (skip the ~3-hour bake)
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
@@ -99,7 +99,7 @@ If bake is absent (or stamp mismatches), the drop bat auto-runs:
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. Historically **~16 hours** when every ARC ran zopfli sequentially; as of 2026-09-05 the pack uses zlib empty-block first + `--pkg-workers` (see `technical.md` §12.5.3). Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. Expect **about 3 hours** on a typical multi-core desktop (zlib empty-block first + `--pkg-workers`; see `technical.md` §12.5.3). Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
 
 - Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
@@ -309,7 +309,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 **Player name UI (`code.bin`)**
 
 - Opt-in: `--patch-code` rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8).  
-- Standalone: `python src/patch_code.py path\to\code.bin`  
+- Standalone: `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
 - LayeredFS installs `code.bin` next to `romfs/` (Azahar/Luma ExeFS overlay).  
 - CIA builds unpack/repack ExeFS via `3dstool`.
 
@@ -327,7 +327,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Watch live ``[timer]`` elapsed / heartbeat lines for actual runtime (often ~2–4h cold on a typical multi-core desktop). Warm `cache/img_pack/` re-packs are typically minutes.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Watch live ``[timer]`` elapsed / heartbeat lines for actual runtime (about **3 hours** cold on a typical multi-core desktop). Warm `cache/img_pack/` re-packs are typically minutes.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
@@ -361,6 +361,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Person | Contribution |
 |--------|----------------|
 | **Zhoumaru** | A large UI overhaul and translation work |
+| **D.** | Debugging and testing the patch |
 
 ### CIA / RomFS tooling
 
@@ -585,8 +586,8 @@ python tools/build_spotpass_inject.py
 python tools/build_spotpass_inject.py --azahar
 # patch_cia flags: --skip-spotpass | --spotpass-mode azahar | --spotpass-install-azahar
 
-# Patch code.bin only
-python src/patch_code.py "..\New Love Plus Plus\extracted\exefs\code.bin"
+# Patch code.bin only (finds cache/vanilla_from_rom or sibling dump)
+python src/patch_code.py
 
 # Asset helpers
 python src/patcher.py status

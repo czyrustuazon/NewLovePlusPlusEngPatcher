@@ -29,6 +29,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
 from patcher_version import PATCHER_RELEASE
 from run_timer import RunTimer
 
@@ -632,6 +633,22 @@ def apply_romfs_overlay(romfs_dir: Path, overlay: Path) -> int:
     return count
 
 
+def resolve_code_bin_src(args: argparse.Namespace) -> Path | None:
+    """Vanilla code.bin for LayeredFS --patch-code.
+
+    ``--code-bin`` default is the sibling dump path. On a clone that file is
+    missing — fall through to ``find_vanilla_code()`` (cache/vanilla_from_rom).
+    An explicit missing path is kept so the caller can error with that name.
+    """
+    if getattr(args, "code_bin", None):
+        explicit = Path(args.code_bin)
+        if explicit.is_file():
+            return explicit.resolve()
+        if explicit.resolve() != DEFAULT_CODE_BIN.resolve():
+            return explicit.resolve()
+    return find_vanilla_code()
+
+
 def write_layeredfs(
     out_dir: Path,
     dbin_root: Path,
@@ -690,11 +707,13 @@ def write_layeredfs(
         shutil.copy2(img_bin, dest_img)
 
     if patch_code:
-        src = code_bin_src if code_bin_src and code_bin_src.is_file() else DEFAULT_CODE_BIN
-        if not src.is_file():
+        src = code_bin_src if code_bin_src and code_bin_src.is_file() else find_vanilla_code()
+        if src is None or not src.is_file():
+            looked = code_bin_src or DEFAULT_CODE_BIN
             raise PatchError(
-                f"--patch-code needs a vanilla code.bin (not found: {src}). "
-                "Pass --code-bin PATH."
+                f"--patch-code needs a vanilla code.bin (not found: {looked}). "
+                "Pass --code-bin PATH, set NLPP_VANILLA_CODE, or extract via "
+                f"rebuild --rom (cache: {CACHE_VANILLA_CODE})."
             )
         from patch_code import write_patched_code_bin
 
@@ -1544,7 +1563,7 @@ def _cmd_patch_body(
         else:
             print(f"[names] --name-img requested but img.bin missing: {img_src}")
 
-    code_bin_src = Path(args.code_bin).resolve() if args.code_bin else DEFAULT_CODE_BIN
+    code_bin_src = resolve_code_bin_src(args)
 
     if args.layeredfs_only and not args.layeredfs_out:
         args.layeredfs_out = str(ROOT / "out" / "luma")
@@ -2006,7 +2025,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--code-bin",
         default=str(DEFAULT_CODE_BIN),
-        help="Vanilla code.bin for LayeredFS --patch-code (default: sibling extracted/exefs/code.bin)",
+        help="Vanilla code.bin for LayeredFS --patch-code "
+        "(default: NLPP_VANILLA_CODE, sibling dump, or cache/vanilla_from_rom)",
     )
     p.add_argument(
         "--skip-spotpass",

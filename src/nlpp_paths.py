@@ -107,8 +107,13 @@ def require_vanilla_code() -> Path:
         raise FileNotFoundError(
             "vanilla exefs/code.bin not found.\n"
             "Provide one of:\n"
+            "  • python tools/rebuild_bake_img.py --rom path\\to\\game.cia|.3ds|.cci\n"
+            "    (fills cache/vanilla_from_rom/exefs/code.bin)\n"
             "  • set NLPP_VANILLA_CODE\n"
-            f"  • place a dump at {DEFAULT_VANILLA_CODE_BAK} or {DEFAULT_VANILLA_CODE}"
+            "  • place a dump at:\n"
+            f"      {DEFAULT_VANILLA_CODE_BAK} or {DEFAULT_VANILLA_CODE}\n"
+            "  • or cache extract at:\n"
+            f"      {CACHE_VANILLA_CODE}"
         )
     return p
 

@@ -1086,7 +1086,7 @@ a/b guide: **`ab_test/README.md`**.
 | 1 | Pane attach null parent | `src/patch_input_pane_registry_nullguard.py` | Skip `Pane_AttachToParent` @ `0x1fa790` when parent is 0 |
 | 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
-| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x006FBB08` |
+| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x0068F900` (last .text page) |
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
@@ -1131,15 +1131,17 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 **LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `out/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 
-**Live code caves (shipped stack only):**
+**Live code caves (shipped stack only; file `< 0x00690000` = .text RX):**
 
 | Pad | Contents |
 |-----|----------|
-| `@0x006E6A38` | Shared nullguard / fillflag caves (do not collide offsets below) |
-| `@0x006FBB08` | Romaji DrawCell blob only (~4 KiB vanilla zero pad; RX — build strings on stack, not by storing into the cave) |
+| `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
+| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack) |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
 
-Shared map `@0x006E6A38`:
+Old pads `@0x006E6A38` / `@0x006FBB08` are **.rodata** (no-X). Azahar still runs them; a real 3DS prefetch-aborts (`Permission - Page`, PC `0x007E6A78` = old shared +0x40).
+
+Shared map `@0x0068F800`:
 
 | Offset | Patch |
 |--------|--------|
@@ -1168,14 +1170,15 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 
 1. Header cleanup — title can show stray kanji + reading (DrawText, not DrawCell).
 2. Name length — 8-char pane budget vs multi-letter Hepburn syllables.
-3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
+3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
+4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
 
 | Symbol | File |
 |--------|------|
 | `NameInput_OnCellTap` | `0x1faee4` |
 | Kana-direct NOP site | `0x1fb070` |
 | `NameInput_DrawCell` | `0x1fc304` |
-| Romaji cave | `0x006FBB08` |
+| Romaji cave | `0x0068F900` |
 
 ---
 

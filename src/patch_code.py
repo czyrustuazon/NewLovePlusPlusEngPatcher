@@ -25,6 +25,8 @@ import shutil
 import struct
 from pathlib import Path
 
+from nlpp_paths import require_vanilla_code
+
 ADDR_CLEAR = 0x00190054
 ADDR_SET = 0x00190168
 ADDR_BACKSPACE = 0x001908D8
@@ -548,7 +550,10 @@ def main(argv: list[str] | None = None) -> int:
         "code_bin",
         nargs="?",
         type=Path,
-        help="Path to code.bin (default: sibling extracted/exefs/code.bin)",
+        help=(
+            "Path to code.bin (default: NLPP_VANILLA_CODE, sibling dump, "
+            "or cache/vanilla_from_rom/exefs/code.bin)"
+        ),
     )
     ap.add_argument(
         "--force",
@@ -578,16 +583,16 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    default = (
-        Path(__file__).resolve().parents[2]
-        / "New Love Plus Plus"
-        / "extracted"
-        / "exefs"
-        / "code.bin"
-    )
-    src = (args.code_bin or default).resolve()
-    if not src.is_file():
-        raise SystemExit(f"missing {src}")
+    if args.code_bin is not None:
+        src = args.code_bin.expanduser().resolve()
+        if not src.is_file():
+            raise SystemExit(f"missing {src}")
+    else:
+        try:
+            src = require_vanilla_code()
+        except FileNotFoundError as exc:
+            raise SystemExit(str(exc)) from exc
+    print(f"[code] using {src}")
 
     name_panes = not args.cesa_only
     skip_cesa = args.skip_cesa_logo or args.cesa_only

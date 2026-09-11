@@ -70,6 +70,8 @@ import shutil
 import struct
 from pathlib import Path
 
+from patch_input_cave_map import ADDR_SHARED_PAD as ADDR_CAVE
+
 # Call site: `bl 0x00545550` inside the per-cell "create it now" handler.
 SITE = 0x001FA790
 RESUME = 0x001FA794  # first instruction after the call (a nop; harmless)
@@ -77,10 +79,8 @@ EXPECT_SITE = bytes.fromhex("6e2b0deb")  # bl 0x00545550
 
 CALL_TARGET = 0x00545550
 
-# Same free vanilla pad already used by the tick-guard (0x00-0x17) and the
-# fillcand nullguard (0x40-0x58, 0x60-0x78) caves -- see technical.md SS3.3e
-# / SS3.3h. Use a sub-range clear of both so all three can coexist.
-ADDR_CAVE = 0x006E6A38
+# Same last-.text RX pad as the fillcand nullguard (technical.md §17).
+# Sub-range +0x90 — keep clear of candidate (+0x40/+0x60) and fillflag (+0xC0).
 CAVE = ADDR_CAVE + 0x90
 CAVE_LEN = 0x10
 

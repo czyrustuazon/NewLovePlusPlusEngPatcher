@@ -68,3 +68,32 @@ def test_find_vanilla_code_env(tmp_path: Path, monkeypatch):
     code.write_bytes(b"code")
     monkeypatch.setenv("NLPP_VANILLA_CODE", str(code))
     assert paths.find_vanilla_code() == code.resolve()
+
+
+def test_find_vanilla_code_cache_when_sibling_missing(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_VANILLA_CODE", raising=False)
+    cache = tmp_path / "cache" / "vanilla_from_rom" / "exefs" / "code.bin"
+    cache.parent.mkdir(parents=True)
+    cache.write_bytes(b"vanilla-exefs")
+    monkeypatch.setattr(paths, "DEFAULT_VANILLA_CODE_BAK", tmp_path / "missing.bak")
+    monkeypatch.setattr(paths, "DEFAULT_VANILLA_CODE", tmp_path / "missing.bin")
+    monkeypatch.setattr(paths, "ROOT", tmp_path)
+    monkeypatch.setattr(paths, "CACHE_VANILLA_CODE", cache)
+    assert paths.find_vanilla_code() == cache.resolve()
+
+
+def test_require_vanilla_code_mentions_cache(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_VANILLA_CODE", raising=False)
+    monkeypatch.setattr(paths, "DEFAULT_VANILLA_CODE_BAK", tmp_path / "nope.bak")
+    monkeypatch.setattr(paths, "DEFAULT_VANILLA_CODE", tmp_path / "nope.bin")
+    monkeypatch.setattr(paths, "ROOT", tmp_path)
+    cache = tmp_path / "cache" / "vanilla_from_rom" / "exefs" / "code.bin"
+    monkeypatch.setattr(paths, "CACHE_VANILLA_CODE", cache)
+    try:
+        paths.require_vanilla_code()
+        raise AssertionError("expected FileNotFoundError")
+    except FileNotFoundError as exc:
+        msg = str(exc)
+        assert "vanilla exefs/code.bin" in msg
+        assert "cache/vanilla_from_rom" in msg
+        assert str(cache) in msg

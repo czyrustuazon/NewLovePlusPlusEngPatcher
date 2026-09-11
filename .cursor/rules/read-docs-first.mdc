@@ -10,6 +10,7 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 1. Read **`technical.md`** (this repo and/or `../NewLovePlusPlusEngPatcher/technical.md`) — addresses, BCLIM quirks, TRB/INDX, softkeys, dead ends, §13.3 third-party stack.
 2. Skim Cursor rules:
    - `nlpp-repo-workflow` — how to pack/deploy/address-convert; **gold bake / Drop CIA (§15.5)**
+   - `from-scratch-bake` — real-3DS ship path: Drop CIA / `rebuild_bake_img.py --rom`; name-input caves in `.text`
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)
    - `ui-localization-method` — texture vs TRB vs DrawText decision tree
    - `img-exact-zlib-deploy` — exact-length zlib/zopfli splice; **never bak→MOD wipe**

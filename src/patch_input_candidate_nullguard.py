@@ -49,6 +49,8 @@ import shutil
 import struct
 from pathlib import Path
 
+from patch_input_cave_map import ADDR_SHARED_PAD as ADDR_CAVE
+
 # Site 1: first "ldr r1,[r0,#0x10]!" in FUN_001fba38's per-iteration label
 # formatting (paired with r6 as the null-path counter register, r9 == 0).
 SITE1 = 0x001FBC08
@@ -63,9 +65,8 @@ RESUME2 = 0x001FBD28
 POST2 = 0x001FBD4C
 REG2 = 11
 
-# Shared free vanilla pad @0x006E6A38 (technical.md §17 live cave map).
+# Shared pad in last .text RX page (technical.md §17). Not 0x006E6A38 (.rodata).
 # Sub-range +0x40/+0x60 — keep clear of pane nullguard (+0x90) and fillflag (+0xC0).
-ADDR_CAVE = 0x006E6A38
 CAVE1 = ADDR_CAVE + 0x40
 CAVE2 = ADDR_CAVE + 0x60
 CAVE_CHECK_LEN = 0x80  # unused; apply_patch checks 0x18 per cave only
