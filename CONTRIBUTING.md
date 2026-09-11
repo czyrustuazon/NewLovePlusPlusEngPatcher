@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for wanting to help translate New Love Plus+. This is a small fan project, not a
-company — see the [companion site](https://github.com/czyrustuazon/NLPP-EngPatcher-Site)
+company — see the [companion site](https://newloveplus.loc.moe)
 for the public devlog and progress tracker, but this repo — the patcher, finished scripts,
 and toolchain — is where the actual work happens and where volunteer tasks are tracked.
 
