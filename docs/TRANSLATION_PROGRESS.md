@@ -10,17 +10,22 @@ python src/patcher.py status                    # XML + inject overview
 
 Machine-readable export (all file names): `out/progress_metrics.json` (~1 MB, gitignored).
 
+Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md`.
+
 ---
 
-## Headline numbers (2026-09-01 shipping stack)
+## Headline numbers (2026-09-11)
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
 | **Dialogue scripts** (`script` pack) | 326 / 578 | **56.4%** | One `.dbin2` per script ID |
 | **SMS / phone** (`maildic_*.mdc`) | 0 / 1822 | **0%** | JP in gold bake (audit) |
 | **Scripts + SMS combined** | 326 / 2400 | **13.6%** | Use for “all spoken + phone text” rollup |
-| **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Menus, stats, quests, system strings |
-| **UI PNG masters** (chrome folders) | 461 files | — | See `images_ui` in JSON; not % of all BCLIMs yet |
+| **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Machine pass, unreviewed |
+| **UI PNG masters** (chrome, site `images_ui`) | **562** in **25 / 25** folders | — | `ui_png_masters_total` (was 461) |
+| **UI PNG masters** (full `IMAGE_MAP`) | **1727** in **92 / 95** folders | — | What gold bake packs. Empty: `intro111`, `intro203`, `intro304` |
+
+PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend TRB 98% into a single “translation done” headline.
 
 Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. The combined patch is higher because Manaka (`t*`) and common (`p*`) are 100%.
 
@@ -75,7 +80,7 @@ Per-category STRI bars: `progress_metrics.json` → `trb_main.by_indx_category` 
 - **NLPPCTR import:** `tools/import_nlppctr_textures.py` + `ab_test/` A/B
 - **UI Buttons bundle:** `tools/import_ui_buttons_bundle.py` → pkgs 5190 / 5259 / 5380 / 4149
 
-Full PNG lists: `progress_metrics.json` → `images_ui.by_folder.<key>.png_files`.
+Chrome folder list: `progress_metrics.json` → `images_ui.ui_folder_keys` (25 keys). Full PNG lists: `images_ui.by_folder.<key>.png_files`. Mapped totals: `mapped_png_masters_total` / `mapped_folders_with_png` / `empty_image_map_keys`.
 
 ---
 
@@ -85,6 +90,6 @@ Full PNG lists: `progress_metrics.json` → `images_ui.by_folder.<key>.png_files
 2. **Phone / SMS** — separate panel: `maildic_m` / `maildic_n` / `maildic_r`
 3. **Rollup** — scripts + SMS message count (13.6% today)
 4. **System strings** — TRB 98.1% (+ optional INDX category drill-down)
-5. **UI textures** — per-folder PNG master counts (461 total)
+5. **UI textures** — chrome table from `images_ui.by_folder` (**562**); prose may also mention the full mapped pack (**1727** in **92 of 95**)
 
 Do **not** show resident TRB fragment % as “translation progress” (mostly JP date/time building blocks by design).

@@ -27,7 +27,7 @@ Clone or download the repo ZIP. No Python install required.
 |-----|--------------------|---------------------------|---------------|---------------------|
 | **Scripts** | Translate leftover Japanese **dialogue** for **all routes** | `NLPP_Translate.html` (~6 MB) | `nlpp-contrib-YYYY-MM-DD.json` | ~300+ scripts / ~10k JP lines |
 | **Strings** | Translate leftover **SMS** (all 3 heroines) + **TRB** menu/system lines | `NLPP_Translate_Strings.html` | `nlpp-strings-YYYY-MM-DD.json` | ~1822 SMS + ~400+ TRB |
-| **Images** | Audit **all** UI PNG masters: OK / Needs fix / upload fixed PNG | `NLPP_Translate_Images/` (+ optional `.zip`) | `nlpp-images-YYYY-MM-DD.json` (may include `png_b64`) | ~1210 PNGs / ~68 folders |
+| **Images** | Audit **all** UI PNG masters: OK / Needs fix / upload fixed PNG | `NLPP_Translate_Images/` (+ optional `.zip`) | `nlpp-images-YYYY-MM-DD.json` (may include `png_b64`) | **1727** PNGs in **92 / 95** folders |
 
 **Scripts — routes (not Manaka-only):**
 
@@ -49,7 +49,7 @@ List is alphabetical (`a…` then `k…` then `p…` then `t…`). Fully English
 
 **Images — what is included (full UI audit):**
 
-- Roughly **every** EngPatcher UI texture folder used for patching: softkeys, option/menus, title, my-room headers, mail, date editor, camera UI, sys popups, map, shop, profile, gallery, transfer, web UI chrome, etc. (~**68** folders / ~**1210** PNGs in a full export).
+- Roughly **every** EngPatcher UI texture folder used for patching: softkeys, option/menus, title, my-room headers, mail, date editor, camera UI, sys popups, map, shop, profile, gallery, transfer, web UI chrome, etc. (**1727** unique masters in **92 of 95** `IMAGE_MAP` folders. Empty: `intro111`, `intro203`, `intro304`. Do not quote the old ~1210 / ~68 figure.)
 - **Not** fonts, not dialogue XML, not TRB files.
 - Actions: mark OK / Needs fix, or upload a **same width × height** PNG; Save embeds uploads as `png_b64` in the JSON.
 - Use **Preview background → Light checker** (or white) if transparent text is hard to see — does not change the file.

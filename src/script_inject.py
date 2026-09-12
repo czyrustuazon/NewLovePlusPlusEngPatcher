@@ -30,6 +30,8 @@ LEGACY_NLPPATCH_SCRIPT = (
     / "bin"
     / "script"
 )
+# Older callers (export_progress_metrics, etc.)
+NLPPPATCH_SCRIPT = LEGACY_NLPPATCH_SCRIPT
 
 PACKS = ("NLP_01", "NLP_02", "script")
 MANAKA_PREFIX = "t"

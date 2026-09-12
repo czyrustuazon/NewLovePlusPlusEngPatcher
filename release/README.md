@@ -23,11 +23,11 @@ python tools/rebuild_bake_img.py --rom path\to\game.3ds
 ```
 
 Vanilla `img.bin` comes from (first match): `NLPP_VANILLA_IMG`, sibling `New Love Plus Plus/extracted/`, `cache/vanilla_from_rom/` (auto-filled from `--rom`), or the dropped ROM when the bat auto-rebuilds.
-First full rebuild often takes **~16 hours** (CPU-bound PNG pack / exact-zlib).
+First full rebuild often takes **~2–4 hours** on a typical multi-core desktop (empty-block zlib + `--pkg-workers`; historically ~16h when every ARC ran zopfli sequentially — see `technical.md` §12.5.3).
 A second full pack with unchanged assets reuses ``cache/img_pack/`` (BCLIM + exact-zlib
 slots) and is typically minutes. Wipe that dir or pass ``--no-cache`` to force re-encode.
 
-**Handing off without the 16h wait:** the **nlpp-gold** repo’s Ubuntu self-hosted CI
+**Handing off without the cold-pack wait:** the **nlpp-gold** repo’s Ubuntu self-hosted CI
 uploads `bake_img.bin` + `romfs_overlay.zip` to GitHub Releases on tags `v*` (see
 `infra/` pointer + nlpp-gold docs), or zip those with a clone. Recipients:
 
