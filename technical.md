@@ -760,6 +760,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 |---------|---------|------------|
 | Assumed sibling dump always exists | `FileNotFoundError: vanilla … img.bin` on first drop | Clone only had EngPatcher + ROM; path `../New Love Plus Plus/extracted/` missing |
 | Omitted `etcpak` from `requirements.txt` | `ModuleNotFoundError: etcpak` mid PNG pack | ETC1A4 BCLIM encode needs it; bat pip install couldn’t pull what wasn’t listed |
+| Omitted `PyYAML` from `requirements.txt` | `ModuleNotFoundError: yaml` in `ie` / `img/__init__.py` at gold unpack | Vendored nlpp-tools imports `yaml`; drop-bat only pip’d Pillow/numpy/zopfli/etcpak |
 | Local exact-zlib forks in deploy scripts | `could not build exact zlib` / `could not hit exact zopfli` on **5245** plates, **5242**, etc. | Hand-rolled binary search without empty-block / near-miss; after Options filled the slot, soft plates overshot congruence |
 | Confirm deploy: one heavy ETC1A4 style only | `zopfli 23082 exceeds slot 23047` @ **5238** | Live ARC already fat from PNG pack; no lean trials / zero-gaps / vanilla base |
 | Day-counter assumed release resident TRB | `resident TRB not found` | Main TRB rebuild doesn’t emit resident; clone never copied `textresource_resident_jpn.trb` into `release/` |
@@ -776,7 +777,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc1`); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc2`); **white glyphs + thick black outline** (readable on Main Menu white column) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -821,9 +822,9 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.3 Clone / first-drop checklist
 
-1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**).
+1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
-3. **If `release/bake_img.bin` is missing** (normal on a fresh clone), the bat runs the acquisition chain in **§15.5** — do **not** expect a finished CIA in minutes unless step 3a (CI download) succeeds or you already built a bake on that machine.
+3. **If `release/bake_img.bin` is missing or `release/bake_stamp.txt` does not match this RC**, Drop rebuilds from this tree **from scratch** (no `cache/img_pack`, leftover bake overwritten). Same-RC stamped bake is reused. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool → expect **~2–4 hours** total on a typical multi-core desktop (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.
    Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
@@ -891,7 +892,7 @@ decrypted .cia / .3ds / .cci dropped
   → out/NewLovePlusPlus-EN.cia + out/luma/
 ```
 
-There is **no saved patch log file** by default — output is the console window only. Re-run with redirection if you need `[images]` / `[inject]` lines for diagnosis.
+Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
 #### Environment overrides
 
@@ -902,7 +903,8 @@ There is **no saved patch log file** by default — output is the console window
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
-| `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+| `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+| `NLPP_NO_LOG=1` | Skip writing `out/logs/` PATCH SUMMARY files |
 
 #### nlpp-gold CI (optional accelerator)
 
@@ -925,7 +927,8 @@ python -m pytest tests/ -v
 
 | Test module | Guards |
 |-------------|--------|
-| `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
+| `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
+| `test_patch_summary.py` | PATCH SUMMARY rows + `out/logs/` write / `--no-log` / cleanup keeps `logs/` |
 | `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback |
 | `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
 | `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |
@@ -1083,7 +1086,7 @@ a/b guide: **`ab_test/README.md`**.
 | 1 | Pane attach null parent | `src/patch_input_pane_registry_nullguard.py` | Skip `Pane_AttachToParent` @ `0x1fa790` when parent is 0 |
 | 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
-| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x006FBB08` |
+| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x0068F900` (last .text page) |
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
@@ -1128,15 +1131,17 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 **LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `out/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 
-**Live code caves (shipped stack only):**
+**Live code caves (shipped stack only; file `< 0x00690000` = .text RX):**
 
 | Pad | Contents |
 |-----|----------|
-| `@0x006E6A38` | Shared nullguard / fillflag caves (do not collide offsets below) |
-| `@0x006FBB08` | Romaji DrawCell blob only (~4 KiB vanilla zero pad; RX — build strings on stack, not by storing into the cave) |
+| `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
+| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack) |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
 
-Shared map `@0x006E6A38`:
+Old pads `@0x006E6A38` / `@0x006FBB08` are **.rodata** (no-X). Azahar still runs them; a real 3DS prefetch-aborts (`Permission - Page`, PC `0x007E6A78` = old shared +0x40).
+
+Shared map `@0x0068F800`:
 
 | Offset | Patch |
 |--------|--------|
@@ -1165,14 +1170,15 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 
 1. Header cleanup — title can show stray kanji + reading (DrawText, not DrawCell).
 2. Name length — 8-char pane budget vs multi-letter Hepburn syllables.
-3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
+3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
+4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
 
 | Symbol | File |
 |--------|------|
 | `NameInput_OnCellTap` | `0x1faee4` |
 | Kana-direct NOP site | `0x1fb070` |
 | `NameInput_DrawCell` | `0x1fc304` |
-| Romaji cave | `0x006FBB08` |
+| Romaji cave | `0x0068F900` |
 
 ---
 

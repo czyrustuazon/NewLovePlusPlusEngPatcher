@@ -28,6 +28,7 @@ from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -188,11 +189,16 @@ def main() -> None:
         _pix, w, h, fmt, _ = parse_bclim(raw_b)
         if fmt != 8:
             raise SystemExit(f"{path} fmt {fmt} (expected RGBA4444=8)")
-        rgba = render_button(w, h, en) if kind == "button" else render_label(w, h, en)
+        stem = Path(path).stem
+        master = find_ui_png(("option.check", "Option"), stem, (w, h))
+        if master:
+            rgba = Image.open(master).convert("RGBA")
+        else:
+            rgba = render_button(w, h, en) if kind == "button" else render_label(w, h, en)
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
         rgba.save(png)
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         darc.replace_same_size(entry, png_to_bclim_rgba4444_same_size(png, orig))
         print(f"OK {path} -> {en!r}", flush=True)

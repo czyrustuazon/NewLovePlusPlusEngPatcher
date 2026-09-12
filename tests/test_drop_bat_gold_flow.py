@@ -13,6 +13,14 @@ def _bat_text() -> str:
     return BAT.read_text(encoding="utf-8", errors="replace")
 
 
+def test_requirements_include_nlpp_tools_yaml():
+    """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
+    req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    assert "PyYAML" in req
+    setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
+    assert '("yaml", "PyYAML")' in setup
+
+
 def test_bat_defaults_packed_img_to_release_bake():
     text = _bat_text()
     assert 'set "PACKED_IMG=%~dp0release\\bake_img.bin"' in text
@@ -27,6 +35,19 @@ def test_bat_polls_ci_before_local_rebuild():
     rebuild_idx = text.index("running tools\\rebuild_bake_img.py")
     assert fetch_idx < rebuild_idx
     assert "--best-effort" in text
+
+
+def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
+    text = _bat_text()
+    assert "patcher_version.py" in text
+    assert "BAKE_STALE" in text
+    assert "NLPP_REUSE_BAKE" in text
+    assert "NLPP_USE_PACK_CACHE" in text
+    assert "from scratch" in text.lower() or "from-scratch" in text
+    # Reuse leftover bake is opt-in; default is stamp-check then rebuild.
+    stale_idx = text.index("BAKE_STALE")
+    inject_idx = text.index("Injecting gold bake")
+    assert stale_idx < inject_idx
 
 
 def test_bat_fetch_is_automatic_not_opt_in():

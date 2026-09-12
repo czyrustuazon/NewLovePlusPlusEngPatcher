@@ -12,7 +12,7 @@ empty gojuon checkerboard (pager 1/1).
 Does NOT touch +0x24. Forcing +0x24=0 (removed candmode_reset) kills taps —
 see technical.md §17.2.
 
-Call site: file 0x1fa828 (mov r5,#0), resume 0x1fa82c. Cave @0x6E6A38+0xC0.
+Call site: file 0x1fa828 (mov r5,#0), resume 0x1fa82c. Cave in last .text page.
 Works on vanilla RedrawKeyboard without candmode_reset.
 
 Rollback: exefs/code.bin.bak_pre_candmode_fillflag_reset.
@@ -24,11 +24,12 @@ import shutil
 import struct
 from pathlib import Path
 
+from patch_input_cave_map import ADDR_SHARED_PAD as ADDR_CAVE
+
 SITE = 0x001FA828
 RESUME = 0x001FA82C
 EXPECT_SITE = bytes.fromhex("0050a0e3")  # mov r5,#0x0
 
-ADDR_CAVE = 0x006E6A38
 CAVE = ADDR_CAVE + 0xC0
 CAVE_LEN = 0x20
 

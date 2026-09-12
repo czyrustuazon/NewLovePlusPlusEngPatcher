@@ -33,12 +33,12 @@ class RunTimer:
     ) -> None:
         self.label = label
         self.t0 = time.monotonic()
-        self._wall0 = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.started_at = time.strftime("%Y-%m-%d %H:%M:%S")
         self._hb_s = heartbeat_s
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
         print(
-            f"[timer] {label} started at {self._wall0}",
+            f"[timer] {label} started at {self.started_at}",
             flush=True,
         )
         if heartbeat_s is not None and heartbeat_s > 0:
@@ -96,3 +96,12 @@ class RunTimer:
         else:
             self.finish(f"{self.label} OK")
         return False
+
+
+if __name__ == "__main__":
+    # Drop bat: python src/run_timer.py <unix_start>  →  4m32s
+    import sys
+
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: run_timer.py <unix_start_seconds>")
+    print(format_elapsed(time.time() - float(sys.argv[1])))

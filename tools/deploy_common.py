@@ -40,6 +40,7 @@ __all__ = [
     "resolve_img_paths",
     "resolve_resident_trb",
     "ui_font",
+    "find_ui_png",
 ]
 
 
@@ -158,3 +159,38 @@ def resolve_resident_trb() -> Path:
         "  • extract via rebuild --rom (cache/vanilla_from_rom/.../textresource_resident_jpn.trb)\n"
         "  • sibling New Love Plus Plus/extracted/romfs/SystemData/TextResource/"
     )
+
+
+def find_ui_png(
+    folder_names: tuple[str, ...] | list[str],
+    stem: str,
+    size: tuple[int, int] | None = None,
+) -> Path | None:
+    """Community / .check PNG master for a BCLIM stem, if size matches.
+
+    Used so output_PNG (English) assets take precedence over rendered labels.
+    """
+    from PIL import Image
+
+    assets = ROOT / "assets" / "images"
+    ranked: list[tuple[int, Path]] = []
+    for name in folder_names:
+        folder = assets / name
+        if not folder.is_dir():
+            continue
+        for png in folder.rglob(f"{stem}.png"):
+            parts_l = {p.lower() for p in png.relative_to(folder).parts}
+            rank = 0 if "timg" in parts_l else 1
+            ranked.append((rank, png))
+    ranked.sort(key=lambda t: (t[0], str(t[1]).lower()))
+    for _rank, png in ranked:
+        if size is None:
+            return png
+        try:
+            with Image.open(png) as im:
+                if im.size == size:
+                    return png
+        except OSError:
+            continue
+    return None
+

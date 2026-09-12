@@ -72,7 +72,7 @@ $label.Height = 70
 $label.Padding = New-Object System.Windows.Forms.Padding(12)
 
 $hint = New-Object System.Windows.Forms.Label
-$hint.Text = "Decrypted CIA or 3DS -> inject -> out\NewLovePlusPlus-EN.cia + out\luma\"
+$hint.Text = "Decrypted CIA or 3DS -> inject -> out\NewLovePlusPlus-EN.cia + out\luma\ + out\logs\"
 $hint.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hint.ForeColor = [System.Drawing.Color]::FromArgb(80, 90, 100)
 $hint.AutoSize = $false
@@ -172,9 +172,9 @@ $go.Add_Click({
     # Quote explicitly — Start-Process ArgumentList does not protect spaces/parens.
     $p = Start-Process -FilePath $bat -ArgumentList "`"$launchPath`"" -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
-        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia and out\luma\"
+        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia, out\luma\, and out\logs\"
         [System.Windows.Forms.MessageBox]::Show(
-            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nLuma LayeredFS:`n$root\out\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nScratch work files were cleaned up.",
+            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nLuma LayeredFS:`n$root\out\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nPatch log (PATCH SUMMARY):`n$root\out\logs\latest.txt`n`nScratch work files were cleaned up.",
             "Patch complete",
             [Windows.Forms.MessageBoxButtons]::OK,
             [Windows.Forms.MessageBoxIcon]::Information

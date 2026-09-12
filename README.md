@@ -22,7 +22,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to the finished CIA + `luma/` LayeredFS (optional SpotPass via `build_spotpass_inject.py`)
+9. **Clean** `out/` to the finished CIA + `luma/` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
+10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -42,7 +43,7 @@ Title ID: `00040000000F4E00`
 
 With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
 
-### Sharing a build (skip the 16-hour bake)
+### Sharing a build (skip the ~3-hour bake)
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
@@ -90,13 +91,15 @@ See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
-If bake is absent, the drop bat auto-runs:
+**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc2`). That forces a from-scratch pack (no `cache/img_pack`) so updating the patcher cannot silently keep yesterday’s menus. Same-RC second drop reuses the stamped bake. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`.
+
+If bake is absent (or stamp mismatches), the drop bat auto-runs:
 
 ```bash
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. Historically **~16 hours** when every ARC ran zopfli sequentially; as of 2026-09-05 the pack uses zlib empty-block first + `--pkg-workers` (see `technical.md` §12.5.3). Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. Expect **about 3 hours** on a typical multi-core desktop (zlib empty-block first + `--pkg-workers`; see `technical.md` §12.5.3). Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
 
 - Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
@@ -124,7 +127,7 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 - Windows x64  
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
-- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak** — drop-bat runs this)  
+- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
 - A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
 - First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
@@ -173,13 +176,14 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
 | `out/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` |
 | `out/luma/README.txt` | Install steps for Luma / Azahar |
+| `out/logs/latest.txt` | PATCH SUMMARY from the last successful run (timestamped copies alongside) |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
 | `release/textresource/` | Durable TRB / translation work |
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
@@ -281,7 +285,8 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → name patches (plain Takane/Rinko/Nene in scripts + resident/img tables)
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
-  → clean out/ (keep *.cia + luma/; azahar_instances/ preserved)
+  → write PATCH SUMMARY log to out/logs/
+  → clean out/ (keep *.cia + luma/ + logs/; azahar_instances/ preserved)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -304,7 +309,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 **Player name UI (`code.bin`)**
 
 - Opt-in: `--patch-code` rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8).  
-- Standalone: `python src/patch_code.py path\to\code.bin`  
+- Standalone: `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
 - LayeredFS installs `code.bin` next to `romfs/` (Azahar/Luma ExeFS overlay).  
 - CIA builds unpack/repack ExeFS via `3dstool`.
 
@@ -322,7 +327,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Watch live ``[timer]`` elapsed / heartbeat lines for actual runtime (often ~2–4h cold on a typical multi-core desktop). Warm `cache/img_pack/` re-packs are typically minutes.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Watch live ``[timer]`` elapsed / heartbeat lines for actual runtime (about **3 hours** cold on a typical multi-core desktop). Warm `cache/img_pack/` re-packs are typically minutes.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
@@ -348,6 +353,15 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 ## Credits
 
 Thank you to everyone whose work this patcher builds on. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
+
+### EngPatcher contributors
+
+New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in the tables below.
+
+| Person | Contribution |
+|--------|----------------|
+| **Zhoumaru** | A large UI overhaul and translation work |
+| **D.** | Debugging and testing the patch |
 
 ### CIA / RomFS tooling
 
@@ -377,7 +391,7 @@ Thank you to everyone whose work this patcher builds on. Their materials keep **
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
 | SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
 
-Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM).
+Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM), [PyYAML](https://pyyaml.org/) (`yaml` — required by vendored `ie` / nlpp-tools).
 
 ---
 
@@ -419,7 +433,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + azahar_instances (gitignored)
+out/                         wipeable scratch + CIA + luma/ + logs/ + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
@@ -533,6 +547,9 @@ python tools/rebuild_bake_img.py --skip-pack          # resume after PNG pack
 
 # Full CIA patch (prefers release/bake_img.bin; same as the .bat)
 python src/patch_cia.py --cia "path\to\game.cia"
+# PATCH SUMMARY log: out/logs/patch_YYYYMMDD_HHMMSS.txt + latest.txt
+# python src/patch_cia.py --cia "path\to\game.cia" --log D:\patch.txt
+# python src/patch_cia.py --cia "path\to\game.cia" --no-log
 
 # Optional PNG-only scratch rebuild (does not refresh gold bake)
 python src/patch_cia.py --cia "path\to\game.cia" --repack-images
@@ -569,8 +586,8 @@ python tools/build_spotpass_inject.py
 python tools/build_spotpass_inject.py --azahar
 # patch_cia flags: --skip-spotpass | --spotpass-mode azahar | --spotpass-install-azahar
 
-# Patch code.bin only
-python src/patch_code.py "..\New Love Plus Plus\extracted\exefs\code.bin"
+# Patch code.bin only (finds cache/vanilla_from_rom or sibling dump)
+python src/patch_code.py
 
 # Asset helpers
 python src/patcher.py status

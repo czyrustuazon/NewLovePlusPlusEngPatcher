@@ -1,0 +1,36 @@
+---
+description: From-scratch gold bake + Drop CIA is the real-3DS ship path after code.bin or UI changes.
+alwaysApply: true
+---
+
+# From-scratch bake (real 3DS ship path)
+
+This is the workflow. Do not invent a side path (Azahar-only LayeredFS, `--skip-pack` “just to test hardware”, PNG scratch `cache/new_img.bin`).
+
+## What to run
+
+Drop a decrypted `.cia` / `.3ds` on **`Drop CIA or 3DS Here to Patch.bat`**.
+
+If `release/bake_img.bin` is missing **or** `release/bake_stamp.txt` ≠ `PATCHER_RELEASE` (RC default), the bat runs:
+
+```bash
+python tools/rebuild_bake_img.py --rom <dropped ROM>
+```
+
+That **will bake**: PNG pack → chrome deploys → TRB overlay → **always** rebuilds `release/name_input_code.bin` from vanilla (`code.bin.bak` preferred) via `deploy_name_input_en.py`. Then `patch_cia.py` injects bake + overlay + name-input.
+
+PNG pack is the long part (~2–4h cold). Name-input rebuild is seconds. Watch `[timer]` lines.
+
+## After name-input / cave changes
+
+Caves must stay in **`.text` RX** (`src/patch_input_cave_map.py`: shared `0x0068F800`, romaji `0x0068F900`). Pads in `.rodata` (`0x006E6A38`, `0x006FBB08`) work in Azahar and **prefetch-abort on hardware**.
+
+Ground-up Drop picks that up because bake **deletes and rewrites** `name_input_code.bin`. Install the new CIA; remove any old Luma `exefs/code.bin` overlay.
+
+If only `code.bin` changed and bake stamp already matches: Drop can inject the rebuilt `name_input_code.bin` in minutes **without** re-packing PNGs. Full from-scratch is still correct when menus/assets changed or leftover bake is stale.
+
+## Don’t
+
+- `--skip-pack` to skip a required from-scratch pack (keeps old `bake_img.bin`)
+- `NLPP_WITH_IMAGES=0` (Drop forbids incomplete CIAs)
+- Patch already-patched `extracted/exefs/code.bin` — vanilla is `code.bin.bak` / ROM extract

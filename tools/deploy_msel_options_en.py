@@ -36,6 +36,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -109,8 +110,15 @@ def render_en_alpha(
     raise RuntimeError(f"cannot fit {text!r}")
 
 
-def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False) -> bytes:
+def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False, stem: str | None = None) -> bytes:
     canvas, w, h = decode_a8(raw)
+    png = tmp / "t.png"
+    orig = tmp / "o.bclim"
+    orig.write_bytes(raw)
+    master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
+    if master is not None:
+        Image.open(master).convert("RGBA").save(png)
+        return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)
     th = int(ys.max() - ys.min() + 1) if len(ys) else h // 2
@@ -122,10 +130,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False) -> byte
         "RGBA",
         (Image.new("L", (w, h), 255),) * 3 + (Image.fromarray(out, "L"),),
     )
-    png = tmp / "t.png"
-    orig = tmp / "o.bclim"
     rgba.save(png)
-    orig.write_bytes(raw)
     return png_to_bclim_a8_same_size(png, orig)
 
 
@@ -138,7 +143,14 @@ def patch_arc(vanilla_arc: bytes, tmp: Path, cmp_len: int) -> bytes:
             if entry is None:
                 raise SystemExit(f"missing {base}")
             darc.replace_same_size(
-                entry, make_en_bclim(darc.extract_file(entry), en, tmp, hard=hard)
+                entry,
+                make_en_bclim(
+                    darc.extract_file(entry),
+                    en,
+                    tmp,
+                    hard=hard,
+                    stem=Path(base).stem,
+                ),
             )
             print(f"OK {base} -> {en!r} hard={hard}")
         patched = bytes(darc.data)

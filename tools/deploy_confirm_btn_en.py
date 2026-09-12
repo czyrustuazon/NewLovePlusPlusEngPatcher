@@ -22,6 +22,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -117,14 +118,20 @@ def _patch_confirm(
         if fmt != 0xB:
             raise SystemExit(f"{path} fmt {fmt}")
         on = "ON" in path
-        rgba = render_btn(w, h, LABEL, on=on, **style)
+        stem = Path(path).stem
+        master = find_ui_png(("NCommonIcon.check",), stem, (w, h))
+        rgba = (
+            Image.open(master).convert("RGBA")
+            if master
+            else render_btn(w, h, LABEL, on=on, **style)
+        )
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
         rgba.save(png)
-        stem = Path(path).stem
         rgba.save(OUT / f"{stem}_en.png")
-        ASSET.mkdir(parents=True, exist_ok=True)
-        rgba.save(ASSET / f"{stem}.png")
+        if master is None:
+            ASSET.mkdir(parents=True, exist_ok=True)
+            rgba.save(ASSET / f"{stem}.png")
         orig.write_bytes(raw_b)
         darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
         print(f"OK {path} -> {LABEL!r} style={style}", flush=True)

@@ -95,6 +95,8 @@ echo  Using:
 echo    %PYTHON%
 echo.
 
+for /f %%T in ('"%PYTHON%" -c "import time; print(int(time.time()))"') do set "NLPP_T0=%%T"
+
 echo Installing Python deps from requirements.txt ...
 "%PYTHON%" -m pip install -q -r "%~dp0requirements.txt"
 if errorlevel 1 (
@@ -225,9 +227,29 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
-  REM Gold bake required. Try CI Release first, then build from assets.
-  if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
-    if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
+  REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
+  set "BAKE_STALE="
+  if /i not "%NLPP_REUSE_BAKE%"=="1" (
+    "%PYTHON%" "%SRC%\patcher_version.py"
+    if errorlevel 1 set "BAKE_STALE=1"
+  )
+  if defined BAKE_STALE (
+    echo.
+    echo RC: bake stamp missing or from another release — packing from this tree.
+    echo Leftover release\bake_img.bin will be overwritten ^(from scratch^).
+    echo Set NLPP_REUSE_BAKE=1 to inject the existing bake anyway.
+    echo.
+  )
+  set "NEED_REBUILD="
+  if defined BAKE_STALE set "NEED_REBUILD=1"
+  if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" set "NEED_REBUILD=1"
+  set "PACK_CACHE="
+  if /i "%NLPP_USE_PACK_CACHE%"=="1" set "PACK_CACHE=--use-cache"
+  if defined NEED_REBUILD (
+    REM Gold bake required. CI fetch only when reusing an unstamped-missing bake
+    REM ^(NLPP_REUSE_BAKE=1^). RC from-scratch skips fetch so an old gold zip
+    REM cannot mask this tree's assets.
+    if not defined BAKE_STALE if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
       echo.
       echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
       echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold if auto-detect fails^)
@@ -242,19 +264,38 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
       echo This builds bake + textresource TRBs from assets\ ^(PNG pack + deploy chrome^).
       echo Vanilla img.bin comes from the dropped ROM if no sibling extracted\ exists.
-      echo First full rebuild often takes ~16 hours. Leave this window open.
+      echo RC from-scratch pack ignores cache\img_pack. Leave this window open.
       echo.
-      "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%"
+      "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
         echo       pip install -r requirements.txt
-        echo       ^(needs Pillow numpy zopfli etcpak^)
+        echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
         exit /b 1
       )
       REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
+      if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
+        echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
+        set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
+      )
+    ) else if defined BAKE_STALE (
+      echo.
+      echo Overwriting leftover gold bake — running tools\rebuild_bake_img.py
+      echo RC from-scratch pack ignores cache\img_pack. Leave this window open.
+      echo.
+      "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
+      if errorlevel 1 (
+        echo [!] rebuild_bake_img.py failed — see traceback above.
+        echo     Common fixes:
+        echo       pip install -r requirements.txt
+        echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
+        echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
+        pause
+        exit /b 1
+      )
       if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
         echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
         set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
@@ -336,14 +377,23 @@ if not "%ERR%"=="0" (
 echo [+] Patched CIA:
 echo     %~dp0out\NewLovePlusPlus-EN.cia
 echo.
+if defined NLPP_T0 (
+  for /f "delims=" %%E in ('"%PYTHON%" "%SRC%\run_timer.py" !NLPP_T0!') do (
+    echo [+] Time to finish: %%E
+    echo.
+  )
+)
 echo [+] Luma LayeredFS ^(real 3DS^):
 echo     %~dp0out\luma\00040000000F4E00
 echo     Copy that folder to SD:/luma/titles/
 echo     Enable "Enable game patching" in Luma settings.
 echo.
 echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
+echo [+] Patch log ^(same summary^):
+echo     %~dp0out\logs\latest.txt
+echo     ^(timestamped copies stay in out\logs\^)
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept CIA + luma^).
+echo [+] out\ cleaned ^(scratch removed; kept CIA + luma + logs^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 

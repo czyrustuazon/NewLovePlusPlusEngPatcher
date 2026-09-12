@@ -24,3 +24,12 @@ def test_resolve_folder_unknown():
 def test_image_map_has_menu_chrome_keys():
     for key in ("title", "ncommonmsel(3)", "ncommonmsel(4)", "ncommonicon", "option"):
         assert key in IMAGE_MAP
+
+
+def test_image_map_community_pack_packages():
+    assert resolve_folder("ncommon") == (5237, "NCommon.arc")
+    assert resolve_folder("ncommonmsel(5)") == (5243, "NCommonMSel.arc")
+    assert resolve_folder("ncommonmsel(9)") == (5239, "NCommonMSel.arc")
+    assert resolve_folder("optionlock") == (5250, "OptionLock.arc")
+    assert resolve_folder("camera_btn00") == (5322, "Camera_Btn00.arc")
+    assert resolve_folder("haircatalog") == (5395, "HairCatalog.arc")

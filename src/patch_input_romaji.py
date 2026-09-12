@@ -22,6 +22,9 @@ import shutil
 import struct
 from pathlib import Path
 
+from patch_input_cave_map import ADDR_ROMAJI_CAVE as ADDR_CAVE
+from patch_input_cave_map import TEXT_PAGE_END
+
 ADDR_DRAW_CELL = 0x001FC304
 SIZE_DRAW_CELL = 0xA0
 
@@ -31,9 +34,8 @@ ADDR_DRAW_TEXT = 0x0054B880
 ADDR_FREE_STR = 0x005A2024
 ADDR_MEMCPY7 = 0x000317DC
 
-# 4KB zero pad in vanilla code.bin (verified empty)
-ADDR_CAVE = 0x006FBB08
-CAVE_MAX = 0x1000
+# Last .text RX page (not 0x006FBB08 — that pad is .rodata / NX on hardware).
+CAVE_MAX = TEXT_PAGE_END - ADDR_CAVE
 
 VANILLA_HEAD = bytes.fromhex("f04f2de90060a0e1")  # stmdb …; mov r6,r0
 

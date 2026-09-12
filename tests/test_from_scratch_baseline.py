@@ -163,6 +163,44 @@ def test_baseline_name_kanji_no_hardcoded_sibling_path():
     assert "find_vanilla_main_trb" in text
 
 
+def test_baseline_patch_code_cli_uses_find_vanilla_code():
+    """Standalone ``python src/patch_code.py`` must not require a sibling dump."""
+    text = (SRC / "patch_code.py").read_text(encoding="utf-8")
+    assert "require_vanilla_code" in text
+    assert 'parents[2]' not in text
+
+
+def test_baseline_patch_code_main_defaults_to_cache(tmp_path: Path, monkeypatch):
+    import patch_code
+
+    code = tmp_path / "vanilla_from_rom" / "exefs" / "code.bin"
+    code.parent.mkdir(parents=True)
+    code.write_bytes(b"vanilla-exefs")
+    monkeypatch.setattr(patch_code, "require_vanilla_code", lambda: code)
+    seen: dict[str, Path] = {}
+
+    def fake_patch(path, **_kw):
+        seen["path"] = path
+        return True
+
+    monkeypatch.setattr(patch_code, "patch_code_bin", fake_patch)
+    assert patch_code.main([]) == 0
+    assert seen["path"] == code
+
+
+def test_baseline_resolve_code_bin_src_falls_back_to_cache(
+    tmp_path: Path, monkeypatch
+):
+    cache = tmp_path / "cache" / "vanilla_from_rom" / "exefs" / "code.bin"
+    cache.parent.mkdir(parents=True)
+    cache.write_bytes(b"vanilla-exefs")
+    missing_sibling = tmp_path / "New Love Plus Plus" / "extracted" / "exefs" / "code.bin"
+    monkeypatch.setattr(patch_cia, "DEFAULT_CODE_BIN", missing_sibling)
+    monkeypatch.setattr(patch_cia, "find_vanilla_code", lambda: cache)
+    args = argparse.Namespace(code_bin=str(missing_sibling))
+    assert patch_cia.resolve_code_bin_src(args) == cache
+
+
 def test_baseline_name_kanji_filter_keeps_ui_allowlist():
     mapping = {
         "冬": "Winter",
@@ -275,6 +313,8 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
             skip_hash=True,
         ),
         eng_patch=True,
+        elapsed="3m05s",
+        started_at="2026-09-08 00:12:03",
     )
     text = "\n".join(lines)
     assert "[OK]" in text and "Dialog scripts" in text
@@ -286,3 +326,4 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
     assert "[OK]" in text and "Output CIA" in text
     assert "[SKIPPED]" in text and "Input CIA SHA-1" in text  # bat pre-checked
     assert "no --inject-code" not in text
+    assert "[OK]" in text and "Time to finish: 3m05s" in text

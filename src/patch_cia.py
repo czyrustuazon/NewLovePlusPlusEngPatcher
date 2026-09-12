@@ -21,12 +21,16 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import re
 import shutil
 import subprocess
 import sys
+from datetime import datetime
 from pathlib import Path
 
+from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
+from patcher_version import PATCHER_RELEASE
 from run_timer import RunTimer
 
 SRC = Path(__file__).resolve().parent
@@ -629,6 +633,22 @@ def apply_romfs_overlay(romfs_dir: Path, overlay: Path) -> int:
     return count
 
 
+def resolve_code_bin_src(args: argparse.Namespace) -> Path | None:
+    """Vanilla code.bin for LayeredFS --patch-code.
+
+    ``--code-bin`` default is the sibling dump path. On a clone that file is
+    missing — fall through to ``find_vanilla_code()`` (cache/vanilla_from_rom).
+    An explicit missing path is kept so the caller can error with that name.
+    """
+    if getattr(args, "code_bin", None):
+        explicit = Path(args.code_bin)
+        if explicit.is_file():
+            return explicit.resolve()
+        if explicit.resolve() != DEFAULT_CODE_BIN.resolve():
+            return explicit.resolve()
+    return find_vanilla_code()
+
+
 def write_layeredfs(
     out_dir: Path,
     dbin_root: Path,
@@ -687,11 +707,13 @@ def write_layeredfs(
         shutil.copy2(img_bin, dest_img)
 
     if patch_code:
-        src = code_bin_src if code_bin_src and code_bin_src.is_file() else DEFAULT_CODE_BIN
-        if not src.is_file():
+        src = code_bin_src if code_bin_src and code_bin_src.is_file() else find_vanilla_code()
+        if src is None or not src.is_file():
+            looked = code_bin_src or DEFAULT_CODE_BIN
             raise PatchError(
-                f"--patch-code needs a vanilla code.bin (not found: {src}). "
-                "Pass --code-bin PATH."
+                f"--patch-code needs a vanilla code.bin (not found: {looked}). "
+                "Pass --code-bin PATH, set NLPP_VANILLA_CODE, or extract via "
+                f"rebuild --rom (cache: {CACHE_VANILLA_CODE})."
             )
         from patch_code import write_patched_code_bin
 
@@ -1179,6 +1201,8 @@ def build_patch_summary(
     args: argparse.Namespace,
     layeredfs_only: bool = False,
     eng_patch: bool | None = None,
+    elapsed: str | None = None,
+    started_at: str | None = None,
 ) -> list[str]:
     """Human-readable include/skip report for the end of a patch run.
 
@@ -1328,6 +1352,10 @@ def build_patch_summary(
     else:
         lines.append(_summary_line("SKIPPED", "Luma LayeredFS", "not requested"))
 
+    if elapsed:
+        detail = elapsed if not started_at else f"{elapsed}  (started {started_at})"
+        lines.append(_summary_line("OK", "Time to finish", detail))
+
     lines.append("=" * 60)
     images_off = args.no_images or not args.with_images or packed_img is None
     name_on = bool(
@@ -1345,9 +1373,119 @@ def build_patch_summary(
     return lines
 
 
-def print_patch_summary(lines: list[str]) -> None:
+def _env_flag(name: str) -> bool:
+    return str(os.environ.get(name, "")).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def default_patch_log_path(*, when: datetime | None = None) -> Path:
+    """Timestamped PATCH SUMMARY log under out/logs/."""
+    stamp = (when or datetime.now()).strftime("%Y%m%d_%H%M%S")
+    return ROOT / "out" / "logs" / f"patch_{stamp}.txt"
+
+
+def resolve_patch_log_path(args: argparse.Namespace) -> Path | None:
+    """Where to write the PATCH SUMMARY log, or None to skip.
+
+    Default: ``out/logs/patch_YYYYMMDD_HHMMSS.txt``. ``--no-log`` or
+    ``NLPP_NO_LOG=1`` disables. ``--log PATH`` writes that file (or, if PATH is
+    an existing directory, a timestamped file inside it).
+    """
+    if getattr(args, "no_log", False) or _env_flag("NLPP_NO_LOG"):
+        return None
+    raw = getattr(args, "log", None)
+    if raw:
+        p = Path(raw).expanduser()
+        if p.is_dir():
+            stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            return (p / f"patch_{stamp}.txt").resolve()
+        return p.resolve()
+    return default_patch_log_path()
+
+
+def summary_status_counts(lines: list[str]) -> dict[str, int]:
+    """Count [OK] / [SKIPPED] / [OFF] / [WARN] rows in a PATCH SUMMARY."""
+    counts = {"OK": 0, "SKIPPED": 0, "OFF": 0, "WARN": 0}
+    for line in lines:
+        for status in counts:
+            token = f"[{status}]"
+            if token in line:
+                counts[status] += 1
+                break
+    return counts
+
+
+def format_patch_log(
+    lines: list[str],
+    *,
+    rom_in: Path | None = None,
+    out_cia: Path | None = None,
+    when: datetime | None = None,
+) -> str:
+    """Header + PATCH SUMMARY text for a saved log file."""
+    now = when or datetime.now()
+    counts = summary_status_counts(lines)
+    result = (
+        f"{counts['OK']} OK, {counts['SKIPPED']} SKIPPED, "
+        f"{counts['WARN']} WARN, {counts['OFF']} OFF"
+    )
+    header = [
+        f"New Love Plus+ English Patcher  {PATCHER_RELEASE}",
+        f"Logged: {now.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Result: {result}",
+    ]
+    if rom_in is not None:
+        header.append(f"Input:  {rom_in}")
+    if out_cia is not None:
+        header.append(f"Output: {out_cia}")
+    header.append("")
+    body = "\n".join(lines).strip("\n")
+    return "\n".join(header) + "\n" + body + "\n"
+
+
+def write_patch_summary_log(
+    path: Path,
+    lines: list[str],
+    *,
+    rom_in: Path | None = None,
+    out_cia: Path | None = None,
+    when: datetime | None = None,
+) -> Path | None:
+    """Write PATCH SUMMARY log + ``latest.txt`` sibling. Never raises."""
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        text = format_patch_log(lines, rom_in=rom_in, out_cia=out_cia, when=when)
+        path.write_text(text, encoding="utf-8")
+        # Mirror to latest.txt only inside a logs/ folder (Drop CIA default).
+        if path.parent.name.lower() == "logs":
+            latest = path.parent / "latest.txt"
+            if path.resolve() != latest.resolve():
+                try:
+                    latest.write_text(text, encoding="utf-8")
+                except OSError:
+                    pass
+        return path
+    except OSError as exc:
+        print(f"[log] warning: could not write {path}: {exc}", flush=True)
+        return None
+
+
+def print_patch_summary(
+    lines: list[str],
+    *,
+    log_path: Path | None = None,
+    rom_in: Path | None = None,
+    out_cia: Path | None = None,
+) -> Path | None:
     for line in lines:
         print(line, flush=True)
+    if log_path is None:
+        return None
+    written = write_patch_summary_log(
+        log_path, lines, rom_in=rom_in, out_cia=out_cia
+    )
+    if written is not None:
+        print(f"  Patch log: {written}", flush=True)
+    return written
 
 
 def cmd_patch(args: argparse.Namespace) -> int:
@@ -1425,12 +1563,13 @@ def _cmd_patch_body(
         else:
             print(f"[names] --name-img requested but img.bin missing: {img_src}")
 
-    code_bin_src = Path(args.code_bin).resolve() if args.code_bin else DEFAULT_CODE_BIN
+    code_bin_src = resolve_code_bin_src(args)
 
     if args.layeredfs_only and not args.layeredfs_out:
         args.layeredfs_out = str(ROOT / "out" / "luma")
 
     romfs_overlay = resolve_romfs_overlay(args)
+    log_path = resolve_patch_log_path(args)
 
     layeredfs_out: Path | None = None
     layeredfs_written = False
@@ -1452,22 +1591,25 @@ def _cmd_patch_body(
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
-        print_patch_summary(
-            build_patch_summary(
-                out_cia=None,
-                packed_img=packed_img,
-                layered_img=layered_img,
-                layeredfs_out=layeredfs_out,
-                romfs_overlay=romfs_overlay,
-                args=args,
-                layeredfs_only=True,
-            )
+        print(f"Time: {timer.elapsed_str()}  (started {timer.started_at})")
+        summary = build_patch_summary(
+            out_cia=None,
+            packed_img=packed_img,
+            layered_img=layered_img,
+            layeredfs_out=layeredfs_out,
+            romfs_overlay=romfs_overlay,
+            args=args,
+            layeredfs_only=True,
+            elapsed=timer.elapsed_str(),
+            started_at=timer.started_at,
         )
+        print_patch_summary(summary)
         if args.keep_work:
             emit_spotpass_inject(args)
         else:
-            cleanup_out_dir(out_cia=out_cia)
+            cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
             print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
+        _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=None)
         timer.finish("CIA patcher OK (LayeredFS only)")
         return 0
 
@@ -1492,21 +1634,23 @@ def _cmd_patch_body(
     print("=== Done ===")
     print(f"Patched CIA: {out_cia}")
     print(f"Size:        {out_cia.stat().st_size:,} bytes")
+    print(f"Time:        {timer.elapsed_str()}  (started {timer.started_at})")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
     if layeredfs_out is not None and layeredfs_out.is_dir():
         print(f"LayeredFS:   {layeredfs_out}")
-    print_patch_summary(
-        build_patch_summary(
-            out_cia=out_cia,
-            packed_img=packed_img,
-            layered_img=layered_img,
-            layeredfs_out=layeredfs_out,
-            romfs_overlay=romfs_overlay,
-            args=args,
-            layeredfs_only=False,
-        )
+    summary = build_patch_summary(
+        out_cia=out_cia,
+        packed_img=packed_img,
+        layered_img=layered_img,
+        layeredfs_out=layeredfs_out,
+        romfs_overlay=romfs_overlay,
+        args=args,
+        layeredfs_only=False,
+        elapsed=timer.elapsed_str(),
+        started_at=timer.started_at,
     )
+    print_patch_summary(summary)
     print("Notes:")
     print("  - Output is a decrypted CIA (works with FBI on CFW, Azahar, Citra).")
     print("  - Retail NCCH re-encryption is not done here; use Decrypt9WIP")
@@ -1521,11 +1665,35 @@ def _cmd_patch_body(
         print("  - Scratch kept (--keep-work).")
         emit_spotpass_inject(args)
     else:
-        cleanup_out_dir(out_cia=out_cia)
-        print("  - out/ cleaned (kept *.cia, luma/, azahar_instances/).")
+        cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
+        print("  - out/ cleaned (kept *.cia, luma/, logs/, azahar_instances/).")
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
+    _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
     timer.finish("CIA patcher OK")
     return 0
+
+
+def _log_keep_paths(log_path: Path | None) -> list[Path]:
+    """Keep the log file (and its parent dir) if it lives under out/."""
+    if log_path is None:
+        return []
+    return [log_path, log_path.parent]
+
+
+def _emit_patch_log(
+    log_path: Path | None,
+    lines: list[str],
+    *,
+    rom_in: Path | None,
+    out_cia: Path | None,
+) -> None:
+    if log_path is None:
+        return
+    written = write_patch_summary_log(
+        log_path, lines, rom_in=rom_in, out_cia=out_cia
+    )
+    if written is not None:
+        print(f"  Patch log: {written}", flush=True)
 
 
 def _is_reparse_dir(path: Path) -> bool:
@@ -1620,12 +1788,17 @@ _OUT_KEEP_DIRS = frozenset(
     {
         "luma",  # LayeredFS drop
         "azahar_instances",  # a/b test workflow (ab_test/)
+        "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
     }
 )
 
 
-def cleanup_out_dir(*, out_cia: Path) -> None:
-    """Wipe EngPatcher out/ except finished CIA(s), luma/, and a/b instances."""
+def cleanup_out_dir(
+    *,
+    out_cia: Path,
+    extra_keep: list[Path] | tuple[Path, ...] | None = None,
+) -> None:
+    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, and a/b instances."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return
@@ -1647,6 +1820,11 @@ def cleanup_out_dir(*, out_cia: Path) -> None:
                 keep.add(p.resolve())
             except OSError:
                 pass
+    for extra in extra_keep or ():
+        try:
+            keep.add(Path(extra).resolve())
+        except OSError:
+            pass
 
     removed = 0
     for child in list(out_root.iterdir()):
@@ -1673,11 +1851,11 @@ def cleanup_out_dir(*, out_cia: Path) -> None:
             print(f"[cleanup] warning: {child.name}: {exc}")
     if removed:
         print(
-            f"[cleanup] out/ kept: *.cia, luma/, azahar_instances/ "
+            f"[cleanup] out/ kept: *.cia, luma/, logs/, azahar_instances/ "
             f"({removed} other item(s) removed)"
         )
     else:
-        print("[cleanup] out/ already clean (CIA + luma + azahar_instances only)")
+        print("[cleanup] out/ already clean (CIA + luma + logs + azahar_instances)")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1742,7 +1920,20 @@ def build_parser() -> argparse.ArgumentParser:
         "--keep-work",
         action="store_true",
         help="Keep out/ scratch after a successful build "
-        "(default: leave only *.cia, out/luma/, out/azahar_instances/)",
+        "(default: leave only *.cia, out/luma/, out/logs/, out/azahar_instances/)",
+    )
+    p.add_argument(
+        "--log",
+        default=None,
+        metavar="PATH",
+        help="Write the PATCH SUMMARY to PATH. Omit this flag to use "
+        "out/logs/patch_YYYYMMDD_HHMMSS.txt (and latest.txt). "
+        "If PATH is a directory, write a timestamped file inside it.",
+    )
+    p.add_argument(
+        "--no-log",
+        action="store_true",
+        help="Do not write a PATCH SUMMARY log file (or set NLPP_NO_LOG=1)",
     )
     p.add_argument(
         "--with-images",
@@ -1834,7 +2025,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--code-bin",
         default=str(DEFAULT_CODE_BIN),
-        help="Vanilla code.bin for LayeredFS --patch-code (default: sibling extracted/exefs/code.bin)",
+        help="Vanilla code.bin for LayeredFS --patch-code "
+        "(default: NLPP_VANILLA_CODE, sibling dump, or cache/vanilla_from_rom)",
     )
     p.add_argument(
         "--skip-spotpass",

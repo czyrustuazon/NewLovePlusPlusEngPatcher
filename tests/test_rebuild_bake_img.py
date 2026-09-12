@@ -20,6 +20,14 @@ def test_deploy_scripts_include_menu_chrome():
         assert name in scripts, f"missing deploy script: {name}"
 
 
+def test_rebuild_rc_pack_is_from_scratch_by_default():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
+    assert "--use-cache" in text
+    assert "no_cache=(not args.use_cache) or args.no_cache" in text
+    assert "write_bake_stamp" in text
+    assert "PATCHER_RELEASE" in text
+
+
 def test_rebuild_name_input_is_required_not_optional():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
     assert "--skip-name-input-code" not in text
