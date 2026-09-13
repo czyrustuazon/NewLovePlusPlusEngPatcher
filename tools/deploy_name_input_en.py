@@ -4,7 +4,7 @@
 Verified stack (2026-08-31, name-pane draw 2026-09-12):
 
   0. patch_code name panes          # single-pane 8-letter draw + 128×16 cells
-  0b. patch_bplace_list_pane        # hometown rows 64×16 → 128×16; glyph cap 8 → 12
+  0b. patch_bplace_list_pane        # hometown 128×16; DrawText maxGlyphs 16; cap 12
   1. patch_input_pane_registry_nullguard
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)

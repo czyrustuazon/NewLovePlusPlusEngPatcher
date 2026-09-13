@@ -16,6 +16,8 @@ def test_wide_block_matches_orig_length():
     assert bplace.WIDE_PANE[0] == 0x80
     assert bplace.BAD_PANE[0] == 0x60
     assert len(bplace.ORIG_CAP) == len(bplace.WIDE_CAP) == 8
+    assert len(bplace.ORIG_DRAW_SP0) == len(bplace.WIDE_DRAW_SP0) == 8
+    assert bplace.WIDE_DRAW_SP0[0] == 0x10
 
 
 def test_deploy_name_input_includes_bplace_pane():
