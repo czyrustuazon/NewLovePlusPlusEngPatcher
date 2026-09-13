@@ -14,6 +14,7 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
    - `bakable-and-layeredfs` — every playable patch: gold bake/CIA **and** Azahar LayeredFS deploy
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)
    - `ui-localization-method` — texture vs TRB vs DrawText decision tree
+   - `zhoumaru-ui-pack` — Zhoumaru community EN UI PNGs (`*.check/timg`); **CESA is not in that pack**
    - `img-exact-zlib-deploy` — exact-length zlib/zopfli splice; **never bak→MOD wipe**
    - `ghidra-mcp` — Ghidra usage + Options bind APIs
    - `patch-safety` — hard bans

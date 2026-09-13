@@ -8,7 +8,7 @@ must be wired in the Parts layout.
 Separate ``timg/Eng_Patch.bclim`` + pic under ``Nul_Copyright``, taller Nul so
 the Eng strip is not clipped. Konami stays on vanilla ``Copyright.bclim``.
 Eng strip stays a separate BCLIM (not merged into Copyright): version line
-keeps the original 14px glyph height; +16px underneath is the project URL.
+keeps the original 14px glyph height; the project URL sits underneath.
 Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 + strong black outline (Aug 2026 confirm) so it stays readable above Konami.
 
@@ -62,11 +62,14 @@ ENG_PATCH_BCLIM_NAME = "Eng_Patch.bclim"
 SITE_LINE = "newloveplus.loc.moe"
 
 # Copyright pic is 218×14 at local Y=0. Eng badge keeps that 14px glyph row and
-# adds 16px underneath for the project URL (pane 218×30). ~6px gap above Konami.
+# the project URL under it. LINE_GAP=0 pulled the site up, so crop leftover
+# empty under the URL (pane 218×26). Pane bottom stays 13 (~6px above Konami).
 ENG_LINE_H = 14
 URL_H = 16
-ENG_PATCH_H = ENG_LINE_H + URL_H  # 30
-ENG_PANE_TY = 28.0  # Eng bottom 13, copyright top 7
+LINE_GAP = 0  # pull the site line 3px closer than the previous 3px body gap
+BOTTOM_PAD = 2  # empty rows kept under the URL outline
+ENG_PATCH_H = 26  # last URL fringe ~23 + BOTTOM_PAD
+ENG_PANE_TY = 26.0  # Eng bottom 13, top 39; copyright top 7
 # Eng top 43; vanilla Nul h=40 clipped at ±20. Keep Nul bottom at -132.
 NUL_H = 90.0
 POS_H_TY = -87.0  # -132 + NUL_H/2
@@ -178,19 +181,37 @@ def render_eng_strip(w: int, h: int = ENG_LINE_H) -> Image.Image:
     return render_outlined_line(ENG_PATCH_LINE, w, h)
 
 
+def _solid_ink_span(im: Image.Image, *, min_n: int = 20) -> tuple[int, int]:
+    """First/last rows with enough opaque pixels to count as glyph body, not fringe."""
+    px = im.load()
+    w, h = im.size
+    rows = [
+        y
+        for y in range(h)
+        if sum(1 for x in range(w) if px[x, y][3] >= 64) >= min_n
+    ]
+    if not rows:
+        return 0, h - 1
+    return rows[0], rows[-1]
+
+
 def compose_eng_patch(version: Image.Image, w: int) -> Image.Image:
-    """Keep the 14px version glyphs; paint the project URL in the extra 16px below.
+    """Keep the 14px version glyphs; site URL is pulled 3px closer than stacked.
 
     Never scale the version row — extra canvas is new pixels only.
     """
-    out = Image.new("RGBA", (w, ENG_PATCH_H), (0, 0, 0, 0))
     src = version.convert("RGBA")
     row = Image.new("RGBA", (w, ENG_LINE_H), (0, 0, 0, 0))
     row.paste(src.crop((0, 0, min(w, src.width), min(ENG_LINE_H, src.height))), (0, 0))
-    out.paste(row, (0, 0))
     url = render_outlined_line(SITE_LINE, w, URL_H)
-    out.paste(url, (0, ENG_LINE_H), url)
-    return out
+    _v0, v1 = _solid_ink_span(row)
+    u0, _u1 = _solid_ink_span(url)
+    url_y = max(0, v1 + 1 + LINE_GAP - u0)
+    out = Image.new("RGBA", (w, ENG_PATCH_H), (0, 0, 0, 0))
+    out.paste(row, (0, 0))
+    layer = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    layer.paste(url, (0, url_y))
+    return Image.alpha_composite(out, layer)
 
 
 def _pad_name(name: str, n: int) -> bytes:
@@ -470,27 +491,11 @@ def main() -> int:
         raise SystemExit(f"Copyright fmt {cfmt:#x} expected ETC1A4")
     print(f"OK Copyright.bclim vanilla {cw}x{ch} (Konami only)", flush=True)
 
-    # Do not pass size=(218,30) into find_ui_png — that contain-fits and
-    # would stretch the 14px glyphs. Prefer Title/ (rc2) over stale .check.
-    version_src = None
-    version_path = None
-    for folder in ("Title", "Title.check"):
-        master_eng = find_ui_png((folder,), "Eng_Patch")
-        if master_eng is None:
-            continue
-        src = Image.open(master_eng).convert("RGBA")
-        if src.width == cw and src.height >= ENG_LINE_H:
-            version_src = src
-            version_path = master_eng
-            break
-    if version_src is None:
-        version_src = render_eng_strip(cw)
-        print(f"OK Eng_Patch version line font fallback {cw}x{ENG_LINE_H}", flush=True)
-    else:
-        print(
-            f"OK Eng_Patch version line {version_path} {version_src.size}",
-            flush=True,
-        )
+    # Always render the version row from PATCHER_RELEASE so an RC bump cannot
+    # keep stale 14px glyphs. Do not find_ui_png-fit the 30px master (that
+    # would stretch the extra URL row into the version line).
+    version_src = render_eng_strip(cw)
+    print(f"OK Eng_Patch version line {ENG_PATCH_LINE!r} {cw}x{ENG_LINE_H}", flush=True)
     eng_rgba = compose_eng_patch(version_src, cw)
     if eng_rgba.size != (cw, ENG_PATCH_H):
         raise SystemExit(f"Eng_Patch canvas {eng_rgba.size} expected {cw}x{ENG_PATCH_H}")

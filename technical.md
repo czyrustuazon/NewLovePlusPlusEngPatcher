@@ -58,6 +58,8 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
 
+- **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `CESA_400X240` blurb, then `deploy_cesa_en.py` — **§12.7**.
+
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
@@ -481,6 +483,10 @@ Important keys for clock / softkeys:
 | `myroomheader` | 5575 | `MyroomHeader.arc` — **not** Options/clock titles |
 
 | `syspopup` | 5259 | `SysPopup.arc` |
+
+
+
+CESA is **not** in this map. Boot warning is `CESA_240X400.texi` inside img.bin package **90** (TEX, not BCLIM/ARC). See **§12.7**.
 
 
 
@@ -1041,6 +1047,9 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
 
+| Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
+| CESA companion blurb | RGB TEX `CESA_400X240.texi` @ pkg **90** (240×400 poster, same orientation as CESA; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild; **§12.7** |
+
 
 
 **Ghidra bind sites (code.bin):**
@@ -1271,6 +1280,116 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 
 
 
+### 12.7 Boot CESA warning (pkg 90 TEX — 2026-09-13)
+
+
+
+Not Zhoumaru UI pack, not `IMAGE_MAP`, not BCLIM, not TRB. The boot anti-piracy slide is a **TEX** in img.bin package **90** (`CESA_240X400.texi`): 256×512 Morton BGR8, **240×400** visible, black padding. Vanilla compressed slot is **13667 bytes**. `pack_images` still **skips** CESA unless `--only cesa` (white-boot history); gold path is `tools/deploy_cesa_en.py` at the tail of `rebuild_bake_img.py`.
+
+
+
+The **blank screen beside CESA** is `CESA_400X240.texi` — same PACK, vanilla **16×16 stub** (shared 15-byte zlib with other unused logos). Ghidra `CesaLogo` (`FUN_0016f338` / `FUN_0016eabc`) is a dual-screen player; constructor IDs include `0x5A0002` = pkg **90** index **2** (`CESA_400X240`). Cannot grow that 15-byte slot in place. Deploy now **rebuilds** the PACK inside the original **29232-byte** img.bin package: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `CESA_400X240` its own 256×512 / **240×400** TEX (same poster orientation as CESA), pad the file back to 29232. Do not shrink img.bin package length.
+
+
+
+Vanilla JP (decode with `src/patch_cesa.py --decode`): white field, `#FF0000` gothic title with ruby, **two** title lines each with a 2px red underline, black body, one red legal line, black closing. Ink occupies roughly **y=73–322**.
+
+
+
+#### English master (how it is drawn)
+
+
+
+`tools/render_cesa_en.py` → `assets/images/cesa/CESA_240X400.png`. Fonts are the NLPPPATCH Graphics & Text Reference (2025) already at `assets/fonts/reference/nlppatch-2025/` ([LovePlusProject/NLPPCTR](https://github.com/LovePlusProject/NLPPCTR) zip). **Not** MPLUS1p and **not** Geomanist — those miss the JP gothic.
+
+
+
+| Role | File | TTC face |
+
+|------|------|----------|
+
+| Title (heavy) | `df-heiseigothic-w9.ttc` | index **1** `DFPHSGothic-W9` (proportional Latin; index 0 is fullwidth) |
+
+| Body / emphasis | `df-heiseigothic-w5.ttc` | index **1** `DFPHSGothic-W5` |
+
+
+
+Layout copies vanilla: two red title lines with **per-line** underlines, five black body lines, red `strictly prohibited by law.`, two-line thanks. No English ruby; title starts ~y=82 to keep the JP title band.
+
+
+
+**2× coverage masks (the AA / “drop-shadow” fix):**
+
+
+
+1. Draw red glyphs + underlines onto an **L** mask and black glyphs onto a **second** L mask, both at **480×800**.
+
+2. LANCZOS-downscale each mask to 240×400.
+
+3. Composite onto white: black coverage darkens RGB; red coverage then lerps toward `(255,0,0)`. Where red coverage > 0, **zero the black coverage** so red AA is only red↔white (pink), never red mixed with black.
+
+4. Quantize each coverage to **12 ramp steps** (`RAMP_STEPS`). That keeps visible AA but few unique colors.
+
+
+
+`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`.
+
+
+
+#### Companion blurb (`CESA_400X240` — 2026-09-13)
+
+
+
+`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/CESA_400X240.png` (**240×400**, same orientation as CESA). Same Heisei W9/W5 index 1, **no red**: title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×400 crop stay poster-white.
+
+
+
+Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Do not fill `Bottom_Thank` as 240×320 — TEXI order would pair it with Konami and shift ProductionLogo onto CESA.
+
+
+
+#### Compression (why not “just keep full AA”)
+
+
+
+| Approach | ~zlib lvl9 of the TEX | On-screen |
+
+|----------|----------------------|-----------|
+
+| Vanilla JP | **13667** on the nose (lvl6) | Smooth gothic, pink/gray AA |
+
+| Early EngPatcher MPLUS1p EN | ~3k | Thin, not gothic |
+
+| Full AA Heisei on one RGB canvas | ~17–19k | Smooth, but **over** the slot |
+
+| Hard 3-color snap (white / `#FF0000` / black) | ~5k | Fits, but **grainy**; dark red AA → black fringe that reads as a **drop-shadow** |
+
+| 2× masks + 12-step ramps (CESA warning) | ~12k (zopfli ~10934; no longer padded to 13667 once the PACK is rebuilt) | Smooth gothic, no red shadow |
+
+| 2× masks + 3-step ramps (CESA_400X240 blurb) | zopfli ~4388 | Teal highlights; extra TEX fits the PACK |
+
+
+
+`compress_zlib_exact` can **pad a short** stream (SYNC_FLUSH empty stored blocks, `unused_data == 0`). It **cannot** shrink a stream that already exceeds 13667. Zopfli of a too-fat TEX is still over; do not NUL-pad or shrink `cmp_len` (CESA white boot — same class as §12.5).
+
+
+
+#### Do not
+
+
+
+- Snap to 3 colors to “make zlib fit.”
+
+- Draw red and black with `ImageDraw` on the **same** RGB image (PIL AA blends red into neighboring black).
+
+- Use Geomanist / MPLUS1p for this slide.
+
+- Auto-pack CESA through `pack_images` (opt-in `--only cesa` only).
+
+- `pe` grow / trailing NUL zlib / bak→MOD wipe.
+
+
+
 ---
 
 
@@ -1307,7 +1426,9 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 
 | `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 
-| `src/patch_cesa.py` | Boot CESA TEX + `compress_zlib_exact` helper |
+| `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`CESA_400X240` companion) |
+
+| `tools/render_cesa_en.py` | EN CESA 240×400 PNG: NLPPPATCH Heisei Gothic, 2× L masks, 12-step ramps (**§12.7**) |
 
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1320,7 +1441,7 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 
 | `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 
-| `tools/deploy_cesa_en.py` | Boot CESA warning PNG → pkg **90** (`patch_cesa` exact zlib) |
+| `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
 
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 
@@ -1409,6 +1530,8 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 | `ui-localization-method.mdc` | §12 | Texture vs TRB vs DrawText tree + chrome status |
 
 | `clock-confirm-ui-localization.mdc` | §§6–9, 12.4–12.5 | Clock + Options + Confirm softkeys |
+
+| `zhoumaru-ui-pack.mdc` | §12.7 | Zhoumaru `.check` PNGs; **CESA is not in that pack** |
 
 | `from-scratch-bake.mdc` | §15.5 | Drop CIA / gold bake; name-input caves in `.text` |
 
@@ -1566,7 +1689,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 |-------|------|
 
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc2`); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc3` + `newloveplus.loc.moe`); **white glyphs + thick black outline** (readable on Main Menu white column) |
 
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 
@@ -1672,7 +1795,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 7. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
 
-8. CESA: use `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`.
+8. CESA: `tools/render_cesa_en.py` then `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`. **§12.7**.
 
 9. Dev sanity: `pip install -r requirements-dev.txt && python -m pytest tests/ -v` (§15.6).
 
@@ -1686,7 +1809,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 |----|---------|----------------|
 
-| Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
+| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `CESA_400X240` blurb; PACK rebuild). **§12.7** |
 
 | Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 
