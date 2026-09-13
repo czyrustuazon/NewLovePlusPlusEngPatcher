@@ -6,6 +6,7 @@ from pathlib import Path
 
 import patcher_version as pv
 from patcher_version import (
+    CIA_TITLE_VERSION,
     PATCHER_RELEASE,
     bake_stamp_matches,
     write_bake_stamp,
@@ -15,6 +16,12 @@ from patcher_version import (
 def test_patcher_release_is_rc():
     assert PATCHER_RELEASE.startswith("v")
     assert "rc" in PATCHER_RELEASE.lower()
+
+
+def test_cia_title_version_is_pinned_int():
+    """Manual RC pin — must increase on merge to main, never reset per clone."""
+    assert isinstance(CIA_TITLE_VERSION, int)
+    assert 1 <= CIA_TITLE_VERSION <= 0xFFFF
 
 
 def test_bake_stamp_roundtrip(tmp_path: Path, monkeypatch):

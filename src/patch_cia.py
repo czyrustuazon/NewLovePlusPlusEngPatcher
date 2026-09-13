@@ -30,7 +30,7 @@ from datetime import datetime
 from pathlib import Path
 
 from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
-from patcher_version import PATCHER_RELEASE
+from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
 from run_timer import RunTimer
 from smdh_meta import (
     PUBLISHER,
@@ -67,11 +67,9 @@ _LEGACY_ROMFS_OVERLAY = ROOT / "cache" / "romfs_overlay"
 DEFAULT_CODE_BIN = DEFAULT_EXTRACTED / "exefs" / "code.bin"
 TITLE_ID = "00040000000F4E00"
 PACKS = ("NLP_01", "NLP_02", "script")
-# 16-bit CIA title version. Each Drop CIA bumps this so FBI/Azahar treat the
-# new CIA as an in-place update instead of delete-and-reinstall (which orphans
-# extra data). Stamp lives under cache/ (gitignored).
+# 16-bit CIA title version. The number itself lives in patcher_version.py
+# (CIA_TITLE_VERSION) and is bumped by hand when an RC merges to main.
 TITLE_VER_MAX = 0xFFFF
-CIA_TITLE_VER_STAMP = ROOT / "cache" / "cia_title_ver.txt"
 
 # Accepted SHA-1 digests for known New Love Plus+ dumps (CIA and/or .3ds/.cci).
 # Typical decrypted CIAs will not match (by design).
@@ -1167,38 +1165,25 @@ def parse_title_version(cia: Path) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def read_title_ver_stamp(path: Path) -> int:
-    try:
-        raw = path.read_text(encoding="utf-8").strip().split()[0]
-        return int(raw, 10)
-    except (OSError, ValueError, IndexError):
-        return 0
-
-
-def write_title_ver_stamp(path: Path, ver: int) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(f"{ver}\n", encoding="utf-8")
-
-
 def next_cia_title_version(
     source_ver: int | None,
     *,
-    stamp_path: Path | None = None,
+    release_ver: int | None = None,
     explicit: int | None = None,
     keep_source: bool = False,
 ) -> int:
-    """Pick a CIA title version that installs as an update, not a reinstall.
+    """CIA title version for this RC — not per-build auto increment.
 
-    Default: max(dump+1, last stamp+1), persisted under cache/. FBI and Azahar
-    keep extra data when the new CIA's version is higher than the installed one.
+    Default is ``CIA_TITLE_VERSION`` from ``patcher_version.py`` (bump that
+    integer when merging an RC into main). Fresh clones then ship the same
+    number as everyone else instead of resetting to dump+1.
     """
     src = source_ver if source_ver is not None else 0
     if src < 0 or src > TITLE_VER_MAX:
         raise PatchError(f"source title version {src} out of range 0..{TITLE_VER_MAX}")
-    path = stamp_path if stamp_path is not None else CIA_TITLE_VER_STAMP
+    pin = CIA_TITLE_VERSION if release_ver is None else release_ver
 
     if keep_source:
-        write_title_ver_stamp(path, max(read_title_ver_stamp(path), src))
         print(
             f"[cia] title version {src} (same as dump; FBI may ask to delete "
             "the title and wipe extra data)"
@@ -1210,27 +1195,28 @@ def next_cia_title_version(
             raise PatchError(
                 f"--title-ver {explicit} out of range 0..{TITLE_VER_MAX}"
             )
-        write_title_ver_stamp(path, max(read_title_ver_stamp(path), explicit))
         print(
             f"[cia] title version {explicit} (--title-ver; install over the "
             "existing title, do not delete)"
         )
         return explicit
 
-    stored = read_title_ver_stamp(path)
-    ver = max(src + 1, stored + 1)
-    if ver > TITLE_VER_MAX:
-        ver = TITLE_VER_MAX
-        print(
-            f"[cia] warning: title version capped at {TITLE_VER_MAX}; "
-            "further CIAs share this version"
+    if pin < 1 or pin > TITLE_VER_MAX:
+        raise PatchError(
+            f"CIA_TITLE_VERSION {pin} out of range 1..{TITLE_VER_MAX} "
+            "(set it in src/patcher_version.py)"
         )
-    write_title_ver_stamp(path, ver)
+    if src >= pin:
+        raise PatchError(
+            f"dump title version {src} >= CIA_TITLE_VERSION {pin}. "
+            "Increase CIA_TITLE_VERSION in src/patcher_version.py "
+            "(must go up on each RC merge to main)."
+        )
     print(
-        f"[cia] title version {ver} (dump {src}; FBI/Azahar will update in "
-        "place — do not delete the title)"
+        f"[cia] title version {pin} ({PATCHER_RELEASE}, CIA_TITLE_VERSION; "
+        f"dump {src} — bump the constant when merging RC to main)"
     )
-    return ver
+    return pin
 
 
 def resolve_cia_title_version(
@@ -1415,7 +1401,7 @@ def build_patch_summary(
                 _summary_line(
                     "OK",
                     "CIA title version",
-                    f"{title_ver} (bumped — install over the existing title, do not delete)",
+                    f"{title_ver} ({PATCHER_RELEASE}; CIA_TITLE_VERSION — bump when merging RC to main)",
                 )
             )
 
@@ -1857,6 +1843,10 @@ def _cmd_patch_body(
     print("Notes:")
     print("  - Output is a decrypted CIA (works with FBI on CFW, Azahar, Citra).")
     print("  - Install over the existing title (do not delete title+ticket first).")
+    print(
+        f"  - CIA title version is {CIA_TITLE_VERSION} ({PATCHER_RELEASE}); "
+        "bump CIA_TITLE_VERSION when merging an RC into main."
+    )
     print("  - Azahar extra data: python tools/restore_azahar_extdata.py backup")
     print("  - Retail NCCH re-encryption is not done here; use Decrypt9WIP")
     print("    'CIA Encryptor (NCCH)' on a 3DS if you specifically need that.")
@@ -2259,9 +2249,9 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="N",
         help=(
-            "CIA title version 0..65535. Default: bump above the dump and the "
-            "last build so FBI/Azahar update in place (extra data kept). "
-            "Stamp: cache/cia_title_ver.txt"
+            "CIA title version 0..65535 (default: CIA_TITLE_VERSION in "
+            "src/patcher_version.py for this RC). Bump that constant when "
+            "merging an RC into main — do not auto-increment per Drop CIA."
         ),
     )
     p.add_argument(

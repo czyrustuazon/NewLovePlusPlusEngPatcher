@@ -363,6 +363,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 |--------|----------------|
 | **Zhoumaru** | A large UI overhaul and translation work |
 | **D.** | Debugging and testing the patch |
+| **i need help here...** | Knowledge sharing |
+| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that allowed quicker access to postgame context |
 
 ### CIA / RomFS tooling
 

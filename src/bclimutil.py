@@ -326,6 +326,34 @@ def png_to_bclim_rgba4444_same_size(png: Path, orig_bclim: Path) -> bytes:
     return out
 
 
+def png_to_bclim_etc1a4(
+    png: Path,
+    orig_bclim: Path,
+    *,
+    size: tuple[int, int],
+) -> bytes:
+    """Build ETC1A4 (CLIM fmt 0xB) at a logical ``size`` (file length may grow).
+
+    Used for newly inserted BCLIMs (Title ``Eng_Patch``) where the pane is
+    taller than the Copyright template. Pixel canvas is rectangular pot
+    ``nlpo2(w) × nlpo2(h)`` (min 8), same as short UI strips.
+    """
+    orig = orig_bclim.read_bytes()
+    _pix, _ow, _oh, fmt, footer = parse_bclim(orig)
+    if fmt != 0xB:
+        raise ValueError(f"expected ETC1A4 fmt 0xB, got {fmt:#x}")
+    width, height = size
+    pot_w, pot_h = max(8, nlpo2(width)), max(8, nlpo2(height))
+    src = Image.open(png).convert("RGBA")
+    canvas = Image.new("RGBA", (pot_w, pot_h), (0, 0, 0, 0))
+    canvas.paste(
+        src.crop((0, 0, min(width, src.width), min(height, src.height))),
+        (0, 0),
+    )
+    pixels = encode_etc1a4_pixels(canvas, pot_w, pot_h)
+    return pixels + _rewrite_footer(footer, width, height, 0xB, len(pixels))
+
+
 def png_to_bclim_etc1a4_same_size(png: Path, orig_bclim: Path) -> bytes:
     """Build ETC1A4 (CLIM fmt 0xB) BCLIM matching the original file length.
 

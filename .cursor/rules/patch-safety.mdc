@@ -22,7 +22,8 @@ alwaysApply: true
 
 - Splice packages at the **same offset/length** (`splice_packages_into_img`).
 - For zlib-compressed ARC replaces: exact-length stream; see rule `img-exact-zlib-deploy` (zopfli gap-salt **or** SYNC_FLUSH empty-blocks; zero gaps first on large ARCs if needed).
-- Backup before code hooks; test one change at a time in LayeredFS (`img.bin.bak_pre_<feature>`).
+- Backup before code hooks; test one change at a time in LayeredFS (`img.bin.bak_pre_<feature>` or `code.bin.bak_pre_<feature>`).
+- Playable patches must be **bakable and LayeredFS-deployable** (rule `bakable-and-layeredfs`): hook `rebuild_bake_img.py` / `name_input_code.bin` **and** apply to live Azahar mods.
 - When deploying images, prefer splicing onto the current Azahar mod `img.bin` if it already has other patches (CESA, etc.), not only vanilla.
 - Treat dump `extracted/` as mostly read-only; write patches through EngPatcher → Azahar mods.
 - Fully quit Azahar after `img.bin` changes so LayeredFS reloads.

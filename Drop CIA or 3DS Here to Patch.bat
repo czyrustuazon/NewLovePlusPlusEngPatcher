@@ -394,7 +394,8 @@ echo     %~dp0out\logs\latest.txt
 echo     ^(timestamped copies stay in out\logs\^)
 echo.
 echo [+] Install over the existing title in FBI/Azahar. Do NOT delete the title first
-echo     ^(that orphans extra data^). Title version is bumped so it installs as an update.
+echo     ^(that orphans extra data^). CIA title version is CIA_TITLE_VERSION for this RC
+echo     ^(src\patcher_version.py^). Bump that number when merging an RC into main.
 echo.
 echo [+] Azahar extra data backup/restore:
 echo     python tools\restore_azahar_extdata.py backup

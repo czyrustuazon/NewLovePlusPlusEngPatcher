@@ -6,7 +6,14 @@ current UI PNG fingerprint. A same-RC stamp that was written after
 ``--skip-pack`` (or before a community PNG import) must not keep
 yesterday's menus.
 
-Bump ``PATCHER_RELEASE`` together with the title Eng Patch badge.
+When merging an RC into **main**, bump these together:
+
+- ``PATCHER_RELEASE`` — Eng Patch badge / bake stamp
+- ``CIA_TITLE_VERSION`` — 16-bit CIA title version (must **increase**; never reuse)
+
+All Drop CIA builds of this RC share ``CIA_TITLE_VERSION``. Do not auto-increment
+per local build: a fresh clone would reset and collide with already-installed
+CIAs (FBI then asks to delete the title and extra data breaks).
 """
 from __future__ import annotations
 
@@ -23,6 +30,8 @@ if str(ROOT / "src") not in sys.path:
 from image_map import normalize_folder_key, resolve_folder  # noqa: E402
 
 PATCHER_RELEASE = "v1.0.0-rc2"
+# makerom -ver. Vanilla NLPP is 0. Increase on each RC → main merge.
+CIA_TITLE_VERSION = 2
 BAKE_STAMP = ROOT / "release" / "bake_stamp.txt"
 ENG_PATCH_LINE = f"Eng Patch {PATCHER_RELEASE}"
 ASSETS_IMAGES = ROOT / "assets" / "images"

@@ -99,7 +99,7 @@ def test_etc1a4_1x1_passes_pack_validator(tmp_path: Path):
     assert (ow, oh, fmt) == (1, 1, 0xB)
 
 
-def test_etc1a4_1x1_passes_pack_validator(tmp_path: Path):
+def test_etc1a4_1x1_passes_pack_validator_again(tmp_path: Path):
     from pack_images import _bclim_looks_valid, convert_png_to_bclim
 
     w, h = 1, 1
@@ -111,3 +111,17 @@ def test_etc1a4_1x1_passes_pack_validator(tmp_path: Path):
     ok, reason = _bclim_looks_valid(produced, orig.stat().st_size)
     assert ok, reason
     assert produced.stat().st_size == 104
+
+
+def test_etc1a4_can_grow_logical_height(tmp_path: Path):
+    from bclimutil import png_to_bclim_etc1a4
+
+    w, h = 8, 8
+    pix = bytes(64)
+    orig = _write_bclim(tmp_path, w, h, 0xB, pix)
+    png = tmp_path / "t.png"
+    Image.new("RGBA", (w, 16), (255, 255, 255, 255)).save(png)
+    out = png_to_bclim_etc1a4(png, orig, size=(w, 16))
+    assert len(out) > orig.stat().st_size
+    _p, ow, oh, fmt, _ = parse_bclim(out)
+    assert (ow, oh, fmt) == (w, 16, 0xB)

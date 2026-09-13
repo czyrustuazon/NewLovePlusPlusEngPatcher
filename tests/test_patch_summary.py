@@ -105,7 +105,7 @@ def test_summary_includes_bumped_title_version(tmp_path: Path, monkeypatch):
     )
     text = "\n".join(lines)
     assert "[OK]      CIA title version: 12" in text
-    assert "do not delete" in text
+    assert "CIA_TITLE_VERSION" in text
 
 
 def test_summary_warns_when_keeping_dump_title_version(tmp_path: Path, monkeypatch):
@@ -158,6 +158,7 @@ def test_drop_bat_mentions_patch_summary():
     assert "Patch log" in bat
     assert "restore_azahar_extdata.py" in bat
     assert "Do NOT delete the title" in bat
+    assert "CIA_TITLE_VERSION" in bat
 
 
 def test_patch_cia_requires_name_input_for_ui_inject():

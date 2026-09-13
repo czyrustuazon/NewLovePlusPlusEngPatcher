@@ -1410,6 +1410,10 @@ Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations
 
 | `clock-confirm-ui-localization.mdc` | §§6–9, 12.4–12.5 | Clock + Options + Confirm softkeys |
 
+| `from-scratch-bake.mdc` | §15.5 | Drop CIA / gold bake; name-input caves in `.text` |
+
+| `bakable-and-layeredfs.mdc` | §15.5, §21 | Playable patches: bake/CIA **and** Azahar LayeredFS; never only one |
+
 
 
 When RE discovers something durable, update **both** this file and the relevant rule so agents don’t diverge.
