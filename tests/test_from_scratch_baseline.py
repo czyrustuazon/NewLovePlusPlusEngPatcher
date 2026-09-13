@@ -323,6 +323,8 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
     assert "[OK]" in text and "Profile name-input code.bin" in text
     assert "[OK]" in text and "RomFS overlay" in text
     assert "[OK]" in text and "Heroine name table patches" in text
+    assert "[OK]" in text and "CIA HOME-menu metadata" in text
+    assert "New Love Plus+" in text
     assert "[OK]" in text and "Output CIA" in text
     assert "[SKIPPED]" in text and "Input CIA SHA-1" in text  # bat pre-checked
     assert "no --inject-code" not in text

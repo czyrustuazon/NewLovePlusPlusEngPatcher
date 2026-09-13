@@ -267,6 +267,8 @@ def test_parser_has_log_flags():
     args = p.parse_args(["--cia", "game.cia"])
     assert args.log is None
     assert args.no_log is False
+    assert args.cia_region == "usa"
+    assert args.skip_cia_meta is False
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"
     args = p.parse_args(["--cia", "game.cia", "--no-log"])
