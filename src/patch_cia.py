@@ -837,10 +837,9 @@ def write_layeredfs(
         ),
         encoding="utf-8",
     )
-    # Legacy name for anyone following older docs.
-    legacy_readme = out_dir / "LAYEREDFS_README.txt"
-    if legacy_readme != readme:
-        legacy_readme.write_text(readme.read_text(encoding="utf-8"), encoding="utf-8")
+    # Older runs also wrote LAYEREDFS_README.txt with the same text.
+    leftover = out_dir / "LAYEREDFS_README.txt"
+    leftover.unlink(missing_ok=True)
     print(f"[layeredfs] wrote {count} scripts under {title_root}")
     return count
 
