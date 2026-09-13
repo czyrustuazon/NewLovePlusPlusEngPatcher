@@ -94,7 +94,7 @@ def test_romaji_table_ka_ke_ku_are_two_letters():
         romaji._pad4(romaji._romaji_cell(romaji.HIRA_ROMAJI.get(cp, "")))
         for cp in range(0x3041, 0x3041 + 0x56)
     )
-    for kana, want in (("か", b"KA.\0"), ("け", b"KE.\0"), ("く", b"KU.\0")):
+    for kana, want in (("か", b"KA\0\0"), ("け", b"KE\0\0"), ("く", b"KU\0\0")):
         i = ord(kana) - 0x3041
         assert tab[i * 4 : i * 4 + 4] == want, (kana, tab[i * 4 : i * 4 + 4])
 

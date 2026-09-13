@@ -10,7 +10,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
-  7. patch_input_strcat_raw                # byte strcat; strip KA.; collapse KKE
+  7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py

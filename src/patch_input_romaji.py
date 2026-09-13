@@ -180,13 +180,11 @@ def _pad4(s: str) -> bytes:
 
 
 def _romaji_cell(s: str) -> str:
-    """2-letter Hepburn gets a trailing '.' so TickPoller cannot match っ/KU.
+    """Hepburn cell label/insert string (4-byte slot via _pad4).
 
-    Keys show KA. / KE. / KU.; strcat-raw strips the dot before append.
-    3-letter cells (SHI/CHI/TSU) stay as-is (4-byte slot).
+    No trailing '.' — skip-ascii-dakuten already bypasses TickPoller's っ/゛
+    strcmp, and strcat-raw still collapses KKE if a clobber returns.
     """
-    if 1 <= len(s) <= 2:
-        return s + "."
     return s
 
 
