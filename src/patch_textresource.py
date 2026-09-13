@@ -485,6 +485,21 @@ _JP_UNITS = {
     "個": "",
     "円": " yen",
 }
+# １月–１２月 / １日–３１日 are calendar dates (birthday pickers), not durations.
+_CALENDAR_MONTHS = (
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+)
 
 
 def local_translate(text: str) -> str | None:
@@ -503,6 +518,13 @@ def local_translate(text: str) -> str | None:
         unit = m.group(2)
         if unit == "時":
             return f"{int(num)}:00"
+        n = int(num)
+        if unit == "月" and 1 <= n <= 12:
+            return _CALENDAR_MONTHS[n - 1]
+        if unit == "日" and 1 <= n <= 31:
+            if n < 10:
+                return str(n)
+            return f"{n // 10} {n % 10}"
         return f"{num}{_JP_UNITS.get(unit, '')}".rstrip()
     # Single common words
     simple = {
