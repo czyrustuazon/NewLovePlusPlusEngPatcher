@@ -25,6 +25,7 @@ def test_rebuild_rc_pack_is_from_scratch_by_default():
     assert "--use-cache" in text
     assert "no_cache=(not args.use_cache) or args.no_cache" in text
     assert "write_bake_stamp" in text
+    assert "packed_assets=not args.skip_pack" in text
     assert "PATCHER_RELEASE" in text
 
 

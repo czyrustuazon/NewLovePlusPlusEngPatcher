@@ -5,6 +5,7 @@ from __future__ import annotations
 import zlib
 
 from exact_zlib import (
+    _zlib_progress,
     apply_gap_pad,
     compress_exact_empty_blocks,
     compress_to_exact_slot,
@@ -79,3 +80,20 @@ def test_compress_to_exact_slot_prefers_fast_path():
     # May be gap-salted; length and unused_data==0 are the game constraints.
     dec = zlib.decompress(slot)
     assert len(dec) == len(payload)
+
+
+def test_zlib_progress_survives_cp1252_stdout(monkeypatch):
+    """Windows consoles used to abort exact-zlib when progress printed '→'."""
+
+    class Cp1252:
+        encoding = "cp1252"
+
+        def write(self, s: str) -> int:
+            s.encode("cp1252")  # raises UnicodeEncodeError on arrows
+            return len(s)
+
+        def flush(self) -> None:
+            return None
+
+    monkeypatch.setattr("sys.stdout", Cp1252())
+    _zlib_progress("zopfli pass 1 done -> 12 bytes (calibrating speed…)", newline=True)

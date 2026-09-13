@@ -235,7 +235,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   if defined BAKE_STALE (
     echo.
-    echo RC: bake stamp missing or from another release — packing from this tree.
+    echo RC: bake stamp missing, other release, or UI PNGs changed — packing from this tree.
     echo Leftover release\bake_img.bin will be overwritten ^(from scratch^).
     echo Set NLPP_REUSE_BAKE=1 to inject the existing bake anyway.
     echo.

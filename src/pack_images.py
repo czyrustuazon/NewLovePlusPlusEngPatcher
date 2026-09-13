@@ -144,14 +144,44 @@ def iter_asset_pngs(folder: Path) -> list[Path]:
     return sorted((p for _, p in by_stem.values()), key=lambda p: p.as_posix().lower())
 
 
-def png_to_bclim_candidates(png: Path) -> list[str]:
+def png_logical_stems(png: Path) -> list[str]:
+    """BCLIM stems a PNG may map to (EN suffixes, new_/__/_upper aliases)."""
     stem = png.stem
-    # Strip common EN suffixes
     for suffix in ("_eng", "_en", "_ENG"):
         if stem.endswith(suffix):
             stem = stem[: -len(suffix)]
             break
-    return [f"timg/{stem}.bclim", f"{stem}.bclim"]
+    aliases = [stem]
+    if stem.startswith("__"):
+        aliases.append(stem[2:])
+    low = stem.lower()
+    if low.endswith("_upper"):
+        aliases.append(stem[: -len("_upper")])
+    if low.endswith("_rgba4"):
+        aliases.append(stem[: -len("_rgba4")])
+    if low.startswith("new_"):
+        rest = stem[4:]
+        aliases += [rest, f"C_{rest}", f"Alb_{rest}"]
+    out: list[str] = []
+    seen: set[str] = set()
+    for a in aliases:
+        k = a.lower()
+        if k not in seen:
+            seen.add(k)
+            out.append(a)
+    return out
+
+
+def png_to_bclim_candidates(png: Path) -> list[str]:
+    cands: list[str] = []
+    seen: set[str] = set()
+    for stem in png_logical_stems(png):
+        for rel in (f"timg/{stem}.bclim", f"{stem}.bclim"):
+            k = rel.lower()
+            if k not in seen:
+                seen.add(k)
+                cands.append(rel)
+    return cands
 
 
 def _bclim_looks_valid(path: Path, orig_size: int) -> tuple[bool, str]:
@@ -162,12 +192,16 @@ def _bclim_looks_valid(path: Path, orig_size: int) -> tuple[bool, str]:
     """
     data = path.read_bytes()
     size = len(data)
-    if size < 128:
-        return False, f"too small ({size} bytes)"
-    if data[:4] == b"CLIM" and size < 256:
-        return False, "header-only CLIM stub"
     if size != orig_size:
+        if size < 128:
+            return False, f"too small ({size} bytes)"
+        if data[:4] == b"CLIM" and size < 256:
+            return False, "header-only CLIM stub"
         return False, f"size/format changed ({orig_size} -> {size}); keeping original"
+    if size < 40:
+        return False, f"too small ({size} bytes)"
+    if data[:4] == b"CLIM" and orig_size < 256 and orig_size != size:
+        return False, "header-only CLIM stub"
     return True, ""
 
 
@@ -201,8 +235,9 @@ def convert_png_to_bclim(
     except Exception:
         fmt = -1
 
-    # fmt 8 = RGBA4444; fmt 0xB = ETC1A4; fmt 1 = A8; fmt 3 = RGB565; fmt 0xD = A4.
-    if fmt in (1, 3, 8, 0xB, 0xD):
+    # NW4C: 0 L8, 1 A8, 2 LA4, 3/5 RGB565, 6 RGB8, 8 RGBA4444, 9 RGBA8,
+    # 0xB ETC1A4, 0xD A4.
+    if fmt in (0, 1, 2, 3, 5, 6, 8, 9, 0xB, 0xD):
         try:
             encoded = png_to_bclim_same_size(png, orig_bclim)
             produced.write_bytes(encoded)

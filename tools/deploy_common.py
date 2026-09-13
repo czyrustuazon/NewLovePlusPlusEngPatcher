@@ -41,6 +41,7 @@ __all__ = [
     "resolve_resident_trb",
     "ui_font",
     "find_ui_png",
+    "fit_png_to_canvas",
 ]
 
 
@@ -161,14 +162,36 @@ def resolve_resident_trb() -> Path:
     )
 
 
+def fit_png_to_canvas(png: Path, size: tuple[int, int]) -> Path:
+    """Contain-resize a PNG onto a transparent canvas of ``size`` (in place)."""
+    from PIL import Image
+
+    w, h = size
+    with Image.open(png) as im:
+        src = im.convert("RGBA")
+        if src.size == (w, h):
+            return png
+        scale = min(w / src.width, h / src.height)
+        nw = max(1, int(round(src.width * scale)))
+        nh = max(1, int(round(src.height * scale)))
+        nw = min(nw, w)
+        nh = min(nh, h)
+        resized = src.resize((nw, nh), Image.Resampling.LANCZOS)
+        canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        canvas.paste(resized, ((w - nw) // 2, (h - nh) // 2), resized)
+        canvas.save(png)
+    return png
+
+
 def find_ui_png(
     folder_names: tuple[str, ...] | list[str],
     stem: str,
     size: tuple[int, int] | None = None,
 ) -> Path | None:
-    """Community / .check PNG master for a BCLIM stem, if size matches.
+    """Community / .check PNG master for a BCLIM stem.
 
-    Used so output_PNG (English) assets take precedence over rendered labels.
+    If ``size`` is set and the PNG differs, contain-fit it onto that canvas so
+    chrome deploys use Zhoumaru art instead of a font label.
     """
     from PIL import Image
 
@@ -190,6 +213,10 @@ def find_ui_png(
             with Image.open(png) as im:
                 if im.size == size:
                     return png
+        except OSError:
+            continue
+        try:
+            return fit_png_to_canvas(png, size)
         except OSError:
             continue
     return None

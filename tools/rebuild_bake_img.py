@@ -9,7 +9,7 @@ Self-contained (no Azahar required):
     → ordered deploy_*_en.py chrome (+ day-counter resident TRB)
     → sync TRBs into release/romfs_overlay
     → release/bake_img.bin
-    → release/bake_stamp.txt (PATCHER_RELEASE; Drop ignores leftover bake if mismatch)
+    → release/bake_stamp.txt (PATCHER_RELEASE + UI PNG fingerprint; Drop ignores leftover bake if mismatch)
     → release/name_input_code.bin (Profile romaji stack; drop-bat --inject-code)
 
 Usage:
@@ -512,7 +512,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
     print(f"  name-input:    {name_code}", flush=True)
-    stamp = write_bake_stamp()
+    stamp = write_bake_stamp(packed_assets=not args.skip_pack)
     print(f"  bake stamp:    {stamp} ({PATCHER_RELEASE})", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
     timer.finish("gold rebuild OK")

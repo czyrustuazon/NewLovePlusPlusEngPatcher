@@ -433,10 +433,17 @@ def main() -> int:
         raise SystemExit(f"Copyright fmt {cfmt:#x} expected ETC1A4")
     print(f"OK Copyright.bclim vanilla {cw}x{ch} (Konami only)", flush=True)
 
-    eng_rgba = render_eng_strip(cw, ch)
+    master_eng = find_ui_png(("Title.check", "Title"), "Eng_Patch", (cw, ch))
+    if master_eng is not None:
+        eng_rgba = Image.open(master_eng).convert("RGBA")
+        print(f"OK Eng_Patch.png master {master_eng.name} {eng_rgba.size}", flush=True)
+    else:
+        eng_rgba = render_eng_strip(cw, ch)
+        ASSET.mkdir(parents=True, exist_ok=True)
+        eng_rgba.save(ASSET / "Eng_Patch.png")
+        print(f"OK Eng_Patch.png font fallback {cw}x{ch}", flush=True)
     eng_png = tmp / "Eng_Patch.png"
     eng_rgba.save(eng_png)
-    eng_rgba.save(ASSET / "Eng_Patch.png")
     eng_rgba.save(OUT / "Eng_Patch_en.png")
     eng_rgba.resize((cw * 4, ch * 4), Image.Resampling.NEAREST).save(
         OUT / "Eng_Patch_en_x4.png"

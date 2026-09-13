@@ -29,6 +29,7 @@ tools/*
 !tools/deploy_*.py
 !tools/import_*.py
 !tools/deploy_common.py
+!tools/fit_ui_masters.py
 !tools/rebuild_bake_img.py
 !tools/rebuild_test_cia.py
 !tools/fetch_release_bake.py

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import os
 import struct
+import sys
 import threading
 import time
 import zlib
@@ -258,7 +259,17 @@ def compress_exact_with_gap_tune(
 
 
 def _zlib_progress(msg: str, *, newline: bool = False) -> None:
-    print(f"\r  [exact-zlib] {msg}".ljust(96), end="" if not newline else "\n", flush=True)
+    # cp1252 consoles raise UnicodeEncodeError on "→" / "…" and pack_images
+    # treated that as a failed compress (left the ARC Japanese).
+    text = f"\r  [exact-zlib] {msg}".ljust(96)
+    end = "" if not newline else "\n"
+    try:
+        print(text, end=end, flush=True)
+    except UnicodeEncodeError:
+        safe = text.encode(sys.stdout.encoding or "ascii", errors="replace").decode(
+            sys.stdout.encoding or "ascii", errors="replace"
+        )
+        print(safe, end=end, flush=True)
 
 
 def _format_secs(sec: float) -> str:
@@ -329,7 +340,7 @@ def _zopfli_compress(data: bytes, *, label: str) -> bytes:
     else:
         _ZOPFLI_SEC_PER_MB = 0.6 * _ZOPFLI_SEC_PER_MB + 0.4 * sample
     _zlib_progress(
-        f"{label} done [{ '#' * 24 }] {_format_secs(elapsed)} → {len(out)} bytes "
+        f"{label} done [{ '#' * 24 }] {_format_secs(elapsed)} -> {len(out)} bytes "
         f"({_ZOPFLI_SEC_PER_MB:.1f}s/MB)",
         newline=True,
     )

@@ -50,6 +50,21 @@ def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypat
     assert bake.resolve() in targets
 
 
+def test_find_ui_png_fits_mismatched_size(tmp_path, monkeypatch):
+    from PIL import Image
+
+    assets = tmp_path / "assets" / "images" / "Title.check" / "timg"
+    assets.mkdir(parents=True)
+    png = assets / "Eng_Patch.png"
+    Image.new("RGBA", (50, 10), (255, 0, 0, 255)).save(png)
+
+    monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
+    got = deploy_common.find_ui_png(("Title.check",), "Eng_Patch", (218, 14))
+    assert got == png
+    with Image.open(png) as im:
+        assert im.size == (218, 14)
+
+
 def test_ui_font_missing_exits(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(deploy_common, "UI_FONT", tmp_path / "missing.ttf")
     try:
