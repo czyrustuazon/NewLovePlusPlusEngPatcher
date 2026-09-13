@@ -850,7 +850,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the ~16h first run when that infra exists.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the ~2–4h first run (historically ~16h sequential zopfli) when that infra exists.
 
 #### What git contains vs what a patched CIA needs
 
@@ -1205,7 +1205,7 @@ Offline `vendor/NLPPATCH/` was removed from main (2026-08-31); NLPP-005 may re-v
 
 ---
 
-*Last updated 2026-09-07 — keep main §§16–18; add NLPP-005 §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-11 — keep main §§16–18; add NLPP-005 §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack. UI PNG masters: 1727 mapped / 562 chrome.*
 
 ---
 
@@ -1267,7 +1267,7 @@ Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` 
 |------|--------|
 | `tools/export_progress_metrics.py` | `out/progress_metrics.json` — per-file script lists, SMS messages, TRB STRI indices, UI PNG names |
 | `tools/script_coverage_report.py` | Console summary |
-| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes |
+| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes (2026-09-11: **562** chrome / **1727** mapped PNG masters) |
 
 Regenerate before publishing; `out/` is gitignored.
 
@@ -1322,13 +1322,13 @@ Or set `NLPP_ENG_PATCHER` / `NLPP_WORKBENCH`.
 |-----|--------------|---------|---------------------|
 | **Scripts** | `kit/NLPP_Translate.html` | Dialogue still needing EN (dialogs only in embed; ~6 MB) | `nlpp-contrib-….json` (`kind: nlpp-contrib`) |
 | **Strings** | `kit/NLPP_Translate_Strings.html` | SMS (`maildic_*`) + TRB leftovers still JP | `nlpp-strings-….json` (`kind: nlpp-strings-contrib`) |
-| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (~1210 across ~68 folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
+| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1727** across **92 / 95** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
 
 Hub tabs lazy-load iframes; unsaved edits warn via `postMessage` `{type:'nlpp-unsaved', tool, dirty}`.
 
 **Volunteer loop:** open hub → edit → **Save progress** → post JSON in Discord `#translated-work-to-review`.
 
-Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-03): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + ~436 TRB; Images **1210** PNGs / **68** folders.
+Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-11): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1727** PNGs / **92 of 95** folders (empty: `intro111`, `intro203`, `intro304`). Chrome-only subset for the fansite bar is **562** in 25 folders (`tools/export_progress_metrics.py`).
 
 #### Scripts kit — routes and sources (`export_workkit.py`)
 
@@ -1384,7 +1384,7 @@ Heroine SMS stems: Manaka `maildic_m`, Nene `maildic_n`, Rinko `maildic_r`. Jump
 | Volunteer actions | Unchecked → **OK** / **Needs fix** / **Upload PNG** (same W×H) → Save → JSON may embed `png_b64` |
 | Preview | Background toggle (light checker default) — view only |
 
-**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. (~68 keys / ~1210 PNGs in a full export).
+**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **92 of 95** keys / **1727** PNGs (empty: `intro111`, `intro203`, `intro304`). Do not quote the old ~68 / ~1210 snapshot.
 
 Ingest: `ingest_images.py --apply` writes replacements back under `assets/images/` for later `pack_images` / bake.
 
@@ -1442,5 +1442,5 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 
 ---
 
-*Last updated 2026-09-07 — merged NLPP-005 onto main: keep §§16–18; add §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-11 — UI PNG masters **1727** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2.*
 

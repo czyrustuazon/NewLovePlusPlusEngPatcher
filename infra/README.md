@@ -20,16 +20,19 @@ commit and updates the rolling Release tag **`gold`**:
 ## Consume a bake
 
 ```bash
-python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
-# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
+# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker
 ```
 
 ## Setup secret (once)
 
 EngPatcher → Settings → Secrets → `NLPP_GOLD_DISPATCH_TOKEN`  
-= PAT that can dispatch workflows on nlpp-gold.
+= PAT that can dispatch workflows on **nlpp-gold-maker**.
 
-Docs / runner: local `Documents/nlpp-gold` or the GitHub nlpp-gold repo (`infra/`).
+Optional variable: `NLPP_GOLD_REPO=OWNER/nlpp-gold-maker` (workflow already
+defaults to `<owner>/nlpp-gold-maker`).
+
+Docs / runner: local `Documents/nlpp-gold` or the GitHub **nlpp-gold-maker** repo.
 
 ## Companion site progress bar (script text)
 

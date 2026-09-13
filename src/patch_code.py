@@ -7,9 +7,10 @@ Ghidra (image base 0 / file offset == address):
   SetNameCharsToPanes   @ 0x00190168  (size 0x1F4)
   BackspaceNameCharPane @ 0x001908d8  (size 0xE8)
 
-Original behavior draws one UTF-8 glyph per pane (8×3 grid). English names
-look wrong because ASCII is half-width. This rewrite:
-  - clears all panes
+Original behavior draws one UTF-8 glyph per pane (8×3 grid of 16×16 cells).
+English names clip because ASCII is half-width and later cells sit off the
+visible field. This rewrite:
+  - widens those glyph panes to 128×16 (covers the whole name row)
   - copies up to 8 UTF-8 characters into a contiguous buffer at obj+0x1AC
   - draws the full string on column 0 (rows 0..2 for shadow layers)
   - keeps max length at 8
@@ -55,6 +56,37 @@ EMPTY_STR_PTR = 0x007C2F0C
 SIZE_CLEAR = 0xB8
 SIZE_SET = 0x1F4
 SIZE_BACKSPACE = 0xE8
+
+# FUN_00190394 CreateTextPane size setup (nop + mov r3,#0x10 + 4×strh 16×16).
+ADDR_PANE_SIZE = 0x001907B4
+PANE_SIZE_LEN = 0x2C  # through strh [sp,#0x26] at 0x001907DC
+# Texture + pane 128×16 so 8 ASCII letters fit in the visible name row.
+ORIG_PANE_SIZE = bytes.fromhex(
+    "00f020e3"  # nop
+    "0e00000a"  # beq skip if alloc failed
+    "1030a0e3"  # mov r3, #0x10
+    "b832cde1"  # strh r3, [sp, #0x28]
+    "ba32cde1"  # strh r3, [sp, #0x2a]
+    "0100a0e3"  # mov r0, #1
+    "ff14a0e3"  # mov r1, #0xff000000
+    "b432cde1"  # strh r3, [sp, #0x24]
+    "bca08de2"  # add r10, sp, #0xbc
+    "bc108de5"  # str r1, [sp, #0xbc]
+    "b632cde1"  # strh r3, [sp, #0x26]
+)
+WIDE_PANE_SIZE = bytes.fromhex(
+    "80c0a0e3"  # mov r12, #0x80  width
+    "0e00000a"  # beq skip
+    "1030a0e3"  # mov r3, #0x10   height
+    "b8c2cde1"  # strh r12, [sp, #0x28]  tex w
+    "ba32cde1"  # strh r3,  [sp, #0x2a]  tex h
+    "0100a0e3"  # mov r0, #1
+    "ff14a0e3"  # mov r1, #0xff000000
+    "b4c2cde1"  # strh r12, [sp, #0x24]  pane w
+    "bca08de2"  # add r10, sp, #0xbc
+    "bc108de5"  # str r1, [sp, #0xbc]
+    "b632cde1"  # strh r3,  [sp, #0x26]  pane h
+)
 
 MAX_CHARS = 8
 COUNT_OFF = 0x1EC
@@ -328,7 +360,7 @@ def assemble_set_name(base: int = ADDR_SET) -> bytes:
     OP(mov_imm(2, 0))
     OP(mov_imm(1, 0))
     OP(mov_reg(0, 9))
-    OP(mov_imm(10, 1))
+    OP(mov_imm(10, 0))  # maxGlyphs=0 → full name (1 would draw only the first letter)
     OP(mov_imm(11, 0))
     OP(u32(0xE1CDA0F0))
     BL(ADDR_DRAW_TEXT)
@@ -434,6 +466,60 @@ def is_patched_code(data: bytes) -> bool:
     return data[ADDR_CLEAR : ADDR_CLEAR + 4] == bytes.fromhex("04109fe5")
 
 
+def is_wide_name_panes(data: bytes) -> bool:
+    return data[ADDR_PANE_SIZE : ADDR_PANE_SIZE + PANE_SIZE_LEN] == WIDE_PANE_SIZE
+
+
+def is_vanilla_name_pane_size(data: bytes) -> bool:
+    return data[ADDR_PANE_SIZE : ADDR_PANE_SIZE + PANE_SIZE_LEN] == ORIG_PANE_SIZE
+
+
+def apply_wide_name_glyph_panes(data: bytearray) -> bool:
+    """CreateTextPane 16×16 → 128×16 so the full 8-letter name fits on-screen."""
+    if is_wide_name_panes(data):
+        print("[code] wide name panes already patched")
+        return False
+    if not is_vanilla_name_pane_size(data):
+        raise ValueError(
+            f"unexpected CreateTextPane size setup at {ADDR_PANE_SIZE:#x}: "
+            f"{bytes(data[ADDR_PANE_SIZE:ADDR_PANE_SIZE + 8]).hex()}"
+        )
+    data[ADDR_PANE_SIZE : ADDR_PANE_SIZE + PANE_SIZE_LEN] = WIDE_PANE_SIZE
+    print(f"[code] name glyph panes 16x16 -> 128x16 @ {ADDR_PANE_SIZE:#x}")
+    return True
+
+
+def apply_name_pane_patches(data: bytearray, *, force: bool = False) -> bool:
+    """In-memory single-pane draw + wide glyph panes. Returns True if bytes changed."""
+    if len(ORIG_PANE_SIZE) != PANE_SIZE_LEN or len(WIDE_PANE_SIZE) != PANE_SIZE_LEN:
+        raise RuntimeError("name pane size blocks must be 0x2c bytes")
+
+    changed = False
+    if is_patched_code(data) and not force:
+        print("[code] name-pane draw already patched")
+    else:
+        if not is_vanilla_code(data) and not force:
+            raise ValueError(
+                "code.bin does not look like vanilla NLPP "
+                "(unexpected prologs at name-pane functions)"
+            )
+        clear = assemble_clear()
+        set_name = assemble_set_name()
+        back = assemble_backspace()
+        assert len(clear) == SIZE_CLEAR
+        assert len(set_name) == SIZE_SET
+        assert len(back) == SIZE_BACKSPACE
+        data[ADDR_CLEAR : ADDR_CLEAR + SIZE_CLEAR] = clear
+        data[ADDR_SET : ADDR_SET + SIZE_SET] = set_name
+        data[ADDR_BACKSPACE : ADDR_BACKSPACE + SIZE_BACKSPACE] = back
+        changed = True
+        print("[code] patched single-pane name draw")
+
+    if apply_wide_name_glyph_panes(data):
+        changed = True
+    return changed
+
+
 def patch_cesa_duration(
     data: bytearray,
     *,
@@ -477,35 +563,21 @@ def patch_code_bin(
     changed = False
 
     if name_panes:
-        if is_patched_code(data) and not force:
-            print(f"[code] name-pane already patched: {path}")
-        else:
-            if not is_vanilla_code(data):
-                if bak.is_file() and is_vanilla_code(bak.read_bytes()):
-                    print(f"[code] restoring vanilla from {bak.name} before re-patch")
-                    data = bytearray(bak.read_bytes())
-                elif not force:
-                    raise ValueError(
-                        f"{path} does not look like vanilla NLPP code.bin "
-                        f"(unexpected prologs at name-pane functions)"
-                    )
-
-            if not bak.exists():
-                shutil.copy2(path, bak)
-                print(f"[code] backup: {bak}")
-
-            clear = assemble_clear()
-            set_name = assemble_set_name()
-            back = assemble_backspace()
-            assert len(clear) == SIZE_CLEAR
-            assert len(set_name) == SIZE_SET
-            assert len(back) == SIZE_BACKSPACE
-
-            data[ADDR_CLEAR : ADDR_CLEAR + SIZE_CLEAR] = clear
-            data[ADDR_SET : ADDR_SET + SIZE_SET] = set_name
-            data[ADDR_BACKSPACE : ADDR_BACKSPACE + SIZE_BACKSPACE] = back
+        if not is_vanilla_code(data) and not is_patched_code(data):
+            if bak.is_file() and is_vanilla_code(bak.read_bytes()):
+                print(f"[code] restoring vanilla from {bak.name} before re-patch")
+                data = bytearray(bak.read_bytes())
+            elif not force:
+                raise ValueError(
+                    f"{path} does not look like vanilla NLPP code.bin "
+                    f"(unexpected prologs at name-pane functions)"
+                )
+        if not bak.exists():
+            shutil.copy2(path, bak)
+            print(f"[code] backup: {bak}")
+        if apply_name_pane_patches(data, force=force):
             changed = True
-            print(f"[code] patched single-pane name draw -> {path}")
+            print(f"[code] name-pane patches -> {path}")
 
     if skip_cesa_logo:
         if not bak.exists():

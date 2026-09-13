@@ -6,6 +6,10 @@ Rewrites NameInput_DrawCell (0x1fc304) so DrawText shows romaji AND the
 7-byte insert buffer stores the same display string (so kana-direct /
 ABC-style insert writes romaji into the name field).
 
+Copy that slot *before* MakeStr/DrawText. The old order left the stack
+syllable live across those calls; TickPoller then concatenated a clobbered
+buffer (KA+KE+KU → KAKKE) even after an empty-field retry.
+
 Romaji is built on a stack buffer (not the code cave): ExeFS .code is RX
 under Azahar — stores into the cave are dropped.
 
@@ -72,6 +76,10 @@ def add_imm(rd: int, rn: int, imm: int) -> bytes:
     return u32(0xE2800000 | (rn << 16) | (rd << 12) | encode_imm12(imm))
 
 
+def add_imm_cond(cond: int, rd: int, rn: int, imm: int) -> bytes:
+    return u32((cond << 28) | 0x02800000 | (rn << 16) | (rd << 12) | encode_imm12(imm))
+
+
 def sub_imm(rd: int, rn: int, imm: int) -> bytes:
     return u32(0xE2400000 | (rn << 16) | (rd << 12) | encode_imm12(imm))
 
@@ -110,6 +118,10 @@ def ldrb_imm(rd: int, rn: int, imm: int = 0) -> bytes:
     return u32(0xE5D00000 | (rn << 16) | (rd << 12) | imm)
 
 
+def ldrb_post(rd: int, rn: int, imm: int = 1) -> bytes:
+    return u32(0xE4D00000 | (rn << 16) | (rd << 12) | (imm & 0xFFF))
+
+
 def push(mask: int) -> bytes:
     return u32(0xE92D0000 | mask)
 
@@ -120,6 +132,13 @@ def pop(mask: int) -> bytes:
 
 def bl(here: int, target: int) -> bytes:
     return u32(0xEB000000 | (((target - here - 8) >> 2) & 0xFFFFFF))
+
+
+def blx_imm(here: int, target: int) -> bytes:
+    """ARM BLX to a Thumb function (even dest; H selects the +2 byte)."""
+    off = target - here - 8
+    h = (off >> 1) & 1
+    return u32(0xFA000000 | (h << 24) | ((off >> 2) & 0xFFFFFF))
 
 
 def b_ins(here: int, target: int) -> bytes:
@@ -158,6 +177,15 @@ def _pad4(s: str) -> bytes:
     if len(b) > 3:
         raise ValueError(s)
     return b + b"\0" * (4 - len(b))
+
+
+def _romaji_cell(s: str) -> str:
+    """Hepburn cell label/insert string (4-byte slot via _pad4).
+
+    No trailing '.' — skip-ascii-dakuten already bypasses TickPoller's っ/゛
+    strcmp, and strcat-raw still collapses KKE if a clobber returns.
+    """
+    return s
 
 
 # Image-2 Hepburn map (small kana → lowercase). Keyed by hiragana codepoint.
@@ -279,6 +307,8 @@ def _assemble(base: int, stream: list) -> bytes:
             out.extend(it[1])
         elif kind == "bl":
             out.extend(bl(addr, it[1]))
+        elif kind == "blx":
+            out.extend(blx_imm(addr, it[1]))
         elif kind == "bl_lab":
             out.extend(bl(addr, labs[it[1]]))
         elif kind == "b":
@@ -295,10 +325,12 @@ def _assemble(base: int, stream: list) -> bytes:
 
 def build_romaji_blob(*, canary: bool = False) -> bytes:
     hira_tab = b"".join(
-        _pad4(HIRA_ROMAJI.get(cp, "")) for cp in range(0x3041, 0x3041 + 0x56)
+        _pad4(_romaji_cell(HIRA_ROMAJI.get(cp, "")))
+        for cp in range(0x3041, 0x3041 + 0x56)
     )
     kata_tab = b"".join(
-        _pad4(HIRA_ROMAJI.get(cp - 0x60, "")) for cp in range(0x30A1, 0x30A1 + 0x56)
+        _pad4(_romaji_cell(HIRA_ROMAJI.get(cp - 0x60, "")))
+        for cp in range(0x30A1, 0x30A1 + 0x56)
     )
 
     stream: list = []
@@ -323,13 +355,29 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
 
     # ---- draw_cell (mirrors FUN_001fc304; MakeStr uses romaji) ----
     # r0=obj r1=idx r2=str
-    # Stack: [0..0x33] same as vanilla MakeStr frame; [0x34..0x3B] RW romaji out
-    # (must NOT write romaji into .text — ExeFS .code is RX on Azahar)
+    # Stack: [0..0x17] DrawText args; [0x18..0x2F] MakeStr (6 words);
+    #        [0x40..0x47] RW romaji out. Frame 0x48 so MakeStr cannot overlap
+    #        the syllable used for insert. (Must NOT write romaji into .text —
+    #        ExeFS .code is RX on Azahar.)
+    FRAME = 0x48
+    ROMAJI_SP = 0x40
+
+    def copy_insert_from_r10() -> None:
+        # strncpy(obj+idx*8+0x541, r10, 7) — MUST run before MakeStr/DrawText.
+        # TickPoller inserts this slot, not the on-screen MakeStr. A later
+        # clobber of the stack syllable turned KA+KE+KU into KAKKE.
+        OP(add_reg(0, 6, 5, shift=3))
+        OP(add_imm(0, 0, 0x500))
+        OP(add_imm(0, 0, 0x41))
+        OP(mov_imm(2, 7))
+        OP(mov_reg(1, 10))
+        BL(ADDR_MEMCPY7)
+
     L("draw")
     OP(push(0x4FF0))  # r4-r11, lr
     OP(mov_reg(6, 0))  # obj
     OP(mov_reg(5, 1))  # idx
-    OP(sub_imm(13, 13, 0x3C))
+    OP(sub_imm(13, 13, FRAME))
     OP(mov_reg(9, 2))  # orig str
     OP(mov_imm(0, 0))
     OP(add_reg(4, 6, 5, shift=2))  # &pane_slot
@@ -339,8 +387,8 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     OP(ldr_imm(0, 4, 0x54))
     BL(ADDR_CLEAR_PANE)
 
-    # r0 = kana_to_romaji(dst=sp+0x34, src=orig)
-    OP(add_imm(0, 13, 0x34))
+    # r0 = kana_to_romaji(dst=sp+ROMAJI_SP, src=orig)
+    OP(add_imm(0, 13, ROMAJI_SP))
     if canary:
         OP(cmp_imm(5, 0))
         B("do_romaji", cond=0x1)  # ne
@@ -351,6 +399,8 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     stream.append(("bl_lab", "kana"))
     OP(mov_reg(10, 0))  # display cstr
     L("after_kana")
+
+    copy_insert_from_r10()
 
     # Always maxGlyphs=0 (unlimited UTF-8 / short ASCII romaji).
     # maxGlyphs=1 truncates multi-byte UTF-8 to the first byte (blank/junk).
@@ -375,19 +425,10 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
 
     OP(add_imm(0, 13, 0x18))
     BL(ADDR_FREE_STR)
-
-    # memcpy(obj+idx*8+0x541, DISPLAY, 7) — insert matches on-screen label
-    # (romaji for gojuon; original kana/kanji/latin when unmapped).
-    OP(add_reg(0, 6, 5, shift=3))
-    OP(add_imm(0, 0, 0x500))
-    OP(add_imm(0, 0, 0x41))
-    OP(mov_imm(2, 7))
-    OP(mov_reg(1, 10))
-    BL(ADDR_MEMCPY7)
     OP(mov_reg(0, 7))
 
     L("epilogue")
-    OP(add_imm(13, 13, 0x3C))
+    OP(add_imm(13, 13, FRAME))
     OP(pop(0x8FF0))  # r4-r11, pc
 
     # ---- kana_to_romaji(r0=dst8, r1=src) -> r0=display cstr ----
@@ -395,6 +436,9 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     OP(push(0x40F0))  # r4-r7, lr
     OP(mov_reg(7, 0))  # dst (RW stack)
     OP(mov_reg(4, 1))  # src
+    OP(mov_imm(0, 0))
+    OP(str_imm(0, 7, 0))
+    OP(str_imm(0, 7, 4))
     OP(cmp_imm(4, 0))
     B("k_orig", cond=0x0)  # eq
 

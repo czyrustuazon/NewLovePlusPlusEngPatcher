@@ -23,7 +23,8 @@ from image_map import IMAGE_MAP  # noqa: E402
 from pack_images import iter_asset_pngs, prefer_asset_folders  # noqa: E402
 from script_inject import (  # noqa: E402
     DEFAULT_ENG_DBIN,
-    NLPPPATCH_SCRIPT,
+    LEGACY_NLPPATCH_SCRIPT,
+    SCRIPT_PACK_TOTAL,
     nlppatch_script_dir,
     nlppatch_stems,
     resolve_script_source,
@@ -82,6 +83,16 @@ UI_FOLDER_KEYS: tuple[str, ...] = (
 )
 
 
+# Vanilla script/bin/script stem counts (New Love Plus+). rebuild_dbin2 only
+# stores English files; JP stems stay on the ROM and must still count here.
+VANILLA_ROUTE_TOTALS = {
+    "manaka": 175,
+    "rinko": 174,
+    "nene": 174,
+    "common": 55,
+}
+
+
 def route_for_stem(stem: str) -> str:
     p = stem[0].lower() if stem else ""
     return {"t": "manaka", "k": "rinko", "a": "nene", "p": "common"}.get(p, "other")
@@ -110,17 +121,21 @@ def script_metrics(eng_root: Path) -> dict:
             route,
             {"total": 0, "english": 0, "japanese": 0, "layers": {}},
         )
-        routes[route]["total"] += 1
         if en:
             routes[route]["english"] += 1
             routes[route]["layers"][tag] = routes[route]["layers"].get(tag, 0) + 1
             files["english"].append(rec)
         else:
-            routes[route]["japanese"] += 1
             files["japanese"].append(rec)
 
-    total = len(stems)
+    for name, tot in VANILLA_ROUTE_TOTALS.items():
+        routes.setdefault(name, {"total": 0, "english": 0, "japanese": 0, "layers": {}})
+        en_n = routes[name]["english"]
+        routes[name]["total"] = tot
+        routes[name]["japanese"] = max(0, tot - en_n)
+
     en_total = len(files["english"])
+    total = SCRIPT_PACK_TOTAL
     out_routes = {}
     for name, v in routes.items():
         out_routes[name] = {
@@ -130,7 +145,7 @@ def script_metrics(eng_root: Path) -> dict:
     return {
         "pack": "script",
         "path_glob": "rebuild_dbin2/script/*.dbin2",
-        "vendor_nlppatch": str(NLPPPATCH_SCRIPT),
+        "vendor_nlppatch": str(nlppatch_script_dir() or LEGACY_NLPPATCH_SCRIPT),
         "nlppatch_stem_count": len(nlppatch_stems()),
         "total_files": total,
         "english_files": en_total,
@@ -142,6 +157,52 @@ def script_metrics(eng_root: Path) -> dict:
 
 
 def sms_metrics(img_path: Path) -> dict:
+    if not img_path.is_file():
+        # Gold bake is gitignored; still emit the known JP-in-bake SMS headline
+        # so image/script exports do not die on a missing 680 MB img.bin.
+        by_hero = {
+            "manaka": {
+                "hero": "manaka",
+                "mdc_file": "maildic_m.mdc",
+                "img_bin_package": SMS_PKG,
+                "total_messages": 599,
+                "english_messages": 0,
+                "japanese_messages": 599,
+                "percent": 0.0,
+            },
+            "nene": {
+                "hero": "nene",
+                "mdc_file": "maildic_n.mdc",
+                "img_bin_package": SMS_PKG,
+                "total_messages": 634,
+                "english_messages": 0,
+                "japanese_messages": 634,
+                "percent": 0.0,
+            },
+            "rinko": {
+                "hero": "rinko",
+                "mdc_file": "maildic_r.mdc",
+                "img_bin_package": SMS_PKG,
+                "total_messages": 589,
+                "english_messages": 0,
+                "japanese_messages": 589,
+                "percent": 0.0,
+            },
+        }
+        return {
+            "storage": f"img.bin package {SMS_PKG}",
+            "deploy_tool": "tools/deploy_sms_maildic_en.py",
+            "restore_tool": "tools/restore_sms_maildic_jpn.py",
+            "note": (
+                f"EN disabled in gold bake by default; {img_path} missing — "
+                "SMS counts are the documented JP bake headline (0/1822), not a live parse"
+            ),
+            "total_messages": 1822,
+            "english_messages": 0,
+            "percent": 0.0,
+            "by_hero": by_hero,
+        }
+
     im = ImgBin(str(img_path))
     im.parse(recursive=False)
     pak = im.entries[SMS_PKG]
@@ -323,7 +384,12 @@ def image_metrics() -> dict:
     all_pngs: list[dict] = []
     for key in UI_FOLDER_KEYS:
         if key not in folders:
-            ui[key] = {"folder_key": key, "asset_dir": None, "png_count": 0}
+            ui[key] = {
+                "folder_key": key,
+                "asset_dir": None,
+                "png_masters": 0,
+                "png_files": [],
+            }
             continue
         folder = folders[key]
         rel = str(folder.relative_to(ROOT))
@@ -342,6 +408,18 @@ def image_metrics() -> dict:
             all_pngs.append({"folder_key": key, "png": n, "package": pkg_idx})
 
     total_ui_pngs = sum(v.get("png_masters", 0) for v in ui.values())
+    mapped_png = 0
+    mapped_hit = 0
+    empty: list[str] = []
+    for key in IMAGE_MAP:
+        folder = folders.get(key)
+        if folder is None:
+            empty.append(key)
+            continue
+        n = len(iter_asset_pngs(folder))
+        mapped_png += n
+        if n:
+            mapped_hit += 1
     return {
         "gold_bake": str(BAKE_IMG.relative_to(ROOT)),
         "source_root": "assets/images/<Folder>.check/",
@@ -349,7 +427,11 @@ def image_metrics() -> dict:
         "ui_folder_keys": list(UI_FOLDER_KEYS),
         "ui_packages_with_png_masters": sum(1 for v in ui.values() if v.get("png_masters")),
         "ui_png_masters_total": total_ui_pngs,
-        "note": "Percent = EN PNG masters present / not full vanilla BCLIM inventory",
+        "mapped_png_masters_total": mapped_png,
+        "mapped_folders_with_png": mapped_hit,
+        "image_map_keys": len(IMAGE_MAP),
+        "empty_image_map_keys": empty,
+        "note": "Percent = EN PNG masters present / not full vanilla BCLIM inventory. ui_* = chrome subset; mapped_* = all IMAGE_MAP folders",
         "by_folder": ui,
         "all_png_files": all_pngs,
     }
@@ -413,7 +495,11 @@ def main() -> int:
     print(f"Scripts+SMS: {payload['dialogue_plus_sms']['english']}/{payload['dialogue_plus_sms']['total']} ({payload['dialogue_plus_sms']['percent']}%)")
     if "percent" in trb_m:
         print(f"TRB: {trb_m['english_entries']}/{trb_m['total_stri_entries']} ({trb_m['percent']}%)")
-    print(f"UI PNG masters: {images['ui_png_masters_total']}")
+    print(f"UI PNG masters (chrome): {images['ui_png_masters_total']}")
+    print(
+        f"UI PNG masters (mapped): {images['mapped_png_masters_total']} "
+        f"in {images['mapped_folders_with_png']}/{images['image_map_keys']} folders"
+    )
     return 0
 
 
