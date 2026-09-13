@@ -161,7 +161,7 @@ def deploy_combined(*, also_code_bak: bool = True) -> None:
     print(f"[combine] TRB <- name-kanji ({src_trb.name})", flush=True)
 
     print(f"[combine] OK -> {mod}", flush=True)
-    print("Launch this Azahar user dir; open Profile → First Name.", flush=True)
+    print("Launch this Azahar user dir; open Profile -> First Name.", flush=True)
     print(
         "Expect: bake EN chrome + Hepburn/ABC keys (not empty checkerboard).",
         flush=True,

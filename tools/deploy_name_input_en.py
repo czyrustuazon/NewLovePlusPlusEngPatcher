@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Deploy the verified Profile name-input EN stack.
 
-Verified stack (2026-08-31):
+Verified stack (2026-08-31, name-pane draw 2026-09-12):
 
+  0. patch_code name panes          # single-pane 8-letter draw + 128×16 cells
   1. patch_input_pane_registry_nullguard
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
+  6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
+  7. patch_input_strcat_raw                # byte strcat; strip KA.; collapse KKE
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -29,6 +32,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from patch_code import apply_name_pane_patches  # noqa: E402
 from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
     CAVE2 as CAND_CAVE2,
@@ -61,6 +65,13 @@ from patch_input_romaji import (  # noqa: E402
     is_romaji_patched,
     patch_input_romaji,
 )
+from patch_input_skip_ascii_dakuten import (  # noqa: E402
+    apply_patch as apply_ascii_dakuten,
+    is_patched as ascii_dakuten_already,
+)
+from patch_input_strcat_raw import (  # noqa: E402
+    apply_patch as apply_strcat_raw,
+)
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
 
@@ -91,6 +102,9 @@ def kana_already(data: bytes) -> bool:
 def apply_name_input_stack(data: bytearray) -> int:
     """Apply the full verified stack in-place. Returns number of steps run."""
     steps = 0
+
+    if apply_name_pane_patches(data):
+        steps += 1
 
     if pane_already(data):
         print("[skip] pane_registry_nullguard already applied")
@@ -127,6 +141,15 @@ def apply_name_input_stack(data: bytearray) -> int:
     else:
         apply_kana_direct(data)
         steps += 1
+
+    if ascii_dakuten_already(data):
+        print("[skip] skip_ascii_dakuten already applied")
+    else:
+        apply_ascii_dakuten(data)
+        steps += 1
+
+    apply_strcat_raw(data)
+    steps += 1
 
     return steps
 
