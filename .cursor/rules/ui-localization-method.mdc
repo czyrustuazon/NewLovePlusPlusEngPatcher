@@ -32,6 +32,7 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Screen | Pkg | Status |
 |--------|-----|--------|
 | Options + clock title | **5245** A8 | EN |
+| Password entry window | **5251** ETC1A4 | EN (`deploy_optionpassword_en.py`, Zhoumaru `Pass_Win01`) |
 | Display/Sound settings panels | **5247** RGBA4444 | EN (`deploy_display_settings_en.py`) |
 | Back/Next/Confirm | **5238** ETC1A4 | EN (`OK` for 決定) |
 | Gallery / Comm / Data MSel | 5244/5241/5242 | EN |
@@ -40,6 +41,6 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Status stats | **5501** / **5255** | EN |
 | To-Do chrome | 5575 / **5253** | EN; long TRB titles → shorten |
 | Floating `初期設定` Defaults | — | **unmapped** |
-| Message-speed sample line | — | **unmapped** |
+| Message-speed sample line | `code.bin` `0x005D1928` | JP sentence unmapped; **delay 14/8/2/0** (`patch_message_speed.py`, §21) |
 
 Details: `technical.md` §12.4–12.6.

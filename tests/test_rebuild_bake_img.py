@@ -15,6 +15,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_confirm_btn_en.py",
         "deploy_title_engpatch_en.py",
         "deploy_display_settings_en.py",
+        "deploy_optionpassword_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"

@@ -344,6 +344,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
 | Softkeys Back / Next / Confirm | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` |
+| Password entry window | **5251** `OptionPassword.arc` | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
 | “Main Menu” title string | TRB | Already EN via textresource |

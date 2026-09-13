@@ -61,6 +61,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_confirm_btn_en.py",
     "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
     "deploy_display_settings_en.py",
+    "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
     "deploy_card_flist_en.py",

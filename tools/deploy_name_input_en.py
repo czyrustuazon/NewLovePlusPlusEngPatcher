@@ -8,6 +8,7 @@ Verified stack (2026-08-31):
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
+  6. patch_message_speed                   # Display Settings 14/8/2/0 frames/glyph
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -60,6 +61,10 @@ from patch_input_pane_registry_nullguard import (  # noqa: E402
 from patch_input_romaji import (  # noqa: E402
     is_romaji_patched,
     patch_input_romaji,
+)
+from patch_message_speed import (  # noqa: E402
+    apply_patch as apply_message_speed,
+    is_patched as message_speed_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -126,6 +131,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] kana_direct_insert already applied")
     else:
         apply_kana_direct(data)
+        steps += 1
+
+    if message_speed_already(data):
+        print("[skip] message_speed already applied")
+    else:
+        apply_message_speed(data)
         steps += 1
 
     return steps

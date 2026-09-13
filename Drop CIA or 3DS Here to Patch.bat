@@ -393,7 +393,14 @@ echo [+] Patch log ^(same summary^):
 echo     %~dp0out\logs\latest.txt
 echo     ^(timestamped copies stay in out\logs\^)
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept CIA + luma + logs^).
+echo [+] Install over the existing title in FBI/Azahar. Do NOT delete the title first
+echo     ^(that orphans extra data^). Title version is bumped so it installs as an update.
+echo.
+echo [+] Azahar extra data backup/restore:
+echo     python tools\restore_azahar_extdata.py backup
+echo     python tools\restore_azahar_extdata.py restore
+echo.
+echo [+] out\ cleaned ^(scratch removed; kept CIA + luma + logs + extdata_backup^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 
