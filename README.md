@@ -55,8 +55,8 @@ builds `release/` and updates GitHub Release tag `gold`. See
 [`infra/README.md`](infra/README.md). Collaborators:
 
 ```bash
-python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
-# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
+# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker
 ```
 
 Manual handoff still works:

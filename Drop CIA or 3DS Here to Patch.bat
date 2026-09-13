@@ -252,7 +252,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     if not defined BAKE_STALE if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
       echo.
       echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
-      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold if auto-detect fails^)
+      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails^)
       echo.
       "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
       if errorlevel 1 (

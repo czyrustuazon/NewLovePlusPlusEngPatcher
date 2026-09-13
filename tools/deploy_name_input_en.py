@@ -4,6 +4,7 @@
 Verified stack (2026-08-31, name-pane draw 2026-09-12):
 
   0. patch_code name panes          # single-pane 8-letter draw + 128×16 cells
+  0b. patch_bplace_list_pane        # hometown rows 64×16 → 128×16; glyph cap 8 → 12
   1. patch_input_pane_registry_nullguard
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
@@ -32,6 +33,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from patch_bplace_list_pane import apply_patch as apply_bplace_list_pane  # noqa: E402
 from patch_code import apply_name_pane_patches  # noqa: E402
 from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
@@ -104,6 +106,9 @@ def apply_name_input_stack(data: bytearray) -> int:
     steps = 0
 
     if apply_name_pane_patches(data):
+        steps += 1
+
+    if apply_bplace_list_pane(data):
         steps += 1
 
     if pane_already(data):

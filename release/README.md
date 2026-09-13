@@ -32,7 +32,7 @@ uploads `bake_img.bin` + `romfs_overlay.zip` to GitHub Releases on tags `v*` (se
 `infra/` pointer + nlpp-gold docs), or zip those with a clone. Recipients:
 
 ```bash
-python tools/fetch_release_bake.py --repo OWNER/nlpp-gold
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker
 ```
 
 then drop their CIA on the bat (Windows). Safe to delete `bake_img.bin.bak_pre_*`

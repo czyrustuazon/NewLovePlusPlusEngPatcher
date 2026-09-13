@@ -39,7 +39,7 @@ def test_default_gold_repo_derives_owner_from_git(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     with patch.object(fetch_mod, "ROOT", tmp_path):
-        assert fetch_mod._default_gold_repo() == "myowner/nlpp-gold"
+        assert fetch_mod._default_gold_repo() == "myowner/nlpp-gold-maker"
 
 
 def test_github_asset_urls_requires_both_assets():

@@ -72,6 +72,29 @@ def nlp_get_string(data: bytes, lookup: list[str]) -> str:
     return "".join(ret)
 
 
+def nlp_payload_bytes(strb: bytes, stringindex: int) -> bytes:
+    """Slice one NLP codebook string out of STRB.
+
+    Two-byte codes use ``hi = 0x80 + (index >> 8)`` and ``lo = index & 0xFF``.
+    Characters whose codebook index is a multiple of 256 (e.g. 梨 at 1536)
+    therefore store ``lo = 0x00``. That NUL is payload, not a terminator.
+    """
+    i = stringindex
+    pending_hi = False
+    while i < len(strb):
+        b = strb[i]
+        if pending_hi:
+            pending_hi = False
+            i += 1
+            continue
+        if b == 0:
+            return strb[stringindex:i]
+        if b >= 0x80:
+            pending_hi = True
+        i += 1
+    return strb[stringindex:]
+
+
 def parse_chunks(data: bytes) -> dict:
     if data[:4] != b"STRI":
         raise ValueError("not a STRI textresource")
@@ -112,12 +135,13 @@ def iter_entries(stri: bytes):
 def decode_entry(strb: bytes, stringindex: int, flag: int, lookup: list[str]) -> tuple[str, bytes]:
     if flag == 2:
         return "", b""
-    end = strb.find(b"\x00", stringindex)
-    if end < 0:
-        end = len(strb)
-    buf = strb[stringindex:end]
     if flag == 1:
+        end = strb.find(b"\x00", stringindex)
+        if end < 0:
+            end = len(strb)
+        buf = strb[stringindex:end]
         return buf.decode("utf-8", errors="replace"), buf
+    buf = nlp_payload_bytes(strb, stringindex)
     return nlp_get_string(buf, lookup), buf
 
 
