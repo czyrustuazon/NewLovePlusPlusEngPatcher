@@ -91,6 +91,17 @@ def test_find_exefs_icon_prefers_icon_bin(tmp_path: Path):
     assert smdh.find_exefs_icon(tmp_path).name == "icon.bin"
 
 
+def test_find_exefs_icon_accepts_3dstool_icn(tmp_path: Path):
+    (tmp_path / "icon.icn").write_bytes(b"x")
+    assert smdh.find_exefs_icon(tmp_path).name == "icon.icn"
+
+
+def test_find_exefs_icon_prefers_icn_over_bin(tmp_path: Path):
+    (tmp_path / "icon.bin").write_bytes(b"bin")
+    (tmp_path / "icon.icn").write_bytes(b"icn")
+    assert smdh.find_exefs_icon(tmp_path).name == "icon.icn"
+
+
 def test_summary_cia_meta_ok_by_default(tmp_path: Path, monkeypatch):
     bake = tmp_path / "bake.bin"
     bake.write_bytes(b"gold")

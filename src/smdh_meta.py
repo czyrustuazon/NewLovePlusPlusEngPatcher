@@ -44,7 +44,9 @@ REGION_PRESETS: dict[str, tuple[int, str, str]] = {
 }
 
 PRODUCT_CODE_LEN = 16
-ICON_NAMES = ("icon.bin", "icon", ".icon")
+# 3dstool maps ExeFS ``icon`` → ``icon.icn`` (v1.2.x+). Older dumps / docs use
+# ``icon.bin``. Keep both so HOME-menu SMDH patching survives either extract.
+ICON_NAMES = ("icon.icn", "icon.bin", "icon", ".icon")
 
 
 def utf16_field(text: str, nbytes: int) -> bytes:
@@ -111,6 +113,9 @@ def smdh_region_lock(data: bytes) -> int:
 def find_exefs_icon(exefs_dir: Path) -> Path:
     for name in ICON_NAMES:
         path = exefs_dir / name
+        if path.is_file():
+            return path
+    for path in sorted(exefs_dir.glob("icon*")):
         if path.is_file():
             return path
     raise FileNotFoundError(f"no SMDH icon in {exefs_dir}")
