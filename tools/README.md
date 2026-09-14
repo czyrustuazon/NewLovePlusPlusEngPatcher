@@ -7,6 +7,7 @@
 | `cia/` | Vendored [3dstool](https://github.com/dnasdw/3dstool) / [Project_CTR](https://github.com/3DSGuy/Project_CTR) / `seeddb.bin` (see `cia/CREDITS.md`) | Split/rebuild NCCH/RomFS, makerom CIA |
 | `nlpp-tools/` | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** (vendored) | `img.bin` / package / BCLIM helpers (`ie`, `pe`, `png2bclim`, …) |
 | `mdcutil.py` | EngPatcher | SMS maildic MDC pack / unpack |
+| `translate_heroines_gemini.py` | EngPatcher | Gemini JP→EN for leftover Nene (`a*`) / Rinko (`k*`) scripts (optional SMS). Preserves `▲…▲` / `※` / `▼` / `●`. Key: `GEMINI_API_KEY` in `.env` |
 | `Trb2xlsx/` | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) | `lookup.txt` codebook for `patch_textresource.py` |
 | `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | XML ↔ `.dbin2` (needs .NET SDK to build) |
 | `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Older `img.bin` unpacker (C#) |

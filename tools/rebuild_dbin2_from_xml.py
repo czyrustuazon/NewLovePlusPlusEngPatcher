@@ -108,6 +108,63 @@ def xml_to_entries(path: Path) -> tuple[int, int, list[DbinEntry]]:
     return key, unknown, entries
 
 
+def _xml_escape(text: str) -> str:
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+    )
+
+
+def entries_to_xml(key: int, unknown: int, entries: list[DbinEntry]) -> str:
+    """Serialize DBIN2 entries to NLPTextTool-compatible XML (utf-8 text).
+
+    Dialog inner newlines are kept as-is (not pretty-indented), matching
+    ``assets/scripts/t*.xml``.
+    """
+    ns_xsi = "http://www.w3.org/2001/XMLSchema-instance"
+    ns_xsd = "http://www.w3.org/2001/XMLSchema"
+    lines = [
+        '<?xml version="1.0" encoding="utf-8"?>',
+        (
+            f'<DBIN2 xmlns:xsi="{ns_xsi}" xmlns:xsd="{ns_xsd}" '
+            f'Key="{key}" Unknown="{unknown}">'
+        ),
+        "  <Entries>",
+    ]
+    for entry in entries:
+        lines.append(
+            f'    <Entry Unknown0="{entry.unknown0}" Unknown1="{entry.unknown1}">'
+        )
+        lines.append(f'      <SDL2 Key="{entry.sdl2.key}">')
+        lines.append("        <Unknown>")
+        for unk in entry.sdl2.unknown:
+            lines.append("          <Entry>")
+            if unk.values:
+                lines.append("            <Values>")
+                for val in unk.values:
+                    lines.append("              <Entry>")
+                    lines.append(f"                <Value0>{val.value0}</Value0>")
+                    lines.append(f"                <Value1>{val.value1}</Value1>")
+                    lines.append("              </Entry>")
+                lines.append("            </Values>")
+            else:
+                lines.append("            <Values />")
+            lines.append(f"            <Value0>{unk.value0}</Value0>")
+            lines.append(f"            <Value1>{unk.value1}</Value1>")
+            lines.append("          </Entry>")
+        lines.append("        </Unknown>")
+        lines.append("        <Dialogs>")
+        for dialog in entry.sdl2.dialogs:
+            lines.append(f"          <Dialog>{_xml_escape(dialog)}</Dialog>")
+        lines.append("        </Dialogs>")
+        lines.append("      </SDL2>")
+        lines.append("    </Entry>")
+    lines.append("  </Entries>")
+    lines.append("</DBIN2>")
+    return "\n".join(lines) + "\n"
+
+
 def count_tokens_in_xml(path: Path) -> int:
     return path.read_text(encoding="utf-8").count(HERO_TOKEN)
 
