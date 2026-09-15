@@ -1993,6 +1993,7 @@ _OUT_KEEP_DIRS = frozenset(
         "azahar_instances",  # a/b test workflow (ab_test/)
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "extdata_backup",  # Azahar extra-data / title-save snapshots
+        "gemini_heroines",  # paid Gemini Nene/Rinko scratch (gitignored; do not wipe)
     }
 )
 
@@ -2003,7 +2004,7 @@ def cleanup_out_dir(
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
     quiet: bool = False,
 ) -> None:
-    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, backups, and a/b instances."""
+    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, gemini_heroines/, backups, and a/b instances."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return

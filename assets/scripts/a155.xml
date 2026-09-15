@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="1441944165" Unknown="4">
+  <Entries>
+    <Entry Unknown0="4204525648" Unknown1="2495128901">
+      <SDL2 Key="4015230205">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88142</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88143</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147461</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88144</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147461</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88145</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147461</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88146</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147461</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>4294901762</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>983040</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1048576</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88147</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1114112</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1179648</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88148</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1245184</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1310720</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88149</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1376256</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1441792</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>4294901762</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>88150</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1507328</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1572864</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88151</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1638400</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88152</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1703936</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88153</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1769472</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1835008</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88154</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1900544</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88155</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>1966080</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88156</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2031616</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88157</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2097152</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2162688</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88158</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2228224</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2293760</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88159</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2359296</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2424832</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88160</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2490368</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2555904</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88161</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2621440</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2686976</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2752512</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2818048</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88162</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>2883584</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2949120</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>3014656</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2752512</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>2818048</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88163</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147470</Value0>
+            <Value1>3080192</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>3145728</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>？？？</Dialog>
+          <Dialog>-Hey.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Mmmgh......</Dialog>
+          <Dialog>Huh...？ Wait, what are
+you doing here!?</Dialog>
+          <Dialog>Naruto</Dialog>
+          <Dialog>What d'you mean？ We're on
+our school trip!
+Still half-asleep？</Dialog>
+          <Dialog>Wait, really...？</Dialog>
+          <Dialog>No time to be snoozing!
+Anegasaki says she needs you.
+She's waiting by the river.</Dialog>
+          <Dialog>Anegasaki...？
+Wait, who gave you the right
+to call her just 'Anegasaki'--？</Dialog>
+          <Dialog>Huh？
+She's Anegasaki, isn't she...？
+Are you still half-asleep？</Dialog>
+          <Dialog>Dammit, why's Anegasaki
+into a guy like you...？
+Anyway, I passed on the
+message, alright？</Dialog>
+          <Dialog>(What is going on...？
+Guess I'll go check it out...)</Dialog>
+          <Dialog>(I wonder why ▲姉ヶ崎＊▲
+called me out here...)</Dialog>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲！</Dialog>
+          <Dialog>I'm so glad...
+You really came...</Dialog>
+          <Dialog>What's wrong？
+Calling me out here...</Dialog>
+          <Dialog>There's something...
+I just had to tell you
+on this trip...</Dialog>
+          <Dialog>Yes...</Dialog>
+          <Dialog>Phew...
+What do I do...？
+I'm getting scared after all...</Dialog>
+          <Dialog>That doesn't sound like you
+at all, ▲姉ヶ崎＊▲.
+It's okay, you can tell me.</Dialog>
+          <Dialog>▲主人公＊▲.
+How do you... feel about me？</Dialog>
+          <Dialog>Well, obviously--</Dialog>
+          <Dialog>Wait!
+It's fine, I know...
+We're just friends, right？</Dialog>
+          <Dialog>But I... The truth is,
+I've liked you for so long...</Dialog>
+          <Dialog>Ever since we were put
+in the same class freshman year...</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...
+Wait.
+Hold on... same class？</Dialog>
+          <Dialog>If I tell you this, we won't
+be able to stay friends like
+before, will we？</Dialog>
+          <Dialog>But it hurts so much...
+I can't take it anymore...
+So I decided.</Dialog>
+          <Dialog>I decided I'd confess
+to you on this trip.</Dialog>
+          <Dialog>Please go out with me.
+I love you...
+I want to be your girlfriend...</Dialog>
+          <Dialog>Well... of course.</Dialog>
+          <Dialog>...Really？</Dialog>
+          <Dialog>Really!
+I mean, ●, we're already--</Dialog>
+          <Dialog>Then hold me!</Dialog>
+          <Dialog>Eh！？</Dialog>
+          <Dialog>If you really love me,
+hug me! Squeeze me tight!</Dialog>
+          <Dialog>S-Squeeze you tight？
+Alright...
+Here goes...</Dialog>
+          <Dialog>Yes...</Dialog>
+          <Dialog>▲姉ヶ崎＊▲!!</Dialog>
+          <Dialog>Oww!!</Dialog>
+          <Dialog>A dream...？
+Felt pretty vivid, though...</Dialog>
+          <Dialog>Nnngh...
+Shut uuup...</Dialog>
+          <Dialog>I'm sorry...</Dialog>
+          <Dialog>(Back to sleep...)</Dialog>
+          <Dialog>Are you okay...？
+You were having a nightmare...</Dialog>
+          <Dialog>I'm fine, I'm fine...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1158439577" Unknown1="256831158">
+      <SDL2 Key="1297430078">
+        <Unknown>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88164</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147462</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>917504</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>983040</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88165</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147472</Value0>
+            <Value1>1114112</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>1179648</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88166</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147472</Value0>
+            <Value1>1245184</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>1310720</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Aaah!
+That was a great soak!</Dialog>
+          <Dialog>(Is ▲姉ヶ崎＊▲...
+still in there？)</Dialog>
+          <Dialog>(She's taking pretty long...
+Did she already go back to
+the room？)</Dialog>
+          <Dialog>I'm back.
+▲姉ヶ崎＊▲, you in here？</Dialog>
+          <Dialog>(Hm？
+Is someone in our room's
+open-air bath？)</Dialog>
+          <Dialog>？？？</Dialog>
+          <Dialog>Haaah...
+Such nice water...
+Pure bliss♪</Dialog>
+          <Dialog>(That sounded like ▲姉ヶ崎＊▲...
+Wait, what if it's
+an intruder？)</Dialog>
+          <Dialog>(Can't be helped...
+Gotta go make sure.
+I'll just slide it open a bit...)</Dialog>
+          <Dialog>(Whoa!
+▲姉ヶ崎＊▲!!?)</Dialog>
+          <Dialog>(It looks like her, but...
+No, I can't really tell yet!)</Dialog>
+          <Dialog>(Right, if I just look
+a little more from the side...)</Dialog>
+          <Dialog>(No good!!
+Curse this steam!
+It's totally in the way!)</Dialog>
+          <Dialog>(At times like this...
+Right, I just have to blow on it!)</Dialog>
+          <Dialog>All right, nice!</Dialog>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Wait, what？
+Who's there!? A peeper!?</Dialog>
+          <Dialog>...Huh？
+No, wait—it's ●!</Dialog>
+          <Dialog>Nooo!
+Teacherrr, a boy!
+A boy is peeping on meee!</Dialog>
+          <Dialog>Wait a second!
+There's a reason for this!!</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3030571274" Unknown1="1066884940">
+      <SDL2 Key="3314838921">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88167</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88168</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88169</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88170</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88171</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88172</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>917504</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>983040</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88173</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>1048576</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1114112</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1179648</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1245184</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1310720</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88174</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>1376256</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1441792</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1507328</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1245184</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1310720</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88175</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147463</Value0>
+            <Value1>1572864</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1441792</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1638400</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>？？？</Dialog>
+          <Dialog>Heeey...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Mmm......</Dialog>
+          <Dialog>Heeey...
+Wake up already~.</Dialog>
+          <Dialog>...▲姉ヶ崎＊▲？
+What is it, something wrong？</Dialog>
+          <Dialog>▲姉ヶ崎＊▲!?</Dialog>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Jeez, I can't believe
+you really fell asleep.
+Fufu.</Dialog>
+          <Dialog>Sorry...
+Wait, what's with that outfit？</Dialog>
+          <Dialog>I changed into it.
+Cute, right？</Dialog>
+          <Dialog>Yeah, super cute...
+But why？</Dialog>
+          <Dialog>Why？ Because it's our
+honeymoon, right？
+I thought you might like this.</Dialog>
+          <Dialog>I do...
+Wait, hold on.
+Does that mean, like, uh...</Dialog>
+          <Dialog>Fufu.
+Hey, won't you come over here？</Dialog>
+          <Dialog>Wait, what!?
+B-But earlier we already—</Dialog>
+          <Dialog>Never mind that.
+Come on, come here.
+Hubby▼</Dialog>
+          <Dialog>W-Well, then...
+Since you're offering, maybe just—</Dialog>
+          <Dialog>▲姉ヶ崎＊▲!!</Dialog>
+          <Dialog>……!?</Dialog>
+          <Dialog>Right... It was a dream!
+Still, though,
+that was one crazy dream...</Dialog>
+          <Dialog>Mmm...
+Too noisy over there...</Dialog>
+          <Dialog>Sorry.
+Really, I'm sorry...</Dialog>
+          <Dialog>(Back to sleep, then...)</Dialog>
+          <Dialog>What happened...!?
+Shouting out loud like that...</Dialog>
+          <Dialog>(Man, this is embarrassing...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1256925344" Unknown1="2450060693">
+      <SDL2 Key="2646906085">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88176</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88177</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88178</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88179</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88180</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88181</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88182</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>917504</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>983040</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1048576</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1114112</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1179648</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1245184</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88183</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>1310720</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1376256</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>88184</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>1441792</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1507328</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>1572864</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Heeey!</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>▲姉ヶ崎＊▲？
+Heeey!</Dialog>
+          <Dialog>Still in the cocoon bath？
+Staying in too long isn't
+good for you, you know～？</Dialog>
+          <Dialog>Good point.
+Time to get out, I guess...</Dialog>
+          <Dialog>▲姉ヶ崎＊▲!!!?</Dialog>
+          <Dialog>Heeey.
+The water feels great, huh♪</Dialog>
+          <Dialog>Yeah, but... Wait!
+This is the men's bath!?
+Did you just come right in？</Dialog>
+          <Dialog>Sure did▼
+I mean, we're on our honeymoon,
+after all. Let's bathe together... okay？</Dialog>
+          <Dialog>I-I see...</Dialog>
+          <Dialog>Haaah...
+Pure bliss♪</Dialog>
+          <Dialog>What is it？
+Are you blushing？
+That's silly, when
+we're married and all.</Dialog>
+          <Dialog>I mean, sure, but...
+Just checking, but
+what's under that towel...？</Dialog>
+          <Dialog>I'll leave that to
+your imagination.
+Hehe▼</Dialog>
+          <Dialog>(I can't see clearly,
+but surely she's got a
+swimsuit on, right？
+Though if she doesn't,
+that'd be bad...)</Dialog>
+          <Dialog>(Right, if I just
+look from the side
+a bit more...)</Dialog>
+          <Dialog>(Aargh!! The steam!
+The steam's in the way!)</Dialog>
+          <Dialog>(Nothing else for it...
+I'll just have to try
+blowing it away...)</Dialog>
+          <Dialog>Dammit!!
+What is with this steam!?
+It's got her completely
+shielded!</Dialog>
+          <Dialog>What is it？
+What about the steam？</Dialog>
+          <Dialog>...Huh？
+N-No, nothing!
+Just talking to myself!</Dialog>
+          <Dialog>Hehe, you're weird.
+Look, you'll catch a cold.
+Hurry on in,
+d-a-r-l-i-n-g▼</Dialog>
+          <Dialog>Y-Yes.
+Excuse me, then...
+All right――huh？</Dialog>
+          <Dialog>...Wait a second？
+Didn't something like
+this happen before...？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>

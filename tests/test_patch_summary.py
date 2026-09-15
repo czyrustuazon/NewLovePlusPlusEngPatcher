@@ -299,11 +299,15 @@ def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
     bak = out / "extdata_backup"
     bak.mkdir()
     (bak / "keep.txt").write_text("snap\n", encoding="utf-8")
+    gemini = out / "gemini_heroines" / "xml"
+    gemini.mkdir(parents=True)
+    (gemini / "a000.xml").write_text("<Dialog>keep</Dialog>\n", encoding="utf-8")
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert cia.is_file()
     assert luma.is_dir()
     assert (logs / "latest.txt").is_file()
     assert (bak / "keep.txt").is_file()
+    assert (gemini / "a000.xml").is_file()
     assert not (out / "scratch.bin").exists()
 
 
