@@ -24,9 +24,9 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 FONTS = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025"
 ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_400X240.png"
+COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "Bottom_Thank.png"
 OUT_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_240X400_preview.png"
-OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_400X240_preview.png"
+OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "Bottom_Thank_preview.png"
 
 W, H = 240, 400
 SCALE = 2
@@ -48,12 +48,13 @@ RAMP_STEPS = 12
 # Companion uses a short ramp so the extra TEX still fits pkg 90.
 COMPANION_RAMP_STEPS = 3
 
-# Same 240×400 poster orientation as CESA_240X400 (slot is still CESA_400X240.texi).
-COMPANION_W, COMPANION_H = W, H
-COMPANION_CW, COMPANION_CH = CW, CH
-COMPANION_MAX_TEXT_W = MAX_TEXT_W
+# Bottom-screen thank pane (320×240 after rotate; slot is Bottom_Thank.texi).
+COMPANION_W, COMPANION_H = 240, 320
+COMPANION_CW, COMPANION_CH = COMPANION_W * SCALE, COMPANION_H * SCALE
+COMPANION_MAX_TEXT_W = (COMPANION_W - 2 * MARGIN) * SCALE
+COMPANION_TITLE_Y = 36 * SCALE
 COMPANION_TITLE = "Thanks for playing!"
-# Wrapped to the 240-wide CESA column (not the old 400×240 landscape).
+# Wrapped to the 240-wide bottom column.
 COMPANION_BODY = (
     (("This is a passionate,", "black"),),
     (("free", "accent"), (" community project.", "black")),
@@ -263,7 +264,7 @@ def render_cesa_en() -> Image.Image:
 
 
 def render_cesa_companion_en() -> Image.Image:
-    """240×400 gothic blurb (same orientation as CESA) for CESA_400X240.texi."""
+    """240×320 gothic blurb for Bottom_Thank.texi (pane beside CESA)."""
     accent_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     black_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     accent_draw = ImageDraw.Draw(accent_mask)
@@ -301,7 +302,7 @@ def render_cesa_companion_en() -> Image.Image:
         + TITLE_TO_BODY
         + leading * len(COMPANION_BODY)
     )
-    y = TITLE_Y
+    y = COMPANION_TITLE_Y
     if y + block_h > COMPANION_CH - 8 * SCALE:
         y = max(18 * SCALE, (COMPANION_CH - block_h) // 2)
 

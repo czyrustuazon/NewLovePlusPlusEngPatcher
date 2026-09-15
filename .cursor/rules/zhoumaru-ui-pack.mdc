@@ -15,8 +15,8 @@ Not NLPPCTR Citra hashes, not the UI Buttons zip (lolipop221), not TRB/scripts.
 
 | | Zhoumaru UI pack | CESA |
 |--|------------------|------|
-| Asset | `*.check/timg/*.png` | `assets/images/cesa/CESA_240X400.png` |
-| Format | BCLIM in IMAGE_MAP ARCs | TEXI `CESA_240X400.texi` |
+| Asset | `*.check/timg/*.png` | `assets/images/cesa/CESA_240X400.png` + `Bottom_Thank.png` |
+| Format | BCLIM in IMAGE_MAP ARCs | TEXI `CESA_240X400.texi` / `Bottom_Thank.texi` |
 | Package | menus / chrome ARCs | **90** (not in `image_map.py`) |
 | Origin | Zhoumaru `7ce3dd3` (did not touch CESA) | EngPatcher `6fc8658` (2026-07-20), earlier |
 | Deploy | PNG pack + chrome `deploy_*` | `deploy_cesa_en.py` / `--only cesa` only |

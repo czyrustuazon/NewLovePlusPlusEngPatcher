@@ -14,13 +14,17 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from patch_cesa import (  # noqa: E402
+    CESA_ALT_ORIENT_TEX_NAME,
+    CESA_COMPANION_TEX_NAME,
     CESA_PKG_INDEX,
+    COMPANION_VISIBLE_H,
+    COMPANION_VISIBLE_W,
+    VANILLA_PKG90_DEC_LEN,
     img_idx_entry_off,
     read_img_idx_dec_len,
     set_img_idx_dec_len,
 )
 
-VANILLA_PKG90_DEC_LEN = 1182976
 COMPANION_PKG90_DEC_LEN = VANILLA_PKG90_DEC_LEN + 256 * 512 * 3
 
 
@@ -61,3 +65,9 @@ def test_set_img_idx_dec_len_rejects_non_pak():
 
 def test_companion_pkg90_dec_len_is_vanilla_plus_one_tex():
     assert COMPANION_PKG90_DEC_LEN == 1576192
+
+
+def test_companion_slot_is_bottom_thank_not_alt_orient():
+    assert CESA_COMPANION_TEX_NAME == "Bottom_Thank.texi"
+    assert CESA_ALT_ORIENT_TEX_NAME == "CESA_400X240.texi"
+    assert (COMPANION_VISIBLE_W, COMPANION_VISIBLE_H) == (240, 320)

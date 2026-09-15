@@ -58,7 +58,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
 
-- **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `CESA_400X240` blurb, then `deploy_cesa_en.py` — **§12.7**.
+- **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `Bottom_Thank` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 
@@ -1048,7 +1048,7 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
 
 | Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
-| CESA companion blurb | RGB TEX `CESA_400X240.texi` @ pkg **90** (240×400 poster, same orientation as CESA; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild **+ idx `dec_len` 1576192**; **§12.7** |
+| CESA companion blurb | RGB TEX `Bottom_Thank.texi` @ pkg **90** (240×320 poster on the bottom screen; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild **+ idx `dec_len` 1576192**; **§12.7** |
 
 
 
@@ -1288,7 +1288,7 @@ Not Zhoumaru UI pack, not `IMAGE_MAP`, not BCLIM, not TRB. The boot anti-piracy 
 
 
 
-The **blank screen beside CESA** is `CESA_400X240.texi` — same PACK, vanilla **16×16 stub** (shared 15-byte zlib with other unused logos). Ghidra `CesaLogo` (`FUN_0016f338` / `FUN_0016eabc`) is a dual-screen player; constructor IDs include `0x5A0002` = pkg **90** index **2** (`CESA_400X240`). Cannot grow that 15-byte slot in place. Deploy now **rebuilds** the PACK inside the original **29232-byte** img.bin package: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `CESA_400X240` its own 256×512 / **240×400** TEX (same poster orientation as CESA), pad the file back to 29232. Do not shrink img.bin package length.
+The **blank screen beside CESA** on first boot is `Bottom_Thank.texi` (constructor ID `0x5A0000`) — same PACK, vanilla **16×16 stub**, **240×320** / 256×512 like `ProductionLogo_240X320`. `CESA_400X240.texi` (`0x5A0002`) is the unused **top-screen orientation** stub (same pattern as `KONAMI_CI_400X240`); filling it does not draw on 2D boot. Cannot grow the 15-byte stub zlib in place. Deploy **rebuilds** the PACK inside the original **29232-byte** img.bin package from **vanilla** pkg 90: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `Bottom_Thank` its own 256×512 / **240×320** TEX, leave `CESA_400X240` as a stub, pad the file back to 29232. Pair by **filename**, not TEXI index (index pairing would attach Konami to Bottom_Thank). Do not shrink img.bin package length.
 
 **Idx table (hardware crash 2026-09-14):** growing the inner PACK header `dec_len` 1182976 → 1576192 is not enough. img.bin's index table (`0x800 + 90*0x14`, `=4s4x2I2xBB`) still stored **1182976**. The game mallocs **that** arena, then writes the companion TEX at `dec_off=1182976` (one byte past the end) → heap smash → ARM11 data abort in malloc `FUN_0000de04` @ runtime `0x0010DE4C` (FAR=3, `ldr r2,[r0,#4]` with `r0=0xFFFFFFFF`). `patch_img_bin_with_companion` now writes the matching idx `dec_len`. Do not grow PACK `dec_len` without the idx field.
 
@@ -1338,15 +1338,15 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 
 
-#### Companion blurb (`CESA_400X240` — 2026-09-13)
+#### Companion blurb (`Bottom_Thank` — 2026-09-15)
 
 
 
-`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/CESA_400X240.png` (**240×400**, same orientation as CESA). Same Heisei W9/W5 index 1, **no red**: title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×400 crop stay poster-white.
+`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/Bottom_Thank.png` (**240×320**, rotated onto the 320×240 bottom screen). Same Heisei W9/W5 index 1, **no red**: title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
 
 
 
-Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Do not fill `Bottom_Thank` as 240×320 — TEXI order would pair it with Konami and shift ProductionLogo onto CESA.
+Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Fill `Bottom_Thank` **by filename** (`Bottom_Thank.texi` + its TEX). An earlier attempt filled `CESA_400X240` instead — that TEX is not bound on first boot, so the thank-you stayed invisible.
 
 
 
@@ -1368,7 +1368,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 
 | 2× masks + 12-step ramps (CESA warning) | ~12k (zopfli ~10934; no longer padded to 13667 once the PACK is rebuilt) | Smooth gothic, no red shadow |
 
-| 2× masks + 3-step ramps (CESA_400X240 blurb) | zopfli ~4388 | Teal highlights; extra TEX fits the PACK |
+| 2× masks + 3-step ramps (Bottom_Thank blurb) | zopfli ~4k | Teal highlights; extra TEX fits the PACK |
 
 
 
@@ -1428,7 +1428,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 
 | `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 
-| `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`CESA_400X240` companion) |
+| `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`Bottom_Thank` companion) |
 
 | `tools/render_cesa_en.py` | EN CESA 240×400 PNG: NLPPPATCH Heisei Gothic, 2× L masks, 12-step ramps (**§12.7**) |
 
@@ -1811,7 +1811,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 |----|---------|----------------|
 
-| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `CESA_400X240` blurb; PACK rebuild). **§12.7** |
+| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `Bottom_Thank` blurb; PACK rebuild). **§12.7** |
 
 | Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 

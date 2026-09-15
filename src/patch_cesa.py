@@ -31,11 +31,16 @@ DEFAULT_IMG = Path(
 )
 CESA_PKG_INDEX = 90
 CESA_TEX_NAME = "CESA_240X400.texi"
-CESA_COMPANION_TEX_NAME = "CESA_400X240.texi"
+# Unused 400×240 orientation stub — not the other 3DS screen.
+CESA_ALT_ORIENT_TEX_NAME = "CESA_400X240.texi"
+# Bottom screen beside CESA (vanilla 16×16 stub). Same canvas as ProductionLogo.
+CESA_COMPANION_TEX_NAME = "Bottom_Thank.texi"
 TEX_W, TEX_H = 256, 512
 VISIBLE_W, VISIBLE_H = 240, 400
 COMPANION_TEX_W, COMPANION_TEX_H = 256, 512
-COMPANION_VISIBLE_W, COMPANION_VISIBLE_H = 240, 400
+COMPANION_VISIBLE_W, COMPANION_VISIBLE_H = 240, 320
+VANILLA_PKG90_DEC_LEN = 1182976
+STUB_TEX_DEC_LEN = 768
 ENTRY_SIZE = 0x20
 PACK_ALIGN = 0x10
 # img.bin index table (see nlpp-tools Image.parse_idx_entry).
@@ -156,10 +161,10 @@ def encode_cesa_tex(im: Image.Image, width: int = TEX_W, height: int = TEX_H) ->
 
 
 def encode_cesa_companion_tex(im: Image.Image) -> bytes:
-    """CESA_400X240 TEX in the same 240×400 poster orientation as CESA_240X400.
+    """Bottom_Thank TEX: 240×320 poster (rotated onto the 320×240 bottom screen).
 
-    Canvas is 256×512 (oh=400) so the logo player rotates it like the warning.
-    Pad with white so Morton tiles at the crop edge stay poster-white.
+    Same 256×512 canvas as ProductionLogo_240X320. Pad white so crop-edge
+    Morton tiles stay poster-white.
     """
     return encode_tex(
         im,
@@ -396,19 +401,21 @@ def rebuild_pkg90_with_companion(
     cesa_tex: bytes,
     companion_tex: bytes,
 ) -> bytes:
-    """Rebuild pkg 90 inside the original 29232-byte slot with a real CESA_400X240.
+    """Rebuild pkg 90 inside the original 29232-byte slot with a real Bottom_Thank.
 
-    Vanilla CESA_400X240 is a 16×16 stub shared with other unused logos. Growing
-    that 15-byte zlib in place is impossible; instead stop padding CESA to 13667,
-    zopfli Konami/ProductionLogo losslessly, and give the companion TEX its own
-    offset (256×512 / 240×400, same orientation as CESA). Package file length
-    stays exactly ``len(pkg_raw)``.
+    CESA_400X240 is the unused top-screen orientation stub (like KONAMI_CI_400X240);
+    filling it does not draw on first boot. The blank pane beside CESA is
+    Bottom_Thank (16×16 stub, 240×320 / 256×512 like ProductionLogo). Growing
+    the 15-byte zlib in place is impossible; instead stop padding CESA to 13667,
+    zopfli Konami/ProductionLogo losslessly, and give Bottom_Thank its own TEX.
+    Package file length stays exactly ``len(pkg_raw)``.
 
     The PACK header ``dec_len`` grows by the companion TEX (393216). The caller
     **must** also update img.bin's idx-table dec_len for pkg 90 — the game
     mallocs that idx size, not the inner PACK header. Leaving idx at vanilla
     1182976 writes the companion one byte past the arena and heap-smashes boot
-    (Luma data abort in malloc @ 0x0010DE4C, FAR=3).
+    (Luma data abort in malloc @ 0x0010DE4C, FAR=3). Prefer a vanilla pkg 90
+    as ``pkg_raw`` so a previous CESA_400X240 grow is undone.
     """
     _ensure_nlpp_path()
     from img import Package
@@ -457,6 +464,8 @@ def rebuild_pkg90_with_companion(
     named_tex = {e["fn"]: e for e in entries if e["typ"] == b"TEX "}
     if CESA_TEX_NAME not in named_tex or CESA_COMPANION_TEX_NAME not in named_tex:
         raise RuntimeError("pkg 90 missing CESA TEX entries")
+    if CESA_ALT_ORIENT_TEX_NAME not in named_tex:
+        raise RuntimeError("pkg 90 missing CESA_400X240 stub TEX")
 
     konami_e = next(e for e in entries if e["typ"] == b"TEX " and e["fn"].startswith("KONAMI_CI_240X400"))
     prod_e = next(
@@ -527,6 +536,11 @@ def rebuild_pkg90_with_companion(
         companion_dec_off = companion_e["dec_off"]
         new_dec_len = dec_len
     else:
+        if dec_len != VANILLA_PKG90_DEC_LEN:
+            raise RuntimeError(
+                "pkg 90 PACK dec_len already grown but Bottom_Thank is still a stub; "
+                "rebuild from vanilla pkg 90 (old CESA_400X240 fill)"
+            )
         companion_dec_off = dec_len
         new_dec_len = dec_len + len(companion_tex)
 
@@ -536,7 +550,9 @@ def rebuild_pkg90_with_companion(
     _write_tex_entry(companion_e, "companion", companion_dec_off)
 
     stub_dec_off = next(
-        e["dec_off"] for e in entries if e["typ"] == b"TEX " and e["dec_len"] == 768
+        e["dec_off"]
+        for e in entries
+        if e["typ"] == b"TEX " and e["dec_len"] == STUB_TEX_DEC_LEN
     )
     for e in entries:
         if e["typ"] != b"TEX " or e["fn"] in {
@@ -548,7 +564,7 @@ def rebuild_pkg90_with_companion(
             continue
         _write_tex_entry(e, "stub", stub_dec_off)
 
-    # Patch CESA_400X240 TEXI visible/canvas size (still 82 bytes).
+    # Patch Bottom_Thank TEXI visible/canvas size (still 82 bytes).
     texi = next(e for e in entries if e["typ"] == b"TEXI" and e["fn"] == CESA_COMPANION_TEX_NAME)
     texi_blob = bytes(out[texi["dec_off"] : texi["dec_off"] + texi["dec_len"]])
     out[texi["dec_off"] : texi["dec_off"] + texi["dec_len"]] = _patch_texi_dims(
@@ -572,7 +588,13 @@ def rebuild_pkg90_with_companion(
     )
     if len(out) != len(pkg_raw):
         raise RuntimeError("rebuild changed package file length")
-    return bytes(out)
+    patched = bytes(out)
+    alt = read_named_tex_from_pkg(patched, CESA_ALT_ORIENT_TEX_NAME)
+    if len(alt) != STUB_TEX_DEC_LEN:
+        raise RuntimeError(
+            f"{CESA_ALT_ORIENT_TEX_NAME} must stay a 16×16 stub, got {len(alt)}"
+        )
+    return patched
 
 
 def read_named_tex_from_pkg(pkg_raw: bytes, name: str) -> bytes:
@@ -672,13 +694,19 @@ def patch_img_bin_with_companion(
     companion_png: Path,
     dst_img: Path,
     work: Path | None = None,
+    vanilla_img: Path | None = None,
 ) -> Path:
-    """Splice rebuilt pkg 90 (CESA + companion blurb) at the same img.bin offset."""
+    """Splice rebuilt pkg 90 (CESA + Bottom_Thank blurb) at the same img.bin offset.
+
+    ``vanilla_img`` supplies a clean pkg 90 so a previous CESA_400X240 grow is
+    reverted. Dest is only the splice target (and idx-table update).
+    """
     _ensure_nlpp_path()
     from img import Image as ImgBin
 
     src_img = Path(src_img).resolve()
     dst_img = Path(dst_img).resolve()
+    pkg_src = Path(vanilla_img).resolve() if vanilla_img is not None else src_img
     if work is None:
         work = dst_img.parent / "cesa_img_work"
     work.mkdir(parents=True, exist_ok=True)
@@ -694,9 +722,13 @@ def patch_img_bin_with_companion(
 
     base = res.fw.base_offset
     pkg_len = res.fw.len()
-    pkg_raw = res.fw.read()
+    im.fh.close()
+
+    pkg_raw = _load_pkg90(pkg_src)
     if len(pkg_raw) != pkg_len:
-        raise RuntimeError("package read length mismatch")
+        raise RuntimeError(
+            f"vanilla pkg 90 length {len(pkg_raw)} != dest slot {pkg_len}"
+        )
 
     patched_pkg = rebuild_pkg90_with_companion(pkg_raw, cesa_tex, companion_tex)
     if len(patched_pkg) != pkg_len:
@@ -706,9 +738,6 @@ def patch_img_bin_with_companion(
 
     (work / f"{CESA_PKG_INDEX:04d}.bin").write_bytes(pkg_raw)
     (work / f"{CESA_PKG_INDEX:04d}_patched.bin").write_bytes(patched_pkg)
-
-    # Close before rewriting dest — Windows won't replace a file held rb+.
-    im.fh.close()
 
     from img import Package
 
@@ -769,7 +798,9 @@ def _load_pkg90(src_img: Path) -> bytes:
     res = im.entries[CESA_PKG_INDEX]
     if res is None:
         raise RuntimeError(f"img.bin missing package {CESA_PKG_INDEX}")
-    return res.fw.read()
+    pkg = res.fw.read()
+    im.fh.close()
+    return pkg
 
 
 def main() -> int:
