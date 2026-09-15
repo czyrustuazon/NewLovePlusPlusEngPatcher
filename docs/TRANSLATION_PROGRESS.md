@@ -12,13 +12,13 @@ Machine-readable export (all file names): `out/progress_metrics.json` (~1 MB, gi
 
 ---
 
-## Headline numbers (2026-09-01 shipping stack)
+## Headline numbers (2026-09-15 shipping stack)
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
-| **Dialogue scripts** (`script` pack) | 326 / 578 | **56.4%** | One `.dbin2` per script ID |
+| **Dialogue scripts** (`script` pack) | 424 / 578 | **73.4%** | One `.dbin2` per script ID |
 | **SMS / phone** (`maildic_*.mdc`) | 0 / 1822 | **0%** | JP in gold bake (audit) |
-| **Scripts + SMS combined** | 326 / 2400 | **13.6%** | Use for “all spoken + phone text” rollup |
+| **Scripts + SMS combined** | 424 / 2400 | **17.7%** | Use for “all spoken + phone text” rollup |
 | **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Menus, stats, quests, system strings |
 | **UI PNG masters** (chrome folders) | 461 files | — | See `images_ui` in JSON; not % of all BCLIMs yet |
 
@@ -32,10 +32,10 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 |-------|--------|------------|---|--------|
 | Manaka | `t*` | 175 / 175 | 100% | `rebuild_dbin2/` |
 | Common | `p*` | 55 / 55 | 100% | `rebuild_dbin2/` |
-| Rinko | `k*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
-| Nene | `a*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
+| Rinko | `k*` | 48 / 174 | 27.6% | community `rebuild_dbin2/script/k*.dbin2` |
+| Nene | `a*` | 146 / 174 | 83.9% | Gemini XML → `rebuild_dbin2/` (`a936` still community-only) |
 
-**Not injected from XML:** Rinko/Nene — community layer in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
+**Not injected from XML:** Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
 
 **Inject policy:** `src/script_inject.py` → `resolve_script_source()` (used by `patch_cia.py`).
 

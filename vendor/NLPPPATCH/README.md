@@ -15,6 +15,7 @@ Original NLPPPATCH GitHub releases may 404. Fallback: extract the script pack fr
 | Layer | Script pack EN |
 |-------|----------------|
 | NLPPPATCH alone | ~169 / 578 (~29%) |
-| + Manaka 100% + common 100% | **326 / 578 (56.4%)** |
+| + Manaka 100% + common 100% | 326 / 578 (56.4%) |
+| + Gemini Nene `a*` (2026-09-15) | **424 / 578 (73.4%)** |
 
 See `docs/TRANSLATION_PROGRESS.md` for SMS, TRB, and UI metrics.

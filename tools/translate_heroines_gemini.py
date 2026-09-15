@@ -593,9 +593,10 @@ def cmd_run(args: argparse.Namespace) -> int:
             dest.write_bytes(path.read_bytes())
             copied += 1
         print(f"copied {copied} xml -> {ASSETS_SCRIPTS}")
-        print("WIP: a*/k* XML is not gold-injected until you rebuild + promote.")
+        print("Rebuild + allowlist required before Drop CIA injects these stems:")
         print("  python tools/rebuild_dbin2_from_xml.py --glob \"a*.xml\"")
         print("  python tools/rebuild_dbin2_from_xml.py --glob \"k*.xml\"")
+        print("  then add new stems to assets/nlppatch/stems.json")
     return 0 if failed_lines == 0 else 1
 
 

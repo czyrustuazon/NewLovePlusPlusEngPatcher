@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="1575396025" Unknown="18">
+  <Entries>
+    <Entry Unknown0="1924630736" Unknown1="340012401">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76689</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey... I'd love to get to
+know you all over again.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2310590181" Unknown1="352207474">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76690</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Your last name...
+It makes me a little
+fluttery... Hehe.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2289228262" Unknown1="3440591660">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76691</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Alright, go ahead and
+give me your name.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1116199072" Unknown1="3876912449">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76692</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>I'll definitely remember
+your birthday, too.
+You remember mine, right？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1502092981" Unknown1="3788378690">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76693</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Do you check blood-type fortunes？
+Mine's O, you know that, right？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1480780214" Unknown1="2598573052">
+      <SDL2 Key="964814421">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76694</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>And how to pronounce it, too.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="307751024" Unknown1="3001339153">
+      <SDL2 Key="1504783535">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76695</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>The place you grew up...
+I bet it's a really lovely place.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="693644933" Unknown1="2996757010">
+      <SDL2 Key="1504783535">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76696</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>It's like a nickname, huh？
+A handle name can really show off
+someone's personality.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="672283014" Unknown1="1739842508">
+      <SDL2 Key="1504783535">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76697</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey, what should I call you？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3794221120" Unknown1="2377424353">
+      <SDL2 Key="1504783535">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76698</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Fufu, all right.
+That's what I'll call you, then.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4180180565" Unknown1="2406396642">
+      <SDL2 Key="327393142">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76699</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>What would you like to call me？
+Go ahead, take your pick.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4175579478" Unknown1="881046428">
+      <SDL2 Key="327393142">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76700</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>All right, you got it♪</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3002550288" Unknown1="1485073841">
+      <SDL2 Key="327393142">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76701</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Is everything right？
+Be sure to double-check, okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3388509733" Unknown1="1480491698">
+      <SDL2 Key="327393142">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76702</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>All good, right？
+I feel like we just got
+a little closer again.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3367147814" Unknown1="1800635244">
+      <SDL2 Key="327393142">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76703</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76705</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76707</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>This game progresses in real time
+synced with the Nintendo 3DS
+system clock. Please make sure
+the time is accurate before starting.</Dialog>
+          <Dialog>If the time is incorrect,
+please turn off the power and set
+the Nintendo 3DS system clock
+properly.</Dialog>
+          <Dialog>Once you start the game, the
+in-game time cannot be changed,
+so please check carefully.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2194118880" Unknown1="1096039809">
+      <SDL2 Key="1135855314">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76708</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Now, please adjust the in-game
+clock to match your schedule.
+Please only shift the time if
+your daily routine strictly requires it.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2580078325" Unknown1="1125012098">
+      <SDL2 Key="1135855314">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76709</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Are you sure about this？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2558700022" Unknown1="3089322812">
+      <SDL2 Key="1135855314">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>76710</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>All right, setup is complete.
+Thank you for your time.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>

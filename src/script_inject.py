@@ -4,12 +4,10 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
 
 1. **Manaka 100%** — ``rebuild_dbin2`` for every ``t*`` (all packs).
 2. **EngPatcher common** — ``rebuild_dbin2`` for ``p*`` when present.
-3. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
-   stems listed in ``assets/nlppatch/stems.json``) from the historical NLPPATCH
-   layer, now shipped inside EngPatcher (no ``vendor/NLPPATCH`` required).
+3. **Nene / Rinko allowlist** — ``rebuild_dbin2`` ``a*``/``k*`` listed in
+   ``assets/nlppatch/stems.json`` (Gemini-promoted Nene plus remaining community
+   Rinko / overlap stems). Injected in every pack that has a matching file.
 4. **Japanese** — everything else left to the base ROM/CIA.
-
-Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply there.
 """
 from __future__ import annotations
 
@@ -33,7 +31,6 @@ LEGACY_NLPPATCH_SCRIPT = (
 
 PACKS = ("NLP_01", "NLP_02", "script")
 MANAKA_PREFIX = "t"
-ENG_PREFIXES = frozenset({"t", "p"})
 COMMUNITY_PREFIXES = frozenset({"a", "k"})
 # Vanilla RomFS ``script/bin/script`` stem count (New Love Plus+).
 SCRIPT_PACK_TOTAL = 578
@@ -42,7 +39,7 @@ _community_stems: set[str] | None = None
 
 
 def community_stems() -> set[str]:
-    """Stems from the integrated NLPPATCH-era layer (allowlist)."""
+    """a*/k* inject allowlist (Gemini Nene + community Rinko / leftover stems)."""
     global _community_stems
     if _community_stems is not None:
         return _community_stems
@@ -87,33 +84,23 @@ def resolve_script_source(
     eng = eng_root / pack / f"{stem}.dbin2"
     pref = script_prefix(stem)
 
-    if pack != "script":
-        if pref in ENG_PREFIXES and eng.is_file():
-            tag = "manaka" if pref == MANAKA_PREFIX else "eng_p"
-            return eng, tag
-        return None, "jp"
-
     if pref == MANAKA_PREFIX and eng.is_file():
         return eng, "manaka"
     if pref == "p" and eng.is_file():
         return eng, "eng_p"
 
-    # Community layer: prefer files already integrated into rebuild_dbin2.
     allow = community_stems()
-    if eng.is_file():
-        if allow:
-            if stem in allow:
-                return eng, "nlppatch"
-        elif pref in COMMUNITY_PREFIXES:
-            # Pre-manifest checkout: only a*/k* left in rebuild are community.
+    if pref in COMMUNITY_PREFIXES and eng.is_file():
+        if not allow or stem in allow:
             return eng, "nlppatch"
 
-    # Optional legacy vendor fallback (pre-integrate checkouts).
-    nlp_dir = nlppatch_script_dir()
-    if nlp_dir is not None:
-        nlp = nlp_dir / f"{stem}.dbin2"
-        if nlp.is_file() and (not allow or stem in allow):
-            return nlp, "nlppatch"
+    # Optional legacy vendor fallback (pre-integrate checkouts; script pack only).
+    if pack == "script":
+        nlp_dir = nlppatch_script_dir()
+        if nlp_dir is not None:
+            nlp = nlp_dir / f"{stem}.dbin2"
+            if nlp.is_file() and (not allow or stem in allow):
+                return nlp, "nlppatch"
 
     return None, "jp"
 

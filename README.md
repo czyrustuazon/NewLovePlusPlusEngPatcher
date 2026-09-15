@@ -16,18 +16,18 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
+3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, Gemini Nene `a*` (XML in `assets/scripts/`), plus community Rinko `k*` stems (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`) via `src/script_inject.py`  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to the finished CIA + `luma/` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
+9. **Clean** `out/` to the finished CIA + `luma/` + `logs/` + `gemini_heroines/` (optional SpotPass via `build_spotpass_inject.py`)  
 10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
-| Finished dialog scripts (XML → `.dbin2`) | 480 scripts → 1644 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
+| Finished dialog scripts (XML → `.dbin2`) | 375 scripts → 1116 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
 | Finished UI PNGs | ~2574 |
 | UI packages patched into `img.bin` (last pack) | 49 packages / ~1190 textures applied |
 
@@ -183,7 +183,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/` + `gemini_heroines/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
@@ -286,7 +286,7 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
   → write PATCH SUMMARY log to out/logs/
-  → clean out/ (keep *.cia + luma/ + logs/; azahar_instances/ preserved)
+  → clean out/ (keep *.cia + luma/ + logs/ + gemini_heroines/; azahar_instances/ preserved)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -433,7 +433,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + CIA + luma/ + logs/ + azahar_instances (gitignored)
+out/                         wipeable scratch + CIA + luma/ + logs/ + gemini_heroines + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).

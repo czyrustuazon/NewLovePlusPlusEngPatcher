@@ -1221,14 +1221,16 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 |----------|--------|-------|
 | 1 | `rebuild_dbin2/<pack>/t*.dbin2` | Manaka 100% (175 in `script` pack) |
 | 2 | `rebuild_dbin2/<pack>/p*.dbin2` | Common 100% (55) |
-| 3 | `rebuild_dbin2/script/{a,k}*.dbin2` | Community ~28% (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`, ~96 stems) |
+| 3 | `rebuild_dbin2/<pack>/{a,k}*.dbin2` | Allowlist `assets/nlppatch/stems.json` (~194 stems): Gemini Nene `a*` + community Rinko `k*` |
 | 4 | Base ROM | Everything else JP |
 
-**Not injected from XML:** Nene (`a*`) / Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
+**Nene (`a*`):** Gemini XML in `assets/scripts/` rebuilt with `tools/rebuild_dbin2_from_xml.py` (145 files) plus leftover community `a936`. Injected in every pack that has a matching file.
 
-**Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (NLPPCTR fallback if the old release zip 404s).
+**Not injected from XML:** Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
 
-**Headline script-pack coverage:** **326 / 578 (56.4%)**. Legacy "28%" = community layer alone (~169 stems upstream / ~96 injected after Manaka/`p*` override).
+**Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import Rinko only: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (do not overwrite Gemini `a*`).
+
+**Headline script-pack coverage:** **424 / 578 (73.4%)**. Legacy "28%" = community layer alone (~169 stems upstream).
 
 ### 19.2 Nickname / name-table fix
 
