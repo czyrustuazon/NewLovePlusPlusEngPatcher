@@ -8,8 +8,10 @@ from exact_zlib import (
     _zlib_progress,
     apply_gap_pad,
     compress_exact_empty_blocks,
+    compress_exact_zopfli,
     compress_to_exact_slot,
     interfile_zero_gaps,
+    pad_closed_zlib_stream,
     try_fast_exact_slot,
     zlib_body_fits_slot,
 )
@@ -80,6 +82,59 @@ def test_compress_to_exact_slot_prefers_fast_path():
     # May be gap-salted; length and unused_data==0 are the game constraints.
     dec = zlib.decompress(slot)
     assert len(dec) == len(payload)
+
+
+def _assert_pad(stream: bytes, extra: int, payload: bytes) -> None:
+    target = len(stream) + extra
+    out = pad_closed_zlib_stream(stream, target, expected=payload)
+    assert out is not None, f"pad failed extra={extra} src={len(stream)}"
+    assert len(out) == target
+    d = zlib.decompressobj()
+    got = d.decompress(out)
+    assert got == payload
+    assert d.unused_data == b""
+    assert d.eof
+
+
+def test_pad_closed_zlib_stream_fixed_and_dynamic():
+    import zopfli.zlib as zopfli_zlib
+
+    small = b"hello world " * 20
+    big = bytes(range(256)) * 40 + b"NLPP exact zlib pad test" * 30
+    for payload, extra in (
+        (small, 3),
+        (small, 5),
+        (small, 8),
+        (small, 56),
+        (big, 2),
+        (big, 56),
+        (big, 64),
+        (big, 100),
+    ):
+        _assert_pad(zlib.compress(payload, 9), extra, payload)
+        _assert_pad(zopfli_zlib.compress(payload), extra, payload)
+
+
+def test_compress_exact_zopfli_pads_56_byte_undershoot():
+    import zopfli.zlib as zopfli_zlib
+
+    payload = bytes(range(256)) * 50 + b"\x00" * 64
+    z0 = zopfli_zlib.compress(payload)
+    target = len(z0) + 56
+    tuned, slot = compress_exact_zopfli(payload, target)
+    assert tuned == payload
+    assert len(slot) == target
+    d = zlib.decompressobj()
+    assert d.decompress(slot) == payload
+    assert d.unused_data == b""
+    assert d.eof
+
+
+def test_pad_closed_zlib_stream_large_payload_56():
+    """Reproduce the gold-rebuild miss: ~280KB uncompressed, 56B short of slot."""
+    payload = bytes(range(256)) * (279848 // 256)
+    stream = zlib.compress(payload, 9)
+    _assert_pad(stream, 56, payload)
 
 
 def test_zlib_progress_survives_cp1252_stdout(monkeypatch):
