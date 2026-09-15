@@ -1924,6 +1924,8 @@ decrypted .cia / .3ds / .cci dropped
 
 Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and the vanilla bake bak after they are consumed; CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps all of that. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/*.cia`, `out/luma/`, `out/logs/`.
+
 
 
 #### Environment overrides
@@ -1999,6 +2001,7 @@ python -m pytest tests/ -v
 | `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
 
 | `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |
+| `test_scratch_cleanup.py` | Incremental scratch delete (pack/extract/CIA intermediates) |
 
 | Others | `patch_names`, `exact_zlib`, `nlpp_paths`, `image_map`, `img_pack_cache`, … |
 

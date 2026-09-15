@@ -21,6 +21,7 @@ from image_map import normalize_folder_key, resolve_folder
 from img_pack_cache import ImgPackCache, compress_to_exact_slot_cached
 from nlpp_paths import CACHE_IMG_PACK
 from run_timer import RunTimer
+from scratch_cleanup import remove_scratch
 
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
@@ -367,6 +368,7 @@ def patch_arc_with_pngs(
         jobs.append((png, entry, dest_bclim))
 
     if not jobs:
+        remove_scratch(extract_dir, label=f"bclim extract {work_dir.name}")
         return ok, skipped, warnings
 
     workers = max(1, int(workers))
@@ -422,6 +424,8 @@ def patch_arc_with_pngs(
 
     if dirty:
         darc.save(arc_path)
+    remove_scratch(extract_dir, label=f"bclim extract {work_dir.name}")
+    remove_scratch(conv_dir, label=f"bclim convert {work_dir.name}")
     return ok, skipped, warnings
 
 
@@ -538,6 +542,18 @@ def repack_package_exact_slots(
         )
     new_pkg.write_bytes(blob)
     return new_pkg
+
+
+def cleanup_package_unpack(img_data: Path, index: int) -> None:
+    """Drop ie/pe unpack leftovers after a package has been processed.
+
+    Splice only reads ``new_XXXX``. Untouched packages are not spliced.
+    """
+    img_data = img_data.resolve()
+    remove_scratch(
+        img_data / f"{index:04d}_data", label=f"pkg {index:04d} unpack tree"
+    )
+    remove_scratch(img_data / f"{index:04d}", label=f"pkg {index:04d} vanilla blob")
 
 
 def splice_packages_into_img(
@@ -722,6 +738,12 @@ def _process_one_package(
         else:
             report.append(f"[skip] package {index:04d}: nothing replaced")
 
+        for key, _, _ in items:
+            remove_scratch(
+                conv_p / f"{index:04d}_{key}", label=f"pkg {index:04d} {key} tmp"
+            )
+        cleanup_package_unpack(img_data_p, index)
+
         return {
             "index": index,
             "ok": True,
@@ -831,11 +853,6 @@ def pack_images(
 
     try:
         if by_pkg:
-            unpack_packages(img_bin, img_data, set(by_pkg))
-            # pe-unpack all packages on the main thread (avoids concurrent pe races).
-            for index in sorted(by_pkg):
-                ensure_package_data(img_data, index)
-
             jobs: list[tuple[int, list[tuple[str, str, str]]]] = []
             for index, items in sorted(by_pkg.items()):
                 jobs.append(
@@ -847,9 +864,13 @@ def pack_images(
 
             results: list[dict] = []
             cache_dir_s = str(cache_dir_p) if cache_dir_p is not None else None
+            sequential = pkg_workers <= 1 or len(jobs) <= 1
 
-            if pkg_workers <= 1 or len(jobs) <= 1:
+            if sequential:
+                # One package at a time so ie/pe unpack trees do not pile up.
                 for index, items in jobs:
+                    unpack_packages(img_bin, img_data, {index})
+                    ensure_package_data(img_data, index)
                     results.append(
                         _process_one_package(
                             index,
@@ -862,6 +883,10 @@ def pack_images(
                         )
                     )
             else:
+                unpack_packages(img_bin, img_data, set(by_pkg))
+                # pe-unpack all packages on the main thread (avoids concurrent pe races).
+                for index in sorted(by_pkg):
+                    ensure_package_data(img_data, index)
                 print(
                     f"[pack] ProcessPool: {len(jobs)} packages, "
                     f"workers={min(pkg_workers, len(jobs))}",
@@ -925,6 +950,9 @@ def pack_images(
                 raise PackError("no textures were injected; aborting img.bin rebuild")
             else:
                 shutil.copy2(img_bin, out_img)
+            # new_XXXX blobs are in out_img now — drop the unpacked package tree.
+            remove_scratch(img_data, label="pack img_data")
+            remove_scratch(conv, label="pack bclim_tmp")
         else:
             shutil.copy2(img_bin, out_img)
 
@@ -933,10 +961,12 @@ def pack_images(
 
             print(f"[cesa] patching boot warning from {cesa_png}")
             patched = work / "img_cesa.bin"
-            patch_img_bin(out_img, cesa_png, patched, work=work / "cesa_work")
+            cesa_work = work / "cesa_work"
+            patch_img_bin(out_img, cesa_png, patched, work=cesa_work)
             shutil.move(str(patched), str(out_img))
             totals["cesa"] = 1
             report_lines.append("[ok] package 0090: CESA_240X400.texi (boot warning)")
+            remove_scratch(cesa_work, label="cesa work")
 
         if not patched_indices and not patch_cesa:
             raise PackError("no textures were injected; aborting img.bin rebuild")

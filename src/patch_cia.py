@@ -32,6 +32,8 @@ from pathlib import Path
 from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
 from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
 from run_timer import RunTimer
+from scratch_cleanup import is_reparse_dir as _is_reparse_dir
+from scratch_cleanup import path_is_under, remove_scratch
 from smdh_meta import (
     PUBLISHER,
     SHORT_TITLE,
@@ -997,6 +999,8 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
         )
     except PackError as exc:
         raise PatchError(f"image packing failed: {exc}") from exc
+    if not getattr(args, "keep_work", False):
+        remove_scratch(img_work, label="img_work")
     return out_img
 
 
@@ -1072,6 +1076,16 @@ def rebuild_patched_cia(
         )
 
     parts = split_cxi(cxi, work / "ncch_parts")
+    keep_work = bool(getattr(args, "keep_work", False))
+
+    def _drop(path: Path | None, label: str | None = None) -> None:
+        if keep_work:
+            return
+        remove_scratch(path, label=label)
+
+    # Original CXI is redundant once NCCH parts exist (keep sibling extracted/).
+    if path_is_under(cxi, work):
+        _drop(cxi, "extracted CXI")
 
     # 3) RomFS tree + inject
     reuse = Path(args.romfs).resolve() if args.romfs else (
@@ -1106,6 +1120,9 @@ def rebuild_patched_cia(
         else:
             romfs_dir = ensure_romfs_dir(parts["romfs"], romfs_work, reuse=None)
 
+    # Tree is on disk; the split romfs.bin (~1GB+) can go.
+    _drop(parts.get("romfs"), "split romfs.bin")
+
     injected = inject_dbin2(romfs_dir, dbin_root)
     print(f"[inject] total .dbin2 files: {injected}")
 
@@ -1137,17 +1154,34 @@ def rebuild_patched_cia(
             region_name=getattr(args, "cia_region", "usa"),
         )
 
+    _drop(work / "exefs_injected", "ExeFS unpack")
+    _drop(work / "exefs_smdh", "SMDH unpack")
+    _drop(work / "exefs_patched", "code-patch unpack")
+    _drop(work / "code_inject_cmp.bin")
+    _drop(work / "code_namepatch_dec.bin")
+
     # 4) Rebuild containers
     new_romfs = work / "romfs_patched.bin"
     rebuild_romfs(romfs_dir, new_romfs)
 
+    # Injected tree is packed; do not delete in-place / external RomFS.
+    in_place = bool(args.in_place_romfs and reuse)
+    if not in_place and path_is_under(romfs_dir, work):
+        _drop(romfs_dir, "injected RomFS tree")
+
     patched_cxi = work / "patched.cxi"
     rebuild_cxi(parts, new_romfs, patched_cxi)
+    _drop(new_romfs, "romfs_patched.bin")
+    _drop(work / "ncch_parts")
+    _drop(work / "exefs_injected.bin")
+    _drop(work / "exefs_smdh.bin")
+    _drop(work / "exefs_namepatch.bin")
 
     title_ver = resolve_cia_title_version(args, title_ver)
     rebuild_cia(patched_cxi, manual, out_cia, title_ver)
+    _drop(patched_cxi, "patched.cxi")
 
-    if not args.keep_work:
+    if not keep_work:
         cleanup_patch_artifacts(
             work,
             out_cia=out_cia,
@@ -1891,32 +1925,6 @@ def _emit_patch_log(
         print(f"  Patch log: {written}", flush=True)
 
 
-def _is_reparse_dir(path: Path) -> bool:
-    """True for symlinks / Windows directory junctions (Py3.10-safe)."""
-    if path.is_symlink():
-        return True
-    is_junction = getattr(path, "is_junction", None)
-    if callable(is_junction):
-        try:
-            return bool(is_junction())
-        except OSError:
-            return False
-    if sys.platform == "win32" and path.is_dir():
-        try:
-            import ctypes
-
-            GetFileAttributesW = ctypes.windll.kernel32.GetFileAttributesW
-            GetFileAttributesW.argtypes = (ctypes.c_wchar_p,)
-            GetFileAttributesW.restype = ctypes.c_uint32
-            attrs = GetFileAttributesW(str(path))
-            FILE_ATTRIBUTE_REPARSE_POINT = 0x400
-            INVALID = 0xFFFFFFFF
-            return attrs != INVALID and bool(attrs & FILE_ATTRIBUTE_REPARSE_POINT)
-        except Exception:
-            return False
-    return False
-
-
 def cleanup_patch_artifacts(
     work: Path,
     *,
@@ -1993,6 +2001,7 @@ def cleanup_out_dir(
     *,
     out_cia: Path,
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
+    quiet: bool = False,
 ) -> None:
     """Wipe EngPatcher out/ except CIA(s), luma/, logs/, backups, and a/b instances."""
     out_root = (ROOT / "out").resolve()
@@ -2050,7 +2059,7 @@ def cleanup_out_dir(
             f"[cleanup] out/ kept: *.cia, luma/, logs/, azahar_instances/, "
             f"extdata_backup/ ({removed} other item(s) removed)"
         )
-    else:
+    elif not quiet:
         print(
             "[cleanup] out/ already clean "
             "(CIA + luma + logs + azahar_instances + extdata_backup)"

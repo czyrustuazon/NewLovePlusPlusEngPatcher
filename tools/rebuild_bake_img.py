@@ -49,9 +49,10 @@ from nlpp_paths import (  # noqa: E402
     find_vanilla_resident_trb,
     require_translations_json,
 )
-from patch_cia import PatchError  # noqa: E402
+from patch_cia import PatchError, cleanup_out_dir  # noqa: E402
 from patcher_version import PATCHER_RELEASE, write_bake_stamp  # noqa: E402
 from run_timer import RunTimer  # noqa: E402
+from scratch_cleanup import remove_scratch  # noqa: E402
 
 # Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
 DEPLOY_SCRIPTS: list[str] = [
@@ -153,6 +154,8 @@ def rebuild_main_trb(*, env: dict[str, str] | None = None) -> None:
     if namekanji_cfg.is_file():
         shutil.copy2(namekanji_cfg, out_cfg)
     print(f"[trb] name-kanji main TRB -> {out_trb}", flush=True)
+    remove_scratch(namekanji, label="name-kanji TRB temp")
+    remove_scratch(namekanji_cfg, label="name-kanji TRB config temp")
 
     # Resident TRB is not rebuilt from translations.json; seed virgin bytes for
     # deploy_day_counter_en.py (日目 → Day) when release/ lacks it.
@@ -176,6 +179,7 @@ def pack_ui(
     no_cache: bool = False,
     cache_dir: Path | None = None,
     pkg_workers: int | None = None,
+    keep_work: bool = False,
 ) -> Path:
     """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake."""
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -207,19 +211,38 @@ def pack_ui(
         cmd.append("--no-cache")
     elif cache_dir is not None:
         cmd.extend(["--cache-dir", str(cache_dir)])
-    run(cmd)
-    if not CACHE_NEW_IMG.is_file():
-        raise SystemExit(f"pack_images did not write {CACHE_NEW_IMG}")
-    shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
-    print(f"[bake] seeded from PNG pack -> {BAKE_IMG}", flush=True)
-    return BAKE_IMG
+    try:
+        run(cmd)
+        if not CACHE_NEW_IMG.is_file():
+            raise SystemExit(f"pack_images did not write {CACHE_NEW_IMG}")
+        shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
+        print(f"[bake] seeded from PNG pack -> {BAKE_IMG}", flush=True)
+        if not keep_work:
+            # Durable copy is release/bake_img.bin; the cache duplicate is ~680MB.
+            remove_scratch(CACHE_NEW_IMG, label="duplicate cache/new_img.bin")
+        return BAKE_IMG
+    finally:
+        if not keep_work:
+            remove_scratch(work, label="rebuild_bake_img_work")
+
+
+def vanilla_bake_bak(bake: Path) -> Path:
+    """Sidecar bak used by several deploys for virgin ARC bytes."""
+    return bake.with_suffix(".bin.bak_pre_msel5245")
 
 
 def seed_vanilla_bak(vanilla: Path, bake: Path) -> None:
     """Sidecar bak used by several deploys for virgin ARC bytes."""
-    bak = bake.with_suffix(".bin.bak_pre_msel5245")
+    bak = vanilla_bake_bak(bake)
     shutil.copy2(vanilla, bak)
     print(f"[bake] vanilla bak -> {bak}", flush=True)
+
+
+def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
+    """Wipe deploy/pack temps under out/ after each rebuild step."""
+    if keep_work:
+        return
+    cleanup_out_dir(out_cia=ROOT / "out" / "NewLovePlusPlus-EN.cia", quiet=True)
 
 
 def build_name_input_code(*, rom: Path | None) -> Path:
@@ -363,6 +386,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="mirror deploy splices into Azahar LayeredFS when present",
     )
+    ap.add_argument(
+        "--keep-work",
+        action="store_true",
+        help="keep pack/deploy scratch under out/ and cache/new_img.bin",
+    )
     args = ap.parse_args(argv)
 
     timer = RunTimer("gold rebuild", heartbeat_s=60.0)
@@ -412,6 +440,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     print(f"[rebuild] vanilla: {vanilla}", flush=True)
     print(f"[rebuild] bake:    {BAKE_IMG}", flush=True)
+    keep_work = bool(args.keep_work)
 
     if args.reseed_from_pack:
         if not CACHE_NEW_IMG.is_file():
@@ -425,6 +454,8 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         elif CACHE_NEW_IMG.is_file():
             shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
             print(f"[bake] seeded from PNG pack (bake was missing) -> {BAKE_IMG}", flush=True)
+            if not keep_work:
+                remove_scratch(CACHE_NEW_IMG, label="duplicate cache/new_img.bin")
         else:
             raise SystemExit(
                 "no bake and no cache/new_img.bin — run without --skip-pack "
@@ -452,9 +483,11 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             fine_tune=args.fine_tune,
             no_cache=(not args.use_cache) or args.no_cache,
             cache_dir=args.cache_dir,
+            keep_work=keep_work,
         )
         timer.start_heartbeat()
         timer.mark("PNG pack done")
+        cleanup_rebuild_scratch(keep_work=keep_work)
 
     seed_vanilla_bak(vanilla, BAKE_IMG)
 
@@ -462,6 +495,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         timer.mark("rebuilding main TRB")
         rebuild_main_trb(env=env)
     sync_trb_overlay()
+    cleanup_rebuild_scratch(keep_work=keep_work)
 
     if not args.skip_deploys:
         scripts = list(DEPLOY_SCRIPTS)
@@ -475,6 +509,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
                 raise SystemExit(f"missing deploy script: {script}")
             run([sys.executable, str(script)], env=env)
             timer.mark(f"deploy done: {name}")
+            cleanup_rebuild_scratch(keep_work=keep_work)
 
     if args.include_sms:
         en_dir = ROOT / "assets" / "sms_en"
@@ -494,8 +529,11 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             ],
             env=env,
         )
+        cleanup_rebuild_scratch(keep_work=keep_work)
 
     sync_trb_overlay()
+    if not keep_work:
+        remove_scratch(vanilla_bake_bak(BAKE_IMG), label="vanilla bake bak")
 
     timer.mark("building name-input code.bin")
     name_code = build_name_input_code(rom=args.rom.resolve() if args.rom else None)
@@ -509,13 +547,15 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         raise SystemExit(f"main TRB missing after rebuild: {main_trb}")
     print("\n[rebuild] OK", flush=True)
     print(f"  gold bake:     {BAKE_IMG}", flush=True)
-    print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
+    if CACHE_NEW_IMG.is_file():
+        print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
     print(f"  main TRB:      {main_trb}", flush=True)
     print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
     print(f"  name-input:    {name_code}", flush=True)
     stamp = write_bake_stamp(packed_assets=not args.skip_pack)
     print(f"  bake stamp:    {stamp} ({PATCHER_RELEASE})", flush=True)
     print("Drop a CIA on the bat to build the EN CIA.", flush=True)
+    cleanup_rebuild_scratch(keep_work=keep_work)
     timer.finish("gold rebuild OK")
     return 0
 

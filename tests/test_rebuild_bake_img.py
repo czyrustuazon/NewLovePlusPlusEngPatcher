@@ -35,6 +35,8 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "--skip-name-input-code" not in text
     assert "build_name_input_code" in text
     assert "required name-input missing" in text
+    assert "--keep-work" in text
+    assert "cleanup_rebuild_scratch" in text
 
 
 def test_softkey_deploy_after_confirm():
