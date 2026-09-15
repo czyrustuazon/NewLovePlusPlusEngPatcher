@@ -4,7 +4,7 @@ English `a*` / `k*` that Drop CIA injects live **inside** EngPatcher:
 
 - Binaries: `rebuild_dbin2/{NLP_01,NLP_02,script}/{a,k}*.dbin2` (stems listed in `stems.json`)
 - Inject: `src/script_inject.py` (Manaka `t*` + common `p*` override; then these)
-- Nene `a*`: Gemini XML in `assets/scripts/` rebuilt with `tools/rebuild_dbin2_from_xml.py`
+- Nene `a*`: Gemini XML in `assets/scripts/` rebuilt with `tools/rebuild_dbin2_from_xml.py` — **machine pass, not proofread** (not a finished route)
 - Rinko `k*`: still the historical NLPPATCH-era community layer
 
 You do **not** need `vendor/NLPPATCH` or a network fetch to Drop a CIA.

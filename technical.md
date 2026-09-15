@@ -1205,7 +1205,7 @@ Offline `vendor/NLPPATCH/` was removed from main (2026-08-31); NLPP-005 may re-v
 
 ---
 
-*Last updated 2026-09-07 — keep main §§16–18; add NLPP-005 §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-15 — keep main §§16–18; add NLPP-005 §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack. Nene Gemini = machine pass, not finished.*
 
 ---
 
@@ -1224,13 +1224,13 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 | 3 | `rebuild_dbin2/<pack>/{a,k}*.dbin2` | Allowlist `assets/nlppatch/stems.json` (~194 stems): Gemini Nene `a*` + community Rinko `k*` |
 | 4 | Base ROM | Everything else JP |
 
-**Nene (`a*`):** Gemini XML in `assets/scripts/` rebuilt with `tools/rebuild_dbin2_from_xml.py` (145 files) plus leftover community `a936`. Injected in every pack that has a matching file.
+**Nene (`a*`) is not finished.** Gemini XML in `assets/scripts/` rebuilt with `tools/rebuild_dbin2_from_xml.py` (145 files) plus leftover community `a936` is **injected** (every pack that has a matching file), but those 145 files are an **unreviewed machine pass**. Do not treat 146 / 174 (~84%) or the 73.4% pack headline as a completed Nene route. Remaining `a*` (~28 files) are still Japanese. Human sign-off: `assets/gemini_heroines/proofread.json` (empty = all Gemini stems teal / “machine pass, unreviewed” on the fansite). Archive: `assets/gemini_heroines/`.
 
 **Not injected from XML:** Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
 
 **Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import Rinko only: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (do not overwrite Gemini `a*`).
 
-**Headline script-pack coverage:** **424 / 578 (73.4%)**. Legacy "28%" = community layer alone (~169 stems upstream).
+**Headline script-pack coverage:** **424 / 578 (73.4%)** files that *look* English in the CIA. That count **includes unreviewed Gemini Nene**. Legacy "28%" = community layer alone (~169 stems upstream).
 
 ### 19.2 Nickname / name-table fix
 
@@ -1271,7 +1271,9 @@ Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` 
 | `tools/script_coverage_report.py` | Console summary |
 | `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes |
 
-Regenerate before publishing; `out/` is gitignored.
+Regenerate before publishing; `out/` is gitignored.
+
+**Fansite caveat:** Gemini Nene `by_route.nene` must use `bar: teal` / `caveat: "machine pass, unreviewed"` (same as main TRB). Rose = human-reviewed only. Importer: site `node scripts/import-progress.mjs`.
 
 ### 19.6 `cache/` hygiene
 
@@ -1283,7 +1285,7 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 |------|--------|
 | In-game verify nicknames after resident TRB fix | **Test** — Manaka pet name, `▲主人公＊▲`, NLPPPATCH Rinko/Nene chunks |
 | Re-enable EN SMS after placeholder audit | WIP — `assets/sms_en/`; use `--include-sms` |
-| Full Rinko / Nene routes | **JP** except NLPPPATCH early ~28% per route |
+| Full Rinko / Nene routes | Rinko still **JP** except community ~28%. **Nene is not done:** 145 Gemini files injected but **unreviewed**; ~28 `a*` still JP |
 | `img.bin` name table — 0 replacements on last deploy | Investigate if nicknames still fail in UI labels |
 | Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |

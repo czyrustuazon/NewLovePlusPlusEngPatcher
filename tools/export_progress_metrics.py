@@ -23,7 +23,7 @@ from image_map import IMAGE_MAP  # noqa: E402
 from pack_images import iter_asset_pngs, prefer_asset_folders  # noqa: E402
 from script_inject import (  # noqa: E402
     DEFAULT_ENG_DBIN,
-    NLPPPATCH_SCRIPT,
+    SCRIPT_PACK_TOTAL,
     nlppatch_script_dir,
     nlppatch_stems,
     resolve_script_source,
@@ -40,6 +40,14 @@ from mdcutil import parse_mdc  # noqa: E402
 
 JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
 BAKE_IMG = ROOT / "release" / "bake_img.bin"
+GEMINI_XML_DIR = ROOT / "assets" / "gemini_heroines" / "xml"
+GEMINI_PROOFREAD = ROOT / "assets" / "gemini_heroines" / "proofread.json"
+# Site StatBar: rose = reviewed EN, teal = machine pass not yet proofread.
+REVIEW_REVIEWED = "reviewed"
+REVIEW_MACHINE = "machine_unreviewed"
+CAVEAT_MACHINE = "machine pass, unreviewed"
+BAR_REVIEWED = "rose"
+BAR_UNREVIEWED = "teal"
 SMS_PKG = 92
 SMS_FILES = {
     "manaka": "maildic_m.mdc",
@@ -87,55 +95,142 @@ def route_for_stem(stem: str) -> str:
     return {"t": "manaka", "k": "rinko", "a": "nene", "p": "common"}.get(p, "other")
 
 
+def load_proofread_stems() -> set[str]:
+    if not GEMINI_PROOFREAD.is_file():
+        return set()
+    try:
+        data = json.loads(GEMINI_PROOFREAD.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, TypeError):
+        return set()
+    if isinstance(data, dict):
+        data = data.get("stems", [])
+    if not isinstance(data, list):
+        return set()
+    return {str(s) for s in data}
+
+
+def gemini_unreviewed_stems() -> set[str]:
+    """Stems from the Gemini archive that have not been listed in proofread.json."""
+    if not GEMINI_XML_DIR.is_dir():
+        return set()
+    return {p.stem for p in GEMINI_XML_DIR.glob("*.xml")} - load_proofread_stems()
+
+
+def review_for_stem(stem: str, unreviewed: set[str]) -> str:
+    return REVIEW_MACHINE if stem in unreviewed else REVIEW_REVIEWED
+
+
+def review_fills(reviewed: int, unreviewed: int, total: int) -> list[dict]:
+    """Stacked bar segments for the fansite (rose = proofread, teal = MT)."""
+    fills: list[dict] = []
+    if reviewed:
+        fills.append(
+            {
+                "kind": REVIEW_REVIEWED,
+                "count": reviewed,
+                "percent": round(100.0 * reviewed / total, 1) if total else 0.0,
+                "bar": BAR_REVIEWED,
+            }
+        )
+    if unreviewed:
+        fills.append(
+            {
+                "kind": REVIEW_MACHINE,
+                "count": unreviewed,
+                "percent": round(100.0 * unreviewed / total, 1) if total else 0.0,
+                "bar": BAR_UNREVIEWED,
+                "note": CAVEAT_MACHINE,
+            }
+        )
+    return fills
+
+
 def script_metrics(eng_root: Path) -> dict:
     script_dir = eng_root / "script"
     stems = sorted(p.stem for p in script_dir.glob("*.dbin2"))
+    unreviewed_stems = gemini_unreviewed_stems()
     routes: dict[str, dict] = {}
     files: dict[str, list[dict]] = {
         "english": [],
         "japanese": [],
     }
+    reviewed_n = 0
+    unreviewed_n = 0
     for stem in stems:
         route = route_for_stem(stem)
         src, tag = resolve_script_source("script", stem, eng_root)
         en = tag != "jp"
+        review = review_for_stem(stem, unreviewed_stems) if en else "japanese"
         rec = {
             "stem": stem,
             "file": f"script/{stem}.dbin2",
             "route": route,
             "layer": tag,
+            "review": review,
             "source": str(src) if src else None,
         }
         routes.setdefault(
             route,
-            {"total": 0, "english": 0, "japanese": 0, "layers": {}},
+            {
+                "total": 0,
+                "english": 0,
+                "japanese": 0,
+                "english_reviewed": 0,
+                "english_unreviewed": 0,
+                "layers": {},
+            },
         )
         routes[route]["total"] += 1
         if en:
             routes[route]["english"] += 1
             routes[route]["layers"][tag] = routes[route]["layers"].get(tag, 0) + 1
+            if review == REVIEW_MACHINE:
+                routes[route]["english_unreviewed"] += 1
+                unreviewed_n += 1
+            else:
+                routes[route]["english_reviewed"] += 1
+                reviewed_n += 1
             files["english"].append(rec)
         else:
             routes[route]["japanese"] += 1
             files["japanese"].append(rec)
 
-    total = len(stems)
     en_total = len(files["english"])
+    total = SCRIPT_PACK_TOTAL
     out_routes = {}
     for name, v in routes.items():
+        r_en = v["english_reviewed"]
+        u_en = v["english_unreviewed"]
         out_routes[name] = {
             **v,
             "percent": round(100.0 * v["english"] / v["total"], 1) if v["total"] else 0.0,
+            "review_status": REVIEW_MACHINE if u_en else REVIEW_REVIEWED,
+            "caveat": CAVEAT_MACHINE if u_en else None,
+            "bar": BAR_UNREVIEWED if u_en else BAR_REVIEWED,
+            "fills": review_fills(r_en, u_en, v["total"]),
         }
     return {
         "pack": "script",
         "path_glob": "rebuild_dbin2/script/*.dbin2",
-        "vendor_nlppatch": str(NLPPPATCH_SCRIPT),
+        "vendor_nlppatch": str(nlppatch_script_dir() or ""),
         "nlppatch_stem_count": len(nlppatch_stems()),
         "total_files": total,
         "english_files": en_total,
-        "japanese_files": total - en_total,
+        "english_reviewed": reviewed_n,
+        "english_unreviewed": unreviewed_n,
+        "japanese_files": max(0, total - en_total),
         "percent": round(100.0 * en_total / total, 1) if total else 0.0,
+        "review_status": "mixed" if unreviewed_n and reviewed_n else (
+            REVIEW_MACHINE if unreviewed_n else REVIEW_REVIEWED
+        ),
+        "caveat": CAVEAT_MACHINE if unreviewed_n else None,
+        "bar": BAR_REVIEWED,
+        "fills": review_fills(reviewed_n, unreviewed_n, total),
+        "unreviewed_note": (
+            "Gemini XML in assets/gemini_heroines/xml/ is a machine pass. "
+            "List a stem in assets/gemini_heroines/proofread.json after human review "
+            "to count it as rose/reviewed."
+        ),
         "by_route": out_routes,
         "files": files,
     }
@@ -290,6 +385,9 @@ def trb_metrics(trb_path: Path, translations_path: Path) -> dict:
         "english_entries": len(en_entries),
         "japanese_entries": len(jp_entries),
         "percent": round(100.0 * len(en_entries) / len(entries), 1) if entries else 0.0,
+        "review_status": REVIEW_MACHINE,
+        "caveat": CAVEAT_MACHINE,
+        "bar": BAR_UNREVIEWED,
         "detection": "no Japanese chars in STRB text OR JP key present in translations.json",
         "by_indx_category": by_category,
         "english_stri_indices": [e["stri_index"] for e in en_entries],
@@ -360,11 +458,19 @@ def combined_text_metrics(scripts: dict, sms: dict) -> dict:
     s_tot = scripts["total_files"]
     m_en = sms["english_messages"]
     m_tot = sms["total_messages"]
+    s_rev = int(scripts.get("english_reviewed", s_en))
+    s_unrev = int(scripts.get("english_unreviewed", 0))
+    tot = s_tot + m_tot
     return {
         "label": "Dialogue scripts + SMS messages",
         "english": s_en + m_en,
-        "total": s_tot + m_tot,
-        "percent": round(100.0 * (s_en + m_en) / (s_tot + m_tot), 1),
+        "english_reviewed": s_rev + m_en,
+        "english_unreviewed": s_unrev,
+        "total": tot,
+        "percent": round(100.0 * (s_en + m_en) / tot, 1) if tot else 0.0,
+        "caveat": CAVEAT_MACHINE if s_unrev else None,
+        "bar": BAR_REVIEWED,
+        "fills": review_fills(s_rev + m_en, s_unrev, tot),
         "components": {
             "scripts": f"{s_en}/{s_tot}",
             "sms": f"{m_en}/{m_tot}",
@@ -409,6 +515,11 @@ def main() -> int:
     args.json.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Wrote {args.json}")
     print(f"Scripts: {scripts['english_files']}/{scripts['total_files']} ({scripts['percent']}%)")
+    print(
+        f"  reviewed {scripts.get('english_reviewed', 0)}  "
+        f"unreviewed {scripts.get('english_unreviewed', 0)} "
+        f"({scripts.get('caveat') or 'none'})"
+    )
     print(f"SMS: {sms['english_messages']}/{sms['total_messages']} ({sms['percent']}%)")
     print(f"Scripts+SMS: {payload['dialogue_plus_sms']['english']}/{payload['dialogue_plus_sms']['total']} ({payload['dialogue_plus_sms']['percent']}%)")
     if "percent" in trb_m:

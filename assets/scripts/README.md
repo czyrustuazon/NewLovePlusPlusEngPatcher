@@ -2,6 +2,8 @@
 
 **Shipping inject (gold path):** Manaka (`t*`), common (`p*`), and Gemini-promoted Nene (`a*`) XML here → `rebuild_dbin2/` → CIA (`src/script_inject.py` + `assets/nlppatch/stems.json`).
 
+**Nene is not finished.** Those `a*` files are an **unreviewed Gemini machine pass** (teal on the fansite until a stem is listed in `assets/gemini_heroines/proofread.json`). Leftover `a*` without XML stay Japanese.
+
 **Gemini archive:** `assets/gemini_heroines/` (XML + `translations.json`). Pipeline default `--out` is that folder.
 
 **WIP:** Volunteer Rinko (`k*`) XML may also land here after ingest. Until promoted, Rinko still uses the community `rebuild_dbin2/script/k*.dbin2` layer (~28%).

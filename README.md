@@ -16,7 +16,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, Gemini Nene `a*` (XML in `assets/scripts/`), plus community Rinko `k*` stems (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`) via `src/script_inject.py`  
+3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, Gemini Nene `a*` (XML in `assets/scripts/` — **machine pass, not proofread**), plus community Rinko `k*` stems (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`) via `src/script_inject.py`  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
@@ -27,9 +27,11 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
-| Finished dialog scripts (XML → `.dbin2`) | 375 scripts → 1116 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
+| Dialog scripts (XML → `.dbin2`) | 375 scripts → 1116 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
 | Finished UI PNGs | ~2574 |
 | UI packages patched into `img.bin` (last pack) | 49 packages / ~1190 textures applied |
+
+**Nene is not finished.** Drop CIA injects ~146 / 174 `a*` files, but **145 of those are an unreviewed Gemini machine pass** (teal / “machine pass, unreviewed” on [newloveplus.loc.moe](https://newloveplus.loc.moe)). The rest of her route is still Japanese. Human review is tracked in `assets/gemini_heroines/proofread.json` (empty until someone signs off). Do not treat 73% script-pack coverage as a completed Nene translation. Details: [`docs/TRANSLATION_PROGRESS.md`](docs/TRANSLATION_PROGRESS.md).
 
 Title ID: `00040000000F4E00`
 
@@ -88,6 +90,8 @@ Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed 
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
 nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin.
 See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
+
+Dialogue route bars come from `tools/export_progress_metrics.py` → `out/progress_metrics.json`. **Nene’s Gemini files must paint teal / yellow**, not rose: they are English in-game but **not proofread**. Do not import them as a finished route.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
@@ -431,7 +435,7 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-assets/gemini_heroines/      Gemini Nene/Rinko XML + translations.json (tracked)
+assets/gemini_heroines/      Gemini Nene XML (machine pass, unreviewed until proofread.json)
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
 out/                         wipeable scratch + CIA + luma/ + logs/ + gemini_heroines + azahar_instances (gitignored)
@@ -469,7 +473,7 @@ Browser kits so translators can help **without Python**. Three sibling trees:
 
 2. Open **`index.html`** → tabs:
 
-   - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
+   - **Scripts** — leftover JP dialogue (Nene still has ~28 `a*` files) plus **proofreading Gemini Nene** (`a*` that already look English). Rinko `k*` is still mostly JP.
 
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
 
