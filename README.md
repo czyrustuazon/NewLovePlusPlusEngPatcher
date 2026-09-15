@@ -431,6 +431,7 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
+assets/gemini_heroines/      Gemini Nene/Rinko XML + translations.json (tracked)
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
 out/                         wipeable scratch + CIA + luma/ + logs/ + gemini_heroines + azahar_instances (gitignored)

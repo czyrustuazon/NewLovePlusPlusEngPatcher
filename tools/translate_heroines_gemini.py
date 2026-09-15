@@ -11,8 +11,11 @@ protected so the model cannot drop them.
   python tools/translate_heroines_gemini.py run --heroine nene --limit 20
   python tools/translate_heroines_gemini.py run --write-xml
 
+Default output is ``assets/gemini_heroines/`` (git-tracked). Gold inject still
+needs ``--write-xml`` into ``assets/scripts/`` plus rebuild + stems.json.
+
 Scripts: vanilla JP .dbin2 + existing EN overlay (rebuild_dbin2 / XML).
-SMS: maildic XML if present (optional --source sms / all).
+SMS: maildic XML if present (optional ``--source sms`` / ``all``).
 
 GEMINI_API_KEY lives in .env (see .env.example).
 """
@@ -49,7 +52,7 @@ from nlpp_paths import find_vanilla_script_dir  # noqa: E402
 from patch_names import parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml, xml_to_entries  # noqa: E402
 
-OUT_DEFAULT = ROOT / "out" / "gemini_heroines"
+OUT_DEFAULT = ROOT / "assets" / "gemini_heroines"
 ASSETS_SCRIPTS = ROOT / "assets" / "scripts"
 REBUILD_SCRIPT = ROOT / "rebuild_dbin2" / "script"
 SMS_EN = ROOT / "assets" / "sms_en"
@@ -649,7 +652,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_run.add_argument(
         "--write-xml",
         action="store_true",
-        help="copy translated XML into assets/scripts/ (still WIP, not gold inject)",
+        help="copy translated XML into assets/scripts/ for rebuild / inject",
     )
     p_run.set_defaults(func=cmd_run)
     return ap
