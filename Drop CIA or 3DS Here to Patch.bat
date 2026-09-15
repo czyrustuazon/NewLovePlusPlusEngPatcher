@@ -190,7 +190,9 @@ REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"
 if not exist "%~dp0out" mkdir "%~dp0out"
-set "LAYEREDFS_OUT=--layeredfs-out %~dp0out\luma"
+REM Keep quotes inside the value so paths with spaces survive expansion
+REM (e.g. E:\zip game\... GitHub unzip folders).
+set LAYEREDFS_OUT=--layeredfs-out "%~dp0out\luma"
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -207,7 +209,7 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
 set "INJECT_CODE="
 REM Profile name-input is required for a complete Drop (built by rebuild_bake_img).
 if exist "%~dp0release\name_input_code.bin" (
-  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
 )
 if /i "%NLPP_WITH_IMAGES%"=="0" (
@@ -353,7 +355,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!

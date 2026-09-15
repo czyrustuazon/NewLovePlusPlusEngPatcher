@@ -84,5 +84,8 @@ def test_bat_requires_name_input_and_rejects_images_off():
     text = _bat_text()
     assert "NLPP_WITH_IMAGES=0 is not allowed" in text
     assert "name_input_code.bin still missing after rebuild" in text
-    assert "INJECT_CODE=--inject-code" in text
+    assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
+    # Unquoted %~dp0 paths split on spaces (E:\zip game\...) and argparse
+    # reports the leftover as unrecognized arguments: ...\name_input_code.bin
+    assert 'LAYEREDFS_OUT=--layeredfs-out "%~dp0out\\luma"' in text
     assert "Scripts-only patch" not in text

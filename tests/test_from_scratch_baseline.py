@@ -45,7 +45,7 @@ def test_baseline_drop_requires_full_artifact_set():
     assert "_title_pkg_has_eng_patch" in text
     assert "name_input_code.bin" in text
     assert "--skip-pack" in text
-    assert 'INJECT_CODE=--inject-code %~dp0release\\name_input_code.bin' in text
+    assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
     # Finish incomplete artifacts before inject.
     assert text.index("NEED_FINISH") < text.index("Injecting gold bake")
     assert text.index("name_input_code.bin still missing") < text.index(
