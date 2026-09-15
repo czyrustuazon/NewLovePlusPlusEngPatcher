@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """Patch the boot CESA anti-piracy texture in img.bin package 90.
 
-In-place only: replaces the zlib-compressed TEX payload inside the original
-PACK bytes and splices that package back into img.bin at the same offset.
-Never rewrites the whole img.bin (Image.write relocates packages and can
-black-screen boot). Never touches code.bin.
+Same-offset splice only: never rewrites the whole img.bin (Image.write
+relocates packages and can black-screen boot). Never touches code.bin.
+
+The companion blurb grows PACK header dec_len; the game mallocs the *idx
+table* size for pkg 90, so that field must be updated to match or boot
+heap-smashes (see rebuild_pkg90_with_companion).
 """
 
 from __future__ import annotations
 
 import argparse
+import mmap
 import shutil
 import struct
 import sys
@@ -35,8 +38,72 @@ COMPANION_TEX_W, COMPANION_TEX_H = 256, 512
 COMPANION_VISIBLE_W, COMPANION_VISIBLE_H = 240, 400
 ENTRY_SIZE = 0x20
 PACK_ALIGN = 0x10
+# img.bin index table (see nlpp-tools Image.parse_idx_entry).
+IMG_IDX_TABLE_ADDR = 0x800
+IMG_IDX_ENTRY_SIZE = 0x14
 # Stock padding outside the visible region is black, not white.
 PAD_RGB = (0, 0, 0)
+
+
+def img_idx_entry_off(pkg_index: int) -> int:
+    return IMG_IDX_TABLE_ADDR + pkg_index * IMG_IDX_ENTRY_SIZE
+
+
+def read_img_idx_dec_len(img: bytes | bytearray | mmap.mmap, pkg_index: int) -> int:
+    """Decompressed size the game allocates for a PAK (idx table, not PACK header)."""
+    off = img_idx_entry_off(pkg_index)
+    typ, dec_len, _dec_data, _unk, _kind = struct.unpack_from("=4s4x2I2xBB", img, off)
+    if typ != b"PAK ":
+        raise RuntimeError(f"img idx {pkg_index} is {typ!r}, not PAK")
+    return dec_len
+
+
+def set_img_idx_dec_len(
+    img: bytearray | mmap.mmap, pkg_index: int, dec_len: int
+) -> int:
+    """Write idx-table dec_len. Returns the previous value."""
+    off = img_idx_entry_off(pkg_index)
+    typ, old, dec_data, unk, kind = struct.unpack_from("=4s4x2I2xBB", img, off)
+    if typ != b"PAK ":
+        raise RuntimeError(f"img idx {pkg_index} is {typ!r}, not PAK")
+    struct.pack_into("=4s4x2I2xBB", img, off, typ, dec_len, dec_data, unk, kind)
+    return old
+
+
+def sync_img_pkg90_idx_to_pack(img_path: Path) -> bool:
+    """Set idx-table pkg90 dec_len from the inner PACK header. True if changed.
+
+    Fast crash fix when the companion TEX is already in the PACK but idx was left
+    at vanilla 1182976.
+    """
+    _ensure_nlpp_path()
+    from img import Image as ImgBin
+    from img import Package
+
+    img_path = Path(img_path).resolve()
+    im = ImgBin(str(img_path))
+    im.parse(False)
+    res = im.entries[CESA_PKG_INDEX]
+    if res is None:
+        im.fh.close()
+        raise RuntimeError(f"img.bin missing package {CESA_PKG_INDEX}")
+    pack_dec_len = Package.parse_header(res.fw.read()[:ENTRY_SIZE])[5]
+    im.fh.close()
+    with img_path.open("r+b") as fh:
+        mm = mmap.mmap(fh.fileno(), 0)
+        try:
+            old = read_img_idx_dec_len(mm, CESA_PKG_INDEX)
+            if old == pack_dec_len:
+                return False
+            set_img_idx_dec_len(mm, CESA_PKG_INDEX, pack_dec_len)
+            mm.flush()
+            print(
+                f"[cesa] img idx pkg90 dec_len {old} -> {pack_dec_len} ({img_path})",
+                flush=True,
+            )
+            return True
+        finally:
+            mm.close()
 
 
 def _ensure_nlpp_path() -> None:
@@ -336,6 +403,12 @@ def rebuild_pkg90_with_companion(
     zopfli Konami/ProductionLogo losslessly, and give the companion TEX its own
     offset (256×512 / 240×400, same orientation as CESA). Package file length
     stays exactly ``len(pkg_raw)``.
+
+    The PACK header ``dec_len`` grows by the companion TEX (393216). The caller
+    **must** also update img.bin's idx-table dec_len for pkg 90 — the game
+    mallocs that idx size, not the inner PACK header. Leaving idx at vanilla
+    1182976 writes the companion one byte past the arena and heap-smashes boot
+    (Luma data abort in malloc @ 0x0010DE4C, FAR=3).
     """
     _ensure_nlpp_path()
     from img import Package
@@ -634,31 +707,45 @@ def patch_img_bin_with_companion(
     (work / f"{CESA_PKG_INDEX:04d}.bin").write_bytes(pkg_raw)
     (work / f"{CESA_PKG_INDEX:04d}_patched.bin").write_bytes(patched_pkg)
 
+    # Close before rewriting dest — Windows won't replace a file held rb+.
+    im.fh.close()
+
+    from img import Package
+
+    pack_dec_len = Package.parse_header(patched_pkg[:ENTRY_SIZE])[5]
+
     if dst_img.resolve() != src_img.resolve():
         shutil.copy2(src_img, dst_img)
-    data = bytearray(dst_img.read_bytes())
-    data[base : base + pkg_len] = patched_pkg
-    dst_img.write_bytes(data)
+    with dst_img.open("r+b") as fh:
+        mm = mmap.mmap(fh.fileno(), 0)
+        try:
+            mm[base : base + pkg_len] = patched_pkg
+            old_idx = set_img_idx_dec_len(mm, CESA_PKG_INDEX, pack_dec_len)
+            mm.flush()
+        finally:
+            mm.close()
+    if old_idx != pack_dec_len:
+        print(
+            f"[cesa] img idx pkg90 dec_len {old_idx} -> {pack_dec_len} "
+            "(boot arena; must match PACK header)",
+            flush=True,
+        )
+    with dst_img.open("rb") as fh:
+        mm = mmap.mmap(fh.fileno(), 0, access=mmap.ACCESS_READ)
+        try:
+            if read_img_idx_dec_len(mm, CESA_PKG_INDEX) != pack_dec_len:
+                raise RuntimeError("img idx pkg90 dec_len did not stick")
+            if mm[base : base + pkg_len] != patched_pkg:
+                raise RuntimeError("package 90 splice did not stick")
+        finally:
+            mm.close()
 
-    im2 = ImgBin(str(dst_img))
-    im2.parse(False)
-    for i, (a, b) in enumerate(zip(im.entries, im2.entries)):
-        if a is None and b is None:
-            continue
-        da = a.fw.read() if a else None
-        db = b.fw.read() if b else None
-        if i == CESA_PKG_INDEX:
-            if da == db:
-                raise RuntimeError("package 90 did not change")
-            got = read_named_tex_from_pkg(db, CESA_TEX_NAME)
-            if got != cesa_tex:
-                raise RuntimeError("patched CESA TEX mismatch after splice")
-            got_c = read_named_tex_from_pkg(db, CESA_COMPANION_TEX_NAME)
-            if got_c != companion_tex:
-                raise RuntimeError("patched companion TEX mismatch after splice")
-            continue
-        if da != db:
-            raise RuntimeError(f"unexpected diff at package {i}")
+    got = read_named_tex_from_pkg(patched_pkg, CESA_TEX_NAME)
+    if got != cesa_tex:
+        raise RuntimeError("patched CESA TEX mismatch after splice")
+    got_c = read_named_tex_from_pkg(patched_pkg, CESA_COMPANION_TEX_NAME)
+    if got_c != companion_tex:
+        raise RuntimeError("patched companion TEX mismatch after splice")
 
     return dst_img
 

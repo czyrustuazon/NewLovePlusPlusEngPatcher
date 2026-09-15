@@ -1048,7 +1048,7 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
 
 | Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
-| CESA companion blurb | RGB TEX `CESA_400X240.texi` @ pkg **90** (240×400 poster, same orientation as CESA; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild; **§12.7** |
+| CESA companion blurb | RGB TEX `CESA_400X240.texi` @ pkg **90** (240×400 poster, same orientation as CESA; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild **+ idx `dec_len` 1576192**; **§12.7** |
 
 
 
@@ -1290,6 +1290,8 @@ Not Zhoumaru UI pack, not `IMAGE_MAP`, not BCLIM, not TRB. The boot anti-piracy 
 
 The **blank screen beside CESA** is `CESA_400X240.texi` — same PACK, vanilla **16×16 stub** (shared 15-byte zlib with other unused logos). Ghidra `CesaLogo` (`FUN_0016f338` / `FUN_0016eabc`) is a dual-screen player; constructor IDs include `0x5A0002` = pkg **90** index **2** (`CESA_400X240`). Cannot grow that 15-byte slot in place. Deploy now **rebuilds** the PACK inside the original **29232-byte** img.bin package: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `CESA_400X240` its own 256×512 / **240×400** TEX (same poster orientation as CESA), pad the file back to 29232. Do not shrink img.bin package length.
 
+**Idx table (hardware crash 2026-09-14):** growing the inner PACK header `dec_len` 1182976 → 1576192 is not enough. img.bin's index table (`0x800 + 90*0x14`, `=4s4x2I2xBB`) still stored **1182976**. The game mallocs **that** arena, then writes the companion TEX at `dec_off=1182976` (one byte past the end) → heap smash → ARM11 data abort in malloc `FUN_0000de04` @ runtime `0x0010DE4C` (FAR=3, `ldr r2,[r0,#4]` with `r0=0xFFFFFFFF`). `patch_img_bin_with_companion` now writes the matching idx `dec_len`. Do not grow PACK `dec_len` without the idx field.
+
 
 
 Vanilla JP (decode with `src/patch_cesa.py --decode`): white field, `#FF0000` gothic title with ruby, **two** title lines each with a 2px red underline, black body, one red legal line, black closing. Ink occupies roughly **y=73–322**.
@@ -1332,7 +1334,7 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 
 
-`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`.
+`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`.
 
 
 

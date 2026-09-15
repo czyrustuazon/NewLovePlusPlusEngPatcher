@@ -17,6 +17,7 @@ alwaysApply: true
 - Treating MyroomHeader `optn_tex_optionmenu_*` as Options/clock titles (wrong; use NCommonMSel **5245**).
 - **`splice_packages_into_img(bak, …, MOD_IMG)`** when `bak != MOD` — copies the whole bak over live and **wipes later EN packages**. Splice into live `MOD_IMG`; extract vanilla packages from bak only.
 - **Patch CIA with UI on the normal Drop CIA path without `release/bake_img.bin`** — causes English dialog/names but **Japanese menus** (menu chrome is bake-only). Bat must hard-stop if bake missing after fetch + rebuild.
+- **Grow a PACK header `dec_len` without updating img.bin's idx-table size for that package** — pkg **90** CESA companion wrote past a 1182976 arena (idx still vanilla) and heap-smashed boot. Inner PACK header and idx `dec_len` must match.
 
 ## Always
 

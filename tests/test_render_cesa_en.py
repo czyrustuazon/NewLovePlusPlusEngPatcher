@@ -79,6 +79,7 @@ def test_render_cesa_companion_en():
         sys.path.insert(0, str(src))
     from patch_cesa import encode_cesa_companion_tex
 
-    # Must leave room in pkg 90 after zopfli of the other TEXs (~4.8k budget).
+    # Compressed extra TEX must fit the 29232 PACK. Idx-table dec_len must
+    # grow with the PACK header or boot heap-smashes (test_patch_cesa_idx).
     compressed = len(zlib.compress(encode_cesa_companion_tex(im), 9))
     assert compressed <= 5500, compressed

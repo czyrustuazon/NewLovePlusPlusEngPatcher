@@ -15,7 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
-from patch_cesa import patch_img_bin_with_companion  # noqa: E402
+from patch_cesa import (  # noqa: E402
+    patch_img_bin_with_companion,
+    sync_img_pkg90_idx_to_pack,
+)
 
 from deploy_common import iter_deploy_targets, resolve_img_paths  # noqa: E402
 from render_cesa_en import render_cesa_companion_en, render_cesa_en  # noqa: E402
@@ -59,6 +62,11 @@ def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     work = OUT / "work"
     work.mkdir(parents=True, exist_ok=True)
+
+    # Fast: if the companion PACK is already in place, only the idx arena was
+    # stale (boot heap smash). Sync that before the slower zopfli rebuild.
+    for dest in iter_deploy_targets(MOD_IMG):
+        sync_img_pkg90_idx_to_pack(dest)
 
     # Patch each deploy target in place (bake first).
     for dest in iter_deploy_targets(MOD_IMG):
