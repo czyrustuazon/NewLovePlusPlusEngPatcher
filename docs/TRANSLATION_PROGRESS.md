@@ -12,13 +12,13 @@ Machine-readable export (all file names): `out/progress_metrics.json` (~1 MB, gi
 
 ---
 
-## Headline numbers (2026-09-01 shipping stack)
+## Headline numbers (2026-09-15 shipping stack)
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
-| **Dialogue scripts** (`script` pack) | 326 / 578 | **56.4%** | One `.dbin2` per script ID |
+| **Dialogue scripts** (`script` pack) | 424 / 578 | **73.4%** | One `.dbin2` per script ID |
 | **SMS / phone** (`maildic_*.mdc`) | 0 / 1822 | **0%** | JP in gold bake (audit) |
-| **Scripts + SMS combined** | 326 / 2400 | **13.6%** | Use for “all spoken + phone text” rollup |
+| **Scripts + SMS combined** | 424 / 2400 | **17.7%** | Use for “all spoken + phone text” rollup |
 | **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Menus, stats, quests, system strings |
 | **UI PNG masters** (chrome folders) | 461 files | — | See `images_ui` in JSON; not % of all BCLIMs yet |
 
@@ -32,10 +32,10 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 |-------|--------|------------|---|--------|
 | Manaka | `t*` | 175 / 175 | 100% | `rebuild_dbin2/` |
 | Common | `p*` | 55 / 55 | 100% | `rebuild_dbin2/` |
-| Rinko | `k*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
-| Nene | `a*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
+| Rinko | `k*` | 48 / 174 | 27.6% | community `rebuild_dbin2/script/k*.dbin2` |
+| Nene | `a*` | 146 / 174 | 83.9% | Gemini XML → `rebuild_dbin2/` (`a936` still community-only). **145 files are a machine pass, unreviewed** (teal on the fansite). |
 
-**Not injected from XML:** Rinko/Nene — community layer in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
+**Not injected from XML:** Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
 
 **Inject policy:** `src/script_inject.py` → `resolve_script_source()` (used by `patch_cia.py`).
 
@@ -86,5 +86,22 @@ Full PNG lists: `progress_metrics.json` → `images_ui.by_folder.<key>.png_files
 3. **Rollup** — scripts + SMS message count (13.6% today)
 4. **System strings** — TRB 98.1% (+ optional INDX category drill-down)
 5. **UI textures** — per-folder PNG master counts (461 total)
+
+### Review caveat (yellow / teal bars)
+
+The homepage already paints TRB as `statbar teal` with note **machine pass, unreviewed**. Dialogue Gemini Nene uses the same contract in `progress_metrics.json`:
+
+| JSON field | Meaning | Site |
+|------------|---------|------|
+| `review_status` | `reviewed` / `machine_unreviewed` / `mixed` | rose vs teal |
+| `caveat` | `"machine pass, unreviewed"` | bar note |
+| `bar` | `rose` or `teal` | StatBar class |
+| `fills` | stacked `{kind,count,percent,bar,note}` | pink reviewed + yellow MT |
+| `english_reviewed` / `english_unreviewed` | file counts | stacked widths |
+| per-file `review` | same enums | file table |
+
+Gemini stems come from `assets/gemini_heroines/xml/`. After proofreading, add the stem to `assets/gemini_heroines/proofread.json` so it counts as rose.
+
+Importer: `node scripts/import-progress.mjs` — if a route or fill has `bar: "teal"` / `caveat` set, use the teal StatBar (same as System & menu text).
 
 Do **not** show resident TRB fragment % as “translation progress” (mostly JP date/time building blocks by design).

@@ -40,6 +40,7 @@ tools/*
 !tools/nuclear_jp_to_x.py
 !tools/mdcutil.py
 !tools/translate_sms_en.py
+!tools/translate_heroines_gemini.py
 !tools/export_progress_metrics.py
 !tools/script_coverage_report.py
 !tools/restore_*.py

@@ -1789,6 +1789,7 @@ _OUT_KEEP_DIRS = frozenset(
         "luma",  # LayeredFS drop
         "azahar_instances",  # a/b test workflow (ab_test/)
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
+        "gemini_heroines",  # paid Gemini Nene/Rinko scratch (gitignored; do not wipe)
     }
 )
 
@@ -1798,7 +1799,7 @@ def cleanup_out_dir(
     out_cia: Path,
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
 ) -> None:
-    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, and a/b instances."""
+    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, gemini_heroines/, and a/b instances."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return

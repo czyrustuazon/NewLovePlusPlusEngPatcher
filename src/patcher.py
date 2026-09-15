@@ -31,7 +31,7 @@ JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 PLACEHOLDER_RE = re.compile(r"[○●…]{2,}|TODO|FIXME|MTL", re.I)
 
 
-# Script inject policy (see script_inject.py): Manaka t* + p* + NLPPPATCH ~28%.
+# Script inject policy (see script_inject.py): Manaka t* + p* + allowlisted a*/k*.
 TRANSLATION_PREFIXES = frozenset({"t", "p"})
 
 
@@ -59,8 +59,8 @@ def cmd_status(_: argparse.Namespace) -> int:
     print(f"scripts (xml): {len(scripts)} in assets/scripts/")
     print(f"  t* Manaka:  {manaka}")
     print(f"  p* common:  {common}")
-    print(f"  a* Nene:    {nene} (WIP if present - not gold-injected)")
-    print(f"  k* Rinko:   {rinko} (WIP if present - not gold-injected)")
+    print(f"  a* Nene:    {nene} (gold XML → rebuild_dbin2)")
+    print(f"  k* Rinko:   {rinko} (WIP if present — community dbin2 only)")
     print(f"Manaka layer: {manaka} t* from rebuild_dbin2 (overrides NLPPATCH)")
     try:
         from script_inject import coverage_summary, nlppatch_script_dir
