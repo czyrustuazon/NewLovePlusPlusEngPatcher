@@ -24,9 +24,9 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 FONTS = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025"
 ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "Bottom_Thank.png"
+COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_400X240.png"
 OUT_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_240X400_preview.png"
-OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "Bottom_Thank_preview.png"
+OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_400X240_preview.png"
 
 W, H = 240, 400
 SCALE = 2
@@ -48,22 +48,18 @@ RAMP_STEPS = 12
 # Companion uses a short ramp so the extra TEX still fits pkg 90.
 COMPANION_RAMP_STEPS = 3
 
-# Bottom-screen thank pane (320×240 after rotate; slot is Bottom_Thank.texi).
-COMPANION_W, COMPANION_H = 240, 320
+# Landscape pane beside CESA (CESA_400X240.texi; vanilla 16×16 stub).
+COMPANION_W, COMPANION_H = 400, 240
 COMPANION_CW, COMPANION_CH = COMPANION_W * SCALE, COMPANION_H * SCALE
 COMPANION_MAX_TEXT_W = (COMPANION_W - 2 * MARGIN) * SCALE
-COMPANION_TITLE_Y = 36 * SCALE
+COMPANION_TITLE_Y = 28 * SCALE
 COMPANION_TITLE = "Thanks for playing!"
-# Wrapped to the 240-wide bottom column.
+# Wrapped to the 400-wide landscape column.
 COMPANION_BODY = (
-    (("This is a passionate,", "black"),),
-    (("free", "accent"), (" community project.", "black")),
+    (("This is a passionate, ", "black"), ("free", "accent"), (" community project.", "black")),
     (("It should ", "black"), ("never be sold", "accent"), (".", "black")),
-    (("If someone charged you", "black"),),
-    (("for this, you were ", "black"), ("scammed", "accent"), (".", "black")),
-    (("Please show your support", "black"),),
-    (("by buying the ", "black"), ("official", "accent")),
-    (("release", "accent"), (".", "black")),
+    (("If you paid for this, you were ", "black"), ("scammed", "accent"), (".", "black")),
+    (("Please support it by buying the ", "black"), ("official release", "accent"), (".", "black")),
 )
 
 # Proportional Heisei Gothic (DFPHSGothic) — same family as the JP CESA.
@@ -264,7 +260,7 @@ def render_cesa_en() -> Image.Image:
 
 
 def render_cesa_companion_en() -> Image.Image:
-    """240×320 gothic blurb for Bottom_Thank.texi (pane beside CESA)."""
+    """400×240 gothic blurb for CESA_400X240.texi (pane beside CESA)."""
     accent_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     black_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     accent_draw = ImageDraw.Draw(accent_mask)

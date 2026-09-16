@@ -25,7 +25,7 @@ from patch_cesa import (  # noqa: E402
     set_img_idx_dec_len,
 )
 
-COMPANION_PKG90_DEC_LEN = VANILLA_PKG90_DEC_LEN + 256 * 512 * 3
+COMPANION_PKG90_DEC_LEN = VANILLA_PKG90_DEC_LEN + 512 * 256 * 3
 
 
 def _fake_img_with_pkg90_idx(dec_len: int = VANILLA_PKG90_DEC_LEN) -> bytearray:
@@ -67,7 +67,7 @@ def test_companion_pkg90_dec_len_is_vanilla_plus_one_tex():
     assert COMPANION_PKG90_DEC_LEN == 1576192
 
 
-def test_companion_slot_is_bottom_thank_not_alt_orient():
-    assert CESA_COMPANION_TEX_NAME == "Bottom_Thank.texi"
-    assert CESA_ALT_ORIENT_TEX_NAME == "CESA_400X240.texi"
-    assert (COMPANION_VISIBLE_W, COMPANION_VISIBLE_H) == (240, 320)
+def test_companion_slot_is_landscape_cesa_400x240():
+    assert CESA_COMPANION_TEX_NAME == "CESA_400X240.texi"
+    assert CESA_ALT_ORIENT_TEX_NAME == "Bottom_Thank.texi"
+    assert (COMPANION_VISIBLE_W, COMPANION_VISIBLE_H) == (400, 240)

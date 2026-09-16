@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""EN boot CESA warning + bottom-screen thank-you — img.bin package 90.
+"""EN boot CESA warning + landscape thank-you — img.bin package 90.
 
-CESA_240X400.texi is the portrait warning on the top screen. The blank pane
-beside it on first boot is Bottom_Thank.texi (vanilla 16×16 stub, 240×320
-like ProductionLogo). CESA_400X240.texi is the unused top-screen orientation
-stub — filling it does not show on 2D boot.
+CESA_240X400.texi is the portrait warning on the left. The white pane beside
+it on first boot is CESA_400X240.texi (vanilla 16×16 stub, 400×240 landscape).
+Bottom_Thank.texi is unused on that dual-screen — keep it a stub.
 
-Rebuild pkg 90 from vanilla so a previous CESA_400X240 grow is undone.
+Rebuild pkg 90 from vanilla so a previous Bottom_Thank grow is undone.
 Gold path splices a same-size PACK into release/bake_img.bin.
 """
 from __future__ import annotations
@@ -22,22 +21,19 @@ from patch_cesa import (  # noqa: E402
     patch_img_bin_with_companion,
     sync_img_pkg90_idx_to_pack,
 )
+from nlpp_paths import find_vanilla_img  # noqa: E402
 
-from deploy_common import (  # noqa: E402
-    find_vanilla_img,
-    iter_deploy_targets,
-    resolve_img_paths,
-)
+from deploy_common import iter_deploy_targets, resolve_img_paths  # noqa: E402
 from render_cesa_en import render_cesa_companion_en, render_cesa_en  # noqa: E402
 
 MOD_IMG, _FALLBACK_VANILLA = resolve_img_paths()
 CESA_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-COMPANION_PNG = ROOT / "assets" / "images" / "cesa" / "Bottom_Thank.png"
+COMPANION_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_400X240.png"
 OUT = ROOT / "out" / "cesa_en"
 
 
 def _vanilla_pkg90_src(dest: Path) -> Path:
-    """Vanilla pkg 90 — not dest, which may still have the old CESA_400X240 fill."""
+    """Vanilla pkg 90 — not dest, which may still have the old Bottom_Thank fill."""
     vanilla = find_vanilla_img()
     if vanilla is not None and vanilla.resolve() != dest.resolve():
         return vanilla.resolve()
@@ -47,13 +43,13 @@ def _vanilla_pkg90_src(dest: Path) -> Path:
     if _FALLBACK_VANILLA.resolve() != dest.resolve():
         return _FALLBACK_VANILLA.resolve()
     raise SystemExit(
-        "CESA Bottom_Thank rebuild needs a vanilla img.bin "
-        "(NLPP_VANILLA_IMG) so CESA_400X240 can return to a stub."
+        "CESA CESA_400X240 rebuild needs a vanilla img.bin "
+        "(NLPP_VANILLA_IMG) so Bottom_Thank can return to a stub."
     )
 
 
 def _refresh_pngs() -> None:
-    """Rebuild CESA + Bottom_Thank masters from NLPPPATCH Heisei Gothic."""
+    """Rebuild CESA + CESA_400X240 masters from NLPPPATCH Heisei Gothic."""
     try:
         im = render_cesa_en()
         CESA_PNG.parent.mkdir(parents=True, exist_ok=True)
@@ -86,13 +82,17 @@ def main() -> int:
     work = OUT / "work"
     work.mkdir(parents=True, exist_ok=True)
 
+    vanilla = find_vanilla_img()
+    if vanilla is None:
+        print("[cesa] no vanilla img.bin; rebuilding from dest (dirty TEXIs possible)", flush=True)
+
     # Fast: if the companion PACK is already in place, only the idx arena was
     # stale (boot heap smash). Sync that before the slower zopfli rebuild.
     for dest in iter_deploy_targets(MOD_IMG):
         sync_img_pkg90_idx_to_pack(dest)
 
     # Patch each deploy target in place (bake first). Rebuild from vanilla
-    # pkg 90 so CESA_400X240 is a stub again and Bottom_Thank gets the blurb.
+    # pkg 90 so Bottom_Thank is a stub again and CESA_400X240 gets the blurb.
     for dest in iter_deploy_targets(MOD_IMG):
         vanilla = _vanilla_pkg90_src(dest)
         print(f"[cesa] patching {dest} (pkg90 from {vanilla})", flush=True)
