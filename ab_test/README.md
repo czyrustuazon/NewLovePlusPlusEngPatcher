@@ -47,7 +47,7 @@ Each has its own `load/mods/00040000000F4E00/` LayeredFS tree and
 (`tools/deploy_name_input_en.py` + kanji TRB) on whatever img is already in the
 instance (usually vanilla from `seed-*`).
 
-**CESA thank-you gold bake A/B** (A = `CESA_400X240` blurb, B = English CESA only / blank right pane):
+**CESA thank-you gold bake A/B** (A = `logo_white` blurb, B = English CESA only / blank right pane):
 
 ```powershell
 .\make.ps1 instances

@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Gold-bake A/B for the CESA thank-you pane.
 
-A = current gold bake (English CESA + CESA_400X240 + idx 1576192)
+A = current gold bake (English CESA + logo_white thank-you + idx 1576192)
+    plus the CesaLogo 400×400 skip so the blurb stays 240×320 portrait.
 B = same bake, pkg 90 restored to English CESA only (blank right pane, idx vanilla)
 
-Both instances get vanilla code.bin so CesaLogo is not skipped.
+Both instances start from vanilla code.bin so CesaLogo is not skipped.
+A then gets the 1-insn logo_white native-size patch; B stays stock so the
+16×16 stub still fills the pane.
 Launch with: .\\make.ps1 launch-a   /   .\\make.ps1 launch-b
 """
 from __future__ import annotations
@@ -43,6 +46,7 @@ from patch_cesa import (  # noqa: E402
     read_named_tex_from_pkg,
     set_img_idx_dec_len,
 )
+from patch_code import patch_cesa_logo_white_native_size  # noqa: E402
 
 CESA_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
 INSTANCES = ROOT / "out" / "azahar_instances"
@@ -89,11 +93,18 @@ def _copy_bake(dest_img: Path) -> None:
     shutil.copy2(BAKE_IMG, dest_img)
 
 
-def _seed_vanilla_code(mod: Path, vanilla_code: Path) -> None:
+def _seed_vanilla_code(mod: Path, vanilla_code: Path, *, native_logo_white: bool = False) -> None:
     exefs = mod / "exefs"
     exefs.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(vanilla_code, exefs / "code.bin")
-    print(f"[cesa-ab] vanilla code.bin -> {exefs / 'code.bin'}", flush=True)
+    dest = exefs / "code.bin"
+    data = bytearray(vanilla_code.read_bytes())
+    if native_logo_white:
+        patch_cesa_logo_white_native_size(data)
+        dest.write_bytes(data)
+        print(f"[cesa-ab] vanilla code.bin + logo_white native size -> {dest}", flush=True)
+    else:
+        dest.write_bytes(data)
+        print(f"[cesa-ab] vanilla code.bin -> {dest}", flush=True)
 
 
 def _summarize(img_path: Path, label: str) -> None:
@@ -102,11 +113,11 @@ def _summarize(img_path: Path, label: str) -> None:
     pack_dec = Package.parse_header(pkg[:ENTRY_SIZE])[5]
     cesa = read_named_tex_from_pkg(pkg, CESA_TEX_NAME)
     thank = read_named_tex_from_pkg(pkg, CESA_COMPANION_TEX_NAME)
-    stub = read_named_tex_from_pkg(pkg, BOTTOM_THANK_TEX_NAME)
+    alt = read_named_tex_from_pkg(pkg, BOTTOM_THANK_TEX_NAME)
     print(
         f"[cesa-ab] {label}: idx={idx} pack={pack_dec} match={idx == pack_dec} "
-        f"CESA={len(cesa)} CESA_400X240={len(thank)} "
-        f"Bottom_Thank={len(stub)}",
+        f"CESA={len(cesa)} {CESA_COMPANION_TEX_NAME}={len(thank)} "
+        f"Bottom_Thank={len(alt)}",
         flush=True,
     )
 
@@ -134,7 +145,7 @@ def main() -> int:
     img_b = mod_b / "romfs" / "img.bin"
 
     _copy_bake(img_a)
-    _seed_vanilla_code(mod_a, vanilla_code)
+    _seed_vanilla_code(mod_a, vanilla_code, native_logo_white=True)
     _summarize(img_a, "A (bake + thank)")
     idx_a = read_img_idx_dec_len(img_a.read_bytes(), CESA_PKG_INDEX)
     pkg_a = _load_pkg90(img_a)
@@ -143,7 +154,8 @@ def main() -> int:
     companion_tex = COMPANION_TEX_W * COMPANION_TEX_H * 3
     if idx_a != COMPANION_DEC_LEN or len(thank_a) != companion_tex:
         raise SystemExit(
-            f"A bake is not the companion build (idx={idx_a}, CESA_400X240={len(thank_a)})"
+            f"A bake is not the companion build (idx={idx_a}, "
+            f"{CESA_COMPANION_TEX_NAME}={len(thank_a)})"
         )
     if len(stub_a) != STUB_TEX_DEC_LEN:
         raise SystemExit(f"A Bottom_Thank should stay a stub, got {len(stub_a)}")
@@ -156,11 +168,13 @@ def main() -> int:
     _summarize(img_b, "B (CESA EN only)")
     thank_b = read_named_tex_from_pkg(_load_pkg90(img_b), CESA_COMPANION_TEX_NAME)
     if len(thank_b) != STUB_TEX_DEC_LEN:
-        raise SystemExit(f"B CESA_400X240 should stay a stub, got {len(thank_b)}")
+        raise SystemExit(
+            f"B {CESA_COMPANION_TEX_NAME} should stay a stub, got {len(thank_b)}"
+        )
 
     print(
-        "\nA/B ready. Boot both — A should show Thanks on the right pane; "
-        "B should boot with English CESA and a blank white right pane.\n"
+        "\nA/B ready. Boot A — Thanks should be a 240×320 portrait column like CESA.\n"
+        "B keeps English CESA and a blank white right pane.\n"
         "  .\\make.ps1 launch-a\n"
         "  .\\make.ps1 launch-b\n",
         flush=True,

@@ -67,7 +67,7 @@ def test_companion_pkg90_dec_len_is_vanilla_plus_one_tex():
     assert COMPANION_PKG90_DEC_LEN == 1576192
 
 
-def test_companion_slot_is_landscape_cesa_400x240():
-    assert CESA_COMPANION_TEX_NAME == "CESA_400X240.texi"
-    assert CESA_ALT_ORIENT_TEX_NAME == "Bottom_Thank.texi"
-    assert (COMPANION_VISIBLE_W, COMPANION_VISIBLE_H) == (400, 240)
+def test_companion_slot_is_logo_white():
+    assert CESA_COMPANION_TEX_NAME == "logo_white.texi"
+    assert CESA_ALT_ORIENT_TEX_NAME == "CESA_400X240.texi"
+    assert (COMPANION_VISIBLE_W, COMPANION_VISIBLE_H) == (240, 320)

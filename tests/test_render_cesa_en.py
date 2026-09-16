@@ -54,7 +54,7 @@ def test_render_cesa_en_matches_tex_canvas():
 )
 def test_render_cesa_companion_en():
     im = render.render_cesa_companion_en()
-    assert im.size == (400, 240)
+    assert im.size == (240, 320)
     assert im.mode == "RGB"
     assert im.getpixel((0, 0)) == (255, 255, 255)
     colors = set(im.getdata())

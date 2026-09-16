@@ -24,9 +24,9 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 FONTS = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025"
 ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "CESA_400X240.png"
+COMPANION_ASSET = ROOT / "assets" / "images" / "cesa" / "logo_white.png"
 OUT_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_240X400_preview.png"
-OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "CESA_400X240_preview.png"
+OUT_COMPANION_PREVIEW = ROOT / "out" / "cesa_en" / "logo_white_preview.png"
 
 W, H = 240, 400
 SCALE = 2
@@ -48,18 +48,24 @@ RAMP_STEPS = 12
 # Companion uses a short ramp so the extra TEX still fits pkg 90.
 COMPANION_RAMP_STEPS = 3
 
-# Landscape pane beside CESA (CESA_400X240.texi; vanilla 16×16 stub).
-COMPANION_W, COMPANION_H = 400, 240
+# Same 240-wide portrait column as CESA (CesaLogo second pane, not 320×240).
+COMPANION_W, COMPANION_H = 240, 320
 COMPANION_CW, COMPANION_CH = COMPANION_W * SCALE, COMPANION_H * SCALE
 COMPANION_MAX_TEXT_W = (COMPANION_W - 2 * MARGIN) * SCALE
-COMPANION_TITLE_Y = 28 * SCALE
-COMPANION_TITLE = "Thanks for playing!"
-# Wrapped to the 400-wide landscape column.
+COMPANION_TITLE_Y = 48 * SCALE
+COMPANION_TITLE = (
+    "Thanks for",
+    "playing!",
+)
+# Wrapped to the 240-wide portrait column (same as CESA).
 COMPANION_BODY = (
-    (("This is a passionate, ", "black"), ("free", "accent"), (" community project.", "black")),
+    (("This is a passionate,", "black"),),
+    (("free", "accent"), (" project.", "black")),
     (("It should ", "black"), ("never be sold", "accent"), (".", "black")),
-    (("If you paid for this, you were ", "black"), ("scammed", "accent"), (".", "black")),
-    (("Please support it by buying the ", "black"), ("official release", "accent"), (".", "black")),
+    (("If you paid, you were", "black"),),
+    (("scammed", "accent"), (".", "black")),
+    (("Please buy the", "black"),),
+    (("official release", "accent"), (".", "black")),
 )
 
 # Proportional Heisei Gothic (DFPHSGothic) — same family as the JP CESA.
@@ -260,7 +266,7 @@ def render_cesa_en() -> Image.Image:
 
 
 def render_cesa_companion_en() -> Image.Image:
-    """400×240 gothic blurb for CESA_400X240.texi (pane beside CESA)."""
+    """240×320 gothic blurb for logo_white.texi (portrait, same column as CESA)."""
     accent_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     black_mask = Image.new("L", (COMPANION_CW, COMPANION_CH), 0)
     accent_draw = ImageDraw.Draw(accent_mask)
@@ -269,7 +275,7 @@ def render_cesa_companion_en() -> Image.Image:
     title_font = None
     for size in range(22 * SCALE, 13 * SCALE - 1, -1):
         font = _font(TITLE_TTC, size)
-        if font.getlength(COMPANION_TITLE) <= COMPANION_MAX_TEXT_W:
+        if all(font.getlength(line) <= COMPANION_MAX_TEXT_W for line in COMPANION_TITLE):
             title_font = font
             break
     if title_font is None:
@@ -284,7 +290,7 @@ def render_cesa_companion_en() -> Image.Image:
     if body_font is None:
         raise RuntimeError("companion body does not fit")
 
-    title_th = _text_size(accent_draw, COMPANION_TITLE, title_font)[1]
+    title_th = max(_text_size(accent_draw, line, title_font)[1] for line in COMPANION_TITLE)
     body_th = max(
         _text_size(accent_draw, run[0], body_font)[1]
         for line in COMPANION_BODY
@@ -292,9 +298,7 @@ def render_cesa_companion_en() -> Image.Image:
     )
     leading = body_th + 6 * SCALE
     block_h = (
-        title_th
-        + UNDERLINE_GAP
-        + UNDERLINE_H
+        (title_th + UNDERLINE_GAP + UNDERLINE_H) * len(COMPANION_TITLE)
         + TITLE_TO_BODY
         + leading * len(COMPANION_BODY)
     )
@@ -302,15 +306,17 @@ def render_cesa_companion_en() -> Image.Image:
     if y + block_h > COMPANION_CH - 8 * SCALE:
         y = max(18 * SCALE, (COMPANION_CH - block_h) // 2)
 
-    y = _draw_runs(
-        accent_draw,
-        black_draw,
-        ((COMPANION_TITLE, "accent"),),
-        title_font,
-        y,
-        COMPANION_CW,
-        underline=True,
-    )
+    for line in COMPANION_TITLE:
+        y = _draw_runs(
+            accent_draw,
+            black_draw,
+            ((line, "accent"),),
+            title_font,
+            y,
+            COMPANION_CW,
+            underline=True,
+        )
+        y += TITLE_AFTER_LINE
     y += TITLE_TO_BODY
     for line in COMPANION_BODY:
         y = _draw_runs(accent_draw, black_draw, line, body_font, y, COMPANION_CW)

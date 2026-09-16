@@ -9,6 +9,7 @@ Verified stack (2026-08-31):
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_message_speed                   # Display Settings 14/8/2/0 frames/glyph
+  7. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -66,6 +67,7 @@ from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
     is_patched as message_speed_already,
 )
+from patch_code import patch_cesa_logo_white_native_size  # noqa: E402
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
 
@@ -138,6 +140,12 @@ def apply_name_input_stack(data: bytearray) -> int:
     else:
         apply_message_speed(data)
         steps += 1
+
+    if patch_cesa_logo_white_native_size(data):
+        print("[cesa] logo_white quad uses TEXI size (skip 400x400 stub scale)")
+        steps += 1
+    else:
+        print("[skip] cesa logo_white native size already applied")
 
     return steps
 

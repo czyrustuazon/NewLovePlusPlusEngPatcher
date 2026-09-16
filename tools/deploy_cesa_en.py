@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""EN boot CESA warning + landscape thank-you — img.bin package 90.
+"""EN boot CESA warning + second-screen thank-you — img.bin package 90.
 
-CESA_240X400.texi is the portrait warning on the left. The white pane beside
-it on first boot is CESA_400X240.texi (vanilla 16×16 stub, 400×240 landscape).
-Bottom_Thank.texi is unused on that dual-screen — keep it a stub.
+CESA_240X400.texi is the portrait warning. The white pane beside it is
+CesaLogo +0x64 → logo_white.texi (constructor ID 0x5A0008, vanilla 16×16
+white stub). CESA_400X240 / Bottom_Thank / ProductionLogo_320X240 stay stubs.
 
-Rebuild pkg 90 from vanilla so a previous Bottom_Thank grow is undone.
+Rebuild pkg 90 from vanilla so a previous companion grow is undone.
 Gold path splices a same-size PACK into release/bake_img.bin.
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ from render_cesa_en import render_cesa_companion_en, render_cesa_en  # noqa: E40
 
 MOD_IMG, _FALLBACK_VANILLA = resolve_img_paths()
 CESA_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-COMPANION_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_400X240.png"
+COMPANION_PNG = ROOT / "assets" / "images" / "cesa" / "logo_white.png"
 OUT = ROOT / "out" / "cesa_en"
 
 
@@ -43,13 +43,13 @@ def _vanilla_pkg90_src(dest: Path) -> Path:
     if _FALLBACK_VANILLA.resolve() != dest.resolve():
         return _FALLBACK_VANILLA.resolve()
     raise SystemExit(
-        "CESA CESA_400X240 rebuild needs a vanilla img.bin "
-        "(NLPP_VANILLA_IMG) so Bottom_Thank can return to a stub."
+        "CESA companion rebuild needs a vanilla img.bin "
+        "(NLPP_VANILLA_IMG) so leftover companion slots can return to stubs."
     )
 
 
 def _refresh_pngs() -> None:
-    """Rebuild CESA + CESA_400X240 masters from NLPPPATCH Heisei Gothic."""
+    """Rebuild CESA + logo_white masters from NLPPPATCH Heisei Gothic."""
     try:
         im = render_cesa_en()
         CESA_PNG.parent.mkdir(parents=True, exist_ok=True)
@@ -92,7 +92,7 @@ def main() -> int:
         sync_img_pkg90_idx_to_pack(dest)
 
     # Patch each deploy target in place (bake first). Rebuild from vanilla
-    # pkg 90 so Bottom_Thank is a stub again and CESA_400X240 gets the blurb.
+    # pkg 90 so logo_white gets the blurb and other stubs stay stubs.
     for dest in iter_deploy_targets(MOD_IMG):
         vanilla = _vanilla_pkg90_src(dest)
         print(f"[cesa] patching {dest} (pkg90 from {vanilla})", flush=True)

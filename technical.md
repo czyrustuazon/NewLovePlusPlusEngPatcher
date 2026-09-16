@@ -58,7 +58,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
 
-- **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `CESA_400X240` blurb, then `deploy_cesa_en.py` — **§12.7**.
+- **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 
@@ -1048,7 +1048,7 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
 
 | Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
-| CESA companion blurb | RGB TEX `CESA_400X240.texi` @ pkg **90** (400×240 landscape pane beside CESA; vanilla 16×16 stub) | **EN** — teal highlight gothic; PACK rebuild **+ idx `dec_len` 1576192**; **§12.7** |
+| CESA companion blurb | RGB TEX `logo_white.texi` @ pkg **90** (CesaLogo `0x5A0008`; **240×320** portrait; vanilla 16×16 stub) | **EN** (verified 2026-09-15) — teal gothic; PACK rebuild **+ idx `dec_len` 1576192** + skip 400×400 stub quad; **§12.7** |
 
 
 
@@ -1065,6 +1065,12 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | `0020ad74` | `BindMSelBtnIconAndText` | Loads icon+text BCLIM by filename |
 
 | `0020bcc0` | `OptionMenu_BindPlateTextures` | Plate header/text; slot **6** = clock title |
+
+| `0016f338` | `CesaLogo` ctor | `+0x60` / `+0x64` constructor IDs (pkg **90** TEXI, **1-based**) |
+
+| `0016ec1c` | `CesaLogo` state 2 | `FUN_005af3ac` bind; `0x5A0008` 400×400 stub quad @ `0x0016ed84` |
+
+| `00598ff4` | TEXI lookup | `(id & 0xffff) - 1` → TEXI index |
 
 
 
@@ -1288,7 +1294,25 @@ Not Zhoumaru UI pack, not `IMAGE_MAP`, not BCLIM, not TRB. The boot anti-piracy 
 
 
 
-The **blank screen beside CESA** on first boot is `CESA_400X240.texi` (`0x5A0002`) — same PACK, vanilla **16×16 stub**, **400×240** / 512×256 landscape. `Bottom_Thank.texi` (constructor ID `0x5A0000`) is unused on that dual-screen; filling it leaves the right pane white (gold-bake A/B, 2026-09-15). Cannot grow the 15-byte stub zlib in place. Deploy **rebuilds** the PACK inside the original **29232-byte** img.bin package from **vanilla** pkg 90: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `CESA_400X240` its own 512×256 / **400×240** TEX, leave `Bottom_Thank` as a stub, pad the file back to 29232. Pair by **filename**, not TEXI index (index pairing would attach Konami to the companion). Do not shrink img.bin package length. Rebuilding from an already-patched bake leaves leftover TEXI dims and can hide the blurb or smash boot.
+The **blank screen beside CESA** is `logo_white.texi` (verified Azahar A/B, 2026-09-15): same 240-wide **portrait** column as CESA, **240×320** visible / 256×512 canvas.
+
+**Constructor IDs are 1-based TEXI indices** (`FUN_00598ff4`: `(id & 0xffff) - 1`). Do not treat `0x5A0000` as TEXI 0.
+
+| TEXI (0-based) | Filename | Constructor ID |
+|----------------|----------|----------------|
+| 0 | `Bottom_Thank.texi` | `0x5A0001` |
+| 1 | `CESA_240X400.texi` | `0x5A0002` |
+| 2 | `CESA_400X240.texi` | `0x5A0003` |
+| 7 | `logo_white.texi` | `0x5A0008` |
+| 8 | `ProductionLogo_240X320.texi` | `0x5A0009` |
+| 9 | `ProductionLogo_320X240.texi` | `0x5A000A` |
+| 10 | `Upper_ThankYou_00.texi` | `0x5A000B` |
+
+CesaLogo (`FUN_0016f338`): `+0x60 = 0x5A0002` (`CESA_240X400`) and `+0x64 = 0x5A0008` (`logo_white`) in orientation 0/2. State 2 (`FUN_0016ec1c`) binds both via `FUN_005af3ac`. Vanilla then forces a **400×400** quad on `0x5A0008` (`s19` at `0x0016ed84`) so the 16×16 white stub fills the pane. A real TEX at that size stretches and clips. `patch_cesa_logo_white_native_size` (`src/patch_code.py`) turns the `bne` at `0x0016ED80` into an always-`b` so bind keeps `FUN_005aeef4`'s TEXI size (**240×320**). Ships in `deploy_name_input_en.py` → `release/name_input_code.bin`. `NintendoLogo` also binds `0x5A0008` (white flash).
+
+**Wrong slots (right pane stayed white):** `Bottom_Thank` (`0x5A0001`), `CESA_400X240` (`0x5A0003`), `ProductionLogo_320X240` (`0x5A000A`). Patching CesaLogo IDs to those slots duplicated CESA / Love Plus Production eyecatches — do not remap `+0x60`/`+0x64`. Landscape **320×240** art on `logo_white` sat on its side next to portrait CESA.
+
+Vanilla `logo_white` is a **16×16 stub**. Cannot grow the 15-byte stub zlib in place. Deploy **rebuilds** the PACK inside the original **29232-byte** img.bin package from **vanilla** pkg 90: zopfli the three real TEXs (CESA / Konami / ProductionLogo), give `logo_white` its own 256×512 / **240×320** TEX, leave the other stubs, pad the file back to 29232. Pair by **filename**. Do not shrink img.bin package length. Rebuilding from an already-patched bake leaves leftover TEXI dims and can hide the blurb or smash boot.
 
 **Idx table (hardware crash 2026-09-14):** growing the inner PACK header `dec_len` 1182976 → 1576192 is not enough. img.bin's index table (`0x800 + 90*0x14`, `=4s4x2I2xBB`) still stored **1182976**. The game mallocs **that** arena, then writes the companion TEX at `dec_off=1182976` (one byte past the end) → heap smash → ARM11 data abort in malloc `FUN_0000de04` @ runtime `0x0010DE4C` (FAR=3, `ldr r2,[r0,#4]` with `r0=0xFFFFFFFF`). `patch_img_bin_with_companion` now writes the matching idx `dec_len`. Do not grow PACK `dec_len` without the idx field.
 
@@ -1334,15 +1358,15 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 
 
-`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`.
+`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. The 400×400 skip lives in `name_input_code.bin` (bake rebuild / Drop CIA). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`, `tests/test_patch_cesa_logo_scale.py`. A/B: `.\make.ps1 cesa-ab` then `launch-a` (thank-you) / `launch-b` (CESA EN, white stub).
 
 
 
-#### Companion blurb (`CESA_400X240` — 2026-09-15)
+#### Companion blurb (`logo_white` — 2026-09-15)
 
-`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/CESA_400X240.png` (**400×240** landscape). Same Heisei W9/W5 index 1, **no red**: title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 400×240 crop stay poster-white.
+`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/logo_white.png` (**240×320** portrait, same 240-wide column as CESA; spliced into `logo_white.texi`). Same Heisei W9/W5 index 1, **no red**: two-line title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
 
-Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Fill `CESA_400X240` **by filename**. An earlier attempt filled `Bottom_Thank` instead — that TEX is not bound on the dual-screen, so the thank-you stayed invisible (right pane all white). Always extract pkg 90 from vanilla before the PACK rebuild.
+Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Fill `logo_white` **by filename**. Always extract pkg 90 from vanilla before the PACK rebuild.
 
 
 
@@ -1364,7 +1388,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 
 | 2× masks + 12-step ramps (CESA warning) | ~12k (zopfli ~10934; no longer padded to 13667 once the PACK is rebuilt) | Smooth gothic, no red shadow |
 
-| 2× masks + 3-step ramps (CESA_400X240 blurb) | zopfli ~4k | Teal highlights; extra TEX fits the PACK |
+| 2× masks + 3-step ramps (logo_white blurb) | zopfli ~4k | Teal highlights; extra TEX fits the PACK |
 
 
 
@@ -1385,6 +1409,14 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 - Auto-pack CESA through `pack_images` (opt-in `--only cesa` only).
 
 - `pe` grow / trailing NUL zlib / bak→MOD wipe.
+
+- Fill `Bottom_Thank` / `CESA_400X240` / `ProductionLogo_320X240` for the dual-screen (wrong constructor IDs).
+
+- Remap CesaLogo `+0x60`/`+0x64` (duplicates CESA / Production eyecatches).
+
+- Landscape **320×240** `logo_white` next to portrait CESA.
+
+- Leave the vanilla 400×400 `logo_white` stub quad (`bne` @ `0x0016ED80`).
 
 
 
@@ -1414,7 +1446,9 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 
 | `src/patch_textresource.py` | TRB dump / translate / rebuild / inplace |
 
-| `src/patch_code.py` | code.bin patches |
+| `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`logo_white` 240×320 companion) |
+
+| `src/patch_code.py` | code.bin patches (incl. CesaLogo skip 400×400 stub quad @ `0x0016ED80`) |
 
 | `src/patch_message_speed.py` | Message Speed slider delays 18/12/6/0 → **14/8/2/0** (`FUN_005d1e18`; ships in `name_input_code.bin`) |
 
@@ -1424,9 +1458,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 
 | `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 
-| `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`CESA_400X240` companion) |
-
-| `tools/render_cesa_en.py` | EN CESA 240×400 PNG: NLPPPATCH Heisei Gothic, 2× L masks, 12-step ramps (**§12.7**) |
+| `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1440,6 +1472,8 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
+
+| `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 
@@ -1807,7 +1841,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 |----|---------|----------------|
 
-| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `CESA_400X240` blurb; PACK rebuild). **§12.7** |
+| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `logo_white` 240×320; PACK rebuild) + `patch_cesa_logo_white_native_size` in `name_input_code.bin`. **§12.7** |
 
 | Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 
