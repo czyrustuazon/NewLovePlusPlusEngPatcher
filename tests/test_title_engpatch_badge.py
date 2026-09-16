@@ -13,9 +13,11 @@ def test_eng_patch_canvas_crops_empty_under_url():
     assert deploy.ENG_LINE_H == 14
     assert deploy.URL_H == 16
     assert deploy.LINE_GAP == 0
-    assert deploy.BOTTOM_PAD == 2
-    assert deploy.SITE_LINE == "newloveplus.loc.moe"
+    assert deploy.BOTTOM_PAD == 0
+    assert deploy.SITE_LINE == "Discord: discord.gg/ZWvjRatW5k"
     assert deploy.ENG_PATCH_H == 26
+    assert deploy.ENG_PANE_TY == 17.0
+    assert deploy.POS_H_TY == -95.0
 
 
 def test_compose_eng_patch_does_not_scale_version_row():
