@@ -12,7 +12,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
-  8. patch_message_speed                   # Display Settings 14/8/2/0 frames/glyph
+  8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
 
   # Azahar LayeredFS (default)
@@ -81,7 +81,7 @@ from patch_input_strcat_raw import (  # noqa: E402
 )
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
-    is_patched as message_speed_already,
+    is_fully_patched as message_speed_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402

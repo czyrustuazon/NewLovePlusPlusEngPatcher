@@ -56,6 +56,16 @@ instance (usually vanilla from `seed-*`).
 .\make.ps1 launch-b
 ```
 
+**TalkWindow Message Speed A/B** (A = ÷4 table + voice/script cap, B = ÷4 table only; Options 14/8/2/0 on both):
+
+```powershell
+.\make.ps1 talk-speed-ab
+.\make.ps1 launch-a
+.\make.ps1 launch-b
+```
+
+Compare a **heroine date line** vs a player line. Script: `tools/ab_talk_speed.py`.
+
 **Combine Bleeding-Edge bake + name-input:**
 
 ```powershell

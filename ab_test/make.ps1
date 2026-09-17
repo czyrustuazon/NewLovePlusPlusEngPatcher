@@ -208,6 +208,7 @@ See ab_test\README.md
   combine-a/b    Bleeding-Edge bake img + name-input + name-kanji TRB -> A/B
   combine        Same combine stack -> roaming Azahar
   cesa-ab        Gold bake CESA thank A/B (A=CESA_400X240, B=CESA EN only)
+  talk-speed-ab  TalkWindow speed A/B (A=÷4+voice cap, B=÷4 table only)
   restore-a/b    Restore default-stack baseline in instance
   restore        Restore baseline in roaming Azahar
 
@@ -231,6 +232,7 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
     "combine-b" = { Deploy-Combined "b" }
     "combine" = { Deploy-Combined "" }
     "cesa-ab" = { Invoke-Python @("tools\ab_cesa_bake.py") }
+    "talk-speed-ab" = { Invoke-Python @("tools\ab_talk_speed.py") }
     "restore-a" = { Restore-NameInput "a" }
     "restore-b" = { Restore-NameInput "b" }
     "restore" = { Restore-NameInput "" }

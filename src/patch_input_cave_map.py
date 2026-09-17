@@ -21,6 +21,9 @@ TEXT_SIZE = 0x0068F7FC
 # 2 KiB zero pad at the end of the last RX page.
 ADDR_SHARED_PAD = 0x0068F800
 ADDR_ROMAJI_CAVE = 0x0068F900
+# TalkWindow delay cap (min vs table). Cand nullguard starts at +0x40.
+ADDR_TALK_CAP_CAVE = ADDR_SHARED_PAD
+TALK_CAP_CAVE_LEN = 0x28
 
 # Historical pads in .rodata — never execute from these on hardware.
 OLD_RODATA_SHARED_PAD = 0x006E6A38

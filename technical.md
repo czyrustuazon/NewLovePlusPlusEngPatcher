@@ -34,7 +34,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
-- **Message Speed delays:** slider 1–4 is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 frames/glyph). EngPatcher uses **14/8/2/0** — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
+- **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
 
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
 - **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
@@ -752,7 +752,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/patch_textresource.py` | TRB dump / translate / rebuild / inplace |
 | `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`logo_white` 240×320 companion) |
 | `src/patch_code.py` | code.bin patches (incl. CesaLogo skip 400×400 stub quad @ `0x0016ED80`) |
-| `src/patch_message_speed.py` | Message Speed slider delays 18/12/6/0 → **14/8/2/0** (`FUN_005d1e18`; ships in `name_input_code.bin`) |
+| `src/patch_message_speed.py` | Options 18/12/6/0 → **14/8/2/0**, TalkWindow 40/70/90/110/220 → **10/18/22/28/55**, tick `min` vs table @ `0x0013B718` |
 | `src/patch_drawtext_titles.py` | DrawTextToPane remap (help/other titles; **not** Options/clock chrome) |
 | `src/patch_ui_titles.py` | Older FUN_0024842c-only remapper (superseded) |
 | `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
@@ -959,7 +959,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
 | Password entry window | **5251** | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
-| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed −4 frames, §21) |
+| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options −4 frames + TalkWindow ÷4 + voice cap, §21) |
 | “Main Menu” title string | TRB / Title_menu_word | Already EN via textresource |
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
@@ -1207,7 +1207,7 @@ a/b guide: **`ab_test/README.md`**.
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
-| 8 | Message Speed delays | `src/patch_message_speed.py` | slider 1–4 → 14/8/2/0 frames/glyph (bake sidecar) |
+| 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
@@ -1563,9 +1563,13 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 
 ---
 
-## 21. Message Speed typewriter (2026-09-13)
+## 21. Message Speed typewriter (2026-09-13, in-game 2026-09-17)
 
-Display Settings → **Message Speed** is a 1–4 slider. It is **not** TRB and not a BCLIM. The Options preview string and the per-glyph delay live in ExeFS `code.bin`.
+Display Settings → **Message Speed** is a 1–4 slider. It is **not** TRB and not a BCLIM. Three printers share the saved level (`cfg+0x0C`) but **not** the same delay table:
+
+1. Options preview widget — `FUN_005d1e18` 18/12/6/0 → **14/8/2/0** (§21.2).
+2. Unvoiced TalkWindow — `.rodata` @ `0x006E3024` 40/70/90/110/220 → **10/18/22/28/55** (§21.4).
+3. Voiced / scripted TalkWindow — `+0xd60` / `+0xd5c` replace that table unless capped (§21.5–21.6).
 
 Ghidra image base **0**. Runtime VA = file + `0x100000`.
 
@@ -1613,11 +1617,11 @@ Options Display Settings is window index **2** (`FUN_00682830` / `UIWindowMgr_Sh
 | 3 | 6 | `moveq r0,#0x06` @ `0x005D1E34` | **2** | `#0x02` |
 | 4 | 0 (instant) | `moveq r0,#0x00` @ `0x005D1E40` | **0** | unchanged |
 
-Script: `src/patch_message_speed.py`. Applied from `tools/deploy_name_input_en.py` so Drop CIA / `rebuild_bake_img.py` inject it inside `release/name_input_code.bin`. LayeredFS-only: `python src/patch_message_speed.py --deploy-azahar` (backup `exefs/code.bin.bak_pre_msg_speed`). Tests: `tests/test_patch_message_speed.py`.
+Script: `src/patch_message_speed.py` (Options + TalkWindow table §21.4 + voice/script cap §21.6). Applied from `tools/deploy_name_input_en.py` so Drop CIA / `rebuild_bake_img.py` inject it inside `release/name_input_code.bin`. LayeredFS-only: `python src/patch_message_speed.py --deploy-azahar` (backup `exefs/code.bin.bak_pre_msg_speed`). Tests: `tests/test_patch_message_speed.py`.
 
-### 21.3 Save encoding (not patched)
+### 21.3 Save encoding
 
-The slider **level** (1–4), not the 18/12/6/0 delay, is what gets written to save/config. `FUN_005d1e18` has **one** caller (`FUN_001d2e5c`) — Options preview. If in-game talk stays slow after this patch, next hunt is readers of config `+0x0C` (0–255 rate), not this table.
+The slider **level** (1–4), not the 18/12/6/0 delay, is what gets written to save/config. `FUN_005d1e18` has **two** Options-only callers (`FUN_001d2e5c` and the Display Settings tick at `0x001D3520`). In-game talk does **not** read that table.
 
 Config manager singleton pointer **`0x0089A330`** (literals at `0x005CD30C` load / `0x005CDBA0` save).
 
@@ -1631,11 +1635,85 @@ Config manager singleton pointer **`0x0089A330`** (literals at `0x005CD30C` load
 
 Help Display Every Time/Once is a neighboring byte at config `+0x20` (inverted: `0` → show every time). Color knob is `+0x10…+0x1C` via `FUN_002d8754`.
 
-### 21.4 Sample sentence (still JP)
+### 21.4 In-game TalkWindow delay (patched /4)
+
+NLPP-024 patched only `FUN_005d1e18`. That table is **Options-only** (`FUN_002d544c` has no ARM `BL` callers — vtable / Display Settings widget). Date talk did not change.
+
+Live date talk is `TalkWindowProcess` (`FUN_0013f6a4`), not `Window_Message`. Glyph progress lives at talk object `+0xd50` (shown) / `+0xd54` (total). The per-glyph tick at `0x0013B6C4` divides elapsed time by a wait from this `.rodata` table:
+
+| File | Runtime VA | Vanilla dwords | Patch |
+|------|------------|----------------|-------|
+| `0x006E3024` | `0x007E3024` | **40, 70, 90, 110, 220, 0** | **10, 18, 22, 28, 55, 0** |
+
+Index is TalkWindow `+0xd9c`. Setter `FUN_0013f260` @ `0x0013F260` stores `r1` only if `r1 < 5` (so table[5]=0 instant is unused; delay 0 would divide-by-zero in `FUN_0001a43c`). Converter `FUN_002d8874` @ `0x002D8874` maps saved `cfg+0x0C`:
+
+| Slider | Saved rate | Index | Vanilla wait | Patch wait |
+|--------|------------|-------|--------------|------------|
+| 1 | `0x3F` | 3 | 110 | **28** |
+| 2 | `0x7F` | 2 | 90 | **22** |
+| 3 | `0xBF` | 1 | 70 | **18** |
+| 4 | `0xFF` | 0 | 40 | **10** |
+
+Callers (pass `*(obj+0x0C)` through `FUN_002d8874` then `FUN_0013f260`): `FUN_003bd280`, `FUN_003c2130`. Draw with new glyph count: `FUN_0013bd20`. Tap-to-complete is a separate skip (`r11`) that copies `+0xd54` → `+0xd50`.
+
+Patching this table (still `src/patch_message_speed.py`) made **unvoiced player** lines fast. It is not sufficient for voiced talk — §21.5.
+
+### 21.5 Tick delay select (player vs NPC vs heroine)
+
+After the table load, the same tick **replaces** `r2` before `cpy r6, r2` @ `0x0013B718`:
+
+| Priority | Condition | `r2` becomes | Who |
+|----------|-----------|--------------|-----|
+| 1 | `+0xd5c > 0` | script wait (skip voice) | some NPC / scripted lines |
+| 2 | `+0xd5c == 0` and `+0xd60 > 0` and `+0xd54 > 0` | `(+0xd60 / +0xd54) + 1` via `FUN_00022d48` | main heroines (voice clip) |
+| 3 | else | `table[+0xd9c]` | unvoiced player |
+
+Voice divide is `BL 0x00022D48` @ `0x0013B710`, then `add r2, r0, #1` @ `0x0013B714`. That `BL` clobbers `r2`, so the table value is gone by the time voice-sync finishes. `GetTalkDelay` @ `0x00625EC4` duplicates this logic; no ARM `BL` callers in `code.bin` (leave it).
+
+`+0xd60` writers (duration, one path clamps `movge r0, #0x1F4` = 500): `0x0013F4C8`, `0x0013C00C`, `0x0013C09C`. `+0xd5c` writers: `0x0013EC3C`, `0x0013EF08`, ctor `0x0013F930`.
+
+A/B on Azahar instances (2026-09-17), same /4 table, same slider:
+
+- Player lines: fast (table path).
+- NPC lines: slightly slower (`+0xd5c` or a short `+0xd60`).
+- Heroine date lines: vanilla-slow (voice-sync ignores the table).
+
+Do **not** hunt `cfg+0x0C` readers in `FUN_005cb47c` / `FUN_005d1d00` — those are unrelated. Do **not** treat Options `FUN_002d544c` as the in-game printer.
+
+### 21.6 Voice/script cap cave (NLPP-025)
+
+Intent: Message Speed is a **ceiling**. Script/voice may still print *faster* than the slider; they must not print *slower*.
+
+Hook **after** all three paths, replacing `cpy r6, r2` (`E1A06002`) @ `0x0013B718` with `BL` to a `.text` cave. Cannot fold the `min` into the `0x0013B710` `BL` slot — the divide already ate `r2`, and a callee-saved save would need the same extra bytes.
+
+Cave @ `0x0068F800` (`ADDR_TALK_CAP_CAVE`, `TALK_CAP_CAVE_LEN = 0x28`). Last `.text` RX page (hardware NX: do not put this in `.rodata`). Cand nullguard starts at shared pad `+0x40` (`0x0068F840`); this cave must stay below that.
+
+`r4` is TalkWindow `this` for the whole tick. `r0`/`r1` are scratch after return (`0x0013B720` reloads a 1e6 constant into `r2`). Cave:
+
+```
+ldr  r0, [r4, #0xd9c]          ; slider index
+ldr  r1, [pc, #table]          ; VA 0x007E3024
+ldr  r1, [r1, r0, lsl #2]      ; table[index]
+cmp  r1, #0
+moveq r1, #1                   ; never cap with 0 (divide-by-zero)
+cmp  r2, r1
+movgt r2, r1                   ; r2 = min(computed, table)
+cpy  r6, r2                    ; original insn
+bx   lr
+.word 0x007E3024
+```
+
+`is_fully_patched` requires Options **and** TalkWindow table **and** this hook (half-patched `name_input_code.bin` used to skip the table because `is_patched` meant Options-only).
+
+Ship path: `apply_patch` from `tools/deploy_name_input_en.py` → `release/name_input_code.bin` (Drop CIA / `rebuild_bake_img.py`). LayeredFS: same script `--deploy-azahar`, or `.\make.ps1 talk-speed-ab` (`tools/ab_talk_speed.py`: **A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
+
+Verified 2026-09-17: heroine date line on **A** matches player speed; **B** still crawls.
+
+### 21.7 Sample sentence (still JP)
 
 `メッセージ速度テストです。` is a UTF-8 literal in `code.bin` (Ghidra string search misses it; grep the binary). It is **not** in `translations.json`. Localizing it is a separate DrawText/strncpy remap (`FUN_005d191c`), not the delay patch.
 
 ---
 
-*Last updated 2026-09-16 — §12.7 CESA companion + §21 Message Speed; UI PNG masters **1727** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2.*
+*Last updated 2026-09-17 — §21 TalkWindow table + voice/script cap (NLPP-025); UI PNG masters **1727** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2.*
 

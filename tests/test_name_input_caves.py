@@ -28,6 +28,8 @@ def test_name_input_caves_are_inside_text_rx():
     """Regression: Luma prefetch abort PC 0x007E6A78 was the old .rodata pad."""
     end = cave_map.TEXT_PAGE_END
     assert cave_map.ADDR_SHARED_PAD < end
+    assert cave_map.ADDR_TALK_CAP_CAVE + cave_map.TALK_CAP_CAVE_LEN <= end
+    assert cave_map.ADDR_TALK_CAP_CAVE + cave_map.TALK_CAP_CAVE_LEN <= cand.CAVE1
     assert cave_map.ADDR_ROMAJI_CAVE < end
     assert cand.CAVE1 < end and cand.CAVE2 + 0x18 <= end
     assert pane.CAVE + pane.CAVE_LEN <= end
@@ -42,6 +44,10 @@ def test_name_input_caves_are_inside_text_rx():
 
 def test_name_input_caves_do_not_overlap():
     ranges = [
+        (
+            cave_map.ADDR_TALK_CAP_CAVE,
+            cave_map.ADDR_TALK_CAP_CAVE + cave_map.TALK_CAP_CAVE_LEN,
+        ),
         (cand.CAVE1, cand.CAVE1 + 0x18),
         (cand.CAVE2, cand.CAVE2 + 0x18),
         (pane.CAVE, pane.CAVE + pane.CAVE_LEN),
