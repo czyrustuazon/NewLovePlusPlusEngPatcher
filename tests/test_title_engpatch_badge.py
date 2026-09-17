@@ -14,7 +14,7 @@ def test_eng_patch_canvas_crops_empty_under_url():
     assert deploy.URL_H == 16
     assert deploy.LINE_GAP == 0
     assert deploy.BOTTOM_PAD == 0
-    assert deploy.SITE_LINE == "Discord: discord.gg/ZWvjRatW5k"
+    assert deploy.SITE_LINE == "newloveplus.loc.moe"
     assert deploy.ENG_PATCH_H == 26
     assert deploy.ENG_PANE_TY == 17.0
     assert deploy.POS_H_TY == -95.0
@@ -55,4 +55,6 @@ def test_compose_eng_patch_site_is_3px_closer():
     last_ink = max(
         y for y in range(out.height) if any(px[x, y][3] > 0 for x in range(out.width))
     )
-    assert out.height - 1 - last_ink == deploy.BOTTOM_PAD
+    # No extra canvas pad; site line may not fill the last rows (no descenders).
+    assert out.height - 1 - last_ink >= deploy.BOTTOM_PAD
+    assert last_ink >= deploy.ENG_LINE_H

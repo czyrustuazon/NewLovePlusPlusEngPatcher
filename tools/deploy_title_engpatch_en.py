@@ -59,17 +59,17 @@ PKG = 5261
 
 ENG_PATCH_REL = "timg/Eng_Patch.bclim"
 ENG_PATCH_BCLIM_NAME = "Eng_Patch.bclim"
-SITE_LINE = "Discord: discord.gg/ZWvjRatW5k"
+SITE_LINE = "newloveplus.loc.moe"
 
 # Copyright pic is 218×14 at local Y=0. Eng badge keeps that 14px glyph row and
-# the Discord invite under it. Translate Pic_EngPatch toward Konami (lower ty)
+# the project URL under it. Translate Pic_EngPatch toward Konami (lower ty)
 # without overlapping: copyright top 7, Eng bottom 4 → 3px into the 14px
 # copyright pane box (Konami glyphs sit lower in that texture).
 # Pos_Copyright_H is shifted down so the strip clears Main Menu Data Management.
 ENG_LINE_H = 14
 URL_H = 16
 LINE_GAP = 0  # pull the site line 3px closer than the previous 3px body gap
-BOTTOM_PAD = 0  # Discord invite outline uses the last canvas rows
+BOTTOM_PAD = 0  # site URL outline uses the last canvas rows
 ENG_PATCH_H = 26
 ENG_PANE_TY = 17.0  # 5px below 22; Eng bottom 4, top 30
 # vanilla Nul h=40 clipped at ±20.
