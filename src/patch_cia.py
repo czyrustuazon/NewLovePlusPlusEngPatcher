@@ -30,8 +30,19 @@ from datetime import datetime
 from pathlib import Path
 
 from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
-from patcher_version import PATCHER_RELEASE
+from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
 from run_timer import RunTimer
+from scratch_cleanup import is_reparse_dir as _is_reparse_dir
+from scratch_cleanup import path_is_under, remove_scratch
+from smdh_meta import (
+    PUBLISHER,
+    SHORT_TITLE,
+    find_exefs_icon,
+    patch_icon_file,
+    patch_ncch_product_code,
+    read_ncch_product_code,
+    resolve_region,
+)
 
 SRC = Path(__file__).resolve().parent
 ROOT = SRC.parent
@@ -58,6 +69,9 @@ _LEGACY_ROMFS_OVERLAY = ROOT / "cache" / "romfs_overlay"
 DEFAULT_CODE_BIN = DEFAULT_EXTRACTED / "exefs" / "code.bin"
 TITLE_ID = "00040000000F4E00"
 PACKS = ("NLP_01", "NLP_02", "script")
+# 16-bit CIA title version. The number itself lives in patcher_version.py
+# (CIA_TITLE_VERSION) and is bumped by hand when an RC merges to main.
+TITLE_VER_MAX = 0xFFFF
 
 # Accepted SHA-1 digests for known New Love Plus+ dumps (CIA and/or .3ds/.cci).
 # Typical decrypted CIAs will not match (by design).
@@ -382,7 +396,8 @@ def rebuild_cxi(parts: dict[str, Path], new_romfs: Path, out_cxi: Path) -> None:
 
 
 def rebuild_cia(cxi: Path, manual: Path | None, out_cia: Path, title_ver: int | None) -> None:
-    print(f"[cia] building {out_cia.name} ...")
+    ver_note = f" (title ver {title_ver})" if title_ver is not None else ""
+    print(f"[cia] building {out_cia.name}{ver_note} ...")
     if out_cia.exists():
         out_cia.unlink()
     cmd: list[str | Path] = [
@@ -603,6 +618,47 @@ def inject_exefs_code(exefs_bin: Path, work: Path, code_src: Path) -> Path:
     return _repack_exefs(exefs_dir, header, work / "exefs_injected.bin")
 
 
+def patch_exefs_smdh(exefs_bin: Path, work: Path, *, region_lock: int) -> Path:
+    """Unpack ExeFS, rewrite HOME-menu SMDH titles/region, repack (hashes regen)."""
+    exefs_dir = work / "exefs_smdh"
+    _code, header = _unpack_exefs(exefs_bin, exefs_dir)
+    icon = find_exefs_icon(exefs_dir)
+    patch_icon_file(icon, region_lock=region_lock)
+    print(
+        f"[meta] HOME title: {SHORT_TITLE!r} / publisher {PUBLISHER!r} "
+        f"(was Japanese SMDH in {icon.name})"
+    )
+    return _repack_exefs(exefs_dir, header, work / "exefs_smdh.bin")
+
+
+def patch_ncch_header_meta(header_path: Path, *, product_code: str) -> None:
+    raw = header_path.read_bytes()
+    old = read_ncch_product_code(raw)
+    if old == product_code:
+        print(f"[meta] NCCH product code already {product_code}")
+        return
+    header_path.write_bytes(patch_ncch_product_code(raw, product_code))
+    print(f"[meta] NCCH product code: {old} -> {product_code}")
+
+
+def apply_cia_metadata(
+    parts: dict[str, Path],
+    work: Path,
+    *,
+    region_name: str,
+) -> dict[str, Path]:
+    """English HOME-menu title + region lock + US/EU product code. Same Title ID."""
+    lock, product_code, label = resolve_region(region_name)
+    parts = dict(parts)
+    parts["exefs"] = patch_exefs_smdh(parts["exefs"], work, region_lock=lock)
+    patch_ncch_header_meta(parts["header"], product_code=product_code)
+    print(
+        f"[meta] SMDH region: {label} (lock {lock:#x}). "
+        f"Title ID stays {TITLE_ID} (saves / LayeredFS unchanged)."
+    )
+    return parts
+
+
 def resolve_romfs_overlay(args: argparse.Namespace) -> Path | None:
     """Release/cache TRB overlay dir, if any."""
     if args.romfs_overlay:
@@ -781,10 +837,9 @@ def write_layeredfs(
         ),
         encoding="utf-8",
     )
-    # Legacy name for anyone following older docs.
-    legacy_readme = out_dir / "LAYEREDFS_README.txt"
-    if legacy_readme != readme:
-        legacy_readme.write_text(readme.read_text(encoding="utf-8"), encoding="utf-8")
+    # Older runs also wrote LAYEREDFS_README.txt with the same text.
+    leftover = out_dir / "LAYEREDFS_README.txt"
+    leftover.unlink(missing_ok=True)
     print(f"[layeredfs] wrote {count} scripts under {title_root}")
     return count
 
@@ -944,6 +999,8 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
         )
     except PackError as exc:
         raise PatchError(f"image packing failed: {exc}") from exc
+    if not getattr(args, "keep_work", False):
+        remove_scratch(img_work, label="img_work")
     return out_img
 
 
@@ -991,8 +1048,8 @@ def rebuild_patched_cia(
     out_cia: Path,
     packed_img: Path | None,
     romfs_overlay: Path | None,
-) -> None:
-    """Extract, inject, and rebuild the output CIA. Raises PatchError on failure."""
+) -> int:
+    """Extract, inject, and rebuild the output CIA. Returns the CIA title version."""
     # 1–2) Extract game CXI (+ optional manual) from decrypted rom
     title_ver: int | None = None
     if args.cxi and Path(args.cxi).is_file():
@@ -1019,6 +1076,16 @@ def rebuild_patched_cia(
         )
 
     parts = split_cxi(cxi, work / "ncch_parts")
+    keep_work = bool(getattr(args, "keep_work", False))
+
+    def _drop(path: Path | None, label: str | None = None) -> None:
+        if keep_work:
+            return
+        remove_scratch(path, label=label)
+
+    # Original CXI is redundant once NCCH parts exist (keep sibling extracted/).
+    if path_is_under(cxi, work):
+        _drop(cxi, "extracted CXI")
 
     # 3) RomFS tree + inject
     reuse = Path(args.romfs).resolve() if args.romfs else (
@@ -1053,6 +1120,9 @@ def rebuild_patched_cia(
         else:
             romfs_dir = ensure_romfs_dir(parts["romfs"], romfs_work, reuse=None)
 
+    # Tree is on disk; the split romfs.bin (~1GB+) can go.
+    _drop(parts.get("romfs"), "split romfs.bin")
+
     injected = inject_dbin2(romfs_dir, dbin_root)
     print(f"[inject] total .dbin2 files: {injected}")
 
@@ -1077,21 +1147,47 @@ def rebuild_patched_cia(
         parts = dict(parts)
         parts["exefs"] = patch_exefs_code(parts["exefs"], work)
 
+    if not getattr(args, "skip_cia_meta", False):
+        parts = apply_cia_metadata(
+            parts,
+            work,
+            region_name=getattr(args, "cia_region", "usa"),
+        )
+
+    _drop(work / "exefs_injected", "ExeFS unpack")
+    _drop(work / "exefs_smdh", "SMDH unpack")
+    _drop(work / "exefs_patched", "code-patch unpack")
+    _drop(work / "code_inject_cmp.bin")
+    _drop(work / "code_namepatch_dec.bin")
+
     # 4) Rebuild containers
     new_romfs = work / "romfs_patched.bin"
     rebuild_romfs(romfs_dir, new_romfs)
 
+    # Injected tree is packed; do not delete in-place / external RomFS.
+    in_place = bool(args.in_place_romfs and reuse)
+    if not in_place and path_is_under(romfs_dir, work):
+        _drop(romfs_dir, "injected RomFS tree")
+
     patched_cxi = work / "patched.cxi"
     rebuild_cxi(parts, new_romfs, patched_cxi)
+    _drop(new_romfs, "romfs_patched.bin")
+    _drop(work / "ncch_parts")
+    _drop(work / "exefs_injected.bin")
+    _drop(work / "exefs_smdh.bin")
+    _drop(work / "exefs_namepatch.bin")
 
+    title_ver = resolve_cia_title_version(args, title_ver)
     rebuild_cia(patched_cxi, manual, out_cia, title_ver)
+    _drop(patched_cxi, "patched.cxi")
 
-    if not args.keep_work:
+    if not keep_work:
         cleanup_patch_artifacts(
             work,
             out_cia=out_cia,
             packed_img=packed_img,
         )
+    return title_ver
 
 
 def parse_title_version(cia: Path) -> int | None:
@@ -1101,6 +1197,74 @@ def parse_title_version(cia: Path) -> int | None:
         return int(m.group(1))
     m = re.search(r"Version:\s*(\d+)", info)
     return int(m.group(1)) if m else None
+
+
+def next_cia_title_version(
+    source_ver: int | None,
+    *,
+    release_ver: int | None = None,
+    explicit: int | None = None,
+    keep_source: bool = False,
+) -> int:
+    """CIA title version for this RC — not per-build auto increment.
+
+    Default is ``CIA_TITLE_VERSION`` from ``patcher_version.py`` (bump that
+    integer when merging an RC into main). Fresh clones then ship the same
+    number as everyone else instead of resetting to dump+1.
+    """
+    src = source_ver if source_ver is not None else 0
+    if src < 0 or src > TITLE_VER_MAX:
+        raise PatchError(f"source title version {src} out of range 0..{TITLE_VER_MAX}")
+    pin = CIA_TITLE_VERSION if release_ver is None else release_ver
+
+    if keep_source:
+        print(
+            f"[cia] title version {src} (same as dump; FBI may ask to delete "
+            "the title and wipe extra data)"
+        )
+        return src
+
+    if explicit is not None:
+        if explicit < 0 or explicit > TITLE_VER_MAX:
+            raise PatchError(
+                f"--title-ver {explicit} out of range 0..{TITLE_VER_MAX}"
+            )
+        print(
+            f"[cia] title version {explicit} (--title-ver; install over the "
+            "existing title, do not delete)"
+        )
+        return explicit
+
+    if pin < 1 or pin > TITLE_VER_MAX:
+        raise PatchError(
+            f"CIA_TITLE_VERSION {pin} out of range 1..{TITLE_VER_MAX} "
+            "(set it in src/patcher_version.py)"
+        )
+    if src >= pin:
+        raise PatchError(
+            f"dump title version {src} >= CIA_TITLE_VERSION {pin}. "
+            "Increase CIA_TITLE_VERSION in src/patcher_version.py "
+            "(must go up on each RC merge to main)."
+        )
+    print(
+        f"[cia] title version {pin} ({PATCHER_RELEASE}, CIA_TITLE_VERSION; "
+        f"dump {src} — bump the constant when merging RC to main)"
+    )
+    return pin
+
+
+def resolve_cia_title_version(
+    args: argparse.Namespace, source_ver: int | None
+) -> int:
+    explicit = getattr(args, "title_ver", None)
+    keep = bool(getattr(args, "keep_title_ver", False))
+    if explicit is not None and keep:
+        raise PatchError("use either --title-ver or --keep-title-ver, not both")
+    return next_cia_title_version(
+        source_ver,
+        explicit=explicit,
+        keep_source=keep,
+    )
 
 
 def sha1_file(path: Path, chunk_size: int = 8 * 1024 * 1024) -> str:
@@ -1203,6 +1367,7 @@ def build_patch_summary(
     eng_patch: bool | None = None,
     elapsed: str | None = None,
     started_at: str | None = None,
+    title_ver: int | None = None,
 ) -> list[str]:
     """Human-readable include/skip report for the end of a patch run.
 
@@ -1217,6 +1382,62 @@ def build_patch_summary(
     ]
 
     lines.append(_summary_line("OK", "Dialog scripts (.dbin2)", "injected"))
+
+    if layeredfs_only:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "CIA HOME-menu metadata",
+                "LayeredFS-only — SMDH is baked into the CIA, not the overlay",
+            )
+        )
+    elif getattr(args, "skip_cia_meta", False):
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "CIA HOME-menu metadata",
+                "--skip-cia-meta (Japanese title/region kept)",
+            )
+        )
+    else:
+        region_key = getattr(args, "cia_region", "usa")
+        try:
+            _lock, product, label = resolve_region(region_key)
+        except ValueError:
+            label, product = region_key, "?"
+        lines.append(
+            _summary_line(
+                "OK",
+                "CIA HOME-menu metadata",
+                f"{SHORT_TITLE} / {label} / {product} (title ID unchanged)",
+            )
+        )
+
+    if layeredfs_only:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "CIA title version",
+                "LayeredFS-only — no CIA",
+            )
+        )
+    elif title_ver is not None:
+        if getattr(args, "keep_title_ver", False):
+            lines.append(
+                _summary_line(
+                    "WARN",
+                    "CIA title version",
+                    f"{title_ver} (same as dump; FBI may ask to delete the title)",
+                )
+            )
+        else:
+            lines.append(
+                _summary_line(
+                    "OK",
+                    "CIA title version",
+                    f"{title_ver} ({PATCHER_RELEASE}; CIA_TITLE_VERSION — bump when merging RC to main)",
+                )
+            )
 
     if args.no_images or not args.with_images:
         lines.append(
@@ -1613,9 +1834,10 @@ def _cmd_patch_body(
         timer.finish("CIA patcher OK (LayeredFS only)")
         return 0
 
+    title_ver: int | None = None
     try:
         timer.mark("rebuilding patched CIA")
-        rebuild_patched_cia(
+        title_ver = rebuild_patched_cia(
             args,
             rom_in=rom_in,
             kind=kind,
@@ -1649,10 +1871,17 @@ def _cmd_patch_body(
         layeredfs_only=False,
         elapsed=timer.elapsed_str(),
         started_at=timer.started_at,
+        title_ver=title_ver,
     )
     print_patch_summary(summary)
     print("Notes:")
     print("  - Output is a decrypted CIA (works with FBI on CFW, Azahar, Citra).")
+    print("  - Install over the existing title (do not delete title+ticket first).")
+    print(
+        f"  - CIA title version is {CIA_TITLE_VERSION} ({PATCHER_RELEASE}); "
+        "bump CIA_TITLE_VERSION when merging an RC into main."
+    )
+    print("  - Azahar extra data: python tools/restore_azahar_extdata.py backup")
     print("  - Retail NCCH re-encryption is not done here; use Decrypt9WIP")
     print("    'CIA Encryptor (NCCH)' on a 3DS if you specifically need that.")
     if packed_img is None:
@@ -1666,7 +1895,7 @@ def _cmd_patch_body(
         emit_spotpass_inject(args)
     else:
         cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
-        print("  - out/ cleaned (kept *.cia, luma/, logs/, azahar_instances/).")
+        print("  - out/ cleaned (kept *.cia, luma/, logs/, azahar_instances/, extdata_backup/).")
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
     timer.finish("CIA patcher OK")
@@ -1694,32 +1923,6 @@ def _emit_patch_log(
     )
     if written is not None:
         print(f"  Patch log: {written}", flush=True)
-
-
-def _is_reparse_dir(path: Path) -> bool:
-    """True for symlinks / Windows directory junctions (Py3.10-safe)."""
-    if path.is_symlink():
-        return True
-    is_junction = getattr(path, "is_junction", None)
-    if callable(is_junction):
-        try:
-            return bool(is_junction())
-        except OSError:
-            return False
-    if sys.platform == "win32" and path.is_dir():
-        try:
-            import ctypes
-
-            GetFileAttributesW = ctypes.windll.kernel32.GetFileAttributesW
-            GetFileAttributesW.argtypes = (ctypes.c_wchar_p,)
-            GetFileAttributesW.restype = ctypes.c_uint32
-            attrs = GetFileAttributesW(str(path))
-            FILE_ATTRIBUTE_REPARSE_POINT = 0x400
-            INVALID = 0xFFFFFFFF
-            return attrs != INVALID and bool(attrs & FILE_ATTRIBUTE_REPARSE_POINT)
-        except Exception:
-            return False
-    return False
 
 
 def cleanup_patch_artifacts(
@@ -1790,6 +1993,7 @@ _OUT_KEEP_DIRS = frozenset(
         "azahar_instances",  # a/b test workflow (ab_test/)
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "gemini_heroines",  # paid Gemini Nene/Rinko scratch (gitignored; do not wipe)
+        "extdata_backup",  # Azahar extra-data / title-save snapshots
     }
 )
 
@@ -1798,8 +2002,9 @@ def cleanup_out_dir(
     *,
     out_cia: Path,
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
+    quiet: bool = False,
 ) -> None:
-    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, gemini_heroines/, and a/b instances."""
+    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, gemini_heroines/, backups, and a/b instances."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return
@@ -1852,11 +2057,14 @@ def cleanup_out_dir(
             print(f"[cleanup] warning: {child.name}: {exc}")
     if removed:
         print(
-            f"[cleanup] out/ kept: *.cia, luma/, logs/, azahar_instances/ "
-            f"({removed} other item(s) removed)"
+            f"[cleanup] out/ kept: *.cia, luma/, logs/, azahar_instances/, "
+            f"extdata_backup/ ({removed} other item(s) removed)"
         )
-    else:
-        print("[cleanup] out/ already clean (CIA + luma + logs + azahar_instances)")
+    elif not quiet:
+        print(
+            "[cleanup] out/ already clean "
+            "(CIA + luma + logs + azahar_instances + extdata_backup)"
+        )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1921,7 +2129,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--keep-work",
         action="store_true",
         help="Keep out/ scratch after a successful build "
-        "(default: leave only *.cia, out/luma/, out/logs/, out/azahar_instances/)",
+        "(default: leave only *.cia, out/luma/, out/logs/, "
+        "out/azahar_instances/, out/extdata_backup/)",
     )
     p.add_argument(
         "--log",
@@ -2028,6 +2237,40 @@ def build_parser() -> argparse.ArgumentParser:
         default=str(DEFAULT_CODE_BIN),
         help="Vanilla code.bin for LayeredFS --patch-code "
         "(default: NLPP_VANILLA_CODE, sibling dump, or cache/vanilla_from_rom)",
+    )
+    p.add_argument(
+        "--cia-region",
+        choices=("usa", "japan", "europe", "free"),
+        default="usa",
+        help=(
+            "HOME-menu SMDH region lock + NCCH product code "
+            "(default: usa / North America, CTR-P-BLPE). "
+            "'free' marks all 3DS regions. Title ID is never changed."
+        ),
+    )
+    p.add_argument(
+        "--skip-cia-meta",
+        action="store_true",
+        help="Keep original Japanese HOME-menu title (ニューラブプラス＋) and JP region",
+    )
+    p.add_argument(
+        "--title-ver",
+        type=int,
+        default=None,
+        metavar="N",
+        help=(
+            "CIA title version 0..65535 (default: CIA_TITLE_VERSION in "
+            "src/patcher_version.py for this RC). Bump that constant when "
+            "merging an RC into main — do not auto-increment per Drop CIA."
+        ),
+    )
+    p.add_argument(
+        "--keep-title-ver",
+        action="store_true",
+        help=(
+            "Keep the dump's title version. FBI may then ask to delete the "
+            "title, which orphans extra data."
+        ),
     )
     p.add_argument(
         "--skip-spotpass",

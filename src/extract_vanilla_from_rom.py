@@ -33,6 +33,7 @@ from patch_cia import (  # noqa: E402
     prepare_cxi_from_rom,
     split_cxi,
 )
+from scratch_cleanup import remove_scratch  # noqa: E402
 
 VANILLA_ROOT = CACHE / "vanilla_from_rom"
 VANILLA_ROMFS = VANILLA_ROOT / "romfs"
@@ -143,38 +144,42 @@ def ensure_vanilla_from_rom(
         shutil.rmtree(work)
     work.mkdir(parents=True, exist_ok=True)
 
-    cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
-    parts = split_cxi(cxi, work / "ncch_parts")
+    try:
+        cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
+        parts = split_cxi(cxi, work / "ncch_parts")
 
-    if VANILLA_ROOT.exists():
-        shutil.rmtree(VANILLA_ROOT)
-    VANILLA_ROOT.mkdir(parents=True, exist_ok=True)
+        if VANILLA_ROOT.exists():
+            shutil.rmtree(VANILLA_ROOT)
+        VANILLA_ROOT.mkdir(parents=True, exist_ok=True)
 
-    romfs_dir = ensure_romfs_dir(parts["romfs"], VANILLA_ROMFS, reuse=None)
-    img = romfs_dir / "img.bin"
-    trb = romfs_dir / "SystemData" / "TextResource" / "textresource_jpn.trb"
-    if not img.is_file():
-        raise PatchError(f"RomFS extract missing img.bin under {romfs_dir}")
-    if not trb.is_file():
-        raise PatchError(
-            f"RomFS extract missing textresource_jpn.trb under {romfs_dir}"
+        romfs_dir = ensure_romfs_dir(parts["romfs"], VANILLA_ROMFS, reuse=None)
+        img = romfs_dir / "img.bin"
+        trb = romfs_dir / "SystemData" / "TextResource" / "textresource_jpn.trb"
+        if not img.is_file():
+            raise PatchError(f"RomFS extract missing img.bin under {romfs_dir}")
+        if not trb.is_file():
+            raise PatchError(
+                f"RomFS extract missing textresource_jpn.trb under {romfs_dir}"
+            )
+
+        # ExeFS code.bin is required (Profile name-input). Keep retrying — never soft-skip.
+        _retry(
+            lambda: _write_decompressed_code(parts["exefs"], work),
+            what="ExeFS code.bin extract",
         )
+        if not VANILLA_CODE.is_file():
+            raise PatchError(f"vanilla code.bin missing after extract: {VANILLA_CODE}")
 
-    # ExeFS code.bin is required (Profile name-input). Keep retrying — never soft-skip.
-    _retry(
-        lambda: _write_decompressed_code(parts["exefs"], work),
-        what="ExeFS code.bin extract",
-    )
-    if not VANILLA_CODE.is_file():
-        raise PatchError(f"vanilla code.bin missing after extract: {VANILLA_CODE}")
+        if slim:
+            _slim_romfs(romfs_dir)
 
-    if slim:
-        _slim_romfs(romfs_dir)
-
-    MARKER.write_text(_rom_fingerprint(rom), encoding="utf-8")
-    print(f"[vanilla] wrote {img} ({img.stat().st_size:,} bytes)", flush=True)
-    print(f"[vanilla] wrote {trb.name}", flush=True)
-    return img.resolve()
+        MARKER.write_text(_rom_fingerprint(rom), encoding="utf-8")
+        print(f"[vanilla] wrote {img} ({img.stat().st_size:,} bytes)", flush=True)
+        print(f"[vanilla] wrote {trb.name}", flush=True)
+        return img.resolve()
+    finally:
+        # CXI + split romfs.bin are duplicates of cache/vanilla_from_rom.
+        remove_scratch(work, label="extract_vanilla_work")
 
 
 def ensure_vanilla_code_from_rom(rom: Path, *, force: bool = False) -> Path:
@@ -203,12 +208,15 @@ def ensure_vanilla_code_from_rom(rom: Path, *, force: bool = False) -> Path:
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True, exist_ok=True)
-    cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
-    parts = split_cxi(cxi, work / "ncch_parts")
-    return _retry(
-        lambda: _write_decompressed_code(parts["exefs"], work),
-        what="ExeFS code.bin extract",
-    )
+    try:
+        cxi, _manual, _ver = prepare_cxi_from_rom(rom, work / "decrypt", kind=kind)
+        parts = split_cxi(cxi, work / "ncch_parts")
+        return _retry(
+            lambda: _write_decompressed_code(parts["exefs"], work),
+            what="ExeFS code.bin extract",
+        )
+    finally:
+        remove_scratch(work, label="extract_vanilla_code_work")
 
 
 def _slim_romfs(romfs_dir: Path) -> None:

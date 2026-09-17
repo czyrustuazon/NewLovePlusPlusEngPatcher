@@ -15,6 +15,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_confirm_btn_en.py",
         "deploy_title_engpatch_en.py",
         "deploy_display_settings_en.py",
+        "deploy_optionpassword_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -25,6 +26,7 @@ def test_rebuild_rc_pack_is_from_scratch_by_default():
     assert "--use-cache" in text
     assert "no_cache=(not args.use_cache) or args.no_cache" in text
     assert "write_bake_stamp" in text
+    assert "packed_assets=not args.skip_pack" in text
     assert "PATCHER_RELEASE" in text
 
 
@@ -33,6 +35,8 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "--skip-name-input-code" not in text
     assert "build_name_input_code" in text
     assert "required name-input missing" in text
+    assert "--keep-work" in text
+    assert "cleanup_rebuild_scratch" in text
 
 
 def test_softkey_deploy_after_confirm():

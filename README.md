@@ -27,9 +27,12 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
-| Dialog scripts (XML → `.dbin2`) | 375 scripts → 1116 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
-| Finished UI PNGs | ~2574 |
-| UI packages patched into `img.bin` (last pack) | 49 packages / ~1190 textures applied |
+| Finished dialog scripts (XML → `.dbin2`) | 480 scripts → 1644 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
+| Unique EN UI PNG masters (`IMAGE_MAP`) | **1727** in **92 / 95** folders |
+| Chrome subset (site “UI textures”) | **562** in **25 / 25** folders |
+| Still empty | `intro111`, `intro203`, `intro304` |
+
+PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs.
 
 **Nene is not finished.** Drop CIA injects ~146 / 174 `a*` files, but **145 of those are an unreviewed Gemini machine pass** (teal / “machine pass, unreviewed” on [newloveplus.loc.moe](https://newloveplus.loc.moe)). The rest of her route is still Japanese. Human review is tracked in `assets/gemini_heroines/proofread.json` (empty until someone signs off). Do not treat 73% script-pack coverage as a completed Nene translation. Details: [`docs/TRANSLATION_PROGRESS.md`](docs/TRANSLATION_PROGRESS.md).
 
@@ -54,8 +57,8 @@ builds `release/` and updates GitHub Release tag `gold`. See
 [`infra/README.md`](infra/README.md). Collaborators:
 
 ```bash
-python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
-# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold
+python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
+# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker
 ```
 
 Manual handoff still works:
@@ -88,14 +91,16 @@ Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed 
 `src/report_progress.py` (EN TRB vs vanilla JP). It auto-POSTs after a TRB
 `rebuild`, after a successful Drop CIA run, and from **nlpp-gold** CI — when
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
-nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin.
+nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin —
+use **562** (chrome) or **1727** (all mapped UI masters) from the table above.
 See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
+Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
 Dialogue route bars come from `tools/export_progress_metrics.py` → `out/progress_metrics.json`. **Nene’s Gemini files must paint teal / yellow**, not rose: they are English in-game but **not proofread**. Do not import them as a finished route.
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
-**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc2`). That forces a from-scratch pack (no `cache/img_pack`) so updating the patcher cannot silently keep yesterday’s menus. Same-RC second drop reuses the stamped bake. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`.
+**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc3`) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). Same-RC second drop reuses the stamped bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
 
 If bake is absent (or stamp mismatches), the drop bat auto-runs:
 
@@ -187,7 +192,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/` + `gemini_heroines/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/` + `gemini_heroines/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
@@ -348,6 +353,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
 | Softkeys Back / Next / Confirm | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` |
+| Password entry window | **5251** `OptionPassword.arc` | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
 | “Main Menu” title string | TRB | Already EN via textresource |
@@ -366,6 +372,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 |--------|----------------|
 | **Zhoumaru** | A large UI overhaul and translation work |
 | **D.** | Debugging and testing the patch |
+| **i need help here...** | Knowledge sharing |
+| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that allowed quicker access to postgame context |
 
 ### CIA / RomFS tooling
 
@@ -447,93 +455,49 @@ Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated
 
 ## Volunteer localization workbench
 
-
-
 Browser kits so translators can help **without Python**. Three sibling trees:
 
-
-
 | Tree | Who | What |
-
 |------|-----|------|
-
 | [`nlpp-localization-workbench`](https://github.com/czyrustuazon/nlpp-localization-workbench) | Volunteers | Hub + built kits under `kit/` — open `index.html` |
-
 | `nlpp-localization-workbench-parser` | Maintainers | `export_*.py` / `ingest_*.py` only (no HTML) |
-
 | This repo `tools/localization_workbench/` | Maintainers | HTML **templates** the exporters inject into |
-
-
 
 ### For volunteers
 
-
-
 1. Clone / unzip the workbench folder (keep `kit/NLPP_Translate_Images/media/` next to its `index.html`).
-
 2. Open **`index.html`** → tabs:
-
-   - **Scripts** — leftover JP dialogue (Nene still has ~28 `a*` files) plus **proofreading Gemini Nene** (`a*` that already look English). Rinko `k*` is still mostly JP.
-
+   - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only). Nene still has ~28 JP `a*` files; English-looking `a*` are an **unreviewed Gemini machine pass** until listed in `proofread.json`.
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-
-   - **Images** — **full UI PNG audit** (~1210 masters / ~68 folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …)
-
+   - **Images** — **full UI PNG audit** (**1727** unique masters in **92 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Empty: `intro111`, `intro203`, `intro304`.
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
-
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
-
-
 
 Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. Image replacements must match original width × height.
 
-
-
-**What’s in the kits (sources):** see **`technical.md` §17.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompt: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md`.
-
-
+**What’s in the kits (sources):** see **`technical.md` §20.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompts: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md` (contribute pages), `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md` (progress numbers).
 
 ### For maintainers
 
-
-
 Configure `paths.local.json` in the parser (see `.example`):
 
-
-
 ```json
-
 { "eng_patcher": "C:/path/to/NewLovePlusPlusEngPatcher", "workbench": "C:/path/to/nlpp-localization-workbench" }
-
 ```
-
-
 
 ```bash
-
 cd nlpp-localization-workbench-parser
-
 python export_workkit.py      # → kit/NLPP_Translate.html (assets/scripts + dump/NLPPATCH dbin2)
-
 python export_strings.py      # → kit/NLPP_Translate_Strings.html
-
 python export_images.py       # → kit/NLPP_Translate_Images/ (+ zip)
-
 python sync_hub.py            # → workbench/index.html from EngPatcher template
 
-
-
 python ingest_pack.py their-nlpp-contrib.json --apply
-
 python ingest_strings.py their-nlpp-strings.json --apply
-
 python ingest_images.py their-nlpp-images.json --apply
-
 ```
 
-
-
-Edit kit UI in EngPatcher `tools/localization_workbench/*.html`, then re-export. Full pack schema, validation rules, and session notes: **`technical.md` §17**.
+Edit kit UI in EngPatcher `tools/localization_workbench/*.html`, then re-export. Full pack schema, validation rules, and session notes: **`technical.md` §20**.
 
 
 

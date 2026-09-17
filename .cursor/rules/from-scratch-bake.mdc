@@ -5,7 +5,9 @@ alwaysApply: true
 
 # From-scratch bake (real 3DS ship path)
 
-This is the workflow. Do not invent a side path (Azahar-only LayeredFS, `--skip-pack` “just to test hardware”, PNG scratch `cache/new_img.bin`).
+This is the workflow. Do not invent a side path (`--skip-pack` “just to test hardware”, PNG scratch `cache/new_img.bin`, **Azahar-only** LayeredFS with no CIA inject).
+
+Azahar LayeredFS is still **required for emulator testing** — see `bakable-and-layeredfs`. Bake without a LayeredFS deploy, or LayeredFS without bake, is incomplete.
 
 ## What to run
 
