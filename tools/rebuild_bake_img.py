@@ -27,6 +27,7 @@ import shutil
 import subprocess
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -243,6 +244,73 @@ def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
     if keep_work:
         return
     cleanup_out_dir(out_cia=ROOT / "out" / "NewLovePlusPlus-EN.cia", quiet=True)
+
+
+def format_rebuild_ok_lines(
+    *,
+    bake: Path,
+    cache_new: Path | None,
+    main_trb: Path,
+    overlay: Path,
+    name_code: Path,
+    stamp: Path,
+    elapsed: str,
+    started_at: str,
+) -> list[str]:
+    """Final gold-rebuild summary printed to the terminal and the rebuild log."""
+    lines = [
+        "[rebuild] OK",
+        f"  gold bake:     {bake}",
+    ]
+    if cache_new is not None:
+        lines.append(f"  PNG optional:  {cache_new}")
+    lines.extend(
+        [
+            f"  main TRB:      {main_trb}",
+            f"  TRB overlay:   {overlay}",
+            f"  name-input:    {name_code}",
+            f"  bake stamp:    {stamp} ({PATCHER_RELEASE})",
+            f"  time:          {elapsed}  (started {started_at})",
+            "Drop a CIA on the bat to build the EN CIA.",
+        ]
+    )
+    return lines
+
+
+def write_rebuild_log(
+    lines: list[str],
+    *,
+    elapsed: str,
+    started_at: str,
+    logs_dir: Path | None = None,
+    when: datetime | None = None,
+) -> Path | None:
+    """Write gold-rebuild summary to ``out/logs/rebuild_*.txt`` + ``rebuild_latest.txt``.
+
+    Survives ``cleanup_out_dir`` (``logs/`` is kept). Never raises.
+    """
+    dest = logs_dir if logs_dir is not None else ROOT / "out" / "logs"
+    now = when or datetime.now()
+    try:
+        dest.mkdir(parents=True, exist_ok=True)
+        path = dest / f"rebuild_{now.strftime('%Y%m%d_%H%M%S')}.txt"
+        header = [
+            f"New Love Plus+ English Patcher  {PATCHER_RELEASE}",
+            "Gold rebuild",
+            f"Logged:  {now.strftime('%Y-%m-%d %H:%M:%S')}",
+            f"Started: {started_at}",
+            f"Time:    {elapsed}",
+            "",
+        ]
+        text = "\n".join(header + lines).rstrip() + "\n"
+        path.write_text(text, encoding="utf-8")
+        latest = dest / "rebuild_latest.txt"
+        if path.resolve() != latest.resolve():
+            latest.write_text(text, encoding="utf-8")
+        return path
+    except OSError as exc:
+        print(f"[log] warning: could not write rebuild log: {exc}", flush=True)
+        return None
 
 
 def build_name_input_code(*, rom: Path | None) -> Path:
@@ -545,16 +613,26 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     main_trb = TEXTRESOURCE / "textresource_jpn.trb"
     if not args.skip_trb and not main_trb.is_file():
         raise SystemExit(f"main TRB missing after rebuild: {main_trb}")
-    print("\n[rebuild] OK", flush=True)
-    print(f"  gold bake:     {BAKE_IMG}", flush=True)
-    if CACHE_NEW_IMG.is_file():
-        print(f"  PNG optional:  {CACHE_NEW_IMG}", flush=True)
-    print(f"  main TRB:      {main_trb}", flush=True)
-    print(f"  TRB overlay:   {OVERLAY_TRB_DIR}", flush=True)
-    print(f"  name-input:    {name_code}", flush=True)
     stamp = write_bake_stamp(packed_assets=not args.skip_pack)
-    print(f"  bake stamp:    {stamp} ({PATCHER_RELEASE})", flush=True)
-    print("Drop a CIA on the bat to build the EN CIA.", flush=True)
+    elapsed = timer.elapsed_str()
+    summary = format_rebuild_ok_lines(
+        bake=BAKE_IMG,
+        cache_new=CACHE_NEW_IMG if CACHE_NEW_IMG.is_file() else None,
+        main_trb=main_trb,
+        overlay=OVERLAY_TRB_DIR,
+        name_code=name_code,
+        stamp=stamp,
+        elapsed=elapsed,
+        started_at=timer.started_at,
+    )
+    print("\n" + "\n".join(summary), flush=True)
+    log_path = write_rebuild_log(
+        summary,
+        elapsed=elapsed,
+        started_at=timer.started_at,
+    )
+    if log_path is not None:
+        print(f"  rebuild log:   {log_path}", flush=True)
     cleanup_rebuild_scratch(keep_work=keep_work)
     timer.finish("gold rebuild OK")
     return 0
