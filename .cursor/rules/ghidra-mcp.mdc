@@ -37,5 +37,7 @@ alwaysApply: true
 | Options button BCLIM bind | `OptionMenu_BindBtnTextures` @ `001eb3dc` |
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
+| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (slider 1–4 → frames/glyph; patched 14/8/2/0) |
+| Message Speed typewriter tick | `FUN_002d544c` @ `002D544C` (widget `+0x24` delay, `0` = instant) |
 
 Options/clock **menu chrome** = A8 BCLIM names under `Com_M_Sel_*_Text*` in pkg **5245**, not DrawText and not `optn_tex_*`.

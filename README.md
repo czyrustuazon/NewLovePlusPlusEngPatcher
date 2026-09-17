@@ -96,7 +96,7 @@ Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_to
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
-**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc2`). That forces a from-scratch pack (no `cache/img_pack`) so updating the patcher cannot silently keep yesterday’s menus. Same-RC second drop reuses the stamped bake. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`.
+**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc3`) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). Same-RC second drop reuses the stamped bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
 
 If bake is absent (or stamp mismatches), the drop bat auto-runs:
 
@@ -188,7 +188,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` if present). Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **LayeredFS install**
 
@@ -349,6 +349,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
 | Softkeys Back / Next / Confirm | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` |
+| Password entry window | **5251** `OptionPassword.arc` | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
 | “Main Menu” title string | TRB | Already EN via textresource |
@@ -367,6 +368,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 |--------|----------------|
 | **Zhoumaru** | A large UI overhaul and translation work |
 | **D.** | Debugging and testing the patch |
+| **i need help here...** | Knowledge sharing |
+| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that allowed quicker access to postgame context |
 
 ### CIA / RomFS tooling
 

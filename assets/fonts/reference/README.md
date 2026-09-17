@@ -14,7 +14,7 @@ EngPatcher’s default deploy font remains `../MPLUS1p-Regular.ttf` (SIL OFL).
 |-----------|-------------|
 | `df-heiseigothic-w5.ttc` | Body UI — regular weight (Heisei Gothic) |
 | `df-heiseigothic-w7.ttc` | Emphasis / section headers |
-| `df-heiseigothic-w9.ttc` | Bold titles |
+| `df-heiseigothic-w9.ttc` | Bold titles (CESA EN headline, TTC index 1) |
 | `df-kakougothic-w5.ttc` | Alternate Gothic (角ゴ) |
 | `df-chubutomarugothic-w7.ttc` | Rounded UI (丸ゴ) |
 | `dfg-kakougothic-w5.ttc` | Proportional Kakugo variant |

@@ -13,4 +13,6 @@
 
 For glyph renders that should match vanilla NL++ chrome, try `reference/nlppatch-2025/df-heiseigothic-w5.ttc` before MPLUS1p.
 
+**CESA boot warning** (`tools/render_cesa_en.py`): proportional Heisei Gothic **W9** title + **W5** body (`df-heiseigothic-w9.ttc` / `w5.ttc`, TTC index 1). Not MPLUS1p — keep the vanilla gothic / red-underline layout.
+
 See also root [`README.md` Credits](../../README.md#credits).

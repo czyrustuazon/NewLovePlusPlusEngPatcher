@@ -89,6 +89,44 @@ def test_summary_includes_time_to_finish(tmp_path: Path, monkeypatch):
     assert "[OK]      Time to finish: 4m32s  (started 2026-09-08 00:12:03)" in text
 
 
+def test_summary_includes_bumped_title_version(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "bake.bin"
+    bake.write_bytes(b"gold")
+    monkeypatch.setattr(patch_cia, "DEFAULT_BAKE_IMG", bake)
+    lines = patch_cia.build_patch_summary(
+        out_cia=None,
+        packed_img=bake,
+        layered_img=bake,
+        layeredfs_out=None,
+        romfs_overlay=None,
+        args=_args(),
+        eng_patch=True,
+        title_ver=12,
+    )
+    text = "\n".join(lines)
+    assert "[OK]      CIA title version: 12" in text
+    assert "CIA_TITLE_VERSION" in text
+
+
+def test_summary_warns_when_keeping_dump_title_version(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "bake.bin"
+    bake.write_bytes(b"gold")
+    monkeypatch.setattr(patch_cia, "DEFAULT_BAKE_IMG", bake)
+    lines = patch_cia.build_patch_summary(
+        out_cia=None,
+        packed_img=bake,
+        layered_img=bake,
+        layeredfs_out=None,
+        romfs_overlay=None,
+        args=_args(keep_title_ver=True),
+        eng_patch=True,
+        title_ver=0,
+    )
+    text = "\n".join(lines)
+    assert "[WARN]    CIA title version: 0" in text
+    assert "same as dump" in text
+
+
 def test_summary_warns_if_eng_missing_despite_img(tmp_path: Path, monkeypatch):
     img = tmp_path / "img.bin"
     img.write_bytes(b"x")
@@ -118,6 +156,9 @@ def test_drop_bat_mentions_patch_summary():
     assert "run_timer.py" in bat
     assert "out\\logs\\latest.txt" in bat
     assert "Patch log" in bat
+    assert "restore_azahar_extdata.py" in bat
+    assert "Do NOT delete the title" in bat
+    assert "CIA_TITLE_VERSION" in bat
 
 
 def test_patch_cia_requires_name_input_for_ui_inject():
@@ -255,10 +296,14 @@ def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
     cia.write_bytes(b"cia")
     luma = out / "luma"
     luma.mkdir()
+    bak = out / "extdata_backup"
+    bak.mkdir()
+    (bak / "keep.txt").write_text("snap\n", encoding="utf-8")
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert cia.is_file()
     assert luma.is_dir()
     assert (logs / "latest.txt").is_file()
+    assert (bak / "keep.txt").is_file()
     assert not (out / "scratch.bin").exists()
 
 
@@ -267,6 +312,10 @@ def test_parser_has_log_flags():
     args = p.parse_args(["--cia", "game.cia"])
     assert args.log is None
     assert args.no_log is False
+    assert args.cia_region == "usa"
+    assert args.skip_cia_meta is False
+    assert args.title_ver is None
+    assert args.keep_title_ver is False
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"
     args = p.parse_args(["--cia", "game.cia", "--no-log"])

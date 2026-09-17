@@ -149,9 +149,12 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
     if stem:
         master = find_ui_png(
             (
+                "NCommonMSel(3).check",
                 "NCommonMSel(4).check",
                 "NCommonMSel(6).check",
                 "NCommonMSel(7).check",
+                "NCommonMSel(8).check",
+                "NCommonMSel(9).check",
             ),
             stem,
             (w, h),

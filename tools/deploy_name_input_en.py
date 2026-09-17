@@ -12,6 +12,8 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
+  8. patch_message_speed                   # Display Settings 14/8/2/0 frames/glyph
+  9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -34,7 +36,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from patch_bplace_list_pane import apply_patch as apply_bplace_list_pane  # noqa: E402
-from patch_code import apply_name_pane_patches  # noqa: E402
+from patch_code import (  # noqa: E402
+    apply_name_pane_patches,
+    patch_cesa_logo_white_native_size,
+)
 from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
     CAVE2 as CAND_CAVE2,
@@ -73,6 +78,10 @@ from patch_input_skip_ascii_dakuten import (  # noqa: E402
 )
 from patch_input_strcat_raw import (  # noqa: E402
     apply_patch as apply_strcat_raw,
+)
+from patch_message_speed import (  # noqa: E402
+    apply_patch as apply_message_speed,
+    is_patched as message_speed_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -155,6 +164,18 @@ def apply_name_input_stack(data: bytearray) -> int:
 
     apply_strcat_raw(data)
     steps += 1
+
+    if message_speed_already(data):
+        print("[skip] message_speed already applied")
+    else:
+        apply_message_speed(data)
+        steps += 1
+
+    if patch_cesa_logo_white_native_size(data):
+        print("[cesa] logo_white quad uses TEXI size (skip 400x400 stub scale)")
+        steps += 1
+    else:
+        print("[skip] cesa logo_white native size already applied")
 
     return steps
 

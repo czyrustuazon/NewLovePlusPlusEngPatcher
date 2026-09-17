@@ -43,6 +43,14 @@ ADDR_CESA_FACTORY = 0x0016F274
 ORIG_CESA_FACTORY_HEAD = bytes.fromhex("f0412de90050a0e1")  # push {r4-r8,lr}; mov r5,r0
 SKIP_CESA_FACTORY = bytes.fromhex("0000a0e31eff2fe1")  # mov r0,#0; bx lr
 
+# CesaLogo state 2: if ID == 0x5A0008 (logo_white), force a 400×400 quad
+# (vstr s19). That scaled the 16×16 stub to fill the pane; a real 240×320
+# TEX then stretches and clips. Always-branch past those four insns so bind
+# keeps FUN_005aeef4's TEXI size.
+ADDR_CESA_LOGO_WHITE_BNE = 0x0016ED80
+ORIG_CESA_LOGO_WHITE_BNE = bytes.fromhex("0400001a")  # bne loc_16ed98
+PATCH_CESA_LOGO_WHITE_B = bytes.fromhex("040000ea")  # b   loc_16ed98
+
 ADDR_CLEAR_PANE = 0x0054B5FC
 ADDR_MAKE_STR = 0x005A1EC8
 ADDR_DRAW_TEXT = 0x0054B880
@@ -543,6 +551,22 @@ def patch_skip_cesa_logo(data: bytearray) -> bool:
             f"unexpected CesaLogo factory head at {ADDR_CESA_FACTORY:#x}: {head.hex()}"
         )
     data[ADDR_CESA_FACTORY : ADDR_CESA_FACTORY + 8] = SKIP_CESA_FACTORY
+    return True
+
+
+def patch_cesa_logo_white_native_size(data: bytearray) -> bool:
+    """Skip the logo_white 400×400 quad so the thank-you TEX stays 240×320."""
+    cur = bytes(data[ADDR_CESA_LOGO_WHITE_BNE : ADDR_CESA_LOGO_WHITE_BNE + 4])
+    if cur == PATCH_CESA_LOGO_WHITE_B:
+        return False
+    if cur != ORIG_CESA_LOGO_WHITE_BNE:
+        raise ValueError(
+            f"unexpected CesaLogo logo_white branch at "
+            f"{ADDR_CESA_LOGO_WHITE_BNE:#x}: {cur.hex()}"
+        )
+    data[ADDR_CESA_LOGO_WHITE_BNE : ADDR_CESA_LOGO_WHITE_BNE + 4] = (
+        PATCH_CESA_LOGO_WHITE_B
+    )
     return True
 
 
