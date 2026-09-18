@@ -26,7 +26,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - Global MakeStr hook and full `img.bin` rewrite are banned — see §11.
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
-- Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**).
+- Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**; title-loop NX abort **§15.7**).
 - Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
 
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
@@ -38,6 +38,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
 - **Communications load hang on Azahar (2026-09-18):** not extra data `00000F4E`, not pkg **5237**. Stock `FSFile::OpenLinkFile` reset the clone to the full extra-data blob; **§10.1**.
+- **Title hub loop NX abort (2026-09-18):** prefetch abort PC `0`, LR `0x00645A2C` (`FindPaneByName` `BLX r3`) — null child in the pane list (`r4=4`). Guard is `src/patch_lyt_null_pane.py` in `name_input_code.bin` — **§15.7**.
 - **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
 
 ---
@@ -538,6 +539,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Floating `初期設定` (Defaults) | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (not pkg **5247**) | **EN** (`Restore Default`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_defaults_en.py`. Twin BCLIM also in Common02Icon **4184** `C_Com_icon_Sy` (already in bake). |
 | Message speed sample `メッセージ速度テストです。` | UTF-8 in `code.bin` @ `0x005D1928` + typewriter `FUN_002d544c` | **EN** (`This is a text-speed test.`) — in-place pool rewrite in `patch_message_speed.py` §21.7 |
 | Extra-data recreate warning `作成には時間がかかるので…` | DrawText / TRB STRI **4429** (`Lyt_C_Com_Win01` `Tex_Sentence`; SysPopup). Not `Com_Win_Warning` BCLIM (that is empty chrome). | **EN** — `translations.json`. Sibling create/start strings STRI 4431–4434. |
+| Anywhere Date empty list `デートデータがありません。「デートの編集」から…` | DrawText / TRB STRI **25183** on `Lyt_De0200` Opt_Win (no body BCLIM; DateEdit `De_*_Txt` are short labels). | **EN** — full JP key in `translations.json`. A truncated key ending `デートを作` never matched, so LayeredFS kept JP. |
 | Options help line | DrawText / TRB | Already EN |
 | 年 / 月 / 日 | Option06 A4 @ 5248 + date-format bytes | EN `Y`/`M`/`D` verified |
 | Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
@@ -931,6 +933,8 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only fringe **vanishes** on Main Menu even when bake/CIA contain the strip — outline strength is the visibility fix, not “merge into Copyright.”
 
+**Title loop NX abort** when rebinding this Parts tree: **§15.7** (do not treat as a CESA / extra-data / `.rodata` cave crash).
+
 **Bake vs CIA mismatch (2026-09-05):** `release/bake_img.bin` pkg **5261** can contain `Eng_Patch` while a Drop’d CIA does not. Desktop `NewLovePlusPlus-EN.cia` (6:31pm) had **vanilla** Title (`sha=37dad8c6aca1`, hub labels JP, no Eng) while bake had EN+Eng (`8b9916be34b2`). Name-input still worked (`--inject-code`). Root causes: (1) shipping **stale luma/Azahar** imgs without the badge; (2) **`patch_cia` swallowed `PatchError` from the Eng-Patch guard and continued scripts-only** — vanilla `img.bin` + EN `code.bin` = JP menus, no badge, name input OK. Fixes: refuse any inject without `Eng_Patch`; **hard-fail** image errors (no scripts-only fallback); `rebuild_test_cia` prefers bake. Tests: `tests/test_patch_cia_gold_bake.py`, `tests/test_rebuild_test_cia_img.py`.
 
 **Wrong Title asset wording (fixed in deploy):** old `assets/images/Title/Title_btn02_t04..t06` said “Save Data / Connection / Dating App”. Vanilla mapping is:
@@ -1091,6 +1095,44 @@ GitHub Actions: `.github/workflows/test.yml` on push/PR to `main` / `Bleeding-Ed
 
 **Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify, individual `deploy_*` texture splices.
 
+### 15.7 Title hub loop — prefetch abort PC 0 (2026-09-18)
+
+NX-accurate Azahar (and a real 3DS) abort when the title hub **loops back to itself** (Main Menu rebuild / copyright Parts rebind). Older Azahar executed the bytes at address 0 anyway (`ExceptionRaised(NoExecuteFault)` text: “Azahar used to run the bytes anyway”).
+
+| Dump field | Value | Meaning |
+|------------|-------|---------|
+| Process | `nlpp` `00040000000F4E00` | Guest, not host Qt |
+| Exception | prefetch abort, **Permission - Page**, `NoExecuteFault` | Instruction fetch from NX / page 0 |
+| PC | `0x00000000` | `BLX` to a null fn pointer |
+| LR | `0x00645A2C` | Next insn after `BLX r3` (VA = file + `0x100000`) |
+| r3 | `0` | Vtable slot `+0x2C` was 0 |
+| r4 | `4` | Intrusive list node for a **null pane** (`object+4`) |
+| r12 | `0x5F736F50` (`Pos_`) | Search name was `Pos_Copyright_*` / `Pos_Tit02_*` |
+
+**Call site (file / Ghidra base 0):** `Pane_FindPaneByName` loop @ `0x005459D8` … `0x00545A48`.
+
+```
+LDR r1, [r4, #-4]     ; vtable
+LDR r3, [r1, #0x2C]   ; virtual Find/Compare
+MOV r1, r7            ; name (Pos_…)
+BLX r3                ; @ 0x00545A28  → PC=0 when r3=0
+```
+
+**How `r4` becomes 4:** `Pane_AttachToParent` @ `0x00545550` takes parent in `r0`, child in `r1`. `IntrusiveDList_InsertFront` uses node `child+4`. A **null child** inserts node address `4` into the parent’s child list. The next recursive `FindPaneByName` (`r2=1`) walks that poison and `BLX`s through page 0.
+
+Likely constructor failure: extra `pic1` **`Pic_EngPatch`** in `Pts_Copyright` (pkg **5261**, `deploy_title_engpatch_en.py`) — new material/tex index 1 on a Parts instance under `Pos_Copyright_*`. Vanilla Pts has only `Pic_Copyright`. First hub show can work; **rebind on loop-back** hits the poison. This is **not** the old `.rodata` name-input pad (that dump was PC `0x007E6A78`).
+
+**Fix (code.bin, last `.text` RX page — ships in `release/name_input_code.bin`):** `src/patch_lyt_null_pane.py`, applied from `tools/deploy_name_input_en.py` (stack step **1b**). Does **not** replace the name-input call-site parent guard @ `0x001FA790`.
+
+| Cave | File | Role |
+|------|------|------|
+| Shared pad `+0x28` (`0x0068F828`, 0x18) | Hook `0x00545550` | Skip attach if child (`r1`) or parent (`r0`) is 0 — stops writing node `4` |
+| Shared pad `+0xA0` (`0x0068F8A0`, 0x20) | Hook `0x00545A28` (`BLX r3`) | If node is 0/4 → not-found; if vtable slot is 0 → next sibling; else `BLX r3` |
+
+`+0xA0` was reserved for banned `candmode_reset` — **this** is the shipped occupant now. Tests: `tests/test_name_input_caves.py` (`test_lyt_null_pane_caves_assemble_and_hook_vanilla`). Rebuild from vanilla `code.bin.bak` after moving caves, then Drop CIA / LayeredFS `exefs/code.bin`.
+
+**Verified 2026-09-18:** instance A title → menu → title loop **no longer prefetch-aborts** with this `name_input_code.bin`. Guard skips a failed Eng pic attach; it does not by itself prove `Pic_EngPatch` always constructs (badge visibility is still the Pts/BCLIM path in §15.1).
+
 ---
 
 ## 16. SpotPass (BOSS NsData / とわのウォッチャー)
@@ -1237,6 +1279,7 @@ a/b guide: **`ab_test/README.md`**.
 | # | Patch | Script | Role |
 |---|-------|--------|------|
 | 1 | Pane attach null parent | `src/patch_input_pane_registry_nullguard.py` | Skip `Pane_AttachToParent` @ `0x1fa790` when parent is 0 |
+| 1b | Attach/FindPane null child | `src/patch_lyt_null_pane.py` | Title hub loop NX abort — skip attach if child/parent is 0; skip `FindPaneByName` `BLX r3` if node/`+0x2C` is 0 (**§15.7**) |
 | 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
 | 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x0068F900` (last .text page) |
@@ -1259,7 +1302,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 - \+ **candmode_reset** → **taps dead**  
 - fillflag_reset **without** candmode_reset → taps OK  
 
-`nameInputObj+0x24` selects keyboard vs candidate identification/lookup tables inside `NameInput_OnCellTap` / fill helpers. Vanilla often shows stale non-zero heap (e.g. `0xffffffa6`) and **still works**. Forcing `+0x24=0` on every redraw makes OnCellTap match the wrong pane-name table → silent no-op taps.
+`nameInputObj+0x24` selects keyboard vs candidate identification/lookup tables inside `NameInput_OnCellTap` / fill helpers. Vanilla often shows stale non-zero heap (e.g. `0xffffffa6`) and **still works**. Forcing `+0x24=0` on every redraw makes OnCellTap match the wrong pane-name table → silent no-op taps. Shared-pad `+0xA0` now holds the FindPane NX guard (**§15.7**), not this banned patch.
 
 ### 17.3 Architecture notes (verified)
 
@@ -1279,6 +1322,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 | `NameInput_DrawCell` | `0x1fc304` |
 | `Delegate_BindByKey` | `0x005eba00` |
 | `Pane_AttachToParent` | `0x00545550` |
+| `Pane_FindPaneByName` | `0x005459d8` (`BLX r3` @ `0x00545a28`, VA `0x00645A2C` = LR of the title NX dump) |
 
 **Parent for attach is not “uninitialized luck” alone:** `Delegate_BindByKey` writes an out-struct at `sp+0x38`; field at `+4` (`sp+0x3c`) is the parent passed to attach. Live vanilla/modded (when Bind succeeds): `sp+0x38` stable (e.g. `0x82ee38`), `sp+0x3c` = per-cell parent stepping by `0x250`.
 
@@ -1302,10 +1346,12 @@ Shared map `@0x0068F800`:
 
 | Offset | Patch |
 |--------|--------|
+| `+0x00` | TalkWindow delay cap (`patch_message_speed.py`, 0x28) — **§21** |
+| `+0x28` | `patch_lyt_null_pane.py` attach null child/parent (0x18) — **§15.7** |
 | `+0x40` / `+0x60` | candidate nullguard |
 | `+0x90` | pane-registry nullguard |
+| `+0xA0` | `patch_lyt_null_pane.py` FindPaneByName `BLX r3` guard (0x20) — **§15.7**. Slot was candmode_reset (banned); do not revive `+0x24=0` here |
 | `+0xC0` | fillflag_reset (`+0x44` / `+0x30`) |
-| ~~`+0xA0`~~ | ~~candmode_reset — banned / never ship~~ |
 
 **Scrapped caves (do not revive):** `@0x006FC000` was reserved for B_Place / C4 candidate-list placers (`FillCandidates` hooks, wipe+place ≤6 cells, SHOW/`+0x540` gymnastics). That whole path was abandoned — we **skip the kanji list** with the NOP at `@0x1fb070` and insert romaji via the DrawCell cave instead. Leave `@0x006FC000` empty unless a new experiment documents a fresh carve.
 
@@ -1367,7 +1413,7 @@ See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openli
 
 ---
 
-*Last updated 2026-09-18 — §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 

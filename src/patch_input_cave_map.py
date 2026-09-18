@@ -22,6 +22,7 @@ TEXT_SIZE = 0x0068F7FC
 ADDR_SHARED_PAD = 0x0068F800
 ADDR_ROMAJI_CAVE = 0x0068F900
 # TalkWindow delay cap (min vs table). Cand nullguard starts at +0x40.
+# +0x28 attach-null (lyt); +0xA0 FindPaneByName null vtable (was candmode_reset).
 ADDR_TALK_CAP_CAVE = ADDR_SHARED_PAD
 TALK_CAP_CAVE_LEN = 0x28
 

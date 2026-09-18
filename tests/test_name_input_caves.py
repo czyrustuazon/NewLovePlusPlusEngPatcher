@@ -17,6 +17,7 @@ fill = load_module(
     "patch_input_candmode_fillflag_reset",
     SRC / "patch_input_candmode_fillflag_reset.py",
 )
+lyt_null = load_module("patch_lyt_null_pane", SRC / "patch_lyt_null_pane.py")
 ascii_dakuten = load_module(
     "patch_input_skip_ascii_dakuten",
     SRC / "patch_input_skip_ascii_dakuten.py",
@@ -34,6 +35,11 @@ def test_name_input_caves_are_inside_text_rx():
     assert cand.CAVE1 < end and cand.CAVE2 + 0x18 <= end
     assert pane.CAVE + pane.CAVE_LEN <= end
     assert fill.CAVE + fill.CAVE_LEN <= end
+    assert lyt_null.ATTACH_CAVE + lyt_null.ATTACH_CAVE_LEN <= end
+    assert lyt_null.FIND_CAVE + lyt_null.FIND_CAVE_LEN <= end
+    assert lyt_null.ATTACH_CAVE + lyt_null.ATTACH_CAVE_LEN <= cand.CAVE1
+    assert pane.CAVE + pane.CAVE_LEN <= lyt_null.FIND_CAVE
+    assert lyt_null.FIND_CAVE + lyt_null.FIND_CAVE_LEN <= fill.CAVE
     blob = romaji.build_romaji_blob()
     assert romaji.ADDR_CAVE + len(blob) <= end
     sc = strcat_raw.cave_addr()
@@ -52,6 +58,8 @@ def test_name_input_caves_do_not_overlap():
         (cand.CAVE2, cand.CAVE2 + 0x18),
         (pane.CAVE, pane.CAVE + pane.CAVE_LEN),
         (fill.CAVE, fill.CAVE + fill.CAVE_LEN),
+        (lyt_null.ATTACH_CAVE, lyt_null.ATTACH_CAVE + lyt_null.ATTACH_CAVE_LEN),
+        (lyt_null.FIND_CAVE, lyt_null.FIND_CAVE + lyt_null.FIND_CAVE_LEN),
         (romaji.ADDR_CAVE, romaji.ADDR_CAVE + len(romaji.build_romaji_blob())),
         (
             strcat_raw.cave_addr(),
@@ -165,3 +173,26 @@ def test_strcat_raw_replaces_makestr_join():
         if blob[off + 3] == 0x8A  # bhi
     ]
     assert hi, "strcat cave must bhi-skip when dest+pending > 8 glyphs"
+
+
+def test_lyt_null_pane_caves_assemble_and_hook_vanilla():
+    attach = lyt_null.build_attach_cave()
+    find = lyt_null.build_find_cave()
+    assert len(attach) == lyt_null.ATTACH_CAVE_LEN
+    assert len(find) == lyt_null.FIND_CAVE_LEN
+    assert attach[4:8] == bytes.fromhex("1eff2f01")  # bxeq lr
+    assert bytes.fromhex("33ff2fe1") in find  # BLX r3
+    from nlpp_paths import find_vanilla_code
+
+    src = find_vanilla_code()
+    if src is None:
+        return
+    data = bytearray(src.read_bytes())
+    if data[lyt_null.ATTACH_SITE : lyt_null.ATTACH_SITE + 4] != lyt_null.ATTACH_EXPECT:
+        return
+    if data[lyt_null.FIND_SITE : lyt_null.FIND_SITE + 4] != lyt_null.FIND_EXPECT:
+        return
+    lyt_null.apply_patch(data)
+    assert lyt_null.is_patched(data)
+    assert bytes(data[lyt_null.ATTACH_CAVE : lyt_null.ATTACH_CAVE + len(attach)]) == attach
+    assert bytes(data[lyt_null.FIND_CAVE : lyt_null.FIND_CAVE + len(find)]) == find

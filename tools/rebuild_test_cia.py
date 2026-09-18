@@ -42,6 +42,7 @@ from patch_input_kana_direct_insert import (  # noqa: E402
 )
 from patch_input_pane_registry_nullguard import apply_patch as apply_pane_nullguard  # noqa: E402
 from patch_input_romaji import patch_input_romaji  # noqa: E402
+from patch_lyt_null_pane import apply_patch as apply_lyt_null_pane  # noqa: E402
 
 SOURCE_ROM_FILE = ROOT / "release" / "source_rom.txt"
 NAME_INPUT_CODE = ROOT / "release" / "name_input_code.bin"
@@ -105,6 +106,7 @@ def _patch_vanilla_code() -> bytes:
     print(f"[code] patching vanilla {src}")
     data = bytearray(src.read_bytes())
     apply_pane_nullguard(data)
+    apply_lyt_null_pane(data)
     apply_cand_nullguard(data)
     apply_fillflag(data)
     if not patch_input_romaji(data, force=True):

@@ -6,6 +6,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   0. patch_code name panes          # single-pane 8-letter draw + 128×16 cells
   0b. patch_bplace_list_pane        # hometown 128×16; DrawText maxGlyphs 16; cap 12
   1. patch_input_pane_registry_nullguard
+  1b. patch_lyt_null_pane  # Attach/FindPaneByName skip null child (title NX abort)
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
@@ -60,6 +61,12 @@ from patch_input_kana_direct_insert import (  # noqa: E402
     PATCHED as KANA_PATCHED,
     apply_patch as apply_kana_direct,
     restore_bind_sites,
+)
+from patch_lyt_null_pane import (  # noqa: E402
+    apply_patch as apply_lyt_null_pane,
+    build_attach_cave as build_lyt_attach_cave,
+    build_find_cave as build_lyt_find_cave,
+    is_patched as lyt_null_pane_already,
 )
 from patch_input_pane_registry_nullguard import (  # noqa: E402
     CAVE as PANE_CAVE,
@@ -124,6 +131,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] pane_registry_nullguard already applied")
     else:
         apply_pane_nullguard(data)
+        steps += 1
+
+    if lyt_null_pane_already(data):
+        print("[skip] lyt_null_pane already applied")
+    else:
+        apply_lyt_null_pane(data)
         steps += 1
 
     if cand_already(data):
@@ -199,6 +212,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.dry_run:
         build_pane_cave()
+        build_lyt_attach_cave()
+        build_lyt_find_cave()
         build_site_cave(CAND_CAVE1, 0x001FBC0C, 0x001FBC30, 6)
         build_site_cave(CAND_CAVE2, 0x001FBD28, 0x001FBD4C, 11)
         build_fillflag_cave()
