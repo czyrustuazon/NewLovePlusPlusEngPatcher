@@ -65,9 +65,43 @@ function Show-Paths {
     Write-Host "Roaming mod: $env:APPDATA\Azahar\load\mods\$($Paths.TitleId)"
 }
 
+function Ensure-AzaharOpenLinkFile {
+    $src = Join-Path $Paths.AzaharSrc "src\core\hle\service\fs\file.cpp"
+    $patch = Join-Path $AbTest "patches\azahar-openlinkfile.patch"
+    if (-not (Test-Path $src)) { throw "Azahar source missing: $src" }
+    if (-not (Test-Path $patch)) { throw "missing $patch" }
+    $text = Get-Content -LiteralPath $src -Raw
+    $stubbed = $text -match '\(STUBBED\) File command OpenLinkFile'
+    $cloned = ($text -match 'clone offset=') -or ($text -match 'slot->size = original_file->size')
+    if ($cloned -and -not $stubbed) {
+        Write-Host "OpenLinkFile already clones the handle ($src)"
+        return
+    }
+    Push-Location $Paths.AzaharSrc
+    try {
+        git apply $patch
+        if ($LASTEXITCODE -ne 0) { throw "git apply failed: $patch" }
+        Write-Host "Applied OpenLinkFile clone patch -> $src"
+    } finally {
+        Pop-Location
+    }
+}
+
+function Copy-AzaharToInstances {
+    $exe = $Paths.AzaharExe
+    if (-not (Test-Path $exe)) { return }
+    foreach ($id in @("a", "b")) {
+        $destDir = Join-Path $Paths.Instances $id
+        if (-not (Test-Path $destDir)) { continue }
+        Copy-Item $exe (Join-Path $destDir "azahar.exe") -Force
+        Write-Host "Copied azahar.exe -> $destDir"
+    }
+}
+
 function Build-Azahar {
     $build = $Paths.AzaharBuild
     if (-not (Test-Path $build)) { throw "Azahar build dir missing: $build" }
+    Ensure-AzaharOpenLinkFile
     $msysBin = "C:\msys64\clang64\bin"
     $env:PATH = "$msysBin;C:\msys64\usr\bin;" + $env:PATH
     Push-Location $build
@@ -84,6 +118,7 @@ function Build-Azahar {
             }
         }
         Write-Host "Built: $($Paths.AzaharExe)"
+        Copy-AzaharToInstances
     } finally {
         Pop-Location
     }
@@ -183,7 +218,48 @@ function Deploy-Combined([string]$InstanceId) {
     }
 }
 
+function Import-SavePack([string]$InstanceId, [string]$Pack) {
+    if ($InstanceId) {
+        $user = Set-DeployEnv $InstanceId
+        if (-not (Test-Path $user)) {
+            throw "Instance $InstanceId missing. Run .\make.ps1 instances first. ($user)"
+        }
+        Write-Host "Save target: $user"
+    } else {
+        Clear-DeployEnv
+        Write-Host "Save target: roaming Azahar (default)"
+    }
+    try {
+        Invoke-Python @("tools\import_azahar_save.py", "--pack", $Pack)
+    } finally {
+        if ($InstanceId) { Clear-DeployEnv }
+    }
+}
+
+function Move-LayeredFsBackups([string]$Id) {
+    # LayeredFS maps *every* file under romfs/, including img.bin.bak_* and
+    # TRB sidecars. Extra overlay files confuse FS walks. The Communications
+    # loading hang itself is Azahar OpenLinkFile (technical.md §10.1), not the
+    # bak copies — still keep rollbacks outside romfs/exefs.
+    $mod = Join-Path (Get-InstanceUser $Id) "load\mods\$($Paths.TitleId)"
+    $stash = Join-Path $mod "_bak"
+    foreach ($sub in @("romfs", "exefs")) {
+        $root = Join-Path $mod $sub
+        if (-not (Test-Path $root)) { continue }
+        Get-ChildItem $root -Recurse -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -match '\.bak' } |
+            ForEach-Object {
+                $rel = $_.FullName.Substring($root.Length).TrimStart('\')
+                $dest = Join-Path $stash (Join-Path $sub $rel)
+                New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+                Move-Item -LiteralPath $_.FullName -Destination $dest -Force
+                Write-Host "LayeredFS: moved $sub\$rel -> _bak\"
+            }
+    }
+}
+
 function Launch-Instance([string]$Id) {
+    Move-LayeredFsBackups $Id
     $bat = Join-Path $Paths.Instances "$Id\Launch-$Id.bat"
     if (Test-Path $bat) {
         Start-Process $bat
@@ -199,7 +275,7 @@ NLPP a/b Azahar workflow (.\make.ps1 [target])
 See ab_test\README.md
 
   paths          Show resolved folder paths
-  build-azahar   cmake + ninja citra_meta
+  build-azahar   apply OpenLinkFile clone patch, cmake + ninja citra_meta, copy exe to A/B
   instances      Create dual test instances + Launch-a/b.bat
   seed-a / seed-b  Copy vanilla code.bin + img.bin into instance mod
 
@@ -211,6 +287,8 @@ See ab_test\README.md
   talk-speed-ab  TalkWindow speed A/B (A=÷4+voice cap, B=÷4 table only)
   restore-a/b    Restore default-stack baseline in instance
   restore        Restore baseline in roaming Azahar
+  save-nene-a/b  Install the Nene title-save pack -> instance A/B
+  save-nene      Same pack -> A and B (shared a/b slot)
 
   launch-a/b     Start Azahar instance A or B
   all-a / all-b  instances + seed + deploy
@@ -236,6 +314,9 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
     "restore-a" = { Restore-NameInput "a" }
     "restore-b" = { Restore-NameInput "b" }
     "restore" = { Restore-NameInput "" }
+    "save-nene-a" = { Import-SavePack "a" "nene" }
+    "save-nene-b" = { Import-SavePack "b" "nene" }
+    "save-nene" = { Import-SavePack "a" "nene"; Import-SavePack "b" "nene" }
     "deploy" = { Deploy-NameInput "" }
     "launch-a" = { Launch-Instance "a" }
     "launch-b" = { Launch-Instance "b" }

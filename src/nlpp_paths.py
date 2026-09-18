@@ -38,6 +38,17 @@ CACHE_VANILLA_SCRIPT = CACHE_VANILLA_ROMFS / "script" / "bin" / "script"
 # Scratch
 OUT = ROOT / "out"
 
+# Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
+# install path; original luma/ and CIA names stay inside.
+OUT_LAYEREDFS_PREFIX = "1_[Either use this-LayerFS]"
+OUT_CIA_PREFIX = "2_[Or this]"
+OUT_NOT_BOTH_NAME = "3_but not both"
+LAYEREDFS_DIR_NAME = "luma"
+CIA_FILENAME = "NewLovePlusPlus-EN.cia"
+OUT_LAYEREDFS = OUT / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME
+OUT_CIA = OUT / OUT_CIA_PREFIX / CIA_FILENAME
+OUT_NOT_BOTH = OUT / OUT_NOT_BOTH_NAME
+
 # Commit-worthy translation source (regenerates release TRBs).
 ASSETS_TEXTRESOURCE = ROOT / "assets" / "textresource"
 TRANSLATIONS_JSON = ASSETS_TEXTRESOURCE / "translations.json"

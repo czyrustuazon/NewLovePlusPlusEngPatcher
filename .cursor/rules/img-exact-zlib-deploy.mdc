@@ -40,6 +40,8 @@ Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 | `deploy_msel_options_en.py` | **5245** Options/clock plates |
 | `deploy_msel_menus_en.py` | 5244/5241/5242 |
 | `deploy_confirm_btn_en.py` | **5238** Confirm `OK` |
+| `deploy_softkey_quit_en.py` | **5238** Quit `やめる` → `Quit` |
+| `deploy_softkey_defaults_en.py` | **5238** Restore Default `初期設定` `Com_btn_sy01` (live ARC; after Quit) |
 | `deploy_display_settings_en.py` | **5247** Help/Message/Sound labels |
 | `deploy_optionpassword_en.py` | **5251** Password window `Pass_Win01` |
 | `deploy_myroom_main_en.py` / `deploy_mydata_en.py` | **5380** |

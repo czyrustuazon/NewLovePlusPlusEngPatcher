@@ -24,6 +24,22 @@ def test_deploy_scripts_include_menu_chrome():
         assert name in scripts, f"missing deploy script: {name}"
 
 
+def test_msel_menus_include_event_gallery_rows():
+    text = (TOOLS / "deploy_msel_menus_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "Com_M_Sel_Btn_Text02_01_01",
+        "Com_M_Sel_Btn_Text02_01_02",
+        "Com_M_Sel_Btn_Text02_01_03",
+        "Com_M_Sel_Btn_Text02_01_04",
+        "Com_M_Sel_Btn_Text02_02_00",
+        "Com_M_Sel_Plate_Text02_01_01",
+        "Com_M_Sel_Plate_Text02_01_03",
+        "Com_M_Sel_Plate_Text02_01_04",
+        "Com_M_Sel_Plate_Text04_01_01",
+    ):
+        assert stem in text
+
+
 def test_rebuild_rc_pack_is_from_scratch_by_default():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
     assert "--use-cache" in text
@@ -42,13 +58,20 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "required name-input missing" in text
     assert "--keep-work" in text
     assert "cleanup_rebuild_scratch" in text
+    deploy = (TOOLS / "deploy_name_input_en.py").read_text(encoding="utf-8")
+    assert "apply_message_speed" in deploy
+    assert "message_speed_already" in deploy
 
 
 def test_softkey_deploy_after_confirm():
     scripts = rebuild.DEPLOY_SCRIPTS
     confirm = scripts.index("deploy_confirm_btn_en.py")
     softkey = scripts.index("deploy_softkey_back_next_en.py")
+    quit_sk = scripts.index("deploy_softkey_quit_en.py")
+    defaults = scripts.index("deploy_softkey_defaults_en.py")
     assert softkey > confirm
+    assert quit_sk > softkey
+    assert defaults > quit_sk
 
 
 def test_multiwin_after_datadelete():
@@ -56,6 +79,33 @@ def test_multiwin_after_datadelete():
     assert scripts.index("deploy_multiwin_headers_en.py") > scripts.index(
         "deploy_datadelete_en.py"
     )
+
+
+def test_multiwin_bake_runs_full_then_extras():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
+    assert '["--full"] if name == "deploy_multiwin_headers_en.py"' in text
+    assert "deploy_multiwin_headers_en.py extras" in text
+
+
+def test_msel_options_omits_quit_azahar_prompt():
+    text = (TOOLS / "deploy_msel_options_en.py").read_text(encoding="utf-8")
+    assert "Fully quit Azahar" not in text
+    assert "Com_M_Sel_Plate_Text03_05_00" in text
+    assert "add_password_input_plate" in text
+    assert "--plate-only" in text
+
+
+def test_multiwin_girlfriend_comm_uses_zhoumaru_01_01():
+    text = (TOOLS / "deploy_multiwin_headers_en.py").read_text(encoding="utf-8")
+    assert "Com_MultiWin_W01_Text04_01_00" in text
+    assert 'PNG_STEM_OVERRIDE' in text
+    assert '"Com_MultiWin_W01_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' in text
+    assert '"Com_MultiWin_W01_Text02_01_01": "Com_M_Sel_Plate_Text02_01_01"' in text
+    assert "Confession Memories" in text
+    assert "Trip Memories" in text
+    assert "Youthful Page" in text
+    assert "Com_MultiWin_W01_Text03_05_00" in text
+    assert "Password Input" in text
 
 
 def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):

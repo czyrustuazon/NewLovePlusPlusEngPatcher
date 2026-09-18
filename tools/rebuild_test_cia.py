@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Rebuild out/NewLovePlusPlus-EN.cia from the verified name-input stack.
+"""Rebuild the numbered CIA drop (`out/2_[Or this]/NewLovePlusPlus-EN.cia`) from the verified name-input stack.
 
 Typical loop:
 
   1. python tools/deploy_name_input_en.py   # or .\\make.ps1 deploy-a
   2. Test in Azahar LayeredFS
   3. python tools/rebuild_test_cia.py
-  4. Install out/NewLovePlusPlus-EN.cia via FBI
+  4. Install out/2_[Or this]/NewLovePlusPlus-EN.cia via FBI
+     (do not also copy the LayeredFS overlay)
 
 ROM path (first match): --rom, NLPP_ROM env, release/source_rom.txt, sibling CIA.
 
@@ -29,6 +30,8 @@ from nlpp_paths import (  # noqa: E402
     AZAHAR_MOD_CODE,
     AZAHAR_MOD_IMG,
     BAKE_IMG,
+    OUT_CIA,
+    OUT_LAYEREDFS,
     require_vanilla_code,
 )
 from patch_input_candidate_nullguard import apply_patch as apply_cand_nullguard  # noqa: E402
@@ -40,7 +43,6 @@ from patch_input_kana_direct_insert import (  # noqa: E402
 from patch_input_pane_registry_nullguard import apply_patch as apply_pane_nullguard  # noqa: E402
 from patch_input_romaji import patch_input_romaji  # noqa: E402
 
-OUT_CIA = ROOT / "out" / "NewLovePlusPlus-EN.cia"
 SOURCE_ROM_FILE = ROOT / "release" / "source_rom.txt"
 NAME_INPUT_CODE = ROOT / "release" / "name_input_code.bin"
 PATCH_CIA = ROOT / "src" / "patch_cia.py"
@@ -159,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         "--packed-img",
         str(img),
         "--layeredfs-out",
-        str(ROOT / "out" / "luma"),
+        str(OUT_LAYEREDFS),
     ]
     if args.skip_hash:
         cmd.append("--skip-hash")

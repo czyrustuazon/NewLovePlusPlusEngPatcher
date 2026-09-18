@@ -6,7 +6,7 @@ Unlike `out/` (wipeable scratch) and `cache/` (optional PNG pack), treat these a
 | Path | Role |
 |------|------|
 | `bake_img.bin` | Gold English `img.bin` (PNG pack + deploy chrome + day-counter; SMS **off** unless `--include-sms`) |
-| `name_input_code.bin` | Profile name-input ExeFS stack (romaji + direct insert); drop-bat `--inject-code` |
+| `name_input_code.bin` | Profile name-input ExeFS stack (romaji + direct insert + Message Speed TalkWindow ÷4 / voice cap); drop-bat `--inject-code` |
 | `romfs_overlay/` | RomFS files auto-injected by `patch_cia` (TRBs under `SystemData/TextResource/`) |
 | `textresource/` | Regenerated TRBs / working copies (from `assets/textresource/translations.json`) |
 

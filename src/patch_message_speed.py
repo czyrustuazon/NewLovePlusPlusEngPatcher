@@ -22,6 +22,9 @@ Two independent tables plus a voice/script cap:
    delay is chosen, ``r2 = min(r2, table[index])``. Unvoiced player lines already
    use the table; voiced heroine lines otherwise ignore it.
 
+4. Options sample UTF-8 at ``0x005D1928`` (39+NUL). In-place EN
+   ``This is a text-speed test.`` padded to the same 40-byte slot.
+
 Ghidra image base 0; runtime VA = file + ``0x100000``. See technical.md §21.
 
   python src/patch_message_speed.py --dry-run
@@ -89,6 +92,16 @@ TALK_HOOK_VANILLA = bytes.fromhex("0260a0e1")  # cpy r6, r2
 TALK_TABLE_VA = TALK_TABLE_OFF + 0x100000
 _CAP_NEED = ADDR_TALK_CAP_CAVE + TALK_CAP_CAVE_LEN
 
+# Options preview sample — UTF-8 literal in the FUN_005d191c pool (not TRB).
+SAMPLE_OFF = 0x005D1928
+SAMPLE_JP = "メッセージ速度テストです。".encode("utf-8") + b"\x00"
+SAMPLE_EN = b"This is a text-speed test.\x00"
+SAMPLE_SLOT = len(SAMPLE_JP)
+if len(SAMPLE_EN) > SAMPLE_SLOT:
+    raise ValueError("EN sample longer than vanilla slot")
+SAMPLE_EN_PADDED = SAMPLE_EN + b"\x00" * (SAMPLE_SLOT - len(SAMPLE_EN))
+_SAMPLE_NEED = SAMPLE_OFF + SAMPLE_SLOT
+
 
 def _u32(word: int) -> bytes:
     return struct.pack("<I", word & 0xFFFFFFFF)
@@ -134,6 +147,25 @@ def _has_talk(data: bytes) -> bool:
 
 def _has_cap_region(data: bytes) -> bool:
     return len(data) >= _CAP_NEED
+
+
+def _has_sample(data: bytes) -> bool:
+    if len(data) < _SAMPLE_NEED:
+        return False
+    got = bytes(data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT])
+    return got == SAMPLE_JP or got == SAMPLE_EN_PADDED
+
+
+def is_sample_patched(data: bytes) -> bool:
+    if not _has_sample(data):
+        return False
+    return bytes(data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT]) == SAMPLE_EN_PADDED
+
+
+def is_sample_vanilla(data: bytes) -> bool:
+    if not _has_sample(data):
+        return False
+    return bytes(data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT]) == SAMPLE_JP
 
 
 def is_options_patched(data: bytes) -> bool:
@@ -192,6 +224,8 @@ def is_fully_patched(data: bytes) -> bool:
     if _has_talk(data) and not is_talk_patched(data):
         return False
     if _has_cap_region(data) and not is_talk_cap_patched(data):
+        return False
+    if _has_sample(data) and not is_sample_patched(data):
         return False
     return True
 
@@ -260,11 +294,26 @@ def _apply_talk_cap(data: bytearray) -> bool:
     return True
 
 
+def _apply_sample(data: bytearray) -> bool:
+    if not _has_sample(data):
+        return False
+    if is_sample_patched(data):
+        print(f"[msg-speed] sample already EN @{SAMPLE_OFF:#x}")
+        return False
+    if not is_sample_vanilla(data):
+        got = bytes(data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT])
+        raise ValueError(f"unexpected message-speed sample @{SAMPLE_OFF:#x}: {got!r}")
+    data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT] = SAMPLE_EN_PADDED
+    print(f"[msg-speed] sample @{SAMPLE_OFF:#x} -> {SAMPLE_EN[:-1]!r}")
+    return True
+
+
 def apply_patch(data: bytearray) -> bool:
     """Rewrite Options + TalkWindow delays + voice/script cap. Returns True if bytes changed."""
     changed = _apply_options(data)
     changed = _apply_talk(data) or changed
     changed = _apply_talk_cap(data) or changed
+    changed = _apply_sample(data) or changed
     return changed
 
 
@@ -317,6 +366,19 @@ def _revert_talk_cap(data: bytearray) -> bool:
     raise ValueError("cannot revert: talk-cap hook is neither vanilla nor patched")
 
 
+def _revert_sample(data: bytearray) -> bool:
+    if not _has_sample(data):
+        return False
+    if is_sample_vanilla(data):
+        print(f"[msg-speed] sample already JP @{SAMPLE_OFF:#x}")
+        return False
+    if not is_sample_patched(data):
+        raise ValueError("cannot revert: message-speed sample is neither vanilla nor patched")
+    data[SAMPLE_OFF : SAMPLE_OFF + SAMPLE_SLOT] = SAMPLE_JP
+    print(f"[msg-speed] sample @{SAMPLE_OFF:#x} restored JP")
+    return True
+
+
 def revert_talk_cap(data: bytearray) -> bool:
     """Leave Options + TalkWindow tables; restore vanilla voice-sync (A/B B)."""
     return _revert_talk_cap(data)
@@ -326,6 +388,7 @@ def revert_patch(data: bytearray) -> bool:
     changed = _revert_options(data)
     changed = _revert_talk(data) or changed
     changed = _revert_talk_cap(data) or changed
+    changed = _revert_sample(data) or changed
     return changed
 
 
@@ -349,6 +412,10 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"Talk cap BL @{TALK_HOOK_OFF:#x} -> cave {ADDR_TALK_CAP_CAVE:#x} "
             f"({TALK_CAP_CAVE_LEN:#x} bytes, min vs table)"
+        )
+        print(
+            f"Sample @{SAMPLE_OFF:#x}: JP メッセージ速度テストです。 -> "
+            f"{SAMPLE_EN[:-1].decode()}"
         )
         return 0
 

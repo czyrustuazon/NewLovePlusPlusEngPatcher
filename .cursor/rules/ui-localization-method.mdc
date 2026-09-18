@@ -33,14 +33,16 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 |--------|-----|--------|
 | Options + clock title | **5245** A8 | EN |
 | Password entry window | **5251** ETC1A4 | EN (`deploy_optionpassword_en.py`, Zhoumaru `Pass_Win01`) |
+| Password entry header | **5245** | EN (`Password Input` plate `Text03_05`) |
 | Display/Sound settings panels | **5247** RGBA4444 | EN (`deploy_display_settings_en.py`) |
-| Back/Next/Confirm | **5238** ETC1A4 | EN (`OK` for 決定) |
+| Back/Next/Confirm/Quit | **5238** ETC1A4 | EN (`OK` for 決定, `Quit` for やめる) |
 | Gallery / Comm / Data MSel | 5244/5241/5242 | EN |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
 | Profile labels | 5246 + **5252** | EN (Western name order) |
 | Status stats | **5501** / **5255** | EN |
 | To-Do chrome | 5575 / **5253** | EN; long TRB titles → shorten |
-| Floating `初期設定` Defaults | — | **unmapped** |
-| Message-speed sample line | `code.bin` `0x005D1928` | JP sentence unmapped; Options **14/8/2/0** + TalkWindow **10/18/22/28** + voice/script cap (`patch_message_speed.py`, §21) |
+| Floating `初期設定` Defaults | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** | EN (`Restore Default`) — Zhoumaru; `deploy_softkey_defaults_en.py` |
+| Message-speed sample line | `code.bin` `0x005D1928` | EN (`This is a text-speed test.`) + Options **14/8/2/0** + TalkWindow **10/18/22/28** + voice/script cap (`patch_message_speed.py`, §21) |
+| Extra-data recreate warning body | TRB STRI **4429** DrawText (`Tex_Sentence`) | EN in `translations.json` (not pkg **5237** `Com_Win_Warning` chrome) |
 
 Details: `technical.md` §12.4–12.6.

@@ -15,6 +15,7 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)
    - `ui-localization-method` — texture vs TRB vs DrawText decision tree
    - `zhoumaru-ui-pack` — Zhoumaru community EN UI PNGs (`*.check/timg`); **CESA is not in that pack**
+   - `azahar-test-workflow` — a/b instances; **OpenLinkFile** Communications load hang (`technical.md` §10.1)
    - `img-exact-zlib-deploy` — exact-length zlib/zopfli splice; **never bak→MOD wipe**
    - `ghidra-mcp` — Ghidra usage + Options bind APIs
    - `patch-safety` — hard bans
@@ -27,6 +28,8 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 **Do not** rediscover NCommonIcon `Com_btn_m01_b` / `t01_b` as the clock Back/Next source — already verified EN (pkg 5238).
 
 **Do not** treat MyroomHeader `optn_tex_*` or DrawText as Options/clock menu chrome — wrong path.
+
+**Do not** treat a Communications loading spinner as broken extra data `00000F4E` or a bad pkg **5237** — Azahar `OpenLinkFile` must clone the subfile handle (`technical.md` §10.1).
 
 Prefer extending documented next steps over opening a fresh “find the string” investigation.
 

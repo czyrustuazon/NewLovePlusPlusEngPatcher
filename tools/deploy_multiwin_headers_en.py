@@ -9,8 +9,6 @@ wipe the earlier datadelete header patch.
 """
 from __future__ import annotations
 
-import os
-import struct
 import sys
 import zlib
 from pathlib import Path
@@ -24,6 +22,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
 from bclimutil import parse_bclim, png_to_bclim_etc1a4_same_size  # noqa: E402
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli, try_fast_exact_slot  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
@@ -45,18 +44,55 @@ HEADER_LABELS = [
     # Gallery (Text02)
     ("timg/Com_MultiWin_W01_Text02_00_00.bclim", "Gallery"),  # 0x0
     ("timg/Com_MultiWin_W01_Text02_01_00.bclim", "Event Gallery"),  # 0x1
+    ("timg/Com_MultiWin_W01_Text02_01_01.bclim", "Confession Memories"),
+    ("timg/Com_MultiWin_W01_Text02_01_02.bclim", "After the Dream"),
+    ("timg/Com_MultiWin_W01_Text02_01_03.bclim", "Trip Memories"),
+    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Youthful Page"),
     ("timg/Com_MultiWin_W01_Text02_02_00.bclim", "Illustration Gallery"),  # 0x7
     ("timg/Com_MultiWin_W01_Text02_02_01.bclim", "Dream Gallery"),  # 0x8
     ("timg/Com_MultiWin_W01_Text02_02_02.bclim", "Special Gallery"),  # 0x9
     ("timg/Com_MultiWin_W01_Text02_01_05.bclim", "Gallery Options"),  # 0x6
+    # Options password entry (Text03) — Lyt_Pass_Info_Display white bar
+    ("timg/Com_MultiWin_W01_Text03_05_00.bclim", "Password Input"),
     # Communication (Text04)
     ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),  # 0x11
-    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Girlfriend Comm."),  # 0x12
+    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Girlfriend Communication"),  # 0x12
     ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),  # 0x16
     ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle"),  # 0x17
     # Data Management
     ("timg/Com_MultiWin_W01_Text05_01_00.bclim", "Delete Save Data"),  # 0x1a
 ]
+# Incremental: Communication substrips on the live ARC only.
+# Vanilla+zopfli of extras together with the Gallery --full pass is a bad
+# compress path; the Communications *loading* hang was Azahar OpenLinkFile (§10.1).
+# Text04_01_00 is the カノジョ通信 white bar. Zhoumaru's 01_00 PNG is Network —
+# use 01_01 (Girlfriend Communication) instead.
+EXTRA_LABELS = [
+    ("timg/Com_MultiWin_W01_Text02_01_01.bclim", "Confession Memories"),
+    ("timg/Com_MultiWin_W01_Text02_01_02.bclim", "After the Dream"),
+    ("timg/Com_MultiWin_W01_Text02_01_03.bclim", "Trip Memories"),
+    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Youthful Page"),
+    ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),
+    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Girlfriend Communication"),
+    ("timg/Com_MultiWin_W01_Text04_01_01.bclim", "Girlfriend Communication"),
+    ("timg/Com_MultiWin_W01_Text04_01_02.bclim", "Introduction"),
+    ("timg/Com_MultiWin_W01_Text04_01_03.bclim", "Double Date"),
+    ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),
+    ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle"),
+    ("timg/Com_MultiWin_W01_Text04_04_00.bclim", "Communication Settings"),
+    ("timg/Com_MultiWin_W01_Text03_05_00.bclim", "Password Input"),
+]
+# MultiWin Text02_01_01 PNG is "Friend's Memory"; the live 告白までの思い出
+# bar is Zhoumaru's MSel plate "Confession Memories". Same for Trip / Youthful.
+PNG_STEM_OVERRIDE = {
+    "Com_MultiWin_W01_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01",
+    "Com_MultiWin_W01_Text04_01_01": "Com_M_Sel_Plate_Text04_01_01",
+    "Com_MultiWin_W01_Text02_01_01": "Com_M_Sel_Plate_Text02_01_01",
+    "Com_MultiWin_W01_Text02_01_02": "Com_M_Sel_Plate_Text02_01_02",
+    "Com_MultiWin_W01_Text02_01_03": "Com_M_Sel_Plate_Text02_01_03",
+    "Com_MultiWin_W01_Text02_01_04": "Com_M_Sel_Plate_Text02_01_04",
+}
+UI_PNG_FOLDERS = ("NCommon.check", "NCommonMSel(4).check", "NCommonMSel(7).check")
 
 VANILLA_CANDIDATES = [
     VANILLA,
@@ -68,7 +104,7 @@ def font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONT), size=size)
 
 
-def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
+def all_interfile_gaps(data: bytes) -> list[tuple[int, int]]:
     darc = DarcArchive(data)
     spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
     gaps: list[tuple[int, int]] = []
@@ -77,78 +113,26 @@ def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
             gaps.append((a1, b0))
     if spans and spans[-1][1] < len(data):
         gaps.append((spans[-1][1], len(data)))
-    out: list[tuple[int, int]] = []
-    for g0, g1 in gaps:
-        chunk = data[g0:g1]
-        if len(chunk) >= 4 and chunk == b"\x00" * len(chunk):
-            out.append((g1 - g0, g0))
-    out.sort(reverse=True)
-    return out
+    return gaps
 
 
-def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
-    runs = interfile_zero_gaps(data)
+def zero_interfile_gaps(data: bytes) -> bytes:
     t = bytearray(data)
-    left = n_bytes
-    off = 0
-    for sz, po in runs:
-        take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
-        left -= take
-        off += sz
-        if left <= 0:
-            break
+    for g0, g1 in all_interfile_gaps(data):
+        t[g0:g1] = b"\x00" * (g1 - g0)
     return bytes(t)
 
 
-def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
-    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
-    bodies: list[bytes] = []
-    for level in range(10):
-        co = zlib.compressobj(level, wbits=-15)
-        bodies.append(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
-    hdrs = (b"\x78\x9c", b"\x78\xda", b"\x78\x5e", b"\x78\x01")
-    for body in bodies:
-        for hdr in hdrs:
-            remain = exact_len - len(hdr) - 4 - len(body)
-            if remain < 5 or remain % 5 != 0:
-                continue
-            n_empty = remain // 5
-            extras = b"\x00\x00\x00\xff\xff" * (n_empty - 1)
-            final = b"\x01\x00\x00\xff\xff"
-            out = hdr + body + extras + final + adler
-            if len(out) != exact_len:
-                continue
-            d = zlib.decompressobj()
-            try:
-                got = d.decompress(out)
-            except zlib.error:
-                continue
-            if got == data and not d.unused_data and d.eof:
-                return out
-    return None
-
-
-def compress_exact_with_gap_tune(data: bytes, exact_len: int) -> tuple[bytes, bytes]:
-    runs = interfile_zero_gaps(data)
-    cap = sum(sz for sz, _ in runs)
-    pad_rng = os.urandom(max(1, cap))
-    print(f"  gap capacity={cap}; tuning pad for exact zlib…", flush=True)
-    step = max(1, cap // 400) if cap else 1
-    for n in range(cap, -1, -step):
-        cand = apply_gap_pad(data, n, pad_rng)
-        slot = compress_exact_empty_blocks(cand, exact_len)
-        if slot is not None:
-            print(f"  hit at pad_bytes={n}", flush=True)
-            return cand, slot
-    for n in range(cap, -1, -1):
-        cand = apply_gap_pad(data, n, pad_rng)
-        slot = compress_exact_empty_blocks(cand, exact_len)
-        if slot is not None:
-            print(f"  hit at pad_bytes={n}", flush=True)
-            return cand, slot
-    raise SystemExit("could not build exact zlib stream with gap tune")
+def exact_slot(data: bytes, exact_len: int, *, zero_gaps: bool) -> tuple[bytes, bytes]:
+    """Fit 5237 ARC to the img.bin slot. Prefer zlib; pad short zopfli (no salt loop)."""
+    if zero_gaps:
+        data = zero_interfile_gaps(data)
+    fast = try_fast_exact_slot(data, exact_len)
+    if fast is not None:
+        print("  hit exact-zlib fast-path", flush=True)
+        return fast
+    print("  escalating to zopfli + empty-block pad", flush=True)
+    return compress_exact_zopfli(data, exact_len)
 
 
 def render_header_label(w: int, h: int, text: str) -> Image.Image:
@@ -177,6 +161,17 @@ def pick_vanilla() -> Path:
 
 
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--full",
+        action="store_true",
+        help="Rebuild all MultiWin headers from vanilla (gold bake). "
+        "Default: patch only extra Communication substrips onto live 5237.",
+    )
+    args = ap.parse_args()
+
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
@@ -185,8 +180,14 @@ def main() -> None:
         bak.write_bytes(MOD_IMG.read_bytes())
         print("created", bak, flush=True)
 
-    vanilla = pick_vanilla()
-    print("vanilla ARC source:", vanilla, flush=True)
+    if args.full:
+        src_img = pick_vanilla()
+        labels = HEADER_LABELS
+        print("vanilla ARC source:", src_img, flush=True)
+    else:
+        src_img = MOD_IMG
+        labels = EXTRA_LABELS
+        print("live ARC source (extras only):", src_img, flush=True)
 
     OUT.mkdir(parents=True, exist_ok=True)
     pkg_dir = OUT / "img_data"
@@ -194,8 +195,8 @@ def main() -> None:
     tmp = OUT / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
 
-    vraw = vanilla.read_bytes()
-    vimg = ImgBin(str(vanilla))
+    vraw = src_img.read_bytes()
+    vimg = ImgBin(str(src_img))
     vimg.parse(False)
 
     res = vimg.entries[PKG]
@@ -217,7 +218,7 @@ def main() -> None:
     )
 
     darc = DarcArchive(bytearray(arc_elem.parsed()))
-    for path, en in HEADER_LABELS:
+    for path, en in labels:
         entry = darc.find(path) or darc.find(Path(path).name)
         if entry is None:
             raise SystemExit(f"missing {path}")
@@ -228,7 +229,10 @@ def main() -> None:
         png = tmp / f"{Path(path).stem}.png"
         orig = tmp / f"{Path(path).stem}.bclim"
         orig.write_bytes(raw)
-        master = find_ui_png(("NCommon.check",), Path(path).stem, (w, h))
+        stem = Path(path).stem
+        master = find_ui_png(
+            UI_PNG_FOLDERS, PNG_STEM_OVERRIDE.get(stem, stem), (w, h)
+        )
         rgba = Image.open(master).convert("RGBA") if master else render_header_label(w, h, en)
         rgba.save(png)
         new = png_to_bclim_etc1a4_same_size(png, orig)
@@ -237,7 +241,7 @@ def main() -> None:
         print(f"  OK {path} -> {en!r}", flush=True)
 
     patched = bytes(darc.data)
-    tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)
+    tuned, slot = exact_slot(patched, cmp_len, zero_gaps=args.full)
     do = zlib.decompressobj()
     got = do.decompress(slot)
     if got != tuned or do.unused_data or not do.eof:
@@ -266,14 +270,22 @@ def main() -> None:
     print("  DMST unchanged OK", flush=True)
 
     try:
-        for _dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for _dest in targets:
             splice_packages_into_img(_dest, pkg_dir, [PKG], _dest)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("\ndeployed MultiWin EN pkg", PKG, "->", MOD_IMG, flush=True)
     print("Rollback:", bak, flush=True)
-    print("Fully quit Azahar and re-open Girlfriend Comm.", flush=True)
+    print("Re-open Girlfriend Communication to reload pkg 5237.", flush=True)
 
 
 if __name__ == "__main__":

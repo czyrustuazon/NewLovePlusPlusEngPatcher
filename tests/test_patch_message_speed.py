@@ -110,6 +110,8 @@ def test_message_speed_vanilla_dump_applies():
         data[ms.ADDR_TALK_CAP_CAVE : ms.ADDR_TALK_CAP_CAVE + ms.TALK_CAP_CAVE_LEN]
         == ms.TALK_CAP_CAVE_BYTES
     )
+    assert ms.is_sample_patched(data)
+    assert data[ms.SAMPLE_OFF : ms.SAMPLE_OFF + ms.SAMPLE_SLOT] == ms.SAMPLE_EN_PADDED
 
 
 def _cap_blob() -> bytearray:
@@ -148,3 +150,15 @@ def test_talk_cap_patch_rewrites_hook():
     assert ms.is_talk_cap_vanilla(data)
     assert ms.is_options_patched(data)
     assert ms.revert_talk_cap(data) is False
+
+
+def test_sample_sentence_rewrites_in_place():
+    data = _blob((ms.VANILLA_LV1, ms.VANILLA_LV2, ms.VANILLA_LV3))
+    data[ms.SAMPLE_OFF : ms.SAMPLE_OFF + ms.SAMPLE_SLOT] = ms.SAMPLE_JP
+    assert ms.is_sample_vanilla(data)
+    assert ms.apply_patch(data) is True
+    assert ms.is_sample_patched(data)
+    assert data[ms.SAMPLE_OFF : ms.SAMPLE_OFF + ms.SAMPLE_SLOT] == ms.SAMPLE_EN_PADDED
+    assert ms.apply_patch(data) is False
+    assert ms.revert_patch(data) is True
+    assert ms.is_sample_vanilla(data)

@@ -37,6 +37,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
 
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
+- **Communications load hang on Azahar (2026-09-18):** not extra data `00000F4E`, not pkg **5237**. Stock `FSFile::OpenLinkFile` reset the clone to the full extra-data blob; **§10.1**.
 - **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
 
 ---
@@ -431,6 +432,33 @@ When deploying with `pack_images --deploy-azahar`, prefer splicing onto the **cu
 
 Treat dump `extracted/` as mostly **read-only**; write patches through EngPatcher → LayeredFS.
 
+### 10.1 `OpenLinkFile` — Communications stuck on loading (2026-09-18)
+
+**Symptom:** Main-menu **Communication** stays on the loading spinner. Guest is already dead.
+
+**Log (instance A):**
+
+1. `OpenLinkFile Path: [Binary: 0000…]` (was logged as STUBBED).
+2. Unmapped `Read32` @ `PC 0x0010CAB4`.
+3. Heap smash `Write32 0x33373338` @ `PC 0x0011531C` / `0x00120590`, then `WriteBlock` @ `PC 0x005EF4CC`.
+
+**Not the cause (verified):**
+
+| Suspect | Why it looks related | Why it is not |
+|---------|----------------------|----------------|
+| Title extra data `00000F4E` “broken” | Communications reads `LP_NET` / `LP_NET_CARD` | Archives present; same file set/sizes as instance B |
+| SpotPass extra data `00000321` missing | Log: `Failed to open SpotPass ext data archive` | Boot SpotPass check only (§16). Not the StreetPass Communication menu |
+| MultiWin pkg **5237** extras / zopfli salt | Timed with Girlfriend Comm. header work | Packages decompress `unused_data=0`; rolling **5237** back did not stop the smash |
+| LayeredFS `img.bin.bak_*` in `romfs/` | Extra overlay files + `OpenLinkFile` in the same log | Still move baks to `_bak/` (`make.ps1 launch-a`); hang persisted with only `img.bin` + two TRBs |
+
+**Cause:** Azahar `File::OpenLinkFile` created a new session but **did not clone** the current handle. 3dbrew / libctru: “opens a clone / duplicate handle.” The stub set `offset=0`, `size=backend->GetSize()`, `subfile=false`. NLPP opens an extra-data **subfile** (`OpenSubFile`) then `OpenLinkFile`. `GetSize` on the clone then returned the **entire** extra-data blob (tens–hundreds of MB). The game treated that as a small `NLPPARC` record and heap-walked ASCII as pointers (`0x33373338`).
+
+**Fix (local Azahar, not CIA `img.bin`):** `File::OpenLinkFile` snapshots `priority` / `offset` / `size` / `subfile` from the source session *before* `ClientConnected`, then copies them onto the clone. `File::Close` must **not** close the shared backend while another session (the clone) is still live — that zeros later reads and brings the spinner back. Patch in this repo: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it if missing, rebuilds `citra_meta`, and copies `azahar.exe` into `out/azahar_instances/{a,b}/`. Default log line: `OpenLinkFile … clone offset=… size=… subfile=… backend=…`. Drop CIA does not need this — hardware FS clones handles correctly.
+
+**Do not** restore extra data or re-splice **5237** / **5241** for this spinner. **Do not** treat missing `00000321` as a Communication-menu fix.
+
+Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple of 4` and makes a wedged guest look frozen. Leave it off while playtesting.
+
 ---
 
 ## 11. Patch safety and abandoned approaches
@@ -500,22 +528,28 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 |-------|------|--------|
 | Back / Next | ETC1A4 BCLIM `Com_btn_{m,t}01_b` @ 5238 | **EN verified** |
 | Confirm `決定` | ETC1A4 BCLIM `Com_btn_k01_b{,ON}` @ **5238** | Deployed (`OK`) — `tools/deploy_confirm_btn_en.py` |
+| Quit `やめる` | ETC1A4 BCLIM `Com_btn_y01_b{,ON}` @ **5238** | Deployed (`Quit`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_quit_en.py` (Save Export confirm, shared) |
 | Clock header `３ＤＳ本体時計` | A8 BCLIM `Com_M_Sel_Plate_Text03_06_00` (+ `_01`) @ **5245** | **EN verified** (`3DS System Clock`) |
 | Options header + buttons + Display/Sound plates | A8 BCLIM Text03 / Text04_04 @ **5245** | **EN** (Options / Display Settings / Sound Settings / Network / Password + plates) — `tools/deploy_msel_options_en.py` |
 | Password entry window `パスワード` | ETC1A4 `Pass_Win01` @ OptionPassword **5251** | **EN** (`Password`) — `tools/deploy_optionpassword_en.py` (Zhoumaru; not DrawText) |
+| Password entry header `パスワード入力` | A8 rewrite of `Com_M_Sel_Plate_Text03_05_00` @ **5245** (`OptionMenu_BindPlateTextures` slot 5) | **EN** (`Password Input`) — Zhoumaru. Vanilla plate is ETC1A4 and misses the slot; encode as A8 like the other Options plates. MultiWin `Text03_05` @ **5237** is a different bind (`FUN_00255a18` idx 0x1f), not this screen. |
 | Display Settings panel | RGBA4444 `Opt_TxtItem_{Help,Message}` + `Opt_HelpBtn_{A,B}_*` @ Option **5247** | **EN** (`Help Display` / `Message Speed` / `Every Time` / `Once`) — `tools/deploy_display_settings_en.py` |
 | Sound Settings panel | RGBA4444 `Opt_txtItem_{SE,VOICE,MIC}` @ Option **5247** | **EN** (`SE` / `Voice` / `Mic Sensitivity`) — same script (also `deploy_sound_settings_en.py`) |
-| Floating `初期設定` (Defaults) | outside `Lyt_Opt_Scene` / not in pkg **5247** | **unmapped** (not SJIS/UTF-8/NLP in romfs; not HelpBtn) |
-| Message speed sample `メッセージ速度テストです。` | UTF-8 in `code.bin` @ `0x005D1928` + typewriter `FUN_002d544c` | **JP sample still unmapped**; delay table patched −4 frames — **§21** |
+| Floating `初期設定` (Defaults) | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (not pkg **5247**) | **EN** (`Restore Default`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_defaults_en.py`. Twin BCLIM also in Common02Icon **4184** `C_Com_icon_Sy` (already in bake). |
+| Message speed sample `メッセージ速度テストです。` | UTF-8 in `code.bin` @ `0x005D1928` + typewriter `FUN_002d544c` | **EN** (`This is a text-speed test.`) — in-place pool rewrite in `patch_message_speed.py` §21.7 |
+| Extra-data recreate warning `作成には時間がかかるので…` | DrawText / TRB STRI **4429** (`Lyt_C_Com_Win01` `Tex_Sentence`; SysPopup). Not `Com_Win_Warning` BCLIM (that is empty chrome). | **EN** — `translations.json`. Sibling create/start strings STRI 4431–4434. |
 | Options help line | DrawText / TRB | Already EN |
 | 年 / 月 / 日 | Option06 A4 @ 5248 + date-format bytes | EN `Y`/`M`/`D` verified |
 | Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
+| Event Gallery rows | A8 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
+| Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Youthful Page** (MultiWin `01_01` PNG is Friend's Memory — do not use) |
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Girlfriend Comm. / Business Card / Wireless Battle) |
+| Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` @ **5237** + A8 `Com_M_Sel_Plate_Text04_01_01` @ **5241** | Zhoumaru `NCommonMSel(7).check` plate **Girlfriend Communication**. MultiWin/plate `01_00` PNGs are Network / Communication Menu — do not use. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
-| Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received`) |
+| Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
 | Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Deployed (`Profile` / First Name / Last Name / Birthday / M·D / Blood / Hometown; uniform size) — `tools/deploy_profile_en.py` |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
@@ -762,12 +796,14 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_msel_menus_en.py` | Gallery/Comm/Data A8 → pkgs **5244/5241/5242** (+ Business Card **5240**) |
 | `tools/deploy_msel_opt_plates_en.py` | Soft re-render Options plates on live **5245** (best-effort; uses shared `exact_zlib`) |
 | `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** (lean trials + shared exact zlib) |
+| `tools/deploy_softkey_quit_en.py` | Quit `やめる` → `Quit` ETC1A4 `Com_btn_y01_b{,ON}` @ **5238** (after Back/Next) |
+| `tools/deploy_softkey_defaults_en.py` | Restore Default `初期設定` ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (last-writer after Quit) |
 | `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
 | `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 | `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from nlpp-gold GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
-| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (+ `out/luma/` LayeredFS) |
+| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/2_[Or this]/`) + LayeredFS (`out/1_[Either use this-LayerFS]/luma/`) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
 | `src/run_timer.py` | Live ``[timer]`` elapsed / 60s heartbeat for pack, gold rebuild, CIA patcher |
@@ -811,7 +847,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `clock-confirm-ui-localization.mdc` | §§6–9, 12.4–12.5 | Clock + Options + Confirm softkeys |
 | `zhoumaru-ui-pack.mdc` | §12.7 | Zhoumaru `.check` PNGs; **CESA is not in that pack** |
 | `from-scratch-bake.mdc` | §15.5 | Drop CIA / gold bake; name-input caves in `.text` |
-| `bakable-and-layeredfs.mdc` | §15.5, §21 | Playable patches: bake/CIA **and** Azahar LayeredFS; never only one |
+| `azahar-test-workflow.mdc` | §10, §18 | a/b instances; **OpenLinkFile** Communications hang |
 
 When RE discovers something durable, update **both** this file and the relevant rule so agents don’t diverge.
 
@@ -954,8 +990,8 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 | Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select | **5153** | `deploy_gallery_common_en.py` |
-| MultiWin headers (+ Delete Save Data) | **5237** | `deploy_datadelete_en.py` then `deploy_multiwin_headers_en.py` |
-| Softkeys Back / Next / Confirm | **5238** | `deploy_confirm_btn_en.py` then `deploy_softkey_back_next_en.py` |
+| MultiWin headers (+ Delete Save Data) | **5237** | `deploy_datadelete_en.py` then `deploy_multiwin_headers_en.py --full` (gold Gallery/Comm home). Bake then runs the same script with no flag (Girlfriend Communication extras; zopfli empty-block pad, not gap-salt). |
+| Softkeys Back / Next / Confirm / Quit / Restore Default | **5238** | `deploy_confirm_btn_en.py` then `deploy_softkey_back_next_en.py` then `deploy_softkey_quit_en.py` then `deploy_softkey_defaults_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
 | Password entry window | **5251** | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
@@ -1003,12 +1039,12 @@ decrypted .cia / .3ds / .cci dropped
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
         + apply_name_patches + optional --inject-code name_input_code.bin
-  → out/NewLovePlusPlus-EN.cia + out/luma/
+  → out/1_[Either use this-LayerFS]/luma/ + out/2_[Or this]/NewLovePlusPlus-EN.cia + out/3_but not both
 ```
 
 Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and the vanilla bake bak after they are consumed; CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps all of that. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/*.cia`, `out/luma/`, `out/logs/`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and the vanilla bake bak after they are consumed; CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps all of that. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-LayerFS]/`, `out/2_[Or this]/`, `out/3_but not both`, `out/logs/`.
 
 #### Environment overrides
 
@@ -1315,6 +1351,7 @@ Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
 | Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
+| Shared Nene save | `ab_test/saves/nene/` via `.\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
 
 Do **not** tell the user to quit Azahar between deploys (standing preference).
 
@@ -1324,9 +1361,13 @@ Do **not** tell the user to quit Azahar between deploys (standing preference).
 
 Offline `vendor/NLPPATCH/` was removed from main (2026-08-31); NLPP-005 may re-vendor it for layered script inject (§19). Dialogue/TRB still primarily live in `rebuild_dbin2/` + `assets/`. Optional: `patch_textresource.py seed --alt-trb <other.trb>` if you bring an external EN TRB.
 
+### 18.3 Communications loading hang — OpenLinkFile (2026-09-18)
+
+See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openlinkfile.patch` and copies `azahar.exe` into the instance folders. Drop CIA / gold `img.bin` do not include this (hardware FS is fine).
+
 ---
 
-*Last updated 2026-09-11 — keep main §§16–18; add NLPP-005 §19 patch composition / progress + §20 volunteer workbench; §13.3 third-party stack. UI PNG masters: 1727 mapped / 562 chrome.*
+*Last updated 2026-09-18 — §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
@@ -1406,7 +1447,6 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 | `img.bin` name table — 0 replacements on last deploy | Investigate if nicknames still fail in UI labels |
 | Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |
-| Unmapped option chrome | Floating `初期設定` (Defaults); Message Speed **sample sentence** still JP (delay table is §21) |
 | Commit / push session tooling | `script_inject.py`, `export_progress_metrics.py`, `restore_*.py`, etc. — whitelisted in `.gitignore` |
 | README / forum post | Community update: NLPPCTR menu migration, 28% baseline restore, nickname fix, progress % |
 
@@ -1705,13 +1745,21 @@ bx   lr
 
 `is_fully_patched` requires Options **and** TalkWindow table **and** this hook (half-patched `name_input_code.bin` used to skip the table because `is_patched` meant Options-only).
 
-Ship path: `apply_patch` from `tools/deploy_name_input_en.py` → `release/name_input_code.bin` (Drop CIA / `rebuild_bake_img.py`). LayeredFS: same script `--deploy-azahar`, or `.\make.ps1 talk-speed-ab` (`tools/ab_talk_speed.py`: **A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
+Ship path: `apply_patch` from `tools/deploy_name_input_en.py` → `release/name_input_code.bin` (Drop CIA / `rebuild_bake_img.py`). Rebuild from vanilla (`code.bin.bak` preferred) when gold still has TalkWindow 40/70/90/110/220:
+
+```bash
+python tools/deploy_name_input_en.py --src extracted/exefs/code.bin.bak --out release/name_input_code.bin
+```
+
+LayeredFS: copy that file to instance `exefs/code.bin` (and mod-root `code.bin`), or `--deploy-azahar` / `.\make.ps1 talk-speed-ab` (**A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
 
 Verified 2026-09-17: heroine date line on **A** matches player speed; **B** still crawls.
 
-### 21.7 Sample sentence (still JP)
+### 21.7 Sample sentence
 
-`メッセージ速度テストです。` is a UTF-8 literal in `code.bin` (Ghidra string search misses it; grep the binary). It is **not** in `translations.json`. Localizing it is a separate DrawText/strncpy remap (`FUN_005d191c`), not the delay patch.
+`メッセージ速度テストです。` is a UTF-8 literal in `code.bin` at `0x005D1928` (39 bytes + NUL, immediately before the next ARM insn at `0x005D1950`). Ghidra string search misses it; it is **not** TRB. `FUN_001d2f90` copies it through `FUN_005d191c`.
+
+Patch: in-place EN `This is a text-speed test.` + NUL pad in the same 40-byte slot (`patch_message_speed.py` / gold `name_input_code.bin`). Do not grow the pool. Do not use a `.rodata` pad.
 
 ---
 

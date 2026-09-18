@@ -27,6 +27,7 @@ from patch_message_speed import (  # noqa: E402
     TALK_PATCHED,
     TALK_TABLE_OFF,
     is_options_patched,
+    is_sample_patched,
     is_talk_cap_patched,
     is_talk_cap_vanilla,
     is_talk_patched,
@@ -69,6 +70,8 @@ def _build(*, cap: bool) -> bytearray:
         raise SystemExit("expected TalkWindow table to be patched")
     if not is_options_patched(data):
         raise SystemExit("Options 14/8/2/0 missing — name-input stack incomplete")
+    if not is_sample_patched(data):
+        raise SystemExit("expected EN Text Speed sample sentence")
     if cap:
         if not is_talk_cap_patched(data):
             raise SystemExit("expected talk cap cave on A")

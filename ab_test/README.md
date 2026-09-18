@@ -56,6 +56,15 @@ instance (usually vanilla from `seed-*`).
 .\make.ps1 launch-b
 ```
 
+**Shared Nene title save** (Checkpoint/Azahar `savedata*` pack in `ab_test/saves/nene/`):
+
+```powershell
+.\make.ps1 save-nene      # A and B
+.\make.ps1 save-nene-a    # one instance
+```
+
+This overwrites the playable SD slot (`sdmc/.../title/00040000/000f4e00/data/00000001/`). The previous title save is snapshotted under `out/extdata_backup/`. Extra data / DLC caches stay put. Script: `tools/import_azahar_save.py`.
+
 **TalkWindow Message Speed A/B** (A = ÷4 table + voice/script cap, B = ÷4 table only; Options 14/8/2/0 on both):
 
 ```powershell
@@ -99,6 +108,7 @@ Or set the env inside a small wrapper the same way `ab_test/make.ps1` does
 | `ab_test/make.ps1` | Targets: instances, seed, deploy, restore, launch, build-azahar |
 | `ab_test/setup_azahar_instances.ps1` | Copies azahar.exe + ICU DLLs; writes Launch-*.bat |
 | `ab_test/paths.local.ps1` | Machine paths (gitignored) |
+| `ab_test/saves/nene/` | Shared Nene title-save pack (`.\make.ps1 save-nene`) |
 | `out/azahar_instances/{a,b}/` | Isolated user dirs + local azahar copy |
 | `src/nlpp_paths.py` | Resolves Azahar mod paths from env |
 
@@ -115,6 +125,14 @@ LayeredFS replacement file in use for /img.bin
 
 - Prefer instance A for the “new” experiment and B for baseline / previous
   known-good, then swap by redeploying.
+
+## Communications loading hang
+
+Not extra data, not pkg 5237. Local Azahar must **clone** `OpenLinkFile`
+handles (same offset/size/subfile) and must **not Close the backend** while
+the clone is still live. Patch: `ab_test/patches/azahar-openlinkfile.patch`.
+`.\make.ps1 build-azahar` applies it and copies `azahar.exe` into the instance
+folders. See `technical.md` **§10.1**.
 
 ## Verify a code.bin patch landed
 

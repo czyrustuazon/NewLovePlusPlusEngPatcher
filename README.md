@@ -22,7 +22,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to the finished CIA + `luma/` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
+9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
 10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
@@ -77,6 +77,7 @@ Dual isolated Azahar user dirs for LayeredFS experiments (no fighting roaming Ap
 ```powershell
 .\make.ps1 instances
 .\make.ps1 deploy-a    # default: name-input stack → instance A
+.\make.ps1 save-nene   # shared Nene title save → A and B
 .\make.ps1 launch-a
 .\make.ps1 restore-a
 ```
@@ -178,9 +179,10 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 
 | Path | Description |
 |------|-------------|
-| `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
-| `out/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` |
-| `out/luma/README.txt` | Install steps for Luma / Azahar |
+| `out/1_[Either use this-LayerFS]/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` (**or** install the CIA, not both) |
+| `out/1_[Either use this-LayerFS]/luma/README.txt` | Install steps for Luma / Azahar |
+| `out/2_[Or this]/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra (**or** use LayeredFS, not both) |
+| `out/3_but not both` | Reminder: pick LayeredFS **or** the CIA |
 | `out/logs/latest.txt` | PATCH SUMMARY from the last successful run (timestamped copies alongside) |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
@@ -188,18 +190,20 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **CIA + `luma/` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+
+**Pick one install path** (see `out/3_but not both`): LayeredFS on top of the English CIA applies the patch twice.
 
 **LayeredFS install**
 
-- **Luma (3DS):** copy `out/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
+- **Luma (3DS):** copy `out/1_[Either use this-LayerFS]/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
 - **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
 
 Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
 
 ### Known issues
 
-- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
+- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/2_[Or this]/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
 
 ---
 
@@ -291,13 +295,13 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
   → write PATCH SUMMARY log to out/logs/
-  → clean out/ (keep *.cia + luma/ + logs/; azahar_instances/ preserved)
+  → clean out/ (keep numbered LayeredFS/CIA folders + 3_but not both + logs/; azahar_instances/ preserved)
 ```
 
 CLI example (cartridge dump → English CIA):
 
 ```bash
-python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/NewLovePlusPlus-EN.cia
+python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2_[Or this]/NewLovePlusPlus-EN.cia"
 ```
 
 **Heroine names**
@@ -347,9 +351,10 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out out/Ne
 | Main Menu **rows** (Game Start, Options, …) | **5261** `Title.arc` | `deploy_title_main_menu_en.py` |
 | Gallery / Communication / Data Management homes | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
-| Softkeys Back / Next / Confirm | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` |
+| Softkeys Back / Next / Confirm / Quit / Restore Default | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` + `deploy_softkey_quit_en.py` + `deploy_softkey_defaults_en.py` |
 | Options chrome | **5245** | `deploy_msel_options_en.py` |
 | Password entry window | **5251** `OptionPassword.arc` | `deploy_optionpassword_en.py` (`Pass_Win01`) |
+| Password entry header | **5245** | `Password Input` (`Plate_Text03_05`) |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
 | “Main Menu” title string | TRB | Already EN via textresource |
@@ -412,9 +417,10 @@ README.md
 technical.md                 RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
 ab_test/
   README.md                  Azahar dual-instance workflow
-  make.ps1                   instances / seed / deploy / launch / restore
+  make.ps1                   instances / seed / deploy / launch / restore / save-nene
   setup_azahar_instances.ps1
   paths.local.ps1.example    → paths.local.ps1 (gitignored)
+  saves/nene/                shared Nene title save (`.\make.ps1 save-nene`)
 assets/
   scripts/                   finished DBIN2 XML
   images/                    finished UI PNGs (+ editor sources)
@@ -433,7 +439,7 @@ src/
   drop_zone.ps1              WinForms drop window
 tools/
   rebuild_bake_img.py        regenerate bake + TRBs from sources
-  deploy_*.py / restore_*.py / rebuild_test_cia.py
+  deploy_*.py / restore_*.py / import_azahar_save.py / rebuild_test_cia.py
   build_spotpass_inject.py   SpotPass boss info.dat for Azahar / real 3DS
   spotpass/                  archived BOSS dump + README
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
@@ -441,7 +447,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + CIA + luma/ + logs/ + azahar_instances (gitignored)
+out/                         wipeable scratch + numbered LayeredFS/CIA drops + logs/ + azahar_instances (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).

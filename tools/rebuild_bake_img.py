@@ -41,6 +41,7 @@ from nlpp_paths import (  # noqa: E402
     CACHE,
     CACHE_NEW_IMG,
     NAME_INPUT_CODE,
+    OUT_CIA,
     OVERLAY_TRB_DIR,
     RELEASE,
     TEXTRESOURCE,
@@ -62,6 +63,8 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_msel_menus_en.py",
     "deploy_confirm_btn_en.py",
     "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
+    "deploy_softkey_quit_en.py",  # 5238 やめる → Quit
+    "deploy_softkey_defaults_en.py",  # 5238 last-writer: 初期設定 → Restore Default
     "deploy_display_settings_en.py",
     "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
@@ -243,7 +246,7 @@ def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
     """Wipe deploy/pack temps under out/ after each rebuild step."""
     if keep_work:
         return
-    cleanup_out_dir(out_cia=ROOT / "out" / "NewLovePlusPlus-EN.cia", quiet=True)
+    cleanup_out_dir(out_cia=OUT_CIA, quiet=True)
 
 
 def format_rebuild_ok_lines(
@@ -575,8 +578,16 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             script = ROOT / "tools" / name
             if not script.is_file():
                 raise SystemExit(f"missing deploy script: {script}")
-            run([sys.executable, str(script)], env=env)
+            extra = (
+                ["--full"] if name == "deploy_multiwin_headers_en.py" else []
+            )
+            run([sys.executable, str(script)] + extra, env=env)
             timer.mark(f"deploy done: {name}")
+            if name == "deploy_multiwin_headers_en.py":
+                # Girlfriend Communication etc. on the live ARC. Pad short zopfli
+                # (exact_zlib); do not combine extras into the vanilla --full pass.
+                run([sys.executable, str(script)], env=env)
+                timer.mark("deploy done: deploy_multiwin_headers_en.py extras")
             cleanup_rebuild_scratch(keep_work=keep_work)
 
     if args.include_sms:

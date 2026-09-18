@@ -66,10 +66,18 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
     5244: [  # Gallery
         ("Com_M_Sel_Plate_Text02_00_00.bclim", "Gallery"),
         ("Com_M_Sel_Btn_Text02_01_00.bclim", "Event Gallery"),
-        ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_01.bclim", "Memory Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_02.bclim", "Dream After Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_03.bclim", "Trip Memory Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_04.bclim", "Drama Gallery"),
         ("Com_M_Sel_Btn_Text02_01_05.bclim", "Gallery Options"),
+        ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
         # Submenu headers (plates; MultiWin Text02_* @ 5237 is the live white strip)
         ("Com_M_Sel_Plate_Text02_01_00.bclim", "Event Gallery"),
+        ("Com_M_Sel_Plate_Text02_01_01.bclim", "Confession Memories"),
+        ("Com_M_Sel_Plate_Text02_01_02.bclim", "After the Dream"),
+        ("Com_M_Sel_Plate_Text02_01_03.bclim", "Trip Memories"),
+        ("Com_M_Sel_Plate_Text02_01_04.bclim", "Youthful Page"),
         ("Com_M_Sel_Plate_Text02_01_05.bclim", "Gallery Options"),
         ("Com_M_Sel_Plate_Text02_02_00.bclim", "Illustration Gallery"),
         ("Com_M_Sel_Btn_Text02_02_01.bclim", "Dream Gallery"),
@@ -80,11 +88,17 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
     ],
     5241: [  # Communication
         ("Com_M_Sel_Plate_Text04_00_00.bclim", "Communication"),
-        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Comm."),
+        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Btn_Text04_01_02.bclim", "Girlfriend Introduction"),
+        ("Com_M_Sel_Btn_Text04_01_03.bclim", "Double Date"),
         ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
         ("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle"),
         # Girlfriend Comm. / Wireless Battle submenu headers
-        ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Comm."),
+        # Zhoumaru Plate_Text04_01_00 is "Communication Menu"; カノジョ通信 is 01_01.
+        ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Plate_Text04_01_01.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Plate_Text04_01_02.bclim", "Girlfriend Introduction"),
+        ("Com_M_Sel_Plate_Text04_01_03.bclim", "Double Date"),
         ("Com_M_Sel_Plate_Text04_03_00.bclim", "Wireless Battle"),
     ],
     5242: [  # Data Management
@@ -94,6 +108,12 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         # Delete submenu header (DataManageDataDelete → plate family 02)
         ("Com_M_Sel_Plate_Text05_02_00.bclim", "Delete Save Data"),
     ],
+}
+
+
+# Zhoumaru Plate_Text04_01_00 is "Communication Menu". Live カノジョ通信 is 01_01.
+PNG_STEM_OVERRIDE = {
+    "Com_M_Sel_Plate_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01",
 }
 
 
@@ -156,7 +176,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
                 "NCommonMSel(8).check",
                 "NCommonMSel(9).check",
             ),
-            stem,
+            PNG_STEM_OVERRIDE.get(stem, stem),
             (w, h),
         )
     if master is not None:
@@ -376,13 +396,21 @@ def main() -> None:
 
     # Splice onto current LayeredFS (keeps Options 5245 etc.)
     try:
-        for _dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for _dest in targets:
             splice_packages_into_img(_dest, pkg_dir, pkgs, _dest)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("\ndeployed MSel EN pkgs", pkgs, "->", MOD_IMG, flush=True)
-    print("Fully quit Azahar and re-open the menu.", flush=True)
+    print("Re-open Event Gallery to reload pkg 5244.", flush=True)
     print("Rollback: img.bin.bak_pre_msel_meishi or bak_pre_msel_menus", flush=True)
 
 
