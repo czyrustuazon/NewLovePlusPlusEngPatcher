@@ -123,6 +123,32 @@ def test_romaji_copies_insert_before_makestr():
     assert memcpy_offs[0] < makestr_offs[0]
 
 
+def test_fullwidth_latin_to_ascii_abc_pack():
+    """ABC TRB pack 0x7004 is U+FF01..U+FF5E; GetCharWidthCells=2 until ASCII."""
+    assert romaji.fullwidth_latin_to_ascii("ＡＢＣ") == "ABC"
+    assert romaji.fullwidth_latin_to_ascii("ａｚ") == "az"
+    assert romaji.fullwidth_latin_to_ascii("！～") == "!~"
+    assert romaji.fullwidth_latin_to_ascii("あＡKA") == "あAKA"
+    for cp in range(0xFF01, 0xFF5F):
+        assert romaji.fullwidth_latin_to_ascii(chr(cp)) == chr(cp - 0xFEE0)
+
+
+def test_romaji_cave_converts_fullwidth_utf8():
+    """kana_to_romaji k_fw: EF BC 81..BF → ASCII-0x60, EF BD 80..9E → ASCII-0x20."""
+    blob = romaji.build_romaji_blob()
+    assert bytes.fromhex("ef0050e3") in blob  # cmp r0, #0xEF
+    assert bytes.fromhex("bc0051e3") in blob  # cmp r1, #0xBC
+    assert bytes.fromhex("bd0051e3") in blob  # cmp r1, #0xBD
+    assert bytes.fromhex("600042e2") in blob  # sub r0, r2, #0x60
+    assert bytes.fromhex("200042e2") in blob  # sub r0, r2, #0x20
+    a_utf8 = "Ａ".encode("utf-8")
+    assert a_utf8 == bytes([0xEF, 0xBC, 0xA1])
+    assert chr(a_utf8[2] - 0x60) == "A"
+    z_utf8 = "ｚ".encode("utf-8")
+    assert z_utf8 == bytes([0xEF, 0xBD, 0x9A])
+    assert chr(z_utf8[2] - 0x20) == "z"
+
+
 def test_skip_ascii_dakuten_is_inplace_strcat_branch():
     assert ascii_dakuten.PATCHED_SITE != ascii_dakuten.EXPECT_SITE
     from nlpp_paths import find_vanilla_code
