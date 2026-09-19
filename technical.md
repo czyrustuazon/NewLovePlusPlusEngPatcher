@@ -32,6 +32,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
 - **Girlfriend Comm. white header** (`カノジョ通信`) is MultiWin **5237** 192×16 ETC1A4, not the MSel plate. Full “Girlfriend Communication” fries that bar; shipped copy is **Heart to Heart** (**§12.4.1**).
+- **Profile white header** (`プロフィール`) is A8 `Plate_Text01_00_00` @ **5246** 144×28. Ship Heisei W5 on a 16px strip (same as Heart to Heart), not MPLUS and not Zhoumaru paint — **§12.4.2**.
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
 - **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
@@ -555,7 +556,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
-| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header is Heisei W5 size 15 on a 16px strip (same as Heart to Heart MultiWin, §12.4.1), centered on 144×28 — not MPLUS. Field labels stay MPLUS (`Profile` / First Name / Last Name / Birthday / M·D / Blood / Hometown) — `tools/deploy_profile_en.py` |
+| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels stay MPLUS (First Name / Last Name / Birthday / M·D / Blood / Hometown) — `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; 1× hard size 12, wide header boxes — not 4× nearest) — `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa) — `tools/deploy_profile_en.py` |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
@@ -620,11 +621,44 @@ The thin white bar on Girlfriend Communication is **not** DrawText, not TRB, and
 
 **What shipped**
 
-Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_common.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG). Profile’s A8 header (`Plate_Text01_00_00` @ **5246**) reuses that 16px Heisei strip centered on 144×28.
+Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_common.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG).
 
 Redeploy: `python tools/deploy_msel_menus_en.py --only 5241` then `python tools/deploy_multiwin_headers_en.py` (extras pass; exact-zopfli pad, splice live bake + instance A). Do **not** treat a Communications **loading** spinner as a 5237 fault — that is Azahar `OpenLinkFile` (**§10.1**).
 
 `find_ui_png` / `fit_png_to_canvas` must **never** resample a mismatched master onto dest **(192, 16)**. `contain_no_upscale` is the letterbox helper if a strip must sit on a taller plate without upscaling glyphs.
+
+#### 12.4.2 Profile white header — match Heart to Heart (2026-09-18)
+
+The Profile screen title is the same *kind* of white bar as Girlfriend Communication, but it is **not** MultiWin **5237**. Filling the 144×28 A8 plate with MPLUS made “Profile” look unlike Heart to Heart / Communication.
+
+| | |
+|--|--|
+| Live BCLIM | A8 `Com_M_Sel_Plate_Text01_00_00` @ pkg **5246**, **144×28** |
+| Shared renderer | `render_header_aa` / `chrome_font` in `deploy_common.py` (Heisei W5 index 1, ink **(68,68,68)**, `HEADER_CORE_PX=15`, `HEADER_STRIP_H=16`) |
+| Field atlas / Call / hometown | Unchanged — MPLUS hard ink + Zhoumaru chips @ **5252** |
+
+**Zhoumaru files exist but are the wrong look**
+
+| Stem | What the PNG actually is |
+|------|--------------------------|
+| `NCommonMSel.check` `Com_M_Sel_Plate_Text01_00_00` | Native 144×28 painted **Profile** (~13px). Same family as other Zhoumaru plates, **not** the Heisei Heart to Heart bar. |
+| `Profile.check` `Profile_Plate_Text01` | 128×16 **Profile** (different canvas; not the 5246 plate). |
+| `Title.check` `Profile_Plate_Text01` | Misnamed — reads **ToDoList**. |
+
+Heart to Heart skipped Zhoumaru because those stems were Network / an 8px strip (**§12.4.1**). Profile *does* have a correct-stem Zhoumaru PNG; we still font-render so the title matches the main-menu bars the player already saw.
+
+**What shipped**
+
+Paint Heisei W5 size 15 on a **16px** strip (gh **12**, same as Heart to Heart at 192×16), then center that strip on the 144×28 A8 canvas. Do **not** start `render_header_aa` at 28px tall — size 15 on the full plate would be larger than the MultiWin bar. Soft AA zopfli is **1719**; pkg **5246** ARC slot is **1725**. The old trial cap **1651** is stale — it forced `hard=True` 1-bit and undid the AA match. `patch_header_arc(..., slot_len=cmp_len)` uses the live slot.
+
+Redeploy: `python tools/deploy_profile_en.py` (bake + instance A via `_iter_splice_imgs`). Fully quit Azahar so LayeredFS reloads.
+
+**Do not**
+
+1. Re-render this header with MPLUS / JP glyph-height (`render_en_alpha` before `c6b3f9e`).
+2. `find_ui_png` the Zhoumaru Profile plate to “use the pack” — that is a different gothic than Heart to Heart.
+3. Glyph-fill `Profile_Plate_Text01` (128×16) onto 144×28.
+4. Gate the soft-AA trial on a hardcoded 1651-byte budget.
 
 ### 12.5 Exact-zlib ARC splice (Options / clock plates / softkeys)
 
@@ -863,7 +897,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
 | `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
-| `tools/deploy_profile_en.py` | Profile header + field atlas + hometown region chips |
+| `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + field atlas + hometown region chips **5252** |
 | `tools/deploy_status_stats_en.py` | Fitness / Intel / Sense / Charm |
 | `tools/deploy_todo_en.py` / `deploy_todo_hist_en.py` | To-Do submenu chrome |
 | `tools/deploy_mail_home_en.py` | Mail home |
@@ -1473,7 +1507,7 @@ See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openli
 
 ---
 
-*Last updated 2026-09-18 — §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §12.4.2 Profile header Heisei strip (match Heart to Heart); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
