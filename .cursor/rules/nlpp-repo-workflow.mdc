@@ -100,7 +100,7 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 
 - Full `img.bin` rebuild via `Image.write()`.
 - Redeploy abandoned global MakeStr cave (`patch_clock_text.py` as-is).
-- Assume OptionClock / SysPopup / MyroomHeader `optn_tex_optionmenu_05` fix every “Japanese chrome” screen.
+- Assume OptionClock / SysPopup / MyroomHeader `optn_tex_optionmenu_05` fix every “Japanese chrome” screen. Hub Options/clock titles are **5245**; the in-room overlay *does* use `optn_tex_*` (`deploy_myroom_options_en.py`).
 - Commit secrets, huge `img.bin` copies, or texture dump folders unless the user asks.
 
 ## Gold bake + Drop CIA (self-contained clone)

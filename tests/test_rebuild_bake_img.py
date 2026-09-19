@@ -19,6 +19,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_title_engpatch_en.py",
         "deploy_display_settings_en.py",
         "deploy_optionpassword_en.py",
+        "deploy_myroom_options_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -104,6 +105,28 @@ def test_multiwin_bake_runs_full_then_extras():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
     assert '["--full"] if name == "deploy_multiwin_headers_en.py"' in text
     assert "deploy_multiwin_headers_en.py extras" in text
+
+
+def test_myroom_options_after_shared_arc_writers():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    opts = scripts.index("deploy_myroom_options_en.py")
+    assert opts > scripts.index("deploy_schedule_header_en.py")
+    last_ui = max(i for i, n in enumerate(scripts) if n == "deploy_ui_buttons_en.py")
+    assert opts > last_ui
+    text = (TOOLS / "deploy_myroom_options_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "optn_tex_optionmenu_RGBA4",
+        "optn_tex_optionhyouji_RGBA4",
+        "optn_tex_optionsound_RGBA4",
+        "optn_tex_optionmenu_01",
+        "optn_tex_optionmenu_02",
+    ):
+        assert stem in text
+    skip_block = text.split("SKIP_UI_PNG", 1)[1].split("JOBS", 1)[0]
+    assert "optn_tex_optionkabegami_RGBA4" in skip_block
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+    assert "unsalted pads" in text
 
 
 def test_msel_options_omits_quit_azahar_prompt():

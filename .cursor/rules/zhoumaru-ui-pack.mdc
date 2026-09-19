@@ -35,6 +35,7 @@ Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/gar
 
 | Dump | Pkg | Why skip / replace |
 |------|-----|--------------------|
-| `Title.check/timg/Title_menu_word.png` | **5261** `Pts_Title_menu` | Vanilla BCLIM is already EN gray `(51,51,51)`. Zhoumaru RGB was swizzle trash → colorful hub header on first boot. `technical.md` **§15.1.1**. |
+| `Title.check/timg/Title_menu_word.png` | **5261** `Pts_Title_menu` | Re-render gray `(51,51,51)` “Main Menu” and RGBA4444-encode. Zhoumaru RGB was swizzle trash → colorful hub header on first boot. Magenta probe confirmed this pane. `technical.md` **§15.1.1**. |
+| `Myroom.check/timg/optn_tex_optionkabegami_RGBA4.png` | **5380** Wallpaper row | Opaque RGB is all `(0,0,0)` (filled slab). Re-render **Wallpaper**; other in-room `optn_tex_*` gray masters are good. `deploy_myroom_options_en.py`. |
 
-Before packing a `.check` A8/RGBA4444 text strip: split RGB vs alpha. If alpha looks like text and opaque RGB is noisy (high chroma, or only `(0,0,0)`/`(255,255,255)` while glyphs are not a designed 1-bit), keep vanilla or re-render RGB from alpha. Do not use `bak_pre_*` copied from packed MOD as a Title ARC source — `deploy_title_engpatch_en.py` extracts **vanilla**.
+Before packing a `.check` A8/RGBA4444 text strip: split RGB vs alpha. If alpha looks like text and opaque RGB is noisy (high chroma, or only `(0,0,0)`/`(255,255,255)` while glyphs are not a designed 1-bit), re-render RGB from alpha (or skip the dump). Do not use `bak_pre_*` copied from packed MOD as a Title ARC source — `deploy_title_engpatch_en.py` extracts **vanilla** and RGBA4444-encodes `Title_menu_word`.

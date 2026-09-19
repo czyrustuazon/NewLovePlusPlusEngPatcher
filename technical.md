@@ -249,7 +249,7 @@ Important keys for clock / softkeys:
 | `option06` | 5248 | `Option06.arc` — Y/M/D date units |
 | `dateeditbase01` / `02` | 4195 / 4196 | `DateEditBase01/02.arc` |
 | `optionclock` | 5249 | `OptionClock.arc` |
-| `myroomheader` | 5575 | `MyroomHeader.arc` — **not** Options/clock titles |
+| `myroomheader` | 5575 | `MyroomHeader.arc` — hub Options/clock titles are **5245**; in-room overlay `optn_tex_optionmenu_*` is this package |
 | `syspopup` | 5259 | `SysPopup.arc` |
 
 CESA is **not** in this map. Boot warning is `CESA_240X400.texi` inside img.bin package **90** (TEX, not BCLIM/ARC). See **§12.7**.
@@ -588,6 +588,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
+| In-room Options overlay `オプションメニュー` | ETC1A4 `optn_tex_optionmenu_RGBA4` + `optn_tex_option{hyouji,sound,jikan,real,skip,kabegami}_RGBA4` @ **5380** + header `optn_tex_optionmenu_{RGBA4,01..05}` @ **5575** | **EN** (`Options Menu` / Display / Sound / …) — Zhoumaru; `tools/deploy_myroom_options_en.py`. Not hub Options **5245**. `optionkabegami` dump is a black slab — re-render Wallpaper. Shared-ARC writers from vanilla wiped these until this last-writer. |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
 | My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status`) — `tools/deploy_mydata_en.py` |
@@ -615,7 +616,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 Button map from `OptionMenu_BindBtnTextures`:
 0. `Btn_Text03_01` Display · 1. `Btn_Text03_02` Sound · 2. `Btn_Text04_04` Network · 3. `Btn_Text03_05` Password
 
-`optn_tex_optionmenu_*` (MyroomHeader **5575**) has **no xrefs** for this screen — dead end.
+`optn_tex_optionmenu_*` (MyroomHeader **5575**) has **no xrefs** for the hub Options/clock list (**5245**) — dead end for that screen. The **in-room** overlay `オプションメニュー` does use these plus Myroom **5380** `optn_tex_option*_RGBA4` (`deploy_myroom_options_en.py`).
 
 #### 12.4.1 Girlfriend Comm. white header — Heart to Heart (2026-09-18)
 
@@ -992,6 +993,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
+| `tools/deploy_myroom_options_en.py` | In-room Options overlay `optn_tex_*` @ **5380** + **5575** (Zhoumaru; after shared-ARC writers) |
 | `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
 | `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + Call/atlas chroma AA **5252** (§12.4.4) + hometown chips (§12.4.3) |
@@ -1101,7 +1103,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Assumed git clone includes English menus | Clean machine “patched in minutes” with JP UI | `release/bake_img.bin` is **gitignored** (~680 MB); clone has sources + scripts, not the pre-baked `img.bin` |
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
 | Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) without abs BCLIM align | Title logo / chrome went **black** | Need `DarcArchive.insert_file_entry` + `rebuild_from_dir(..., align_mode="absolute")` + Pts_Copyright wire; bake now uses `deploy_title_engpatch_en.py` |
-| Packed Zhoumaru `Title_menu_word.png` + rebuilt Title.arc from `bak_pre_title_engpatch` | First hub show: **colorful tiled noise** where “Main Menu” should be; `Title_btn02_t*` rows + Eng Patch still EN | GPU dump: alpha = glyphs, RGB = swizzle garbage. Offline alpha-composite looks fine. Vanilla BCLIM is already EN gray. `bak_pre_*` was packed MOD, not vanilla — **§15.1.1** |
+| Packed Zhoumaru `Title_menu_word.png` + rebuilt Title.arc from `bak_pre_title_engpatch` | First hub show: **colorful tiled noise** where “Main Menu” should be; `Title_btn02_t*` rows + Eng Patch still EN | GPU dump: alpha = glyphs, RGB = swizzle garbage. Offline alpha-composite looks fine. Magenta probe confirmed `Pts_Title_menu`. Encode gray “Main Menu” (RGBA4444); never pack the dump. `bak_pre_*` was packed MOD, not vanilla — **§15.1.1** |
 
 **Eng Patch badge (verified standalone — do not merge into `Copyright.bclim`):**
 
@@ -1150,7 +1152,9 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 **How it landed in gold bake:** `pack_images` prefers `.check` and replaced the vanilla BCLIM. `deploy_title_engpatch_en.py` is last-writer for **5261**, but it used `img.bin.bak_pre_title_engpatch` as the Title ARC source. That bak is created from **packed** MOD (`bak.write_bytes(MOD_IMG.read_bytes())`), so the dump survived. Deploy only rewrote hub labels + `Eng_Patch`.
 
-**Fix:** Rebuild Title.arc from **vanilla** (`src_for_pkg = VANILLA`). Keep vanilla `Title_menu_word` (and vanilla `Title_Logo*` — Zhoumaru logos are still JP). Restore `assets/images/Title.check/timg/Title_menu_word.png` from the vanilla decode (gray RGB). Tests: `tests/test_title_engpatch_badge.py` (`test_title_engpatch_rebuilds_title_arc_from_vanilla`, `test_title_menu_word_png_rgb_matches_glyphs`).
+**Fix:** Rebuild Title.arc from **vanilla** (`src_for_pkg = VANILLA`). Encode `Title_menu_word` with the same `png_to_bclim_rgba4444_same_size` path as `Title_btn02_t*` (do not keep vanilla BCLIM bytes, and never pack the Zhoumaru dump). Keep vanilla `Title_Logo*` — Zhoumaru logos are still JP. Overwrite `assets/images/Title.check/timg/Title_menu_word.png` with the gray render. Tests: `tests/test_title_engpatch_badge.py` (`test_title_engpatch_rebuilds_title_arc_from_vanilla`, `test_title_menu_word_png_rgb_matches_glyphs`).
+
+**Magenta probe:** A solid `(255,0,255)` 100×20 spliced into `Title_menu_word` on bake + instance A showed magenta in-game → pane identity confirmed, and this RGBA4444 encoder is what the GPU draws. Replace the probe before shipping; do not leave magenta in `release/bake_img.bin`.
 
 **Do not:** treat this as a CESA / extra-data / §15.7 null-pane leftover; those crash or skip panes, they do not paint swizzled RGB into `Pts_Title_menu`.
 
@@ -1203,8 +1207,9 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Options chrome | **5245** | `deploy_msel_options_en.py` (+ optional opt_plates) |
 | Password entry window | **5251** | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
+| In-room Options overlay | **5380** / **5575** | `deploy_myroom_options_en.py` (`optn_tex_*`; after shared-ARC writers) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options −4 frames + TalkWindow ÷4 + voice cap, §21) |
-| “Main Menu” title string | **5261** `Title_menu_word` (`Pts_Title_menu`) | Vanilla already EN — keep vanilla BCLIM; Zhoumaru dump RGB was swizzled |
+| “Main Menu” title string | **5261** `Title_menu_word` (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode (same path as hub rows); Zhoumaru dump RGB was swizzled |
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
@@ -1583,6 +1588,7 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
 4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
 5. Optional: compact ABC grid empty slots 26–29 (Y/Z then four blanks before lowercase) — TRB pack `0x7004` leftover 6-col layout, not the spacing bug.
+6. **Romaji display, hiragana voice (2026-09-18):** gojūon keys stay Hepburn, but a tap must still bind the original hiragana so 呼ばれ方 can hit TRB **`0x7100`**. Today `insert=display` writes `akiko` and Siren never sees `あきこ`. Keep Latin on screen; store or reverse-map the kana reading for speech (and for the Called list, which currently skips the JP dictionary on pure ASCII). See `docs/sayable-names.md`.
 
 ### 17.7 ABC fullwidth Latin → ASCII (2026-09-18)
 

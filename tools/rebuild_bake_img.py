@@ -85,6 +85,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_gallery_common_en.py",  # 5153
     "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
+    "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_cesa_en.py",
