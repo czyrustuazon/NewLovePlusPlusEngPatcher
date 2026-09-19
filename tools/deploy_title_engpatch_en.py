@@ -12,10 +12,12 @@ keeps the original 14px glyph height; the project URL sits underneath.
 Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 + strong black outline (Aug 2026 confirm) so it stays readable above Konami.
 
-Hub header ``Title_menu_word`` stays vanilla (already EN gray). Zhoumaru
-``Title.check`` dump had swizzled RGB; packing it garbles first hub show
-(``technical.md`` §15.1.1). Rebuild this ARC from vanilla, never from
-``bak_pre_title_engpatch`` (that bak is packed MOD).
+Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
+the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
+``Pts_Title_menu`` shows). Zhoumaru ``Title.check`` dump had swizzled RGB;
+packing it garbles first hub show (``technical.md`` §15.1.1). Rebuild this
+ARC from vanilla, never from ``bak_pre_title_engpatch`` (that bak is packed
+MOD). Never leave a magenta probe in gold bake.
 
 Usage:
   python tools/deploy_title_engpatch_en.py
@@ -81,7 +83,11 @@ ENG_PANE_TY = 17.0  # 5px below 22; Eng bottom 4, top 30
 NUL_H = 90.0
 POS_H_TY = -95.0  # 8px below prior -87 so Eng clears Data Management
 
+# Vanilla header ink. Do not use Title.check GPU dumps for this stem.
+MENU_WORD_INK = (51, 51, 51, 255)
+
 LABELS: list[tuple[str, str]] = [
+    ("timg/Title_menu_word.bclim", "Main Menu"),
     ("timg/Title_btn02_t01.bclim", "Options"),
     ("timg/Title_btn02_t02.bclim", "Game Start"),
     ("timg/Title_btn02_t03.bclim", "Gallery"),
@@ -91,7 +97,12 @@ LABELS: list[tuple[str, str]] = [
 ]
 
 
-def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
+def render_label(
+    text: str,
+    w: int = 100,
+    h: int = 20,
+    fill: tuple[int, int, int, int] = (0, 0, 0, 255),
+) -> Image.Image:
     for size in range(13, 8, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
@@ -103,7 +114,7 @@ def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=font, fill=(0, 0, 0, 255))
+        dr.text((x, y), text, font=font, fill=fill)
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r}")
 
@@ -471,26 +482,28 @@ def main() -> int:
     darc = DarcArchive(bytearray(arc.parsed()))
     darc.extract_all(extract_dir)
 
-    # Vanilla Title_menu_word is already English gray RGBA4444. Zhoumaru's
-    # Title.check dump kept the alpha glyphs but swizzled RGB — packing it
-    # garbles the hub header (Pts_Title_menu) on first boot.
-    menu_word = extract_dir / "timg" / "Title_menu_word.bclim"
-    if not menu_word.is_file():
-        raise SystemExit("missing timg/Title_menu_word.bclim")
-    print("OK Title_menu_word.bclim kept vanilla (already EN)", flush=True)
-
     for path, en in LABELS:
         if darc.find(path) is None:
             raise SystemExit(f"missing {path}")
         raw_b = (extract_dir / path).read_bytes()
         stem = Path(path).stem
-        master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
-        rgba = Image.open(master).convert("RGBA") if master else render_label(en)
+        # Title_menu_word: never pack the Zhoumaru GPU dump (swizzled RGB).
+        # Magenta 100×20 probe showed this RGBA4444 encoder on Pts_Title_menu.
+        if stem == "Title_menu_word":
+            rgba = render_label(en, fill=MENU_WORD_INK)
+            master = None
+        else:
+            master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
+            rgba = Image.open(master).convert("RGBA") if master else render_label(en)
         png = tmp / f"{stem}.png"
         orig = tmp / f"{stem}.bclim"
         rgba.save(png)
         if master is None:
             rgba.save(ASSET / f"{stem}.png")
+        if stem == "Title_menu_word":
+            check_png = ROOT / "assets" / "images" / "Title.check" / "timg" / f"{stem}.png"
+            check_png.parent.mkdir(parents=True, exist_ok=True)
+            rgba.save(check_png)
         rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         (extract_dir / path).write_bytes(png_to_bclim_rgba4444_same_size(png, orig))
@@ -613,8 +626,17 @@ def main() -> int:
     print("DMST OK", flush=True)
 
     try:
-        for dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for dest in targets:
             splice_packages_into_img(dest, pkg_dir, [PKG], dest)
+            print(f"spliced pkg {PKG} -> {dest}", flush=True)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 

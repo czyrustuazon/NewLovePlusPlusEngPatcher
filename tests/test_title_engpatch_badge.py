@@ -65,7 +65,8 @@ def test_title_engpatch_rebuilds_title_arc_from_vanilla():
     text = (TOOLS / "deploy_title_engpatch_en.py").read_text(encoding="utf-8")
     assert "src_for_pkg = bak_title" not in text
     assert "src_for_pkg = VANILLA if VANILLA.is_file() else MOD_IMG" in text
-    assert "Title_menu_word.bclim kept vanilla" in text
+    assert '("timg/Title_menu_word.bclim", "Main Menu")' in text
+    assert "Title_menu_word.bclim kept vanilla" not in text
 
 
 def test_title_menu_word_png_rgb_matches_glyphs():
@@ -78,3 +79,5 @@ def test_title_menu_word_png_rgb_matches_glyphs():
     assert opaque, "Title_menu_word.png has no glyphs"
     chroma = sum(abs(r - g) + abs(g - b) for r, g, b in opaque) / len(opaque)
     assert chroma < 8, f"Title_menu_word RGB dump noise chroma={chroma:.1f}"
+    magenta = sum(1 for r, g, b in opaque if r > 200 and g < 40 and b > 200)
+    assert magenta == 0, "Title_menu_word probe magenta must not ship"
