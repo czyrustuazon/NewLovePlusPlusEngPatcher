@@ -12,6 +12,11 @@ keeps the original 14px glyph height; the project URL sits underneath.
 Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 + strong black outline (Aug 2026 confirm) so it stays readable above Konami.
 
+Hub header ``Title_menu_word`` stays vanilla (already EN gray). Zhoumaru
+``Title.check`` dump had swizzled RGB; packing it garbles first hub show
+(``technical.md`` §15.1.1). Rebuild this ARC from vanilla, never from
+``bak_pre_title_engpatch`` (that bak is packed MOD).
+
 Usage:
   python tools/deploy_title_engpatch_en.py
   python tools/deploy_title_engpatch_en.py --bisect-tex0   # Eng mats → Copyright tex

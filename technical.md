@@ -1004,6 +1004,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Assumed git clone includes English menus | Clean machine “patched in minutes” with JP UI | `release/bake_img.bin` is **gitignored** (~680 MB); clone has sources + scripts, not the pre-baked `img.bin` |
 | Ran `python tools\rebuild…` from inside `tools\` | `tools\tools\rebuild_bake_img.py` not found | CWD doubled the path |
 | Added `timg/Eng_Patch.bclim` + edited `Lyt_Copyright.bclyt` (DARC grow) without abs BCLIM align | Title logo / chrome went **black** | Need `DarcArchive.insert_file_entry` + `rebuild_from_dir(..., align_mode="absolute")` + Pts_Copyright wire; bake now uses `deploy_title_engpatch_en.py` |
+| Packed Zhoumaru `Title_menu_word.png` + rebuilt Title.arc from `bak_pre_title_engpatch` | First hub show: **colorful tiled noise** where “Main Menu” should be; `Title_btn02_t*` rows + Eng Patch still EN | GPU dump: alpha = glyphs, RGB = swizzle garbage. Offline alpha-composite looks fine. Vanilla BCLIM is already EN gray. `bak_pre_*` was packed MOD, not vanilla — **§15.1.1** |
 
 **Eng Patch badge (verified standalone — do not merge into `Copyright.bclim`):**
 
@@ -1031,7 +1032,30 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | `t05` | コミュニケーション | Communication |
 | `t06` | どこでもデート | Anywhere Date |
 
-(`Title_btn02_01..06` are **32×32 icons**, not labels. Header “Main Menu” is BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu` — vanilla is already EN gray RGBA4444. Do **not** pack the Zhoumaru `Title.check` dump: alpha glyphs were OK but RGB was swizzled, which garbles the hub header.)
+(`Title_btn02_01..06` are **32×32 icons**, not labels. Header “Main Menu” is BCLIM `Title_menu_word` — **§15.1.1**, not TRB.)
+
+#### 15.1.1 Hub header garbled on first boot (`Title_menu_word` RGB dump — 2026-09-18)
+
+**Symptom:** After CESA / title logo, the Main Menu hub shows a small **colorful tiled noise** strip at the top (above Game Start). Hub rows stay EN (`GAME START` / `OPTIONS` / …) and the Eng Patch badge is readable. Looks like a format/swizzle smash, not Japanese leftover.
+
+**What it is:** RGBA4444 BCLIM `timg/Title_menu_word.bclim` (100×20) in Title.arc pkg **5261**, bound by `Pts_Title_menu` onto `Lyt_Tit02` `Pos_Tit02_menu` / `Vis_Tit02_menu`. Not TRB, not DrawText, not `Title_btn02_t01..t06`.
+
+**Vanilla is already English.** Opaque pixels are gray `(51,51,51)` “Main Menu”. No localization splice was required.
+
+**Zhoumaru `Title.check/timg/Title_menu_word.png` is a bad GPU dump:**
+
+| Channel | Dump | In-game |
+|---------|------|---------|
+| Alpha | Clean “Main Menu” glyphs | Mask only |
+| RGB | Swizzled black/white noise (often just `(0,0,0)` and `(255,255,255)`) | **This is what the pic pane shows** |
+
+`decode_bclim_to_image` + alpha-composite on gray looks like a clean label (alpha hides the RGB trash). Do not trust that preview for GPU dumps. Split RGB vs alpha; if opaque chroma is high while alpha looks like text, **do not pack**.
+
+**How it landed in gold bake:** `pack_images` prefers `.check` and replaced the vanilla BCLIM. `deploy_title_engpatch_en.py` is last-writer for **5261**, but it used `img.bin.bak_pre_title_engpatch` as the Title ARC source. That bak is created from **packed** MOD (`bak.write_bytes(MOD_IMG.read_bytes())`), so the dump survived. Deploy only rewrote hub labels + `Eng_Patch`.
+
+**Fix:** Rebuild Title.arc from **vanilla** (`src_for_pkg = VANILLA`). Keep vanilla `Title_menu_word` (and vanilla `Title_Logo*` — Zhoumaru logos are still JP). Restore `assets/images/Title.check/timg/Title_menu_word.png` from the vanilla decode (gray RGB). Tests: `tests/test_title_engpatch_badge.py` (`test_title_engpatch_rebuilds_title_arc_from_vanilla`, `test_title_menu_word_png_rgb_matches_glyphs`).
+
+**Do not:** treat this as a CESA / extra-data / §15.7 null-pane leftover; those crash or skip panes, they do not paint swizzled RGB into `Pts_Title_menu`.
 
 ### 15.2 What we got right
 
@@ -1507,7 +1531,7 @@ See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openli
 
 ---
 
-*Last updated 2026-09-18 — §12.4.2 Profile header Heisei strip (match Heart to Heart); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §15.1.1 hub header RGB dump (`Title_menu_word`); §12.4.2 Profile header Heisei strip (match Heart to Heart); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 

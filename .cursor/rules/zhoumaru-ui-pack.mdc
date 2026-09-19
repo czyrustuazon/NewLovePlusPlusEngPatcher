@@ -28,3 +28,13 @@ CESA is a separate EngPatcher boot-warning texture (not Zhoumaru paint). English
 1. Look for a Zhoumaru `.check` PNG first.
 2. If missing, it is not “Zhoumaru forgot CESA-class extras” unless the asset is actually a mapped BCLIM folder.
 3. CESA questions → `patch_cesa.py` / `deploy_cesa_en.py`, not the Zhoumaru tree.
+
+## Known-bad dumps (do not pack as-is)
+
+Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/garbage RGB**. Offline decode + alpha-composite on gray looks like a clean EN label; in-game the pic pane shows the RGB noise.
+
+| Dump | Pkg | Why skip / replace |
+|------|-----|--------------------|
+| `Title.check/timg/Title_menu_word.png` | **5261** `Pts_Title_menu` | Vanilla BCLIM is already EN gray `(51,51,51)`. Zhoumaru RGB was swizzle trash → colorful hub header on first boot. `technical.md` **§15.1.1**. |
+
+Before packing a `.check` A8/RGBA4444 text strip: split RGB vs alpha. If alpha looks like text and opaque RGB is noisy (high chroma, or only `(0,0,0)`/`(255,255,255)` while glyphs are not a designed 1-bit), keep vanilla or re-render RGB from alpha. Do not use `bak_pre_*` copied from packed MOD as a Title ARC source — `deploy_title_engpatch_en.py` extracts **vanilla**.

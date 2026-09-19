@@ -17,6 +17,7 @@ When a screen stays Japanese despite EN TRB:
 6. **If TRB already EN for the same words:** wrong path (different asset or runtime buffer). Stop re-translating those keys.
 7. **If `translations.json` has EN but the screen is still the full JP sentence:** dump vanilla TRB and compare keys. A truncated JSON key (cut mid-phrase, e.g. `…デートを作` vs `…デートを作成してください。`) never matches, so rebuild keeps JP. Fix the **full** codebook string, then `deploy_name_kanji_trb.py`. Example: Anywhere Date empty list STRI **25183**.
 8. **If an ETC1A4 MultiWin 192×16 bar looks fried / pixel-y:** it is a **BCLIM**, not TRB. Zhoumaru stem may be the wrong file (Network) or an 8px strip. Full EN that is 2× Communication’s width cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, `technical.md` §12.4.1). Do not LANCZOS-fill a plate onto this bar.
+9. **If the Main Menu hub header is colorful tiled noise** (rows still EN): BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu`, not TRB. Vanilla is already EN gray. Zhoumaru `.check` dump had swizzled RGB (alpha still “Main Menu”). Split RGB vs alpha before packing GPU dumps. `technical.md` **§15.1.1**.
 
 ## Verify identity before patching
 
@@ -48,5 +49,6 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Message-speed sample line | `code.bin` `0x005D1928` | EN (`This is a text-speed test.`) + Options **14/8/2/0** + TalkWindow **10/18/22/28** + voice/script cap (`patch_message_speed.py`, §21) |
 | Extra-data recreate warning body | TRB STRI **4429** DrawText (`Tex_Sentence`) | EN in `translations.json` (not pkg **5237** `Com_Win_Warning` chrome) |
 | Anywhere Date empty list | TRB STRI **25183** DrawText (`Lyt_De0200` Opt_Win) | EN — full JP key; truncated `…デートを作` never matched |
+| Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Vanilla already EN gray — keep vanilla; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
 
 Details: `technical.md` §12.4–12.6.
