@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import zopfli.zlib as zopfli_zlib
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -27,13 +27,15 @@ from bclimutil import (  # noqa: E402
     png_to_bclim_rgba4444_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli as shared_exact_zopfli  # noqa: E402
+from exact_zlib import try_fast_exact_slot  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     HEADER_CORE_PX,
     HEADER_STRIP_H,
-    UI_FONT,
+    chrome_font,
     find_ui_png,
     iter_deploy_targets,
     render_header_aa,
@@ -44,7 +46,6 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "profile_en"
 PREV = ROOT / "out" / "profile_previews"
-FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 BG = (255, 220, 0)
 # Match JP atlas chroma ink (light cyan) — yellow is keyed out on grey bars.
 INK = (160, 210, 230)
@@ -68,18 +69,19 @@ ATLAS_LABELS: list[tuple[int, int, int, int, str]] = [
 # Drop separate "Type" under Blood (JP 血液型 split); Blood alone covers it.
 ATLAS_MD: tuple[int, int, int, int, int, int] = (110, 122, 106, 118, 144, 156)
 # Shared glyph height for main field labels (M/D stay slightly smaller).
-ATLAS_LABEL_SIZE = 12
+# Size 15 = Profile / Heart to Heart header cores (Heisei W5).
+ATLAS_LABEL_SIZE = HEADER_CORE_PX
 ATLAS_MD_SIZE = 11
 
 # Profile Call panels (yellow key + green plate + cyan ink).
 CALL_YELLOW = (255, 226, 0)
 CALL_GREEN = (49, 129, 0)
 CALL_INK = (49, 157, 255)
-# Same 1× size as field atlas; 4× nearest-downsampled glyphs were gappy.
-CALL_LABEL_SIZE = ATLAS_LABEL_SIZE
+# Same size as the Profile / Heart to Heart header; 4× nearest was gappy.
+CALL_LABEL_SIZE = HEADER_CORE_PX
 # (y0, y1, x0, x1, text) on Profile_Info_Call01_t — 苗字/名前 + 表記/呼ばれ方
 # Header boxes are wide (>100px) so they sit on yellow key, not a green slab.
-# JP 苗字/名前 ink was only ~36×14; EN "Last Name" needs ~62px at size 12.
+# JP 苗字/名前 ink was only ~36×14; EN "Last Name" needs ~70px at Heisei size 15.
 CALL01_LABELS: list[tuple[int, int, int, int, str]] = [
     (1, 14, 48, 192, "Last Name"),
     (22, 34, 17, 78, "Written"),
@@ -103,10 +105,6 @@ REGION_BUTTONS: tuple[str, ...] = tuple(
 # stay inside the rounded 80×40 pill.
 REGION_PAD_X = 6
 REGION_PAD_Y = 3
-
-
-def font(size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(str(FONT), size=size)
 
 
 # ---- A8 header (white plate) -------------------------------------------------
@@ -222,7 +220,7 @@ def render_hard_label(
     bg: tuple[int, int, int] = BG,
     ink: tuple[int, int, int] = INK,
 ) -> Image.Image:
-    """1× hard glyphs — avoids muddy soft-AA on chroma-keyed panes."""
+    """1× hard Heisei glyphs — avoids muddy soft-AA on chroma-keyed panes."""
     sizes: list[int]
     if prefer_size is not None:
         # Prefer fixed size; only shrink if the string truly won't fit.
@@ -233,7 +231,7 @@ def render_hard_label(
     for size in sizes:
         img = Image.new("RGB", (w, h), bg)
         dr = ImageDraw.Draw(img)
-        f = font(size)
+        f = chrome_font(size)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
         if tw > w - 1 or th > h:
@@ -329,7 +327,7 @@ def decode_rgb565(raw: bytes) -> tuple[Image.Image, int, int]:
 def render_call_label(
     w: int, h: int, text: str, *, plate: bool
 ) -> Image.Image:
-    """Cyan glyphs on green plate (or yellow) — 1× hard, same as field atlas."""
+    """Cyan glyphs on green plate (or yellow) — 1× hard Heisei, same as header."""
     fill = CALL_GREEN if plate else CALL_YELLOW
     return render_hard_label(
         w,
@@ -562,7 +560,12 @@ def patch_package(
     patched = patch_fn(arc_elem.parsed(), tmp, slot_len=cmp_len)
 
     if use_zopfli:
-        tuned, slot = compress_exact_zopfli(patched, cmp_len)
+        fast = try_fast_exact_slot(patched, cmp_len)
+        if fast is not None:
+            tuned, slot = fast
+            print("  hit exact-zlib fast-path", flush=True)
+        else:
+            tuned, slot = shared_exact_zopfli(patched, cmp_len)
     else:
         tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)
     do = zlib.decompressobj()

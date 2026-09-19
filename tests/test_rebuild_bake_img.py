@@ -165,15 +165,17 @@ def test_profile_call01_labels_use_1x_hard_wide_headers():
     text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
     assert '(1, 14, 48, 192, "Last Name")' in text
     assert '(77, 89, 48, 192, "First Name")' in text
-    assert "CALL_LABEL_SIZE" in text
+    assert "CALL_LABEL_SIZE = HEADER_CORE_PX" in text
+    assert "ATLAS_LABEL_SIZE = HEADER_CORE_PX" in text
+    hard_fn = text.split("def render_hard_label")[1].split("def paste_label")[0]
+    assert "chrome_font" in hard_fn
     call_fn = text.split("def render_call_label")[1].split("def make_call_en")[0]
     assert "render_hard_label" in call_fn
     assert "Resampling.NEAREST" not in call_fn
     from PIL import Image, ImageDraw, ImageFont
 
-    font = ImageFont.truetype(
-        str(TOOLS.parent / "assets" / "fonts" / "MPLUS1p-Regular.ttf"), 12
-    )
+    hei = TOOLS.parent / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
+    font = ImageFont.truetype(str(hei), 15, index=1)
     dr = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     # Inclusive box widths in CALL01_LABELS after the wide-header change.
     for label, width in (

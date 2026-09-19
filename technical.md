@@ -33,6 +33,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - **Girlfriend Comm. white header** (`カノジョ通信`) is MultiWin **5237** 192×16 ETC1A4, not the MSel plate. Full “Girlfriend Communication” fries that bar; shipped copy is **Heart to Heart** (**§12.4.1**).
 - **Profile white header** (`プロフィール`) is A8 `Plate_Text01_00_00` @ **5246** 144×28. Ship Heisei W5 on a 16px strip (same as Heart to Heart), not MPLUS and not Zhoumaru paint — **§12.4.2**.
+- **Profile hometown region chips** (`全国` / `北海道東北` / …) are RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252**, not DrawText. Zhoumaru two-line EN overflowed the rounded pills — contain-fit to the 6px inset (**§12.4.3**).
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
 - **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
@@ -556,9 +557,9 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
-| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels stay MPLUS (First Name / Last Name / Birthday / M·D / Blood / Hometown) — `tools/deploy_profile_en.py` |
-| Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; 1× hard size 12, wide header boxes — not 4× nearest) — `tools/deploy_profile_en.py` |
-| Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa) — `tools/deploy_profile_en.py` |
+| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels are the same Heisei W5 size 15 1× hard crush (First Name / Last Name / Birthday / M·D / Blood / Hometown) — `tools/deploy_profile_en.py` |
+| Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; Heisei W5 size 15 1× hard, wide header boxes — not 4× nearest) — `tools/deploy_profile_en.py` |
+| Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
@@ -635,7 +636,7 @@ The Profile screen title is the same *kind* of white bar as Girlfriend Communica
 |--|--|
 | Live BCLIM | A8 `Com_M_Sel_Plate_Text01_00_00` @ pkg **5246**, **144×28** |
 | Shared renderer | `render_header_aa` / `chrome_font` in `deploy_common.py` (Heisei W5 index 1, ink **(68,68,68)**, `HEADER_CORE_PX=15`, `HEADER_STRIP_H=16`) |
-| Field atlas / Call / hometown | Unchanged — MPLUS hard ink + Zhoumaru chips @ **5252** |
+| Field atlas / Call / hometown | Call01/02 + field atlas use the same Heisei W5 **size 15** 1× hard crush as the header (`chrome_font` in `render_hard_label`). RGB565 still keys yellow; do not ship soft AA. Hometown chips stay Zhoumaru @ **5252** — **§12.4.3**. |
 
 **Zhoumaru files exist but are the wrong look**
 
@@ -659,6 +660,41 @@ Redeploy: `python tools/deploy_profile_en.py` (bake + instance A via `_iter_spli
 2. `find_ui_png` the Zhoumaru Profile plate to “use the pack” — that is a different gothic than Heart to Heart.
 3. Glyph-fill `Profile_Plate_Text01` (128×16) onto 144×28.
 4. Gate the soft-AA trial on a hardcoded 1651-byte budget.
+
+#### 12.4.3 Profile hometown region chips (2026-09-18)
+
+The Hometown dropdown (`▼全国` / `北海道東北` / `関東` / …) is **not** DrawText and **not** TRB. It is RGBA4444 text overlays on rounded pills.
+
+| | |
+|--|--|
+| Live BCLIM | `Profile_Btn_Com02_Text01..08` @ pkg **5252**, **64×24** fmt **8** |
+| Pill chrome | `Profile_Btn_Com02_Color` is ETC1A4 **80×40**; text sits in the inner 64×24 |
+| Masters | Zhoumaru `Profile.check/timg/Profile_Btn_Com02_Text01.png` … `Text08` |
+| Deploy | `fit_region_png` in `tools/deploy_profile_en.py` then exact-zlib splice **5252** |
+
+| Stem | EN (Zhoumaru) | Notes |
+|------|----------------|-------|
+| Text01 / Text02 | ▼/▲ Nation | Collapsed / expanded `全国` |
+| Text03 | Hokkaido Tohoku | Two-line |
+| Text04 | Kanto | One-line; already fit |
+| Text05 | Chubu | One-line; already fit |
+| Text06 | Kinki | One-line; already fit |
+| Text07 | Chugoku Shikoku | Two-line |
+| Text08 | Kyushu Okinawa | Two-line |
+
+Vanilla JP (even 北海道東北) is **one line**, glyph box **52×12**, **6px** pad on every side of the 64×24 overlay. Zhoumaru two-line paint filled ~55×21 (pad ~4–5 / 1–2), so Hokkaido / Chugoku / Kyushu clipped the rounded 80×40 pill.
+
+**What shipped**
+
+Keep Zhoumaru paint. `fit_region_png` contain-scales any glyph bbox that exceeds inner **52×18** (`REGION_PAD_X=6`, `REGION_PAD_Y=3`) and recenters it. Kanto / Chubu / Kinki stay native. Do **not** font-render these chips (Heisei two-line is a different gothic than the pack).
+
+Redeploy: `python tools/deploy_profile_en.py` (bake + instance A). Gold PNG pack still skipped these — they only land via this deploy.
+
+**Do not**
+
+1. Canvas-fill the 64×24 overlay with two-line EN (clips the pill).
+2. Treat this list as StreetPass / Card / TownVoice (wrong packages).
+3. LANCZOS-fill onto a different canvas size; the BCLIM is already 64×24.
 
 ### 12.5 Exact-zlib ARC splice (Options / clock plates / softkeys)
 
@@ -897,7 +933,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
 | `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
-| `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + field atlas + hometown region chips **5252** |
+| `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + field atlas + hometown region chips **5252** (§12.4.3) |
 | `tools/deploy_status_stats_en.py` | Fitness / Intel / Sense / Charm |
 | `tools/deploy_todo_en.py` / `deploy_todo_hist_en.py` | To-Do submenu chrome |
 | `tools/deploy_mail_home_en.py` | Mail home |
@@ -1531,7 +1567,7 @@ See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openli
 
 ---
 
-*Last updated 2026-09-18 — §15.1.1 hub header RGB dump (`Title_menu_word`); §12.4.2 Profile header Heisei strip (match Heart to Heart); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §12.4.3 Profile hometown region chips (Zhoumaru 5252, 6px pill inset); §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
