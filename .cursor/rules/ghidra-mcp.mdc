@@ -37,6 +37,7 @@ alwaysApply: true
 | Options button BCLIM bind | `OptionMenu_BindBtnTextures` @ `001eb3dc` |
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
+| MultiWin white-bar bind | `FUN_00255a18` @ `00255a18` (table ~`0x6c3f9c`; GF Comm = `Text04_01_00`) |
 | Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options preview 18/12/6/0 → 14/8/2/0) |
 | Message Speed typewriter tick | `FUN_002d544c` @ `002D544C` (Options widget `+0x24` delay, `0` = instant) |
 | TalkWindow delay table | `0x006E3024` (40/70/90/110/220 → 10/18/22/28/55; index via `FUN_002d8874`) |

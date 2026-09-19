@@ -38,7 +38,7 @@ Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 | Script | Pkg(s) |
 |--------|--------|
 | `deploy_msel_options_en.py` | **5245** Options/clock plates |
-| `deploy_msel_menus_en.py` | 5244/5241/5242 |
+| `deploy_msel_menus_en.py` | 5244/5241/5242 (+ GF Comm./Intro/Date rows `Btn_Text04_01_04..10`) |
 | `deploy_confirm_btn_en.py` | **5238** Confirm `OK` |
 | `deploy_softkey_quit_en.py` | **5238** Quit `やめる` → `Quit` |
 | `deploy_softkey_defaults_en.py` | **5238** Restore Default `初期設定` `Com_btn_sy01` (live ARC; after Quit) |

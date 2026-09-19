@@ -27,11 +27,11 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**; title-loop NX abort **§15.7**).
-- Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers`): **§12.5.3**.
+- Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers` + zopfli pad; typically under an hour): **§12.5.3**.
 
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
-- SpotPass boot inject (Azahar HLE + real 3DS): **§16**. Do not look for it in the StreetPass Communication menu.
+- **Girlfriend Comm. white header** (`カノジョ通信`) is MultiWin **5237** 192×16 ETC1A4, not the MSel plate. Full “Girlfriend Communication” fries that bar; shipped copy is **Heart to Heart** (**§12.4.1**).
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
 - **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
@@ -508,6 +508,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 4. **True runtime DrawText** (help/error lines, some titles): `DrawTextToPane` / MakeStr. Nuclear test: force all DrawText → if chrome stays JP, it’s textures.
 5. **List/quest titles already EN but clipped:** TRB string too long for the capsule — **shorten EN** (pane font is global). See §12.6 (To-Do STRI 2837).
 6. **TRB already EN for the same words:** wrong path (different asset or runtime buffer). Stop re-translating those keys.
+7. **ETC1A4 MultiWin 192×16 bar fried or pixel-y:** BCLIM, not TRB. Zhoumaru stem may be Network or an 8px strip. Full EN 2× as wide as Communication cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, **§12.4.1**). Never LANCZOS-fill a plate onto this bar.
 
 ### 12.2 Verify identity before patching
 
@@ -531,7 +532,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Confirm `決定` | ETC1A4 BCLIM `Com_btn_k01_b{,ON}` @ **5238** | Deployed (`OK`) — `tools/deploy_confirm_btn_en.py` |
 | Quit `やめる` | ETC1A4 BCLIM `Com_btn_y01_b{,ON}` @ **5238** | Deployed (`Quit`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_quit_en.py` (Save Export confirm, shared) |
 | Clock header `３ＤＳ本体時計` | A8 BCLIM `Com_M_Sel_Plate_Text03_06_00` (+ `_01`) @ **5245** | **EN verified** (`3DS System Clock`) |
-| Options header + buttons + Display/Sound plates | A8 BCLIM Text03 / Text04_04 @ **5245** | **EN** (Options / Display Settings / Sound Settings / Network / Password + plates) — `tools/deploy_msel_options_en.py` |
+| Options header + buttons + Display/Sound plates | A8 BCLIM Text03 / Text04_04 @ **5245** | **EN** (Options / Display Settings / Sound Settings / Network / Password + **Communication Settings** plate) — `tools/deploy_msel_options_en.py` / `deploy_msel_opt_plates_en.py` |
 | Password entry window `パスワード` | ETC1A4 `Pass_Win01` @ OptionPassword **5251** | **EN** (`Password`) — `tools/deploy_optionpassword_en.py` (Zhoumaru; not DrawText) |
 | Password entry header `パスワード入力` | A8 rewrite of `Com_M_Sel_Plate_Text03_05_00` @ **5245** (`OptionMenu_BindPlateTextures` slot 5) | **EN** (`Password Input`) — Zhoumaru. Vanilla plate is ETC1A4 and misses the slot; encode as A8 like the other Options plates. MultiWin `Text03_05` @ **5237** is a different bind (`FUN_00255a18` idx 0x1f), not this screen. |
 | Display Settings panel | RGBA4444 `Opt_TxtItem_{Help,Message}` + `Opt_HelpBtn_{A,B}_*` @ Option **5247** | **EN** (`Help Display` / `Message Speed` / `Every Time` / `Once`) — `tools/deploy_display_settings_en.py` |
@@ -548,7 +549,9 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Girlfriend Comm. / Business Card / Wireless Battle) |
-| Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` @ **5237** + A8 `Com_M_Sel_Plate_Text04_01_01` @ **5241** | Zhoumaru `NCommonMSel(7).check` plate **Girlfriend Communication**. MultiWin/plate `01_00` PNGs are Network / Communication Menu — do not use. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
+| Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | A8 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
+| Girlfriend Introduction / Double Date rows | A8 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
+| Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Menu row stays **Girlfriend Communication**. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
@@ -573,6 +576,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | `001eb3dc` | `OptionMenu_BindBtnTextures` | Wires 4 Options buttons |
 | `0020ad74` | `BindMSelBtnIconAndText` | Loads icon+text BCLIM by filename |
 | `0020bcc0` | `OptionMenu_BindPlateTextures` | Plate header/text; slot **6** = clock title |
+| `00255a18` | MultiWin header bind | Filename table ~`0x6c3f9c`; Girlfriend Comm. bar = `Text04_01_00` |
 | `0016f338` | `CesaLogo` ctor | `+0x60` / `+0x64` constructor IDs (pkg **90** TEXI, **1-based**) |
 | `0016ec1c` | `CesaLogo` state 2 | `FUN_005af3ac` bind; `0x5A0008` 400×400 stub quad @ `0x0016ed84` |
 | `00598ff4` | TEXI lookup | `(id & 0xffff) - 1` → TEXI index |
@@ -581,6 +585,44 @@ Button map from `OptionMenu_BindBtnTextures`:
 0. `Btn_Text03_01` Display · 1. `Btn_Text03_02` Sound · 2. `Btn_Text04_04` Network · 3. `Btn_Text03_05` Password
 
 `optn_tex_optionmenu_*` (MyroomHeader **5575**) has **no xrefs** for this screen — dead end.
+
+#### 12.4.1 Girlfriend Comm. white header — Heart to Heart (2026-09-18)
+
+The thin white bar on Girlfriend Communication is **not** DrawText, not TRB, and **not** the 144×28 MSel plate that `find_ui_png` prefers by filename.
+
+| | |
+|--|--|
+| Bind | `FUN_00255a18` table ~`0x6c3f9c`; `Text04_01_00` pointer @ file `0x006c4030` |
+| Live BCLIM | ETC1A4 `Com_MultiWin_W01_Text04_01_00` (+ sibling `01_01`) @ pkg **5237**, **192×16** |
+| Home-menu row | A8 `Com_M_Sel_Btn_Text04_01_01` @ **5241** (Zhoumaru; stays **Girlfriend Communication**) |
+| Help blurb | TRB DrawText (shortened to five lines in `53010b1`; not this bar) |
+
+**Zhoumaru files do not match the live bar**
+
+| Stem | What the PNG actually is |
+|------|--------------------------|
+| MultiWin `Text04_01_00` | **Network** (wrong screen) |
+| MultiWin `Text04_01_01` | Cramped **8px-tall** 192×16 strip of the long EN title |
+| MSel `Plate_Text04_01_01` | Same 192×16 strip, while the live plate BCLIM is **144×28** |
+
+`Communication` / `Double Date` look smooth because Zhoumaru painted them **native 192×16** with ~13px glyph height, dark ink **(68,68,68)**, and a few gray AA ramps (~989 ink px, bbox ~48–142). ETC1 4×4 blocks keep those cores.
+
+**What failed (do not repeat)**
+
+1. Canvas-fit / glyph-fill the 8px plate onto the 192×16 bar (LANCZOS + threshold = “deep fried”).
+2. Override `01_00` → `01_01` and ship that cramped strip as-is (still fried).
+3. Letterbox-contain `01_01` onto the 144×28 plate (readable but tiny).
+4. Self-render the **full** phrase `Girlfriend Communication` at 192×16:
+   - MPLUS 2× bilinear, white RGB: max alpha ~216, ~11px, ETC1 eats hairlines (“broken lined”).
+   - Heisei W5 1-bit + 4× dilate + nearest: readable, but chunkier than Communication. That is the **format ceiling** for ~24 letters on this bar.
+
+**What shipped**
+
+Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_multiwin_headers_en.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG).
+
+Redeploy: `python tools/deploy_msel_menus_en.py --only 5241` then `python tools/deploy_multiwin_headers_en.py` (extras pass; exact-zopfli pad, splice live bake + instance A). Do **not** treat a Communications **loading** spinner as a 5237 fault — that is Azahar `OpenLinkFile` (**§10.1**).
+
+`find_ui_png` / `fit_png_to_canvas` must **never** resample a mismatched master onto dest **(192, 16)**. `contain_no_upscale` is the letterbox helper if a strip must sit on a taller plate without upscaling glyphs.
 
 ### 12.5 Exact-zlib ARC splice (Options / clock plates / softkeys)
 
@@ -628,7 +670,7 @@ Rollbacks: `img.bin.bak_pre_<feature>` under LayeredFS `romfs/`.
 
 #### 12.5.3 Cold PNG-pack speedup (2026-09-05)
 
-Historical first-run gold bake was **~16 hours**, dominated by sequential **zopfli** exact-length searches (one heavy compress per binary-search / near-miss trial per changed ARC element). Two changes cut that without relaxing slot constraints:
+Historical first-run gold bake was **~16 hours**, dominated by sequential **zopfli** exact-length searches (one heavy compress per binary-search / near-miss trial per changed ARC element). Three changes cut that without relaxing slot constraints:
 
 **A. Empty-block / zlib before zopfli** (`src/exact_zlib.py`)
 
@@ -656,15 +698,20 @@ python src/pack_images.py --pkg-workers 1          # sequential packages (debug)
 python tools/rebuild_bake_img.py --rom game.cia --pkg-workers 4
 ```
 
+**C. Closed-stream zopfli pad (2026-09-15)** (`src/exact_zlib.py`)
+
+When zopfli comes in *short* of the slot, pad the finished stream at EOB with empty deflate blocks instead of burning CPU on 256 near-miss trials (the old 56-byte-undershoot stall). Still only then binary-search salt / bounded near-miss.
+
 Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on how many ARCs miss the zlib fast path (tight ETC1A4 softkeys still often need zopfli).
 
-**Live elapsed timer:** `pack_images`, `rebuild_bake_img`, and `patch_cia` print ``[timer]`` lines — start wall-clock, stage marks, a heartbeat every 60s while still running, and ``[timer] total …`` at finish. Watch those for actual runtime (do not rely on a fixed hour estimate).
+**Live elapsed timer:** `pack_images`, `rebuild_bake_img`, and `patch_cia` print ``[timer]`` lines — start wall-clock, stage marks, a heartbeat every 60s while still running, and ``[timer] total …`` at finish. Watch those for actual runtime (do not rely on a fixed hour estimate). Gold rebuild also writes the wall-clock total to `[rebuild] OK` and `out/logs/rebuild_*.txt`.
 
 **Ballpark (cold, no bake cache) — engineering estimate only:**
 
 | Machine | Cold full gold rebuild (`rebuild_bake_img.py`) |
 |---------|--------------------------------------------------|
-| Typical modern multi-core desktop (e.g. 8-core / `--pkg-workers` default) | Often **~2–4 hours** end-to-end if many ARCs hit the zlib fast path |
+| High-thread desktop (e.g. 32-thread / `--pkg-workers` default) | Measured **~27 min** end-to-end (2026-09-18) |
+| Typical modern multi-core desktop (e.g. 8-core / `--pkg-workers` default) | Often **under an hour** if many ARCs hit the zlib fast path |
 | Low-core / `--pkg-workers 1` | Longer — can still approach historical ~16h if every tight ARC hits zopfli |
 | Warm `cache/img_pack/` + bake present | **Minutes** (Drop CIA reuses bake) |
 
@@ -976,7 +1023,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **If `release/bake_img.bin` is missing or `release/bake_stamp.txt` does not match this RC**, Drop rebuilds from this tree **from scratch** (no `cache/img_pack`, leftover bake overwritten). Same-RC stamped bake is reused. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
-4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). As of 2026-09-05, empty-block-first + `--pkg-workers` ProcessPool → expect **~2–4 hours** total on a typical multi-core desktop (§12.5.3); leave the window open and watch `[exact-zlib]` / `[pack]` progress.
+4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine, 2026-09-18; §12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
    Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
@@ -1004,7 +1051,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the ~2–4h first run (historically ~16h sequential zopfli) when that infra exists.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the first local pack (typically under an hour; historically ~16h sequential zopfli) when that infra exists.
 
 #### What git contains vs what a patched CIA needs
 
@@ -1282,7 +1329,7 @@ a/b guide: **`ab_test/README.md`**.
 | 1b | Attach/FindPane null child | `src/patch_lyt_null_pane.py` | Title hub loop NX abort — skip attach if child/parent is 0; skip `FindPaneByName` `BLX r3` if node/`+0x2C` is 0 (**§15.7**) |
 | 2 | SetDisplayMode +0x10 guard | `src/patch_input_candidate_nullguard.py` | Guard `0x1fbc08` / `0x1fbd24` |
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
-| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; cave `@0x0068F900` (last .text page) |
+| 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; ABC fullwidth→ASCII (**§17.7**); cave `@0x0068F900` |
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
@@ -1291,7 +1338,7 @@ a/b guide: **`ab_test/README.md`**.
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
-**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower still show Latin; name length still ≤8 chars.
+**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower insert **ASCII** (not fullwidth `Ａ`); name length still ≤8 chars.
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
@@ -1314,7 +1361,9 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 | `Pane_AttachToParent` call (create path) | `0x1fa790` |
 | `NameInput_RedrawKeyboard` | `0x1fa81c` |
 | `NameInput_FillKeyboard_Kanji` | `0x1fa918` (tail before shared epilogue `0x1faa20`) |
+| `NameInput_FillKeyboard_ABC` | `0x1fab9c` (mode 4; pack `0x7004`) |
 | `NameInput_OnCellTap` | `0x1faee4` |
+| `GetCharWidthCells` | `0x005c0748` (ASCII `< 0x80` → 1, else 2; used by `DrawTextToPane`) |
 | `NameInput_SetDisplayMode` | `0x1fba38` |
 | `NameInput_FillCandidates` | `0x1fb438` (tail `strb +0x44=1` @ `0x1fb724`) |
 | `NameInput_FillGridFromResourceTable` | (fills all 60 from TRB when tick allows) |
@@ -1375,6 +1424,15 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 2. Name length — 8-char pane budget vs multi-letter Hepburn syllables.
 3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
 4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
+5. Optional: compact ABC grid empty slots 26–29 (Y/Z then four blanks before lowercase) — TRB pack `0x7004` leftover 6-col layout, not the spacing bug.
+
+### 17.7 ABC fullwidth Latin → ASCII (2026-09-18)
+
+ABC/Symbols TRB pack **`0x7004`** (`NameInput_FillKeyboard_ABC` `@0x001fab9c`; mode-4 packs at file `0x006c2d48`) is U+FF01–U+FF5E (`Ａ` not `A`). `GetCharWidthCells` `@0x005C0748` (from `DrawTextToPane`) returns **2** for those codepoints (ASCII `< 0x80` → 1), so First Name and in-game DrawText look like `A B C`. Do **not** change `GetCharWidthCells` globally.
+
+`kana_to_romaji` (`patch_input_romaji.py` cave `@0x0068F900`) maps that UTF-8 (`EF BC 81..BF` / `EF BD 80..9E`) to ASCII **before** the DrawCell copy into `obj+idx*8+0x541`. `NameInput_OnCellTap` copies that slot into `+0x46`; strcat-raw joins the save string. New ABC names are packed halfwidth everywhere DrawText runs (profile field + dialogue tags). Re-enter an already-saved fullwidth name to convert it.
+
+Tests: `tests/test_name_input_caves.py` (`test_fullwidth_latin_to_ascii_abc_pack`, `test_romaji_cave_converts_fullwidth_utf8`). Rebuild: `python tools/deploy_name_input_en.py --src <code.bin.bak> --out release/name_input_code.bin`.
 
 | Symbol | File |
 |--------|------|
@@ -1413,7 +1471,7 @@ See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openli
 
 ---
 
-*Last updated 2026-09-18 — §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 

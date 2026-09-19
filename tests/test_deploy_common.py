@@ -60,9 +60,96 @@ def test_find_ui_png_fits_mismatched_size(tmp_path, monkeypatch):
 
     monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
     got = deploy_common.find_ui_png(("Title.check",), "Eng_Patch", (218, 14))
-    assert got == png
+    assert got != png
     with Image.open(png) as im:
+        assert im.size == (50, 10)
+    with Image.open(got) as im:
         assert im.size == (218, 14)
+
+
+def test_find_ui_png_fills_small_strip_glyphs(tmp_path, monkeypatch):
+    from PIL import Image
+
+    assets = tmp_path / "assets" / "images" / "NCommon.check" / "timg"
+    assets.mkdir(parents=True)
+    png = assets / "Com_M_Sel_Plate_Text02_01_01.png"
+    src = Image.new("RGBA", (192, 16), (0, 0, 0, 0))
+    # 8px-tall ink, same as Zhoumaru's 192×16 Confession Memories master.
+    for y in range(4, 12):
+        for x in range(55, 137):
+            src.putpixel((x, y), (255, 255, 255, 255))
+    src.save(png)
+
+    monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
+    got = deploy_common.find_ui_png(
+        ("NCommon.check",), "Com_M_Sel_Plate_Text02_01_01", (144, 28)
+    )
+    assert got != png
+    with Image.open(png) as im:
+        assert im.size == (192, 16)
+    with Image.open(got) as im:
+        assert im.size == (144, 28)
+        bbox = im.getchannel("A").getbbox()
+    assert bbox is not None
+    gh = bbox[3] - bbox[1]
+    # 144×28 plate is width-limited for "Confession Memories"; 14px matches
+    # sibling Event Gallery (~15px) instead of the 8px letterboxed strip.
+    assert gh >= 12, f"glyph height {gh} still letterboxed"
+
+
+def test_find_ui_png_same_size_strip_not_stretched(tmp_path, monkeypatch):
+    from PIL import Image
+
+    assets = tmp_path / "assets" / "images" / "NCommon.check" / "timg"
+    assets.mkdir(parents=True)
+    png = assets / "Com_MultiWin_W01_Text04_01_01.png"
+    src = Image.new("RGBA", (192, 16), (0, 0, 0, 0))
+    for y in range(4, 12):
+        for x in range(55, 137):
+            src.putpixel((x, y), (255, 255, 255, 255))
+    src.save(png)
+
+    monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
+    got = deploy_common.find_ui_png(
+        ("NCommon.check",), "Com_MultiWin_W01_Text04_01_01", (192, 16)
+    )
+    assert got == png
+
+
+def test_find_ui_png_does_not_upscale_onto_multiwin_bar(tmp_path, monkeypatch):
+    from PIL import Image
+
+    assets = tmp_path / "assets" / "images" / "NCommonMSel(7).check" / "timg"
+    assets.mkdir(parents=True)
+    png = assets / "Com_M_Sel_Plate_Text04_01_01.png"
+    src = Image.new("RGBA", (144, 28), (0, 0, 0, 0))
+    for y in range(10, 18):
+        for x in range(20, 120):
+            src.putpixel((x, y), (255, 255, 255, 255))
+    src.save(png)
+
+    monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
+    got = deploy_common.find_ui_png(
+        ("NCommonMSel(7).check",), "Com_M_Sel_Plate_Text04_01_01", (192, 16)
+    )
+    assert got is None
+
+
+def test_contain_no_upscale_does_not_blow_up_strip(tmp_path):
+    from PIL import Image
+
+    png = tmp_path / "strip.png"
+    src = Image.new("RGBA", (192, 16), (0, 0, 0, 0))
+    for y in range(4, 12):
+        for x in range(40, 150):
+            src.putpixel((x, y), (255, 255, 255, 255))
+    src.save(png)
+    got = deploy_common.contain_no_upscale(png, (144, 28))
+    assert got.size == (144, 28)
+    bbox = got.getchannel("A").getbbox()
+    assert bbox is not None
+    gh = bbox[3] - bbox[1]
+    assert gh <= 16, f"glyph height {gh} was upscaled onto 144x28"
 
 
 def test_ui_font_missing_exits(tmp_path: Path, monkeypatch):

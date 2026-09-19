@@ -37,6 +37,8 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "multiwin_headers_en"
 FONT = UI_FONT
+HEISEI_W5 = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
+HEADER_INK = (68, 68, 68)
 PKG = 5237
 
 # FUN_00255a18 idx → MultiWin text (table @ ~0x6c3f9c)
@@ -56,7 +58,7 @@ HEADER_LABELS = [
     ("timg/Com_MultiWin_W01_Text03_05_00.bclim", "Password Input"),
     # Communication (Text04)
     ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),  # 0x11
-    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Girlfriend Communication"),  # 0x12
+    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Heart to Heart"),  # 0x12 カノジョ通信
     ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),  # 0x16
     ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle"),  # 0x17
     # Data Management
@@ -65,16 +67,16 @@ HEADER_LABELS = [
 # Incremental: Communication substrips on the live ARC only.
 # Vanilla+zopfli of extras together with the Gallery --full pass is a bad
 # compress path; the Communications *loading* hang was Azahar OpenLinkFile (§10.1).
-# Text04_01_00 is the カノジョ通信 white bar. Zhoumaru's 01_00 PNG is Network —
-# use 01_01 (Girlfriend Communication) instead.
+# Text04_01_00 is the カノジョ通信 white bar. Zhoumaru MultiWin 01_00 is Network;
+# 01_01 PNG is a cramped 8px strip — skip both and font-render "Heart to Heart".
 EXTRA_LABELS = [
     ("timg/Com_MultiWin_W01_Text02_01_01.bclim", "Confession Memories"),
     ("timg/Com_MultiWin_W01_Text02_01_02.bclim", "After the Dream"),
     ("timg/Com_MultiWin_W01_Text02_01_03.bclim", "Trip Memories"),
     ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Youthful Page"),
     ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),
-    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Girlfriend Communication"),
-    ("timg/Com_MultiWin_W01_Text04_01_01.bclim", "Girlfriend Communication"),
+    ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Heart to Heart"),
+    ("timg/Com_MultiWin_W01_Text04_01_01.bclim", "Heart to Heart"),
     ("timg/Com_MultiWin_W01_Text04_01_02.bclim", "Introduction"),
     ("timg/Com_MultiWin_W01_Text04_01_03.bclim", "Double Date"),
     ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),
@@ -82,15 +84,13 @@ EXTRA_LABELS = [
     ("timg/Com_MultiWin_W01_Text04_04_00.bclim", "Communication Settings"),
     ("timg/Com_MultiWin_W01_Text03_05_00.bclim", "Password Input"),
 ]
-# MultiWin Text02_01_01 PNG is "Friend's Memory"; the live 告白までの思い出
-# bar is Zhoumaru's MSel plate "Confession Memories". Same for Trip / Youthful.
-PNG_STEM_OVERRIDE = {
-    "Com_MultiWin_W01_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01",
-    "Com_MultiWin_W01_Text04_01_01": "Com_M_Sel_Plate_Text04_01_01",
-    "Com_MultiWin_W01_Text02_01_01": "Com_M_Sel_Plate_Text02_01_01",
-    "Com_MultiWin_W01_Text02_01_02": "Com_M_Sel_Plate_Text02_01_02",
-    "Com_MultiWin_W01_Text02_01_03": "Com_M_Sel_Plate_Text02_01_03",
-    "Com_MultiWin_W01_Text02_01_04": "Com_M_Sel_Plate_Text02_01_04",
+# MultiWin Text02_01_01 PNG is "Friend's Memory"; keep that painted strip
+# rather than stretching MSel "Confession Memories" to fill 192×16.
+# カノジョ通信 header: skip Zhoumaru 01_00 (Network) and 01_01 (8px strip).
+PNG_STEM_OVERRIDE: dict[str, str] = {}
+SKIP_UI_PNG = {
+    "Com_MultiWin_W01_Text04_01_00",
+    "Com_MultiWin_W01_Text04_01_01",
 }
 UI_PNG_FOLDERS = ("NCommon.check", "NCommonMSel(4).check", "NCommonMSel(7).check")
 
@@ -102,6 +102,13 @@ VANILLA_CANDIDATES = [
 
 def font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONT), size=size)
+
+
+def chrome_font(size: int) -> ImageFont.FreeTypeFont:
+    """Heisei Gothic P-face when present (same as other NL++ chrome)."""
+    if HEISEI_W5.is_file():
+        return ImageFont.truetype(str(HEISEI_W5), size=size, index=1)
+    return font(size)
 
 
 def all_interfile_gaps(data: bytes) -> list[tuple[int, int]]:
@@ -135,21 +142,52 @@ def exact_slot(data: bytes, exact_len: int, *, zero_gaps: bool) -> tuple[bytes, 
     return compress_exact_zopfli(data, exact_len)
 
 
-def render_header_label(w: int, h: int, text: str) -> Image.Image:
+def render_header_label(w: int, h: int, text: str, *, max_size: int | None = None) -> Image.Image:
     """White alpha text for MultiWin ETC1A4 header strip."""
-    for size in range(min(15, h + 2), 7, -1):
+    top = max_size if max_size is not None else min(15, h + 2)
+    for size in range(top, 7, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
         dr = ImageDraw.Draw(big)
         f = font(size * scale)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w * scale - 4:
+        if tw > w * scale - 8:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
         dr.text((x, y), text, font=f, fill=(255, 255, 255, 255))
         return big.resize((w, h), Image.Resampling.BILINEAR)
+    raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
+
+
+def render_header_aa(w: int, h: int, text: str, *, max_size: int | None = None) -> Image.Image:
+    """Dark gray AA like Zhoumaru Communication / Double Date.
+
+    Short titles (Heart to Heart) keep ~13px cores so ETC1A4 does not fry them.
+    """
+    import numpy as np
+
+    top = max_size if max_size is not None else min(15, h + 2)
+    for size in range(top, 7, -1):
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = chrome_font(size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > w * scale - 8:
+            continue
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        alpha = np.array(big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32)
+        peak = float(alpha.max())
+        if peak > 0:
+            alpha = np.clip(alpha * (255.0 / peak), 0, 255)
+        a = alpha.astype(np.uint8)
+        rgb = Image.new("RGB", (w, h), HEADER_INK)
+        return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
     raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
 
 
@@ -230,10 +268,28 @@ def main() -> None:
         orig = tmp / f"{Path(path).stem}.bclim"
         orig.write_bytes(raw)
         stem = Path(path).stem
-        master = find_ui_png(
-            UI_PNG_FOLDERS, PNG_STEM_OVERRIDE.get(stem, stem), (w, h)
-        )
-        rgba = Image.open(master).convert("RGBA") if master else render_header_label(w, h, en)
+        master = None
+        if stem not in SKIP_UI_PNG:
+            master = find_ui_png(
+                UI_PNG_FOLDERS, PNG_STEM_OVERRIDE.get(stem, stem), (w, h)
+            )
+            # MultiWin bars are 192×16 pixel paint. Scaled `_ui_png_fit` copies
+            # come out deep-fried after ETC1A4.
+            if master is not None:
+                fitted = "_ui_png_fit" in Path(master).parts
+                with Image.open(master) as im:
+                    native = im.size == (w, h)
+                if fitted or not native:
+                    print(f"  skip scaled {master.name} for {stem}", flush=True)
+                    master = None
+        if stem in SKIP_UI_PNG:
+            print(f"  font-render-aa {stem} {en!r}", flush=True)
+            rgba = render_header_aa(w, h, en)
+        elif master is not None:
+            rgba = Image.open(master).convert("RGBA")
+        else:
+            print(f"  font-render {stem} {en!r}", flush=True)
+            rgba = render_header_label(w, h, en)
         rgba.save(png)
         new = png_to_bclim_etc1a4_same_size(png, orig)
         rgba.save(OUT / f"{Path(path).stem}_en.png")

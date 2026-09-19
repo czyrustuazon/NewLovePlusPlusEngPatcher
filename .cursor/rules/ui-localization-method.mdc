@@ -16,6 +16,7 @@ When a screen stays Japanese despite EN TRB:
 5. **If list/quest titles already EN but overflow the capsule:** TRB string too long — **shorten the EN string** (pane font size is global). Example: To-Do STRI **2837** `Girlfriend's Personal Photographer` → shorter synonym (`Personal Photographer`). Pack `0x0600` slot 22; `translations.json` + `patch_textresource.py`.
 6. **If TRB already EN for the same words:** wrong path (different asset or runtime buffer). Stop re-translating those keys.
 7. **If `translations.json` has EN but the screen is still the full JP sentence:** dump vanilla TRB and compare keys. A truncated JSON key (cut mid-phrase, e.g. `…デートを作` vs `…デートを作成してください。`) never matches, so rebuild keeps JP. Fix the **full** codebook string, then `deploy_name_kanji_trb.py`. Example: Anywhere Date empty list STRI **25183**.
+8. **If an ETC1A4 MultiWin 192×16 bar looks fried / pixel-y:** it is a **BCLIM**, not TRB. Zhoumaru stem may be the wrong file (Network) or an 8px strip. Full EN that is 2× Communication’s width cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, `technical.md` §12.4.1). Do not LANCZOS-fill a plate onto this bar.
 
 ## Verify identity before patching
 
@@ -37,7 +38,8 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Password entry header | **5245** | EN (`Password Input` plate `Text03_05`) |
 | Display/Sound settings panels | **5247** RGBA4444 | EN (`deploy_display_settings_en.py`) |
 | Back/Next/Confirm/Quit | **5238** ETC1A4 | EN (`OK` for 決定, `Quit` for やめる) |
-| Gallery / Comm / Data MSel | 5244/5241/5242 | EN |
+| Gallery / Comm / Data MSel | 5244/5241/5242 | EN (GF Comm./Intro/Date rows `Btn_Text04_01_04..10` @ **5241**) |
+| Girlfriend Comm. white header `カノジョ通信` | **5237** ETC1A4 192×16 | **Heart to Heart** (`deploy_multiwin_headers_en.py`; skip Zhoumaru 8px strip). Full “Girlfriend Communication” fries this bar — **§12.4.1**. |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
 | Profile labels | 5246 + **5252** | EN (Western name order) |
 | Status stats | **5501** / **5255** | EN |

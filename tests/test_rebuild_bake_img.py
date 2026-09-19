@@ -36,8 +36,27 @@ def test_msel_menus_include_event_gallery_rows():
         "Com_M_Sel_Plate_Text02_01_03",
         "Com_M_Sel_Plate_Text02_01_04",
         "Com_M_Sel_Plate_Text04_01_01",
+        "Com_M_Sel_Btn_Text04_01_04",
+        "Com_M_Sel_Btn_Text04_01_05",
+        "Com_M_Sel_Btn_Text04_01_06",
+        "Com_M_Sel_Btn_Text04_01_07",
+        "Com_M_Sel_Btn_Text04_01_08",
+        "Com_M_Sel_Btn_Text04_01_09",
+        "Com_M_Sel_Btn_Text04_01_10",
     ):
         assert stem in text
+    assert "Find Two-Person Chat" in text
+    assert "Find Three-Person Chat" in text
+    assert "Join Chat" in text
+    assert "Introduce Girlfriend" in text
+    assert "Get Introduced" in text
+    assert "Find Couple" in text
+    assert "Join Double Date" in text
+    assert "Heart to Heart" in text
+    assert "SKIP_UI_PNG" in text
+    assert "Com_M_Sel_Plate_Text04_01_01" in text.split("SKIP_UI_PNG")[1]
+    assert "GF_COMM_PLATE_FROM_MULTIWIN" not in text
+    assert '"Com_M_Sel_Plate_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' not in text
 
 
 def test_rebuild_rc_pack_is_from_scratch_by_default():
@@ -93,14 +112,24 @@ def test_msel_options_omits_quit_azahar_prompt():
     assert "Com_M_Sel_Plate_Text03_05_00" in text
     assert "add_password_input_plate" in text
     assert "--plate-only" in text
+    assert "Com_M_Sel_Plate_Text04_04_00" in text
+    plates = (TOOLS / "deploy_msel_opt_plates_en.py").read_text(encoding="utf-8")
+    assert "Com_M_Sel_Plate_Text04_04_00" in plates
+    assert "Communication Settings" in plates
 
 
-def test_multiwin_girlfriend_comm_uses_zhoumaru_01_01():
+def test_multiwin_girlfriend_comm_self_renders():
     text = (TOOLS / "deploy_multiwin_headers_en.py").read_text(encoding="utf-8")
     assert "Com_MultiWin_W01_Text04_01_00" in text
-    assert 'PNG_STEM_OVERRIDE' in text
-    assert '"Com_MultiWin_W01_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' in text
-    assert '"Com_MultiWin_W01_Text02_01_01": "Com_M_Sel_Plate_Text02_01_01"' in text
+    assert "SKIP_UI_PNG" in text
+    skip_block = text.split("SKIP_UI_PNG")[1].split("UI_PNG_FOLDERS")[0]
+    assert "Com_MultiWin_W01_Text04_01_00" in skip_block
+    assert "Com_MultiWin_W01_Text04_01_01" in skip_block
+    assert '"Com_MultiWin_W01_Text04_01_00": "Com_MultiWin_W01_Text04_01_01"' not in text
+    assert "Heart to Heart" in text
+    assert "render_header_aa" in text
+    assert "HEADER_INK" in text
+    assert "df-heiseigothic-w5.ttc" in text
     assert "Confession Memories" in text
     assert "Trip Memories" in text
     assert "Youthful Page" in text
