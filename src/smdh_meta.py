@@ -22,7 +22,8 @@ TITLES_OFF = 0x08
 REGION_LOCK_OFF = 0x2018
 
 SHORT_TITLE = "New Love Plus+"
-LONG_TITLE = "New Love Plus+"
+# FBI / HOME show short on top, long underneath. One sentence; 127 UTF-16 chars max.
+LONG_TITLE = "Date Manaka, Nene, or Rinko and share everyday life together."
 PUBLISHER = "KONAMI"
 
 # SMDH region lock-out bitmask (3dbrew). Bit set = that region may launch.
@@ -103,6 +104,13 @@ def smdh_short_title(data: bytes, lang: int = 1) -> str:
     """Read a language slot's short title (0=JP, 1=EN)."""
     off = TITLES_OFF + lang * TITLE_SLOT
     raw = data[off : off + SHORT_LEN]
+    return raw.decode("utf-16le", errors="replace").split("\x00", 1)[0]
+
+
+def smdh_long_title(data: bytes, lang: int = 1) -> str:
+    """Read a language slot's long description (0=JP, 1=EN)."""
+    off = TITLES_OFF + lang * TITLE_SLOT + SHORT_LEN
+    raw = data[off : off + LONG_LEN]
     return raw.decode("utf-16le", errors="replace").split("\x00", 1)[0]
 
 

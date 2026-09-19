@@ -44,6 +44,7 @@ from run_timer import RunTimer
 from scratch_cleanup import is_reparse_dir as _is_reparse_dir
 from scratch_cleanup import path_is_under, remove_scratch
 from smdh_meta import (
+    LONG_TITLE,
     PUBLISHER,
     SHORT_TITLE,
     find_exefs_icon,
@@ -634,8 +635,8 @@ def patch_exefs_smdh(exefs_bin: Path, work: Path, *, region_lock: int) -> Path:
     icon = find_exefs_icon(exefs_dir)
     patch_icon_file(icon, region_lock=region_lock)
     print(
-        f"[meta] HOME title: {SHORT_TITLE!r} / publisher {PUBLISHER!r} "
-        f"(was Japanese SMDH in {icon.name})"
+        f"[meta] HOME title: {SHORT_TITLE!r} / {LONG_TITLE!r} / "
+        f"publisher {PUBLISHER!r} (was Japanese SMDH in {icon.name})"
     )
     return _repack_exefs(exefs_dir, header, work / "exefs_smdh.bin")
 
