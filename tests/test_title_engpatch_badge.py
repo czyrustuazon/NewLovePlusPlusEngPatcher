@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from PIL import Image
 
-from conftest import TOOLS, load_module
+from conftest import ROOT, TOOLS, load_module
 
 deploy = load_module("deploy_title_engpatch_en", TOOLS / "deploy_title_engpatch_en.py")
 
@@ -58,3 +58,23 @@ def test_compose_eng_patch_site_is_3px_closer():
     # No extra canvas pad; site line may not fill the last rows (no descenders).
     assert out.height - 1 - last_ink >= deploy.BOTTOM_PAD
     assert last_ink >= deploy.ENG_LINE_H
+
+
+def test_title_engpatch_rebuilds_title_arc_from_vanilla():
+    """bak_pre_title_engpatch is packed MOD — using it as ARC source garbles the hub header."""
+    text = (TOOLS / "deploy_title_engpatch_en.py").read_text(encoding="utf-8")
+    assert "src_for_pkg = bak_title" not in text
+    assert "src_for_pkg = VANILLA if VANILLA.is_file() else MOD_IMG" in text
+    assert "Title_menu_word.bclim kept vanilla" in text
+
+
+def test_title_menu_word_png_rgb_matches_glyphs():
+    """Zhoumaru Title_menu_word dump had swizzled RGB; opaque pixels must stay gray."""
+    png = ROOT / "assets" / "images" / "Title.check" / "timg" / "Title_menu_word.png"
+    if not png.is_file():
+        return
+    im = Image.open(png).convert("RGBA")
+    opaque = [p[:3] for p in im.getdata() if p[3] >= 32]
+    assert opaque, "Title_menu_word.png has no glyphs"
+    chroma = sum(abs(r - g) + abs(g - b) for r, g, b in opaque) / len(opaque)
+    assert chroma < 8, f"Title_menu_word RGB dump noise chroma={chroma:.1f}"

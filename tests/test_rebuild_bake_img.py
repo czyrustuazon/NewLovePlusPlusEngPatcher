@@ -120,6 +120,7 @@ def test_msel_options_omits_quit_azahar_prompt():
 
 def test_multiwin_girlfriend_comm_self_renders():
     text = (TOOLS / "deploy_multiwin_headers_en.py").read_text(encoding="utf-8")
+    common = (TOOLS / "deploy_common.py").read_text(encoding="utf-8")
     assert "Com_MultiWin_W01_Text04_01_00" in text
     assert "SKIP_UI_PNG" in text
     skip_block = text.split("SKIP_UI_PNG")[1].split("UI_PNG_FOLDERS")[0]
@@ -128,13 +129,58 @@ def test_multiwin_girlfriend_comm_self_renders():
     assert '"Com_MultiWin_W01_Text04_01_00": "Com_MultiWin_W01_Text04_01_01"' not in text
     assert "Heart to Heart" in text
     assert "render_header_aa" in text
-    assert "HEADER_INK" in text
-    assert "df-heiseigothic-w5.ttc" in text
+    assert "HEADER_INK" in common
+    assert "df-heiseigothic-w5.ttc" in common
     assert "Confession Memories" in text
     assert "Trip Memories" in text
     assert "Youthful Page" in text
     assert "Com_MultiWin_W01_Text03_05_00" in text
     assert "Password Input" in text
+
+
+def test_profile_deploy_includes_hometown_regions():
+    text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
+    assert "REGION_BUTTONS" in text
+    assert "patch_region_buttons" in text
+    assert "png_to_bclim_rgba4444_same_size" in text
+    assert "Profile_Btn_Com02_Text" in text
+    assert "range(1, 9)" in text
+    assert "Profile.check" in text
+
+
+def test_profile_header_uses_heisei_heart_to_heart_chrome():
+    text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
+    assert "render_header_aa" in text
+    assert "HEADER_CORE_PX" in text
+    assert "HEADER_STRIP_H" in text
+    assert "Com_M_Sel_Plate_Text01_00_00" in text
+    assert "slot_len" in text
+    assert "1651" not in text
+
+
+def test_profile_call01_labels_use_1x_hard_wide_headers():
+    text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
+    assert '(1, 14, 48, 192, "Last Name")' in text
+    assert '(77, 89, 48, 192, "First Name")' in text
+    assert "CALL_LABEL_SIZE" in text
+    call_fn = text.split("def render_call_label")[1].split("def make_call_en")[0]
+    assert "render_hard_label" in call_fn
+    assert "Resampling.NEAREST" not in call_fn
+    from PIL import Image, ImageDraw, ImageFont
+
+    font = ImageFont.truetype(
+        str(TOOLS.parent / "assets" / "fonts" / "MPLUS1p-Regular.ttf"), 12
+    )
+    dr = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    # Inclusive box widths in CALL01_LABELS after the wide-header change.
+    for label, width in (
+        ("Last Name", 145),
+        ("First Name", 145),
+        ("Written", 62),
+        ("Called", 62),
+    ):
+        b = dr.textbbox((0, 0), label, font=font)
+        assert b[2] - b[0] <= width - 1, f"{label} {b[2]-b[0]}px > {width}px box"
 
 
 def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):

@@ -23,6 +23,12 @@ from nlpp_paths import (  # noqa: E402
 
 # Bundled SIL OFL font (see assets/fonts/README.md). Replaces YuGothR.ttc.
 UI_FONT = ROOT / "assets" / "fonts" / "MPLUS1p-Regular.ttf"
+# NLPPPATCH Heisei Gothic — MultiWin white bars (Heart to Heart, Communication).
+HEISEI_W5 = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
+HEADER_INK = (68, 68, 68)
+# Same start size as Girlfriend Comm. `render_header_aa` (gh ~12 on 192×16).
+HEADER_CORE_PX = 15
+HEADER_STRIP_H = 16
 
 __all__ = [
     "AZAHAR_MOD_IMG",
@@ -34,12 +40,18 @@ __all__ = [
     "ROOT",
     "TEXTRESOURCE",
     "UI_FONT",
+    "HEISEI_W5",
+    "HEADER_INK",
+    "HEADER_CORE_PX",
+    "HEADER_STRIP_H",
     "find_vanilla_img",
     "iter_deploy_targets",
     "require_vanilla_img",
     "resolve_img_paths",
     "resolve_resident_trb",
     "ui_font",
+    "chrome_font",
+    "render_header_aa",
     "find_ui_png",
     "fit_png_to_canvas",
     "contain_no_upscale",
@@ -56,6 +68,50 @@ def ui_font(size: int):
             "Expected assets/fonts/MPLUS1p-Regular.ttf (SIL OFL)."
         )
     return ImageFont.truetype(str(UI_FONT), size=size)
+
+
+def chrome_font(size: int):
+    """Heisei Gothic P-face when present (same as MultiWin Heart to Heart)."""
+    from PIL import ImageFont
+
+    if HEISEI_W5.is_file():
+        return ImageFont.truetype(str(HEISEI_W5), size=size, index=1)
+    return ui_font(size)
+
+
+def render_header_aa(w: int, h: int, text: str, *, max_size: int | None = None):
+    """Dark gray AA like Zhoumaru Communication / Heart to Heart.
+
+    Short titles keep ~13px cores so ETC1A4 does not fry them. Default
+    ``max_size`` is ``HEADER_CORE_PX`` (15) — Heart to Heart at 192×16
+    lands at glyph-height 12 after 2× bilinear.
+    """
+    import numpy as np
+    from PIL import Image, ImageDraw
+
+    top = max_size if max_size is not None else min(HEADER_CORE_PX, h + 2)
+    for size in range(top, 7, -1):
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = chrome_font(size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > w * scale - 8:
+            continue
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        alpha = np.array(
+            big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32
+        )
+        peak = float(alpha.max())
+        if peak > 0:
+            alpha = np.clip(alpha * (255.0 / peak), 0, 255)
+        a = alpha.astype(np.uint8)
+        rgb = Image.new("RGB", (w, h), HEADER_INK)
+        return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
+    raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
 
 
 def resolve_img_paths() -> tuple[Path, Path]:

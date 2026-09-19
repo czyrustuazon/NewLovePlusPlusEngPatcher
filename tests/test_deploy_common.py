@@ -159,3 +159,23 @@ def test_ui_font_missing_exits(tmp_path: Path, monkeypatch):
         raise AssertionError("expected SystemExit")
     except SystemExit as exc:
         assert "missing UI font" in str(exc)
+
+
+def test_profile_header_glyph_height_matches_heart_to_heart():
+    import numpy as np
+    import pytest
+
+    if not deploy_common.HEISEI_W5.is_file():
+        pytest.skip("Heisei W5 reference font missing")
+    h2h = deploy_common.render_header_aa(192, 16, "Heart to Heart")
+    prof = deploy_common.render_header_aa(144, 16, "Profile")
+
+    def glyph_h(im) -> int:
+        a = np.array(im.getchannel("A"))
+        ys, _ = np.where(a > 20)
+        return int(ys.max() - ys.min() + 1)
+
+    assert abs(glyph_h(h2h) - glyph_h(prof)) <= 1
+    assert 11 <= glyph_h(prof) <= 14
+    assert h2h.size == (192, 16)
+    assert prof.size == (144, 16)

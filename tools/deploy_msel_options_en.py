@@ -51,6 +51,7 @@ LABELS: list[tuple[str, str]] = [
     ("Com_M_Sel_Plate_Text03_00_00.bclim", "Options"),
     ("Com_M_Sel_Plate_Text03_01_00.bclim", "Display Settings"),
     ("Com_M_Sel_Plate_Text03_02_00.bclim", "Sound Settings"),
+    ("Com_M_Sel_Plate_Text04_04_00.bclim", "Communication Settings"),
     ("Com_M_Sel_Btn_Text03_01_00.bclim", "Display Settings"),
     ("Com_M_Sel_Btn_Text03_02_00.bclim", "Sound Settings"),
     ("Com_M_Sel_Btn_Text04_04_00.bclim", "Network"),
@@ -117,7 +118,15 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False, stem: s
     orig.write_bytes(raw)
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
-        Image.open(master).convert("RGBA").save(png)
+        rgba = Image.open(master).convert("RGBA")
+        if hard or (stem and stem.endswith("Text04_04_00")):
+            a = np.array(rgba.getchannel("A"))
+            a = np.where(a >= 40, 255, 0).astype(np.uint8)
+            rgb = np.array(rgba.convert("RGBA"))
+            rgb[:, :, 3] = a
+            rgb[:, :, :3] = 255
+            rgba = Image.fromarray(rgb, "RGBA")
+        rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)

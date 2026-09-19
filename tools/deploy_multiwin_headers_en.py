@@ -30,6 +30,7 @@ from deploy_common import (  # noqa: E402
     UI_FONT,
     find_ui_png,
     iter_deploy_targets,
+    render_header_aa,
     resolve_img_paths,
 )
 
@@ -37,8 +38,6 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "multiwin_headers_en"
 FONT = UI_FONT
-HEISEI_W5 = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
-HEADER_INK = (68, 68, 68)
 PKG = 5237
 
 # FUN_00255a18 idx → MultiWin text (table @ ~0x6c3f9c)
@@ -104,13 +103,6 @@ def font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONT), size=size)
 
 
-def chrome_font(size: int) -> ImageFont.FreeTypeFont:
-    """Heisei Gothic P-face when present (same as other NL++ chrome)."""
-    if HEISEI_W5.is_file():
-        return ImageFont.truetype(str(HEISEI_W5), size=size, index=1)
-    return font(size)
-
-
 def all_interfile_gaps(data: bytes) -> list[tuple[int, int]]:
     darc = DarcArchive(data)
     spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
@@ -158,36 +150,6 @@ def render_header_label(w: int, h: int, text: str, *, max_size: int | None = Non
         y = (h * scale - th) // 2 - b[1]
         dr.text((x, y), text, font=f, fill=(255, 255, 255, 255))
         return big.resize((w, h), Image.Resampling.BILINEAR)
-    raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
-
-
-def render_header_aa(w: int, h: int, text: str, *, max_size: int | None = None) -> Image.Image:
-    """Dark gray AA like Zhoumaru Communication / Double Date.
-
-    Short titles (Heart to Heart) keep ~13px cores so ETC1A4 does not fry them.
-    """
-    import numpy as np
-
-    top = max_size if max_size is not None else min(15, h + 2)
-    for size in range(top, 7, -1):
-        scale = 2
-        big = Image.new("L", (w * scale, h * scale), 0)
-        dr = ImageDraw.Draw(big)
-        f = chrome_font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w * scale - 8:
-            continue
-        x = (w * scale - tw) // 2 - b[0]
-        y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        alpha = np.array(big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32)
-        peak = float(alpha.max())
-        if peak > 0:
-            alpha = np.clip(alpha * (255.0 / peak), 0, 255)
-        a = alpha.astype(np.uint8)
-        rgb = Image.new("RGB", (w, h), HEADER_INK)
-        return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
     raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
 
 

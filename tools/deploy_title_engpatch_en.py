@@ -443,14 +443,11 @@ def main() -> int:
         shutil.rmtree(extract_dir)
     extract_dir.mkdir(parents=True)
 
-    # Prefer bak_pre_title_engpatch / vanilla so we rebuild from clean Title.arc.
-    src_img = VANILLA if VANILLA.is_file() else MOD_IMG
-    bak_title = MOD_IMG.with_suffix(".bin.bak_pre_title_engpatch")
-    if bak_title.is_file():
-        # Extract clean package from bak when available (avoids stacking on prior Eng).
-        src_for_pkg = bak_title
-    else:
-        src_for_pkg = src_img
+    # Always rebuild from vanilla Title.arc. bak_pre_title_engpatch is a live-img
+    # rollback only — it is created from packed MOD after pack_images, so using it
+    # as the ARC source keeps Zhoumaru Title.check dumps (Title_menu_word RGB was
+    # a swizzled GPU dump; in-game header garbled on first hub show).
+    src_for_pkg = VANILLA if VANILLA.is_file() else MOD_IMG
     print(f"Title ARC source: {src_for_pkg}", flush=True)
     raw = src_for_pkg.read_bytes()
     img = ImgBin(str(src_for_pkg))
@@ -468,6 +465,14 @@ def main() -> int:
 
     darc = DarcArchive(bytearray(arc.parsed()))
     darc.extract_all(extract_dir)
+
+    # Vanilla Title_menu_word is already English gray RGBA4444. Zhoumaru's
+    # Title.check dump kept the alpha glyphs but swizzled RGB — packing it
+    # garbles the hub header (Pts_Title_menu) on first boot.
+    menu_word = extract_dir / "timg" / "Title_menu_word.bclim"
+    if not menu_word.is_file():
+        raise SystemExit("missing timg/Title_menu_word.bclim")
+    print("OK Title_menu_word.bclim kept vanilla (already EN)", flush=True)
 
     for path, en in LABELS:
         if darc.find(path) is None:

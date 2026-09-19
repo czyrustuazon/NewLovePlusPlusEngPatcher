@@ -185,7 +185,7 @@ REM Optional PNG scratch:
 REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (~16h)
+REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (typically under an hour)
 REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"

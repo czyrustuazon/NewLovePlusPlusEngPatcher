@@ -105,13 +105,13 @@ If bake is absent (or stamp mismatches), the drop bat auto-runs:
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. Expect **about 3 hours** on a typical multi-core desktop (zlib empty-block first + `--pkg-workers`; see `technical.md` §12.5.3). Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. A cold pack is typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine; historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
 
 - Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
 - Scripts-only CIA (no UI inject): `set NLPP_WITH_IMAGES=0`.
 
-Details / pitfalls: `technical.md` §15, `release/README.md`.
+Details / pitfalls: `technical.md` §15.
 
 ### Required dump
 
@@ -336,7 +336,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers`. Watch live ``[timer]`` elapsed / heartbeat lines for actual runtime (about **3 hours** cold on a typical multi-core desktop). Warm `cache/img_pack/` re-packs are typically minutes.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers` + zopfli empty-block pad. Watch live ``[timer]`` elapsed / heartbeat lines. Measured **~27 min** on a high-thread desktop; typical multi-core is often **under an hour** (historically ~16h sequential zopfli). Warm `cache/img_pack/` re-packs are typically minutes.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
@@ -357,7 +357,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 | Password entry header | **5245** | `Password Input` (`Plate_Text03_05`) |
 | Boot CESA warning | **90** | `deploy_cesa_en.py` (not auto PNG-pack) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` |
-| “Main Menu” title string | TRB | Already EN via textresource |
+| “Main Menu” title string | **5261** `Title_menu_word` | Vanilla already EN (do not pack Zhoumaru RGB dump) |
 
 ---
 
@@ -445,7 +445,7 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-release/                     gold bake + TRB overlay (binaries gitignored; see release/README.md)
+release/                     gold bake + TRB overlay (binaries gitignored; see technical.md §15.5)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
 out/                         wipeable scratch + numbered LayeredFS/CIA drops + logs/ + azahar_instances (gitignored)
 ```

@@ -41,7 +41,7 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Gallery / Comm / Data MSel | 5244/5241/5242 | EN (GF Comm./Intro/Date rows `Btn_Text04_01_04..10` @ **5241**) |
 | Girlfriend Comm. white header `カノジョ通信` | **5237** ETC1A4 192×16 | **Heart to Heart** (`deploy_multiwin_headers_en.py`; skip Zhoumaru 8px strip). Full “Girlfriend Communication” fries this bar — **§12.4.1**. |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
-| Profile labels | 5246 + **5252** | EN (Western name order) |
+| Profile labels | 5246 + **5252** | EN (Western name order) + Call01 `Written`/`Called` 1× hard + hometown chips `Profile_Btn_Com02_Text01..08` (Nation / Kanto / …) |
 | Status stats | **5501** / **5255** | EN |
 | To-Do chrome | 5575 / **5253** | EN; long TRB titles → shorten |
 | Floating `初期設定` Defaults | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** | EN (`Restore Default`) — Zhoumaru; `deploy_softkey_defaults_en.py` |

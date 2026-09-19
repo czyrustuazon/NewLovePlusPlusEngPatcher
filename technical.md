@@ -555,7 +555,9 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
-| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Deployed (`Profile` / First Name / Last Name / Birthday / M·D / Blood / Hometown; uniform size) — `tools/deploy_profile_en.py` |
+| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header is Heisei W5 size 15 on a 16px strip (same as Heart to Heart MultiWin, §12.4.1), centered on 144×28 — not MPLUS. Field labels stay MPLUS (`Profile` / First Name / Last Name / Birthday / M·D / Blood / Hometown) — `tools/deploy_profile_en.py` |
+| Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; 1× hard size 12, wide header boxes — not 4× nearest) — `tools/deploy_profile_en.py` |
+| Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa) — `tools/deploy_profile_en.py` |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
@@ -618,7 +620,7 @@ The thin white bar on Girlfriend Communication is **not** DrawText, not TRB, and
 
 **What shipped**
 
-Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_multiwin_headers_en.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG).
+Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_common.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG). Profile’s A8 header (`Plate_Text01_00_00` @ **5246**) reuses that 16px Heisei strip centered on 144×28.
 
 Redeploy: `python tools/deploy_msel_menus_en.py --only 5241` then `python tools/deploy_multiwin_headers_en.py` (extras pass; exact-zopfli pad, splice live bake + instance A). Do **not** treat a Communications **loading** spinner as a 5237 fault — that is Azahar `OpenLinkFile` (**§10.1**).
 
@@ -861,7 +863,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
 | `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
-| `tools/deploy_profile_en.py` | Profile header + field atlas |
+| `tools/deploy_profile_en.py` | Profile header + field atlas + hometown region chips |
 | `tools/deploy_status_stats_en.py` | Fitness / Intel / Sense / Charm |
 | `tools/deploy_todo_en.py` / `deploy_todo_hist_en.py` | To-Do submenu chrome |
 | `tools/deploy_mail_home_en.py` | Mail home |
@@ -995,7 +997,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | `t05` | コミュニケーション | Communication |
 | `t06` | どこでもデート | Anywhere Date |
 
-(`Title_btn02_01..06` are **32×32 icons**, not labels. Header “Main Menu” is TRB / `Title_menu_word`, already EN.)
+(`Title_btn02_01..06` are **32×32 icons**, not labels. Header “Main Menu” is BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu` — vanilla is already EN gray RGBA4444. Do **not** pack the Zhoumaru `Title.check` dump: alpha glyphs were OK but RGB was swizzled, which garbles the hub header.)
 
 ### 15.2 What we got right
 
@@ -1047,7 +1049,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Password entry window | **5251** | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options −4 frames + TalkWindow ÷4 + voice cap, §21) |
-| “Main Menu” title string | TRB / Title_menu_word | Already EN via textresource |
+| “Main Menu” title string | **5261** `Title_menu_word` (`Pts_Title_menu`) | Vanilla already EN — keep vanilla BCLIM; Zhoumaru dump RGB was swizzled |
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
