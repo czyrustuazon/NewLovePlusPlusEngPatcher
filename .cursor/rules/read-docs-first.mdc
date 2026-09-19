@@ -15,7 +15,7 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
    - `clock-confirm-ui-localization` — clock + Options + Confirm softkeys (5245 / 5238 / 5247 / 5248)
    - `ui-localization-method` — texture vs TRB vs DrawText decision tree
    - `zhoumaru-ui-pack` — Zhoumaru community EN UI PNGs (`*.check/timg`); **CESA is not in that pack**
-   - `azahar-test-workflow` — a/b instances; **OpenLinkFile** Communications load hang (`technical.md` §10.1)
+   - `azahar-test-workflow` — a/b instances; **OpenLinkFile** Communications load hang + Game Start parent-archive hang (`technical.md` §10.1–§10.2)
    - `img-exact-zlib-deploy` — exact-length zlib/zopfli splice; **never bak→MOD wipe**
    - `ghidra-mcp` — Ghidra usage + Options bind APIs
    - `patch-safety` — hard bans
@@ -30,6 +30,8 @@ Before reverse-engineering UI, patching `img.bin`/`code.bin`/TRB, or “searchin
 **Do not** treat MyroomHeader `optn_tex_*` or DrawText as Options/clock menu chrome — wrong path.
 
 **Do not** treat a Communications loading spinner as broken extra data `00000F4E` or a bad pkg **5237** — Azahar `OpenLinkFile` must clone the subfile handle (`technical.md` §10.1).
+
+**Do not** treat an intermittent **Game Start** freeze (reset continues) as a CIA / `img.bin` / hardware bug — Azahar `OpenLinkFile` of the **parent** extra-data archive reports ~1.62 GiB quota (`subfile=false`); same `0x33373338` smash. Clone patch does not help. `technical.md` **§10.2**.
 
 Prefer extending documented next steps over opening a fresh “find the string” investigation.
 

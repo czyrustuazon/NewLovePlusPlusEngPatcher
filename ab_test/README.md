@@ -134,6 +134,12 @@ the clone is still live. Patch: `ab_test/patches/azahar-openlinkfile.patch`.
 `.\make.ps1 build-azahar` applies it and copies `azahar.exe` into the instance
 folders. See `technical.md` **§10.1**.
 
+## Game Start hang (reset continues)
+
+Same extra-data smash, different handle: Game Start `OpenLinkFile`s the
+**parent** archive (`size≈1.62 GiB`, `subfile=false`). The clone patch cannot
+shrink that. Not hardware; do not restore extra data. See `technical.md` **§10.2**.
+
 ## Verify a code.bin patch landed
 
 ```powershell

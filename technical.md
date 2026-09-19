@@ -41,6 +41,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
 - **Communications load hang on Azahar (2026-09-18):** not extra data `00000F4E`, not pkg **5237**. Stock `FSFile::OpenLinkFile` reset the clone to the full extra-data blob; **§10.1**.
+- **Game Start hang on Azahar (2026-09-18):** same extra-data smash (`Write32 0x33373338`), but `OpenLinkFile` of the **parent** archive (`size≈1.62 GiB`, `subfile=false`). Clone patch does not help; reset unsticks it. **Not hardware.** **§10.2**.
 - **Title hub loop NX abort (2026-09-18):** prefetch abort PC `0`, LR `0x00645A2C` (`FindPaneByName` `BLX r3`) — null child in the pane list (`r4=4`). Guard is `src/patch_lyt_null_pane.py` in `name_input_code.bin` — **§15.7**.
 - **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
 
@@ -461,7 +462,32 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 
 **Do not** restore extra data or re-splice **5237** / **5241** for this spinner. **Do not** treat missing `00000321` as a Communication-menu fix.
 
-Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple of 4` and makes a wedged guest look frozen. Leave it off while playtesting.
+Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple of 4` and makes a wedged guest look frozen. Leave it off while playtesting. Game Start can look the same with dump **off** — NLPP itself uses 1×1 textures, and a smashed guest keeps the GPU thread alive (**§10.2**).
+
+### 10.2 Game Start hang — parent extra-data `OpenLinkFile` (2026-09-18)
+
+**Symptom:** Tapping Main Menu **Game Start** sometimes freezes. Azahar **reset** tears down the guest (`GDBStub` stop + `Cleaning up process 11`) and the next boot can continue. Looks like a hang, not a crash dialog.
+
+**Live instance A (2026-09-18):** `out/azahar_instances/a/azahar.exe` (`75134fc-dirty`, clone patch **present**). Log rotated to `user/log/azahar_log.old.txt`.
+
+1. `OpenLinkFile Path: [Binary: 0000…] clone offset=0x0 size=0x65a13720 subfile=false backend=0x65a13720`  
+   (`0x65a13720` ≈ **1.62 GiB** — ExtSaveData **quota / backend** size, not an on-disk file that large.)
+2. Heap smash `Write32 0x33373338` @ `PC 0x0011531C` (file `0x0001531C`, `FUN_00015304` heap unlink), then `PC 0x00120590` / `WriteBlock` @ `PC 0x005EF4CC`. Same ASCII-as-pointer walk as **§10.1**.
+3. GPU keeps logging `Texture size (1x1)` (`Utility_DumpTextures: false`) — wedged guest looks frozen.
+4. Reset at ~122 s guest time: `Stopping GDB` + process-11 cleanup. That is why reset “fixes” it.
+
+**Same smash as Communications, different FS shape:**
+
+| | Communications **§10.1** | Game Start **§10.2** |
+|--|--------------------------|----------------------|
+| Game call | `OpenSubFile` then `OpenLinkFile` | `OpenLinkFile` on the **parent** extra-data handle |
+| Stock Azahar | Clone reset to full blob (`subfile=false`) | Source **already** the full blob |
+| `azahar-openlinkfile.patch` | Fixes — clone inherits the small window | **Does not help** — faithfully copies `size=0x65a13720`, `subfile=false` |
+| Hardware | Clones the subfile | `GetSize` is the real extra-data file, not a 1.7 GiB quota |
+
+**Not the cause:** gold bake `img.bin` / Title pkg **5261**, `name_input_code.bin`, extra-data “restore”, missing SpotPass `00000321`, pkg **5237**.
+
+**Do not:** treat this as a Drop CIA / console bug; ship a `code.bin` workaround; restore extra data; re-splice menus. Remaining Azahar gap is `GetSize` / `OpenLinkFile` on the **parent** ExtSaveData archive reporting quota instead of an inner file. That is still HLE. Hardware FS will not expose this.
 
 ---
 
@@ -1003,7 +1029,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `clock-confirm-ui-localization.mdc` | §§6–9, 12.4–12.5 | Clock + Options + Confirm softkeys |
 | `zhoumaru-ui-pack.mdc` | §12.7 | Zhoumaru `.check` PNGs; **CESA is not in that pack** |
 | `from-scratch-bake.mdc` | §15.5 | Drop CIA / gold bake; name-input caves in `.text` |
-| `azahar-test-workflow.mdc` | §10, §18 | a/b instances; **OpenLinkFile** Communications hang |
+| `azahar-test-workflow.mdc` | §10, §18 | a/b instances; **OpenLinkFile** Communications hang + Game Start parent-archive hang |
 
 When RE discovers something durable, update **both** this file and the relevant rule so agents don’t diverge.
 
@@ -1600,9 +1626,13 @@ Offline `vendor/NLPPATCH/` was removed from main (2026-08-31); NLPP-005 may re-v
 
 See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openlinkfile.patch` and copies `azahar.exe` into the instance folders. Drop CIA / gold `img.bin` do not include this (hardware FS is fine).
 
+### 18.4 Game Start hang — parent extra-data OpenLinkFile (2026-09-18)
+
+See **§10.2**. Same `0x33373338` smash as Communications, but the clone patch is already in instance A and the source handle is the full extra-data backend (`subfile=false`, `size=0x65a13720`). Reset unsticks it. Does **not** extend to a real 3DS. Do not restore extra data or patch `code.bin` for this.
+
 ---
 
-*Last updated 2026-09-18 — §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
