@@ -13,6 +13,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
+  7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
   8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
 
@@ -85,6 +86,10 @@ from patch_input_skip_ascii_dakuten import (  # noqa: E402
 )
 from patch_input_strcat_raw import (  # noqa: E402
     apply_patch as apply_strcat_raw,
+)
+from patch_input_call_romaji import (  # noqa: E402
+    apply_patch as apply_call_romaji,
+    is_patched as call_romaji_already,
 )
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
@@ -177,6 +182,12 @@ def apply_name_input_stack(data: bytearray) -> int:
 
     apply_strcat_raw(data)
     steps += 1
+
+    if call_romaji_already(data):
+        print("[skip] call_romaji already applied")
+    else:
+        apply_call_romaji(data)
+        steps += 1
 
     if message_speed_already(data):
         print("[skip] message_speed already applied")

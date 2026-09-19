@@ -44,6 +44,7 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Girlfriend Comm. white header `カノジョ通信` | **5237** ETC1A4 192×16 | **Heart to Heart** (`deploy_multiwin_headers_en.py`; skip Zhoumaru 8px strip). Full “Girlfriend Communication” fries this bar — **§12.4.1**. |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
 | Profile labels | 5246 + **5252** | EN header **Profile** is Heisei W5 16px strip like Heart to Heart (`deploy_profile_en.py`, **§12.4.2**). Call01/atlas labels are Heisei size 15 **2× AA** quantized to vanilla RGB565 chroma ramps (not 1-bit) — **§12.4.4**. Hometown chips `Profile_Btn_Com02_Text01..08` stay Zhoumaru, contain-fit to a 6px pill inset (**§12.4.3**). |
+| Profile Called list (`Win_Call01/02`) | `code.bin` | Leftover `づ` was pack **0x7000** slot `0x40` after a `*3` kana walk past ASCII NUL — not a label to translate. ASCII Called names draw the typed string (`patch_input_call_romaji.py`, **§17.8**). |
 | Status stats | **5501** / **5255** | EN |
 | To-Do chrome | 5575 / **5253** | EN; long TRB titles → shorten |
 | Floating `初期設定` Defaults | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** | EN (`Restore Default`) — Zhoumaru; `deploy_softkey_defaults_en.py` |

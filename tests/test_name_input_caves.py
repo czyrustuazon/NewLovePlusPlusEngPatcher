@@ -23,6 +23,7 @@ ascii_dakuten = load_module(
     SRC / "patch_input_skip_ascii_dakuten.py",
 )
 strcat_raw = load_module("patch_input_strcat_raw", SRC / "patch_input_strcat_raw.py")
+call_romaji = load_module("patch_input_call_romaji", SRC / "patch_input_call_romaji.py")
 
 
 def test_name_input_caves_are_inside_text_rx():
@@ -44,6 +45,8 @@ def test_name_input_caves_are_inside_text_rx():
     assert romaji.ADDR_CAVE + len(blob) <= end
     sc = strcat_raw.cave_addr()
     assert sc + len(strcat_raw.build_blob(base=sc)) <= end
+    cr = call_romaji.cave_addr()
+    assert cr + len(call_romaji.build_blob()[0]) <= end
     assert cave_map.OLD_RODATA_SHARED_PAD >= end
     assert cave_map.OLD_RODATA_ROMAJI_CAVE >= end
 
@@ -64,6 +67,10 @@ def test_name_input_caves_do_not_overlap():
         (
             strcat_raw.cave_addr(),
             strcat_raw.cave_addr() + len(strcat_raw.build_blob(base=strcat_raw.cave_addr())),
+        ),
+        (
+            call_romaji.cave_addr(),
+            call_romaji.cave_addr() + len(call_romaji.build_blob()[0]),
         ),
     ]
     for i, (a0, a1) in enumerate(ranges):
@@ -199,6 +206,35 @@ def test_strcat_raw_replaces_makestr_join():
         if blob[off + 3] == 0x8A  # bhi
     ]
     assert hi, "strcat cave must bhi-skip when dest+pending > 8 glyphs"
+
+
+def test_call_romaji_caves_assemble_and_hook_vanilla():
+    """Called-list *3 walk + ASCII fallback stay in .text RX after strcat."""
+    cave = call_romaji.cave_addr()
+    blob, labs = call_romaji.build_blob(base=cave)
+    assert cave + len(blob) <= cave_map.TEXT_PAGE_END
+    assert labs["utf8_off"] == cave
+    assert "call01" in labs and "call02" in labs
+    assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
+    assert bytes.fromhex("0cf028e1") in blob  # msr cpsr_f, r12
+    assert bytes.fromhex("0190a0e3") in blob  # mov r9, #1 before ASCII DrawText jump
+    bls = _arm_bl_targets(blob, cave)
+    assert any(tgt == call_romaji.ADDR_UTF8_LEN for _, tgt in bls)
+    from nlpp_paths import find_vanilla_code
+
+    src = find_vanilla_code()
+    if src is None:
+        return
+    data = bytearray(src.read_bytes())
+    if data[call_romaji.SITE_INDEX_MUL3 : call_romaji.SITE_INDEX_MUL3 + 4] != (
+        call_romaji.ORIG_INDEX_MUL3
+    ):
+        return
+    if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] == strcat_raw.VANILLA_HEAD:
+        strcat_raw.apply_patch(data)
+    call_romaji.apply_patch(data)
+    assert call_romaji.is_patched(data)
+    assert bytes(data[cave : cave + len(blob)]) == blob
 
 
 def test_lyt_null_pane_caves_assemble_and_hook_vanilla():

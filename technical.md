@@ -1490,12 +1490,13 @@ a/b guide: **`ab_test/README.md`**.
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
+| 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
-**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower insert **ASCII** (not fullwidth `Ａ`); name length still ≤8 chars.
+**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower insert **ASCII** (not fullwidth `Ａ`); name length still ≤8 chars; Called list shows the typed ASCII name (not leftover `づ`).
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
@@ -1543,7 +1544,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 | Pad | Contents |
 |-----|----------|
 | `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
-| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack) |
+| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then ASCII Called fallback after it |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
 
 Old pads `@0x006E6A38` / `@0x006FBB08` are **.rodata** (no-X). Azahar still runs them; a real 3DS prefetch-aborts (`Permission - Page`, PC `0x007E6A78` = old shared +0x40).
@@ -1598,6 +1599,23 @@ Tests: `tests/test_name_input_caves.py` (`test_fullwidth_latin_to_ascii_abc_pack
 | `NameInput_DrawCell` | `0x1fc304` |
 | Romaji cave | `0x0068F900` |
 
+### 17.8 Called list leftover `づ` (2026-09-18)
+
+Profile **Called** (`呼ばれ方`) fills `Lyt_Prf_Win_Call01/02` via `FUN_0023e468` / `FUN_001f1a6c`. Lookup is hiragana-only:
+
+- `FUN_00147808` indexes each “character” as `ptr + i*3`
+- `FUN_00147e04` scans for ず/づ (pack **0x7000** slots `0x3b` / `0x40`) with `add r4, #3`
+- Hits TRB **0x7200** (surnames) / **0x7100+bucket** (given names)
+
+Romaji insert is 1-byte ASCII, so `*3` steps **past the NUL** into leftover kana in the name slot. Slot `0x40` is literally `づ`, which then appears as the only candidate no matter what Latin name you typed (`AKIKO`, …). `name-kanji` TRB also keeps single kana JP, so that glyph is never mapped to `du`.
+
+`src/patch_input_call_romaji.py` (after strcat in `deploy_name_input_en.py`):
+
+1. `*3` / `+3` → `GetUtf8CharByteLength` (ASCII +1, stops before leftover)
+2. Non-empty ASCII Called name skips the JP dictionary and jumps into the existing strncpy+DrawText tail so the **typed string** is candidate 0
+
+Japanese readings still resolve for hiragana saves. English nicknames are not in pack 0x7100 (voice); she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`).
+
 ---
 
 ## 18. Azahar a/b + CIA input policy (2026-08-31)
@@ -1632,7 +1650,7 @@ See **§10.2**. Same `0x33373338` smash as Communications, but the clone patch i
 
 ---
 
-*Last updated 2026-09-18 — §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-18 — §17.8 Called list leftover `づ`; §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
