@@ -146,6 +146,9 @@ def test_profile_deploy_includes_hometown_regions():
     assert "Profile_Btn_Com02_Text" in text
     assert "range(1, 9)" in text
     assert "Profile.check" in text
+    assert "fit_region_png" in text
+    assert "REGION_PAD_X" in text
+    assert "REGION_PAD_Y" in text
 
 
 def test_profile_header_uses_heisei_heart_to_heart_chrome():

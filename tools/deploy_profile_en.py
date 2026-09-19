@@ -98,6 +98,11 @@ CALL02_LABELS: list[tuple[int, int, int, int, str]] = [
 REGION_BUTTONS: tuple[str, ...] = tuple(
     f"Profile_Btn_Com02_Text{i:02d}" for i in range(1, 9)
 )
+# Vanilla longest JP (北海道東北) is 52×12 with 6px side inset. Two-line EN
+# (Hokkaido Tohoku) needs a bit more height; keep the 6px side inset so glyphs
+# stay inside the rounded 80×40 pill.
+REGION_PAD_X = 6
+REGION_PAD_Y = 3
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -359,6 +364,28 @@ def make_call_en(
     return png_to_bclim_rgb565_same_size(png, orig)
 
 
+def fit_region_png(png: Path, size: tuple[int, int], dest: Path) -> Path:
+    """Contain Zhoumaru glyphs in the pill's inner box. Never mutates ``png``."""
+    w, h = size
+    inner_w = max(1, w - 2 * REGION_PAD_X)
+    inner_h = max(1, h - 2 * REGION_PAD_Y)
+    with Image.open(png) as im:
+        src = im.convert("RGBA")
+        bbox = src.getchannel("A").getbbox() or (0, 0, src.width, src.height)
+        crop = src.crop(bbox)
+        if crop.width <= inner_w and crop.height <= inner_h:
+            return png
+        scale = min(inner_w / crop.width, inner_h / crop.height)
+        nw = max(1, int(round(crop.width * scale)))
+        nh = max(1, int(round(crop.height * scale)))
+        resized = crop.resize((nw, nh), Image.Resampling.LANCZOS)
+        canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        canvas.paste(resized, ((w - nw) // 2, (h - nh) // 2), resized)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        canvas.save(dest)
+    return dest
+
+
 def patch_region_buttons(darc: DarcArchive, tmp: Path) -> None:
     """Splices Zhoumaru hometown-region chips (Nation / Kanto / …) into pkg 5252."""
     for stem in REGION_BUTTONS:
@@ -370,14 +397,17 @@ def patch_region_buttons(darc: DarcArchive, tmp: Path) -> None:
         _pix, w, h, fmt, _ft = parse_bclim(raw)
         if fmt != 8:
             raise SystemExit(f"{path} fmt {fmt} not RGBA4444")
-        master = find_ui_png(("Profile.check", "Profile"), stem, (w, h))
+        master = find_ui_png(("Profile.check", "Profile"), stem)
         if master is None:
             raise SystemExit(f"missing Zhoumaru PNG for {stem}")
+        fitted = fit_region_png(master, (w, h), tmp / f"{stem}_fit.png")
         orig = tmp / f"{stem}_o.bclim"
         orig.write_bytes(raw)
-        new = png_to_bclim_rgba4444_same_size(master, orig)
+        new = png_to_bclim_rgba4444_same_size(fitted, orig)
         darc.replace_same_size(entry, new)
-        print(f"OK {stem} Zhoumaru RGBA4444 {w}x{h}", flush=True)
+        Image.open(fitted).save(OUT / f"{stem}_en.png")
+        note = "fit" if fitted != master else "native"
+        print(f"OK {stem} Zhoumaru RGBA4444 {w}x{h} ({note})", flush=True)
 
 
 # ---- exact zlib / zopfli helpers ---------------------------------------------
