@@ -46,9 +46,10 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "profile_en"
 PREV = ROOT / "out" / "profile_previews"
-BG = (255, 220, 0)
-# Match JP atlas chroma ink (light cyan) — yellow is keyed out on grey bars.
-INK = (160, 210, 230)
+# Vanilla RGB565 chroma (pkg 5252 Call/atlas). Yellow keys out; cyan remaps
+# to dark text. JP uses ~17 ramps — 1-bit crush is what fried Last Name.
+BG = (255, 226, 0)
+INK = (49, 157, 255)
 
 PKG_HEADER = 5246
 PKG_ATLAS = 5252
@@ -74,11 +75,35 @@ ATLAS_LABEL_SIZE = HEADER_CORE_PX
 ATLAS_MD_SIZE = 11
 
 # Profile Call panels (yellow key + green plate + cyan ink).
-CALL_YELLOW = (255, 226, 0)
+CALL_YELLOW = BG
 CALL_GREEN = (49, 129, 0)
-CALL_INK = (49, 157, 255)
-# Same size as the Profile / Heart to Heart header; 4× nearest was gappy.
+CALL_INK = INK
+# Same size as the Profile / Heart to Heart header (2× AA, then JP ramps).
 CALL_LABEL_SIZE = HEADER_CORE_PX
+# Vanilla Call01 unique colors (yellow key + green plate + cyan ink + AA).
+CALL_PALETTE = np.array(
+    [
+        [255, 226, 0],
+        [49, 129, 0],
+        [49, 133, 0],
+        [49, 137, 0],
+        [49, 141, 0],
+        [49, 145, 0],
+        [49, 149, 0],
+        [49, 153, 0],
+        [49, 157, 0],
+        [49, 129, 131],
+        [49, 133, 131],
+        [49, 137, 131],
+        [49, 141, 131],
+        [49, 145, 131],
+        [49, 149, 131],
+        [49, 153, 131],
+        [49, 157, 131],
+        [49, 157, 255],
+    ],
+    dtype=np.uint8,
+)
 # (y0, y1, x0, x1, text) on Profile_Info_Call01_t — 苗字/名前 + 表記/呼ばれ方
 # Header boxes are wide (>100px) so they sit on yellow key, not a green slab.
 # JP 苗字/名前 ink was only ~36×14; EN "Last Name" needs ~70px at Heisei size 15.
@@ -211,6 +236,14 @@ def patch_header_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byt
 # ---- RGB565 atlas (hard ink, no soft outline) --------------------------------
 
 
+def _quantize_chroma(rgb: np.ndarray) -> np.ndarray:
+    """Snap RGB to vanilla Call/atlas RGB565 chroma ramps."""
+    pal = CALL_PALETTE.astype(np.int16)
+    diff = rgb.astype(np.int16)[..., None, :] - pal.reshape((1, 1, -1, 3))
+    idx = np.abs(diff).sum(axis=3).argmin(axis=2)
+    return CALL_PALETTE[idx]
+
+
 def render_hard_label(
     w: int,
     h: int,
@@ -220,33 +253,41 @@ def render_hard_label(
     bg: tuple[int, int, int] = BG,
     ink: tuple[int, int, int] = INK,
 ) -> Image.Image:
-    """1× hard Heisei glyphs — avoids muddy soft-AA on chroma-keyed panes."""
+    """2× Heisei AA, quantized to vanilla yellow/green/cyan ramps.
+
+    1× hard crush made Last Name / Written look deep-fried next to the A8
+    Profile header and RGBA4444 Clear/Delete. Word count is not the issue.
+    """
     sizes: list[int]
     if prefer_size is not None:
-        # Prefer fixed size; only shrink if the string truly won't fit.
         sizes = list(range(prefer_size, 7, -1))
     else:
         sizes = list(range(min(13, h), 7, -1))
-    bg_arr = np.array(bg, dtype=np.int16)
+    plate = np.array(CALL_GREEN, dtype=np.float32)
+    ink_a = np.array(ink, dtype=np.float32)
+    bg_a = np.array(bg, dtype=np.float32)
     for size in sizes:
-        img = Image.new("RGB", (w, h), bg)
-        dr = ImageDraw.Draw(img)
-        f = chrome_font(size)
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = chrome_font(size * scale)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w - 1 or th > h:
+        if tw > w * scale - 2 or th > h * scale:
             continue
-        x = (w - tw) // 2 - b[0]
-        y = (h - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=ink)
-        # Crush partial AA fringe into solid ink / pure key color.
-        arr = np.array(img)
-        dist = np.abs(arr.astype(np.int16) - bg_arr).sum(axis=2)
-        mask = dist > 40
-        out = np.zeros_like(arr)
-        out[:] = bg
-        out[mask] = ink
-        return Image.fromarray(out, "RGB")
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        alpha = np.array(
+            big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32
+        )
+        peak = float(alpha.max())
+        if peak > 0:
+            alpha = alpha / peak
+        # Glyphs lerp plate→ink (JP AA). Box fill stays yellow key or green.
+        glyph = plate + (ink_a - plate) * alpha[..., None]
+        rgb = np.where(alpha[..., None] > 0.06, glyph, bg_a)
+        return Image.fromarray(_quantize_chroma(rgb), "RGB")
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
 
 
@@ -327,7 +368,7 @@ def decode_rgb565(raw: bytes) -> tuple[Image.Image, int, int]:
 def render_call_label(
     w: int, h: int, text: str, *, plate: bool
 ) -> Image.Image:
-    """Cyan glyphs on green plate (or yellow) — 1× hard Heisei, same as header."""
+    """Cyan glyphs on green plate (or yellow) — 2× Heisei, vanilla chroma ramps."""
     fill = CALL_GREEN if plate else CALL_YELLOW
     return render_hard_label(
         w,

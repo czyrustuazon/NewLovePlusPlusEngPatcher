@@ -161,14 +161,17 @@ def test_profile_header_uses_heisei_heart_to_heart_chrome():
     assert "1651" not in text
 
 
-def test_profile_call01_labels_use_1x_hard_wide_headers():
+def test_profile_call01_labels_use_heisei_chroma_aa():
     text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
     assert '(1, 14, 48, 192, "Last Name")' in text
     assert '(77, 89, 48, 192, "First Name")' in text
     assert "CALL_LABEL_SIZE = HEADER_CORE_PX" in text
     assert "ATLAS_LABEL_SIZE = HEADER_CORE_PX" in text
+    assert "CALL_PALETTE" in text
     hard_fn = text.split("def render_hard_label")[1].split("def paste_label")[0]
     assert "chrome_font" in hard_fn
+    assert "BILINEAR" in hard_fn
+    assert "CALL_PALETTE" in hard_fn or "_quantize_chroma" in hard_fn
     call_fn = text.split("def render_call_label")[1].split("def make_call_en")[0]
     assert "render_hard_label" in call_fn
     assert "Resampling.NEAREST" not in call_fn
