@@ -1109,7 +1109,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc3-NENE` + newloveplus.loc.moe); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc3-NENE` + newloveplus.loc.moe); **white glyphs + thick black outline** (readable on Main Menu white column). **NLPP-010 merge:** `v1.0.0-rc3-NENE` is a volunteer-build tag (`4450526`). Revert that commit before merging this branch into an RC feature branch. |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |

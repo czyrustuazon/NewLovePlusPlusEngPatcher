@@ -16,6 +16,7 @@ from patcher_version import (
 def test_patcher_release_is_rc():
     assert PATCHER_RELEASE.startswith("v")
     assert "rc" in PATCHER_RELEASE.lower()
+    # Volunteer Drop CIA id. Drop with 4450526 when merging NLPP-010 into an RC.
     assert PATCHER_RELEASE.endswith("-NENE")
 
 

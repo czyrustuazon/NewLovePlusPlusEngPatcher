@@ -18,6 +18,7 @@ def test_eng_patch_canvas_crops_empty_under_url():
     assert deploy.ENG_PATCH_H == 26
     assert deploy.ENG_PANE_TY == 17.0
     assert deploy.POS_H_TY == -95.0
+    # Volunteer Drop CIA id. Drop with 4450526 when merging NLPP-010 into an RC.
     assert deploy.ENG_PATCH_LINE.endswith("-NENE")
     assert "rc3-NENE" in deploy.ENG_PATCH_LINE
     strip = deploy.render_eng_strip(218)

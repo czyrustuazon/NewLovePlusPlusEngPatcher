@@ -14,6 +14,11 @@ When merging an RC into **main**, bump these together:
 All Drop CIA builds of this RC share ``CIA_TITLE_VERSION``. Do not auto-increment
 per local build: a fresh clone would reset and collide with already-installed
 CIAs (FBI then asks to delete the title and extra data breaks).
+
+**NLPP-010 volunteer badge:** ``PATCHER_RELEASE`` ends in ``-NENE`` so
+proofreaders can confirm they have this branch's Drop CIA (commit
+``4450526``). Revert that commit before merging NLPP-010 into an RC
+feature branch so the badge is not ``v1.0.0-rc3-NENE``.
 """
 from __future__ import annotations
 
@@ -29,6 +34,8 @@ if str(ROOT / "src") not in sys.path:
 
 from image_map import normalize_folder_key, resolve_folder  # noqa: E402
 
+# Volunteer proofread id only. Revert 4450526 before merging NLPP-010 into
+# an RC feature branch (restore v1.0.0-rc3, Eng_Patch.png, and the tests).
 PATCHER_RELEASE = "v1.0.0-rc3-NENE"
 # makerom -ver. Vanilla NLPP is 0. Increase on each RC → main merge.
 CIA_TITLE_VERSION = 3
