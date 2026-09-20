@@ -29,7 +29,7 @@ if str(ROOT / "src") not in sys.path:
 
 from image_map import normalize_folder_key, resolve_folder  # noqa: E402
 
-PATCHER_RELEASE = "v1.0.0-rc3"
+PATCHER_RELEASE = "v1.0.0-rc3-NENE"
 # makerom -ver. Vanilla NLPP is 0. Increase on each RC → main merge.
 CIA_TITLE_VERSION = 3
 BAKE_STAMP = ROOT / "release" / "bake_stamp.txt"

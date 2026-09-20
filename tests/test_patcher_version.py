@@ -16,6 +16,7 @@ from patcher_version import (
 def test_patcher_release_is_rc():
     assert PATCHER_RELEASE.startswith("v")
     assert "rc" in PATCHER_RELEASE.lower()
+    assert PATCHER_RELEASE.endswith("-NENE")
 
 
 def test_cia_title_version_is_pinned_int():
