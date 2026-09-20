@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EN Profile UI: A8 header (pkg 5246) + RGB565 atlas/call labels (pkg 5252)."""
+"""EN Profile UI: A8 header (pkg 5246) + RGB565 atlas/call + hometown regions (pkg 5252)."""
 from __future__ import annotations
 
 import os
@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 import zopfli.zlib as zopfli_zlib
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -24,14 +24,21 @@ from bclimutil import (  # noqa: E402
     parse_bclim,
     png_to_bclim_a8_same_size,
     png_to_bclim_rgb565_same_size,
+    png_to_bclim_rgba4444_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli as shared_exact_zopfli  # noqa: E402
+from exact_zlib import try_fast_exact_slot  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
-    UI_FONT,
+    HEADER_CORE_PX,
+    HEADER_STRIP_H,
+    chrome_font,
+    find_ui_png,
     iter_deploy_targets,
+    render_header_aa,
     resolve_img_paths,
 )
 
@@ -39,10 +46,10 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "profile_en"
 PREV = ROOT / "out" / "profile_previews"
-FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
-BG = (255, 220, 0)
-# Match JP atlas chroma ink (light cyan) — yellow is keyed out on grey bars.
-INK = (160, 210, 230)
+# Vanilla RGB565 chroma (pkg 5252 Call/atlas). Yellow keys out; cyan remaps
+# to dark text. JP uses ~17 ramps — 1-bit crush is what fried Last Name.
+BG = (255, 226, 0)
+INK = (49, 157, 255)
 
 PKG_HEADER = 5246
 PKG_ATLAS = 5252
@@ -63,19 +70,48 @@ ATLAS_LABELS: list[tuple[int, int, int, int, str]] = [
 # Drop separate "Type" under Blood (JP 血液型 split); Blood alone covers it.
 ATLAS_MD: tuple[int, int, int, int, int, int] = (110, 122, 106, 118, 144, 156)
 # Shared glyph height for main field labels (M/D stay slightly smaller).
-ATLAS_LABEL_SIZE = 12
+# Size 15 = Profile / Heart to Heart header cores (Heisei W5).
+ATLAS_LABEL_SIZE = HEADER_CORE_PX
 ATLAS_MD_SIZE = 11
 
 # Profile Call panels (yellow key + green plate + cyan ink).
-CALL_YELLOW = (255, 226, 0)
+CALL_YELLOW = BG
 CALL_GREEN = (49, 129, 0)
-CALL_INK = (49, 157, 255)
+CALL_INK = INK
+# Same size as the Profile / Heart to Heart header (2× AA, then JP ramps).
+CALL_LABEL_SIZE = HEADER_CORE_PX
+# Vanilla Call01 unique colors (yellow key + green plate + cyan ink + AA).
+CALL_PALETTE = np.array(
+    [
+        [255, 226, 0],
+        [49, 129, 0],
+        [49, 133, 0],
+        [49, 137, 0],
+        [49, 141, 0],
+        [49, 145, 0],
+        [49, 149, 0],
+        [49, 153, 0],
+        [49, 157, 0],
+        [49, 129, 131],
+        [49, 133, 131],
+        [49, 137, 131],
+        [49, 141, 131],
+        [49, 145, 131],
+        [49, 149, 131],
+        [49, 153, 131],
+        [49, 157, 131],
+        [49, 157, 255],
+    ],
+    dtype=np.uint8,
+)
 # (y0, y1, x0, x1, text) on Profile_Info_Call01_t — 苗字/名前 + 表記/呼ばれ方
+# Header boxes are wide (>100px) so they sit on yellow key, not a green slab.
+# JP 苗字/名前 ink was only ~36×14; EN "Last Name" needs ~70px at Heisei size 15.
 CALL01_LABELS: list[tuple[int, int, int, int, str]] = [
-    (1, 14, 95, 146, "Last Name"),
+    (1, 14, 48, 192, "Last Name"),
     (22, 34, 17, 78, "Written"),
     (45, 57, 17, 78, "Called"),
-    (77, 89, 95, 146, "First Name"),
+    (77, 89, 48, 192, "First Name"),
     (98, 110, 17, 78, "Written"),
     (121, 133, 17, 78, "Called"),
 ]
@@ -84,17 +120,19 @@ CALL02_LABELS: list[tuple[int, int, int, int, str]] = [
     (58, 72, 60, 180, "Her nickname"),
 ]
 
-
-def font(size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(str(FONT), size=size)
+# Hometown region dropdown (▼全国 / 北海道東北 / …) — Zhoumaru RGBA4444 64×24.
+# Text01 collapsed Nation, Text02 expanded Nation, Text03–08 the six regions.
+REGION_BUTTONS: tuple[str, ...] = tuple(
+    f"Profile_Btn_Com02_Text{i:02d}" for i in range(1, 9)
+)
+# Vanilla longest JP (北海道東北) is 52×12 with 6px side inset. Two-line EN
+# (Hokkaido Tohoku) needs a bit more height; keep the 6px side inset so glyphs
+# stay inside the rounded 80×40 pill.
+REGION_PAD_X = 6
+REGION_PAD_Y = 3
 
 
 # ---- A8 header (white plate) -------------------------------------------------
-
-
-def glyph_h(a: np.ndarray) -> int:
-    ys, _ = np.where(a > 20)
-    return int(ys.max() - ys.min() + 1) if len(ys) else 0
 
 
 def decode_a8(raw: bytes) -> tuple[np.ndarray, int, int]:
@@ -112,23 +150,20 @@ def decode_a8(raw: bytes) -> tuple[np.ndarray, int, int]:
     return canvas, w, h
 
 
-def render_en_alpha(w: int, h: int, text: str, target_h: int) -> np.ndarray:
-    for size in range(target_h + 4, 7, -1):
-        scale = 2
-        big = Image.new("L", (w * scale, h * scale), 0)
-        dr = ImageDraw.Draw(big)
-        f = font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w * scale - 6:
-            continue
-        x = max(2, (w * scale - tw) // 2)
-        y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        cand = np.array(big.resize((w, h), Image.Resampling.BILINEAR))
-        if glyph_h(cand) <= target_h + 2:
-            return np.clip(cand.astype(np.float32) * 0.95, 0, 255).astype(np.uint8)
-    raise RuntimeError(f"cannot fit {text!r}")
+def render_en_alpha(w: int, h: int, text: str) -> np.ndarray:
+    """Heisei W5 on a 16px MultiWin-height strip, centered on the A8 plate.
+
+    Heart to Heart (`Com_MultiWin_W01_Text04_01_00`) is size 15 on 192×16
+    (glyph-height 12). Painting the same strip onto 144×28 keeps Profile at
+    that scale instead of filling the taller plate with MPLUS.
+    """
+    strip_h = min(HEADER_STRIP_H, h)
+    rgba = render_header_aa(w, strip_h, text, max_size=HEADER_CORE_PX)
+    strip = np.array(rgba.getchannel("A"))
+    out = np.zeros((h, w), dtype=np.uint8)
+    y0 = (h - strip_h) // 2
+    out[y0 : y0 + strip_h, :] = strip
+    return out
 
 
 def make_a8_en(
@@ -136,9 +171,7 @@ def make_a8_en(
 ) -> bytes:
     canvas, w, h = decode_a8(raw)
     jp = canvas[:h, :w]
-    ys, _ = np.where(jp > 40)
-    th = int(ys.max() - ys.min() + 1) if len(ys) else h // 2
-    en_a = render_en_alpha(w, h, en, th)
+    en_a = render_en_alpha(w, h, en)
     if hard:
         en_a = np.where(en_a >= 96, 255, 0).astype(np.uint8)
     out = np.maximum(np.zeros_like(jp), en_a)
@@ -158,8 +191,9 @@ def make_a8_en(
     return png_to_bclim_a8_same_size(png, orig)
 
 
-def patch_header_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
-    """Try soft then hard A8 so zopfli fits the tiny 5246 slot."""
+def patch_header_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> bytes:
+    """Try soft then hard A8 so zopfli fits the 5246 slot."""
+    budget = slot_len or 1725
     trials: list[tuple[bool, float]] = [
         (False, 0.0),
         (True, 0.0),
@@ -184,13 +218,13 @@ def patch_header_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
         print(f"  trial hard={hard} salt={salt}: zopfli={z}", flush=True)
         if best is None or z < best[0]:
             best = (z, patched, hard, salt)
-        if z <= 1651:
+        if z <= budget:
             print(f"OK header Profile (hard={hard} salt={salt})", flush=True)
             return patched
     assert best is not None
-    if best[0] > 1651:
+    if best[0] > budget:
         raise SystemExit(
-            f"header zopfli {best[0]} still exceeds slot 1651 (hard={best[2]})"
+            f"header zopfli {best[0]} still exceeds slot {budget} (hard={best[2]})"
         )
     print(
         f"OK header Profile best hard={best[2]} salt={best[3]} z={best[0]}",
@@ -202,37 +236,58 @@ def patch_header_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
 # ---- RGB565 atlas (hard ink, no soft outline) --------------------------------
 
 
+def _quantize_chroma(rgb: np.ndarray) -> np.ndarray:
+    """Snap RGB to vanilla Call/atlas RGB565 chroma ramps."""
+    pal = CALL_PALETTE.astype(np.int16)
+    diff = rgb.astype(np.int16)[..., None, :] - pal.reshape((1, 1, -1, 3))
+    idx = np.abs(diff).sum(axis=3).argmin(axis=2)
+    return CALL_PALETTE[idx]
+
+
 def render_hard_label(
-    w: int, h: int, text: str, *, prefer_size: int | None = None
+    w: int,
+    h: int,
+    text: str,
+    *,
+    prefer_size: int | None = None,
+    bg: tuple[int, int, int] = BG,
+    ink: tuple[int, int, int] = INK,
 ) -> Image.Image:
-    """1× hard glyphs on yellow — avoids muddy soft-AA on grey bars."""
+    """2× Heisei AA, quantized to vanilla yellow/green/cyan ramps.
+
+    1× hard crush made Last Name / Written look deep-fried next to the A8
+    Profile header and RGBA4444 Clear/Delete. Word count is not the issue.
+    """
     sizes: list[int]
     if prefer_size is not None:
-        # Prefer fixed size; only shrink if the string truly won't fit.
         sizes = list(range(prefer_size, 7, -1))
     else:
         sizes = list(range(min(13, h), 7, -1))
+    plate = np.array(CALL_GREEN, dtype=np.float32)
+    ink_a = np.array(ink, dtype=np.float32)
+    bg_a = np.array(bg, dtype=np.float32)
     for size in sizes:
-        img = Image.new("RGB", (w, h), BG)
-        dr = ImageDraw.Draw(img)
-        f = font(size)
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = chrome_font(size * scale)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w - 1 or th > h:
+        if tw > w * scale - 2 or th > h * scale:
             continue
-        x = (w - tw) // 2 - b[0]
-        y = (h - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=INK)
-        # Crush partial AA fringe into solid ink / pure yellow.
-        arr = np.array(img)
-        dist = np.abs(arr.astype(np.int16) - np.array(BG, dtype=np.int16)).sum(
-            axis=2
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        alpha = np.array(
+            big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32
         )
-        mask = dist > 40
-        out = np.zeros_like(arr)
-        out[:] = BG
-        out[mask] = INK
-        return Image.fromarray(out, "RGB")
+        peak = float(alpha.max())
+        if peak > 0:
+            alpha = alpha / peak
+        # Glyphs lerp plate→ink (JP AA). Box fill stays yellow key or green.
+        glyph = plate + (ink_a - plate) * alpha[..., None]
+        rgb = np.where(alpha[..., None] > 0.06, glyph, bg_a)
+        return Image.fromarray(_quantize_chroma(rgb), "RGB")
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
 
 
@@ -313,29 +368,16 @@ def decode_rgb565(raw: bytes) -> tuple[Image.Image, int, int]:
 def render_call_label(
     w: int, h: int, text: str, *, plate: bool
 ) -> Image.Image:
-    """Cyan glyphs on green plate (or yellow) — hard mask, no AA mush."""
+    """Cyan glyphs on green plate (or yellow) — 2× Heisei, vanilla chroma ramps."""
     fill = CALL_GREEN if plate else CALL_YELLOW
-    for size in range(min(14, h + 1), 7, -1):
-        scale = 4
-        mw, mh = w * scale, h * scale
-        mask = Image.new("L", (mw, mh), 0)
-        dr = ImageDraw.Draw(mask)
-        f = font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > mw - 4 or th > mh - 2:
-            continue
-        x = (mw - tw) // 2 - b[0]
-        y = (mh - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        m = (np.array(mask) >= 140).astype(np.uint8) * 255
-        small = Image.fromarray(m, "L").resize((w, h), Image.Resampling.NEAREST)
-        g = np.array(small) >= 128
-        out = np.empty((h, w, 3), dtype=np.uint8)
-        out[:, :] = fill
-        out[g] = CALL_INK
-        return Image.fromarray(out, "RGB")
-    raise RuntimeError(f"cannot fit call label {text!r} in {w}x{h}")
+    return render_hard_label(
+        w,
+        h,
+        text,
+        prefer_size=CALL_LABEL_SIZE,
+        bg=fill,
+        ink=CALL_INK,
+    )
 
 
 def make_call_en(
@@ -359,6 +401,52 @@ def make_call_en(
     img.save(OUT / f"{stem}_en.png")
     orig.write_bytes(raw)
     return png_to_bclim_rgb565_same_size(png, orig)
+
+
+def fit_region_png(png: Path, size: tuple[int, int], dest: Path) -> Path:
+    """Contain Zhoumaru glyphs in the pill's inner box. Never mutates ``png``."""
+    w, h = size
+    inner_w = max(1, w - 2 * REGION_PAD_X)
+    inner_h = max(1, h - 2 * REGION_PAD_Y)
+    with Image.open(png) as im:
+        src = im.convert("RGBA")
+        bbox = src.getchannel("A").getbbox() or (0, 0, src.width, src.height)
+        crop = src.crop(bbox)
+        if crop.width <= inner_w and crop.height <= inner_h:
+            return png
+        scale = min(inner_w / crop.width, inner_h / crop.height)
+        nw = max(1, int(round(crop.width * scale)))
+        nh = max(1, int(round(crop.height * scale)))
+        resized = crop.resize((nw, nh), Image.Resampling.LANCZOS)
+        canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        canvas.paste(resized, ((w - nw) // 2, (h - nh) // 2), resized)
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        canvas.save(dest)
+    return dest
+
+
+def patch_region_buttons(darc: DarcArchive, tmp: Path) -> None:
+    """Splices Zhoumaru hometown-region chips (Nation / Kanto / …) into pkg 5252."""
+    for stem in REGION_BUTTONS:
+        path = f"timg/{stem}.bclim"
+        entry = darc.find(path) or darc.find(f"{stem}.bclim")
+        if entry is None:
+            raise SystemExit(f"missing {path}")
+        raw = darc.extract_file(entry)
+        _pix, w, h, fmt, _ft = parse_bclim(raw)
+        if fmt != 8:
+            raise SystemExit(f"{path} fmt {fmt} not RGBA4444")
+        master = find_ui_png(("Profile.check", "Profile"), stem)
+        if master is None:
+            raise SystemExit(f"missing Zhoumaru PNG for {stem}")
+        fitted = fit_region_png(master, (w, h), tmp / f"{stem}_fit.png")
+        orig = tmp / f"{stem}_o.bclim"
+        orig.write_bytes(raw)
+        new = png_to_bclim_rgba4444_same_size(fitted, orig)
+        darc.replace_same_size(entry, new)
+        Image.open(fitted).save(OUT / f"{stem}_en.png")
+        note = "fit" if fitted != master else "native"
+        print(f"OK {stem} Zhoumaru RGBA4444 {w}x{h} ({note})", flush=True)
 
 
 # ---- exact zlib / zopfli helpers ---------------------------------------------
@@ -510,10 +598,15 @@ def patch_package(
 
     tmp = OUT / f"_fit_{pkg_id}"
     tmp.mkdir(parents=True, exist_ok=True)
-    patched = patch_fn(arc_elem.parsed(), tmp)
+    patched = patch_fn(arc_elem.parsed(), tmp, slot_len=cmp_len)
 
     if use_zopfli:
-        tuned, slot = compress_exact_zopfli(patched, cmp_len)
+        fast = try_fast_exact_slot(patched, cmp_len)
+        if fast is not None:
+            tuned, slot = fast
+            print("  hit exact-zlib fast-path", flush=True)
+        else:
+            tuned, slot = shared_exact_zopfli(patched, cmp_len)
     else:
         tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)
     do = zlib.decompressobj()
@@ -544,13 +637,26 @@ def patch_package(
     print(f"  DMST OK", flush=True)
 
     try:
-        for _dest in iter_deploy_targets(MOD_IMG):
+        for _dest in _iter_splice_imgs():
             splice_packages_into_img(_dest, pkg_dir, [pkg_id], _dest)
     except PackError as exc:
         raise SystemExit(f"splice {pkg_id} failed: {exc}") from exc
 
 
-def patch_atlas_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
+def _iter_splice_imgs() -> list[Path]:
+    targets = list(iter_deploy_targets(MOD_IMG))
+    seen = {p.resolve() for p in targets}
+    inst_root = ROOT / "out" / "azahar_instances"
+    for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+        rp = img.resolve()
+        if rp.is_file() and rp not in seen:
+            targets.append(rp)
+            seen.add(rp)
+    return targets
+
+
+def patch_atlas_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> bytes:
+    del slot_len
     darc = DarcArchive(bytearray(vanilla_arc))
     atlas = darc.find("timg/Profile_Info_Profile_t.bclim")
     if atlas is None:
@@ -579,6 +685,7 @@ def patch_atlas_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
         ),
     )
     print("OK Profile_Info_Call02_t", flush=True)
+    patch_region_buttons(darc, tmp)
     return bytes(darc.data)
 
 
@@ -593,7 +700,7 @@ def main() -> None:
 
     patch_package(PKG_HEADER, patch_header_arc, use_zopfli=True)
     patch_package(PKG_ATLAS, patch_atlas_arc, use_zopfli=False)
-    print("deployed Profile header+atlas ->", MOD_IMG, flush=True)
+    print("deployed Profile header+atlas+hometown regions ->", MOD_IMG, flush=True)
     print("Rollback:", bak, flush=True)
 
 

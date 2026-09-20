@@ -37,7 +37,11 @@ alwaysApply: true
 | Options button BCLIM bind | `OptionMenu_BindBtnTextures` @ `001eb3dc` |
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
-| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (slider 1–4 → frames/glyph; patched 14/8/2/0) |
-| Message Speed typewriter tick | `FUN_002d544c` @ `002D544C` (widget `+0x24` delay, `0` = instant) |
+| MultiWin white-bar bind | `FUN_00255a18` @ `00255a18` (table ~`0x6c3f9c`; GF Comm = `Text04_01_00`) |
+| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options preview 18/12/6/0 → 14/8/2/0) |
+| Message Speed typewriter tick | `FUN_002d544c` @ `002D544C` (Options widget `+0x24` delay, `0` = instant) |
+| TalkWindow delay table | `0x006E3024` (40/70/90/110/220 → 10/18/22/28/55; index via `FUN_002d8874`) |
+| TalkWindow delay setter | `FUN_0013f260` @ `0013F260` (`+0xd9c`, stores if index `< 5`) |
+| TalkWindow tick cap | `0x0013B718` → cave `0x0068F800` (`min(r2, table[+0xd9c])`; +0xd5c / +0xd60) |
 
 Options/clock **menu chrome** = A8 BCLIM names under `Com_M_Sel_*_Text*` in pkg **5245**, not DrawText and not `optn_tex_*`.

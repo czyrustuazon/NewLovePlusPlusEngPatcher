@@ -9,11 +9,13 @@ RUN := powershell -NoProfile -ExecutionPolicy Bypass -File "make.ps1"
 
 .PHONY: help paths build-azahar instances seed-a seed-b \
 	deploy-a deploy-b deploy restore-a restore-b restore \
+	save-nene-a save-nene-b save-nene \
 	launch-a launch-b all-a all-b
 
 .DEFAULT_GOAL := help
 
 help paths build-azahar instances seed-a seed-b \
 deploy-a deploy-b deploy restore-a restore-b restore \
+save-nene-a save-nene-b save-nene \
 launch-a launch-b all-a all-b:
 	@$(RUN) $@

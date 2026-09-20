@@ -4,7 +4,7 @@
 Rebuilds from vanilla so HelpBtn is Every Time / Once (not Defaults).
 Also keeps Sound panel labels (SE / Voice / Mic Sensitivity).
 
-Floating 初期設定 (Defaults) is NOT in this package — still unmapped.
+Floating 初期設定 (Defaults) is NCommonIcon Com_btn_sy01 @ 5238 (`deploy_softkey_defaults_en.py`).
 """
 from __future__ import annotations
 

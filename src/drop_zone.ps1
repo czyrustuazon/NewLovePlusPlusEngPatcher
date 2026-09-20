@@ -72,7 +72,7 @@ $label.Height = 70
 $label.Padding = New-Object System.Windows.Forms.Padding(12)
 
 $hint = New-Object System.Windows.Forms.Label
-$hint.Text = "Decrypted CIA or 3DS -> inject -> out\NewLovePlusPlus-EN.cia + out\luma\ + out\logs\"
+$hint.Text = "Decrypted CIA or 3DS -> inject -> pick LayeredFS (1) OR CIA (2), not both. Logs in out\logs\"
 $hint.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 $hint.ForeColor = [System.Drawing.Color]::FromArgb(80, 90, 100)
 $hint.AutoSize = $false
@@ -172,17 +172,17 @@ $go.Add_Click({
     # Quote explicitly — Start-Process ArgumentList does not protect spaces/parens.
     $p = Start-Process -FilePath $bat -ArgumentList "`"$launchPath`"" -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
-        $status.Text = "Done. See out\NewLovePlusPlus-EN.cia, out\luma\, and out\logs\"
+        $status.Text = "Done. Pick LayeredFS (1) or CIA (2) — not both. See out\logs\"
         [System.Windows.Forms.MessageBox]::Show(
-            "Patched CIA written to:`n$root\out\NewLovePlusPlus-EN.cia`n`nLuma LayeredFS:`n$root\out\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nPatch log (PATCH SUMMARY):`n$root\out\logs\latest.txt`n`nScratch work files were cleaned up.",
+            "Use either LayeredFS or the CIA, not both (see out\3_but not both).`n`nLayeredFS:`n$root\out\1_[Either use this-LayerFS]\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nPatched CIA:`n$root\out\2_[Or this]\NewLovePlusPlus-EN.cia`n`nPatch log (PATCH SUMMARY):`n$root\out\logs\latest.txt`n`nScratch work files were cleaned up.",
             "Patch complete",
             [Windows.Forms.MessageBoxButtons]::OK,
             [Windows.Forms.MessageBoxIcon]::Information
         ) | Out-Null
     } else {
-        $luma = Join-Path $root "out\luma\00040000000F4E00"
+        $luma = Join-Path $root "out\1_[Either use this-LayerFS]\luma\00040000000F4E00"
         if (Test-Path -LiteralPath $luma) {
-            $status.Text = "CIA failed; Luma overlay at out\luma\ — see console log."
+            $status.Text = "CIA failed; Luma overlay at out\1_[Either use this-LayerFS]\luma\ — see console log."
         } else {
             $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
         }

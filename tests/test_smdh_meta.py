@@ -31,11 +31,22 @@ def _ncch_header(product: str = "CTR-P-BLPJ") -> bytes:
     return bytes(buf)
 
 
+def test_long_title_fits_smdh_field():
+    raw = smdh.LONG_TITLE.encode("utf-16le")
+    assert len(raw) <= smdh.LONG_LEN - 2
+    assert smdh.LONG_TITLE != smdh.SHORT_TITLE
+    assert "Manaka" in smdh.LONG_TITLE
+    assert "Nene" in smdh.LONG_TITLE
+    assert "Rinko" in smdh.LONG_TITLE
+
+
 def test_patch_smdh_english_titles_and_usa_region():
     patched = smdh.patch_smdh(bytes(_blank_smdh()), region_lock=smdh.REGION_USA)
     assert patched[:4] == smdh.SMDH_MAGIC
     assert smdh.smdh_short_title(patched, lang=0) == "New Love Plus+"
     assert smdh.smdh_short_title(patched, lang=1) == "New Love Plus+"
+    assert smdh.smdh_long_title(patched, lang=0) == smdh.LONG_TITLE
+    assert smdh.smdh_long_title(patched, lang=1) == smdh.LONG_TITLE
     assert smdh.smdh_region_lock(patched) == smdh.REGION_USA
     # icons / trailing bytes preserved (we only filled titles + region)
     assert patched[0x2060:] == bytes(_blank_smdh())[0x2060:]

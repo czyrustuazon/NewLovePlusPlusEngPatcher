@@ -95,6 +95,8 @@ def test_pack_images_cleans_per_package():
     assert "cleanup_package_unpack" in text
     assert "One package at a time" in text
     assert 'label="pack img_data"' in text
+    assert "elapsed={timer.elapsed_str()}" in text
+    assert 'f"elapsed:          {timer.elapsed_str()}"' in text
 
 
 def test_rebuild_cleanup_scratch_skips_when_keep_work(monkeypatch):

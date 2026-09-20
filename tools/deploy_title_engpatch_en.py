@@ -12,6 +12,13 @@ keeps the original 14px glyph height; the project URL sits underneath.
 Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 + strong black outline (Aug 2026 confirm) so it stays readable above Konami.
 
+Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
+the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
+``Pts_Title_menu`` shows). Zhoumaru ``Title.check`` dump had swizzled RGB;
+packing it garbles first hub show (``technical.md`` §15.1.1). Rebuild this
+ARC from vanilla, never from ``bak_pre_title_engpatch`` (that bak is packed
+MOD). Never leave a magenta probe in gold bake.
+
 Usage:
   python tools/deploy_title_engpatch_en.py
   python tools/deploy_title_engpatch_en.py --bisect-tex0   # Eng mats → Copyright tex
@@ -59,24 +66,28 @@ PKG = 5261
 
 ENG_PATCH_REL = "timg/Eng_Patch.bclim"
 ENG_PATCH_BCLIM_NAME = "Eng_Patch.bclim"
-SITE_LINE = "Discord: discord.gg/ZWvjRatW5k"
+SITE_LINE = "newloveplus.loc.moe"
 
 # Copyright pic is 218×14 at local Y=0. Eng badge keeps that 14px glyph row and
-# the Discord invite under it. Translate Pic_EngPatch toward Konami (lower ty)
+# the project URL under it. Translate Pic_EngPatch toward Konami (lower ty)
 # without overlapping: copyright top 7, Eng bottom 4 → 3px into the 14px
 # copyright pane box (Konami glyphs sit lower in that texture).
 # Pos_Copyright_H is shifted down so the strip clears Main Menu Data Management.
 ENG_LINE_H = 14
 URL_H = 16
 LINE_GAP = 0  # pull the site line 3px closer than the previous 3px body gap
-BOTTOM_PAD = 0  # Discord invite outline uses the last canvas rows
+BOTTOM_PAD = 0  # site URL outline uses the last canvas rows
 ENG_PATCH_H = 26
 ENG_PANE_TY = 17.0  # 5px below 22; Eng bottom 4, top 30
 # vanilla Nul h=40 clipped at ±20.
 NUL_H = 90.0
 POS_H_TY = -95.0  # 8px below prior -87 so Eng clears Data Management
 
+# Vanilla header ink. Do not use Title.check GPU dumps for this stem.
+MENU_WORD_INK = (51, 51, 51, 255)
+
 LABELS: list[tuple[str, str]] = [
+    ("timg/Title_menu_word.bclim", "Main Menu"),
     ("timg/Title_btn02_t01.bclim", "Options"),
     ("timg/Title_btn02_t02.bclim", "Game Start"),
     ("timg/Title_btn02_t03.bclim", "Gallery"),
@@ -86,7 +97,12 @@ LABELS: list[tuple[str, str]] = [
 ]
 
 
-def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
+def render_label(
+    text: str,
+    w: int = 100,
+    h: int = 20,
+    fill: tuple[int, int, int, int] = (0, 0, 0, 255),
+) -> Image.Image:
     for size in range(13, 8, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
@@ -98,7 +114,7 @@ def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=font, fill=(0, 0, 0, 255))
+        dr.text((x, y), text, font=font, fill=fill)
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r}")
 
@@ -443,14 +459,11 @@ def main() -> int:
         shutil.rmtree(extract_dir)
     extract_dir.mkdir(parents=True)
 
-    # Prefer bak_pre_title_engpatch / vanilla so we rebuild from clean Title.arc.
-    src_img = VANILLA if VANILLA.is_file() else MOD_IMG
-    bak_title = MOD_IMG.with_suffix(".bin.bak_pre_title_engpatch")
-    if bak_title.is_file():
-        # Extract clean package from bak when available (avoids stacking on prior Eng).
-        src_for_pkg = bak_title
-    else:
-        src_for_pkg = src_img
+    # Always rebuild from vanilla Title.arc. bak_pre_title_engpatch is a live-img
+    # rollback only — it is created from packed MOD after pack_images, so using it
+    # as the ARC source keeps Zhoumaru Title.check dumps (Title_menu_word RGB was
+    # a swizzled GPU dump; in-game header garbled on first hub show).
+    src_for_pkg = VANILLA if VANILLA.is_file() else MOD_IMG
     print(f"Title ARC source: {src_for_pkg}", flush=True)
     raw = src_for_pkg.read_bytes()
     img = ImgBin(str(src_for_pkg))
@@ -474,13 +487,23 @@ def main() -> int:
             raise SystemExit(f"missing {path}")
         raw_b = (extract_dir / path).read_bytes()
         stem = Path(path).stem
-        master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
-        rgba = Image.open(master).convert("RGBA") if master else render_label(en)
+        # Title_menu_word: never pack the Zhoumaru GPU dump (swizzled RGB).
+        # Magenta 100×20 probe showed this RGBA4444 encoder on Pts_Title_menu.
+        if stem == "Title_menu_word":
+            rgba = render_label(en, fill=MENU_WORD_INK)
+            master = None
+        else:
+            master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
+            rgba = Image.open(master).convert("RGBA") if master else render_label(en)
         png = tmp / f"{stem}.png"
         orig = tmp / f"{stem}.bclim"
         rgba.save(png)
         if master is None:
             rgba.save(ASSET / f"{stem}.png")
+        if stem == "Title_menu_word":
+            check_png = ROOT / "assets" / "images" / "Title.check" / "timg" / f"{stem}.png"
+            check_png.parent.mkdir(parents=True, exist_ok=True)
+            rgba.save(check_png)
         rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         (extract_dir / path).write_bytes(png_to_bclim_rgba4444_same_size(png, orig))
@@ -603,8 +626,17 @@ def main() -> int:
     print("DMST OK", flush=True)
 
     try:
-        for dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for dest in targets:
             splice_packages_into_img(dest, pkg_dir, [PKG], dest)
+            print(f"spliced pkg {PKG} -> {dest}", flush=True)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 

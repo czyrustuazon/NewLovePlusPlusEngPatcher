@@ -29,6 +29,7 @@ tools/*
 !tools/deploy_*.py
 !tools/render_cesa_en.py
 !tools/ab_cesa_bake.py
+!tools/ab_talk_speed.py
 !tools/import_*.py
 !tools/deploy_common.py
 !tools/fit_ui_masters.py

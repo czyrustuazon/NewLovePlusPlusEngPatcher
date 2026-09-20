@@ -6,13 +6,15 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   0. patch_code name panes          # single-pane 8-letter draw + 128×16 cells
   0b. patch_bplace_list_pane        # hometown 128×16; DrawText maxGlyphs 16; cap 12
   1. patch_input_pane_registry_nullguard
+  1b. patch_lyt_null_pane  # Attach/FindPaneByName skip null child (title NX abort)
   2. patch_input_candidate_nullguard
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
-  8. patch_message_speed                   # Display Settings 14/8/2/0 frames/glyph
+  7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
+  8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
 
   # Azahar LayeredFS (default)
@@ -61,6 +63,12 @@ from patch_input_kana_direct_insert import (  # noqa: E402
     apply_patch as apply_kana_direct,
     restore_bind_sites,
 )
+from patch_lyt_null_pane import (  # noqa: E402
+    apply_patch as apply_lyt_null_pane,
+    build_attach_cave as build_lyt_attach_cave,
+    build_find_cave as build_lyt_find_cave,
+    is_patched as lyt_null_pane_already,
+)
 from patch_input_pane_registry_nullguard import (  # noqa: E402
     CAVE as PANE_CAVE,
     SITE as PANE_SITE,
@@ -79,9 +87,13 @@ from patch_input_skip_ascii_dakuten import (  # noqa: E402
 from patch_input_strcat_raw import (  # noqa: E402
     apply_patch as apply_strcat_raw,
 )
+from patch_input_call_romaji import (  # noqa: E402
+    apply_patch as apply_call_romaji,
+    is_patched as call_romaji_already,
+)
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
-    is_patched as message_speed_already,
+    is_fully_patched as message_speed_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -126,6 +138,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_pane_nullguard(data)
         steps += 1
 
+    if lyt_null_pane_already(data):
+        print("[skip] lyt_null_pane already applied")
+    else:
+        apply_lyt_null_pane(data)
+        steps += 1
+
     if cand_already(data):
         print("[skip] candidate_nullguard already applied")
     else:
@@ -165,6 +183,12 @@ def apply_name_input_stack(data: bytearray) -> int:
     apply_strcat_raw(data)
     steps += 1
 
+    if call_romaji_already(data):
+        print("[skip] call_romaji already applied")
+    else:
+        apply_call_romaji(data)
+        steps += 1
+
     if message_speed_already(data):
         print("[skip] message_speed already applied")
     else:
@@ -199,6 +223,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.dry_run:
         build_pane_cave()
+        build_lyt_attach_cave()
+        build_lyt_find_cave()
         build_site_cave(CAND_CAVE1, 0x001FBC0C, 0x001FBC30, 6)
         build_site_cave(CAND_CAVE2, 0x001FBD28, 0x001FBD4C, 11)
         build_fillflag_cave()

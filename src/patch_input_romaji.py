@@ -6,6 +6,11 @@ Rewrites NameInput_DrawCell (0x1fc304) so DrawText shows romaji AND the
 7-byte insert buffer stores the same display string (so kana-direct /
 ABC-style insert writes romaji into the name field).
 
+ABC/Symbols TRB (pack 0x7004) is fullwidth Latin (U+FF21 Ａ). GetCharWidthCells
+returns 2 for those codepoints, so the name field and in-game player name
+look like "A B C" with a CJK cell per letter. kana_to_romaji also maps
+U+FF01..U+FF5E → ASCII so insert + DrawText use halfwidth (width 1).
+
 Copy that slot *before* MakeStr/DrawText. The old order left the stack
 syllable live across those calls; TickPoller then concatenated a clobbered
 buffer (KA+KE+KU → KAKKE) even after an empty-field retry.
@@ -186,6 +191,15 @@ def _romaji_cell(s: str) -> str:
     strcmp, and strcat-raw still collapses KKE if a clobber returns.
     """
     return s
+
+
+def fullwidth_latin_to_ascii(s: str) -> str:
+    """U+FF01..U+FF5E (ABC pack 0x7004) → ASCII. Other codepoints unchanged."""
+    out = []
+    for ch in s:
+        cp = ord(ch)
+        out.append(chr(cp - 0xFEE0) if 0xFF01 <= cp <= 0xFF5E else ch)
+    return "".join(out)
 
 
 # Image-2 Hepburn map (small kana → lowercase). Keyed by hiragana codepoint.
@@ -446,7 +460,7 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     OP(cmp_imm(0, 0))
     B("k_orig", cond=0x0)
     OP(cmp_imm(0, 0xE3))
-    B("k_orig", cond=0x1)  # ne
+    B("k_fw", cond=0x1)  # ne — ABC fullwidth is EF, not E3
 
     OP(ldrb_imm(1, 4, 1))
     OP(ldrb_imm(2, 4, 2))
@@ -469,12 +483,12 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     LDR(6, "hira_lo")
     OP(sub_reg(0, 5, 6))  # idx
     OP(cmp_imm(0, 0x56))
-    B("k_orig", cond=0x2)  # hs
+    B("k_fw", cond=0x2)  # hs
     LDR(1, "hira_tab")
     OP(add_reg(1, 1, 0, shift=2))
     OP(ldrb_imm(2, 1, 0))
     OP(cmp_imm(2, 0))
-    B("k_orig", cond=0x0)
+    B("k_fw", cond=0x0)
     OP(ldr_imm(2, 1, 0))
     OP(str_imm(2, 7, 0))
     OP(mov_reg(0, 7))
@@ -483,21 +497,52 @@ def build_romaji_blob(*, canary: bool = False) -> bytes:
     L("try_kata")
     LDR(6, "kata_lo")
     OP(cmp_reg(5, 6))
-    B("k_orig", cond=0x3)
+    B("k_fw", cond=0x3)
     LDR(6, "kata_hi")
     OP(cmp_reg(5, 6))
-    B("k_orig", cond=0x8)
+    B("k_fw", cond=0x8)
     LDR(6, "kata_lo")
     OP(sub_reg(0, 5, 6))
     OP(cmp_imm(0, 0x56))
-    B("k_orig", cond=0x2)
+    B("k_fw", cond=0x2)
     LDR(1, "kata_tab")
     OP(add_reg(1, 1, 0, shift=2))
     OP(ldrb_imm(2, 1, 0))
     OP(cmp_imm(2, 0))
-    B("k_orig", cond=0x0)
+    B("k_fw", cond=0x0)
     OP(ldr_imm(2, 1, 0))
     OP(str_imm(2, 7, 0))
+    OP(mov_reg(0, 7))
+    B("k_done")
+
+    # ABC pack 0x7004 is U+FF01..U+FF5E (UTF-8 EF BC 81..BF / EF BD 80..9E).
+    # ASCII = low byte: BC xx → xx-0x60, BD xx → xx-0x20.
+    L("k_fw")
+    OP(ldrb_imm(0, 4, 0))
+    OP(cmp_imm(0, 0xEF))
+    B("k_orig", cond=0x1)
+    OP(ldrb_imm(1, 4, 1))
+    OP(ldrb_imm(2, 4, 2))
+    OP(cmp_imm(1, 0xBC))
+    B("try_bd", cond=0x1)
+    OP(cmp_imm(2, 0x81))
+    B("k_orig", cond=0x3)
+    OP(cmp_imm(2, 0xBF))
+    B("k_orig", cond=0x8)
+    OP(sub_imm(0, 2, 0x60))
+    B("k_store_ascii")
+
+    L("try_bd")
+    OP(cmp_imm(1, 0xBD))
+    B("k_orig", cond=0x1)
+    OP(cmp_imm(2, 0x80))
+    B("k_orig", cond=0x3)
+    OP(cmp_imm(2, 0x9E))
+    B("k_orig", cond=0x8)
+    OP(sub_imm(0, 2, 0x20))
+
+    L("k_store_ascii")
+    OP(str_imm(0, 7, 0))  # dst already zeroed; low byte = ASCII
     OP(mov_reg(0, 7))
     B("k_done")
 

@@ -311,6 +311,25 @@ def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
     assert not (out / "scratch.bin").exists()
 
 
+def test_cleanup_out_dir_keeps_prefixed_install_outputs(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "scratch.bin").write_bytes(b"x")
+    luma = out / patch_cia.OUT_LAYEREDFS_PREFIX / patch_cia.LAYEREDFS_DIR_NAME / "00040000000F4E00"
+    luma.mkdir(parents=True)
+    cia = out / patch_cia.OUT_CIA_PREFIX / patch_cia.CIA_FILENAME
+    cia.parent.mkdir(parents=True)
+    cia.write_bytes(b"cia")
+    note = patch_cia.write_install_choice_note(out)
+    patch_cia.cleanup_out_dir(out_cia=cia)
+    assert luma.is_dir()
+    assert cia.is_file()
+    assert note.is_file()
+    assert "Do not use both" in note.read_text(encoding="utf-8")
+    assert not (out / "scratch.bin").exists()
+
+
 def test_parser_has_log_flags():
     p = patch_cia.build_parser()
     args = p.parse_args(["--cia", "game.cia"])
@@ -320,6 +339,8 @@ def test_parser_has_log_flags():
     assert args.skip_cia_meta is False
     assert args.title_ver is None
     assert args.keep_title_ver is False
+    assert patch_cia.OUT_CIA_PREFIX in args.out
+    assert patch_cia.CIA_FILENAME in args.out
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"
     args = p.parse_args(["--cia", "game.cia", "--no-log"])

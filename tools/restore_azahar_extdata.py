@@ -9,11 +9,14 @@ This copies the emulator trees (not real-3DS SD extra data — use Checkpoint).
   python tools/restore_azahar_extdata.py restore --from out/extdata_backup/20260913_133000
   python tools/restore_azahar_extdata.py list
 
+Named playable slots (Nene, …) are installed with tools/import_azahar_save.py.
+
 Paths (under Azahar user dir, override with --user-dir / NLPP_AZAHAR_USER_DIR):
 
   sdmc/Nintendo 3DS/<ID0>/<ID1>/extdata/00000000/00000f4e/   title extra data
   sdmc/Nintendo 3DS/<ID0>/<ID1>/extdata/00000000/00000321/   SpotPass boss
-  nand/data/<ID0>/title/00040000/000f4e00/data/              title save
+  sdmc/Nintendo 3DS/<ID0>/<ID1>/title/00040000/000f4e00/data/  playable SD title save
+  nand/data/<ID0>/title/00040000/000f4e00/data/              NAND title save (usually unused)
 
 Fully quit Azahar before restore so it reloads the files.
 """
@@ -45,6 +48,7 @@ EXTDATA_IDS = frozenset(
     }
 )
 NAND_SAVE_REL = f"title/{TITLE_HIGH}/{TITLE_LOW}/data"
+SD_SAVE_REL = f"title/{TITLE_HIGH}/{TITLE_LOW}/data"
 DEFAULT_BACKUP_ROOT = ROOT / "out" / "extdata_backup"
 MANIFEST_NAME = "manifest.json"
 
@@ -54,7 +58,7 @@ def _norm_rel(path: Path) -> str:
 
 
 def discover_nlpp_trees(user_dir: Path) -> list[Path]:
-    """Extra-data archives + NAND title save that belong to NLPP."""
+    """Extra-data archives + SD/NAND title save that belong to NLPP."""
     found: list[Path] = []
     seen: set[Path] = set()
 
@@ -73,6 +77,8 @@ def discover_nlpp_trees(user_dir: Path) -> list[Path]:
         for archive in sdmc.glob("*/*/extdata/00000000/*"):
             if archive.name.lower() in EXTDATA_IDS:
                 add(archive)
+        for save in discover_sd_title_saves(user_dir):
+            add(save)
 
     nand_data = user_dir / "nand" / "data"
     if nand_data.is_dir():
@@ -82,6 +88,19 @@ def discover_nlpp_trees(user_dir: Path) -> list[Path]:
         for save in nand_data.glob(f"*/{NAND_SAVE_REL}"):
             add(save)
 
+    found.sort(key=lambda p: str(p).lower())
+    return found
+
+
+def discover_sd_title_saves(user_dir: Path) -> list[Path]:
+    """Playable Azahar SD title save (savedata0… under data/00000001/)."""
+    found: list[Path] = []
+    sdmc = user_dir / "sdmc" / "Nintendo 3DS"
+    if not sdmc.is_dir():
+        return found
+    for save in sdmc.glob(f"*/*/{SD_SAVE_REL}"):
+        if save.is_dir():
+            found.append(save)
     found.sort(key=lambda p: str(p).lower())
     return found
 
