@@ -14,7 +14,7 @@ alwaysApply: true
 - Shipping Azahar **custom texture** packs (`use_new_hash`) as the real fix — OK for RE, unstable in play.
 - **`pe` repack that grows a PACK slot**, or selective `ie` full rewrite to absorb growth (prefer exact same package length).
 - **Short zlib into a compressed ARC/TEX slot with trailing NUL**, or **shrinking entry `cmp_len`** — freezes/crashes (Options, CESA). Stream length must equal the slot with `unused_data == 0`.
-- Treating MyroomHeader `optn_tex_optionmenu_*` as Options/clock titles (wrong; use NCommonMSel **5245**).
+- Treat MyroomHeader `optn_tex_optionmenu_*` as Options/**clock** titles (wrong for hub Options; use NCommonMSel **5245**). The in-room overlay `オプションメニュー` *does* use those stems + Myroom **5380** (`deploy_myroom_options_en.py`).
 - **`splice_packages_into_img(bak, …, MOD_IMG)`** when `bak != MOD` — copies the whole bak over live and **wipes later EN packages**. Splice into live `MOD_IMG`; extract vanilla packages from bak only.
 - **Patch CIA with UI on the normal Drop CIA path without `release/bake_img.bin`** — causes English dialog/names but **Japanese menus** (menu chrome is bake-only). Bat must hard-stop if bake missing after fetch + rebuild.
 - **Grow a PACK header `dec_len` without updating img.bin's idx-table size for that package** — pkg **90** CESA companion wrote past a 1182976 arena (idx still vanilla) and heap-smashed boot. Inner PACK header and idx `dec_len` must match.

@@ -1,0 +1,121 @@
+diff --git a/src/core/hle/service/fs/file.cpp b/src/core/hle/service/fs/file.cpp
+index 6ba8f2b77..ec7c220a6 100644
+--- a/src/core/hle/service/fs/file.cpp
++++ b/src/core/hle/service/fs/file.cpp
+@@ -61,8 +61,10 @@ void File::Read(Kernel::HLERequestContext& ctx) {
+ 
+     const FileSessionSlot* file = GetSessionData(ctx.Session());
+ 
+-    if (file->subfile && length > file->size) {
+-        LOG_DEBUG(Service_FS, "Trying to read beyond the subfile size, truncating");
++    // OpenLinkFile clones inherit the session window. Clamp even when subfile
++    // is false so GetSize/Read cannot expose the rest of the backend.
++    if (length > file->size) {
++        LOG_DEBUG(Service_FS, "Trying to read beyond the session size, truncating");
+         length = static_cast<u32>(file->size);
+     }
+ 
+@@ -305,10 +307,16 @@ void File::SetSize(Kernel::HLERequestContext& ctx) {
+ void File::Close(Kernel::HLERequestContext& ctx) {
+     IPC::RequestParser rp(ctx);
+ 
+-    // TODO(Subv): Only close the backend if this client is the only one left.
+-    if (connected_sessions.size() > 1)
+-        LOG_WARNING(Service_FS, "Closing File backend but {} clients still connected",
+-                    connected_sessions.size());
++    // OpenLinkFile / OpenSubFile share one backend. Closing it while another
++    // session is live zeros later reads (NLPP Communications hang).
++    const bool last_client = connected_sessions.size() <= 1;
++    if (!last_client) {
++        LOG_DEBUG(Service_FS, "Close {} with {} clients; leaving backend open", GetName(),
++                  connected_sessions.size());
++        IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
++        rb.Push(ResultSuccess);
++        return;
++    }
+ 
+     if (!backend->AllowsCachedReads() && !Settings::values.async_fs_operations) {
+         backend->Close();
+@@ -379,7 +387,20 @@ void File::GetPriority(Kernel::HLERequestContext& ctx) {
+ }
+ 
+ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
+-    LOG_WARNING(Service_FS, "(STUBBED) File command OpenLinkFile {}", GetName());
++    // Duplicate the current handle (3dbrew / libctru FSFILE_OpenLinkFile).
++    // Snapshot the source session *before* ClientConnected so a vector grow
++    // cannot alias the new slot onto the original. Resetting offset/size to
++    // the whole backend breaks subfiles: GetSize then reports the full
++    // extra-data blob and NLPP heap-walks it (Communications load).
++    const FileSessionSlot* original_file = GetSessionData(ctx.Session());
++    const u32 priority = original_file->priority;
++    const u64 offset = original_file->offset;
++    const u64 size = original_file->size;
++    const bool subfile = original_file->subfile;
++    LOG_WARNING(Service_FS,
++                "OpenLinkFile {} clone offset={:#x} size={:#x} subfile={} backend={:#x}",
++                GetName(), offset, size, subfile, backend->GetSize());
++
+     using Kernel::ClientSession;
+     using Kernel::ServerSession;
+     IPC::RequestParser rp(ctx);
+@@ -388,12 +409,10 @@ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
+     ClientConnected(server);
+ 
+     FileSessionSlot* slot = GetSessionData(std::move(server));
+-    const FileSessionSlot* original_file = GetSessionData(ctx.Session());
+-
+-    slot->priority = original_file->priority;
+-    slot->offset = 0;
+-    slot->size = backend->GetSize();
+-    slot->subfile = false;
++    slot->priority = priority;
++    slot->offset = offset;
++    slot->size = size;
++    slot->subfile = subfile;
+ 
+     rb.Push(ResultSuccess);
+     rb.PushMoveObjects(client);
+@@ -410,11 +429,14 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+ 
+     if (original_file->subfile) {
+         // OpenSubFile can not be called on a file which is already as subfile
++        LOG_WARNING(Service_FS, "OpenSubFile {} already a subfile", GetName());
+         rb.Push(FileSys::ResultUnsupportedOpenFlags);
+         return;
+     }
+ 
+     if (offset < 0 || size < 0) {
++        LOG_WARNING(Service_FS, "OpenSubFile {} negative offset={} size={}", GetName(), offset,
++                    size);
+         rb.Push(FileSys::ResultWriteBeyondEnd);
+         return;
+     }
+@@ -424,6 +446,9 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+     // TODO(Subv): Check for overflow and return ResultWriteBeyondEnd
+ 
+     if (end > original_file->size) {
++        LOG_WARNING(Service_FS,
++                    "OpenSubFile {} beyond end offset={} size={} session={:#x}", GetName(), offset,
++                    size, original_file->size);
+         rb.Push(FileSys::ResultWriteBeyondEnd);
+         return;
+     }
+diff --git a/src/core/hle/service/fs/file.h b/src/core/hle/service/fs/file.h
+index 92d610214..fb4bed7e3 100644
+--- a/src/core/hle/service/fs/file.h
++++ b/src/core/hle/service/fs/file.h
+@@ -17,10 +17,10 @@ class System;
+ namespace Service::FS {
+ 
+ struct FileSessionSlot : public Kernel::SessionRequestHandler::SessionDataBase {
+-    u32 priority; ///< Priority of the file. TODO(Subv): Find out what this means
+-    u64 offset;   ///< Offset that this session will start reading from.
+-    u64 size;     ///< Max size of the file that this session is allowed to access
+-    bool subfile; ///< Whether this file was opened via OpenSubFile or not.
++    u32 priority = 0; ///< Priority of the file. TODO(Subv): Find out what this means
++    u64 offset = 0;   ///< Offset that this session will start reading from.
++    u64 size = 0;     ///< Max size of the file that this session is allowed to access
++    bool subfile = false; ///< Whether this file was opened via OpenSubFile or not.
+ 
+ private:
+     template <class Archive>

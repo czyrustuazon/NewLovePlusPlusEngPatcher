@@ -32,6 +32,8 @@ def test_deploy_name_input_includes_name_panes():
     assert "apply_name_pane_patches" in text
     assert "apply_ascii_dakuten" in text
     assert "apply_strcat_raw" in text
+    assert "apply_message_speed" in text
+    assert "message_speed_already" in text
 
 
 def test_apply_name_pane_patches_on_vanilla():

@@ -29,12 +29,22 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from nlpp_paths import CACHE_VANILLA_CODE, find_vanilla_code
+from nlpp_paths import (
+    CACHE_VANILLA_CODE,
+    CIA_FILENAME,
+    LAYEREDFS_DIR_NAME,
+    OUT_CIA,
+    OUT_CIA_PREFIX,
+    OUT_LAYEREDFS_PREFIX,
+    OUT_NOT_BOTH_NAME,
+    find_vanilla_code,
+)
 from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
 from run_timer import RunTimer
 from scratch_cleanup import is_reparse_dir as _is_reparse_dir
 from scratch_cleanup import path_is_under, remove_scratch
 from smdh_meta import (
+    LONG_TITLE,
     PUBLISHER,
     SHORT_TITLE,
     find_exefs_icon,
@@ -625,8 +635,8 @@ def patch_exefs_smdh(exefs_bin: Path, work: Path, *, region_lock: int) -> Path:
     icon = find_exefs_icon(exefs_dir)
     patch_icon_file(icon, region_lock=region_lock)
     print(
-        f"[meta] HOME title: {SHORT_TITLE!r} / publisher {PUBLISHER!r} "
-        f"(was Japanese SMDH in {icon.name})"
+        f"[meta] HOME title: {SHORT_TITLE!r} / {LONG_TITLE!r} / "
+        f"publisher {PUBLISHER!r} (was Japanese SMDH in {icon.name})"
     )
     return _repack_exefs(exefs_dir, header, work / "exefs_smdh.bin")
 
@@ -828,6 +838,7 @@ def write_layeredfs(
                 "resident TRB / img.bin use plain English heroine names — see src/patch_names.py.",
                 "",
                 "No CIA reinstall is required when using LayeredFS.",
+                "Do not also install the patched CIA from folder 2 — pick one.",
                 "Same install style as LovePlusProject/NLPPATCH releases.",
                 "",
                 "Note: the drop patcher writes this folder before rebuilding the CIA.",
@@ -1787,7 +1798,9 @@ def _cmd_patch_body(
     code_bin_src = resolve_code_bin_src(args)
 
     if args.layeredfs_only and not args.layeredfs_out:
-        args.layeredfs_out = str(ROOT / "out" / "luma")
+        args.layeredfs_out = str(
+            ROOT / "out" / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME
+        )
 
     romfs_overlay = resolve_romfs_overlay(args)
     log_path = resolve_patch_log_path(args)
@@ -1808,6 +1821,7 @@ def _cmd_patch_body(
             romfs_overlay=romfs_overlay,
         )
         layeredfs_written = _layeredfs_title_dir(layeredfs_out).is_dir()
+        write_install_choice_note()
 
     if args.layeredfs_only:
         print()
@@ -1849,6 +1863,7 @@ def _cmd_patch_body(
         )
     except PatchError:
         if layeredfs_written and layeredfs_out is not None:
+            write_install_choice_note()
             _print_layeredfs_recovery(layeredfs_out)
         raise
 
@@ -1861,6 +1876,7 @@ def _cmd_patch_body(
         print(f"Packed UI:   {packed_img}")
     if layeredfs_out is not None and layeredfs_out.is_dir():
         print(f"LayeredFS:   {layeredfs_out}")
+    write_install_choice_note()
     summary = build_patch_summary(
         out_cia=out_cia,
         packed_img=packed_img,
@@ -1895,7 +1911,10 @@ def _cmd_patch_body(
         emit_spotpass_inject(args)
     else:
         cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
-        print("  - out/ cleaned (kept *.cia, luma/, logs/, azahar_instances/, extdata_backup/).")
+        print(
+            "  - out/ cleaned (kept numbered LayeredFS/CIA folders, "
+            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/)."
+        )
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
     timer.finish("CIA patcher OK")
@@ -1989,12 +2008,45 @@ def cleanup_patch_artifacts(
 # Dirs under out/ that survive post-patch cleanup (not patch scratch).
 _OUT_KEEP_DIRS = frozenset(
     {
-        "luma",  # LayeredFS drop
+        OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
+        OUT_CIA_PREFIX,  # patched CIA
+        LAYEREDFS_DIR_NAME,  # leftover unprefixed luma/ from older builds
         "azahar_instances",  # a/b test workflow (ab_test/)
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "extdata_backup",  # Azahar extra-data / title-save snapshots
     }
 )
+_OUT_KEEP_FILES = frozenset(
+    {
+        OUT_NOT_BOTH_NAME,  # pick LayeredFS or CIA, not both
+    }
+)
+
+
+def write_install_choice_note(out_root: Path | None = None) -> Path:
+    """Write out/3_but not both — use LayeredFS or the CIA, not both."""
+    root = Path(out_root) if out_root is not None else (ROOT / "out")
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / OUT_NOT_BOTH_NAME
+    path.write_text(
+        "\n".join(
+            [
+                "Use either folder 1 (LayeredFS) or folder 2 (CIA). Do not use both.",
+                "",
+                f"{OUT_LAYEREDFS_PREFIX}/",
+                f"  Copy {LAYEREDFS_DIR_NAME}/{TITLE_ID} to SD:/luma/titles/",
+                "  (enable Enable game patching in Luma).",
+                "",
+                f"{OUT_CIA_PREFIX}/",
+                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
+                "",
+                "LayeredFS on top of the English CIA would apply the patch twice.",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return path
 
 
 def cleanup_out_dir(
@@ -2003,14 +2055,18 @@ def cleanup_out_dir(
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
     quiet: bool = False,
 ) -> None:
-    """Wipe EngPatcher out/ except CIA(s), luma/, logs/, backups, and a/b instances."""
+    """Wipe EngPatcher out/ except CIA(s), numbered install folders, logs, backups."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return
 
     keep: set[Path] = set()
     try:
-        keep.add(out_cia.resolve())
+        cia_path = out_cia.resolve()
+        keep.add(cia_path)
+        parent = cia_path.parent
+        if parent != out_root and path_is_under(parent, out_root):
+            keep.add(parent)
     except OSError:
         pass
     for cia in out_root.glob("*.cia"):
@@ -2019,6 +2075,13 @@ def cleanup_out_dir(
         except OSError:
             pass
     for name in _OUT_KEEP_DIRS:
+        p = out_root / name
+        if p.exists():
+            try:
+                keep.add(p.resolve())
+            except OSError:
+                pass
+    for name in _OUT_KEEP_FILES:
         p = out_root / name
         if p.exists():
             try:
@@ -2037,7 +2100,11 @@ def cleanup_out_dir(
             resolved = child.resolve()
         except OSError:
             continue
-        if resolved in keep or child.name in _OUT_KEEP_DIRS:
+        if (
+            resolved in keep
+            or child.name in _OUT_KEEP_DIRS
+            or child.name in _OUT_KEEP_FILES
+        ):
             continue
         if child.is_file() and child.suffix.lower() == ".cia":
             continue
@@ -2056,13 +2123,15 @@ def cleanup_out_dir(
             print(f"[cleanup] warning: {child.name}: {exc}")
     if removed:
         print(
-            f"[cleanup] out/ kept: *.cia, luma/, logs/, azahar_instances/, "
-            f"extdata_backup/ ({removed} other item(s) removed)"
+            f"[cleanup] out/ kept: {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
+            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/ "
+            f"({removed} other item(s) removed)"
         )
     elif not quiet:
         print(
             "[cleanup] out/ already clean "
-            "(CIA + luma + logs + azahar_instances + extdata_backup)"
+            f"({OUT_LAYEREDFS_PREFIX} + {OUT_CIA_PREFIX} + {OUT_NOT_BOTH_NAME} "
+            "+ logs + azahar_instances + extdata_backup)"
         )
 
 
@@ -2080,7 +2149,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "--out",
-        default=str(ROOT / "out" / "NewLovePlusPlus-EN.cia"),
+        default=str(OUT_CIA),
         help="Output patched CIA path",
     )
     p.add_argument(
@@ -2128,8 +2197,9 @@ def build_parser() -> argparse.ArgumentParser:
         "--keep-work",
         action="store_true",
         help="Keep out/ scratch after a successful build "
-        "(default: leave only *.cia, out/luma/, out/logs/, "
-        "out/azahar_instances/, out/extdata_backup/)",
+        f"(default: leave {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
+        f"{OUT_NOT_BOTH_NAME}, out/logs/, out/azahar_instances/, "
+        "out/extdata_backup/)",
     )
     p.add_argument(
         "--log",

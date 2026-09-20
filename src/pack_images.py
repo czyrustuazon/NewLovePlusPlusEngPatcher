@@ -997,7 +997,8 @@ def pack_images(
         print(f"[report] {report_path}")
         print(
             f"[done] packages={totals['packages']} replaced={totals['png_ok']} "
-            f"skipped={totals['png_skip']} cesa={totals['cesa']} {cache_line}"
+            f"skipped={totals['png_skip']} cesa={totals['cesa']} "
+            f"elapsed={timer.elapsed_str()} {cache_line}"
         )
         timer.finish(
             f"PNG pack OK packages={totals['packages']} replaced={totals['png_ok']}"

@@ -23,6 +23,12 @@ from nlpp_paths import (  # noqa: E402
 
 # Bundled SIL OFL font (see assets/fonts/README.md). Replaces YuGothR.ttc.
 UI_FONT = ROOT / "assets" / "fonts" / "MPLUS1p-Regular.ttf"
+# NLPPPATCH Heisei Gothic — MultiWin white bars (Heart to Heart, Communication).
+HEISEI_W5 = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
+HEADER_INK = (68, 68, 68)
+# Same start size as Girlfriend Comm. `render_header_aa` (gh ~12 on 192×16).
+HEADER_CORE_PX = 15
+HEADER_STRIP_H = 16
 
 __all__ = [
     "AZAHAR_MOD_IMG",
@@ -34,14 +40,21 @@ __all__ = [
     "ROOT",
     "TEXTRESOURCE",
     "UI_FONT",
+    "HEISEI_W5",
+    "HEADER_INK",
+    "HEADER_CORE_PX",
+    "HEADER_STRIP_H",
     "find_vanilla_img",
     "iter_deploy_targets",
     "require_vanilla_img",
     "resolve_img_paths",
     "resolve_resident_trb",
     "ui_font",
+    "chrome_font",
+    "render_header_aa",
     "find_ui_png",
     "fit_png_to_canvas",
+    "contain_no_upscale",
 ]
 
 
@@ -55,6 +68,50 @@ def ui_font(size: int):
             "Expected assets/fonts/MPLUS1p-Regular.ttf (SIL OFL)."
         )
     return ImageFont.truetype(str(UI_FONT), size=size)
+
+
+def chrome_font(size: int):
+    """Heisei Gothic P-face when present (same as MultiWin Heart to Heart)."""
+    from PIL import ImageFont
+
+    if HEISEI_W5.is_file():
+        return ImageFont.truetype(str(HEISEI_W5), size=size, index=1)
+    return ui_font(size)
+
+
+def render_header_aa(w: int, h: int, text: str, *, max_size: int | None = None):
+    """Dark gray AA like Zhoumaru Communication / Heart to Heart.
+
+    Short titles keep ~13px cores so ETC1A4 does not fry them. Default
+    ``max_size`` is ``HEADER_CORE_PX`` (15) — Heart to Heart at 192×16
+    lands at glyph-height 12 after 2× bilinear.
+    """
+    import numpy as np
+    from PIL import Image, ImageDraw
+
+    top = max_size if max_size is not None else min(HEADER_CORE_PX, h + 2)
+    for size in range(top, 7, -1):
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = chrome_font(size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > w * scale - 8:
+            continue
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        alpha = np.array(
+            big.resize((w, h), Image.Resampling.BILINEAR), dtype=np.float32
+        )
+        peak = float(alpha.max())
+        if peak > 0:
+            alpha = np.clip(alpha * (255.0 / peak), 0, 255)
+        a = alpha.astype(np.uint8)
+        rgb = Image.new("RGB", (w, h), HEADER_INK)
+        return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
+    raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
 
 
 def resolve_img_paths() -> tuple[Path, Path]:
@@ -162,25 +219,99 @@ def resolve_resident_trb() -> Path:
     )
 
 
-def fit_png_to_canvas(png: Path, size: tuple[int, int]) -> Path:
-    """Contain-resize a PNG onto a transparent canvas of ``size`` (in place)."""
+def _ui_fit_dest(png: Path, size: tuple[int, int]) -> Path:
+    w, h = size
+    dest = ROOT / "out" / "_ui_png_fit" / f"{png.stem}_{w}x{h}.png"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    return dest
+
+
+def _glyph_bbox(src) -> tuple[int, int, int, int]:
+    """Ink box: alpha when the master is A8/transparent; else the full frame."""
+    bbox = src.getchannel("A").getbbox()
+    if bbox is None:
+        return (0, 0, src.width, src.height)
+    return bbox
+
+
+def _glyph_fill_needed(src_size: tuple[int, int], size: tuple[int, int], bbox) -> bool:
+    """True when a strip master is going onto a different BCLIM canvas.
+
+    MultiWin bars are 192×16 native paint. Never resample a plate (or any
+    other canvas) onto that size — LANCZOS-filling 8px glyphs fries the
+    Girlfriend Communication header.
+    """
+    w, h = size
+    if src_size == (w, h):
+        return False
+    if (w, h) == (192, 16):
+        return False
+    return True
+
+
+def contain_no_upscale(
+    png: Path,
+    size: tuple[int, int],
+    *,
+    max_scale: float = 1.0,
+) -> "Image.Image":
+    """Scale ``png`` to fit ``size`` without cropping glyphs or upscaling.
+
+    Used for Girlfriend Communication: the plate PNG is a 192×16 strip, but
+    the live BCLIM is 144×28. Glyph-filling that 8px paint fries the header.
+    """
     from PIL import Image
 
     w, h = size
     with Image.open(png) as im:
         src = im.convert("RGBA")
-        if src.size == (w, h):
-            return png
-        scale = min(w / src.width, h / src.height)
-        nw = max(1, int(round(src.width * scale)))
-        nh = max(1, int(round(src.height * scale)))
-        nw = min(nw, w)
-        nh = min(nh, h)
-        resized = src.resize((nw, nh), Image.Resampling.LANCZOS)
+    scale = min(w / src.width, h / src.height, max_scale)
+    nw = max(1, min(w, int(round(src.width * scale))))
+    nh = max(1, min(h, int(round(src.height * scale))))
+    resized = src.resize((nw, nh), Image.Resampling.LANCZOS)
+    canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    canvas.paste(resized, ((w - nw) // 2, (h - nh) // 2), resized)
+    return canvas
+
+
+def fit_png_to_canvas(
+    png: Path, size: tuple[int, int], dest: Path | None = None
+) -> Path:
+    """Contain-resize painted UI onto ``size``. Never overwrites ``png``.
+
+    Crops to the alpha/glyph bbox first so a 192×16 Zhoumaru strip can fill a
+    144×28 MSel plate (or a 192×16 MultiWin bar) instead of sitting letterboxed.
+    """
+    from PIL import Image
+
+    w, h = size
+    dest = dest or _ui_fit_dest(png, size)
+    with Image.open(png) as im:
+        src = im.convert("RGBA")
+        bbox = _glyph_bbox(src)
+        bw, bh = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        full = bw >= src.width - 1 and bh >= src.height - 1
+        crop = src if full else src.crop(bbox)
+        pad_x = 2 if w <= 192 else 4
+        pad_y = 1 if h <= 16 else max(2, h // 10)
+        inner_w = max(1, w - 2 * pad_x)
+        inner_h = max(1, h - 2 * pad_y)
+        scale = min(inner_w / crop.width, inner_h / crop.height)
+        nw = max(1, min(w, int(round(crop.width * scale))))
+        nh = max(1, min(h, int(round(crop.height * scale))))
+        resized = crop.resize((nw, nh), Image.Resampling.LANCZOS)
+        if not full:
+            # Upscaled A8/MultiWin paint: keep a solid coverage mask so LANCZOS
+            # fringes don't vanish (or blow the zlib slot as soft AA).
+            alpha = resized.getchannel("A").point(
+                lambda p: 255 if p >= 40 else 0
+            )
+            rgb = Image.new("RGB", resized.size, (255, 255, 255))
+            resized = Image.merge("RGBA", (*rgb.split(), alpha))
         canvas = Image.new("RGBA", (w, h), (0, 0, 0, 0))
         canvas.paste(resized, ((w - nw) // 2, (h - nh) // 2), resized)
-        canvas.save(png)
-    return png
+        canvas.save(dest)
+    return dest
 
 
 def find_ui_png(
@@ -190,8 +321,9 @@ def find_ui_png(
 ) -> Path | None:
     """Community / .check PNG master for a BCLIM stem.
 
-    If ``size`` is set and the PNG differs, contain-fit it onto that canvas so
-    chrome deploys use Zhoumaru art instead of a font label.
+    If ``size`` is set, glyph-fit onto that canvas when the master would
+    otherwise letterbox. Writes the result under ``out/_ui_png_fit/`` — never
+    mutates ``assets/images``.
     """
     from PIL import Image
 
@@ -211,9 +343,14 @@ def find_ui_png(
             return png
         try:
             with Image.open(png) as im:
-                if im.size == size:
-                    return png
+                src = im.convert("RGBA")
+                src_size = src.size
+                bbox = _glyph_bbox(src)
         except OSError:
+            continue
+        if not _glyph_fill_needed(src_size, size, bbox):
+            if src_size == size:
+                return png
             continue
         try:
             return fit_png_to_canvas(png, size)
