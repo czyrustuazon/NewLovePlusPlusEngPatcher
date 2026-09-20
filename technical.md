@@ -1636,7 +1636,7 @@ Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
 | Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
-| Shared Nene save | `ab_test/saves/nene/` via `.\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
+| Shared Nene save | local `ab_test/saves/nene/` (gitignored) via `.\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
 
 Do **not** tell the user to quit Azahar between deploys (standing preference).
 

@@ -101,11 +101,16 @@ desktop.ini
 .idea/
 .vscode/
 
-# Local a/b workflow overrides (copy from ab_test/paths.local.ps1.example)
+# Local a/b workflow: ignore saves / machine paths. Keep scripts, docs, Azahar patch.
 paths.local.*
 !paths.local.*.example
-ab_test/paths.local.ps1
+ab_test/**
+!ab_test/README.md
+!ab_test/make.ps1
+!ab_test/setup_azahar_instances.ps1
 !ab_test/paths.local.ps1.example
+!ab_test/patches/
+!ab_test/patches/**
 
 # Optional offline NLPPATCH mirror (not required — community scripts live in rebuild_dbin2)
 vendor/NLPPATCH/

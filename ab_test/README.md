@@ -56,7 +56,7 @@ instance (usually vanilla from `seed-*`).
 .\make.ps1 launch-b
 ```
 
-**Shared Nene title save** (Checkpoint/Azahar `savedata*` pack in `ab_test/saves/nene/`):
+**Local Nene title save** (Checkpoint/Azahar `savedata*` pack in gitignored `ab_test/saves/nene/`):
 
 ```powershell
 .\make.ps1 save-nene      # A and B
@@ -108,7 +108,7 @@ Or set the env inside a small wrapper the same way `ab_test/make.ps1` does
 | `ab_test/make.ps1` | Targets: instances, seed, deploy, restore, launch, build-azahar |
 | `ab_test/setup_azahar_instances.ps1` | Copies azahar.exe + ICU DLLs; writes Launch-*.bat |
 | `ab_test/paths.local.ps1` | Machine paths (gitignored) |
-| `ab_test/saves/nene/` | Shared Nene title-save pack (`.\make.ps1 save-nene`) |
+| `ab_test/saves/nene/` | Local Nene title-save pack (`.\make.ps1 save-nene`; gitignored) |
 | `out/azahar_instances/{a,b}/` | Isolated user dirs + local azahar copy |
 | `src/nlpp_paths.py` | Resolves Azahar mod paths from env |
 
