@@ -94,3 +94,17 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert r'out\2_[Or this]\NewLovePlusPlus-EN.cia' in text
     assert r"out\3_but not both" in text
     assert "Scripts-only patch" not in text
+
+
+def test_bat_drop_timer_avoids_for_f_python_quoting():
+    """cmd FOR /F '"%PYTHON%" -c "import' treats python.exe\" -c \"import as the exe."""
+    text = _bat_text()
+    assert "run_timer.py" in text
+    assert "--now" in text
+    assert "nlpp_t0.txt" in text
+    assert "nlpp_elapsed.txt" in text
+    assert "Time to finish" in text
+    # The broken start-clock line (and the matching elapsed FOR /F).
+    assert "import time; print(int(time.time()))" not in text
+    assert "for /f %%T in" not in text
+    assert 'for /f "delims=" %%E in' not in text

@@ -99,9 +99,15 @@ class RunTimer:
 
 
 if __name__ == "__main__":
-    # Drop bat: python src/run_timer.py <unix_start>  →  4m32s
+    # Drop bat (no FOR /F — cmd quote-breaks '"python.exe" -c "import'):
+    #   python src/run_timer.py --now           →  1758410000
+    #   python src/run_timer.py <unix_start>    →  4m32s
     import sys
 
     if len(sys.argv) != 2:
-        raise SystemExit("usage: run_timer.py <unix_start_seconds>")
-    print(format_elapsed(time.time() - float(sys.argv[1])))
+        raise SystemExit("usage: run_timer.py --now | <unix_start_seconds>")
+    arg = sys.argv[1]
+    if arg == "--now":
+        print(int(time.time()))
+    else:
+        print(format_elapsed(time.time() - float(arg)))

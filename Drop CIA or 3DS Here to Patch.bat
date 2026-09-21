@@ -95,7 +95,19 @@ echo  Using:
 echo    %PYTHON%
 echo.
 
-for /f %%T in ('"%PYTHON%" -c "import time; print(int(time.time()))"') do set "NLPP_T0=%%T"
+REM Do not use FOR /F around '"%PYTHON%" -c "import ...' — cmd treats
+REM 'C:\...\python.exe" -c "import' as the executable name (quote pairing).
+REM Write the unix stamp to a temp file instead (same pattern as SHA-1).
+set "NLPP_T0="
+set "NLPP_T0_FILE=%TEMP%\nlpp_t0.txt"
+if exist "%NLPP_T0_FILE%" del /f /q "%NLPP_T0_FILE%" >nul 2>&1
+"%PYTHON%" "%SRC%\run_timer.py" --now > "%NLPP_T0_FILE%"
+if exist "%NLPP_T0_FILE%" (
+  set /p NLPP_T0=<"%NLPP_T0_FILE%"
+  del /f /q "%NLPP_T0_FILE%" >nul 2>&1
+)
+set "NLPP_T0_FILE="
+if defined NLPP_T0 echo [timer] Drop CIA started
 
 echo Installing Python deps from requirements.txt ...
 "%PYTHON%" -m pip install -q -r "%~dp0requirements.txt"
@@ -381,8 +393,17 @@ echo [+] Patched CIA:
 echo     %~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia
 echo.
 if defined NLPP_T0 (
-  for /f "delims=" %%E in ('"%PYTHON%" "%SRC%\run_timer.py" !NLPP_T0!') do (
-    echo [+] Time to finish: %%E
+  set "NLPP_ELAPSED="
+  set "NLPP_ELAPSED_FILE=%TEMP%\nlpp_elapsed.txt"
+  if exist "!NLPP_ELAPSED_FILE!" del /f /q "!NLPP_ELAPSED_FILE!" >nul 2>&1
+  "%PYTHON%" "%SRC%\run_timer.py" !NLPP_T0! > "!NLPP_ELAPSED_FILE!"
+  if exist "!NLPP_ELAPSED_FILE!" (
+    set /p NLPP_ELAPSED=<"!NLPP_ELAPSED_FILE!"
+    del /f /q "!NLPP_ELAPSED_FILE!" >nul 2>&1
+  )
+  set "NLPP_ELAPSED_FILE="
+  if defined NLPP_ELAPSED (
+    echo [+] Time to finish: !NLPP_ELAPSED!
     echo.
   )
 )
