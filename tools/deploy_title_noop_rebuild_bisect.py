@@ -32,7 +32,7 @@ from exact_zlib import compress_exact_zopfli, _force_zero_gaps  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
-from deploy_common import iter_deploy_targets, resolve_img_paths  # noqa: E402
+from deploy_common import maybe_backup_img, iter_deploy_targets, resolve_img_paths  # noqa: E402
 
 MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "title_noop_bisect"
@@ -43,10 +43,7 @@ def main() -> int:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_title_noop_bisect")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "title_noop_bisect")
 
     OUT.mkdir(parents=True, exist_ok=True)
     pkg_dir = OUT / "img_data"

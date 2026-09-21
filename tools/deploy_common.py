@@ -45,10 +45,13 @@ __all__ = [
     "HEADER_CORE_PX",
     "HEADER_STRIP_H",
     "find_vanilla_img",
+    "img_backup_path",
     "iter_deploy_targets",
+    "maybe_backup_img",
     "require_vanilla_img",
     "resolve_img_paths",
     "resolve_resident_trb",
+    "skip_full_img_backup",
     "ui_font",
     "chrome_font",
     "render_header_aa",
@@ -145,12 +148,49 @@ def resolve_img_paths() -> tuple[Path, Path]:
 
     vanilla = find_vanilla_img()
     if vanilla is None:
-        bak = primary.with_suffix(".bin.bak_pre_msel5245")
+        bak = img_backup_path(primary, "msel5245")
         if bak.is_file():
             vanilla = bak.resolve()
         else:
             vanilla = primary
     return primary, vanilla
+
+
+def img_backup_path(img: Path, tag: str) -> Path:
+    """Sidecar next to ``img``, e.g. ``img.bin.bak_pre_confirm_btn``."""
+    return img.with_suffix(f".bin.bak_pre_{tag}")
+
+
+def skip_full_img_backup(img: Path) -> bool:
+    """True for gold bake / ``NLPP_NO_IMG_BACKUP`` — a full copy is ~680MB."""
+    env = os.environ.get("NLPP_NO_IMG_BACKUP", "").strip().lower()
+    if env in ("1", "true", "yes", "on"):
+        return True
+    try:
+        return img.resolve() == BAKE_IMG.resolve()
+    except OSError:
+        return False
+
+
+def maybe_backup_img(img: Path, tag: str) -> Path:
+    """Copy ``img`` once for LayeredFS rollback. Skip gold bake.
+
+    Drop CIA / ``rebuild_bake_img.py`` target ``release/bake_img.bin``. Twenty-plus
+    feature sidecars used to fill the disk (~17GB) and abort mid-bake. Vanilla
+    ARCs come from ``find_vanilla_img()``; rollback for gold is rebuild.
+
+    Returns the sidecar path whether or not a copy was written.
+    """
+    bak = img_backup_path(img, tag)
+    if skip_full_img_backup(img):
+        print(f"skip img backup: {bak.name}", flush=True)
+        return bak
+    if not bak.is_file():
+        if not img.is_file():
+            raise SystemExit(f"missing {img}")
+        bak.write_bytes(img.read_bytes())
+        print("created", bak, flush=True)
+    return bak
 
 
 def iter_deploy_targets(primary: Path) -> list[Path]:

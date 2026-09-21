@@ -28,6 +28,7 @@ from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -360,10 +361,7 @@ def splice_pkg(pkg_id: int, src_img: Path, patched: bytes, cmp_len: int) -> None
 def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_todo")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "todo")
     OUT.mkdir(parents=True, exist_ok=True)
 
     # Headers from live (keeps My Data / Mail headers)

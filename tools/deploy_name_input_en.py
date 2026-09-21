@@ -18,6 +18,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
   11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
+  12. patch_password_uribo                  # UriboKasa* slots 33–35 grant ウリボー傘, not 内部
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -105,6 +106,10 @@ from patch_spotpass_embed import (  # noqa: E402
     apply_patch as apply_spotpass_embed,
     build_function_blob as build_spotpass_embed,
     is_patched as spotpass_embed_already,
+)
+from patch_password_uribo import (  # noqa: E402
+    apply_patch as apply_password_uribo,
+    is_patched as password_uribo_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -222,6 +227,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] spotpass_embed already applied")
     else:
         apply_spotpass_embed(data)
+        steps += 1
+
+    if password_uribo_already(data):
+        print("[skip] password_uribo already applied")
+    else:
+        apply_password_uribo(data)
         steps += 1
 
     return steps

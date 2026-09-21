@@ -21,6 +21,7 @@ from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     OVERLAY_TRB_DIR,
+    maybe_backup_img,
     TEXTRESOURCE,
     iter_deploy_targets,
     resolve_img_paths,
@@ -77,10 +78,7 @@ def main() -> None:
         p.write_bytes(trb_live)
         print("wrote", p, flush=True)
 
-    bak_img = MOD_IMG.with_suffix(".bin.bak_pre_day_counter")
-    if not bak_img.is_file():
-        bak_img.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak_img, flush=True)
+    bak_img = maybe_backup_img(MOD_IMG, "day_counter")
 
     if len(trb_live) != 223280:
         raise SystemExit(f"unexpected resident TRB size {len(trb_live)}")

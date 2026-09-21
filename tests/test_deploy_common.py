@@ -179,3 +179,42 @@ def test_profile_header_glyph_height_matches_heart_to_heart():
     assert 11 <= glyph_h(prof) <= 14
     assert h2h.size == (192, 16)
     assert prof.size == (144, 16)
+
+
+def test_skip_full_img_backup_for_gold_bake(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    bake.write_bytes(b"bake")
+    other = tmp_path / "img.bin"
+    other.write_bytes(b"mod")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    assert deploy_common.skip_full_img_backup(bake) is True
+    assert deploy_common.skip_full_img_backup(other) is False
+    monkeypatch.setenv("NLPP_NO_IMG_BACKUP", "1")
+    assert deploy_common.skip_full_img_backup(other) is True
+
+
+def test_maybe_backup_img_skips_gold_bake(tmp_path: Path, monkeypatch, capsys):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    bake.write_bytes(b"bake-bytes")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    bak = deploy_common.maybe_backup_img(bake, "confirm_btn")
+    assert bak == bake.with_suffix(".bin.bak_pre_confirm_btn")
+    assert not bak.is_file()
+    assert "skip img backup" in capsys.readouterr().out
+
+
+def test_maybe_backup_img_copies_layeredfs(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    img = tmp_path / "azahar" / "img.bin"
+    img.parent.mkdir(parents=True)
+    img.write_bytes(b"layeredfs")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    bak = deploy_common.maybe_backup_img(img, "confirm_btn")
+    assert bak.is_file()
+    assert bak.read_bytes() == b"layeredfs"

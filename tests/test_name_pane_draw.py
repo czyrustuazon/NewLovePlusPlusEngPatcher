@@ -38,6 +38,8 @@ def test_deploy_name_input_includes_name_panes():
     assert "spotpass_skip_already" in text
     assert "apply_spotpass_embed" in text
     assert "spotpass_embed_already" in text
+    assert "apply_password_uribo" in text
+    assert "password_uribo_already" in text
 
 
 def test_apply_name_pane_patches_on_vanilla():

@@ -1259,7 +1259,7 @@ decrypted .cia / .3ds / .cci dropped
 
 Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and the vanilla bake bak after they are consumed; CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps all of that. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-LayerFS]/`, `out/2_[Or this]/`, `out/3_but not both`, `out/logs/`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-LayerFS]/`, `out/2_[Or this]/`, `out/3_but not both`, `out/logs/`.
 
 #### Environment overrides
 
@@ -1525,6 +1525,7 @@ a/b guide: **`ab_test/README.md`**.
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 | 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `moveq r0,#4` → `#0` @ `0x00609740` — no boot nag without BOSS (**§16.7**) |
 | 11 | SpotPass NsData embed | `src/patch_spotpass_embed.py` | Bake Watcher #28; spoof NewFlag/ReadNsData after save load (**§16.8**) |
+| 12 | ウリボー傘 grant | `src/patch_password_uribo.py` | `UriboKasa*` slots 33–35 → item ids 465/466/467; `cmp r4,#0x21` → `#0x24` so they are presents, not 内部 (**§22**) |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
@@ -2076,6 +2077,37 @@ Verified 2026-09-17: heroine date line on **A** matches player speed; **B** stil
 `メッセージ速度テストです。` is a UTF-8 literal in `code.bin` at `0x005D1928` (39 bytes + NUL, immediately before the next ARM insn at `0x005D1950`). Ghidra string search misses it; it is **not** TRB. `FUN_001d2f90` copies it through `FUN_005d191c`.
 
 Patch: in-place EN `This is a text-speed test.` + NUL pad in the same 40-byte slot (`patch_message_speed.py` / gold `name_input_code.bin`). Do not grow the pool. Do not use a `.rodata` pad.
+
+---
+
+## 22. Shared password serials / ウリボー傘 grant
+
+Player cheat sheet: **`docs/password-codes.md`**.
+
+Passwords are **not** ASCII in `code.bin`. `FUN_00132d40` (`0x00132D40`) `strcmp`s the ABC buffer against pack **`0xb000`** (INDX cat 176 sub 0, slots 0–52). Pack **`0xb001`** is the source label only. Shared hit: `+0x88=1`, `+0x94=slot`, `+0x89=0`. Serial/PAK path (`FUN_00598f14`): `+0x89=1`, `+0x8b=1`. Used-bit: `FUN_00257600` / `FUN_002575c4` (8 bytes at save `+0xc`). UI after match: `FUN_001330d8` returns `+0x94`; OptionPassword @ `0x002DB790`.
+
+Vanilla holes all pointed at STRI **24550** `なし` (NLP flag 0). ABC cannot type it. `src/patch_password_serials.py` appends unique STRI rows and retargets INDX only — do **not** rewrite 24550. Hook: `tools/deploy_name_kanji_trb.py`.
+
+Match does not grant. `FUN_0038dc70` (`0x0038DC70`) applies `s32 item_id[53]` @ file **`0x006B6F00`** (VA `0x007B6F00`, `DAT_0038e108`):
+
+| Sentinel / id | Slots | Effect |
+|---------------|-------|--------|
+| positive | 0–17, 19–22 | `FUN_00390058` present (`0x0404` ids; slot 0 = 355 gloves) |
+| `-1` | 18, 23, 30–32 | Riches `FUN_0025959c(..., 100)` |
+| `-200` | 24–26 | VISA: items **465/466/467** (heroine `param_5`) + nickname (`FUN_003b82e0` tests slot `0x18`) |
+| `-100` | 27–29 | Pia muffler **350 / 352 / 353** (`0x160` imm for Rinko) |
+| `-500` (`0xFFFFFE0C`) | 33–40 vanilla | `uxth` junk + **内部** flags |
+| `-300` | 41–52 | collab straps (`DAT_0038e11c` + `(slot-0x29)*0xC`) |
+
+Inventory-key split (`cmp r4,#0x21` @ **`0x0038DDA0`**, then `bge` 内部 base):
+
+- slot `< 0x21` → `slot - DAT_0038e10c` = `0x04000614 + slot`
+- slot `< 0x34` → `DAT_0038e110 + slot` = `0x04000659 + slot` (内部)
+- else → `DAT_0038e114 + slot` = `0x0400066C + slot`
+
+Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa*` on 33–35, then `src/patch_password_uribo.py` writes 465/466/467 over `-500` and changes the compare to `#0x24` so those three use present flags `0x04000635..637`. Slots 36–40 stay 内部. `.rodata` table; no cave. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin`.
+
+内部 names (wiki / success copy, slots 33–40): Colorful Clip, MEDAL Happy Daily Life, all Love Plus mode, all illustrations, card templates, card stickers, all costumes, all 着ボイス.
 
 ---
 

@@ -34,6 +34,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -372,10 +373,7 @@ def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
-    bak_menus = MOD_IMG.with_suffix(".bin.bak_pre_msel_menus")
-    if not bak_menus.is_file():
-        bak_menus.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak_menus, flush=True)
+    bak_menus = maybe_backup_img(MOD_IMG, "msel_menus")
 
     vanilla_img = pick_vanilla()
     print("vanilla ARC source:", vanilla_img, flush=True)

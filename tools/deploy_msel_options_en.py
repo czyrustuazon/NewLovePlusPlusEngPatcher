@@ -36,6 +36,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -457,12 +458,10 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_msel5245")
-    if not bak.is_file():
-        if not MOD_IMG.is_file():
-            raise SystemExit(f"missing {MOD_IMG}")
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created bak from current mod img")
+    if not MOD_IMG.is_file():
+        raise SystemExit(f"missing {MOD_IMG}")
+    maybe_backup_img(MOD_IMG, "msel5245")
+    vanilla_src = VANILLA if VANILLA.is_file() else MOD_IMG
 
     IMG_DATA.mkdir(parents=True, exist_ok=True)
     tmp = ROOT / "out" / "msel5245_en" / "_fit"
@@ -470,7 +469,7 @@ def main() -> None:
     new_pkg = IMG_DATA / f"new_{PKG:04d}"
 
     if args.plate_only:
-        src_img = MOD_IMG if MOD_IMG.is_file() else bak
+        src_img = MOD_IMG
         image = ImgBin(str(src_img))
         image.parse(False)
         res = image.entries[PKG]
@@ -489,16 +488,18 @@ def main() -> None:
         )
         splice_arc(src_pkg, patched_arc, new_pkg)
     else:
-        image = ImgBin(str(bak))
+        image = ImgBin(str(vanilla_src))
         image.parse(False)
         res = image.entries[PKG]
         if res is None:
             raise SystemExit(f"pkg {PKG} missing")
         src_pkg = IMG_DATA / f"{PKG:04d}"
         src_pkg.write_bytes(
-            bak.read_bytes()[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
+            vanilla_src.read_bytes()[
+                res.fw.base_offset : res.fw.base_offset + res.fw.len()
+            ]
         )
-        print(f"vanilla package {PKG} ({src_pkg.stat().st_size} bytes)")
+        print(f"vanilla package {PKG} from {vanilla_src} ({src_pkg.stat().st_size} bytes)")
         pkg = Package(FileWindow(str(src_pkg)), 0)
         pkg.parse(False)
         arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))

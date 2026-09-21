@@ -85,6 +85,8 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "spotpass_skip_already" in deploy
     assert "apply_spotpass_embed" in deploy
     assert "spotpass_embed_already" in deploy
+    assert "apply_password_uribo" in deploy
+    assert "password_uribo_already" in deploy
 
 
 def test_softkey_deploy_after_confirm():
@@ -234,6 +236,20 @@ def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):
     assert "time:          1h02m18s  (started 2026-09-17 00:02:00)" in text
     assert "gold bake:" in text
     assert "PNG optional:" not in text
+
+
+def test_rebuild_skips_gold_bake_sidecars(tmp_path: Path):
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
+    assert "cleanup_bake_img_baks" in text
+    assert 'env["NLPP_NO_IMG_BACKUP"] = "1"' in text
+    assert "seed_vanilla_bak" not in text
+    bake = tmp_path / "bake_img.bin"
+    bake.write_bytes(b"gold")
+    leftover = tmp_path / "bake_img.bin.bak_pre_cesa"
+    leftover.write_bytes(b"old")
+    rebuild.cleanup_bake_img_baks(bake)
+    assert bake.read_bytes() == b"gold"
+    assert not leftover.exists()
 
 
 def test_write_rebuild_log_includes_total_time(tmp_path: Path):

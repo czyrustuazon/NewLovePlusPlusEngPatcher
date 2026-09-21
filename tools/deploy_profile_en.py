@@ -34,6 +34,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     HEADER_CORE_PX,
+    maybe_backup_img,
     HEADER_STRIP_H,
     chrome_font,
     find_ui_png,
@@ -692,10 +693,7 @@ def patch_atlas_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byte
 def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_profile_v3")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "profile_v3")
     OUT.mkdir(parents=True, exist_ok=True)
 
     patch_package(PKG_HEADER, patch_header_arc, use_zopfli=True)

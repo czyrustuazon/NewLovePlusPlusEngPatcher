@@ -30,6 +30,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -192,10 +193,7 @@ def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_gallery_common")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "gallery_common")
 
     vanilla = pick_vanilla()
     print("vanilla ARC source:", vanilla, flush=True)

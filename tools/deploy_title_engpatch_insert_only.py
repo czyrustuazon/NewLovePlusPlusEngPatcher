@@ -35,6 +35,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -71,10 +72,7 @@ def main() -> int:
 
     # Prefer live MOD as ARC base so hub EN labels stay.
     src_img = MOD_IMG
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_engpatch_bisect")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "engpatch_bisect")
 
     OUT.mkdir(parents=True, exist_ok=True)
     pkg_dir = OUT / "img_data"

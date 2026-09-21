@@ -231,16 +231,15 @@ def pack_ui(
             remove_scratch(work, label="rebuild_bake_img_work")
 
 
-def vanilla_bake_bak(bake: Path) -> Path:
-    """Sidecar bak used by several deploys for virgin ARC bytes."""
-    return bake.with_suffix(".bin.bak_pre_msel5245")
+def bake_img_feature_baks(bake: Path) -> list[Path]:
+    """Leftover ``bake_img.bin.bak_pre_*`` copies (~680MB each)."""
+    return sorted(bake.parent.glob(f"{bake.name}.bak_pre_*"))
 
 
-def seed_vanilla_bak(vanilla: Path, bake: Path) -> None:
-    """Sidecar bak used by several deploys for virgin ARC bytes."""
-    bak = vanilla_bake_bak(bake)
-    shutil.copy2(vanilla, bak)
-    print(f"[bake] vanilla bak -> {bak}", flush=True)
+def cleanup_bake_img_baks(bake: Path) -> None:
+    """Gold bake does not keep feature sidecars; they fill disks and abort Drop."""
+    for bak in bake_img_feature_baks(bake):
+        remove_scratch(bak, label=f"bake sidecar {bak.name}")
 
 
 def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
@@ -497,6 +496,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     env = os.environ.copy()
     env["NLPP_VANILLA_IMG"] = str(vanilla)
     env["NLPP_DEPLOY_IMG"] = str(BAKE_IMG)
+    env["NLPP_NO_IMG_BACKUP"] = "1"
     if find_vanilla_main_trb() is None and args.rom is not None:
         raise SystemExit(
             "vanilla textresource_jpn.trb missing after ROM extract. "
@@ -562,7 +562,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         timer.mark("PNG pack done")
         cleanup_rebuild_scratch(keep_work=keep_work)
 
-    seed_vanilla_bak(vanilla, BAKE_IMG)
+    cleanup_bake_img_baks(BAKE_IMG)
 
     if not args.skip_trb:
         timer.mark("rebuilding main TRB")
@@ -613,8 +613,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         cleanup_rebuild_scratch(keep_work=keep_work)
 
     sync_trb_overlay()
-    if not keep_work:
-        remove_scratch(vanilla_bake_bak(BAKE_IMG), label="vanilla bake bak")
+    cleanup_bake_img_baks(BAKE_IMG)
 
     timer.mark("building name-input code.bin")
     name_code = build_name_input_code(rom=args.rom.resolve() if args.rom else None)

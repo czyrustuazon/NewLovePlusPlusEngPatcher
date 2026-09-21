@@ -72,7 +72,9 @@ def test_rebuild_cleans_scratch_by_default():
     assert "duplicate cache/new_img.bin" in text
     assert "rebuild_bake_img_work" in text
     assert "--keep-work" in text
-    assert "vanilla bake bak" in text
+    assert "cleanup_bake_img_baks" in text
+    assert "NLPP_NO_IMG_BACKUP" in text
+    assert "seed_vanilla_bak" not in text
 
 
 def test_extract_deletes_work_dir():
