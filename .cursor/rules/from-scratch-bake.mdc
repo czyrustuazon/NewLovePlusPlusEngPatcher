@@ -13,7 +13,7 @@ Azahar LayeredFS is still **required for emulator testing** — see `bakable-and
 
 Drop a decrypted `.cia` / `.3ds` on **`Drop CIA or 3DS Here to Patch.bat`**.
 
-If `release/bake_img.bin` is missing **or** `release/bake_stamp.txt` ≠ `PATCHER_RELEASE` (RC default), the bat runs:
+If `release/bake_img.bin` is missing **or** `release/bake_stamp.txt` ≠ `PATCHER_RELEASE` (currently `v1.0.0-rc3` on main), the bat runs:
 
 ```bash
 python tools/rebuild_bake_img.py --rom <dropped ROM>

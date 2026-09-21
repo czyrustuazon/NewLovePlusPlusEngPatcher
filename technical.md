@@ -77,7 +77,7 @@ file_offset = runtime_va - 0x100000
 
 ### 1.1 Ghidra MCP (`user-ghidra`)
 
-1. Call `GetMcpTools` for schemas before invoking tools.
+1. Call `GetDynamicTools` (`namespace: "user-ghidra"`) for schemas before invoking tools (`CallDynamicTool`).
 2. `list_open_programs` / `list_instances` + `connect_instance` if disconnected.
 3. Prefer current program `code.bin` (also `/codeV2.bin` may exist). Image base **0**.
 
@@ -105,6 +105,8 @@ file_offset = runtime_va - 0x100000
 | Options button BCLIM bind | `OptionMenu_BindBtnTextures` @ `001eb3dc` |
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
+| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options 18/12/6/0 → 14/8/2/0) — **§21** |
+| TalkWindow delay table | `0x006E3024` (40/70/90/110/220 → 10/18/22/28/55) — **§21** |
 
 ---
 
@@ -156,7 +158,7 @@ Codebook file used by EngPatcher:
 `release/textresource/textresource_jpn.trb` vs vanilla JP — count of non-empty
 `JP_RE` entries whose text changed → `scriptPercent`. POSTs to the site Worker
 KV (`POST /api/admin/progress`). Auto after `rebuild`, Drop CIA.bat, and
-nlpp-gold CI when `NLPP_PROGRESS_*` is set. Resident TOP TRB is **out of scope**.
+nlpp-gold-maker CI when `NLPP_PROGRESS_*` is set. Resident TOP TRB is **out of scope**.
 Graphics track is manual. See `infra/README.md`.
 
 ### 3.2 Pack / hierarchy lookup
@@ -981,11 +983,11 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_confirm_btn_en.py` | Confirm `決定` → `OK` ETC1A4 @ **5238** (lean trials + shared exact zlib) |
 | `tools/deploy_softkey_quit_en.py` | Quit `やめる` → `Quit` ETC1A4 `Com_btn_y01_b{,ON}` @ **5238** (after Back/Next) |
 | `tools/deploy_softkey_defaults_en.py` | Restore Default `初期設定` ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (last-writer after Quit) |
-| `tools/deploy_title_main_menu_en.py` | **Main-menu hub rows** `Title_btn02_t01..t06` RGBA4444 @ **5261** (labels only; custom BCLIM/BCLYT black-screened — do not re-add yet) |
+| `tools/deploy_title_engpatch_en.py` | Hub rows + Eng Patch badge + gray `Title_menu_word` @ **5261** (bake last-writer). Labels-only `deploy_title_main_menu_en.py` is leftover — do not put it back on the bake list |
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
 | `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
-| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from nlpp-gold GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
+| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/2_[Or this]/`) + LayeredFS (`out/1_[Either use this-LayerFS]/luma/`) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
@@ -1109,7 +1111,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch v1.0.0-rc3` + newloveplus.loc.moe); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc3`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1170,9 +1172,9 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Zero DARC inter-file gaps before measuring zopfli | Prior urandom salt inflates zlib on shared ARCs |
 | Package ProcessPool (`--pkg-workers`) | Parallel exact-zlib across packages; main thread splices (§12.5.3) |
 | Seed resident TRB into `release/textresource/` from vanilla/cache | Convenient same-size TOP blob to patch before splicing into pkg **5508** (RomFS resident path itself unused at runtime) |
-| `deploy_title_main_menu_en.py` + `deploy_cesa_en.py` on rebuild list | Hub + boot warning covered in gold path |
+| `deploy_title_engpatch_en.py` + `deploy_cesa_en.py` on rebuild list | Hub rows + Eng Patch badge + boot warning on gold path |
 | Softkeys / multiwin / gallery / UI buttons / keyboard tabs on rebuild list | Remaining chrome deploy scripts in `DEPLOY_SCRIPTS` |
-| `release/name_input_code.bin` from bake | Drop-bat `--inject-code` for Profile romaji name-input |
+| `release/name_input_code.bin` from bake | Drop injects it when present (bake always rebuilds it) |
 | Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
 | Drop CIA polls CI then rebuild; hard-stop without bake | Prevents silent “scripts-only” CIAs that look partially EN (§15.5) |
@@ -1213,7 +1215,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold** CI can publish a pre-built bake to skip the first local pack (typically under an hour; historically ~16h sequential zopfli) when that infra exists.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically under an hour; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc3`** (`PATCHER_RELEASE` / Eng Patch badge / `CIA_TITLE_VERSION` **3**) until the next bump.
 
 #### What git contains vs what a patched CIA needs
 
@@ -1239,7 +1241,7 @@ decrypted .cia / .3ds / .cci dropped
         use gold bake → patch CIA in minutes
   → else (fresh clone):
         1. fetch_release_bake.py --best-effort
-             poll GitHub Release {owner}/nlpp-gold @ tag gold
+             poll GitHub Release {owner}/nlpp-gold-maker @ tag gold
              (owner from git remote or NLPP_GITHUB_REPO)
            success → release/bake_img.bin + romfs_overlay/
            fail (404, no repo, network) → continue
@@ -1251,7 +1253,7 @@ decrypted .cia / .3ds / .cci dropped
              HARD STOP — do not patch (prevents half-EN CIA)
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
-        + apply_name_patches + optional --inject-code name_input_code.bin
+        + apply_name_patches + name_input_code.bin when present
   → out/1_[Either use this-LayerFS]/luma/ + out/2_[Or this]/NewLovePlusPlus-EN.cia + out/3_but not both
 ```
 
@@ -1264,18 +1266,18 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | Variable | Effect |
 |----------|--------|
 | `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
-| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override nlpp-gold repo (`OWNER/nlpp-gold`) |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (`OWNER/nlpp-gold-maker`) |
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
 | `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
 | `NLPP_NO_LOG=1` | Skip writing `out/logs/` PATCH SUMMARY files |
 
-#### nlpp-gold CI (optional accelerator)
+#### nlpp-gold-maker CI (optional accelerator)
 
 When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. The Drop CIA bat **polls this automatically** when local bake is absent.
 
-**Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold`.
+**Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold`.
 
 #### `patch_cia.py` image resolution
 
@@ -1300,7 +1302,7 @@ python -m pytest tests/ -v
 | `test_scratch_cleanup.py` | Incremental scratch delete (pack/extract/CIA intermediates) |
 | Others | `patch_names`, `exact_zlib`, `nlpp_paths`, `image_map`, `img_pack_cache`, … |
 
-GitHub Actions: `.github/workflows/test.yml` on push/PR to `main` / `Bleeding-Edge`.
+GitHub Actions: `.github/workflows/test.yml` on push/PR to **`main` only** (not Bleeding-Edge / ticket branches).
 
 **Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify, individual `deploy_*` texture splices.
 
@@ -1456,6 +1458,12 @@ SD layout (ID0/ID1 are console-specific):
 | `out/spotpass_real3ds/info.dat` | 2376 | Hardware / exact |
 | `out/spotpass_azahar/info.dat` | ~512056 | Stock Azahar HLE pad |
 
+### 16.7 Skip “No SpotPass data found.” without BOSS (2026-09-20)
+
+Boot nag is **not** Enoshima. `FUN_006096d8` stores `+0x46 = 4` when `GetNsDataNewFlag` is 0 (`moveq r0,#4` @ `0x00609740`). UI treats state 4 as TRB “No SpotPass data found.”
+
+`src/patch_spotpass_skip.py` changes that imm to `#0` so a missing CDN / uninjected boss file stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. Does **not** merge Towano Watcher tables. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
+
 ---
 
 ## 17. Profile name-input (gojūon romaji + direct insert) — 2026-08-31
@@ -1473,13 +1481,15 @@ Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji i
 .\make.ps1 launch-a
 ```
 
-**Combine with Bleeding-Edge bake UI** (EN chrome + working Profile keyboard):
+**Combine with gold bake UI** (EN chrome + working Profile keyboard):
 
 ```bash
 .\make.ps1 combine-a     # instance A
 .\make.ps1 combine       # roaming AppData
 # or: python tools/deploy_bleeding_edge_name_input.py --refresh-artifacts
 ```
+
+(`deploy_bleeding_edge_name_input.py` is the historical script name.)
 
 Writes: `bake_img.bin` + `name_input_code.bin` + **name-kanji** TRB (not full EN TRB). Drop-bat already injects `release/name_input_code.bin`; bake rebuild uses name-kanji TRB via `rebuild_bake_img.py`.
 
@@ -1498,6 +1508,7 @@ a/b guide: **`ab_test/README.md`**.
 | 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
+| 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `moveq r0,#4` → `#0` @ `0x00609740` — no boot nag without BOSS (**§16.7**) |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
@@ -1644,7 +1655,7 @@ Do **not** tell the user to quit Azahar between deploys (standing preference).
 
 `src/patch_cia.py` / drop bat accept **decrypted** `.cia` / `.3ds` / `.cci` only (`Crypto Key: None`). Encrypted input fails with a short “decrypt yourself first” message. `decrypt.exe` / Batch CIA 3DS Decryptor Redux were **removed** from the tree — users decrypt outside EngPatcher (GodMode9, etc.). Still vendored: `tools/cia/` `3dstool` / `ctrtool` / `makerom` / `seeddb`.
 
-Offline `vendor/NLPPATCH/` was removed from main (2026-08-31); NLPP-005 may re-vendor it for layered script inject (§19). Dialogue/TRB still primarily live in `rebuild_dbin2/` + `assets/`. Optional: `patch_textresource.py seed --alt-trb <other.trb>` if you bring an external EN TRB.
+Community NLPPATCH scripts already ship in `rebuild_dbin2/` (NLPP-005). Offline `vendor/NLPPATCH/` is optional re-import only — **not** required for Drop. Dialogue/TRB live in `rebuild_dbin2/` + `assets/` (`assets/nlppatch/`). Optional: `patch_textresource.py seed --alt-trb <other.trb>` if you bring an external EN TRB. See **§19**.
 
 ### 18.3 Communications loading hang — OpenLinkFile (2026-09-18)
 
@@ -1718,7 +1729,7 @@ Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` 
 |------|--------|
 | `tools/export_progress_metrics.py` | `out/progress_metrics.json` — per-file script lists, SMS messages, TRB STRI indices, UI PNG names |
 | `tools/script_coverage_report.py` | Console summary |
-| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes (2026-09-11: **562** chrome / **1727** mapped PNG masters) |
+| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes (2026-09-20: **562** chrome / **1745** mapped PNG masters in **95 / 95** folders) |
 
 Regenerate before publishing; `out/` is gitignored.
 
@@ -1772,13 +1783,13 @@ Or set `NLPP_ENG_PATCHER` / `NLPP_WORKBENCH`.
 |-----|--------------|---------|---------------------|
 | **Scripts** | `kit/NLPP_Translate.html` | Dialogue still needing EN (dialogs only in embed; ~6 MB) | `nlpp-contrib-….json` (`kind: nlpp-contrib`) |
 | **Strings** | `kit/NLPP_Translate_Strings.html` | SMS (`maildic_*`) + TRB leftovers still JP | `nlpp-strings-….json` (`kind: nlpp-strings-contrib`) |
-| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1727** across **92 / 95** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
+| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1745** across **95 / 95** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
 
 Hub tabs lazy-load iframes; unsaved edits warn via `postMessage` `{type:'nlpp-unsaved', tool, dirty}`.
 
 **Volunteer loop:** open hub → edit → **Save progress** → post JSON in Discord `#translated-work-to-review`.
 
-Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-11): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1727** PNGs / **92 of 95** folders (empty: `intro111`, `intro203`, `intro304`). Chrome-only subset for the fansite bar is **562** in 25 folders (`tools/export_progress_metrics.py`).
+Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1745** PNGs / **95 of 95** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **562** in 25 folders (`tools/export_progress_metrics.py`).
 
 #### Scripts kit — routes and sources (`export_workkit.py`)
 
@@ -1834,7 +1845,7 @@ Heroine SMS stems: Manaka `maildic_m`, Nene `maildic_n`, Rinko `maildic_r`. Jump
 | Volunteer actions | Unchecked → **OK** / **Needs fix** / **Upload PNG** (same W×H) → Save → JSON may embed `png_b64` |
 | Preview | Background toggle (light checker default) — view only |
 
-**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **92 of 95** keys / **1727** PNGs (empty: `intro111`, `intro203`, `intro304`). Do not quote the old ~68 / ~1210 snapshot.
+**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **95 of 95** keys / **1745** PNGs (`intro111` / `intro203` / `intro304` are sparse dumps). Do not quote the old ~68 / ~1210 or **1727 / 92 of 95** snapshots.
 
 Ingest: `ingest_images.py --apply` writes replacements back under `assets/images/` for later `pack_images` / bake.
 
@@ -2052,5 +2063,5 @@ Patch: in-place EN `This is a text-speed test.` + NUL pad in the same 40-byte sl
 
 ---
 
-*Last updated 2026-09-17 — §21 TalkWindow table + voice/script cap (NLPP-025); UI PNG masters **1727** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2.*
+*Last updated 2026-09-20 — rc-3 merged to main (still stamped `v1.0.0-rc3` / CIA title version 3); UI PNG masters **1745** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2; gold fetch repo `nlpp-gold-maker`.*
 

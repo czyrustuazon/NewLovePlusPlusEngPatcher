@@ -75,14 +75,14 @@ This overwrites the playable SD slot (`sdmc/.../title/00040000/000f4e00/data/000
 
 Compare a **heroine date line** vs a player line. Script: `tools/ab_talk_speed.py`.
 
-**Combine Bleeding-Edge bake + name-input:**
+**Combine gold bake + name-input:**
 
 ```powershell
 .\make.ps1 combine-a    # bake img + name_input_code.bin + name-kanji TRB → A
 .\make.ps1 combine      # same → roaming AppData
 ```
 
-Script: `tools/deploy_bleeding_edge_name_input.py`. That is bake **UI** plus the
+Script: `tools/deploy_bleeding_edge_name_input.py` (filename is historical). That is gold-bake **UI** plus the
 verified ExeFS/TRB name-input pieces — not “bake TRB alone.”
 
 ## Point any script at instance A or B

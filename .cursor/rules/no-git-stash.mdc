@@ -13,7 +13,7 @@ alwaysApply: true
 
 ## Always
 
-- **Commit** unfinished or experimental work on the current branch (e.g. Bleeding-Edge) so it stays in history and is recoverable
+- **Commit** unfinished or experimental work on the current branch (e.g. a ticket branch) so it stays in history and is recoverable
 - If commit permission is unclear, **ask to commit** rather than stashing
 - Use a normal commit message that marks WIP when needed (e.g. `WIP: title EngPatch badge — black-screen bisect`)
 - Prefer a branch or WIP commit over stash when switching tasks

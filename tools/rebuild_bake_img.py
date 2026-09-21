@@ -4,7 +4,7 @@
 Self-contained (no Azahar required):
 
   vanilla img.bin
-    → pack_images (assets/images)           # RC default: from-scratch (--no-cache)
+    → pack_images (assets/images)           # stamp mismatch: from-scratch (--no-cache)
     → rebuild textresource_jpn.trb from assets/textresource/translations.json
     → ordered deploy_*_en.py chrome (+ day-counter resident TRB)
     → sync TRBs into release/romfs_overlay

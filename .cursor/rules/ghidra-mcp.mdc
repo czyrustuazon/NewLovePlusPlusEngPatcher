@@ -7,7 +7,7 @@ alwaysApply: true
 
 ## Setup
 
-1. `GetMcpTools` for schema before calling tools.
+1. `GetDynamicTools` (`namespace: "user-ghidra"`) for schema before calling tools (`CallDynamicTool`).
 2. `list_open_programs` / `list_instances` + `connect_instance` if needed.
 3. Prefer current program `code.bin` (image base **0**).
 

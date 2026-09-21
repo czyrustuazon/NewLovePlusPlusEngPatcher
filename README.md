@@ -18,8 +18,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
 3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
 4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
-5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
-6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
+5. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
+6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
 9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
@@ -28,11 +28,10 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 | Included assets | Approx. count |
 |-----------------|--------------:|
 | Finished dialog scripts (XML → `.dbin2`) | 480 scripts → 1644 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
-| Unique EN UI PNG masters (`IMAGE_MAP`) | **1727** in **92 / 95** folders |
+| Unique EN UI PNG masters (`IMAGE_MAP`) | **1745** in **95 / 95** folders |
 | Chrome subset (site “UI textures”) | **562** in **25 / 25** folders |
-| Still empty | `intro111`, `intro203`, `intro304` |
 
-PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs.
+PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; 2026-09-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 95 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
 
 Title ID: `00040000000F4E00`
 
@@ -46,11 +45,11 @@ Title ID: `00040000000F4E00`
 
 With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
 
-### Sharing a build (skip the ~3-hour bake)
+### Sharing a build (skip the cold PNG pack)
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
-**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold** Ubuntu runner
+**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold-maker** Ubuntu runner
 builds `release/` and updates GitHub Release tag `gold`. See
 [`infra/README.md`](infra/README.md). Collaborators:
 
@@ -88,16 +87,16 @@ Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: copy `ab_test/paths
 
 Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed by
 `src/report_progress.py` (EN TRB vs vanilla JP). It auto-POSTs after a TRB
-`rebuild`, after a successful Drop CIA run, and from **nlpp-gold** CI — when
+`rebuild`, after a successful Drop CIA run, and from **nlpp-gold-maker** CI — when
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
-nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin —
-use **562** (chrome) or **1727** (all mapped UI masters) from the table above.
+nlpp-gold-maker Actions secrets). Graphics/menus stay manual in the site admin —
+use **562** (chrome) or **1745** (all mapped UI masters) from the table above.
 See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
 Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
 ### First-time gold bake (only if `release/bake_img.bin` is missing)
 
-**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc3`) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). Same-RC second drop reuses the stamped bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
+**Bake stamp:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this tree’s `PATCHER_RELEASE` (currently **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` **3**) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). A second drop of the same stamp reuses the bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
 
 If bake is absent (or stamp mismatches), the drop bat auto-runs:
 
@@ -317,8 +316,9 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 
 **Player name UI (`code.bin`)**
 
-- Opt-in: `--patch-code` rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8).  
-- Standalone: `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
+- **Default (gold / Drop CIA):** inject `release/name_input_code.bin` from `deploy_name_input_en.py` — romaji Profile keyboard, Message Speed, title-loop null-pane guard (`technical.md` §17 / §21). Bake always rebuilds it from vanilla.  
+- Older opt-in `--patch-code` only rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8). It is **not** the name-input stack.  
+- Standalone (legacy): `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
 - LayeredFS installs `code.bin` next to `romfs/` (Azahar/Luma ExeFS overlay).  
 - CIA builds unpack/repack ExeFS via `3dstool`.
 
@@ -348,7 +348,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 
 | Screen | Package | Notes |
 |--------|---------|--------|
-| Main Menu **rows** (Game Start, Options, …) | **5261** `Title.arc` | `deploy_title_main_menu_en.py` |
+| Main Menu **rows** + Eng Patch badge | **5261** `Title.arc` | `deploy_title_engpatch_en.py` (replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 | Gallery / Communication / Data Management homes | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
 | Softkeys Back / Next / Confirm / Quit / Restore Default | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` + `deploy_softkey_quit_en.py` + `deploy_softkey_defaults_en.py` |
@@ -446,7 +446,7 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-release/                     gold bake + TRB overlay (binaries gitignored; see technical.md §15.5)
+release/                     gold bake + TRB overlay (binaries gitignored; `release/README.md`; technical.md §15.5)
 cache/                       PNG scratch + vanilla_from_rom (gitignored)
 out/                         wipeable scratch + numbered LayeredFS/CIA drops + logs/ + azahar_instances (gitignored)
 ```
@@ -471,7 +471,7 @@ Browser kits so translators can help **without Python**. Three sibling trees:
 2. Open **`index.html`** → tabs:
    - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-   - **Images** — **full UI PNG audit** (**1727** unique masters in **92 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Empty: `intro111`, `intro203`, `intro304`.
+   - **Images** — **full UI PNG audit** (**1745** unique masters in **95 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
@@ -547,8 +547,8 @@ python src/patch_names.py --dbin rebuild_dbin2
 .\make.ps1 launch-a
 # or: python tools/deploy_name_input_en.py
 
-# Hub main menu / CESA only (onto release/bake_img.bin)
-python tools/deploy_title_main_menu_en.py
+# Hub main menu + Eng Patch badge / CESA only (onto release/bake_img.bin)
+python tools/deploy_title_engpatch_en.py
 python tools/deploy_cesa_en.py
 
 # SpotPass inject (boot NsData — see technical.md §16)
@@ -577,4 +577,4 @@ python src/patcher.py build --clean
 - A dump of the game — you must supply your own matching **decrypted** CIA / `.3ds`.  
 - A ROM decryptor — decrypt outside this tool, then drop the clear dump.  
 - An on-console retail re-encryptor.  
-- A GitHub-hosted gold bake — ship `release/bake_img.bin` separately if you want others to skip a cold local rebuild.
+- A gold bake **in this git repo** — `release/bake_img.bin` is gitignored. Fetch from **nlpp-gold-maker** Release tag `gold` (`tools/fetch_release_bake.py`) or rebuild locally.

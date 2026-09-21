@@ -120,7 +120,7 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 
 Name-input caves must be in `.text` RX (`patch_input_cave_map.py`). See rule `from-scratch-bake`.
 
-**nlpp-gold CI** is an optional accelerator (`infra/README.md`) — **not required**; local rebuild is the fallback when Release 404.
+**nlpp-gold-maker CI** is an optional accelerator (`infra/README.md`) — **not required**; local rebuild is the fallback when Release 404.
 
 ### Env overrides
 

@@ -1,7 +1,8 @@
 # Release infra (gold publish)
 
 You change assets/code in **this** EngPatcher repo. Gold binaries are built and
-uploaded by **nlpp-gold** (Ubuntu self-hosted → GitHub Releases).
+uploaded by **nlpp-gold-maker** (Ubuntu self-hosted → GitHub Releases; EngPatcher
+workflow nickname: nlpp-gold).
 
 ## Publish a bake
 
@@ -11,7 +12,7 @@ Push or merge to **`main`** only (other branches do not trigger):
 git push origin main
 ```
 
-Workflow **Request gold Release** pings nlpp-gold, which rebuilds from that
+Workflow **Request gold Release** pings **nlpp-gold-maker**, which rebuilds from that
 commit and updates the rolling Release tag **`gold`**:
 
 - `bake_img.bin`
@@ -36,12 +37,12 @@ Docs / runner: local `Documents/nlpp-gold` or the GitHub **nlpp-gold-maker** rep
 
 ## Companion site progress bar (script text)
 
-After each gold bake, nlpp-gold runs `engpatcher/src/report_progress.py` and
+After each gold bake, nlpp-gold-maker runs `engpatcher/src/report_progress.py` and
 POSTs `scriptTranslated` / `scriptTotal` / `scriptPercent` to the companion
 site Worker (`POST /api/admin/progress`). The site bar reads `GET /api/progress`
 live (~30 s edge cache) — no site rebuild.
 
-On **nlpp-gold** (Actions secrets, not the public EngPatcher repo):
+On **nlpp-gold-maker** (Actions secrets, not the public EngPatcher repo):
 
 | Secret | Value |
 |--------|--------|

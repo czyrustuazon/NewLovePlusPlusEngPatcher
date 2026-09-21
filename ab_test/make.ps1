@@ -281,7 +281,7 @@ See ab_test\README.md
 
   deploy-a/b     Name-input only (vanilla img stay) -> instance A/B
   deploy         Name-input only -> roaming %AppData%\Azahar
-  combine-a/b    Bleeding-Edge bake img + name-input + name-kanji TRB -> A/B
+  combine-a/b    Gold bake img + name-input + name-kanji TRB -> A/B
   combine        Same combine stack -> roaming Azahar
   cesa-ab        Gold bake CESA thank A/B (A=CESA_400X240, B=CESA EN only)
   talk-speed-ab  TalkWindow speed A/B (A=÷4+voice cap, B=÷4 table only)
