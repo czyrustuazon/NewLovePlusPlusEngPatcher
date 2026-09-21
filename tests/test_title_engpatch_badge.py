@@ -6,6 +6,7 @@ from PIL import Image
 
 from conftest import ROOT, TOOLS, load_module
 
+# Import must not require bake_img.bin (CI collection has no gold bake).
 deploy = load_module("deploy_title_engpatch_en", TOOLS / "deploy_title_engpatch_en.py")
 
 

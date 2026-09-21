@@ -58,7 +58,8 @@ from deploy_common import (  # noqa: E402
 )
 from patcher_version import ENG_PATCH_LINE  # noqa: E402
 
-MOD_IMG, VANILLA = resolve_img_paths()
+# Do not call resolve_img_paths() at import: pytest imports this module for
+# badge layout tests, and CI has no release/bake_img.bin.
 
 OUT = ROOT / "out" / "title_engpatch_en"
 ASSET = ROOT / "assets" / "images" / "Title"
@@ -438,6 +439,7 @@ def main() -> int:
     args = ap.parse_args()
     eng_tex = 0 if args.bisect_tex0 else 1
 
+    MOD_IMG, VANILLA = resolve_img_paths()
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
     if not UI_FONT.is_file():
