@@ -16,6 +16,8 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
   8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
+  10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
+  11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -94,6 +96,15 @@ from patch_input_call_romaji import (  # noqa: E402
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
     is_fully_patched as message_speed_already,
+)
+from patch_spotpass_skip import (  # noqa: E402
+    apply_patch as apply_spotpass_skip,
+    is_patched as spotpass_skip_already,
+)
+from patch_spotpass_embed import (  # noqa: E402
+    apply_patch as apply_spotpass_embed,
+    build_function_blob as build_spotpass_embed,
+    is_patched as spotpass_embed_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -201,6 +212,18 @@ def apply_name_input_stack(data: bytearray) -> int:
     else:
         print("[skip] cesa logo_white native size already applied")
 
+    if spotpass_skip_already(data):
+        print("[skip] spotpass_skip already applied")
+    else:
+        apply_spotpass_skip(data)
+        steps += 1
+
+    if spotpass_embed_already(data):
+        print("[skip] spotpass_embed already applied")
+    else:
+        apply_spotpass_embed(data)
+        steps += 1
+
     return steps
 
 
@@ -228,6 +251,7 @@ def main(argv: list[str] | None = None) -> int:
         build_site_cave(CAND_CAVE1, 0x001FBC0C, 0x001FBC30, 6)
         build_site_cave(CAND_CAVE2, 0x001FBD28, 0x001FBD4C, 11)
         build_fillflag_cave()
+        build_spotpass_embed()
         print("dry-run OK (caves assemble)")
         return 0
 

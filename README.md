@@ -22,7 +22,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
+9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)  
 10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
@@ -189,7 +189,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **Pick one install path** (see `out/3_but not both`): LayeredFS on top of the English CIA applies the patch twice.
 
@@ -208,11 +208,13 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 
 ## SpotPass (とわのウォッチャー / boot check)
 
-SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle — those are StreetPass / local wireless). NLPP checks for SpotPass NsData at **cold boot** and shows either an apply prompt or **“No SpotPass data found.”**
+SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle — those are StreetPass / local wireless). NLPP checks for SpotPass NsData at **cold boot** and used to show either an apply prompt or **“No SpotPass data found.”**
 
 Archived BOSS content (「とわのウォッチャー」第28号) is vendored under `tools/spotpass/` — **thank you to Cetaceaqua** for providing that SpotPass dump. Full RE notes: [`technical.md` §16](technical.md).
 
-**Included in the patch workflow:** LayeredFS + CIA by default. SpotPass inject is **optional** afterward:
+**Ship path — no inject.** Drop CIA / `release/name_input_code.bin` embeds the 2324-byte payload and spoofs BOSS `GetNsDataNewFlag` / `ReadNsData` after a save is loaded (`src/patch_spotpass_skip.py` + `src/patch_spotpass_embed.py`). The boot nag is suppressed; Watcher / city / meal tables merge once via the stock apply path. You do **not** need to paste `extdata/…/00000321/boss/info.dat`. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not this blob.
+
+**Optional BOSS-shaped file** (hardware BOSS DBs / Azahar HLE experiments only — not required for the English CIA):
 
 ```bash
 python tools/build_spotpass_inject.py          # → out/spotpass_real3ds/info.dat
@@ -551,11 +553,9 @@ python src/patch_names.py --dbin rebuild_dbin2
 python tools/deploy_title_engpatch_en.py
 python tools/deploy_cesa_en.py
 
-# SpotPass inject (boot NsData — see technical.md §16)
-# Default after patch_cia / drop-bat: real3ds → out/spotpass_real3ds/
-python tools/build_spotpass_inject.py
-python tools/build_spotpass_inject.py --azahar
-# patch_cia flags: --skip-spotpass | --spotpass-mode azahar | --spotpass-install-azahar
+# SpotPass inject (optional real extdata — Watcher #28 is already in name_input_code.bin)
+# python tools/build_spotpass_inject.py
+# python tools/build_spotpass_inject.py --azahar
 
 # Patch code.bin only (finds cache/vanilla_from_rom or sibling dump)
 python src/patch_code.py

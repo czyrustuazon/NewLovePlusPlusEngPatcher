@@ -81,6 +81,10 @@ def test_rebuild_name_input_is_required_not_optional():
     deploy = (TOOLS / "deploy_name_input_en.py").read_text(encoding="utf-8")
     assert "apply_message_speed" in deploy
     assert "message_speed_already" in deploy
+    assert "apply_spotpass_skip" in deploy
+    assert "spotpass_skip_already" in deploy
+    assert "apply_spotpass_embed" in deploy
+    assert "spotpass_embed_already" in deploy
 
 
 def test_softkey_deploy_after_confirm():

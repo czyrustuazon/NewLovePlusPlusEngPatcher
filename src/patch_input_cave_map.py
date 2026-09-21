@@ -29,3 +29,6 @@ TALK_CAP_CAVE_LEN = 0x28
 # Historical pads in .rodata — never execute from these on hardware.
 OLD_RODATA_SHARED_PAD = 0x006E6A38
 OLD_RODATA_ROMAJI_CAVE = 0x006FBB08
+# SpotPass NsData body (data only). Same pad as OLD_RODATA_ROMAJI_CAVE.
+ADDR_SPOTPASS_PAYLOAD = OLD_RODATA_ROMAJI_CAVE
+SPOTPASS_PAYLOAD_MAX = 0x1001

@@ -1462,7 +1462,22 @@ SD layout (ID0/ID1 are console-specific):
 
 Boot nag is **not** Enoshima. `FUN_006096d8` stores `+0x46 = 4` when `GetNsDataNewFlag` is 0 (`moveq r0,#4` @ `0x00609740`). UI treats state 4 as TRB “No SpotPass data found.”
 
-`src/patch_spotpass_skip.py` changes that imm to `#0` so a missing CDN / uninjected boss file stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. Does **not** merge Towano Watcher tables. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
+`src/patch_spotpass_skip.py` changes that imm to `#0` so a missing CDN / uninjected boss file stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. Watcher / city / meal tables are applied by **§16.8** (embedded NsData), not by this skip. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
+
+### 16.8 Bake Watcher #28 without a BOSS inject (2026-09-20)
+
+CIA install cannot write `extdata/00000321/boss/`. LayeredFS cannot overlay it. `src/patch_spotpass_embed.py` impersonates the two BOSS results so the stock apply path runs on the vendored payload:
+
+| Piece | Address | Patch |
+|-------|---------|-------|
+| Payload | `0x006FBB08` `.rodata` (file; VA `0x007FBB08`) | `tools/spotpass/info.dat` (2324 B). Data only — NX on hardware. |
+| GetNsDataNewFlag | `FUN_00609ab0` @ `0x00609AB0` | In-place cave: `FUN_004e122c==0` (save loaded) and `FUN_004e1c68` header empty/missing → return 1; else 0. Leftover RX is the memcpy stub. |
+| ReadNsData | BLs @ `0x00609FD8` / `0x0060A018` | `bl` memcpy stub (byte copy, NULs kept). Returns `0x914`. |
+| Auto-confirm | `0x00609750` | `ldrb r0,[r4,#0x48]` → `mov r0,#1` so state 1 does not wait on the apply UI. |
+
+Title ticks stay in state 0 until a save is loaded, so §16.7 still suppresses “No SpotPass data found.” After a non-zero applied header, NewFlag stays 0 (no every-boot re-merge / StreetPass voice wipe). Enoshima is unchanged.
+
+Does **not** require `out/spotpass_real3ds/` or Azahar SDMC inject. Those remain optional for a real BOSS-shaped file.
 
 ---
 
@@ -1509,6 +1524,7 @@ a/b guide: **`ab_test/README.md`**.
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 | 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `moveq r0,#4` → `#0` @ `0x00609740` — no boot nag without BOSS (**§16.7**) |
+| 11 | SpotPass NsData embed | `src/patch_spotpass_embed.py` | Bake Watcher #28; spoof NewFlag/ReadNsData after save load (**§16.8**) |
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
