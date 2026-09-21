@@ -100,6 +100,9 @@ desktop.ini
 .idea/
 .vscode/
 
+# Local Cursor chat exports
+conversation-archive/
+
 # Local machine path overrides
 paths.local.*
 !paths.local.*.example
