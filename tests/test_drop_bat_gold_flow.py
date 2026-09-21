@@ -104,6 +104,10 @@ def test_bat_drop_timer_avoids_for_f_python_quoting():
     assert "nlpp_t0.txt" in text
     assert "nlpp_elapsed.txt" in text
     assert "Time to finish" in text
+    assert "STARTED_UNIX" in text
+    assert "--started-unix" in text
+    # Drop start must reach patch_cia.py (PATCH SUMMARY), not only the bat echo.
+    assert "!STARTED_UNIX!" in text
     # The broken start-clock line (and the matching elapsed FOR /F).
     assert "import time; print(int(time.time()))" not in text
     assert "for /f %%T in" not in text

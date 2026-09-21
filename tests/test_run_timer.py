@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from run_timer import RunTimer, format_elapsed
+from run_timer import (
+    RunTimer,
+    elapsed_since_unix,
+    format_elapsed,
+    format_started_at,
+    parse_unix_start,
+)
 
 
 def test_format_elapsed_seconds():
@@ -13,6 +19,22 @@ def test_format_elapsed_seconds():
 def test_format_elapsed_minutes_hours():
     assert format_elapsed(65) == "1m05s"
     assert format_elapsed(3723) == "1h02m03s"
+
+
+def test_parse_unix_start_strips_cmd_cr():
+    assert parse_unix_start(None) is None
+    assert parse_unix_start("  ") is None
+    assert parse_unix_start("nope") is None
+    assert parse_unix_start("1758410000\r\n") == 1758410000.0
+    assert parse_unix_start(1758410000) == 1758410000.0
+
+
+def test_elapsed_since_unix_and_started_at():
+    assert elapsed_since_unix(1000, now=1065) == "1m05s"
+    assert elapsed_since_unix(1000, now=4723) == "1h02m03s"
+    stamp = format_started_at(1758410000)
+    assert len(stamp) == 19
+    assert stamp[4] == "-" and stamp[10] == " "
 
 
 def test_run_timer_mark_and_finish(capsys):

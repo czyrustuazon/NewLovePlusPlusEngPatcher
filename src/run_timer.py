@@ -22,6 +22,30 @@ def format_elapsed(seconds: float) -> str:
     return f"{s}s"
 
 
+def parse_unix_start(value: object | None) -> float | None:
+    """Parse Drop CIA ``NLPP_T0`` / ``--started-unix`` (strips cmd ``set /p`` CR)."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def format_started_at(started_unix: float) -> str:
+    """Local wall-clock stamp matching ``RunTimer.started_at``."""
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(started_unix))
+
+
+def elapsed_since_unix(started_unix: float, *, now: float | None = None) -> str:
+    """Elapsed from a unix start stamp to ``now`` (default ``time.time()``)."""
+    end = time.time() if now is None else now
+    return format_elapsed(end - started_unix)
+
+
 class RunTimer:
     """Track how long the current patcher/bake step has been running."""
 

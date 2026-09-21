@@ -108,6 +108,9 @@ if exist "%NLPP_T0_FILE%" (
 )
 set "NLPP_T0_FILE="
 if defined NLPP_T0 echo [timer] Drop CIA started
+REM Pass Drop start into patch_cia.py so PATCH SUMMARY elapsed includes bake.
+set "STARTED_UNIX="
+if defined NLPP_T0 set STARTED_UNIX=--started-unix !NLPP_T0!
 
 echo Installing Python deps from requirements.txt ...
 "%PYTHON%" -m pip install -q -r "%~dp0requirements.txt"
@@ -239,7 +242,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
   set "BAKE_STALE="
@@ -370,7 +373,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
 

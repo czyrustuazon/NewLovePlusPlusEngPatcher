@@ -40,7 +40,12 @@ from nlpp_paths import (
     find_vanilla_code,
 )
 from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
-from run_timer import RunTimer
+from run_timer import (
+    RunTimer,
+    elapsed_since_unix,
+    format_started_at,
+    parse_unix_start,
+)
 from scratch_cleanup import is_reparse_dir as _is_reparse_dir
 from scratch_cleanup import path_is_under, remove_scratch
 from smdh_meta import (
@@ -1605,6 +1610,32 @@ def build_patch_summary(
     return lines
 
 
+def resolve_started_unix(args: argparse.Namespace | None = None) -> float | None:
+    """Drop CIA wall-clock start: ``--started-unix``, else ``NLPP_T0`` env."""
+    raw = getattr(args, "started_unix", None) if args is not None else None
+    parsed = parse_unix_start(raw)
+    if parsed is not None:
+        return parsed
+    return parse_unix_start(os.environ.get("NLPP_T0"))
+
+
+def summary_timing(
+    timer: RunTimer,
+    args: argparse.Namespace | None = None,
+    *,
+    now: float | None = None,
+) -> tuple[str, str]:
+    """Elapsed + started_at for PATCH SUMMARY.
+
+    Drop CIA stamps ``NLPP_T0`` before pip / SHA-1 / gold bake. The CIA
+    ``RunTimer`` only covers inject, so without this the summary stays ~1m.
+    """
+    t0 = resolve_started_unix(args)
+    if t0 is not None:
+        return elapsed_since_unix(t0, now=now), format_started_at(t0)
+    return timer.elapsed_str(), timer.started_at
+
+
 def _env_flag(name: str) -> bool:
     return str(os.environ.get(name, "")).strip().lower() in {"1", "true", "yes", "on"}
 
@@ -1826,7 +1857,8 @@ def _cmd_patch_body(
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
-        print(f"Time: {timer.elapsed_str()}  (started {timer.started_at})")
+        elapsed, started_at = summary_timing(timer, args)
+        print(f"Time: {elapsed}  (started {started_at})")
         summary = build_patch_summary(
             out_cia=None,
             packed_img=packed_img,
@@ -1835,8 +1867,8 @@ def _cmd_patch_body(
             romfs_overlay=romfs_overlay,
             args=args,
             layeredfs_only=True,
-            elapsed=timer.elapsed_str(),
-            started_at=timer.started_at,
+            elapsed=elapsed,
+            started_at=started_at,
         )
         print_patch_summary(summary)
         if args.keep_work:
@@ -1871,7 +1903,8 @@ def _cmd_patch_body(
     print("=== Done ===")
     print(f"Patched CIA: {out_cia}")
     print(f"Size:        {out_cia.stat().st_size:,} bytes")
-    print(f"Time:        {timer.elapsed_str()}  (started {timer.started_at})")
+    elapsed, started_at = summary_timing(timer, args)
+    print(f"Time:        {elapsed}  (started {started_at})")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
     if layeredfs_out is not None and layeredfs_out.is_dir():
@@ -1885,8 +1918,8 @@ def _cmd_patch_body(
         romfs_overlay=romfs_overlay,
         args=args,
         layeredfs_only=False,
-        elapsed=timer.elapsed_str(),
-        started_at=timer.started_at,
+        elapsed=elapsed,
+        started_at=started_at,
         title_ver=title_ver,
     )
     print_patch_summary(summary)
@@ -2356,6 +2389,16 @@ def build_parser() -> argparse.ArgumentParser:
         "--spotpass-install-azahar",
         action="store_true",
         help="Also sync SpotPass info.dat into Azahar AppData sdmc extdata 00000321/boss/",
+    )
+    p.add_argument(
+        "--started-unix",
+        default=None,
+        metavar="SECONDS",
+        help=(
+            "Drop CIA wall-clock start (unix seconds). PATCH SUMMARY elapsed "
+            "is from this instant (pip / hash / bake / inject). "
+            "Default: NLPP_T0 environment variable."
+        ),
     )
     return p
 

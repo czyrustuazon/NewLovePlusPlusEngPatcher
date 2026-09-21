@@ -89,6 +89,39 @@ def test_summary_includes_time_to_finish(tmp_path: Path, monkeypatch):
     assert "[OK]      Time to finish: 4m32s  (started 2026-09-08 00:12:03)" in text
 
 
+def test_summary_timing_uses_drop_start_not_inject_timer(monkeypatch):
+    """PATCH SUMMARY must include bake; CIA RunTimer alone is ~1m inject."""
+    drop_start = 1_000_000.0
+    monkeypatch.setenv("NLPP_T0", f"{int(drop_start)}\r")
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, started = patch_cia.summary_timing(
+        timer, _args(), now=drop_start + 3723
+    )
+    timer.finish("test")
+    assert elapsed == "1h02m03s"
+    assert started == patch_cia.format_started_at(drop_start)
+    # Inject-only clock stays short; summary must not use it.
+    assert timer.elapsed() < 5
+
+
+def test_summary_timing_cli_overrides_env(monkeypatch):
+    monkeypatch.setenv("NLPP_T0", "1000")
+    args = _args(started_unix="2000")
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, _started = patch_cia.summary_timing(timer, args, now=2065)
+    timer.finish("test")
+    assert elapsed == "1m05s"
+
+
+def test_summary_timing_falls_back_to_inject_timer_without_t0(monkeypatch):
+    monkeypatch.delenv("NLPP_T0", raising=False)
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, started = patch_cia.summary_timing(timer, _args())
+    timer.finish("test")
+    assert elapsed == timer.elapsed_str()
+    assert started == timer.started_at
+
+
 def test_summary_includes_bumped_title_version(tmp_path: Path, monkeypatch):
     bake = tmp_path / "bake.bin"
     bake.write_bytes(b"gold")
@@ -153,6 +186,8 @@ def test_drop_bat_mentions_patch_summary():
     assert "incomplete patches abort" in bat
     assert "Time to finish" in bat
     assert "NLPP_T0" in bat
+    assert "STARTED_UNIX" in bat
+    assert "--started-unix" in bat
     assert "run_timer.py" in bat
     assert "out\\logs\\latest.txt" in bat
     assert "Patch log" in bat
@@ -335,9 +370,12 @@ def test_parser_has_log_flags():
     assert args.skip_cia_meta is False
     assert args.title_ver is None
     assert args.keep_title_ver is False
+    assert args.started_unix is None
     assert patch_cia.OUT_CIA_PREFIX in args.out
     assert patch_cia.CIA_FILENAME in args.out
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"
     args = p.parse_args(["--cia", "game.cia", "--no-log"])
     assert args.no_log is True
+    args = p.parse_args(["--cia", "game.cia", "--started-unix", "1758410000"])
+    assert args.started_unix == "1758410000"
