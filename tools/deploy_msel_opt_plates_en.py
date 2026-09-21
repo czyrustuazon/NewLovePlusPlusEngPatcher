@@ -49,6 +49,7 @@ PKG = 5245
 LABELS = [
     ("timg/Com_M_Sel_Plate_Text03_01_00.bclim", "Display Settings"),
     ("timg/Com_M_Sel_Plate_Text03_02_00.bclim", "Sound Settings"),
+    ("timg/Com_M_Sel_Plate_Text04_04_00.bclim", "Communication Settings"),
 ]
 
 
@@ -105,7 +106,17 @@ def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, stem: str | None =
     orig.write_bytes(raw)
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
-        Image.open(master).convert("RGBA").save(png)
+        rgba = Image.open(master).convert("RGBA")
+        # 5245 is packed to the slot. Extra EN plates need a coverage mask or
+        # Zhoumaru AA blows cmp_len (Communication Settings was +264).
+        if hard or (stem and stem.endswith("Text04_04_00")):
+            a = np.array(rgba.getchannel("A"))
+            a = np.where(a >= 40, 255, 0).astype(np.uint8)
+            rgb = np.array(rgba.convert("RGBA"))
+            rgb[:, :, 3] = a
+            rgb[:, :, :3] = 255
+            rgba = Image.fromarray(rgb, "RGBA")
+        rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)
@@ -122,9 +133,15 @@ def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, stem: str | None =
     return png_to_bclim_a8_same_size(png, orig)
 
 
-def _patch_candidate(arc_bytes: bytes, tmp: Path, *, hard: bool) -> bytes:
+def _patch_candidate(
+    arc_bytes: bytes,
+    tmp: Path,
+    *,
+    hard: bool,
+    labels: list[tuple[str, str]] | None = None,
+) -> bytes:
     darc = DarcArchive(bytearray(arc_bytes))
-    for path, en in LABELS:
+    for path, en in labels or LABELS:
         entry = darc.find(path) or darc.find(Path(path).name)
         if entry is None:
             raise SystemExit(f"missing {path}")
@@ -169,13 +186,27 @@ def main() -> int:
     print(f"pkg {PKG} slot={cmp}", flush=True)
 
     # Soft first (nicer), then hard (matches options deploy; usually compresses better).
+    # Prefer the still-JP Communication Settings plate alone so we don't
+    # re-encode Display/Sound and blow the packed 5245 slot.
+    batches: list[tuple[str, list[tuple[str, str]]]] = [
+        ("comm-settings", [LABELS[-1]]),
+        ("all-plates", LABELS),
+    ]
     candidates: list[tuple[str, bytes]] = []
-    for hard in (False, True):
-        cand = _patch_candidate(arc.parsed(), tmp, hard=hard)
-        z = len(zopfli_zlib.compress(cand))
-        print(f"  trial hard={hard}: zopfli={z} slot={cmp}", flush=True)
-        if z <= cmp:
-            candidates.append((f"hard={hard}", cand))
+    for batch_name, batch in batches:
+        for hard in (False, True):
+            cand = _patch_candidate(arc.parsed(), tmp, hard=hard, labels=batch)
+            z = len(zopfli_zlib.compress(cand))
+            print(
+                f"  trial {batch_name} hard={hard}: zopfli={z} slot={cmp}",
+                flush=True,
+            )
+            if z <= cmp:
+                candidates.append((f"{batch_name} hard={hard}", cand))
+                if batch_name == "comm-settings":
+                    break
+        if candidates:
+            break
 
     if not candidates:
         raise SystemExit(f"patched ARC zopfli exceeds slot {cmp}")
@@ -231,7 +262,15 @@ def main() -> int:
         elif a.parsed() != b.parsed():
             raise SystemExit("DMST changed")
     print("DMST OK", flush=True)
-    for _dest in iter_deploy_targets(MOD_IMG):
+    targets = list(iter_deploy_targets(MOD_IMG))
+    inst_root = ROOT / "out" / "azahar_instances"
+    seen = {p.resolve() for p in targets}
+    for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+        rp = img.resolve()
+        if rp.is_file() and rp not in seen:
+            targets.append(rp)
+            seen.add(rp)
+    for _dest in targets:
         splice_packages_into_img(_dest, pkg_dir, [PKG], _dest)
     print("deployed Options plates EN ->", MOD_IMG, flush=True)
     print("Rollback:", bak, flush=True)

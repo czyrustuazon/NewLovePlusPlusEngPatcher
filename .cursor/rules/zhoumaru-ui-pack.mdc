@@ -1,0 +1,41 @@
+---
+description: Zhoumaru community English UI PNG pack — what it is, where it lives, and what it does not include (CESA).
+alwaysApply: true
+---
+
+# Zhoumaru UI pack
+
+**Zhoumaru UI pack** = Zhoumaru’s community English UI PNG masters (`output_PNG`). Imported `7ce3dd3` (2026-09-07) into `assets/images/<Folder>.check/timg/<stem>.png`. Painted BCLIM chrome that matches game art. Prefer these over font-rendered labels (`find_ui_png` in `tools/deploy_common.py`).
+
+Gold bake: `pack_images` (`.check` wins) + ordered `deploy_*_en.py` chrome. Canvas-fit / skip-fix: `1082419`.
+
+Not NLPPCTR Citra hashes, not the UI Buttons zip (lolipop221), not TRB/scripts.
+
+## CESA is not in this pack
+
+| | Zhoumaru UI pack | CESA |
+|--|------------------|------|
+| Asset | `*.check/timg/*.png` | `assets/images/cesa/CESA_240X400.png` + `Bottom_Thank.png` |
+| Format | BCLIM in IMAGE_MAP ARCs | TEXI `CESA_240X400.texi` / `Bottom_Thank.texi` |
+| Package | menus / chrome ARCs | **90** (not in `image_map.py`) |
+| Origin | Zhoumaru `7ce3dd3` (did not touch CESA) | EngPatcher `6fc8658` (2026-07-20), earlier |
+| Deploy | PNG pack + chrome `deploy_*` | `deploy_cesa_en.py` / `--only cesa` only |
+
+CESA is a separate EngPatcher boot-warning texture (not Zhoumaru paint). English master is rendered with NLPPPATCH Heisei Gothic (`tools/render_cesa_en.py`) to match vanilla layout. Gold bake still injects it at the **tail** of `rebuild_bake_img.py`.
+
+## When a screen is still JP
+
+1. Look for a Zhoumaru `.check` PNG first.
+2. If missing, it is not “Zhoumaru forgot CESA-class extras” unless the asset is actually a mapped BCLIM folder.
+3. CESA questions → `patch_cesa.py` / `deploy_cesa_en.py`, not the Zhoumaru tree.
+
+## Known-bad dumps (do not pack as-is)
+
+Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/garbage RGB**. Offline decode + alpha-composite on gray looks like a clean EN label; in-game the pic pane shows the RGB noise.
+
+| Dump | Pkg | Why skip / replace |
+|------|-----|--------------------|
+| `Title.check/timg/Title_menu_word.png` | **5261** `Pts_Title_menu` | Re-render gray `(51,51,51)` “Main Menu” and RGBA4444-encode. Zhoumaru RGB was swizzle trash → colorful hub header on first boot. Magenta probe confirmed this pane. `technical.md` **§15.1.1**. |
+| `Myroom.check/timg/optn_tex_optionkabegami_RGBA4.png` | **5380** Wallpaper row | Opaque RGB is all `(0,0,0)` (filled slab). Re-render **Wallpaper**; other in-room `optn_tex_*` gray masters are good. `deploy_myroom_options_en.py`. |
+
+Before packing a `.check` A8/RGBA4444 text strip: split RGB vs alpha. If alpha looks like text and opaque RGB is noisy (high chroma, or only `(0,0,0)`/`(255,255,255)` while glyphs are not a designed 1-bit), re-render RGB from alpha (or skip the dump). Do not use `bak_pre_*` copied from packed MOD as a Title ARC source — `deploy_title_engpatch_en.py` extracts **vanilla** and RGBA4444-encodes `Title_menu_word`.

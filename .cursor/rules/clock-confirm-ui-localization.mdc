@@ -29,8 +29,10 @@ Chosen approach: **targeted RE / romhack** (not custom Azahar textures as the lo
 | Back `戻る` | `Com_btn_m01_b` (+ ON) | Back |
 | Next `次へ` | `Com_btn_t01_b` (+ ON) | Next |
 | Confirm `決定` | `Com_btn_k01_b` (+ ON) | OK |
+| Quit `やめる` | `Com_btn_y01_b` (+ ON) | Quit |
+| Restore Default `初期設定` | `Com_btn_sy01_b` / `_a` | Restore Default |
 
-ETC1A4. Shared across screens. Deploy Confirm: `tools/deploy_confirm_btn_en.py`.
+ETC1A4. Shared across screens. Deploy Confirm: `tools/deploy_confirm_btn_en.py`. Deploy Quit: `tools/deploy_softkey_quit_en.py`. Deploy Defaults chip: `tools/deploy_softkey_defaults_en.py` (Zhoumaru; last-writer on **5238**).
 
 ## Options + clock title @ NCommonMSel **5245** (A8)
 
@@ -48,6 +50,20 @@ Ghidra: `OptionMenu_BindBtnTextures` `001eb3dc`, `BindMSelBtnIconAndText` `0020a
 
 Deploy: `tools/deploy_msel_options_en.py` (splice into **live** MOD).
 
+In-room overlay `オプションメニュー` (girl’s room, gear header + Display/Sound pills) is **not** this list. That chrome is ETC1A4 `optn_tex_*` @ Myroom **5380** + MyroomHeader **5575** — Zhoumaru; `tools/deploy_myroom_options_en.py`.
+
+## Password entry window @ **5251** (ETC1A4)
+
+**Not DrawText. Not TRB.** `Lyt_Pass_Info_Display` / `Pts_Pass_Display` are pic panes only.
+
+| Asset | EN |
+|-------|-----|
+| `Pass_Win01` | Password (Zhoumaru; baked into the window) |
+| MultiWin `Text03_05_00` @ **5237** | Password Input (Zhoumaru; `FUN_00255a18` idx 0x1f — not the Options password screen) |
+| `Plate_Text03_05_00` @ **5245** | Password Input (Zhoumaru A8; Options `パスワード入力` header) |
+
+Deploy: `tools/deploy_optionpassword_en.py` (vanilla extract → exact-zlib → splice live) plus `deploy_msel_options_en.py` for the header. Options list row remains **5245** `Btn_Text03_05`.
+
 ## Option panels @ **5247**
 
 | Asset | EN |
@@ -56,7 +72,7 @@ Deploy: `tools/deploy_msel_options_en.py` (splice into **live** MOD).
 | `Opt_HelpBtn_A_*` / `B_*` | Every Time / Once (**not** Defaults) |
 | `Opt_txtItem_{SE,VOICE,MIC}` | SE / Voice / Mic Sensitivity |
 
-Deploy: `tools/deploy_display_settings_en.py`. Floating `初期設定` still unmapped.
+Deploy: `tools/deploy_display_settings_en.py`. Floating `初期設定` is **5238** `Com_btn_sy01` (Zhoumaru Restore Default).
 
 ## Do not repeat
 
@@ -70,6 +86,5 @@ Deploy: `tools/deploy_display_settings_en.py`. Floating `初期設定` still unm
 
 ## Open
 
-1. `初期設定` Defaults asset; message-speed sample string source.
-2. Shorten overflowing To-Do TRB titles (STRI 2837 etc.).
-3. Bake verified LayeredFS into CIA.
+1. Shorten overflowing To-Do TRB titles (STRI 2837 etc.).
+2. Bake verified LayeredFS into CIA.

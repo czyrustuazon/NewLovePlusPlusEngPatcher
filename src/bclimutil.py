@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Minimal BCLIM helpers for NLPP UI text textures.
 
-CLIM format IDs (GBATEK / this game):
-  1 = A8, 8 = RGBA4444, 0xB/11 = ETC1A4, 0xD/13 = A4
+NW4C CLIM format IDs (this game):
+  0 L8, 1 A8, 2 LA4, 3 LA8 (also packed as RGB565 by older encodes),
+  5 RGB565, 6 RGB8, 8 RGBA4444, 9 RGBA8, 0xB ETC1A4, 0xD A4.
 
 Title button labels are RGBA4444 (fmt 8). FileSelect label sheets are
 ETC1A4 (fmt 0xB) — 16 bytes per 4x4 block, stored in 8x8-tile Z-order.
@@ -187,6 +188,12 @@ def canvas_for_pixel_bytes(
         (64, 64),
         (512, 16),
         (128, 16),
+        (8, 8),
+        (8, 4),
+        (4, 8),
+        (16, 8),
+        (8, 16),
+        (16, 16),
     ):
         if cand[0] * cand[1] == px:
             return cand
@@ -319,6 +326,34 @@ def png_to_bclim_rgba4444_same_size(png: Path, orig_bclim: Path) -> bytes:
     return out
 
 
+def png_to_bclim_etc1a4(
+    png: Path,
+    orig_bclim: Path,
+    *,
+    size: tuple[int, int],
+) -> bytes:
+    """Build ETC1A4 (CLIM fmt 0xB) at a logical ``size`` (file length may grow).
+
+    Used for newly inserted BCLIMs (Title ``Eng_Patch``) where the pane is
+    taller than the Copyright template. Pixel canvas is rectangular pot
+    ``nlpo2(w) × nlpo2(h)`` (min 8), same as short UI strips.
+    """
+    orig = orig_bclim.read_bytes()
+    _pix, _ow, _oh, fmt, footer = parse_bclim(orig)
+    if fmt != 0xB:
+        raise ValueError(f"expected ETC1A4 fmt 0xB, got {fmt:#x}")
+    width, height = size
+    pot_w, pot_h = max(8, nlpo2(width)), max(8, nlpo2(height))
+    src = Image.open(png).convert("RGBA")
+    canvas = Image.new("RGBA", (pot_w, pot_h), (0, 0, 0, 0))
+    canvas.paste(
+        src.crop((0, 0, min(width, src.width), min(height, src.height))),
+        (0, 0),
+    )
+    pixels = encode_etc1a4_pixels(canvas, pot_w, pot_h)
+    return pixels + _rewrite_footer(footer, width, height, 0xB, len(pixels))
+
+
 def png_to_bclim_etc1a4_same_size(png: Path, orig_bclim: Path) -> bytes:
     """Build ETC1A4 (CLIM fmt 0xB) BCLIM matching the original file length.
 
@@ -340,7 +375,7 @@ def png_to_bclim_etc1a4_same_size(png: Path, orig_bclim: Path) -> bytes:
             p *= 2
         return p
 
-    pot_w, pot_h = _next_pot(width), _next_pot(height)
+    pot_w, pot_h = max(8, _next_pot(width)), max(8, _next_pot(height))
     if (pot_w // 4) * (pot_h // 4) != blocks:
         # Fall back: find factor pair of blocks matching Ohana rectangular pot.
         pot_w, pot_h = canvas_for_pixel_bytes(len(pix), width, height, 16)
@@ -370,7 +405,7 @@ def png_to_bclim_etc1a4_same_size(png: Path, orig_bclim: Path) -> bytes:
 
 
 def encode_rgb565_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
-    """Nintendo BCLIM fmt 3 = RGB565 (no alpha; a<16 → black)."""
+    """RGB565 (no alpha; a<16 → black). NW4C fmt 5; older encodes also used fmt 3."""
 
     def write(r: int, g: int, b: int, a: int) -> bytes:
         if a < 16:
@@ -381,21 +416,183 @@ def encode_rgb565_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
     return encode_tiled_pixels(img, pot_w, pot_h, write)
 
 
-def png_to_bclim_rgb565_same_size(png: Path, orig_bclim: Path) -> bytes:
-    """Build RGB565 (CLIM fmt 3) BCLIM matching the original file length."""
+def encode_l8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
+    """L8 (fmt 0). Transparent → 0."""
+
+    def write(r: int, g: int, b: int, a: int) -> bytes:
+        if a < 16:
+            return bytes([0])
+        return bytes([(r * 299 + g * 587 + b * 114) // 1000])
+
+    return encode_tiled_pixels(img, pot_w, pot_h, write)
+
+
+def encode_la4_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
+    """LA4 (fmt 2): high nibble L, low nibble A."""
+
+    def write(r: int, g: int, b: int, a: int) -> bytes:
+        lum = (r * 299 + g * 587 + b * 114) // 1000
+        return bytes([((lum >> 4) << 4) | (a >> 4)])
+
+    return encode_tiled_pixels(img, pot_w, pot_h, write)
+
+
+def encode_rgb8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
+    """RGB8 (fmt 6). Transparent → black."""
+
+    def write(r: int, g: int, b: int, a: int) -> bytes:
+        if a < 16:
+            r = g = b = 0
+        return bytes([r, g, b])
+
+    return encode_tiled_pixels(img, pot_w, pot_h, write)
+
+
+def encode_rgba8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
+    """RGBA8 (fmt 9)."""
+
+    def write(r: int, g: int, b: int, a: int) -> bytes:
+        return bytes([r, g, b, a])
+
+    return encode_tiled_pixels(img, pot_w, pot_h, write)
+
+
+def _png_to_tiled_same_size(
+    png: Path,
+    orig_bclim: Path,
+    expected_fmt: int | tuple[int, ...],
+    bpp: int,
+    encode_fn,
+) -> bytes:
     orig = orig_bclim.read_bytes()
     pix, width, height, fmt, footer = parse_bclim(orig)
-    if fmt != 3:
-        raise ValueError(f"expected RGB565 fmt 3, got {fmt}")
-    pot_w, pot_h = canvas_for_pixel_bytes(len(pix), width, height, 2)
-    need = pot_w * pot_h * 2
-    pixels = encode_rgb565_pixels(Image.open(png), pot_w, pot_h)
+    allowed = expected_fmt if isinstance(expected_fmt, tuple) else (expected_fmt,)
+    if fmt not in allowed:
+        raise ValueError(f"expected fmt {expected_fmt}, got {fmt}")
+    pot_w, pot_h = canvas_for_pixel_bytes(len(pix), width, height, bpp)
+    need = pot_w * pot_h * bpp
+    pixels = encode_fn(Image.open(png), pot_w, pot_h)
     if len(pixels) != need:
-        raise ValueError(f"RGB565 size mismatch {len(pixels)} != {need}")
+        raise ValueError(f"fmt {fmt} size mismatch {len(pixels)} != {need}")
     out = pixels + footer
     if len(out) != len(orig):
         raise ValueError(f"BCLIM size changed {len(orig)} -> {len(out)}")
     return out
+
+
+def png_to_bclim_rgb565_same_size(png: Path, orig_bclim: Path) -> bytes:
+    """Build RGB565 BCLIM (fmt 3 historical / fmt 5 NW4C) matching original length."""
+    return _png_to_tiled_same_size(
+        png, orig_bclim, (3, 5), 2, encode_rgb565_pixels
+    )
+
+
+def png_to_bclim_l8_same_size(png: Path, orig_bclim: Path) -> bytes:
+    return _png_to_tiled_same_size(png, orig_bclim, 0, 1, encode_l8_pixels)
+
+
+def png_to_bclim_la4_same_size(png: Path, orig_bclim: Path) -> bytes:
+    return _png_to_tiled_same_size(png, orig_bclim, 2, 1, encode_la4_pixels)
+
+
+def png_to_bclim_rgb8_same_size(png: Path, orig_bclim: Path) -> bytes:
+    return _png_to_tiled_same_size(png, orig_bclim, 6, 3, encode_rgb8_pixels)
+
+
+def png_to_bclim_rgba8_same_size(png: Path, orig_bclim: Path) -> bytes:
+    return _png_to_tiled_same_size(png, orig_bclim, 9, 4, encode_rgba8_pixels)
+
+
+def _decode_tiled(
+    pix: bytes, width: int, height: int, bpp: int, read_pixel
+) -> Image.Image:
+    pot_w, pot_h = canvas_for_pixel_bytes(len(pix), width, height, bpp)
+    tiles_x = max(1, gcm(pot_w, 8) // 8)
+    im = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    px = im.load()
+    n = min(len(pix) // bpp, pot_w * pot_h)
+    for i in range(n):
+        mx, my = d2xy(i % 64)
+        tile = i // 64
+        x = mx + (tile % tiles_x) * 8
+        y = my + (tile // tiles_x) * 8
+        if 0 <= x < width and 0 <= y < height:
+            px[x, y] = read_pixel(pix, i)
+    return im
+
+
+def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
+    """Best-effort RGBA decode for packing masters. None if format unknown."""
+    pix, w, h, fmt, _ft = parse_bclim(raw)
+    if fmt == 0xB:
+        return None
+    if fmt == 1:
+
+        def read_a8(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            return (255, 255, 255, buf[i])
+
+        return _decode_tiled(pix, w, h, 1, read_a8)
+    if fmt == 0:
+
+        def read_l8(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            v = buf[i]
+            return (v, v, v, 255 if v else 0)
+
+        return _decode_tiled(pix, w, h, 1, read_l8)
+    if fmt == 2:
+
+        def read_la4(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            v = buf[i]
+            lum = (v >> 4) * 17
+            a = (v & 0xF) * 17
+            return (lum, lum, lum, a)
+
+        return _decode_tiled(pix, w, h, 1, read_la4)
+    if fmt in (3, 5):
+
+        def read_565(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            v = buf[i * 2] | (buf[i * 2 + 1] << 8)
+            r = ((v >> 11) & 31) * 255 // 31
+            g = ((v >> 5) & 63) * 255 // 63
+            b = (v & 31) * 255 // 31
+            return (r, g, b, 255)
+
+        return _decode_tiled(pix, w, h, 2, read_565)
+    if fmt == 6:
+
+        def read_rgb8(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            o = i * 3
+            return (buf[o], buf[o + 1], buf[o + 2], 255)
+
+        return _decode_tiled(pix, w, h, 3, read_rgb8)
+    if fmt == 8:
+
+        def read_4444(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            v = buf[i * 2] | (buf[i * 2 + 1] << 8)
+            r = ((v >> 12) & 0xF) * 17
+            g = ((v >> 8) & 0xF) * 17
+            b = ((v >> 4) & 0xF) * 17
+            a = (v & 0xF) * 17
+            return (r, g, b, a)
+
+        return _decode_tiled(pix, w, h, 2, read_4444)
+    if fmt == 9:
+
+        def read_rgba8(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            o = i * 4
+            return (buf[o], buf[o + 1], buf[o + 2], buf[o + 3])
+
+        return _decode_tiled(pix, w, h, 4, read_rgba8)
+    if fmt == 0xD:
+
+        def read_a4(buf: bytes, i: int) -> tuple[int, int, int, int]:
+            v = buf[i // 2]
+            n = v & 0xF if i % 2 == 0 else v >> 4
+            return (255, 255, 255, n * 17)
+
+        # A4 uses Tile_Order, not Morton-linear; skip if we only need intros.
+        return None
+    return None
 
 
 def png_to_bclim_same_size(png: Path, orig_bclim: Path) -> bytes:
@@ -407,8 +604,16 @@ def png_to_bclim_same_size(png: Path, orig_bclim: Path) -> bytes:
         return png_to_bclim_etc1a4_same_size(png, orig_bclim)
     if fmt == 1:
         return png_to_bclim_a8_same_size(png, orig_bclim)
-    if fmt == 3:
+    if fmt in (3, 5):
         return png_to_bclim_rgb565_same_size(png, orig_bclim)
     if fmt == 0xD:
         return png_to_bclim_a4_same_size(png, orig_bclim)
+    if fmt == 0:
+        return png_to_bclim_l8_same_size(png, orig_bclim)
+    if fmt == 2:
+        return png_to_bclim_la4_same_size(png, orig_bclim)
+    if fmt == 6:
+        return png_to_bclim_rgb8_same_size(png, orig_bclim)
+    if fmt == 9:
+        return png_to_bclim_rgba8_same_size(png, orig_bclim)
     raise ValueError(f"unsupported BCLIM format {fmt:#x} for same-size encode")

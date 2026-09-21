@@ -51,6 +51,7 @@ LABELS: list[tuple[str, str]] = [
     ("Com_M_Sel_Plate_Text03_00_00.bclim", "Options"),
     ("Com_M_Sel_Plate_Text03_01_00.bclim", "Display Settings"),
     ("Com_M_Sel_Plate_Text03_02_00.bclim", "Sound Settings"),
+    ("Com_M_Sel_Plate_Text04_04_00.bclim", "Communication Settings"),
     ("Com_M_Sel_Btn_Text03_01_00.bclim", "Display Settings"),
     ("Com_M_Sel_Btn_Text03_02_00.bclim", "Sound Settings"),
     ("Com_M_Sel_Btn_Text04_04_00.bclim", "Network"),
@@ -117,7 +118,15 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False, stem: s
     orig.write_bytes(raw)
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
-        Image.open(master).convert("RGBA").save(png)
+        rgba = Image.open(master).convert("RGBA")
+        if hard or (stem and stem.endswith("Text04_04_00")):
+            a = np.array(rgba.getchannel("A"))
+            a = np.where(a >= 40, 255, 0).astype(np.uint8)
+            rgb = np.array(rgba.convert("RGBA"))
+            rgb[:, :, 3] = a
+            rgb[:, :, :3] = 255
+            rgba = Image.fromarray(rgb, "RGBA")
+        rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)
@@ -368,7 +377,86 @@ def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
     print("DMST unchanged OK")
 
 
+PLATE_PASSWORD = "Com_M_Sel_Plate_Text03_05_00.bclim"
+PLATE_OPTIONS_TMPL = "Com_M_Sel_Plate_Text03_00_00.bclim"
+
+
+def _zhoumaru_password_plate_png(tmp: Path, w: int, h: int, *, hard: bool) -> Path:
+    master = find_ui_png(("NCommonMSel(3).check",), Path(PLATE_PASSWORD).stem, (w, h))
+    if master is None:
+        raise SystemExit(f"missing Zhoumaru {PLATE_PASSWORD} under NCommonMSel(3).check")
+    im = Image.open(master).convert("RGBA")
+    if hard:
+        a = np.array(im)
+        a[:, :, 3] = np.where(a[:, :, 3] >= 80, 255, 0).astype(np.uint8)
+        a[:, :, 0] = 255
+        a[:, :, 1] = 255
+        a[:, :, 2] = 255
+        im = Image.fromarray(a)
+    png = tmp / ("plate_pw_hard.png" if hard else "plate_pw.png")
+    im.save(png)
+    return png
+
+
+def add_password_input_plate(arc: bytes, tmp: Path, cmp_len: int) -> bytes:
+    """パスワード入力 header — BindPlateTextures slot 5, not MultiWin 5237.
+
+    Vanilla ``Plate_Text03_05`` is ETC1A4; Zhoumaru ETC1A4 misses the 5245 slot.
+    Sibling Options plates are A8 144x28 — encode Zhoumaru as A8 (same length).
+    """
+    darc = DarcArchive(bytearray(arc))
+    tmpl = darc.find(f"timg/{PLATE_OPTIONS_TMPL}") or darc.find(PLATE_OPTIONS_TMPL)
+    if tmpl is None:
+        raise SystemExit(f"missing template {PLATE_OPTIONS_TMPL}")
+    _pix, w, h, _fmt, _ft = parse_bclim(darc.extract_file(tmpl))
+    orig = tmp / "plate_tmpl.bclim"
+    orig.write_bytes(darc.extract_file(tmpl))
+    best: tuple[int, bytes] | None = None
+    for hard in (False, True):
+        png = _zhoumaru_password_plate_png(tmp, w, h, hard=hard)
+        trial = DarcArchive(bytearray(arc))
+        ent = trial.find(f"timg/{PLATE_PASSWORD}") or trial.find(PLATE_PASSWORD)
+        if ent is None:
+            raise SystemExit(f"missing {PLATE_PASSWORD}")
+        trial.replace_same_size(ent, png_to_bclim_a8_same_size(png, orig))
+        patched = bytes(trial.data)
+        z = len(zopfli_zlib.compress(patched))
+        print(f"  password plate A8 hard={hard}: zopfli={z} slot={cmp_len}", flush=True)
+        if best is None or z < best[0]:
+            best = (z, patched)
+        if z <= cmp_len:
+            return patched
+    assert best is not None
+    if best[0] > cmp_len:
+        raise SystemExit(
+            f"password plate misses slot {cmp_len} (best zopfli={best[0]})"
+        )
+    return best[1]
+
+
+def _deploy_targets() -> list[Path]:
+    targets = list(iter_deploy_targets(MOD_IMG))
+    inst_root = ROOT / "out" / "azahar_instances"
+    seen = {p.resolve() for p in targets}
+    for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+        rp = img.resolve()
+        if rp.is_file() and rp not in seen:
+            targets.append(rp)
+            seen.add(rp)
+    return targets
+
+
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--plate-only",
+        action="store_true",
+        help="Only splice Password Input plate onto live 5245 (skip full Options rebuild).",
+    )
+    args = ap.parse_args()
+
     bak = MOD_IMG.with_suffix(".bin.bak_pre_msel5245")
     if not bak.is_file():
         if not MOD_IMG.is_file():
@@ -376,40 +464,56 @@ def main() -> None:
         bak.write_bytes(MOD_IMG.read_bytes())
         print("created bak from current mod img")
 
-    image = ImgBin(str(bak))
-    image.parse(False)
-    res = image.entries[PKG]
-    if res is None:
-        raise SystemExit(f"pkg {PKG} missing")
-    src_pkg = IMG_DATA / f"{PKG:04d}"
     IMG_DATA.mkdir(parents=True, exist_ok=True)
-    src_pkg.write_bytes(
-        bak.read_bytes()[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
-    )
-    print(f"vanilla package {PKG} ({src_pkg.stat().st_size} bytes)")
-
     tmp = ROOT / "out" / "msel5245_en" / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
-
-    pkg = Package(FileWindow(str(src_pkg)), 0)
-    pkg.parse(False)
-    arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))
-    print(f"vanilla ARC {len(arc_elem.parsed())} cmp_slot={arc_elem.fw.len()}")
-
-    patched_arc = patch_arc(arc_elem.parsed(), tmp, arc_elem.fw.len())
     new_pkg = IMG_DATA / f"new_{PKG:04d}"
-    splice_arc(src_pkg, patched_arc, new_pkg)
 
-    # Splice into live MOD — never use bak as img base (that copies bak over
-    # the whole LayeredFS img and wipes later package EN patches).
+    if args.plate_only:
+        src_img = MOD_IMG if MOD_IMG.is_file() else bak
+        image = ImgBin(str(src_img))
+        image.parse(False)
+        res = image.entries[PKG]
+        if res is None:
+            raise SystemExit(f"pkg {PKG} missing")
+        src_pkg = IMG_DATA / f"{PKG:04d}"
+        src_pkg.write_bytes(
+            src_img.read_bytes()[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
+        )
+        print(f"live package {PKG} from {src_img} ({src_pkg.stat().st_size} bytes)")
+        pkg = Package(FileWindow(str(src_pkg)), 0)
+        pkg.parse(False)
+        arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))
+        patched_arc = add_password_input_plate(
+            arc_elem.parsed(), tmp, arc_elem.fw.len()
+        )
+        splice_arc(src_pkg, patched_arc, new_pkg)
+    else:
+        image = ImgBin(str(bak))
+        image.parse(False)
+        res = image.entries[PKG]
+        if res is None:
+            raise SystemExit(f"pkg {PKG} missing")
+        src_pkg = IMG_DATA / f"{PKG:04d}"
+        src_pkg.write_bytes(
+            bak.read_bytes()[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
+        )
+        print(f"vanilla package {PKG} ({src_pkg.stat().st_size} bytes)")
+        pkg = Package(FileWindow(str(src_pkg)), 0)
+        pkg.parse(False)
+        arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))
+        print(f"vanilla ARC {len(arc_elem.parsed())} cmp_slot={arc_elem.fw.len()}")
+        patched_arc = patch_arc(arc_elem.parsed(), tmp, arc_elem.fw.len())
+        patched_arc = add_password_input_plate(patched_arc, tmp, arc_elem.fw.len())
+        splice_arc(src_pkg, patched_arc, new_pkg)
+
     try:
-        for _dest in iter_deploy_targets(MOD_IMG):
+        for _dest in _deploy_targets():
             splice_packages_into_img(_dest, IMG_DATA, [PKG], _dest)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("deployed exact-zopfli Options EN ->", MOD_IMG)
-    print("Fully quit Azahar and open Options.")
     print("Rollback: tools/restore_img_pre_msel5245.ps1")
 
 

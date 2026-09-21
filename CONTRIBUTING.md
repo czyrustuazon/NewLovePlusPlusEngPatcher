@@ -1,13 +1,18 @@
 # Contributing
 
 Thanks for wanting to help translate New Love Plus+. This is a small fan project, not a
-company — see the [companion site](https://github.com/czyrustuazon/NLPP-EngPatcher-Site)
+company — see the [companion site](https://newloveplus.loc.moe) ([source](https://github.com/czyrustuazon/NLPP-EngPatcher-Site))
 for the public devlog and progress tracker, but this repo — the patcher, finished scripts,
 and toolchain — is where the actual work happens and where volunteer tasks are tracked.
 
 ## Finding something to work on
 
-Browse [open Issues](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher/issues),
+Most leftover **dialogue / SMS / TRB / UI PNG** help is through the browser
+[localization workbench](https://github.com/czyrustuazon/nlpp-localization-workbench)
+(no Python). See root `README.md` → **Volunteer localization workbench**.
+
+For patcher / RE / QA tasks, browse
+[open Issues](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher/issues),
 filtered by label:
 
 | Label | What it means |

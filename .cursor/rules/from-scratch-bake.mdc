@@ -5,7 +5,9 @@ alwaysApply: true
 
 # From-scratch bake (real 3DS ship path)
 
-This is the workflow. Do not invent a side path (Azahar-only LayeredFS, `--skip-pack` “just to test hardware”, PNG scratch `cache/new_img.bin`).
+This is the workflow. Do not invent a side path (`--skip-pack` “just to test hardware”, PNG scratch `cache/new_img.bin`, **Azahar-only** LayeredFS with no CIA inject).
+
+Azahar LayeredFS is still **required for emulator testing** — see `bakable-and-layeredfs`. Bake without a LayeredFS deploy, or LayeredFS without bake, is incomplete.
 
 ## What to run
 
@@ -19,7 +21,7 @@ python tools/rebuild_bake_img.py --rom <dropped ROM>
 
 That **will bake**: PNG pack → chrome deploys → TRB overlay → **always** rebuilds `release/name_input_code.bin` from vanilla (`code.bin.bak` preferred) via `deploy_name_input_en.py`. Then `patch_cia.py` injects bake + overlay + name-input.
 
-PNG pack is the long part (~2–4h cold). Name-input rebuild is seconds. Watch `[timer]` lines.
+PNG pack is the long part (typically under an hour cold; measured ~27 min on a high-thread desktop). Name-input rebuild is seconds. Watch `[timer]` lines.
 
 ## After name-input / cave changes
 

@@ -185,12 +185,14 @@ REM Optional PNG scratch:
 REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (~16h)
+REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (typically under an hour)
 REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 if not exist "%~dp0release" mkdir "%~dp0release"
 if not exist "%~dp0out" mkdir "%~dp0out"
-set "LAYEREDFS_OUT=--layeredfs-out %~dp0out\luma"
+REM Keep quotes inside the value so paths with spaces survive expansion
+REM (e.g. E:\zip game\... GitHub unzip folders).
+set LAYEREDFS_OUT=--layeredfs-out "%~dp0out\1_[Either use this-LayerFS]\luma"
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -207,7 +209,7 @@ if exist "%~dp0release\romfs_overlay\SystemData" (
 set "INJECT_CODE="
 REM Profile name-input is required for a complete Drop (built by rebuild_bake_img).
 if exist "%~dp0release\name_input_code.bin" (
-  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
 )
 if /i "%NLPP_WITH_IMAGES%"=="0" (
@@ -225,7 +227,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 ) else (
   REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
   set "BAKE_STALE="
@@ -235,7 +237,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   if defined BAKE_STALE (
     echo.
-    echo RC: bake stamp missing or from another release — packing from this tree.
+    echo RC: bake stamp missing, other release, or UI PNGs changed — packing from this tree.
     echo Leftover release\bake_img.bin will be overwritten ^(from scratch^).
     echo Set NLPP_REUSE_BAKE=1 to inject the existing bake anyway.
     echo.
@@ -252,7 +254,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     if not defined BAKE_STALE if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
       echo.
       echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
-      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold if auto-detect fails^)
+      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails^)
       echo.
       "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
       if errorlevel 1 (
@@ -353,20 +355,21 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  set "INJECT_CODE=--inject-code %~dp0release\name_input_code.bin"
+  set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE!
 )
 set ERR=%ERRORLEVEL%
 
 echo.
 if not "%ERR%"=="0" (
-  if exist "%~dp0out\luma\00040000000F4E00" (
+  if exist "%~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00" (
     echo.
     echo [!] CIA rebuild failed, but Luma LayeredFS was written:
-    echo     %~dp0out\luma\00040000000F4E00
-    echo     See out\luma\README.txt — copy to SD:/luma/titles/
+    echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
+    echo     See that folder's README.txt — copy to SD:/luma/titles/
+    echo     Do not also install a patched CIA.
   )
   echo.
   echo [!] Patch failed ^(exit %ERR%^).
@@ -375,7 +378,7 @@ if not "%ERR%"=="0" (
 )
 
 echo [+] Patched CIA:
-echo     %~dp0out\NewLovePlusPlus-EN.cia
+echo     %~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia
 echo.
 if defined NLPP_T0 (
   for /f "delims=" %%E in ('"%PYTHON%" "%SRC%\run_timer.py" !NLPP_T0!') do (
@@ -384,16 +387,27 @@ if defined NLPP_T0 (
   )
 )
 echo [+] Luma LayeredFS ^(real 3DS^):
-echo     %~dp0out\luma\00040000000F4E00
+echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
 echo     Copy that folder to SD:/luma/titles/
 echo     Enable "Enable game patching" in Luma settings.
+echo.
+echo [+] Use LayeredFS OR the CIA, not both. See:
+echo     %~dp0out\3_but not both
 echo.
 echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
 echo [+] Patch log ^(same summary^):
 echo     %~dp0out\logs\latest.txt
 echo     ^(timestamped copies stay in out\logs\^)
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept CIA + luma + logs^).
+echo [+] Install over the existing title in FBI/Azahar. Do NOT delete the title first
+echo     ^(that orphans extra data^). CIA title version is CIA_TITLE_VERSION for this RC
+echo     ^(src\patcher_version.py^). Bump that number when merging an RC into main.
+echo.
+echo [+] Azahar extra data backup/restore:
+echo     python tools\restore_azahar_extdata.py backup
+echo     python tools\restore_azahar_extdata.py restore
+echo.
+echo [+] out\ cleaned ^(scratch removed; kept numbered LayeredFS/CIA folders + 3_but not both + logs + extdata_backup^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 

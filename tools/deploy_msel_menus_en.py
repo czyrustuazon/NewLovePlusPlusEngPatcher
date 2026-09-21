@@ -66,10 +66,18 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
     5244: [  # Gallery
         ("Com_M_Sel_Plate_Text02_00_00.bclim", "Gallery"),
         ("Com_M_Sel_Btn_Text02_01_00.bclim", "Event Gallery"),
-        ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_01.bclim", "Memory Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_02.bclim", "Dream After Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_03.bclim", "Trip Memory Gallery"),
+        ("Com_M_Sel_Btn_Text02_01_04.bclim", "Drama Gallery"),
         ("Com_M_Sel_Btn_Text02_01_05.bclim", "Gallery Options"),
+        ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
         # Submenu headers (plates; MultiWin Text02_* @ 5237 is the live white strip)
         ("Com_M_Sel_Plate_Text02_01_00.bclim", "Event Gallery"),
+        ("Com_M_Sel_Plate_Text02_01_01.bclim", "Confession Memories"),
+        ("Com_M_Sel_Plate_Text02_01_02.bclim", "After the Dream"),
+        ("Com_M_Sel_Plate_Text02_01_03.bclim", "Trip Memories"),
+        ("Com_M_Sel_Plate_Text02_01_04.bclim", "Youthful Page"),
         ("Com_M_Sel_Plate_Text02_01_05.bclim", "Gallery Options"),
         ("Com_M_Sel_Plate_Text02_02_00.bclim", "Illustration Gallery"),
         ("Com_M_Sel_Btn_Text02_02_01.bclim", "Dream Gallery"),
@@ -80,11 +88,26 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
     ],
     5241: [  # Communication
         ("Com_M_Sel_Plate_Text04_00_00.bclim", "Communication"),
-        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Comm."),
+        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Btn_Text04_01_02.bclim", "Girlfriend Introduction"),
+        ("Com_M_Sel_Btn_Text04_01_03.bclim", "Double Date"),
+        # Girlfriend Comm. session rows (２人会話を募集 / ３人会話を募集 / 会話に参加)
+        ("Com_M_Sel_Btn_Text04_01_04.bclim", "Find Two-Person Chat"),
+        ("Com_M_Sel_Btn_Text04_01_05.bclim", "Find Three-Person Chat"),
+        ("Com_M_Sel_Btn_Text04_01_06.bclim", "Join Chat"),
+        # Girlfriend Introduction / Double Date session rows
+        ("Com_M_Sel_Btn_Text04_01_07.bclim", "Introduce Girlfriend"),
+        ("Com_M_Sel_Btn_Text04_01_08.bclim", "Get Introduced"),
+        ("Com_M_Sel_Btn_Text04_01_09.bclim", "Find Couple"),
+        ("Com_M_Sel_Btn_Text04_01_10.bclim", "Join Double Date"),
         ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
         ("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle"),
         # Girlfriend Comm. / Wireless Battle submenu headers
-        ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Comm."),
+        # Zhoumaru Plate_Text04_01_00 is "Communication Menu"; カノジョ通信 is 01_01.
+        ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Plate_Text04_01_01.bclim", "Heart to Heart"),
+        ("Com_M_Sel_Plate_Text04_01_02.bclim", "Girlfriend Introduction"),
+        ("Com_M_Sel_Plate_Text04_01_03.bclim", "Double Date"),
         ("Com_M_Sel_Plate_Text04_03_00.bclim", "Wireless Battle"),
     ],
     5242: [  # Data Management
@@ -95,6 +118,13 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Plate_Text05_02_00.bclim", "Delete Save Data"),
     ],
 }
+
+
+# Zhoumaru Plate_Text04_01_00 is native 144×28 "Communication Menu".
+# Plate_Text04_01_01 PNG is a 192×16 MultiWin strip — do not glyph-fill it.
+PNG_STEM_OVERRIDE: dict[str, str] = {}
+# Paint カノジョ通信 ourselves as "Heart to Heart" at 144×28 (not the 8px strip).
+SKIP_UI_PNG = {"Com_M_Sel_Plate_Text04_01_01"}
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -149,19 +179,36 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
     if stem:
         master = find_ui_png(
             (
+                "NCommonMSel(3).check",
                 "NCommonMSel(4).check",
                 "NCommonMSel(6).check",
                 "NCommonMSel(7).check",
+                "NCommonMSel(8).check",
+                "NCommonMSel(9).check",
             ),
-            stem,
+            PNG_STEM_OVERRIDE.get(stem, stem),
             (w, h),
         )
+        if stem in SKIP_UI_PNG:
+            master = None
     if master is not None:
-        Image.open(master).convert("RGBA").save(png)
+        rgba = Image.open(master).convert("RGBA")
+        # Glyph-filled copies (out/_ui_png_fit) are upscaled AA and blow the
+        # tight 5244 slot unless quantized. Native-size Zhoumaru stays AA
+        # unless a hard trial asked for it.
+        fitted = "_ui_png_fit" in master.parts
+        if hard or fitted:
+            a = np.array(rgba.getchannel("A"))
+            a = np.where(a >= 96, 255, 0).astype(np.uint8)
+            rgba.putalpha(Image.fromarray(a, "L"))
+        rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]
     ys, _ = np.where(jp > 40)
     th = int(ys.max() - ys.min() + 1) if len(ys) else h // 2
+    if stem in SKIP_UI_PNG:
+        th = min(13, h - 4)
+        print(f"  font-render {stem} {en!r} {w}x{h} target_h={th}", flush=True)
     en_a = render_en_alpha(w, h, en, th)
     if hard:
         en_a = np.where(en_a >= 96, 255, 0).astype(np.uint8)
@@ -373,13 +420,21 @@ def main() -> None:
 
     # Splice onto current LayeredFS (keeps Options 5245 etc.)
     try:
-        for _dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for _dest in targets:
             splice_packages_into_img(_dest, pkg_dir, pkgs, _dest)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("\ndeployed MSel EN pkgs", pkgs, "->", MOD_IMG, flush=True)
-    print("Fully quit Azahar and re-open the menu.", flush=True)
+    print("Re-open Event Gallery / Girlfriend Communication to reload pkgs.", flush=True)
     print("Rollback: img.bin.bak_pre_msel_meishi or bak_pre_msel_menus", flush=True)
 
 

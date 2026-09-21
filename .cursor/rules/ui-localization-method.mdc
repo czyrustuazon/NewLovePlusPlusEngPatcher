@@ -15,6 +15,10 @@ When a screen stays Japanese despite EN TRB:
 4. **If true runtime DrawText** (help/error, some titles): `DrawTextToPane` / MakeStr. Nuclear test: force all DrawText → if chrome stays JP, it’s textures.
 5. **If list/quest titles already EN but overflow the capsule:** TRB string too long — **shorten the EN string** (pane font size is global). Example: To-Do STRI **2837** `Girlfriend's Personal Photographer` → shorter synonym (`Personal Photographer`). Pack `0x0600` slot 22; `translations.json` + `patch_textresource.py`.
 6. **If TRB already EN for the same words:** wrong path (different asset or runtime buffer). Stop re-translating those keys.
+7. **If `translations.json` has EN but the screen is still the full JP sentence:** dump vanilla TRB and compare keys. A truncated JSON key (cut mid-phrase, e.g. `…デートを作` vs `…デートを作成してください。`) never matches, so rebuild keeps JP. Fix the **full** codebook string, then `deploy_name_kanji_trb.py`. Example: Anywhere Date empty list STRI **25183**.
+8. **If an ETC1A4 MultiWin 192×16 bar looks fried / pixel-y:** it is a **BCLIM**, not TRB. Zhoumaru stem may be the wrong file (Network) or an 8px strip. Full EN that is 2× Communication’s width cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, `technical.md` §12.4.1). Do not LANCZOS-fill a plate onto this bar.
+9. **If the Main Menu hub header is colorful tiled noise** (rows still EN): BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu`, not TRB. Zhoumaru `.check` dump had swizzled RGB (alpha still “Main Menu”). Encode gray “Main Menu” with the hub-label RGBA4444 path. Split RGB vs alpha before packing GPU dumps. `technical.md` **§15.1.1**.
+10. **If RGB565 yellow-key labels look deep-fried next to an A8 header / RGBA4444 button:** not word count. Vanilla uses chroma ramps (~17 colors). 1-bit crush is the fry. 2× Heisei, lerp plate→ink, quantize to the JP palette — **§12.4.4**.
 
 ## Verify identity before patching
 
@@ -32,14 +36,22 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Screen | Pkg | Status |
 |--------|-----|--------|
 | Options + clock title | **5245** A8 | EN |
+| Password entry window | **5251** ETC1A4 | EN (`deploy_optionpassword_en.py`, Zhoumaru `Pass_Win01`) |
+| Password entry header | **5245** | EN (`Password Input` plate `Text03_05`) |
 | Display/Sound settings panels | **5247** RGBA4444 | EN (`deploy_display_settings_en.py`) |
-| Back/Next/Confirm | **5238** ETC1A4 | EN (`OK` for 決定) |
-| Gallery / Comm / Data MSel | 5244/5241/5242 | EN |
+| Back/Next/Confirm/Quit | **5238** ETC1A4 | EN (`OK` for 決定, `Quit` for やめる) |
+| Gallery / Comm / Data MSel | 5244/5241/5242 | EN (GF Comm./Intro/Date rows `Btn_Text04_01_04..10` @ **5241**) |
+| Girlfriend Comm. white header `カノジョ通信` | **5237** ETC1A4 192×16 | **Heart to Heart** (`deploy_multiwin_headers_en.py`; skip Zhoumaru 8px strip). Full “Girlfriend Communication” fries this bar — **§12.4.1**. |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
-| Profile labels | 5246 + **5252** | EN (Western name order) |
+| Profile labels | 5246 + **5252** | EN header **Profile** is Heisei W5 16px strip like Heart to Heart (`deploy_profile_en.py`, **§12.4.2**). Call01/atlas labels are Heisei size 15 **2× AA** quantized to vanilla RGB565 chroma ramps (not 1-bit) — **§12.4.4**. Hometown chips `Profile_Btn_Com02_Text01..08` stay Zhoumaru, contain-fit to a 6px pill inset (**§12.4.3**). |
+| Profile Called list (`Win_Call01/02`) | `code.bin` | Leftover `づ` was pack **0x7000** slot `0x40` after a `*3` kana walk past ASCII NUL — not a label to translate. ASCII Called names draw the typed string (`patch_input_call_romaji.py`, **§17.8**). |
 | Status stats | **5501** / **5255** | EN |
 | To-Do chrome | 5575 / **5253** | EN; long TRB titles → shorten |
-| Floating `初期設定` Defaults | — | **unmapped** |
-| Message-speed sample line | — | **unmapped** |
+| Floating `初期設定` Defaults | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** | EN (`Restore Default`) — Zhoumaru; `deploy_softkey_defaults_en.py` |
+| Message-speed sample line | `code.bin` `0x005D1928` | EN (`This is a text-speed test.`) + Options **14/8/2/0** + TalkWindow **10/18/22/28** + voice/script cap (`patch_message_speed.py`, §21) |
+| Extra-data recreate warning body | TRB STRI **4429** DrawText (`Tex_Sentence`) | EN in `translations.json` (not pkg **5237** `Com_Win_Warning` chrome) |
+| Anywhere Date empty list | TRB STRI **25183** DrawText (`Lyt_De0200` Opt_Win) | EN — full JP key; truncated `…デートを作` never matched |
+| Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
+| In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
 
 Details: `technical.md` §12.4–12.6.

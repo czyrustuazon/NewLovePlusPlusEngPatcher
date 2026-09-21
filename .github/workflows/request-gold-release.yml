@@ -1,12 +1,13 @@
-# Push to main (EngPatcher) → ping nlpp-gold to bake + publish Releases.
+# Push to main (EngPatcher) → ping nlpp-gold-maker to bake + publish Releases.
 # Other branches do not trigger this.
 #
 # Once: EngPatcher secret NLPP_GOLD_DISPATCH_TOKEN = PAT that can
-#   POST /repos/OWNER/nlpp-gold/dispatches
-# Optional var: NLPP_GOLD_REPO=OWNER/nlpp-gold (default: <owner>/nlpp-gold)
+#   POST /repos/OWNER/nlpp-gold-maker/dispatches
+# Optional var: NLPP_GOLD_REPO=OWNER/nlpp-gold-maker
+#   (default: <owner>/nlpp-gold-maker — not the old <owner>/nlpp-gold slug)
 #
-# Rolling Release tag on nlpp-gold: "gold" (assets overwritten each run).
-# Consumers: python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
+# Rolling Release tag on nlpp-gold-maker: "gold" (assets overwritten each run).
+# Consumers: python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
 
 name: Request gold Release
 
@@ -17,7 +18,7 @@ on:
   workflow_dispatch:
     inputs:
       skip_pack:
-        description: "Ask nlpp-gold to skip PNG pack (TRB/deploys only)"
+        description: "Ask nlpp-gold-maker to skip PNG pack (TRB/deploys only)"
         type: boolean
         default: false
       engpatcher_ref:
@@ -39,7 +40,7 @@ jobs:
         id: meta
         run: |
           set -euo pipefail
-          # Always publish to the rolling "gold" Release on nlpp-gold.
+          # Always publish to the rolling "gold" Release on nlpp-gold-maker.
           TAG=gold
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.engpatcher_ref }}" ]; then
@@ -55,8 +56,16 @@ jobs:
 
           GOLD="${{ vars.NLPP_GOLD_REPO }}"
           if [ -z "$GOLD" ]; then
-            GOLD="${{ github.repository_owner }}/nlpp-gold"
+            GOLD="${{ github.repository_owner }}/nlpp-gold-maker"
           fi
+          # Retired GitHub slug (repo is nlpp-gold-maker). Catch a leftover
+          # Actions var NLPP_GOLD_REPO=OWNER/nlpp-gold so dispatch is not 404.
+          case "$GOLD" in
+            */nlpp-gold)
+              GOLD="${GOLD%/nlpp-gold}/nlpp-gold-maker"
+              echo "Remapped retired nlpp-gold slug → $GOLD"
+              ;;
+          esac
 
           {
             echo "tag=$TAG"
@@ -66,7 +75,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo "Dispatch → $GOLD  release_tag=$TAG  engpatcher_ref=$REF  skip_pack=$SKIP"
 
-      - name: repository_dispatch → nlpp-gold
+      - name: repository_dispatch → nlpp-gold-maker
         env:
           GH_TOKEN: ${{ secrets.NLPP_GOLD_DISPATCH_TOKEN }}
         run: |
@@ -92,5 +101,12 @@ jobs:
                 source_repo: $repo
               }
             }')
-          gh api --method POST "repos/${GOLD}/dispatches" --input - <<<"$BODY"
-          echo "Pinged ${GOLD}. Watch nlpp-gold Actions → Release gold bake."
+          if ! gh api --method POST "repos/${GOLD}/dispatches" --input - <<<"$BODY"; then
+            echo "repository_dispatch failed for ${GOLD}." >&2
+            echo "Bake repo must be OWNER/nlpp-gold-maker (not the retired nlpp-gold slug)." >&2
+            echo "Fix: EngPatcher variable NLPP_GOLD_REPO=OWNER/nlpp-gold-maker" >&2
+            echo "and secret NLPP_GOLD_DISPATCH_TOKEN = PAT with repo access to that private repo." >&2
+            echo "Workaround: run Actions → Release gold bake on nlpp-gold-maker directly." >&2
+            exit 1
+          fi
+          echo "Pinged ${GOLD}. Watch nlpp-gold-maker Actions → Release gold bake."

@@ -8,14 +8,18 @@ Cold-build order (fast → slow):
   2. Gap-salt + empty-block (still zlib-speed)
   3. Zero DARC pads then retry empty-block (large-ARC playbook)
   4. Zopfli only when zlib cannot fit under the slot
+  5. If zopfli is *short*, pad the closed stream at EOB with empty deflate
+     blocks (do not wait on 256 near-miss trials for a 50-byte undershoot)
 """
 from __future__ import annotations
 
 import os
 import struct
+import sys
 import threading
 import time
 import zlib
+from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 try:
@@ -258,7 +262,17 @@ def compress_exact_with_gap_tune(
 
 
 def _zlib_progress(msg: str, *, newline: bool = False) -> None:
-    print(f"\r  [exact-zlib] {msg}".ljust(96), end="" if not newline else "\n", flush=True)
+    # cp1252 consoles raise UnicodeEncodeError on "→" / "…" and pack_images
+    # treated that as a failed compress (left the ARC Japanese).
+    text = f"\r  [exact-zlib] {msg}".ljust(96)
+    end = "" if not newline else "\n"
+    try:
+        print(text, end=end, flush=True)
+    except UnicodeEncodeError:
+        safe = text.encode(sys.stdout.encoding or "ascii", errors="replace").decode(
+            sys.stdout.encoding or "ascii", errors="replace"
+        )
+        print(safe, end=end, flush=True)
 
 
 def _format_secs(sec: float) -> str:
@@ -329,7 +343,7 @@ def _zopfli_compress(data: bytes, *, label: str) -> bytes:
     else:
         _ZOPFLI_SEC_PER_MB = 0.6 * _ZOPFLI_SEC_PER_MB + 0.4 * sample
     _zlib_progress(
-        f"{label} done [{ '#' * 24 }] {_format_secs(elapsed)} → {len(out)} bytes "
+        f"{label} done [{ '#' * 24 }] {_format_secs(elapsed)} -> {len(out)} bytes "
         f"({_ZOPFLI_SEC_PER_MB:.1f}s/MB)",
         newline=True,
     )
@@ -419,6 +433,345 @@ def _bounded_near_miss_tune(
     return None
 
 
+# --- Closed-stream empty-block pad (zopfli undershoot) ---------------------
+#
+# Finished zlib/zopfli blobs have BFINAL already set, so you cannot append
+# ``00 00 00 ff ff`` onto the byte string. Walk to EOB, clear BFINAL, then
+# emit empty fixed-Huffman / stored blocks from that *bit* offset. Leftover
+# zero padding after EOB would otherwise be read as a stored-block header.
+
+_LEN_EXTRA = (
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+    4, 4, 4, 4, 5, 5, 5, 5, 0,
+)
+_DIST_EXTRA = (
+    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7,
+    8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13,
+)
+_CLEN_ORDER = (16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15)
+
+
+class _BitReader:
+    def __init__(self, data: bytes) -> None:
+        self.data = data
+        self.pos = 0
+
+    def bit(self) -> int:
+        i, b = divmod(self.pos, 8)
+        if i >= len(self.data):
+            raise ValueError("truncated deflate")
+        v = (self.data[i] >> b) & 1
+        self.pos += 1
+        return v
+
+    def bits(self, n: int) -> int:
+        v = 0
+        for i in range(n):
+            v |= self.bit() << i
+        return v
+
+    def byte_align(self) -> None:
+        rem = self.pos % 8
+        if rem:
+            self.pos += 8 - rem
+
+
+class _BitWriter:
+    def __init__(self, data: bytearray, pos: int) -> None:
+        self.data = data
+        self.pos = pos
+
+    def _ensure(self, nbits: int) -> None:
+        need = (self.pos + nbits + 7) // 8
+        if len(self.data) < need:
+            self.data.extend(b"\x00" * (need - len(self.data)))
+
+    def write(self, value: int, nbits: int) -> None:
+        self._ensure(nbits)
+        for i in range(nbits):
+            bit = (value >> i) & 1
+            byte_i, b = divmod(self.pos, 8)
+            if bit:
+                self.data[byte_i] |= 1 << b
+            else:
+                self.data[byte_i] &= ~(1 << b)
+            self.pos += 1
+
+
+def _huffman_from_lengths(lengths: list[int]) -> tuple[list[int], list[int]]:
+    """Puff-style (count[len], symbols-sorted-by-length) tables."""
+    maxb = max(lengths) if lengths else 0
+    count = [0] * (maxb + 1)
+    for length in lengths:
+        if length < 0 or (maxb and length > maxb):
+            raise ValueError("bad code length")
+        count[length] += 1
+    left = 1
+    for nbits in range(1, maxb + 1):
+        left <<= 1
+        left -= count[nbits]
+        if left < 0:
+            raise ValueError("over-subscribed Huffman tree")
+    offs = [0] * (maxb + 1)
+    for nbits in range(1, maxb):
+        offs[nbits + 1] = offs[nbits] + count[nbits]
+    symbol = [0] * len(lengths)
+    for sym, length in enumerate(lengths):
+        if length:
+            symbol[offs[length]] = sym
+            offs[length] += 1
+    return count, symbol
+
+
+def _huff_decode(reader: _BitReader, count: list[int], symbol: list[int]) -> int:
+    code = 0
+    first = 0
+    index = 0
+    for length in range(1, len(count)):
+        code |= reader.bit()
+        n = count[length]
+        if code - n < first:
+            return symbol[index + (code - first)]
+        index += n
+        first += n
+        first <<= 1
+        code <<= 1
+    raise ValueError("invalid Huffman code")
+
+
+def _skip_huffman(
+    reader: _BitReader,
+    lit: tuple[list[int], list[int]],
+    dist: tuple[list[int], list[int]],
+) -> None:
+    lit_count, lit_sym = lit
+    dist_count, dist_sym = dist
+    while True:
+        sym = _huff_decode(reader, lit_count, lit_sym)
+        if sym < 256:
+            continue
+        if sym == 256:
+            return
+        extra_i = sym - 257
+        if extra_i >= len(_LEN_EXTRA):
+            raise ValueError("bad length symbol")
+        reader.bits(_LEN_EXTRA[extra_i])
+        dsym = _huff_decode(reader, dist_count, dist_sym)
+        if dsym >= len(_DIST_EXTRA):
+            raise ValueError("bad distance symbol")
+        reader.bits(_DIST_EXTRA[dsym])
+
+
+_FIXED_LIT: tuple[list[int], list[int]] | None = None
+_FIXED_DIST: tuple[list[int], list[int]] | None = None
+
+
+def _fixed_tables() -> tuple[
+    tuple[list[int], list[int]], tuple[list[int], list[int]]
+]:
+    global _FIXED_LIT, _FIXED_DIST
+    if _FIXED_LIT is None or _FIXED_DIST is None:
+        _FIXED_LIT = _huffman_from_lengths(
+            [8] * 144 + [9] * 112 + [7] * 24 + [8] * 8
+        )
+        _FIXED_DIST = _huffman_from_lengths([5] * 32)
+    return _FIXED_LIT, _FIXED_DIST
+
+
+def _skip_dynamic(reader: _BitReader) -> None:
+    hlit = reader.bits(5) + 257
+    hdist = reader.bits(5) + 1
+    hclen = reader.bits(4) + 4
+    clen = [0] * 19
+    for i in range(hclen):
+        clen[_CLEN_ORDER[i]] = reader.bits(3)
+    cl_tab = _huffman_from_lengths(clen)
+    lengths: list[int] = []
+    total = hlit + hdist
+    while len(lengths) < total:
+        sym = _huff_decode(reader, cl_tab[0], cl_tab[1])
+        if sym < 16:
+            lengths.append(sym)
+        elif sym == 16:
+            if not lengths:
+                raise ValueError("bad repeat")
+            lengths.extend([lengths[-1]] * (reader.bits(2) + 3))
+        elif sym == 17:
+            lengths.extend([0] * (reader.bits(3) + 3))
+        elif sym == 18:
+            lengths.extend([0] * (reader.bits(7) + 11))
+        else:
+            raise ValueError("bad code-length symbol")
+    lengths = lengths[:total]
+    lit = _huffman_from_lengths(lengths[:hlit])
+    dist = _huffman_from_lengths(lengths[hlit:])
+    _skip_huffman(reader, lit, dist)
+
+
+def _walk_deflate(deflate: bytes) -> tuple[int, int]:
+    """Return (last_block_start_bit, bit_offset_after_EOB)."""
+    reader = _BitReader(deflate)
+    last_start = 0
+    bfinal = 0
+    while not bfinal:
+        last_start = reader.pos
+        bfinal = reader.bit()
+        btype = reader.bits(2)
+        if btype == 0:
+            reader.byte_align()
+            ln = reader.bits(16)
+            nlen = reader.bits(16)
+            if (ln ^ 0xFFFF) & 0xFFFF != nlen:
+                raise ValueError("bad stored block lengths")
+            reader.pos += ln * 8
+            if reader.pos > len(deflate) * 8:
+                raise ValueError("truncated stored block")
+        elif btype == 1:
+            _skip_huffman(reader, *_fixed_tables())
+        elif btype == 2:
+            _skip_dynamic(reader)
+        else:
+            raise ValueError("reserved BTYPE")
+    return last_start, reader.pos
+
+
+def _split_zlib(stream: bytes) -> tuple[bytes, bytes, bytes] | None:
+    if len(stream) < 6:
+        return None
+    cmf, flg = stream[0], stream[1]
+    if (cmf & 0x0F) != 8:
+        return None
+    if (cmf * 256 + flg) % 31 != 0:
+        return None
+    if flg & 0x20:
+        return None
+    return stream[:2], stream[2:-4], stream[-4:]
+
+
+def _stored_empty_bits(pos: int) -> int:
+    pad = (8 - ((pos + 3) % 8)) % 8
+    return 3 + pad + 32
+
+
+def _plan_empty_block_bits(end_bit: int, c_max: int) -> list[str] | None:
+    """Kinds of empty blocks whose bit length is in [c_max-7, c_max]."""
+    if c_max < 10:
+        return None
+    want_lo = max(10, c_max - 7)
+    want_hi = c_max
+    parent: dict[int, tuple[int, str] | None] = {0: None}
+    q: deque[int] = deque([0])
+    found: int | None = None
+    while q:
+        used = q.popleft()
+        if want_lo <= used <= want_hi:
+            found = used
+            break
+        pos = end_bit + used
+        for kind, size in (("fixed", 10), ("stored", _stored_empty_bits(pos))):
+            nxt = used + size
+            if nxt > want_hi or nxt in parent:
+                continue
+            parent[nxt] = (used, kind)
+            q.append(nxt)
+    if found is None:
+        return None
+    kinds: list[str] = []
+    cur = found
+    while cur:
+        prev, kind = parent[cur]  # type: ignore[misc]
+        kinds.append(kind)
+        cur = prev
+    kinds.reverse()
+    return kinds or None
+
+
+def _write_empty_blocks(writer: _BitWriter, kinds: list[str]) -> None:
+    for i, kind in enumerate(kinds):
+        final = i == len(kinds) - 1
+        if kind == "fixed":
+            writer.write(1 if final else 0, 1)
+            writer.write(1, 2)  # BTYPE = 01
+            writer.write(0, 7)  # EOB
+        else:
+            writer.write(1 if final else 0, 1)
+            writer.write(0, 2)  # BTYPE = 00
+            pad = (8 - (writer.pos % 8)) % 8
+            if pad:
+                writer.write(0, pad)
+            writer.write(0, 16)
+            writer.write(0xFFFF, 16)
+
+
+def pad_closed_zlib_stream(
+    stream: bytes,
+    target: int,
+    *,
+    expected: bytes | None = None,
+) -> bytes | None:
+    """Grow a finished zlib stream to ``target`` with empty deflate blocks.
+
+    Uncompressed payload is unchanged (Adler32 stays). Returns None when the
+    undershoot is too small to encode (typically 1 byte) or the stream cannot
+    be parsed.
+    """
+    if len(stream) == target:
+        return stream
+    if len(stream) > target or target - len(stream) > 1_000_000:
+        return None
+    split = _split_zlib(stream)
+    if split is None:
+        return None
+    hdr, deflate, adler = split
+    need = target - len(stream)
+    try:
+        last_start, end_bit = _walk_deflate(deflate)
+    except ValueError:
+        return None
+    if last_start >= len(deflate) * 8 or end_bit > len(deflate) * 8:
+        return None
+
+    new_len = len(deflate) + need
+    c_max = new_len * 8 - end_bit
+    kinds = _plan_empty_block_bits(end_bit, c_max)
+    if not kinds:
+        return None
+
+    buf = bytearray(deflate[: (end_bit + 7) // 8])
+    bi, bt = divmod(last_start, 8)
+    buf[bi] &= ~(1 << bt)
+    used = end_bit % 8
+    if used:
+        buf[-1] &= (1 << used) - 1
+
+    writer = _BitWriter(buf, end_bit)
+    _write_empty_blocks(writer, kinds)
+    pad = (8 - (writer.pos % 8)) % 8
+    if pad:
+        writer.write(0, pad)
+    if len(buf) != new_len or writer.pos != new_len * 8:
+        return None
+    out = hdr + bytes(buf[:new_len]) + adler
+    if len(out) != target:
+        return None
+    d = zlib.decompressobj()
+    try:
+        got = d.decompress(out)
+    except zlib.error:
+        return None
+    if d.unused_data or not d.eof:
+        return None
+    if expected is not None and got != expected:
+        return None
+    try:
+        orig = zlib.decompress(stream)
+    except zlib.error:
+        return None
+    if got != orig:
+        return None
+    return out
+
+
 def compress_exact_zopfli(
     data: bytes,
     target: int,
@@ -440,6 +793,13 @@ def compress_exact_zopfli(
         _zlib_progress(f"exact hit zopfli={z0}", newline=True)
         return data, z_blob
 
+    padded = pad_closed_zlib_stream(z_blob, target, expected=data)
+    if padded is not None:
+        _zlib_progress(
+            f"zopfli empty-block pad {z0}->{target}", newline=True
+        )
+        return data, padded
+
     runs = interfile_zero_gaps(data, min_len=8)
     cap = sum(sz for sz, _ in runs)
     rng = os.urandom(cap) if cap else b""
@@ -448,6 +808,8 @@ def compress_exact_zopfli(
     est = max(1, (cap.bit_length() + 2) if cap else 1)
     best_under_pad: int | None = None
     best_under_len = -1
+    best_under_blob: bytes | None = None
+    best_under_data: bytes | None = None
     while lo <= hi:
         mid = (lo + hi) // 2
         cand = apply_gap_pad(data, mid, rng) if cap else data
@@ -459,14 +821,33 @@ def compress_exact_zopfli(
         if len(z) == target:
             return cand, z
         if len(z) < target:
+            padded = pad_closed_zlib_stream(z, target, expected=cand)
+            if padded is not None:
+                _zlib_progress(
+                    f"zopfli empty-block pad {len(z)}->{target} (salt={mid})",
+                    newline=True,
+                )
+                return cand, padded
             if len(z) > best_under_len:
                 best_under_len = len(z)
                 best_under_pad = mid
+                best_under_blob = z
+                best_under_data = cand
             lo = mid + 1
         else:
             hi = mid - 1
 
     preferred = best_under_pad if best_under_pad is not None else max(hi, 0)
+    if best_under_blob is not None and best_under_data is not None:
+        padded = pad_closed_zlib_stream(
+            best_under_blob, target, expected=best_under_data
+        )
+        if padded is not None:
+            _zlib_progress(
+                f"zopfli empty-block pad {best_under_len}->{target}",
+                newline=True,
+            )
+            return best_under_data, padded
 
     # Auto near-miss: a few bytes under the slot (e.g. 42515 vs 42517). Much
     # cheaper than full fine-tune; empty-block often cannot close a 1–4B gap.

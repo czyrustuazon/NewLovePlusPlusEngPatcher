@@ -7,9 +7,17 @@ must be wired in the Parts layout.
 
 Separate ``timg/Eng_Patch.bclim`` + pic under ``Nul_Copyright``, taller Nul so
 the Eng strip is not clipped. Konami stays on vanilla ``Copyright.bclim``.
-Eng strip stays a separate BCLIM (not merged into Copyright). Main Menu is a
-white column — soft white-on-white vanishes; use white glyphs + strong black
-outline (Aug 2026 confirm) so it stays readable above Konami.
+Eng strip stays a separate BCLIM (not merged into Copyright): version line
+keeps the original 14px glyph height; the project URL sits underneath.
+Main Menu is a white column — soft white-on-white vanishes; use white glyphs
++ strong black outline (Aug 2026 confirm) so it stays readable above Konami.
+
+Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
+the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
+``Pts_Title_menu`` shows). Zhoumaru ``Title.check`` dump had swizzled RGB;
+packing it garbles first hub show (``technical.md`` §15.1.1). Rebuild this
+ARC from vanilla, never from ``bak_pre_title_engpatch`` (that bak is packed
+MOD). Never leave a magenta probe in gold bake.
 
 Usage:
   python tools/deploy_title_engpatch_en.py
@@ -34,7 +42,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
 from bclimutil import (  # noqa: E402
     parse_bclim,
-    png_to_bclim_etc1a4_same_size,
+    png_to_bclim_etc1a4,
     png_to_bclim_rgba4444_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
@@ -50,7 +58,8 @@ from deploy_common import (  # noqa: E402
 )
 from patcher_version import ENG_PATCH_LINE  # noqa: E402
 
-MOD_IMG, VANILLA = resolve_img_paths()
+# Do not call resolve_img_paths() at import: pytest imports this module for
+# badge layout tests, and CI has no release/bake_img.bin.
 
 OUT = ROOT / "out" / "title_engpatch_en"
 ASSET = ROOT / "assets" / "images" / "Title"
@@ -58,14 +67,28 @@ PKG = 5261
 
 ENG_PATCH_REL = "timg/Eng_Patch.bclim"
 ENG_PATCH_BCLIM_NAME = "Eng_Patch.bclim"
+SITE_LINE = "newloveplus.loc.moe"
 
-# Pts_Copyright: copyright at local Y=0 (218×14); Eng strip above with gap.
-ENG_PANE_TY = 20.0
-# Grow Nul so Eng at ty=20 ±7 stays inside (was height 40 → clip at ±20).
-NUL_H = 56.0
-POS_H_TY = -104.0  # Lyt Pos_Copyright_H: keep bottom edge near vanilla (-112)
+# Copyright pic is 218×14 at local Y=0. Eng badge keeps that 14px glyph row and
+# the project URL under it. Translate Pic_EngPatch toward Konami (lower ty)
+# without overlapping: copyright top 7, Eng bottom 4 → 3px into the 14px
+# copyright pane box (Konami glyphs sit lower in that texture).
+# Pos_Copyright_H is shifted down so the strip clears Main Menu Data Management.
+ENG_LINE_H = 14
+URL_H = 16
+LINE_GAP = 0  # pull the site line 3px closer than the previous 3px body gap
+BOTTOM_PAD = 0  # site URL outline uses the last canvas rows
+ENG_PATCH_H = 26
+ENG_PANE_TY = 17.0  # 5px below 22; Eng bottom 4, top 30
+# vanilla Nul h=40 clipped at ±20.
+NUL_H = 90.0
+POS_H_TY = -95.0  # 8px below prior -87 so Eng clears Data Management
+
+# Vanilla header ink. Do not use Title.check GPU dumps for this stem.
+MENU_WORD_INK = (51, 51, 51, 255)
 
 LABELS: list[tuple[str, str]] = [
+    ("timg/Title_menu_word.bclim", "Main Menu"),
     ("timg/Title_btn02_t01.bclim", "Options"),
     ("timg/Title_btn02_t02.bclim", "Game Start"),
     ("timg/Title_btn02_t03.bclim", "Gallery"),
@@ -75,7 +98,12 @@ LABELS: list[tuple[str, str]] = [
 ]
 
 
-def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
+def render_label(
+    text: str,
+    w: int = 100,
+    h: int = 20,
+    fill: tuple[int, int, int, int] = (0, 0, 0, 255),
+) -> Image.Image:
     for size in range(13, 8, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
@@ -87,30 +115,49 @@ def render_label(text: str, w: int = 100, h: int = 20) -> Image.Image:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=font, fill=(0, 0, 0, 255))
+        dr.text((x, y), text, font=font, fill=fill)
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r}")
 
 
-def render_eng_strip(w: int, h: int) -> Image.Image:
-    """Standalone Eng line: white fill + thick black outline (Main Menu readable).
+def _etc1a4_alpha(a: int) -> int:
+    if a < 12:
+        return 0
+    return min(255, ((a + 8) // 17) * 17)
 
-    Soft copyright-matched white-only fringe vanishes on the Main Menu white
-    column. Aug 2026 confirm used a strong black outline on a separate
-    ``Eng_Patch.bclim`` — keep that; do not dual-line into Copyright.
-    """
+
+_OUTLINE_XY = (
+    (-2, 0),
+    (2, 0),
+    (0, -2),
+    (0, 2),
+    (-1, 0),
+    (1, 0),
+    (0, -1),
+    (0, 1),
+    (-1, -1),
+    (-1, 1),
+    (1, -1),
+    (1, 1),
+    (-2, -1),
+    (-2, 1),
+    (2, -1),
+    (2, 1),
+    (-1, -2),
+    (1, -2),
+    (-1, 2),
+    (1, 2),
+)
+
+
+def render_outlined_line(text: str, w: int, h: int) -> Image.Image:
+    """White fill + thick black outline (Main Menu readable on the white column)."""
     fill_rgb = (255, 255, 255)
     outline_rgb = (0, 0, 0)
-
-    def _etc1a4_alpha(a: int) -> int:
-        if a < 12:
-            return 0
-        return min(255, ((a + 8) // 17) * 17)
-
     for size in range(10, 6, -1):
         font = ImageFont.truetype(str(UI_FONT), size)
         probe = ImageDraw.Draw(Image.new("RGBA", (w, h)))
-        b = probe.textbbox((0, 0), ENG_PATCH_LINE, font=font)
+        b = probe.textbbox((0, 0), text, font=font)
         tw, th = b[2] - b[0], b[3] - b[1]
         if tw > w - 4 or th > h - 2:
             continue
@@ -121,31 +168,9 @@ def render_eng_strip(w: int, h: int) -> Image.Image:
         fmask = Image.new("L", (w, h), 0)
         od = ImageDraw.Draw(omask)
         fd = ImageDraw.Draw(fmask)
-        # Thick outline ring (cardinals + diagonals + 2px cardinals).
-        for ox, oy in (
-            (-2, 0),
-            (2, 0),
-            (0, -2),
-            (0, 2),
-            (-1, 0),
-            (1, 0),
-            (0, -1),
-            (0, 1),
-            (-1, -1),
-            (-1, 1),
-            (1, -1),
-            (1, 1),
-            (-2, -1),
-            (-2, 1),
-            (2, -1),
-            (2, 1),
-            (-1, -2),
-            (1, -2),
-            (-1, 2),
-            (1, 2),
-        ):
-            od.text((x + ox, y + oy), ENG_PATCH_LINE, font=font, fill=255)
-        fd.text((x, y), ENG_PATCH_LINE, font=font, fill=255)
+        for ox, oy in _OUTLINE_XY:
+            od.text((x + ox, y + oy), text, font=font, fill=255)
+        fd.text((x, y), text, font=font, fill=255)
         fbody = fmask.point(lambda p: 255 if p >= 64 else 0)
         omask = ImageChops.subtract(omask, fbody)
 
@@ -167,7 +192,45 @@ def render_eng_strip(w: int, h: int) -> Image.Image:
                 a2 = _etc1a4_alpha(a)
                 px[xx, yy] = (0, 0, 0, 0) if a2 == 0 else (r, g, b, a2)
         return im
-    raise RuntimeError(f"cannot fit {ENG_PATCH_LINE!r}")
+    raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+
+
+def render_eng_strip(w: int, h: int = ENG_LINE_H) -> Image.Image:
+    """Version line only (original 14px glyph height)."""
+    return render_outlined_line(ENG_PATCH_LINE, w, h)
+
+
+def _solid_ink_span(im: Image.Image, *, min_n: int = 20) -> tuple[int, int]:
+    """First/last rows with enough opaque pixels to count as glyph body, not fringe."""
+    px = im.load()
+    w, h = im.size
+    rows = [
+        y
+        for y in range(h)
+        if sum(1 for x in range(w) if px[x, y][3] >= 64) >= min_n
+    ]
+    if not rows:
+        return 0, h - 1
+    return rows[0], rows[-1]
+
+
+def compose_eng_patch(version: Image.Image, w: int) -> Image.Image:
+    """Keep the 14px version glyphs; site URL is pulled 3px closer than stacked.
+
+    Never scale the version row — extra canvas is new pixels only.
+    """
+    src = version.convert("RGBA")
+    row = Image.new("RGBA", (w, ENG_LINE_H), (0, 0, 0, 0))
+    row.paste(src.crop((0, 0, min(w, src.width), min(ENG_LINE_H, src.height))), (0, 0))
+    url = render_outlined_line(SITE_LINE, w, URL_H)
+    _v0, v1 = _solid_ink_span(row)
+    u0, _u1 = _solid_ink_span(url)
+    url_y = max(0, v1 + 1 + LINE_GAP - u0)
+    out = Image.new("RGBA", (w, ENG_PATCH_H), (0, 0, 0, 0))
+    out.paste(row, (0, 0))
+    layer = Image.new("RGBA", out.size, (0, 0, 0, 0))
+    layer.paste(url, (0, url_y))
+    return Image.alpha_composite(out, layer)
 
 
 def _pad_name(name: str, n: int) -> bytes:
@@ -193,14 +256,18 @@ def _build_txl1(names: list[str]) -> bytes:
     return b"txl1" + struct.pack("<I", 8 + len(body)) + body
 
 
-def _make_pic1(template: bytes, name: str, mat_id: int, ty: float) -> bytes:
-    """Clone a pic1; keep W/H from template (Pts uses 218×14)."""
+def _make_pic1(
+    template: bytes, name: str, mat_id: int, ty: float, *, height: float | None = None
+) -> bytes:
+    """Clone a pic1; UVs stay 0–1 so a taller pane shows the extra texture rows."""
     if template[:4] != b"pic1" or len(template) != 128:
         raise ValueError("expected 128-byte pic1 template")
     out = bytearray(template)
     body = memoryview(out)[8:]
     body[4:28] = _pad_name(name, 24)
     struct.pack_into("<f", out, 8 + 32, ty)
+    if height is not None:
+        struct.pack_into("<f", out, 8 + 64, height)
     struct.pack_into("<H", out, 0x5C, mat_id)
     return bytes(out)
 
@@ -249,6 +316,7 @@ def patch_lyt_copyright(orig: bytes) -> bytes:
             name = out[12:36].split(b"\x00", 1)[0].decode("ascii", "ignore")
             if name == "Pos_Copyright_H":
                 struct.pack_into("<f", out, 8 + 32, POS_H_TY)
+                struct.pack_into("<f", out, 8 + 64, NUL_H)
             new_sections.append(bytes(out))
         else:
             new_sections.append(sec)
@@ -299,7 +367,13 @@ def patch_pts_copyright(orig: bytes, *, eng_tex_index: int = 1) -> bytes:
         if tag == b"pic1" and not inserted_eng:
             # Eng above Konami; both under Nul_Copyright (inherits BCLAN show/hide).
             new_sections.append(
-                _make_pic1(pic_template, "Pic_EngPatch", mat_id=n_mat, ty=ENG_PANE_TY)
+                _make_pic1(
+                    pic_template,
+                    "Pic_EngPatch",
+                    mat_id=n_mat,
+                    ty=ENG_PANE_TY,
+                    height=float(ENG_PATCH_H),
+                )
             )
             new_sections.append(sec)
             inserted_eng = True
@@ -341,10 +415,13 @@ def _verify_pts(lyt: bytes, *, eng_tex_index: int) -> None:
             if name == b"Pic_EngPatch":
                 mat = struct.unpack_from("<H", lyt, off + 0x5C)[0]
                 ty = struct.unpack_from("<f", lyt, off + 8 + 32)[0]
+                ph = struct.unpack_from("<f", lyt, off + 8 + 64)[0]
                 if mat != eng_mat:
                     raise SystemExit(f"Eng pic mat {mat} != mat index {eng_mat}")
                 if abs(ty - ENG_PANE_TY) > 0.01:
                     raise SystemExit(f"Eng ty {ty} expected {ENG_PANE_TY}")
+                if abs(ph - ENG_PATCH_H) > 0.01:
+                    raise SystemExit(f"Eng h {ph} expected {ENG_PATCH_H}")
         off += size
     if eng_tex != eng_tex_index:
         raise SystemExit(f"Eng tex {eng_tex} expected {eng_tex_index}")
@@ -362,6 +439,7 @@ def main() -> int:
     args = ap.parse_args()
     eng_tex = 0 if args.bisect_tex0 else 1
 
+    MOD_IMG, VANILLA = resolve_img_paths()
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
     if not UI_FONT.is_file():
@@ -383,14 +461,11 @@ def main() -> int:
         shutil.rmtree(extract_dir)
     extract_dir.mkdir(parents=True)
 
-    # Prefer bak_pre_title_engpatch / vanilla so we rebuild from clean Title.arc.
-    src_img = VANILLA if VANILLA.is_file() else MOD_IMG
-    bak_title = MOD_IMG.with_suffix(".bin.bak_pre_title_engpatch")
-    if bak_title.is_file():
-        # Extract clean package from bak when available (avoids stacking on prior Eng).
-        src_for_pkg = bak_title
-    else:
-        src_for_pkg = src_img
+    # Always rebuild from vanilla Title.arc. bak_pre_title_engpatch is a live-img
+    # rollback only — it is created from packed MOD after pack_images, so using it
+    # as the ARC source keeps Zhoumaru Title.check dumps (Title_menu_word RGB was
+    # a swizzled GPU dump; in-game header garbled on first hub show).
+    src_for_pkg = VANILLA if VANILLA.is_file() else MOD_IMG
     print(f"Title ARC source: {src_for_pkg}", flush=True)
     raw = src_for_pkg.read_bytes()
     img = ImgBin(str(src_for_pkg))
@@ -414,13 +489,23 @@ def main() -> int:
             raise SystemExit(f"missing {path}")
         raw_b = (extract_dir / path).read_bytes()
         stem = Path(path).stem
-        master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
-        rgba = Image.open(master).convert("RGBA") if master else render_label(en)
+        # Title_menu_word: never pack the Zhoumaru GPU dump (swizzled RGB).
+        # Magenta 100×20 probe showed this RGBA4444 encoder on Pts_Title_menu.
+        if stem == "Title_menu_word":
+            rgba = render_label(en, fill=MENU_WORD_INK)
+            master = None
+        else:
+            master = find_ui_png(("Title.check", "Title"), stem, (100, 20))
+            rgba = Image.open(master).convert("RGBA") if master else render_label(en)
         png = tmp / f"{stem}.png"
         orig = tmp / f"{stem}.bclim"
         rgba.save(png)
         if master is None:
             rgba.save(ASSET / f"{stem}.png")
+        if stem == "Title_menu_word":
+            check_png = ROOT / "assets" / "images" / "Title.check" / "timg" / f"{stem}.png"
+            check_png.parent.mkdir(parents=True, exist_ok=True)
+            rgba.save(check_png)
         rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         (extract_dir / path).write_bytes(png_to_bclim_rgba4444_same_size(png, orig))
@@ -433,17 +518,35 @@ def main() -> int:
         raise SystemExit(f"Copyright fmt {cfmt:#x} expected ETC1A4")
     print(f"OK Copyright.bclim vanilla {cw}x{ch} (Konami only)", flush=True)
 
-    eng_rgba = render_eng_strip(cw, ch)
+    # Always render the version row from PATCHER_RELEASE so an RC bump cannot
+    # keep stale 14px glyphs. Do not find_ui_png-fit the 30px master (that
+    # would stretch the extra URL row into the version line).
+    version_src = render_eng_strip(cw)
+    print(f"OK Eng_Patch version line {ENG_PATCH_LINE!r} {cw}x{ENG_LINE_H}", flush=True)
+    eng_rgba = compose_eng_patch(version_src, cw)
+    if eng_rgba.size != (cw, ENG_PATCH_H):
+        raise SystemExit(f"Eng_Patch canvas {eng_rgba.size} expected {cw}x{ENG_PATCH_H}")
+    check_png = ROOT / "assets" / "images" / "Title.check" / "timg" / "Eng_Patch.png"
+    check_png.parent.mkdir(parents=True, exist_ok=True)
+    ASSET.mkdir(parents=True, exist_ok=True)
+    eng_rgba.save(check_png)
+    eng_rgba.save(ASSET / "Eng_Patch.png")
     eng_png = tmp / "Eng_Patch.png"
     eng_rgba.save(eng_png)
-    eng_rgba.save(ASSET / "Eng_Patch.png")
     eng_rgba.save(OUT / "Eng_Patch_en.png")
-    eng_rgba.resize((cw * 4, ch * 4), Image.Resampling.NEAREST).save(
+    eng_rgba.resize((cw * 4, ENG_PATCH_H * 4), Image.Resampling.NEAREST).save(
         OUT / "Eng_Patch_en_x4.png"
     )
-    eng_bclim = png_to_bclim_etc1a4_same_size(eng_png, cpath)
+    eng_bclim = png_to_bclim_etc1a4(eng_png, cpath, size=(cw, ENG_PATCH_H))
+    _pix, ew, eh, efmt, _ft = parse_bclim(eng_bclim)
+    if (ew, eh, efmt) != (cw, ENG_PATCH_H, 0xB):
+        raise SystemExit(f"Eng_Patch BCLIM {ew}x{eh} fmt {efmt:#x}")
     (extract_dir / ENG_PATCH_REL).write_bytes(eng_bclim)
-    print(f"OK {ENG_PATCH_REL} {cw}x{ch} ({len(eng_bclim)} B) -> {ENG_PATCH_LINE!r}", flush=True)
+    print(
+        f"OK {ENG_PATCH_REL} {ew}x{eh} ({len(eng_bclim)} B) -> "
+        f"{ENG_PATCH_LINE!r} + {SITE_LINE!r}",
+        flush=True,
+    )
 
     lyt_path = extract_dir / "blyt" / "Lyt_Copyright.bclyt"
     patched_lyt = patch_lyt_copyright(lyt_path.read_bytes())
@@ -457,7 +560,7 @@ def main() -> int:
     (OUT / "Pts_Copyright.bclyt").write_bytes(patched_pts)
     print(
         f"OK Pts_Copyright.bclyt {len(patched_pts)} B "
-        f"(Eng ty={ENG_PANE_TY}, Nul h={NUL_H}, tex={eng_tex}"
+        f"(Eng ty={ENG_PANE_TY}, Eng h={ENG_PATCH_H}, Nul h={NUL_H}, tex={eng_tex}"
         f"{' BISECT' if args.bisect_tex0 else ''})",
         flush=True,
     )
@@ -525,8 +628,17 @@ def main() -> int:
     print("DMST OK", flush=True)
 
     try:
-        for dest in iter_deploy_targets(MOD_IMG):
+        targets = list(iter_deploy_targets(MOD_IMG))
+        inst_root = ROOT / "out" / "azahar_instances"
+        seen = {p.resolve() for p in targets}
+        for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
+            rp = img.resolve()
+            if rp.is_file() and rp not in seen:
+                targets.append(rp)
+                seen.add(rp)
+        for dest in targets:
             splice_packages_into_img(dest, pkg_dir, [PKG], dest)
+            print(f"spliced pkg {PKG} -> {dest}", flush=True)
     except PackError as exc:
         raise SystemExit(f"splice failed: {exc}") from exc
 

@@ -61,3 +61,34 @@ def test_allowed_dump_sha1_is_lowercase_hex():
         assert len(h) == 40
         assert h == h.lower()
         int(h, 16)
+
+
+def test_next_cia_title_version_uses_release_pin():
+    assert patch_cia.next_cia_title_version(0, release_ver=2) == 2
+    assert patch_cia.next_cia_title_version(0, release_ver=2) == 2
+    assert patch_cia.next_cia_title_version(None, release_ver=5) == 5
+    assert patch_cia.next_cia_title_version(0) == patch_cia.CIA_TITLE_VERSION
+
+
+def test_next_cia_title_version_explicit_and_keep():
+    assert patch_cia.next_cia_title_version(0, release_ver=2, explicit=20) == 20
+    assert patch_cia.next_cia_title_version(0, release_ver=2) == 2
+    assert patch_cia.next_cia_title_version(3, release_ver=2, keep_source=True) == 3
+
+
+def test_next_cia_title_version_rejects_dump_not_below_pin():
+    try:
+        patch_cia.next_cia_title_version(5, release_ver=5)
+        raise AssertionError("expected PatchError")
+    except patch_cia.PatchError as exc:
+        assert "CIA_TITLE_VERSION" in str(exc)
+
+
+def test_resolve_cia_title_version_rejects_both_flags():
+    args = argparse.Namespace(title_ver=4, keep_title_ver=True)
+    try:
+        patch_cia.resolve_cia_title_version(args, 0)
+        raise AssertionError("expected PatchError")
+    except patch_cia.PatchError as exc:
+        assert "--title-ver" in str(exc)
+        assert "--keep-title-ver" in str(exc)

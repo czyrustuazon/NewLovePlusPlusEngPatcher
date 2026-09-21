@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Download gold bake + romfs_overlay from GitHub Releases.
 
-Gold Releases are published from the **nlpp-gold** repo (not this EngPatcher
-remote). Pass ``--repo OWNER/nlpp-gold`` or set ``NLPP_GITHUB_REPO``.
+Gold Releases are published from the **nlpp-gold-maker** repo (not this EngPatcher
+remote). Pass ``--repo OWNER/nlpp-gold-maker`` or set ``NLPP_GITHUB_REPO``.
 The rolling bake from EngPatcher ``main`` is Release tag ``gold``.
 
 Examples:
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag latest
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold --tag gold --force
+  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
+  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag latest
+  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold --force
 """
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def _repo_from_git() -> str | None:
 
 
 def _default_gold_repo() -> str | None:
-    """nlpp-gold Release repo (not the EngPatcher clone remote)."""
+    """nlpp-gold-maker Release repo (not the EngPatcher clone remote)."""
     for key in ("NLPP_GITHUB_REPO", "NLPP_GOLD_REPO"):
         val = os.environ.get(key, "").strip()
         if val:
@@ -55,7 +55,7 @@ def _default_gold_repo() -> str | None:
     origin = _repo_from_git()
     if origin and "/" in origin:
         owner = origin.split("/", 1)[0]
-        return f"{owner}/nlpp-gold"
+        return f"{owner}/nlpp-gold-maker"
     return None
 
 
@@ -168,7 +168,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--repo",
         default=_default_gold_repo(),
-        help="OWNER/nlpp-gold (default: NLPP_GITHUB_REPO or <origin-owner>/nlpp-gold)",
+        help="OWNER/nlpp-gold-maker (default: NLPP_GITHUB_REPO or <origin-owner>/nlpp-gold-maker)",
     )
     ap.add_argument(
         "--tag",
