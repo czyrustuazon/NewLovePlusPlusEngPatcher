@@ -100,6 +100,18 @@ def test_softkey_deploy_after_confirm():
     assert defaults > quit_sk
 
 
+def test_commu_settings_header_after_menus():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_commu_settings_header_en.py") > scripts.index(
+        "deploy_msel_menus_en.py"
+    )
+    text = (TOOLS / "deploy_commu_settings_header_en.py").read_text(encoding="utf-8")
+    assert "Com_M_Sel_Plate_Text04_04_00" in text
+    assert "Com_M_Sel_Btn_Text04_04_00" in text
+    assert "Communication Settings" in text
+    assert "5241" in text
+
+
 def test_multiwin_after_datadelete():
     scripts = rebuild.DEPLOY_SCRIPTS
     assert scripts.index("deploy_multiwin_headers_en.py") > scripts.index(

@@ -61,6 +61,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_msel_options_en.py",
     "deploy_msel_opt_plates_en.py",
     "deploy_msel_menus_en.py",
+    "deploy_commu_settings_header_en.py",  # 5241 after menus (ETC1A4 Communication Settings plate)
     "deploy_confirm_btn_en.py",
     "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
     "deploy_softkey_quit_en.py",  # 5238 やめる → Quit
@@ -82,6 +83,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_day_counter_en.py",
     "deploy_datadelete_en.py",  # 4187 + 5237 Text05
     "deploy_multiwin_headers_en.py",  # 5237 after datadelete (keeps Text05)
+    "deploy_commu_option_en.py",  # 4185 StreetPass / SpotPass / Double Date rows
     "deploy_gallery_common_en.py",  # 5153
     "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
