@@ -7,7 +7,8 @@ Typical loop:
   2. Test in Azahar LayeredFS
   3. python tools/rebuild_test_cia.py
   4. Install out/2_[Or this]/NewLovePlusPlus-EN.cia via FBI
-     (do not also copy the LayeredFS overlay)
+     or copy out/1_[Either use this-LayerFS]/luma/<titleid> to SD:/luma/titles/
+     (one install path, not both)
 
 ROM path (first match): --rom, NLPP_ROM env, release/source_rom.txt, sibling CIA.
 
@@ -32,6 +33,7 @@ from nlpp_paths import (  # noqa: E402
     BAKE_IMG,
     OUT_CIA,
     OUT_LAYEREDFS,
+    TITLE_ID,
     require_vanilla_code,
 )
 from patch_input_candidate_nullguard import apply_patch as apply_cand_nullguard  # noqa: E402
@@ -173,7 +175,8 @@ def main(argv: list[str] | None = None) -> int:
     env.setdefault("PYTHONIOENCODING", "utf-8")
     subprocess.check_call(cmd, cwd=ROOT, env=env)
     print(f"\n[done] {out}")
-    print("Install with FBI in Azahar, then launch the CIA title.")
+    print(f"[done] LayeredFS {OUT_LAYEREDFS / TITLE_ID}")
+    print("Install the CIA or the LayeredFS folder, not both.")
     return 0
 
 

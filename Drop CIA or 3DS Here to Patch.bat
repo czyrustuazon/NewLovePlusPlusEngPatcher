@@ -174,6 +174,19 @@ if "!HASH_ERR!"=="0" (
 )
 
 echo.
+echo Wiping out\ and release\ before this build...
+echo Previous CIA, logs, Azahar copies, extra-data backups, gold bake,
+echo TRB overlay, and name-input code.bin in those folders are deleted.
+echo cache\ is left as-is. Close anything using files under out\ or release\.
+"%PYTHON%" "%SRC%\scratch_cleanup.py" --wipe-cia-build
+if errorlevel 1 (
+  echo [!] Could not wipe out\ and release\.
+  echo     Close programs that have files open in those folders, then drop again.
+  pause
+  exit /b 1
+)
+echo.
+
 echo Injecting scripts + UI / rebuilding CIA...
 echo Requires a decrypted .cia or .3ds/.cci ^(decrypt yourself first^).
 echo This can take several minutes and needs a few GB free disk.
@@ -193,21 +206,22 @@ if exist "%SIBLING_ROMFS%\script\bin\script" (
   set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
 )
 
-REM UI ON by default. Durable release artifacts (not wipeable like out/):
+REM UI ON by default. out\ and release\ were wiped above; this run fills them again.
 REM   release\bake_img.bin     — gold bake (built locally; gitignored)
 REM   release\romfs_overlay\   — TRB overlays (auto-applied when present)
 REM Optional PNG scratch:
 REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Missing gold bake: poll GitHub Release (nlpp-gold), else rebuild from assets (typically under an hour)
+REM Bake was just deleted, so the stamp check fails and this run packs locally.
+REM   NLPP_REUSE_BAKE=1  skips that stamp check and may poll GitHub first
 REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
 if not exist "%~dp0cache" mkdir "%~dp0cache"
-if not exist "%~dp0release" mkdir "%~dp0release"
-if not exist "%~dp0out" mkdir "%~dp0out"
 REM Keep quotes inside the value so paths with spaces survive expansion
 REM (e.g. E:\zip game\... GitHub unzip folders).
-set LAYEREDFS_OUT=--layeredfs-out "%~dp0out\1_[Either use this-LayerFS]\luma"
+REM LayeredFS is written next to the CIA. code.bin is name_input_code.bin
+REM so English graphics load. Install the CIA or this folder, not both.
+set LAYEREDFS=--layeredfs-out "%~dp0out\1_[Either use this-LayerFS]\luma"
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -242,7 +256,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
   set "BAKE_STALE="
@@ -373,19 +387,12 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS_OUT! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
 
 echo.
 if not "%ERR%"=="0" (
-  if exist "%~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00" (
-    echo.
-    echo [!] CIA rebuild failed, but Luma LayeredFS was written:
-    echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
-    echo     See that folder's README.txt — copy to SD:/luma/titles/
-    echo     Do not also install a patched CIA.
-  )
   echo.
   echo [!] Patch failed ^(exit %ERR%^).
   pause
@@ -394,6 +401,10 @@ if not "%ERR%"=="0" (
 
 echo [+] Patched CIA:
 echo     %~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia
+echo [+] LayeredFS ^(use this or the CIA, not both^):
+echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
+echo     Copy that folder to SD:/luma/titles/ and enable game patching.
+echo     code.bin is included so English graphics load.
 echo.
 if defined NLPP_T0 (
   set "NLPP_ELAPSED="
@@ -410,14 +421,6 @@ if defined NLPP_T0 (
     echo.
   )
 )
-echo [+] Luma LayeredFS ^(real 3DS^):
-echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
-echo     Copy that folder to SD:/luma/titles/
-echo     Enable "Enable game patching" in Luma settings.
-echo.
-echo [+] Use LayeredFS OR the CIA, not both. See:
-echo     %~dp0out\3_but not both
-echo.
 echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
 echo [+] Patch log ^(same summary^):
 echo     %~dp0out\logs\latest.txt
@@ -431,7 +434,7 @@ echo [+] Azahar extra data backup/restore:
 echo     python tools\restore_azahar_extdata.py backup
 echo     python tools\restore_azahar_extdata.py restore
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept numbered LayeredFS/CIA folders + 3_but not both + logs + extdata_backup^).
+echo [+] out\ cleaned ^(scratch removed; kept the CIA folder + logs + extdata_backup^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 

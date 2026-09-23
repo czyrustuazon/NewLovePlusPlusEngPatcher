@@ -329,3 +329,82 @@ def test_baseline_summary_matches_successful_full_cia(tmp_path: Path, monkeypatc
     assert "[SKIPPED]" in text and "Input CIA SHA-1" in text  # bat pre-checked
     assert "no --inject-code" not in text
     assert "[OK]" in text and "Time to finish: 3m05s" in text
+
+
+def _empty_dbin_root(tmp_path: Path) -> Path:
+    root = tmp_path / "dbin"
+    for pack in patch_cia.PACKS:
+        (root / pack).mkdir(parents=True)
+    return root
+
+
+def test_layeredfs_copies_injected_code_without_patch_code(tmp_path: Path, monkeypatch):
+    """--layeredfs-out + --inject-code writes that code.bin even if --patch-code is off."""
+    injected = tmp_path / "name_input_code.bin"
+    injected.write_bytes(b"patched-cesa-skip")
+    other = tmp_path / "release-name.bin"
+    other.write_bytes(b"not-this")
+    monkeypatch.setattr(patch_cia, "NAME_INPUT_CODE", other)
+    out = tmp_path / "luma"
+    patch_cia.write_layeredfs(
+        out,
+        _empty_dbin_root(tmp_path),
+        patch_code=False,
+        patched_code=injected,
+        skip_name_patches=True,
+    )
+    dest = out / patch_cia.TITLE_ID / "code.bin"
+    assert dest.read_bytes() == b"patched-cesa-skip"
+    readme = (out / "README.txt").read_text(encoding="utf-8")
+    assert "only with --patch-code" not in readme
+
+
+def test_layeredfs_falls_back_to_release_code_when_inject_unset(
+    tmp_path: Path, monkeypatch
+):
+    """Re-enabling LayeredFS without --patch-code still ships name_input_code.bin."""
+    release = tmp_path / "name_input_code.bin"
+    release.write_bytes(b"release-patched")
+    monkeypatch.setattr(patch_cia, "NAME_INPUT_CODE", release)
+    out = tmp_path / "luma"
+    patch_cia.write_layeredfs(
+        out,
+        _empty_dbin_root(tmp_path),
+        patch_code=False,
+        skip_name_patches=True,
+    )
+    dest = out / patch_cia.TITLE_ID / "code.bin"
+    assert dest.read_bytes() == b"release-patched"
+    readme = (out / "README.txt").read_text(encoding="utf-8")
+    assert "optionally code.bin" not in readme
+    assert "still kept on disk" not in readme
+    assert "English graphics load only when code.bin is in this folder." in readme
+
+
+def test_layeredfs_recovery_deletes_overlay_without_code_bin(tmp_path: Path, capsys):
+    out = tmp_path / "luma"
+    title = out / patch_cia.TITLE_ID
+    (title / "romfs").mkdir(parents=True)
+    (title / "romfs" / "img.bin").write_bytes(b"img")
+    (out / "README.txt").write_text("install me\n", encoding="utf-8")
+    assert patch_cia._print_layeredfs_recovery(out) is False
+    assert not title.exists()
+    assert not (out / "README.txt").exists()
+    assert not out.exists()
+    err = capsys.readouterr().out
+    assert "LayeredFS removed" in err
+    assert "no code.bin" in err
+
+
+def test_layeredfs_recovery_keeps_overlay_with_code_bin(tmp_path: Path, capsys):
+    out = tmp_path / "luma"
+    title = out / patch_cia.TITLE_ID
+    title.mkdir(parents=True)
+    (title / "code.bin").write_bytes(b"patched")
+    (out / "README.txt").write_text("install me\n", encoding="utf-8")
+    assert patch_cia._print_layeredfs_recovery(out) is True
+    assert (title / "code.bin").read_bytes() == b"patched"
+    assert (out / "README.txt").is_file()
+    err = capsys.readouterr().out
+    assert "Luma LayeredFS still available" in err
+    assert "code.bin is in this folder" in err

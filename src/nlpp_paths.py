@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Durable release artifacts (gold bake + RomFS overlays). Not wipeable scratch.
+# Gold bake + RomFS overlays. Drop CIA deletes this tree before each build.
 RELEASE = ROOT / "release"
 BAKE_IMG = RELEASE / "bake_img.bin"
 NAME_INPUT_CODE = RELEASE / "name_input_code.bin"

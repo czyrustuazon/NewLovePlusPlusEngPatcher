@@ -21,6 +21,17 @@ def test_requirements_include_nlpp_tools_yaml():
     assert '("yaml", "PyYAML")' in setup
 
 
+def test_bat_wipes_out_and_release_before_build():
+    text = _bat_text()
+    wipe_idx = text.index("--wipe-cia-build")
+    assert "Wiping out\\ and release\\" in text
+    assert "scratch_cleanup.py" in text
+    assert wipe_idx < text.index("Using gold bake")
+    assert wipe_idx < text.index("Injecting scripts + UI")
+    # cache holds vanilla extract / PNG scratch and is not part of the wipe.
+    assert "cache\\ is left as-is" in text
+
+
 def test_bat_defaults_packed_img_to_release_bake():
     text = _bat_text()
     assert 'set "PACKED_IMG=%~dp0release\\bake_img.bin"' in text
@@ -87,12 +98,10 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
     # Unquoted %~dp0 paths split on spaces (E:\zip game\...) and argparse
     # reports the leftover as unrecognized arguments: ...\name_input_code.bin
-    assert (
-        'LAYEREDFS_OUT=--layeredfs-out "%~dp0out\\1_[Either use this-LayerFS]\\luma"'
-        in text
-    )
+    assert 'set LAYEREDFS=--layeredfs-out "%~dp0out\\1_[Either use this-LayerFS]\\luma"' in text
+    assert text.count("!LAYEREDFS!") == 2
     assert r'out\2_[Or this]\NewLovePlusPlus-EN.cia' in text
-    assert r"out\3_but not both" in text
+    assert "Copy that folder to SD:/luma/titles/" in text
     assert "Scripts-only patch" not in text
 
 

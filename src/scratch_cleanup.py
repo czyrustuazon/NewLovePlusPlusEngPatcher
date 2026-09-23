@@ -42,6 +42,56 @@ def path_is_under(path: Path, root: Path) -> bool:
         return False
 
 
+def wipe_directory(path: Path, *, root: Path) -> None:
+    """Delete ``path`` and recreate it empty. Refuses anything outside ``root``."""
+    resolved = path.resolve()
+    root_resolved = root.resolve()
+    if resolved == root_resolved or not path_is_under(resolved, root_resolved):
+        raise SystemExit(f"[wipe] refusing to delete {resolved}")
+
+    label = resolved.name
+    if not resolved.exists():
+        resolved.mkdir(parents=True, exist_ok=True)
+        print(f"[wipe] {label}/ created empty", flush=True)
+        return
+
+    print(f"[wipe] removing {label}/", flush=True)
+    try:
+        if is_reparse_dir(resolved):
+            try:
+                resolved.unlink()
+            except OSError:
+                resolved.rmdir()
+        elif resolved.is_file():
+            resolved.unlink()
+        else:
+            romfs = resolved / "romfs"
+            if romfs.exists() and is_reparse_dir(romfs):
+                try:
+                    romfs.unlink()
+                except OSError:
+                    romfs.rmdir()
+            shutil.rmtree(resolved)
+    except OSError as exc:
+        raise SystemExit(f"[wipe] {label}/: {exc}") from exc
+
+    if resolved.exists():
+        raise SystemExit(f"[wipe] {label}/ still exists after delete")
+    resolved.mkdir(parents=True, exist_ok=True)
+    leftovers = list(resolved.iterdir())
+    if leftovers:
+        raise SystemExit(f"[wipe] {label}/ not empty: {leftovers[0].name}")
+    print(f"[wipe] {label}/ is empty", flush=True)
+
+
+def wipe_cia_build_dirs() -> None:
+    """Delete repo ``out/`` and ``release/`` before a CIA build starts."""
+    from nlpp_paths import OUT, RELEASE, ROOT
+
+    for path in (OUT, RELEASE):
+        wipe_directory(path, root=ROOT)
+
+
 def remove_scratch(path: Path | None, *, label: str | None = None) -> None:
     """Delete a scratch file or directory. Never raises."""
     if path is None:
@@ -81,3 +131,18 @@ def remove_scratch(path: Path | None, *, label: str | None = None) -> None:
         shutil.rmtree(path, ignore_errors=True)
     except OSError as exc:
         print(f"[cleanup] warning: {name}: {exc}", flush=True)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Drop CIA scratch cleanup")
+    parser.add_argument(
+        "--wipe-cia-build",
+        action="store_true",
+        help="Delete out/ and release/ and recreate both empty",
+    )
+    args = parser.parse_args()
+    if not args.wipe_cia_build:
+        parser.error("pass --wipe-cia-build")
+    wipe_cia_build_dirs()

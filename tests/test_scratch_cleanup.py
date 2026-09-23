@@ -4,12 +4,40 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from conftest import SRC, TOOLS, load_module
 
 cleanup = load_module("scratch_cleanup", SRC / "scratch_cleanup.py")
 pack_images = load_module("pack_images", SRC / "pack_images.py")
 rebuild = load_module("rebuild_bake_img", TOOLS / "rebuild_bake_img.py")
 patch_cia = load_module("patch_cia", SRC / "patch_cia.py")
+
+
+def test_wipe_directory_recreates_empty(tmp_path: Path):
+    root = tmp_path / "repo"
+    out = root / "out"
+    nested = out / "azahar_instances" / "a"
+    nested.mkdir(parents=True)
+    (nested / "save.bin").write_bytes(b"save")
+    (out / "NewLovePlusPlus-EN.cia").write_bytes(b"cia")
+    release = root / "release"
+    release.mkdir()
+    (release / "bake_img.bin").write_bytes(b"bake")
+    (release / "romfs_overlay" / "SystemData").mkdir(parents=True)
+
+    cleanup.wipe_directory(out, root=root)
+    cleanup.wipe_directory(release, root=root)
+
+    assert out.is_dir() and list(out.iterdir()) == []
+    assert release.is_dir() and list(release.iterdir()) == []
+    assert not (nested / "save.bin").exists()
+    assert not (release / "bake_img.bin").exists()
+
+
+def test_wipe_directory_refuses_repo_root(tmp_path: Path):
+    with pytest.raises(SystemExit, match="refusing"):
+        cleanup.wipe_directory(tmp_path, root=tmp_path)
 
 
 def test_remove_scratch_deletes_file_and_dir(tmp_path: Path):
