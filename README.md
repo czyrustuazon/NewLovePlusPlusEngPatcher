@@ -15,15 +15,16 @@ Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.co
 Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
-2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
-4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
-5. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
-6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
-7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
-8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)  
-10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
+2. **Wipe `out/` and `release/`** completely, then recreate both empty. That deletes the previous CIA, logs, `out/azahar_instances/`, `out/extdata_backup/`, gold bake, TRB overlay, and name-input `code.bin`. `cache/` is left in place. `python src/patch_cia.py` on its own does not do this wipe  
+3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
+4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
+5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
+6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
+7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
+8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
+9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) and a Luma **LayeredFS** folder at `out/1_[Either use this-LayerFS]/luma/` (includes `code.bin`). Use one install path  
+10. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)  
+11. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -37,13 +38,29 @@ Title ID: `00040000000F4E00`
 
 ---
 
+## Why this rebuilds a CIA
+
+Most 3DS mods ship as a Luma LayeredFS folder. You copy the changed files to `sdmc:/luma/titles/<titleid>/`, the stock install or cartridge stays untouched, and a bad mod is removed by deleting the folder. That became the usual path because a lot of games store textures and text as loose RomFS files, a public mod page can host those files without hosting the game, and rebuilding a CIA means unpacking the RomFS, rebuilding its hash tree, and reinstalling through FBI.
+
+This project started from the other problem: images, dialog, and `code.bin` each had their own patch, and nothing required them to be the same game. Copying one of them left English names and script on Japanese menus. Drop CIA injects the gold `img.bin`, the script and TRB overlay, and `name_input_code.bin` together, and it stops if the bake is missing instead of emitting that half-English title. A LayeredFS folder of whichever piece you happened to have would still have been those separate routes.
+
+The English release is also its own installable title, which a loose overlay does not produce.
+
+- **HOME menu, region, and product code live in the CIA.** Vanilla shows ニューラブプラス＋, region Japan, product code `CTR-P-BLPJ`. LayeredFS does not rewrite the SMDH or the NCCH header. The rebuilt CIA sets the English title **New Love Plus+**, a USA region lock by default, and product code `CTR-P-BLPE`. The title ID stays `00040000000F4E00`, so existing saves still match. Other regions: `--cia-region japan|europe|free`.
+- **Menus are one archive.** UI chrome sits inside `img.bin` (about 680 MB), so a LayeredFS copy of the English UI is still that whole file. Drop CIA deletes `release/` at the start of every build and packs a new `release/bake_img.bin` before inject.
+- **FBI, Azahar, and Citra install a CIA.** A dropped `.3ds` / `.cci` is rebuilt into the same CIA. The patcher also writes `out/1_[Either use this-LayerFS]/` for a Luma overlay on a stock install, or for emulator tests. Use that folder **or** the CIA. Stacking them applies the English files twice (`out/3_but not both`).
+
+The git repo still does not contain a dump. You bring your own decrypted CIA or `.3ds`. `release/bake_img.bin` and the finished CIA are generated on your machine (or fetched as a bake by collaborators) and are not committed.
+
+---
+
 ## Quick start (drag and drop)
 
 1. Double-click **`Drop CIA or 3DS Here to Patch.bat`**
 2. Drop your **decrypted** `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
-With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
+Drop CIA **deletes `out/` and `release/` completely** before it starts, then packs a new gold bake. A previous bake, CIA, log, Azahar copy under `out/`, or extra-data backup in those folders is removed. `cache/` stays. Expect a full pack (typically under an hour; see below) on every drop.
 
 ### Sharing a build (skip the cold PNG pack)
 
@@ -65,7 +82,9 @@ Manual handoff still works:
    - `release/bake_img.bin` — English UI bake  
    - `release/romfs_overlay/` — TRB overlay  
    - `release/textresource/` — optional but useful  
-3. They supply **their own** matching dump and run the drop bat.
+3. They supply **their own** matching dump.
+
+Running the drop bat deletes that copied `release/` and packs again from `assets/`. To inject a bake already on disk, run `python src/patch_cia.py` (that command does not wipe `out/` or `release/`).
 
 Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA patching stays on **Windows**.
 
@@ -94,11 +113,11 @@ use **562** (chrome) or **1745** (all mapped UI masters) from the table above.
 See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
 Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
-### First-time gold bake (only if `release/bake_img.bin` is missing)
+### Gold bake (every Drop CIA)
 
-**Bake stamp:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this tree’s `PATCHER_RELEASE` (currently **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` **3**) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). A second drop of the same stamp reuses the bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
+**Drop CIA wipes `out/` and `release/` first.** The previous `release/bake_img.bin` and `release/bake_stamp.txt` are deleted, so the bat always packs from this tree. `PATCHER_RELEASE` is **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` is **3**. `cache/` (including `cache/img_pack`) is not wiped. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/` or `release/`.
 
-If bake is absent (or stamp mismatches), the drop bat auto-runs:
+The drop bat then runs:
 
 ```bash
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
@@ -189,7 +208,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, logs, `azahar_instances/`, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` is not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **Pick one install path** (see `out/3_but not both`): LayeredFS on top of the English CIA applies the patch twice.
 
@@ -209,7 +228,7 @@ This overlay still needs `release/name_input_code.bin` beside `romfs/`, because 
 
 Drop CIA copies that file to `code.bin` in the LayeredFS folder. Luma and Azahar pick it up only when it is there. A folder with English `img.bin` and no `code.bin` runs the retail ExeFS: the textures are present, then the hub aborts and the thank-you quad is the wrong size. If a CIA rebuild fails and the overlay has no `code.bin`, that LayeredFS folder is deleted.
 
-Use the `code.bin` from the same Drop CIA run. It is rebuilt from vanilla during the bake (`deploy_name_input_en.py`). An older ExeFS can miss one of those two hooks. The same file also carries the romaji name keyboard, Message Speed, and the SpotPass Watcher embed.
+Use the `code.bin` from the same Drop CIA run. It is rebuilt from vanilla during the bake (`deploy_name_input_en.py`). An older ExeFS can miss one of those two hooks. The same file also carries the romaji name keyboard, Message Speed, and the SpotPass Watcher embed.  
 
 Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
 
@@ -461,9 +480,9 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-release/                     gold bake + TRB overlay (binaries gitignored; `release/README.md`; technical.md §15.5)
-cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + numbered LayeredFS/CIA drops + logs/ + azahar_instances (gitignored)
+release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; technical.md §15.5)
+cache/                       PNG scratch + vanilla_from_rom (gitignored; not wiped by Drop CIA)
+out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and logs/ (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).

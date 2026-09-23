@@ -623,7 +623,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Confirm `決定` | ETC1A4 BCLIM `Com_btn_k01_b{,ON}` @ **5238** | Deployed (`OK`) — `tools/deploy_confirm_btn_en.py` |
 | Quit `やめる` | ETC1A4 BCLIM `Com_btn_y01_b{,ON}` @ **5238** | Deployed (`Quit`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_quit_en.py` (Save Export confirm, shared) |
 | Clock header `３ＤＳ本体時計` | A8 BCLIM `Com_M_Sel_Plate_Text03_06_00` (+ `_01`) @ **5245** | **EN verified** (`3DS System Clock`) |
-| Options header + buttons + Display/Sound plates | A8 BCLIM Text03 / Text04_04 @ **5245** | **EN** (Options / Display Settings / Sound Settings / Network / Password + **Communication Settings** plate) — `tools/deploy_msel_options_en.py` / `deploy_msel_opt_plates_en.py` |
+| Options header + buttons + Display/Sound plates | A8 BCLIM Text03 / Text04_04 @ **5245** | **EN** (Options / Display Settings / Sound Settings / Network / Password + **Communication Settings** plate) — `tools/deploy_msel_options_en.py` / `deploy_msel_opt_plates_en.py`. Menu button `Btn_Text04_04` stays Zhoumaru AA, same weight as Display / Sound / Password. A coverage mask is the header plate only; masking the button makes a heavier stroke. |
 | Password entry window `パスワード` | ETC1A4 `Pass_Win01` @ OptionPassword **5251** | **EN** (`Password`) — `tools/deploy_optionpassword_en.py` (Zhoumaru; not DrawText) |
 | Password entry header `パスワード入力` | A8 rewrite of `Com_M_Sel_Plate_Text03_05_00` @ **5245** (`OptionMenu_BindPlateTextures` slot 5) | **EN** (`Password Input`) — Zhoumaru. Vanilla plate is ETC1A4 and misses the slot; encode as A8 like the other Options plates. MultiWin `Text03_05` @ **5237** is a different bind (`FUN_00255a18` idx 0x1f), not this screen. |
 | Display Settings panel | RGBA4444 `Opt_TxtItem_{Help,Message}` + `Opt_HelpBtn_{A,B}_*` @ Option **5247** | **EN** (`Help Display` / `Message Speed` / `Every Time` / `Once`) — `tools/deploy_display_settings_en.py` |
@@ -639,15 +639,17 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Youthful Page** (MultiWin `01_01` PNG is Friend's Memory — do not use) |
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
-| Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Girlfriend Comm. / Business Card / Wireless Battle) |
+| Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
 | Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | A8 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
 | Girlfriend Introduction / Double Date rows | A8 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
-| Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Menu row stays **Girlfriend Communication**. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
+| Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Home-menu row `Btn_Text04_01_01` is the same wording. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Communication settings rows `すれちがい通信` / `いつの間に通信` / `ダブルデート` | RGBA4444 `Commu_Op_Text02/03/04` @ **4185** | **StreetPass** / **SpotPass** / **Double Date**. Zhoumaru Text02/Text04 are ToDoList / Gallery. Help line `Commu_Op_Text01` is the Zhoumaru ON/OFF sentence composited from alpha (RGB dump was noisy). `tools/deploy_commu_option_en.py` |
 | Communication settings header `通信設定` | ETC1A4 `Com_M_Sel_Plate_Text04_04_00` @ **5241** (144×28) | **Communication Settings**. Mode 6 on the settings open binds this plate from the Communication archive. The menu row is the same words: `Com_M_Sel_Btn_Text04_04_00` (246×48, Geomanist). MultiWin `Text04_04_00` @ **5237** and the Options plate @ **5245** were already EN and are not this bar. `tools/deploy_commu_settings_header_en.py` (after `deploy_msel_menus_en.py`). |
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
+| Select Save Data **表面 / 裏面** toggle | ETC1A4 `B_Card_b_btn_lite` @ **5238** (highlight `B_Card_b_btn_on`, pill `B_Card_b_btn_base` stay) | **Front Side / Back Side** — Zhoumaru `NCommonIcon.check`. Last-writer on **5238** after Restore Default so the softkey chain cannot drop it. `tools/deploy_card_side_btn_en.py` |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
+| Save-card field labels `名前` / `カノジョの名前` | RGBA4444 `B_Card04_txt01` / `txt06` @ Card **4152**, **128×28** | **Name** / **Girlfriend's Name** on the card field list. The two-bar pink screen is a different draw — see **§12.4.5**. A blank folder from the main menu is `FUN_0014ed0c` — **§12.4.6**. |
 | Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (First Name / Last Name / Birthday / M·D / Blood / Hometown) — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
@@ -690,7 +692,7 @@ The thin white bar on Girlfriend Communication is **not** DrawText, not TRB, and
 |--|--|
 | Bind | `FUN_00255a18` table ~`0x6c3f9c`; `Text04_01_00` pointer @ file `0x006c4030` |
 | Live BCLIM | ETC1A4 `Com_MultiWin_W01_Text04_01_00` (+ sibling `01_01`) @ pkg **5237**, **192×16** |
-| Home-menu row | A8 `Com_M_Sel_Btn_Text04_01_01` @ **5241** (Zhoumaru; stays **Girlfriend Communication**) |
+| Home-menu row | A8 `Com_M_Sel_Btn_Text04_01_01` @ **5241** — **Heart to Heart** (Geomanist Regular, sibling core gh 18). Zhoumaru PNG is the long title; `FONT_BTN_H` skips it. |
 | Help blurb | TRB DrawText (shortened to five lines in `53010b1`; not this bar) |
 
 **Zhoumaru files do not match the live bar**
@@ -714,7 +716,7 @@ The thin white bar on Girlfriend Communication is **not** DrawText, not TRB, and
 
 **What shipped**
 
-Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_common.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG).
+Shorten the **bar copy** to **Heart to Heart** (カノジョ通信). Heisei W5 size 15, 2× bilinear, ink (68), alpha normalized to 255: bbox **47–143**, gh **12** — same scale as Communication. Skip both Zhoumaru MultiWin files (`SKIP_UI_PNG`) and font-render (`render_header_aa` in `deploy_common.py`). Plate `Plate_Text04_01_01` @ **5241** uses the same wording at 144×28 `target_h=13` (do not glyph-fill the 8px PNG). The Communication home pill `Btn_Text04_01_01` uses the same wording (`FONT_BTN_H`, Geomanist Regular, gh 18) so the weight matches the Zhoumaru Name Card / Communication Battle pills. Heisei W5 read thin on this row; Heisei W7 went darker than those pills. The Zhoumaru PNG of this stem is the long title and is skipped. The white bar above stays Heisei W5.
 
 Redeploy: `python tools/deploy_msel_menus_en.py --only 5241` then `python tools/deploy_multiwin_headers_en.py` (extras pass; exact-zopfli pad, splice live bake + instance A). Do **not** treat a Communications **loading** spinner as a 5237 fault — that is Azahar `OpenLinkFile` (**§10.1**).
 
@@ -821,6 +823,74 @@ Redeploy: `python tools/deploy_profile_en.py` (bake + instance A).
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”
 2. Blame overflowing English — **Last Name** / **Written** / **Called** all fit size 15.
 3. `find_ui_png` the Zhoumaru Call01 mock for this BCLIM.
+
+#### 12.4.5 Save-card name labels vs the two-bar plate (2026-09-22)
+
+`B_Card04_txt01` / `txt06` @ Card **4152** are the card field list (名前 / カノジョの名前, 128×28 RGBA4444). Heisei **Name** / **Girlfriend's Name** is spliced there (`tools/deploy_card_name_labels_en.py`). The field row itself is `Lyt_B_Card04_btn`: `Vis_White_Base` and `Vis_com_btn_m_00`–`_08` are stored with pane flag bit 0 clear. That flag is set by the card deploy, and it is not the folder page.
+
+FileSelect **5152** `Vis_Dsel_Data` is the 256×512 field sheet `D_Select_data03` on the save card. `Pts_Dsel_Data` in that same archive has a second `Pic_Dsel_data`, stored visible, 9px to the left. Both showing the English sheet doubles every row (Please Select Data, Full Name, …). `tools/deploy_dsel_data_visible.py` keeps `Vis_Dsel_Data` on and hides the parts picture. Those visibility flips, and the ones on `Lyt_C_Com_folder` @ pkg **5208**, do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
+
+The pink two-bar screen is a **folder tab**: a short upper-left tab holds the blue label, and the wider cream body holds the save value (`(・_・)` / Anegasaki). On the crop, one bar is about 177×38 and the tab is about 60% of that width. The same shape is the magazine NOTICE window `Mag_Enq_Notice_Win01` (184×40 RGBA4444, TownGuide **5265**), which bakes its tab word into the texture.
+
+`Lyt_Com_DataPlate` @ **5237** is a different widget. `Com_Dataplate01` is a plain 256×64 rounded bar with no glyphs. Its row setter `FUN_002240f8` (callers `0x14dca0` and `0x14dd54`) draws either pack `0x9d02` slot 0 `"%s %s"` filled from the save, or pack `0x9d00` slot 3 `NO DATA`. Those are the values, not the tab labels. `名前` / `カノジョの名前` are not standalone strings in `code.bin`, the main TRB, or uncompressed `img.bin` (the only full NLP phrase is the voice-recognition sentence in pkg **5373**).
+
+Next step for this screen: GPU-dump the two bars and match the texture. Do not treat `Pic_Font` on the data plate as these tabs.
+
+| | |
+|--|--|
+| Live BCLIM | `B_Card04_txt01` = 名前, `B_Card04_txt06` = カノジョの名前 @ Card **4152**, **128×28** fmt 8 |
+| Ink | Gray `(48,48,48)` + alpha. The pane tints it blue. Same header ink `(68,68,68)` |
+| Placement | Glyphs sit in the top 16px, left pad **x≈13**. Centered header text would land in the value field |
+
+**Zhoumaru `Card.check` is the wrong master**
+
+| Stem | PNG |
+|------|-----|
+| `B_Card04_txt01` | **Last Name** — that is 苗字, not 名前 |
+| `B_Card04_txt06` | **Girlfriend's Name**, but the glyphs run to the sheet edge |
+
+**What shipped**
+
+`render_tab_label` in `tools/deploy_card_name_labels_en.py`: Heisei W5 size 15 on a **16px** strip (same core as Heart to Heart / Profile), 2× bilinear, ink `(68,68,68)`, alpha peak-normalized, **left-aligned** at x=13, strip pasted at the top of the 128×28 sheet. **Name** lands about x 13–48. **Girlfriend's Name** fits at that size (about x 13–119, gh ~13) so the bar copy stays the full phrase. Live Card.arc, after `deploy_card_flist_en.py`, so Received Date stays.
+
+Redeploy: `python tools/deploy_card_name_labels_en.py` (bake + Azahar). Fully quit Azahar so LayeredFS reloads.
+
+**Do not**
+
+1. Pack Zhoumaru txt01 — it says Last Name.
+2. Center the string on the 128px sheet.
+3. Start the renderer at 28px tall (glyphs would outgrow the header bars).
+4. Shorten to "Her Name" while size 15 still fits the sheet.
+5. Treat this card list as the pink two-bar screen. That screen is a folder-tab (see above), not `Pic_Font` on `Lyt_Com_DataPlate`.
+6. Flip `Vis_` on **5208** / **5152** / **4152** to bring back the main-menu Name Card. That page is the `FUN_0014ed0c` setup branch — **§12.4.6**.
+
+#### 12.4.6 Main-menu Name Card stays an empty folder (2026-09-22)
+
+Clicking **Name Card** on the main menu used to open the two selection bars. After a `code.bin` restart it opens a blank folder (dotted heart/plus paper, solid black tab caps) and the bars never appear. `img.bin` pkg **4202** (the exchange-card ARC) is byte-identical in vanilla, the gold bake, and both Azahar instances, so the page was not a broken BCLIM splice.
+
+`FUN_0014ed0c` @ `0x14ED0C` is that screen and the save/boot DATA apply. State byte is `+0x84`. The dispatcher (`cmp` `#0x2b`, table @ `0x14ED2C`) falls through to the idle epilogue `0x150658` when the state is out of range. Layouts are built by `FUN_00150668` @ `0x150668`.
+
+Opening the card leaves `+0x85` clear. State 1 (`0x14EE34`) then does:
+
+```text
+ldrb r0, [r4, #0x85]
+cmp  r0, #0
+beq  0x14EEC8          ; vanilla 21 00 00 0a
+```
+
+`0x14EEC8` is the setup that actually reveals the card. It requires `+0xb1 != 0` (cleared in the ctor @ `0x151250`; set by `FUN_0014b730` when called with `r1=0, r2=0`, which does not change the state). It creates the MultiWin into group 1 slot 9, looks up group 1 slots 1–3, fades those panes in (`0x208F48` / `0x1A953C` / `0x219490`), and draws pack `0x9d00` slot `0xc` (“You can create your Name Card…”) plus slot `0xd` (“Please select an item.”). It then asks `FUN_00150668` for the next state.
+
+`src/patch_spotpass_skip.py` had retargeted that `beq` to `0x150658` (`05 06 00 0a`, `OLD_14ED_ST1_SKIP`). Every tick returned immediately, so the folder paper stayed up and the selection panes never faded in. The 1×1 GPU rejection (`Texture size (1x1) is not multiple of 4`) is logged on boots where the bars were visible too. It is not this bug.
+
+The DATA apply chain is still skipped. `0x14EFE8` remains `mov r1, #21` instead of state 22, and jump-table slots 24–31 / 41–42 still idle at `0x150658`. `apply_patch` upgrades a `code.bin` that still has the old skip and writes the vanilla `beq` back. Ships in `release/name_input_code.bin` and the Azahar instance `exefs/code.bin`. A process that already loaded the skip keeps the empty folder until relaunch.
+
+State 11 of the same setter (`0x150CB4`) is the exchange-card cluster, group 0: slot 1 `Lyt_LP2_Ex_Card_KiraBase`, slot 2 `Lyt_LP2_Ex_Card`, slot 3 `Lyt_LP2_Ex_Card_Efect`, slot 4 `Lyt_B_Card07`. Those layouts live in pkg **4202** (`Pts_LP2_Ex_Card_Base`, `Lyt_LP2_Ex_Card_KiraBase`, `Lyt_LP2_Ex_Card_Efect`; `Lyt_B_Card07` is Card **4152**). `Vis_Ex_Card_Base` in the KiraBase layout is stored hidden. Do not force it on to “fill” the folder.
+
+**Do not**
+
+1. Retarget `0x14EE3C` to `0x150658` again. That is the empty Name Card.
+2. Treat pkg **5208** `Lyt_C_Com_folder`, FileSelect `Vis_Dsel_Data`, or Card field `Vis_com_btn_m_*` as this page.
+3. Repack pkg **4202** to fix the blank folder. It already matches vanilla.
 
 ### 12.5 Exact-zlib ARC splice (Options / clock plates / softkeys)
 
@@ -1068,6 +1138,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/mdcutil.py` + `deploy_sms_maildic_en.py` | Pack EN SMS into MDC + splice img.bin pkg **92** |
 | `tools/deploy_day_counter_en.py` | Play-day counter TRB + pkg **5508** |
 | `tools/deploy_card_flist_en.py` | Friends list sort label |
+| `tools/deploy_card_name_labels_en.py` | Save-card **Name** / **Girlfriend's Name** @ **4152** (§12.4.5); after flist |
 | `tools/build_spotpass_inject.py` | SpotPass boss `info.dat` → `out/spotpass_*` (+ optional Azahar SDMC) |
 | `tools/spotpass/` | Archived BOSS dump (`info.dat`, `.boss`, decrypted container) |
 | `tools/restore_img_pre_msel5245.ps1` | Restore LayeredFS `img.bin` from pre-5245 bak |
@@ -1522,9 +1593,9 @@ SD layout (ID0/ID1 are console-specific):
 
 ### 16.7 Skip “No SpotPass data found.” without BOSS (2026-09-20)
 
-Boot nag is **not** Enoshima. `FUN_006096d8` stores `+0x46 = 4` when `GetNsDataNewFlag` is 0 (`moveq r0,#4` @ `0x00609740`). UI treats state 4 as TRB “No SpotPass data found.”
+Boot nag is **not** Enoshima. The string is TRB STRI **4808**, pack **`0x1901`** slots **`0x1e6` / `0x1e7`**. Overlay translation is blanked (`" "` in `translations.json`) so leftover `0x2b61` call sites cannot print it. TitleUI ctor pane stays msgid **`0x2b61`** (STRI **4808**, blanked). Title init state 8 creates layout 49 (title attract) and skips the apply-done wait; hiding `+0x90` first, skipping that create, or stubbing `FUN_00443cd8` at the function itself left a blank boot. Overlay states 1–5 stay, including state 1 show `bl FUN_00443cd8` (`+0x90` cafe overlay). `FUN_0014ed0c` is the main-menu Name Card operator and the save/boot DATA apply. State 1 `+0x85==0` still `beq 0x14EEC8`, which fades in the card panes and the pack `0x9d00` slot `0xc` help (“You can create your Name Card…”). Retargeting that `beq` to `0x150658` left Name Card as an empty folder (**§12.4.6**). The `mov` at `0x14EFE8` still goes to state 21 instead of 22, so the DATA apply chain stays idle. Overlay 24–31 / 41–42 idle-stay at `0x150658`. Parent helpers still opened the same chrome from Communication Settings: `FUN_0014b890` `beq 0x14B988` MultiWin (state 2), `FUN_0014e648` `beq 0x14E808` pack `0x9d01` slot 4 DrawText (state 8), and state 3 `blne FUN_00255a18` idx `0x16`. Those three sites now skip. **Communication Settings DATA** is `CommunicationOptionUIOperator` `FUN_0010ef5c`, not `FUN_0014ed0c`. State 3 pack `0xd201` DrawText r1=#2 (ERROR chrome, blanked body) is skipped. Overlay show/wait helpers stay vanilla. TitleUI state 2 no longer stays on `FUN_0026c9ac==0`. Ghidra: `FUN_0059a010` is a **heap-arena stats** fill, not DrawText. Boot UI `FUN_000ea254` state 0 always binds slot `0x1e7` through `FUN_002626e8` → `FUN_004b119c` onto the sentence pane, then **shows** with `FUN_004b17b0(pane, 0x2b61)` (`0x000EA2DC`, also `0x5FDDC` / `0x60470`), then **opens** the warning layout via `FUN_000ea964` (id `0x3074`). Blanking the TRB leaves that window empty. A later SysPopup is `FUN_00319320` @ **`0x000EED44`** (slot `0x1e6`). Tick `+0x46 = 4` is a separate idle flag.
 
-`src/patch_spotpass_skip.py` changes that imm to `#0` so a missing CDN / uninjected boss file stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. Watcher / city / meal tables are applied by **§16.8** (embedded NsData), not by this skip. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
+`src/patch_spotpass_skip.py` hides `FUN_000ea254` ctor layout `+0xa8` then dismisses to state 7 (`0x001EA6C4`) so the empty warning window does not stay up, NOPs `bl FUN_004b17b0` (message id `0x2b61` → slot `0x1e7`) and the `bl FUN_004b119c` pane binds, turns state 4’s tail `b FUN_004b17b0` @ `0x000EA628` into `bx lr` (BL NOPs miss this; `FUN_000ebe0c` still jumped here after `FUN_000ea964` returned), retargets `FUN_000ebe0c` away from applying-wait (`NOP bl FUN_000eb3bc`, `mov r1,#1/#3/#4` → `#7`), skips TitleUIOperator’s `+0x8c` fail flag and pack `0xd201` DrawText (`“Failed to apply SpotPass data.”`), NOPs `bl FUN_00319320` @ `0x000EED44` (keeps `strb [obj,#0x5a]=1`) then **does not** enter applying-wait state 6 (`mov r1,#6` → `#7`, jt6 → hide/dismiss), NOPs boot-UI applying-layout *call sites* of `FUN_00443cd8` (the helper itself stays vanilla), then **hides `+0xd0` and always returns** from `FUN_0062fa8c` wait *sites* (`r0!=0` used to fall through to pack `0x1901` “Applying SpotPass…” DrawText — forcing done as 1 *caused* the spinner), turns TitleUIOperator apply states 6/7 / 0xA–0xC / 0xF into hide `+0x90` then `+0x5c=0` (state 1 still shows `+0x90`; title-init state 8 skips `FUN_00443e18` / `FUN_00196b7c` and runs `FUN_00195fa4`; `FUN_0014ed0c` DATA kick then idle-stays so state 41 pack `0x9d01` slot `0x10` DrawText never runs), skips FUN_004b2574 type-2 SysPopup slot `0x1e5` (`beq` @ `0x4B2634` → epilogue, not the 0x4B2660 join that still popped), turns the type-2 `beq` @ `0x0011021C` into `b`, still NOPs leftover `bl FUN_0059a010` in NetDlTaskManager, retargets the NetDl state-0 jump table (`0x00709708` → `0x00709734`), and changes the imm to `#0` so a missing CDN stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. **Verified 2026-09-22 Azahar A:** cafe title attract returns; applying/no-data may flash once from leftover TitleUI, then in-game reset stays clean. Watcher / city / meal tables are applied by **§16.8** (embedded NsData), not by this skip. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
 
 ### 16.8 Bake Watcher #28 without a BOSS inject (2026-09-20)
 
@@ -1533,11 +1604,14 @@ CIA install cannot write `extdata/00000321/boss/`. LayeredFS cannot overlay it. 
 | Piece | Address | Patch |
 |-------|---------|-------|
 | Payload | `0x006FBB08` `.rodata` (file; VA `0x007FBB08`) | `tools/spotpass/info.dat` (2324 B). Data only — NX on hardware. |
-| GetNsDataNewFlag | `FUN_00609ab0` @ `0x00609AB0` | In-place cave: `FUN_004e122c==0` (save loaded) and `FUN_004e1c68` header empty/missing → return 1; else 0. Leftover RX is the memcpy stub. |
-| ReadNsData | BLs @ `0x00609FD8` / `0x0060A018` | `bl` memcpy stub (byte copy, NULs kept). Returns `0x914`. |
-| Auto-confirm | `0x00609750` | `ldrb r0,[r4,#0x48]` → `mov r0,#1` so state 1 does not wait on the apply UI. |
+| GetNsDataNewFlag | `FUN_00609ab0` @ `0x00609AB0` | Always **1** so tick can enter apply after §16.7 hides the nag. |
+| Confirm | `0x00609750` | `mov r0,#1` (do not wait on tick `+0x48`). |
+| ReadNsData | BLs @ `0x00609FD8` / `0x0060A018` | `bl` memcpy into dest `r1`, or store payload VA at wrapper `+0x48` when dest is 0. Do **not** write wrapper `+0x200`. |
+| Watcher magazine | `0x006092C8` / `0x00609164` / `0x00609600` / `0x006093F4` / `0x006090B0` | `mov r0,#1; bx lr`. **Not** `FUN_005fe9d8` (has-rows must poll). MagList always command **9**, then **state 6** until rows bind; keep layout `+0x7c`. Parent skips MagList-equal gate and after MagList goes **0x17** (dismiss), not Watcher. NOP MagList pump / has-rows / bind `+0x45/+0x46` and parent state 0 so `FUN_005fe5d0` inits. Watcher extra `bne` restored. WEB **とわのウォッチャー** is Myroom layout **0xC** (`FUN_0005b49c` @ `0x0005B49C`), not TownGuide MagOp layout `0x31`. Extra-data `FUN_004e7d34==0` or article `+0x70==0` set `+0x5e=9` (empty viewer → ERROR “No data.”). NOP the extra `beq` @ `0x0005B570`; `+0x70` miss and empty `FUN_00444cd8` count (`0x0005B600` / `0x0005BC74` / `0x0005AC04`) go hub state **7**. State 9 entry `0x0005BA44` `b 0x5ba20`. Watcher tap `FUN_0005b49c` is `mov r0,#0; bx lr`. Myroom 0x84 ERROR `0x0004FC20`/`0x0004FC58` and leftover pack `0x9d01` slot 8 `0x0014E110` are NOP. MagOp: extra-missing left Watcher `0x31` empty (pack `0xB200`). State 0 goes **5** (no layout), extra cmp `mov r0,#1`, parent after Watcher **0xC** MagList (cart `Mag_Tit`). `FUN_0014eb9c` returns `(extra & ~bit0x20 & has-rows) ^ 1` and binds pack `0x9d01` when extra is **missing** (slot `0x60`) or extra+no bit+no rows (slot `0xf`). Stub the entry `mov r0,#0; bx lr` @ `0x0014EB9C`. Caller leftover `+0xb4 != -1` still opened the 0x84 ERROR window; `0x0014E16C` `beq` → `b 0x14e2a4`. Inner `bl FUN_005fe9d8` stays vanilla. |
+| Merge | `FUN_006088c8` | **`mov r0,#1; bx lr`** — do not parse. Skip-ac:u still let WaitSync set `+0x250=1` with a bad handle; next tick `bl FUN_004e19b0` @ `0x00608984` smashed (`LR` `0x00708988`, `PC` garbage). MagList always worker command **9** (`0x0010441C` → `0x104454`); Watcher extra-data `bne` @ `0x0010472C` NOP. |
+| DATA kick | `0x0014F018` | After `FUN_0059a788`, mark type-`0xf` job idle (`+0=0`, `+1=0`, `+4=0`). `+1=1` opened state 24 (layout `0xCA` blank ERROR). |
 
-Title ticks stay in state 0 until a save is loaded, so §16.7 still suppresses “No SpotPass data found.” After a non-zero applied header, NewFlag stays 0 (no every-boot re-merge / StreetPass voice wipe). Enoshima is unchanged.
+Title ticks stay in state 0 until a save is loaded, so §16.7 still suppresses “No SpotPass data found.” Enoshima is unchanged.
 
 Does **not** require `out/spotpass_real3ds/` or Azahar SDMC inject. Those remain optional for a real BOSS-shaped file.
 
@@ -1585,7 +1659,7 @@ a/b guide: **`ab_test/README.md`**.
 | 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
-| 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `moveq r0,#4` → `#0` @ `0x00609740` — no boot nag without BOSS (**§16.7**) |
+| 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `FUN_000ea254` hide `+0xa8` then dismiss + NOP `FUN_004b17b0` 0x2b61 show + `FUN_004b119c` 0x1e7 pane + `FUN_00319320` @ `0xEED44` + leftover `FUN_0059a010` NOPs + NetDl jt0 + `moveq #4`→`#0` (**§16.7**) |
 | 11 | SpotPass NsData embed | `src/patch_spotpass_embed.py` | Bake Watcher #28; spoof NewFlag/ReadNsData after save load (**§16.8**) |
 | 12 | ウリボー傘 grant | `src/patch_password_uribo.py` | `UriboKasa*` slots 33–35 → item ids 465/466/467; `cmp r4,#0x21` → `#0x24` so they are presents, not 内部 (**§22**) |
 

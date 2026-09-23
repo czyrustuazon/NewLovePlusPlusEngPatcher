@@ -33,6 +33,7 @@ from nlpp_paths import (
     CACHE_VANILLA_CODE,
     CIA_FILENAME,
     LAYEREDFS_DIR_NAME,
+    NAME_INPUT_CODE,
     OUT_CIA,
     OUT_CIA_PREFIX,
     OUT_LAYEREDFS_PREFIX,
@@ -728,6 +729,7 @@ def write_layeredfs(
     resident_src: Path | None = None,
     code_bin_src: Path | None = None,
     patch_code: bool = False,
+    patched_code: Path | None = None,
     skip_name_patches: bool = False,
     romfs_overlay: Path | None = None,
 ) -> int:
@@ -777,7 +779,17 @@ def write_layeredfs(
         print(f"[layeredfs] copying img.bin ({img_bin.stat().st_size:,} bytes) ...")
         shutil.copy2(img_bin, dest_img)
 
-    if patch_code:
+    dest_code = title_root / "code.bin"
+    # Drop leaves LayeredFS off. When it is turned back on, still ship the
+    # same code.bin the CIA injects — not vanilla, and not only if --patch-code.
+    prebuilt = patched_code if patched_code and patched_code.is_file() else None
+    if prebuilt is None and not patch_code and NAME_INPUT_CODE.is_file():
+        prebuilt = NAME_INPUT_CODE
+    if prebuilt is not None:
+        dest_code.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(prebuilt, dest_code)
+        print(f"[layeredfs] code.bin <- {prebuilt}")
+    elif patch_code:
         src = code_bin_src if code_bin_src and code_bin_src.is_file() else find_vanilla_code()
         if src is None or not src.is_file():
             looked = code_bin_src or DEFAULT_CODE_BIN
@@ -788,9 +800,8 @@ def write_layeredfs(
             )
         from patch_code import write_patched_code_bin
 
-        dest_code = title_root / "code.bin"
         write_patched_code_bin(src, dest_code, force=True)
-        print(f"[layeredfs] code.bin (single-pane name draw)")
+        print("[layeredfs] code.bin (single-pane name draw)")
 
     if romfs_overlay is not None:
         apply_romfs_overlay(title_romfs, romfs_overlay)
@@ -1048,15 +1059,63 @@ def _layeredfs_title_dir(out_dir: Path) -> Path:
     return out_dir / TITLE_ID
 
 
-def _print_layeredfs_recovery(out_dir: Path) -> None:
+def _layeredfs_code_bin(out_dir: Path) -> Path:
+    return _layeredfs_title_dir(out_dir) / "code.bin"
+
+
+def _layeredfs_graphics_ready(out_dir: Path) -> bool:
+    """English UI in the overlay loads only when code.bin was written with it."""
+    code = _layeredfs_code_bin(out_dir)
+    try:
+        return code.is_file() and code.stat().st_size > 0
+    except OSError:
+        return False
+
+
+def _discard_incomplete_layeredfs(out_dir: Path) -> None:
+    """Delete a LayeredFS drop that cannot show English graphics."""
+    title_dir = _layeredfs_title_dir(out_dir)
+    remove_scratch(title_dir, label=f"incomplete LayeredFS {title_dir}")
+    readme = out_dir / "README.txt"
+    if readme.is_file():
+        try:
+            readme.unlink()
+        except OSError as exc:
+            print(f"[layeredfs] warning: {readme}: {exc}")
+    try:
+        if out_dir.is_dir() and not any(out_dir.iterdir()):
+            out_dir.rmdir()
+    except OSError:
+        pass
+
+
+def _print_layeredfs_recovery(out_dir: Path) -> bool:
+    """Keep the overlay after a CIA failure only when code.bin is present.
+
+    Returns True when the folder is still an installable Luma drop.
+    """
     title_dir = _layeredfs_title_dir(out_dir)
     if not title_dir.is_dir():
-        return
+        return False
+    if not _layeredfs_graphics_ready(out_dir):
+        print()
+        print("=== LayeredFS removed ===")
+        print(f"Folder:  {title_dir}")
+        print(
+            "CIA rebuild failed. This overlay has no code.bin, so English "
+            "graphics would not load. Removed the incomplete LayeredFS folder."
+        )
+        _discard_incomplete_layeredfs(out_dir)
+        return False
     print()
     print("=== Luma LayeredFS still available ===")
     print(f"Folder:  {title_dir}")
     print(f"Install: SD:/luma/titles/{TITLE_ID}/  (see {out_dir / 'README.txt'})")
-    print("The CIA rebuild failed, but this overlay can still be used on Luma CFW.")
+    print(
+        "The CIA rebuild failed. code.bin is in this folder, so the English "
+        "graphics can still load on Luma CFW."
+    )
+    return True
 
 
 def rebuild_patched_cia(
@@ -1853,6 +1912,7 @@ def _cmd_patch_body(
             resident_src=resident_src,
             code_bin_src=code_bin_src,
             patch_code=args.patch_code,
+            patched_code=Path(args.inject_code) if args.inject_code else None,
             skip_name_patches=args.skip_name_patches,
             romfs_overlay=romfs_overlay,
         )
@@ -1900,8 +1960,8 @@ def _cmd_patch_body(
         )
     except PatchError:
         if layeredfs_written and layeredfs_out is not None:
-            write_install_choice_note()
-            _print_layeredfs_recovery(layeredfs_out)
+            if _print_layeredfs_recovery(layeredfs_out):
+                write_install_choice_note()
         raise
 
     print()
@@ -1912,9 +1972,9 @@ def _cmd_patch_body(
     print(f"Time:        {elapsed}  (started {started_at})")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
-    if layeredfs_out is not None and layeredfs_out.is_dir():
+    if layeredfs_written and layeredfs_out is not None:
         print(f"LayeredFS:   {layeredfs_out}")
-    write_install_choice_note()
+        write_install_choice_note()
     summary = build_patch_summary(
         out_cia=out_cia,
         packed_img=packed_img,
