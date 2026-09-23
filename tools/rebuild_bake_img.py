@@ -71,6 +71,7 @@ DEPLOY_SCRIPTS: list[str] = [
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
     "deploy_card_flist_en.py",
+    "deploy_dsel_data_visible.py",  # 5152 Vis_Dsel_Data label sheet
     "deploy_status_stats_en.py",
     "deploy_myroom_main_en.py",
     # NLPP English UI Buttons bundle (keyboard 5190, SysPopup, scoped Back, Album delete).

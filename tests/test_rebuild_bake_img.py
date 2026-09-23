@@ -89,6 +89,16 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "password_uribo_already" in deploy
 
 
+def test_dsel_data_visible_hooked():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert "deploy_dsel_data_visible.py" in scripts
+    text = (TOOLS / "deploy_dsel_data_visible.py").read_text(encoding="utf-8")
+    assert "Vis_Dsel_Data" in text
+    assert "Pts_Dsel_Data" in text
+    assert '("Pic_Dsel_data",)' in text
+    assert "5152" in text
+
+
 def test_softkey_deploy_after_confirm():
     scripts = rebuild.DEPLOY_SCRIPTS
     confirm = scripts.index("deploy_confirm_btn_en.py")
