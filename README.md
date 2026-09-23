@@ -15,7 +15,7 @@ Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.co
 Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
-2. **Wipe `out/` and `release/`** completely, then recreate both empty. That deletes the previous CIA, logs, `out/azahar_instances/`, `out/extdata_backup/`, gold bake, TRB overlay, and name-input `code.bin`. `cache/` is left in place. `python src/patch_cia.py` on its own does not do this wipe  
+2. **Wipe `out/` and `release/`** completely, then recreate both empty. That deletes the previous CIA, logs, `out/extdata_backup/`, gold bake, TRB overlay, and name-input `code.bin`. `cache/` and the A/B Azahar copies in `ab_test/azahar_instances/` are left in place. `python src/patch_cia.py` on its own does not do this wipe  
 3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
 4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
 5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
@@ -208,7 +208,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, logs, `azahar_instances/`, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` is not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, logs, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **Pick one install path** (see `out/3_but not both`): LayeredFS on top of the English CIA applies the patch twice.
 
@@ -328,7 +328,7 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
   → write PATCH SUMMARY log to out/logs/
-  → clean out/ (keep numbered LayeredFS/CIA folders + 3_but not both + logs/; azahar_instances/ preserved)
+  → clean out/ (keep numbered LayeredFS/CIA folders + 3_but not both + logs/)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -455,6 +455,7 @@ ab_test/
   make.ps1                   instances / seed / deploy / launch / restore / save-nene
   setup_azahar_instances.ps1
   paths.local.ps1.example    → paths.local.ps1 (gitignored)
+  azahar_instances/{a,b}/    portable Azahar + saves (survives a CIA wipe)
   saves/nene/                shared Nene title save (`.\make.ps1 save-nene`)
 assets/
   scripts/                   finished DBIN2 XML

@@ -17,7 +17,7 @@ patch_cia = load_module("patch_cia", SRC / "patch_cia.py")
 def test_wipe_directory_recreates_empty(tmp_path: Path):
     root = tmp_path / "repo"
     out = root / "out"
-    nested = out / "azahar_instances" / "a"
+    nested = out / "nested_scratch" / "a"
     nested.mkdir(parents=True)
     (nested / "save.bin").write_bytes(b"save")
     (out / "NewLovePlusPlus-EN.cia").write_bytes(b"cia")

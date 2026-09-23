@@ -2011,7 +2011,7 @@ def _cmd_patch_body(
         cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
         print(
             "  - out/ cleaned (kept numbered LayeredFS/CIA folders, "
-            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/)."
+            f"{OUT_NOT_BOTH_NAME}, logs/, extdata_backup/)."
         )
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
@@ -2109,7 +2109,6 @@ _OUT_KEEP_DIRS = frozenset(
         OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
         OUT_CIA_PREFIX,  # patched CIA
         LAYEREDFS_DIR_NAME,  # leftover unprefixed luma/ from older builds
-        "azahar_instances",  # a/b test workflow (ab_test/)
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "extdata_backup",  # Azahar extra-data / title-save snapshots
     }
@@ -2222,14 +2221,14 @@ def cleanup_out_dir(
     if removed:
         print(
             f"[cleanup] out/ kept: {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
-            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/ "
+            f"{OUT_NOT_BOTH_NAME}, logs/, extdata_backup/ "
             f"({removed} other item(s) removed)"
         )
     elif not quiet:
         print(
             "[cleanup] out/ already clean "
             f"({OUT_LAYEREDFS_PREFIX} + {OUT_CIA_PREFIX} + {OUT_NOT_BOTH_NAME} "
-            "+ logs + azahar_instances + extdata_backup)"
+            "+ logs + extdata_backup)"
         )
 
 
@@ -2296,7 +2295,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep out/ scratch after a successful build "
         f"(default: leave {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
-        f"{OUT_NOT_BOTH_NAME}, out/logs/, out/azahar_instances/, "
+        f"{OUT_NOT_BOTH_NAME}, out/logs/, "
         "out/extdata_backup/)",
     )
     p.add_argument(

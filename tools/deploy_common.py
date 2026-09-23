@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from nlpp_paths import (  # noqa: E402
+    AZAHAR_INSTANCES,
     AZAHAR_MOD_IMG,
     AZAHAR_MOD_TRB_DIR,
     BAKE_IMG,
@@ -16,6 +17,7 @@ from nlpp_paths import (  # noqa: E402
     RELEASE,
     ROMFS_OVERLAY,
     TEXTRESOURCE,
+    TITLE_ID,
     find_vanilla_img,
     find_vanilla_resident_trb,
     require_vanilla_img,
@@ -31,6 +33,7 @@ HEADER_CORE_PX = 15
 HEADER_STRIP_H = 16
 
 __all__ = [
+    "AZAHAR_INSTANCES",
     "AZAHAR_MOD_IMG",
     "AZAHAR_MOD_TRB_DIR",
     "BAKE_IMG",
@@ -212,6 +215,11 @@ def iter_deploy_targets(primary: Path) -> list[Path]:
     also = os.environ.get("NLPP_ALSO_AZAHAR", "1").strip().lower()
     if also not in ("0", "false", "no", "off"):
         _add(AZAHAR_MOD_IMG)
+        if AZAHAR_INSTANCES.is_dir():
+            for img in AZAHAR_INSTANCES.glob(
+                f"*/user/load/mods/{TITLE_ID}/romfs/img.bin"
+            ):
+                _add(img)
     return targets
 
 

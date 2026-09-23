@@ -50,6 +50,39 @@ def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypat
     assert bake.resolve() in targets
 
 
+def test_iter_deploy_targets_includes_ab_instances(tmp_path: Path, monkeypatch):
+    primary = tmp_path / "primary.img.bin"
+    primary.write_bytes(b"p")
+    inst = (
+        tmp_path
+        / "ab_test"
+        / "azahar_instances"
+        / "a"
+        / "user"
+        / "load"
+        / "mods"
+        / "00040000000F4E00"
+        / "romfs"
+        / "img.bin"
+    )
+    inst.parent.mkdir(parents=True)
+    inst.write_bytes(b"inst")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "missing-bake.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", tmp_path / "missing.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_INSTANCES", tmp_path / "ab_test" / "azahar_instances")
+    monkeypatch.delenv("NLPP_ALSO_AZAHAR", raising=False)
+
+    targets = deploy_common.iter_deploy_targets(primary)
+    assert inst.resolve() in targets
+
+
+def test_azahar_instances_live_outside_out():
+    inst = deploy_common.AZAHAR_INSTANCES
+    assert inst.parent.name == "ab_test"
+    assert inst.name == "azahar_instances"
+    assert "out" not in inst.parts[-2:]
+
+
 def test_find_ui_png_fits_mismatched_size(tmp_path, monkeypatch):
     from PIL import Image
 

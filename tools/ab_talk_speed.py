@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
 from deploy_name_input_en import apply_name_input_stack  # noqa: E402
-from nlpp_paths import TITLE_ID, azahar_mod_root, find_vanilla_code  # noqa: E402
+from nlpp_paths import AZAHAR_INSTANCES, TITLE_ID, azahar_mod_root, find_vanilla_code  # noqa: E402
 from patch_message_speed import (  # noqa: E402
     TALK_PATCHED,
     TALK_TABLE_OFF,
@@ -34,7 +34,7 @@ from patch_message_speed import (  # noqa: E402
     revert_talk_cap,
 )
 
-INSTANCES = ROOT / "out" / "azahar_instances"
+INSTANCES = AZAHAR_INSTANCES
 
 
 def _mod(letter: str) -> Path:

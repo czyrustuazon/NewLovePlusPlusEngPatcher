@@ -30,7 +30,7 @@ from exact_zlib import compress_exact_zopfli, try_fast_exact_slot  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
-from deploy_common import iter_deploy_targets, maybe_backup_img, resolve_img_paths  # noqa: E402
+from deploy_common import AZAHAR_INSTANCES, iter_deploy_targets, maybe_backup_img, resolve_img_paths  # noqa: E402
 
 MOD_IMG, _VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "dsel_data_visible"
@@ -47,7 +47,7 @@ PATCHES = (
 
 def _deploy_targets() -> list[Path]:
     targets = list(iter_deploy_targets(MOD_IMG))
-    inst_root = ROOT / "out" / "azahar_instances"
+    inst_root = AZAHAR_INSTANCES
     seen = {p.resolve() for p in targets}
     for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
         rp = img.resolve()

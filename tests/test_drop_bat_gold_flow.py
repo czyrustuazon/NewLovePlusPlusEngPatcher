@@ -30,6 +30,8 @@ def test_bat_wipes_out_and_release_before_build():
     assert wipe_idx < text.index("Injecting scripts + UI")
     # cache holds vanilla extract / PNG scratch and is not part of the wipe.
     assert "cache\\ is left as-is" in text
+    # A/B Azahar copies live outside out/ so this wipe does not delete them.
+    assert "ab_test\\azahar_instances\\ is left as-is" in text
 
 
 def test_bat_defaults_packed_img_to_release_bake():

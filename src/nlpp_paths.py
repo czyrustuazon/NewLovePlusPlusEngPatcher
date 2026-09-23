@@ -35,8 +35,12 @@ CACHE_VANILLA_RESIDENT_TRB = (
 )
 CACHE_VANILLA_SCRIPT = CACHE_VANILLA_ROMFS / "script" / "bin" / "script"
 
-# Scratch
+# Scratch. Drop CIA deletes this tree before each build.
 OUT = ROOT / "out"
+
+# A/B Azahar copies (exe, user dir, saves). Lives under gitignored ab_test/
+# so a CIA build can wipe out/ without deleting the instances.
+AZAHAR_INSTANCES = ROOT / "ab_test" / "azahar_instances"
 
 # Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
 # install path; original luma/ and CIA names stay inside.

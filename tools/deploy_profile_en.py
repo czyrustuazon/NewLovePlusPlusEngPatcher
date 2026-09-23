@@ -33,6 +33,7 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     HEADER_CORE_PX,
     maybe_backup_img,
     HEADER_STRIP_H,
@@ -647,7 +648,7 @@ def patch_package(
 def _iter_splice_imgs() -> list[Path]:
     targets = list(iter_deploy_targets(MOD_IMG))
     seen = {p.resolve() for p in targets}
-    inst_root = ROOT / "out" / "azahar_instances"
+    inst_root = AZAHAR_INSTANCES
     for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
         rp = img.resolve()
         if rp.is_file() and rp not in seen:

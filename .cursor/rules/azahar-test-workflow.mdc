@@ -17,12 +17,12 @@ Full workflow for agents: **`ab_test/README.md`**.
 .\make.ps1 restore-a
 ```
 
-Instance roots: `out/azahar_instances/{a,b}/user` (`NLPP_AZAHAR_USER_DIR`).
+Instance roots: `ab_test/azahar_instances/{a,b}/user` (`NLPP_AZAHAR_USER_DIR`). Drop CIA wipes `out/`; these copies stay.
 Scripts: `ab_test/`. Feature details: `technical.md`.
 
 ## Communications stuck on loading
 
-That spinner is Azahar **`OpenLinkFile`**, not extra data `00000F4E` and not pkg **5237**. Stock HLE cloned the handle as the **full** extra-data blob (`offset=0`, `subfile=false`). NLPP `GetSize`s that clone after `OpenSubFile` and heap-smashes (`Write32 0x33373338`). Closing the shared backend while the clone is still live brings the same spinner back. Fix is in local Azahar `src/core/hle/service/fs/file.cpp`: snapshot `priority` / `offset` / `size` / `subfile`, and skip `backend->Close()` until the last session. Patch: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it and copies `azahar.exe` into `out/azahar_instances/{a,b}/`. Details: `technical.md` **§10.1**.
+That spinner is Azahar **`OpenLinkFile`**, not extra data `00000F4E` and not pkg **5237**. Stock HLE cloned the handle as the **full** extra-data blob (`offset=0`, `subfile=false`). NLPP `GetSize`s that clone after `OpenSubFile` and heap-smashes (`Write32 0x33373338`). Closing the shared backend while the clone is still live brings the same spinner back. Fix is in local Azahar `src/core/hle/service/fs/file.cpp`: snapshot `priority` / `offset` / `size` / `subfile`, and skip `backend->Close()` until the last session. Patch: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`. Details: `technical.md` **§10.1**.
 
 Do **not** restore extra data or re-splice Communication packages for this hang. Still move LayeredFS `*.bak*` out of `romfs/` (`launch-a` already does).
 

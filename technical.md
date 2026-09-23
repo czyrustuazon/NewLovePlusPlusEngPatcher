@@ -520,7 +520,7 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 
 **Cause:** Azahar `File::OpenLinkFile` created a new session but **did not clone** the current handle. 3dbrew / libctru: “opens a clone / duplicate handle.” The stub set `offset=0`, `size=backend->GetSize()`, `subfile=false`. NLPP opens an extra-data **subfile** (`OpenSubFile`) then `OpenLinkFile`. `GetSize` on the clone then returned the **entire** extra-data blob (tens–hundreds of MB). The game treated that as a small `NLPPARC` record and heap-walked ASCII as pointers (`0x33373338`).
 
-**Fix (local Azahar, not CIA `img.bin`):** `File::OpenLinkFile` snapshots `priority` / `offset` / `size` / `subfile` from the source session *before* `ClientConnected`, then copies them onto the clone. `File::Close` must **not** close the shared backend while another session (the clone) is still live — that zeros later reads and brings the spinner back. Patch in this repo: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it if missing, rebuilds `citra_meta`, and copies `azahar.exe` into `out/azahar_instances/{a,b}/`. Default log line: `OpenLinkFile … clone offset=… size=… subfile=… backend=…`. Drop CIA does not need this — hardware FS clones handles correctly.
+**Fix (local Azahar, not CIA `img.bin`):** `File::OpenLinkFile` snapshots `priority` / `offset` / `size` / `subfile` from the source session *before* `ClientConnected`, then copies them onto the clone. `File::Close` must **not** close the shared backend while another session (the clone) is still live — that zeros later reads and brings the spinner back. Patch in this repo: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it if missing, rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`. Default log line: `OpenLinkFile … clone offset=… size=… subfile=… backend=…`. Drop CIA does not need this — hardware FS clones handles correctly.
 
 **Do not** restore extra data or re-splice **5237** / **5241** for this spinner. **Do not** treat missing `00000321` as a Communication-menu fix.
 
@@ -530,7 +530,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 
 **Symptom:** Tapping Main Menu **Game Start** sometimes freezes. Azahar **reset** tears down the guest (`GDBStub` stop + `Cleaning up process 11`) and the next boot can continue. Looks like a hang, not a crash dialog.
 
-**Live instance A (2026-09-18):** `out/azahar_instances/a/azahar.exe` (`75134fc-dirty`, clone patch **present**). Log rotated to `user/log/azahar_log.old.txt`.
+**Live instance A (2026-09-18):** `ab_test/azahar_instances/a/azahar.exe` (`75134fc-dirty`, clone patch **present**). Log rotated to `user/log/azahar_log.old.txt`.
 
 1. `OpenLinkFile Path: [Binary: 0000…] clone offset=0x0 size=0x65a13720 subfile=false backend=0x65a13720`  
    (`0x65a13720` ≈ **1.62 GiB** — ExtSaveData **quota / backend** size, not an on-disk file that large.)
@@ -1706,7 +1706,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 **gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
 
-**LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `out/azahar_instances/{a,b}/user` over roaming AppData while iterating.
+**LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `ab_test/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 
 **Live code caves (shipped stack only; file `< 0x00690000` = .text RX):**
 
@@ -1796,7 +1796,7 @@ Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test
 
 | Item | Path / note |
 |------|-------------|
-| Instance user dirs | `out/azahar_instances/{a,b}/user` |
+| Instance user dirs | `ab_test/azahar_instances/{a,b}/user` (outside `out/`; a CIA wipe does not delete them) |
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
 | Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |

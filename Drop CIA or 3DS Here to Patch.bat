@@ -175,9 +175,11 @@ if "!HASH_ERR!"=="0" (
 
 echo.
 echo Wiping out\ and release\ before this build...
-echo Previous CIA, logs, Azahar copies, extra-data backups, gold bake,
+echo Previous CIA, logs, extra-data backups, gold bake,
 echo TRB overlay, and name-input code.bin in those folders are deleted.
-echo cache\ is left as-is. Close anything using files under out\ or release\.
+echo cache\ is left as-is.
+echo ab_test\azahar_instances\ is left as-is.
+echo Close anything using files under out\ or release\.
 "%PYTHON%" "%SRC%\scratch_cleanup.py" --wipe-cia-build
 if errorlevel 1 (
   echo [!] Could not wipe out\ and release\.
