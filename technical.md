@@ -43,6 +43,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Communications load hang on Azahar (2026-09-18):** not extra data `00000F4E`, not pkg **5237**. Stock `FSFile::OpenLinkFile` reset the clone to the full extra-data blob; **§10.1**.
 - **Game Start hang on Azahar (2026-09-18):** same extra-data smash (`Write32 0x33373338`), but `OpenLinkFile` of the **parent** archive (`size≈1.62 GiB`, `subfile=false`). Clone patch does not help; reset unsticks it. **Not hardware.** **§10.2**.
 - **Title hub loop NX abort (2026-09-18):** prefetch abort PC `0`, LR `0x00645A2C` (`FindPaneByName` `BLX r3`) — null child in the pane list (`r4=4`). Guard is `src/patch_lyt_null_pane.py` in `name_input_code.bin` — **§15.7**.
+- **BCLIM load path (vanilla `code.bin`):** `FUN_00542c30` accepts a texture only when the pointer is 128-byte aligned and the `CLIM` / `imag` headers match; `FUN_00542828` maps the format byte through the table at `0x006E9964` and uploads with target `0x0DE1`. English LayeredFS still needs this repo’s `code.bin` for the title-loop guard and the CESA logo size — **§5.4**.
 - **CIA patcher input:** decrypted dumps only — no `decrypt.exe` in tree (user decrypts first).
 
 ---
@@ -302,6 +303,65 @@ When identifying which BCLIM a screen uses:
 3. Compare with text-region MAD / glyph Jaccard (or full-frame MAD for opaque buttons).
 4. **MAD = 0** against `assets/images/NCommonIcon.check/timg/…` confirmed exact masters for clock softkeys.
 
+### 5.4 How `code.bin` loads a BCLIM (2026-09-23)
+
+Retail `code.bin` already turns a BCLIM into a GPU texture. English `img.bin` bytes ride that path. The patched ExeFS from this repo (`release/name_input_code.bin`) is still required on LayeredFS because two English graphics sit outside what that loader can finish: the title-hub Eng Patch pane (**§15.7**) and the CESA thank-you quad (**§12.7**). Addresses below are Ghidra image base 0. Runtime VA = file offset + `0x100000`.
+
+**Shared NW4C header check** `FUN_00541ce0` (`0x00541CE0`). A resource header passes when the 4-byte magic matches, the BOM is `0xFEFF`, the version top byte is `0x02` and the minor is no newer than `0x02020000`, and the header is large enough for the block count at `+0x10`. The same check covers `CLIM`, `CLYT`, `CLAN`, and `CFNT` (font sites near `0x0056AB08`).
+
+**BCLIM parse** `FUN_00542c30` (`0x00542C30`). Writes a 12-byte record `{file base, imag block, end pointer}`, or zeroes it and returns 0.
+
+| Check | Requirement |
+|-------|-------------|
+| Pointer | Non-null and **128-byte aligned** (`ptr & 0x7F == 0`) |
+| Size | 4-byte aligned and greater than `0x28` |
+| Tail dword | File-size field (last 4 bytes) is smaller than the buffer, then 4-aligned |
+| Header | `CLIM` + version `0x02020000` at that aligned offset |
+| Block | An `imag` block (magic test adds `0x989E9297`, which wraps to 0 only for `imag`) |
+
+A BCLIM whose file pointer is not 128-byte aligned never becomes a texture, so the pane stays empty. That is why DARC entries for these files stay on an absolute alignment when the bake repacks an ARC.
+
+`imag` fields the uploader reads: `+0x08` width (`u16`), `+0x0A` height (`u16`), `+0x0C` format byte, `+0x0D` low 2 bits = pixel-layout version (`0` → `0x02010000`, `1` → `0x02020000`, `2` → `0x02030000`). This game’s tiled UI textures are the `0x02020000` case.
+
+**GPU upload** `FUN_00542828` (`0x00542828`) is the only caller of the parser. Both sites virtual-call “get resource” (`vtable + 0x08`) for the file pointer and size, then call it:
+
+| Call site | Role |
+|-----------|------|
+| `0x00543C7C` | Layout material / picture pane |
+| `0x005EA4F0` | Second resource accessor |
+
+The format byte indexes a 20-byte row at file `0x006E9964`. Word 1 is the GX internal format, word 2 is the pixel type, and the low half of word 3 is the size quantum. Width and height round up to the next power of two starting from that quantum (8 for almost every format, 16 for ETC1).
+
+| `imag` fmt | Pixels | Internal | Type |
+|------------|--------|----------|------|
+| 0 | L8 | `0x6757` | `0x1401` unsigned byte |
+| 1 | A8 | `0x6756` | `0x1401` |
+| 2 | LA4 | `0x6758` | `0x6760` |
+| 3 | LA8 | `0x6758` | `0x1401` |
+| 4 | HILO8 | `0x6759` | `0x1401` |
+| 5 | RGB565 | `0x6754` | `0x8363` |
+| 6 | RGB8 | `0x6754` | `0x1401` |
+| 7 | RGBA5551 | `0x6752` | `0x8034` |
+| 8 | RGBA4444 | `0x6752` | `0x8033` |
+| 9 | RGBA8 | `0x6752` | `0x1401` |
+| 10 | ETC1 | `0x675A` | quantum `0x10` |
+| 11 | ETC1A4 | `0x675B` | flags `0x101` |
+| 12 | L4 | `0x6757` | `0x6761` |
+| 13 | A4 | `0x6756` | `0x6761` |
+
+`0x1401`, `0x8033`, `0x8034`, and `0x8363` are the usual unsigned-byte and unsigned-short 4444 / 5551 / 565 types. The `0x67xx` values are this GX layer’s internal formats. For the normal `0x02020000` layout, `FUN_006691d0` supplies a converter invoked with mode `0x101` (`0x00542A6C`) so Morton-tiled pixels match what the GPU samples. `FUN_00661e80` allocates a texture id, `FUN_0065f4d4` binds it, and `FUN_00660498` uploads with target `0x0DE1` (`GL_TEXTURE_2D`). Filter and wrap constants sit at `0x00542B40`. A failed parse zeroes the output object through `+0x0E` and returns, so the pane has no texture id.
+
+**Layout that places the texture.** `FUN_00548A84` (`0x00548A84`) builds a BCLYT (`CLYT`, version `0x02020000`) and walks sections named from the pool at `0x00548D0C`: `txl1` (texture list), `usd1` (user data), `pic1` (picture panes). Picture panes reach the upload via `0x00543C7C`. `FUN_00542D64` (`0x00542D64`) loads BCLAN animation (`CLAN`, sections `pai1` and `pat1`).
+
+**What the patched ExeFS adds on top of this loader** (ships in `release/name_input_code.bin`, copied beside LayeredFS `romfs/`):
+
+| Hook | Why a retail `code.bin` is not enough for this overlay |
+|------|--------------------------------------------------------|
+| `src/patch_lyt_null_pane.py` | English `Pts_Copyright` adds `Pic_EngPatch`. A null child on hub rebuild makes `FindPaneByName` `BLX` address 0 (**§15.7**). The guard lets the menu finish drawing. |
+| `patch_cesa_logo_white_native_size` | Retail forces a 400×400 quad on `logo_white`. The English TEXI is 240×320; the hook keeps that size (**§12.7**). |
+
+`deploy_name_input_en.py` rebuilds that `code.bin` from vanilla. An older ExeFS, or a LayeredFS folder with only `romfs/img.bin`, still has the retail loader and misses both hooks.
+
 ---
 
 ## 6. Softkey system
@@ -430,7 +490,7 @@ Searched and **not found** as a contiguous payload:
 |------|-----|
 | `…\romfs\img.bin` | Texture packages (spliced) |
 | `…\romfs\SystemData\TextResource\*.trb` | Strings |
-| `…\exefs\code.bin` | Code patches |
+| `…\exefs\code.bin` | This repo’s patched ExeFS (`release/name_input_code.bin`). Retail code loads BCLIM (**§5.4**); the English overlay also needs the title-loop guard (**§15.7**) and the CESA logo size (**§12.7**). |
 | `%AppData%\Azahar\dump\textures\00040000000F4E00\` | GPU dumps |
 
 Custom texture replacements (`pack.json`, `use_new_hash: true`) can briefly remap dumps but caused misbinds/crashes. **OK for RE reconnaissance only** — not a shipping strategy. Prefer archive splice; keep custom/dump/async off unless deliberately testing.
@@ -1686,7 +1746,7 @@ See **§10.2**. Same `0x33373338` smash as Communications, but the clone patch i
 
 ---
 
-*Last updated 2026-09-18 — §17.8 Called list leftover `づ`; §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
+*Last updated 2026-09-23 — §5.4 BCLIM load path (`FUN_00542c30` / `FUN_00542828`) and why LayeredFS needs this repo’s `code.bin`; §17.8 Called list leftover `づ`; §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 

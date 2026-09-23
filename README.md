@@ -198,6 +198,19 @@ After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folder
 - **Luma (3DS):** copy `out/1_[Either use this-LayerFS]/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
 - **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
 
+**Why the folder’s `code.bin` has to be the one this repo built**
+
+Retail `code.bin` already loads textures. A BCLIM in `romfs/img.bin` is accepted only when its pointer is 128-byte aligned, the `CLIM` header and `imag` block match, and the format byte hits a GPU row (A8, RGBA4444, ETC1A4, and the rest). A valid English texture gets that far on an unpatched executable. Details: [`technical.md` §5.4](technical.md).
+
+This overlay still needs `release/name_input_code.bin` beside `romfs/`, because two English graphics are outside that loader:
+
+1. **Main Menu Eng Patch badge.** The title layout adds a picture pane retail does not have. When the hub rebuilds, that pane can be a null child, and retail `FindPaneByName` jumps to address 0. The menu aborts before it finishes drawing. The patched executable skips that attach ([`technical.md` §15.7](technical.md)).
+2. **CESA thank-you blurb.** Retail draws the companion logo as a 400×400 quad. The English texture is 240×320. The patched executable keeps that real size so the blurb stays on the pane ([`technical.md` §12.7](technical.md)).
+
+Drop CIA copies that file to `code.bin` in the LayeredFS folder. Luma and Azahar pick it up only when it is there. A folder with English `img.bin` and no `code.bin` runs the retail ExeFS: the textures are present, then the hub aborts and the thank-you quad is the wrong size. If a CIA rebuild fails and the overlay has no `code.bin`, that LayeredFS folder is deleted.
+
+Use the `code.bin` from the same Drop CIA run. It is rebuilt from vanilla during the bake (`deploy_name_input_en.py`). An older ExeFS can miss one of those two hooks. The same file also carries the romaji name keyboard, Message Speed, and the SpotPass Watcher embed.
+
 Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
 
 ### Known issues
