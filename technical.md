@@ -1635,7 +1635,7 @@ The book is state 3 (`0x003E6908`). A blob whose first byte is 0 used to `moveq 
 
 **Verified 2026-09-24 Azahar A:** the tap opens the Towano Watcher book (page 01/02, New Open, SPOT / AREA). Back and the page arrow respond. The speech bubble and **もどる** are still Japanese art. STRI 3346 stays **No data.** — the “Towano Watcher #28” body was only a probe.
 
-This restores **access to the magazine viewer**. The cart spread that used to open here is issue 2 (pages 01/02, New Open). **§16.11** replaces that with issue 28’s holy-site corner: the lake paragraph on the right page only. `FUN_006088c8` stays a stub. The weekly strings still are not drawn into `Tex_Name_00` / `Tex_Place_00`.
+This restores **access to the magazine viewer**. The cart spread that used to open here is issue 2 (pages 01/02, New Open). **§16.11** replaces that with issue 28’s holy-site corner: the lake paragraph on the right page, and 「湖」 on the SPOT row. `FUN_006088c8` stays a stub, so `Tex_Name_00` / `Tex_Place_00` are still not filled by DrawText. AREA has no station in this issue.
 
 ### 16.10 What else SpotPass delivers on this title (2026-09-24)
 
@@ -1680,7 +1680,7 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 | `0x004DA664` `ldr r2,[r4,#0x8c]` | `8c2094e5` | `mov r2,#2` `0220a0e3` |
 | `0x00631354` `ldr ip,[r0,#0x8c]` | `8cc090e5` | `mov ip,#2` `02c0a0e3` |
 
-`tools/deploy_watcher_issue28_en.py` paints the lake paragraph and 「湖」 onto `Mag_Page01` (UI font, rotated so the lines read upright under the banner) and splices package 5265 at the same offset. One spread is two layouts:
+`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` (UI font, rotated so the lines read upright under the banner) and splices package 5265 at the same offset. The SPOT name is not on that sheet. One spread is two layouts:
 
 | Page | Layout | What stays |
 |------|--------|------------|
@@ -1689,11 +1689,13 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 
 Hiding only the extra flipped panes (`Pic_Page01_03` / `_05`, parts `Pic_Page01_01`) left the backwards paragraph. The copy on the photo is the left layout’s own sheet (`Pic_Page01_04` and parts `Pic_Page01_00`), the same texture the right page shows. Narrowing that pane clipped both copies together. `Mag_Page_Efe01` is opaque RGB565 (gold); painting the paragraph there covered the banner. `Mag_Spot_Line01`–`06` are 16×16 fmt 7, stretched across the rules, so they cannot hold the paragraph. The left sheet is hidden by clearing the visible bit, alpha, and size on `Lyt_Spot_O01` `Pic_Page01_02`–`05` and `Pts_Page_O01a` `Pic_Page01_00` / `_01`. Shadow parts no longer name `Mag_Page01.bclim` (same-length rename to `Mag_Page02.bclim`).
 
-SPOT is a short place name and AREA is the station (issues 1–3: 海水浴場 / 臨海駅, then 噴水公園 / 新とわの駅). Issue 28 names only 「湖」 and gives no station. 「湖」 is drawn on the right-page sheet above the paragraph. The left SPOT and AREA rules stay empty.
+SPOT is a short place name and AREA is the station (issues 1–3: 海水浴場 / 臨海駅, then 噴水公園 / 新とわの駅). Issue 28’s lake record (`02 02 01 91` then the paragraph at `info.dat` offset 1415) names only 「湖」 and gives no station, so the AREA row stays blank. `Tex_Name_00` / `Tex_Place_00` stay empty while merge is stubbed. Putting the name on `Pic_Line01` did not work: that pane’s position change showed up, but the game rebinds the line to `Mag_Spot_Line02` (16×16, stretched), so the pane never showed the badge texture.
+
+The layout’s texture list names the green set (`Mag_Obj_Spot01`). After load, the page swaps in a color set from the name table at file `0x00738CD8` (five groups: Area / Line / Mark / Spot, plus the matching Deco). The holy-site corner uses set 02, the pink badge `Mag_Obj_Spot02`. Painting only `Spot01` never appeared. The deploy scales each `Mag_Obj_Spot01`–`05` (72×32 RGBA4444) into the left 48 pixels and draws 「湖」 in the right 24. `Pic_Spot` in `Lyt_Spot_O01` and `Pts_Spot_O01` is widened from 72×32 at x=−60 to 108×32 at x=−42, so the left edge stays at −96 and the character sits on the row. The underline pane is unchanged.
 
 Hooked from `rebuild_bake_img.py` immediately before `deploy_cesa_en.py`. Exact-zlib; slot length stays 424287.
 
-**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, SPOT, and AREA, with no backwards paragraph. The right page keeps the banner and the lake paragraph on the rules.
+**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, SPOT, and AREA, with no backwards paragraph, and 「湖」 sits to the right of the pink SPOT badge. AREA’s line is empty. The right page keeps the banner and the lake paragraph on the rules.
 
 ---
 

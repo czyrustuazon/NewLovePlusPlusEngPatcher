@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 from bclimutil import (  # noqa: E402
     decode_bclim_to_image,
     png_to_bclim_la4_same_size,
+    png_to_bclim_rgba4444_same_size,
     png_to_bclim_rgb565_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
@@ -58,17 +59,15 @@ def _draw(base: Image.Image, text: str, ink: tuple[int, int, int, int]) -> Image
     """The book shows this sheet rotated 90 degrees counter-clockwise.
 
     The readable page is the unflipped sheet. The paragraph starts below the
-    holy-site banner so it sits on the ruled lines. 「湖」 is the SPOT name,
-    drawn on the lower part of this same sheet.
+    holy-site banner so it sits on the ruled lines. The SPOT name is not
+    drawn here; it sits beside the SPOT badge on the left page.
     """
     tw, th = base.size
     screen = Image.new("RGBA", (th, tw), (0, 0, 0, 0))
     draw = ImageDraw.Draw(screen)
     font = ImageFont.truetype(str(UI_FONT), 13)
-    name_font = ImageFont.truetype(str(UI_FONT), 14)
     # Screen space is 248 wide by 320 tall. The banner occupies the top of
     # the right page; the rules start under it.
-    draw.text((18, 130), "湖", font=name_font, fill=ink)
     draw.multiline_text((16, 158), text, font=font, fill=ink, spacing=7)
     spun = screen.transpose(Image.Transpose.ROTATE_270)
     im = base.convert("RGBA")
@@ -120,6 +119,68 @@ def _unbind_page_texture(raw: bytes, keep: bytes) -> bytes:
     return bytes(out)
 
 
+# Each color set is its own BCLIM (Spot01 green … Spot02 pink). The holy-site
+# page rebinds the pane to Mag_Obj_Spot02 after the layout loads, so the name
+# has to be in that file. The badge art keeps the left 48 pixels. 「湖」 is the
+# right 24, and the pane is widened so that strip sits on the row.
+_SPOT_BADGE_PX = 48
+
+
+def _paint_spot_name(badge: Image.Image) -> Image.Image:
+    src = badge.convert("RGBA")
+    width, height = src.size
+    if width <= _SPOT_BADGE_PX:
+        raise SystemExit(f"SPOT badge is only {width}px wide")
+    canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    shrunk = src.resize((_SPOT_BADGE_PX, height), Image.Resampling.LANCZOS)
+    canvas.paste(shrunk, (0, 0), shrunk)
+    draw = ImageDraw.Draw(canvas)
+    font = ImageFont.truetype(str(UI_FONT), 22)
+    text = "湖"
+    box = draw.textbbox((0, 0), text, font=font)
+    tw, th = box[2] - box[0], box[3] - box[1]
+    x = _SPOT_BADGE_PX + (width - _SPOT_BADGE_PX - tw) / 2 - box[0]
+    y = (height - th) / 2 - box[1]
+    draw.text((x, y), text, font=font, fill=(40, 40, 40, 255))
+    return canvas
+
+
+def _pic_base(raw: bytes, name: bytes) -> int:
+    start = 0
+    needle = name + b"\x00"
+    while True:
+        i = raw.find(needle, start)
+        if i < 0:
+            raise SystemExit(f"missing picture pane {name!r}")
+        if raw[i - 12 : i - 8] == b"pic1":
+            return i - 12
+        start = i + 1
+
+
+def _place_spot_name(raw: bytes) -> bytes:
+    """Widen the SPOT badge so the 「湖」 painted on its texture sits on the row.
+
+    The separate line pane stayed blank when it was retargeted at that
+    texture, so the name has to be part of the badge picture itself.
+    The underline pane is left alone.
+    """
+    import struct
+
+    out = bytearray(raw)
+    spot = _pic_base(out, b"Pic_Spot")
+    struct.pack_into("<8f", out, spot + 0x60, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0)
+    # Current badge is centered at x=-60, width 72, so its left edge is -96.
+    # The texture's left 48/72 is the badge art. Grow the pane to the right
+    # until that art is still 72 wide and 「湖」 hangs past it.
+    badge_frac = _SPOT_BADGE_PX / 72.0
+    width = 72.0 / badge_frac
+    struct.pack_into("<f", out, spot + 0x24, -96.0 + width / 2.0)
+    struct.pack_into("<f", out, spot + 0x28, -40.0)
+    struct.pack_into("<f", out, spot + 0x44, width)
+    struct.pack_into("<f", out, spot + 0x48, 32.0)
+    return bytes(out)
+
+
 def _encode(page: Image.Image, orig: bytes, tmp: Path, stem: str, kind: str) -> bytes:
     png = tmp / f"{stem}.png"
     page.save(png)
@@ -127,6 +188,8 @@ def _encode(page: Image.Image, orig: bytes, tmp: Path, stem: str, kind: str) -> 
     orig_path.write_bytes(orig)
     if kind == "la4":
         return png_to_bclim_la4_same_size(png, orig_path)
+    if kind == "rgba4444":
+        return png_to_bclim_rgba4444_same_size(png, orig_path)
     return png_to_bclim_rgb565_same_size(png, orig_path)
 
 
@@ -138,6 +201,21 @@ def patch_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
     raw1 = darc.extract_file(page1)
     painted1 = _draw(decode_bclim_to_image(raw1), LAKE, (40, 40, 40, 255))
     darc.replace_same_size(page1, _encode(painted1, raw1, tmp, "page01", "la4"))
+    painted_any = False
+    for n in range(1, 6):
+        rel = f"timg/Mag_Obj_Spot0{n}.bclim"
+        spot = darc.find(rel)
+        if spot is None:
+            continue
+        raw_spot = darc.extract_file(spot)
+        painted_spot = _paint_spot_name(decode_bclim_to_image(raw_spot))
+        darc.replace_same_size(
+            spot, _encode(painted_spot, raw_spot, tmp, f"spot0{n}", "rgba4444")
+        )
+        painted_any = True
+        print(f"OK {rel} SPOT name", flush=True)
+    if not painted_any:
+        raise SystemExit("missing Mag_Obj_Spot0N")
     # The upright sheet is Pic_Page01_04 (layout) and Pic_Page01_00 (page part).
     # Every other Mag_Page01 pane is the backwards copy.
     # O01 is the left page (photo, SPOT, AREA). Its sheet is the same
@@ -156,6 +234,8 @@ def patch_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
         if lay is None:
             raise SystemExit(f"missing {layout}")
         raw = _hide_pic_panes(darc.extract_file(lay), names)
+        if layout == "blyt/Lyt_Spot_O01.bclyt":
+            raw = _place_spot_name(raw)
         if layout.startswith("blyt/Lyt_Spot_"):
             raw = _unbind_page_texture(raw, b"Pic_Page01_04")
         if layout.startswith("blyt/Pts_Page_"):
@@ -171,6 +251,12 @@ def patch_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
             raw = bytes(raw)
         darc.replace_same_size(lay, raw)
         print(f"OK {layout} mirror panes hidden", flush=True)
+    for layout in ("blyt/Pts_Spot_O01.bclyt",):
+        lay = darc.find(layout)
+        if lay is None:
+            raise SystemExit(f"missing {layout}")
+        darc.replace_same_size(lay, _place_spot_name(darc.extract_file(lay)))
+        print(f"OK {layout} SPOT name", flush=True)
     for layout in ("blyt/Pts_Shadow_O.bclyt", "blyt/Pts_Shadow_U.bclyt"):
         lay = darc.find(layout)
         raw = darc.extract_file(lay).replace(b"Mag_Page01.bclim", b"Mag_Page02.bclim")
