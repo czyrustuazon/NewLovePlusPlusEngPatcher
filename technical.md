@@ -1680,7 +1680,7 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 | `0x004DA664` `ldr r2,[r4,#0x8c]` | `8c2094e5` | `mov r2,#2` `0220a0e3` |
 | `0x00631354` `ldr ip,[r0,#0x8c]` | `8cc090e5` | `mov ip,#2` `02c0a0e3` |
 
-`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` and splices package 5265 at the same offset. The sheet is drawn in screen space (248 wide by 320 tall) with the UI font at size 13, then rotated 270° so the lines read upright under the banner. `multiline_text` at `(58, 126)` with spacing 7 puts each line in the gap above a pink rule and indents the block off the spine. That spacing matches the rule pitch, about 26px. The SPOT name is not on that sheet. One spread is two layouts:
+`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` and splices package 5265 at the same offset. The sheet is drawn in screen space (248 wide by 320 tall) with the UI font at size 13, then rotated 270° so the lines read upright under the banner. Each of the eight lines is centered in the gap above one rule (§16.11.1). The SPOT name is not on that sheet. One spread is two layouts:
 
 | Page | Layout | What stays |
 |------|--------|------------|
@@ -1699,7 +1699,22 @@ The binder at `0x00246838` is what stores those pane pointers. It treats `[widge
 
 The paragraph and the SPOT glyph are hooked from `rebuild_bake_img.py` immediately before `deploy_cesa_en.py`. The AREA draw ships in the name-input `code.bin` rebuild with the rest of `patch_spotpass_embed.py`. Exact-zlib; slot length stays 424287.
 
-**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, the pink SPOT badge with 「湖」, and the vanilla AREA badge with 奥十羽野駅 in the game font on the pink rule. No backwards paragraph. The right page keeps the banner and the lake paragraph in the rule gaps, indented from the spine.
+#### 16.11.1 Ruled-paragraph recipe (issues 1–27)
+
+Issue 28 is the measured page. Issues 1–27 use this same right-page sheet and these same eight rules, so a later chapter changes the strings and keeps these coordinates.
+
+`Pic_Line01`–`08` sit under `Anm_Rot` at `(0, −128)` on `Lyt_Spot_U01`. Local Y starts at 8 and steps by −16. Each pane is 184×16 and they tile, so the pink rules are 16px apart. After the book’s quarter turn, screen Y of rule `i` is `143 + i*16`. A font’s own line height is about 26px and walks the glyphs across the rules. The pitch has to be 16.
+
+For each source line `i`, at most eight:
+
+- UI font, size 13, ink `(40, 40, 40)`.
+- Center the glyph ink in the gap above that rule. The gap center is `rule_y − 8`. With the font bbox `(left, top, right, bottom)`, `draw_y = gap_center − (bottom − top) / 2 − top`.
+- Left edge `x = 58`, off the spine. A 14-character line at size 13 is about 182px wide and still fits the 248-wide page.
+- Draw into the 248×320 screen image, `ROTATE_270`, and composite onto `Mag_Page01`. The left page stays the hidden copy of that sheet.
+
+The SPOT name stays the badge glyph. The AREA station stays the `Tex_Place` cave string. Neither is painted on `Mag_Page01`.
+
+**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, the pink SPOT badge with 「湖」, and the vanilla AREA badge with 奥十羽野駅 in the game font on the pink rule. No backwards paragraph. The right page keeps the banner, and each of the eight lake lines sits in the gap above its rule, indented from the spine.
 
 ---
 

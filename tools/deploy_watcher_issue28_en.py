@@ -55,21 +55,30 @@ LAKE = (
 )
 
 
+# Pic_Line01–08 on Lyt_Spot_U01. Each pane is 16px tall and they tile, so
+# the pink rules are 16px apart in this screen space. One paragraph line
+# sits in the gap above each rule. x=58 is the indent off the spine.
+_RULE_Y = tuple(143 + i * 16 for i in range(8))
+_TEXT_X = 58
+
+
 def _draw(base: Image.Image, text: str, ink: tuple[int, int, int, int]) -> Image.Image:
     """The book shows this sheet rotated 90 degrees counter-clockwise.
 
-    The readable page is the unflipped sheet. The paragraph starts below the
-    holy-site banner so it sits on the ruled lines. The SPOT name is not
-    drawn here; it sits beside the SPOT badge on the left page.
+    The readable page is the unflipped sheet. Each line is centered in the
+    gap above one pink rule. The SPOT name is not drawn here; it sits beside
+    the SPOT badge on the left page.
     """
     tw, th = base.size
     screen = Image.new("RGBA", (th, tw), (0, 0, 0, 0))
     draw = ImageDraw.Draw(screen)
     font = ImageFont.truetype(str(UI_FONT), 13)
-    # Screen space is 248 wide by 320 tall. The banner occupies the top of
-    # the right page; the rules start under it. x=58 keeps the block off
-    # the spine. y=126 sits the glyphs in the gap above each pink rule.
-    draw.multiline_text((58, 126), text, font=font, fill=ink, spacing=7)
+    for i, line in enumerate(text.split("\n")):
+        bbox = font.getbbox(line)
+        ink_h = bbox[3] - bbox[1]
+        gap_center = _RULE_Y[i] - 8
+        top = gap_center - ink_h / 2 - bbox[1]
+        draw.text((_TEXT_X, top), line, font=font, fill=ink)
     spun = screen.transpose(Image.Transpose.ROTATE_270)
     im = base.convert("RGBA")
     im.alpha_composite(spun)
