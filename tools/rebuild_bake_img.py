@@ -91,6 +91,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
+    "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
     "deploy_cesa_en.py",
 ]
 

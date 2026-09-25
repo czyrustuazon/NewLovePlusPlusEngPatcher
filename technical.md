@@ -1635,7 +1635,65 @@ The book is state 3 (`0x003E6908`). A blob whose first byte is 0 used to `moveq 
 
 **Verified 2026-09-24 Azahar A:** the tap opens the Towano Watcher book (page 01/02, New Open, SPOT / AREA). Back and the page arrow respond. The speech bubble and **もどる** are still Japanese art. STRI 3346 stays **No data.** — the “Towano Watcher #28” body was only a probe.
 
-This restores **access to the magazine viewer**. It does **not** restore the weekly issue text SpotPass used to deliver. The open spread is the on-cart book (the 2012 transcript’s issue 2, pages 01/02). Each week the server replaced the current issue; copies already received stayed on the console, and missed numbers were not filled in later. `FUN_006088c8` stays a stub, so issue 28 and the other weekly payloads never become pages.
+This restores **access to the magazine viewer**. The cart spread that used to open here is issue 2 (pages 01/02, New Open). **§16.11** replaces that with issue 28’s holy-site corner: the lake paragraph on the right page only. `FUN_006088c8` stays a stub. The weekly strings still are not drawn into `Tex_Name_00` / `Tex_Place_00`.
+
+### 16.10 What else SpotPass delivers on this title (2026-09-24)
+
+Besides the magazine, this title’s SpotPass blob is the shared city update. The upload string (TRB, rendered in `translations.json`) says Konami reviews player uploads and sends them back through SpotPass as **city voices** (街の声), **city changes** (街の変化), and the magazine. City voices are other players’ map comments. City changes are the aggregate: which spots are busy, which shops open or close, and the meal rankings. §16.8 applies Watcher, city, and meal tables from the same `info.dat`. The boot line “Received the latest NEW Love Plus+ info via SpotPass” is the apply prompt for that blob.
+
+The real-place trips are **not** in that delivery. **Nikko / Kinugawa**, **Hakone**, and **Atami** ship on the cart and open from the save clock and relationship progress (Nikko earliest in May, Hakone about two months in). **Enoshima** was the 2012 game’s SpotPass day trip (added with ver 1.2). On this title it is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`. NEW Love Plus+ also removed the 2012 “download distribution data” menu, so the three heroine SpotPass packs from that game (Manaka / Rinko / Nene) are not applied here.
+
+Public archive (No-Intro / Internet Archive `3ds-boss-data`), task id from the CDN URL in §16.3:
+
+| Archive | Task ID | Size | Role |
+|---------|---------|------|------|
+| New Love Plus + (Japan) | `QwyHOPV4LsvQ2I3U` | 16 MB | This title’s whole SpotPass set. Vendored issue 28 is one file inside it. |
+| New Love Plus (Japan) | `NiAJFnn4fyAAiggq` | 1.4 TB | 2012 game. Server mirror of every magazine update plus player uploads, not one console’s save. |
+| New Love Plus – Nene / Rinko / Aika | `yMkh08f1lW0DafIi` / `XT7XAO9p7C9Rfvvx` / `BDgoKPBE6iIm6GvU` | 11 MB each | 2012 heroine tasks. Not this title’s magazine list. |
+
+Delivery of とわのウォッチャー started 2012-02-22. The official site on 2012-04-04 listed issue 6 as the current number. Issues were weekly: the server replaced the current issue, received copies stayed on the console, and missed numbers were not backfilled. Transcripts exist for issues 1–3 only ([NEWラブプラス wiki](https://w.atwiki.jp/newloveplus2ch/pages/126.html)). Issue 28 is the Cetaceaqua dump’s label, not a proven last issue.
+
+### 16.11 Issue 28 holy-site page, right side only (2026-09-25)
+
+The book §16.9 opens is seven cart spreads (pages 01–14) in TownGuide package **5265**. Banners change per corner. The lined body is one shared LA4 sheet, `timg/Mag_Page01.bclim` (320×248, fmt 2). The left page draws that same sheet flipped, which is why the cart ships it blank. SpotPass did not paint glyphs into it. A weekly file supplied strings, and the game drew them into one-sided text panes (`Tex_Name_00` / `Tex_Place_00`, 120×12, under `Anm_Rot` on `Lyt_Spot_O01`). Those panes stay empty because merge `FUN_006088c8` is still the §16.8 stub. Un-stubbing it crashed (`bl FUN_004e19b0` @ `0x00608984` after a bad ac:u WaitSync).
+
+Issue 28’s cleartext body is six city comments, one lake paragraph, and one heated-pool paragraph. The city comments belong on the map (街の声), not as extra magazine pages. The lake sentence is the pink 「恋愛の聖地」NEW誕生 corner (`Mag_Tit03`). The pool sentence is FEVER 今週の人気デートスポット (`Mag_Tit05`). Both corners use `Mag_Page01`, so only the lake corner is shown.
+
+The page walker at `0x004DA658` loads the article mask from `[r4,#0x8c]` and counts bits 0–6. `FUN_00631348` @ `0x00631348` returns the bit index of the Nth set bit. The caller at `0x004DA710` (`cmp r1,#7`, then a jump table; file = VA − `0x100000`):
+
+| Bit | Page type | Title index | Banner |
+|-----|-----------|-------------|--------|
+| 0 | `0xA` | 0 | `Mag_Tit02` New Open |
+| 1 | `0xB` | 1 | `Mag_Tit03` 恋愛の聖地 (lake). Mask value **2**. |
+| 2 | `0xC` | 2 | `Mag_Tit04` START |
+| 3 | `0xD` | 3 | `Mag_Tit05` FEVER (pool) |
+| 4 | `0xE` | 4 | `Mag_Tit06` PICK UP |
+| 5 | `0xF` / `0x10` | ≥5 | `Mag_Tit07` (clamped) |
+| 6 | survey | | `Mag_Tit08` |
+
+The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit number is `r4+2` (`add r0, r7, #2` at `0x00247088`). `cmp r0,#0xe` at `0x004DC788` and `0x004DC874` is the page-type case for type `0xE` (Tit06), not a 14-page count. Do not patch those immediates.
+
+`src/patch_spotpass_embed.py` forces both mask loads to bit 1 only. The default “all sections” getter `mov r0,#0x3f; bx lr` at `0x004D5A00` stays vanilla. Both sites ship in the name-input `code.bin` rebuild:
+
+| Site | Vanilla | Patch |
+|------|---------|-------|
+| `0x004DA664` `ldr r2,[r4,#0x8c]` | `8c2094e5` | `mov r2,#2` `0220a0e3` |
+| `0x00631354` `ldr ip,[r0,#0x8c]` | `8cc090e5` | `mov ip,#2` `02c0a0e3` |
+
+`tools/deploy_watcher_issue28_en.py` paints the lake paragraph and 「湖」 onto `Mag_Page01` (UI font, rotated so the lines read upright under the banner) and splices package 5265 at the same offset. One spread is two layouts:
+
+| Page | Layout | What stays |
+|------|--------|------------|
+| Right | `Lyt_Spot_U01` / `Pts_Page_U01a` | Banner `Pic_Tit_*`, rules `Pic_Line01`–`08`, sheet `Pic_Page01_04` / parts `Pic_Page01_00` |
+| Left | `Lyt_Spot_O01` / `Pts_Page_O01a` | Photo, 緊急速報, SPOT, AREA. Sheet panes hidden. |
+
+Hiding only the extra flipped panes (`Pic_Page01_03` / `_05`, parts `Pic_Page01_01`) left the backwards paragraph. The copy on the photo is the left layout’s own sheet (`Pic_Page01_04` and parts `Pic_Page01_00`), the same texture the right page shows. Narrowing that pane clipped both copies together. `Mag_Page_Efe01` is opaque RGB565 (gold); painting the paragraph there covered the banner. `Mag_Spot_Line01`–`06` are 16×16 fmt 7, stretched across the rules, so they cannot hold the paragraph. The left sheet is hidden by clearing the visible bit, alpha, and size on `Lyt_Spot_O01` `Pic_Page01_02`–`05` and `Pts_Page_O01a` `Pic_Page01_00` / `_01`. Shadow parts no longer name `Mag_Page01.bclim` (same-length rename to `Mag_Page02.bclim`).
+
+SPOT is a short place name and AREA is the station (issues 1–3: 海水浴場 / 臨海駅, then 噴水公園 / 新とわの駅). Issue 28 names only 「湖」 and gives no station. 「湖」 is drawn on the right-page sheet above the paragraph. The left SPOT and AREA rules stay empty.
+
+Hooked from `rebuild_bake_img.py` immediately before `deploy_cesa_en.py`. Exact-zlib; slot length stays 424287.
+
+**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, SPOT, and AREA, with no backwards paragraph. The right page keeps the banner and the lake paragraph on the rules.
 
 ---
 
