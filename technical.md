@@ -1680,7 +1680,7 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 | `0x004DA664` `ldr r2,[r4,#0x8c]` | `8c2094e5` | `mov r2,#2` `0220a0e3` |
 | `0x00631354` `ldr ip,[r0,#0x8c]` | `8cc090e5` | `mov ip,#2` `02c0a0e3` |
 
-`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` (UI font, rotated so the lines read upright under the banner) and splices package 5265 at the same offset. The SPOT name is not on that sheet. One spread is two layouts:
+`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` and splices package 5265 at the same offset. The sheet is drawn in screen space (248 wide by 320 tall) with the UI font at size 13, then rotated 270° so the lines read upright under the banner. `multiline_text` at `(58, 126)` with spacing 7 puts each line in the gap above a pink rule and indents the block off the spine. That spacing matches the rule pitch, about 26px. The SPOT name is not on that sheet. One spread is two layouts:
 
 | Page | Layout | What stays |
 |------|--------|------------|
@@ -1699,7 +1699,7 @@ The binder at `0x00246838` is what stores those pane pointers. It treats `[widge
 
 The paragraph and the SPOT glyph are hooked from `rebuild_bake_img.py` immediately before `deploy_cesa_en.py`. The AREA draw ships in the name-input `code.bin` rebuild with the rest of `patch_spotpass_embed.py`. Exact-zlib; slot length stays 424287.
 
-**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, the pink SPOT badge with 「湖」, and the vanilla AREA badge with 奥十羽野駅 in the game font on the pink rule. No backwards paragraph. The right page keeps the banner and the lake paragraph on the rules.
+**Verified 2026-09-25 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, the pink SPOT badge with 「湖」, and the vanilla AREA badge with 奥十羽野駅 in the game font on the pink rule. No backwards paragraph. The right page keeps the banner and the lake paragraph in the rule gaps, indented from the spine.
 
 ---
 

@@ -67,8 +67,9 @@ def _draw(base: Image.Image, text: str, ink: tuple[int, int, int, int]) -> Image
     draw = ImageDraw.Draw(screen)
     font = ImageFont.truetype(str(UI_FONT), 13)
     # Screen space is 248 wide by 320 tall. The banner occupies the top of
-    # the right page; the rules start under it.
-    draw.multiline_text((16, 158), text, font=font, fill=ink, spacing=7)
+    # the right page; the rules start under it. x=58 keeps the block off
+    # the spine. y=126 sits the glyphs in the gap above each pink rule.
+    draw.multiline_text((58, 126), text, font=font, fill=ink, spacing=7)
     spun = screen.transpose(Image.Transpose.ROTATE_270)
     im = base.convert("RGBA")
     im.alpha_composite(spun)
