@@ -200,6 +200,27 @@ def test_embed_applies_idempotent_and_reverts():
     assert sp.revert_patch(data) is False
 
 
+def test_area_name_cave_draws_station_into_tex_place():
+    cave = sp.build_area_cave()
+    assert len(cave) == len(sp.VANILLA_AREA_CAVE_BODY)
+    assert sp.ADDR_AREA_CAVE + len(cave) <= sp.ADDR_AREA_CAVE_LIMIT
+    assert cave.endswith("奥十羽野駅".encode("utf-8") + b"\x00")
+    data = _vanilla_blob()
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_AREA_DRAW : sp.ADDR_AREA_DRAW + 4] == sp._bl(
+        sp.ADDR_AREA_DRAW, sp.ADDR_AREA_CAVE
+    )
+    assert data[sp.ADDR_GATE_HASROWS_BL : sp.ADDR_GATE_HASROWS_BL + 4] == (
+        sp.VANILLA_GATE_HASROWS_BL
+    )
+    assert sp.revert_patch(data) is True
+    assert data[sp.ADDR_AREA_DRAW : sp.ADDR_AREA_DRAW + 12] == sp.VANILLA_AREA_DRAW
+    assert (
+        data[sp.ADDR_AREA_CAVE : sp.ADDR_AREA_CAVE + len(cave)]
+        == sp.VANILLA_AREA_CAVE_BODY
+    )
+
+
 def test_embed_rejects_unknown_function():
     data = _vanilla_blob()
     data[sp.ADDR_NEWFLAG] = 0x99
