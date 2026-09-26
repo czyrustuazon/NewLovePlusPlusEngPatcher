@@ -205,6 +205,7 @@ def test_area_name_cave_draws_station_into_tex_place():
     assert len(cave) == len(sp.VANILLA_AREA_CAVE_BODY)
     assert sp.ADDR_AREA_CAVE + len(cave) <= sp.ADDR_AREA_CAVE_LIMIT
     assert cave.endswith("奥十羽野駅".encode("utf-8") + b"\x00")
+    assert "湖".encode("utf-8") + b"\x00" in cave
     data = _vanilla_blob()
     assert sp.apply_patch(data) is True
     assert data[sp.ADDR_AREA_DRAW : sp.ADDR_AREA_DRAW + 4] == sp._bl(

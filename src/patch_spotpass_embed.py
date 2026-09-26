@@ -122,11 +122,11 @@ WATCHER_RET1_SITES = (
     (ADDR_PREUNPACK_READY, VANILLA_PREUNPACK_READY),
 )
 ARM_NOP = bytes.fromhex("00f020e3")  # nop
-# Holy-site AREA name. Tex_Place is DrawText'd from an inline buffer the
-# stubbed merge never fills, and the pane pointer stays null while the
-# binder searches the empty-data group. The cave binds Tex_Place, then
-# draws a static UTF-8 station name. It sits in the dead body of the
-# ret0 gate, after the vanilla has-rows BL at 0x14EBC4.
+# Holy-site names. Tex_Name / Tex_Place are DrawText'd from inline buffers
+# the stubbed merge never fills, and the pane pointers stay null while the
+# binder searches the empty-data group. The cave binds both panes, then
+# draws 「湖」 and the station in the game font. It sits in the dead body
+# of the ret0 gate, after the vanilla has-rows BL at 0x14EBC4.
 ADDR_AREA_DRAW = 0x004DCBCC  # add r1, r5, #0x84 ; mov r0, r8 ; bl drawer
 VANILLA_AREA_DRAW = bytes.fromhex("841085e20800a0e17ca7f5eb")
 ADDR_AREA_CAVE = 0x0014EBC8
@@ -135,11 +135,14 @@ _AREA_LOOKUP = 0x005C6E84
 _AREA_FINDER_INIT = 0x005E828C
 _AREA_FIND = 0x005EBA00
 _AREA_STORE = 0x00199B98
-_AREA_DRAW_PLACE = 0x002469CC
+_AREA_DRAW_PLACE = 0x002469CC  # index 1, Tex_Place
+_AREA_DRAW_NAME = 0x002469D8  # index 0, Tex_Name
 _AREA_GLOBAL_VA = 0x008BFA40
 _AREA_POS_VA = 0x003468E4  # "Pos_Spot_O01"
+_AREA_NAME_VA = 0x003468F4  # "Tex_Name"
 _AREA_PLACE_VA = 0x00346900  # "Tex_Place"
 _AREA_NAME = "奥十羽野駅".encode("utf-8") + b"\x00"
+_SPOT_NAME = "湖".encode("utf-8") + b"\x00"
 # Dead instructions the cave replaces (gate body after the has-rows BL).
 VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "30a19fe530919fe530719fe5000054e30060a0e10080a0e30500000a"
@@ -149,7 +152,10 @@ VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "0a00a0e1220000ea1020a0e30010a0e38400a0e34220fbeb000050e3"
     "00f020e309e4021b000087e50070b0e11f00000a0120a0e37010a0e3"
     "0a00a0e134c811eb00f020e300f020e3120000ea000056e31600001a"
-    "000097e5000050e30700001a1020a0e3"
+    "000097e5000050e30700001a1020a0e30010a0e38400a0e32c20fbeb"
+    "000050e300f020e3f3e3021b000087e50070b0e10900000a0120a0e3"
+    "0f10a0e39d0c82e21ec811eb0030a0e10120a0e30310a0e30700a0e1"
+    "f080cde1"
 )
 # MagList: extra-data version + no bit 0x20 → state 5. NOP of that beq
 # sent worker command 10 (empty SpotPass). Force command 9 (cart).
@@ -457,104 +463,128 @@ def _ldr_pc(here: int, pool: int, rt: int = 0) -> bytes:
     return _u32(0xE5900000 | (15 << 16) | (rt << 12) | imm)
 
 
+def _area_store(code: bytearray, cave: int, pool_off: int) -> None:
+    """Store one pane name. The finder object is already at sp+0x10."""
+    code += _u32(0xE3A030FF)  # mov r3, #0xff
+    code += _ldr_pc(cave + len(code), cave + pool_off, 2)
+    code += _u32(0xE28D1010)  # add r1, sp, #0x10
+    code += _u32(0xE1A00004)  # mov r0, r4
+    code += _u32(0xE58D6000)  # str r6, [sp]
+    code += _u32(0xE58D6004)  # str r6, [sp, #4]
+    code += _u32(0xE58D6008)  # str r6, [sp, #8]
+    code += _u32(0xE58D600C)  # str r6, [sp, #0xc]
+    code += _bl(cave + len(code), _AREA_STORE)
+
+
 def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
-    """Bind Tex_Place on the spot widget (r8), then draw the station name.
+    """Bind Tex_Name and Tex_Place, then draw 「湖」 and the station.
 
     Entered in place of ``add r1, r5, #0x84``. r8 is the spot widget.
+    Both names use the game font, so 「湖」 matches the AREA line.
     Layout lookup tries the has-data group first, then the empty group.
     A miss leaves the pane null; the drawer returns without drawing.
+    The store call increments the pane index, so Tex_Name is stored at 0
+    and Tex_Place lands at 1.
     """
-    name = _AREA_NAME
-    # Code is fixed; the pool and string sit immediately after the epilogue.
-    # Offsets below match the instruction list. Update both together.
-    code_len = 0xB4
-    pool = cave + code_len
-    string_at = pool + 16
-    words = [
-        0xE92D4070,  # push {r4, r5, r6, lr}
-        0xE24DD018,  # sub sp, sp, #0x18
-        0xE5980078,  # ldr r0, [r8, #0x78]
-        0xE3500000,  # cmp r0, #0
-        None,  # bne draw
-        0xE3A00001,  # mov r0, #1          store at pane index 1
-        0xE5880070,  # str r0, [r8, #0x70]
-        None,  # ldr r0, [pc, global]
-        0xE5900000,  # ldr r0, [r0]
-        0xE5982008,  # ldr r2, [r8, #8]
-        0xE3A01001,  # mov r1, #1
-        None,  # bl lookup
-        0xE3500000,  # cmp r0, #0
-        None,  # bne have
-        None,  # ldr r0, [pc, global]
-        0xE5900000,  # ldr r0, [r0]
-        0xE5982008,  # ldr r2, [r8, #8]
-        0xE3A01000,  # mov r1, #0
-        None,  # bl lookup
-        0xE3500000,  # cmp r0, #0
-        None,  # beq draw
-        0xE1A05000,  # mov r5, r0          have:
-        0xE3A06000,  # mov r6, #0
-        0xE1A04008,  # mov r4, r8
-        0xE28D0010,  # add r0, sp, #0x10
-        None,  # bl finder init
-        0xE3A03000,  # mov r3, #0
-        0xE28D2010,  # add r2, sp, #0x10
-        None,  # ldr r1, [pc, pos]
-        0xE1A00005,  # mov r0, r5
-        None,  # bl find
-        0xE3A030FF,  # mov r3, #0xff
-        None,  # ldr r2, [pc, place]
-        0xE28D1010,  # add r1, sp, #0x10
-        0xE1A00004,  # mov r0, r4
-        0xE58D6000,  # str r6, [sp]
-        0xE58D6004,  # str r6, [sp, #4]
-        0xE58D6008,  # str r6, [sp, #8]
-        0xE58D600C,  # str r6, [sp, #0xc]
-        None,  # bl store
-        None,  # ldr r1, [pc, string]   draw:
-        0xE1A00008,  # mov r0, r8
-        None,  # bl drawer
-        0xE28DD018,  # add sp, sp, #0x18
-        0xE8BD8070,  # pop {r4, r5, r6, pc}
-    ]
-    if len(words) * 4 != code_len:
-        raise ValueError(f"area cave code {len(words) * 4:#x} != {code_len:#x}")
-    draw_at = cave + 0xA0
-    have_at = cave + 0x54
-    fixups = {
-        4: _b_cond(0x1, cave + 0x10, draw_at),
-        7: _ldr_pc(cave + 0x1C, pool, 0),
-        11: _bl(cave + 0x2C, _AREA_LOOKUP),
-        13: _b_cond(0x1, cave + 0x34, have_at),
-        14: _ldr_pc(cave + 0x38, pool, 0),
-        18: _bl(cave + 0x48, _AREA_LOOKUP),
-        20: _b_cond(0x0, cave + 0x50, draw_at),
-        25: _bl(cave + 0x64, _AREA_FINDER_INIT),
-        28: _ldr_pc(cave + 0x70, pool + 4, 1),
-        30: _bl(cave + 0x78, _AREA_FIND),
-        32: _ldr_pc(cave + 0x80, pool + 8, 2),
-        39: _bl(cave + 0x9C, _AREA_STORE),
-        40: _ldr_pc(cave + 0xA0, pool + 12, 1),
-        42: _bl(cave + 0xA8, _AREA_DRAW_PLACE),
-    }
-    blob = bytearray()
-    for i, word in enumerate(words):
-        if i in fixups:
-            blob += fixups[i]
-        else:
-            if word is None:
-                raise ValueError(f"area cave slot {i} has no encoding")
-            blob += _u32(word)
+    code = bytearray()
+    code += _u32(0xE92D4070)  # push {r4, r5, r6, lr}
+    code += _u32(0xE24DD018)  # sub sp, sp, #0x18
+    code += _u32(0xE5980074)  # ldr r0, [r8, #0x74]  Tex_Name
+    code += _u32(0xE3500000)  # cmp r0, #0
+    bind_fix = len(code)
+    code += b"\x00" * 4  # beq bind
+    code += _u32(0xE5980078)  # ldr r0, [r8, #0x78]  Tex_Place
+    code += _u32(0xE3500000)  # cmp r0, #0
+    draw_fix = len(code)
+    code += b"\x00" * 4  # bne draw
+    bind_at = cave + len(code)
+    code += _u32(0xE3A00000)  # mov r0, #0
+    code += _u32(0xE5880070)  # str r0, [r8, #0x70]
+    global_fixes = [len(code)]
+    code += b"\x00" * 4  # ldr r0, [pc, global]
+    code += _u32(0xE5900000)  # ldr r0, [r0]
+    code += _u32(0xE5982008)  # ldr r2, [r8, #8]
+    code += _u32(0xE3A01001)  # mov r1, #1
+    code += _bl(cave + len(code), _AREA_LOOKUP)
+    code += _u32(0xE3500000)  # cmp r0, #0
+    have_fix = len(code)
+    code += b"\x00" * 4  # bne have
+    global_fixes.append(len(code))
+    code += b"\x00" * 4  # ldr r0, [pc, global]
+    code += _u32(0xE5900000)  # ldr r0, [r0]
+    code += _u32(0xE5982008)  # ldr r2, [r8, #8]
+    code += _u32(0xE3A01000)  # mov r1, #0
+    code += _bl(cave + len(code), _AREA_LOOKUP)
+    code += _u32(0xE3500000)  # cmp r0, #0
+    miss_fix = len(code)
+    code += b"\x00" * 4  # beq draw
+    have_at = cave + len(code)
+    code += _u32(0xE1A05000)  # mov r5, r0
+    code += _u32(0xE3A06000)  # mov r6, #0
+    code += _u32(0xE1A04008)  # mov r4, r8
+    code += _u32(0xE28D0010)  # add r0, sp, #0x10
+    code += _bl(cave + len(code), _AREA_FINDER_INIT)
+    code += _u32(0xE3A03000)  # mov r3, #0
+    code += _u32(0xE28D2010)  # add r2, sp, #0x10
+    pos_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, pos]
+    code += _u32(0xE1A00005)  # mov r0, r5
+    code += _bl(cave + len(code), _AREA_FIND)
+    # Pool layout, fixed once the code length is known. Two stores and two
+    # draws refer into it. Code length is determined after these emits, so
+    # the pool offsets are patched once `code` stops growing.
+    name_store = len(code)
+    code += b"\x00" * (9 * 4)
+    place_store = len(code)
+    code += b"\x00" * (9 * 4)
+    draw_at = cave + len(code)
+    spot_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, spot string]
+    code += _u32(0xE1A00008)  # mov r0, r8
+    code += _bl(cave + len(code), _AREA_DRAW_NAME)
+    station_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, station string]
+    code += _u32(0xE1A00008)  # mov r0, r8
+    code += _bl(cave + len(code), _AREA_DRAW_PLACE)
+    code += _u32(0xE28DD018)  # add sp, sp, #0x18
+    code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
+    pool = cave + len(code)
+    spot_at = pool + 24
+    station_at = spot_at + len(_SPOT_NAME)
+    code[bind_fix : bind_fix + 4] = _b_cond(0x0, cave + bind_fix, bind_at)
+    code[draw_fix : draw_fix + 4] = _b_cond(0x1, cave + draw_fix, draw_at)
+    code[have_fix : have_fix + 4] = _b_cond(0x1, cave + have_fix, have_at)
+    code[miss_fix : miss_fix + 4] = _b_cond(0x0, cave + miss_fix, draw_at)
+    for fix in global_fixes:
+        code[fix : fix + 4] = _ldr_pc(cave + fix, pool, 0)
+    code[pos_fix : pos_fix + 4] = _ldr_pc(cave + pos_fix, pool + 4, 1)
+    code[spot_fix : spot_fix + 4] = _ldr_pc(cave + spot_fix, pool + 16, 1)
+    code[station_fix : station_fix + 4] = _ldr_pc(cave + station_fix, pool + 20, 1)
+    _area_store_into(code, cave, name_store, pool + 8)
+    _area_store_into(code, cave, place_store, pool + 12)
+    blob = bytes(code)
     blob += _u32(_AREA_GLOBAL_VA)
     blob += _u32(_AREA_POS_VA)
+    blob += _u32(_AREA_NAME_VA)
     blob += _u32(_AREA_PLACE_VA)
-    blob += _u32(string_at + 0x100000)
-    blob += name
-    if cave + len(blob) > ADDR_AREA_CAVE_LIMIT:
+    blob += _u32(spot_at + 0x100000)
+    blob += _u32(station_at + 0x100000)
+    blob += _SPOT_NAME
+    blob += _AREA_NAME
+    # Stop before the gate function's pop at 0x14ECF8.
+    if cave + len(blob) > 0x0014ECF8:
         raise ValueError(
-            f"area cave ends @{cave + len(blob):#x}, past {ADDR_AREA_CAVE_LIMIT:#x}"
+            f"area cave ends @{cave + len(blob):#x}, past the gate pop"
         )
-    return bytes(blob)
+    return blob
+
+
+def _area_store_into(code: bytearray, cave: int, at: int, pool_addr: int) -> None:
+    chunk = bytearray()
+    _area_store(chunk, cave + at, pool_addr - (cave + at))
+    if len(chunk) != 9 * 4:
+        raise ValueError(f"store block {len(chunk)} != 36")
+    code[at : at + len(chunk)] = chunk
 
 
 def apply_area_name(data: bytearray) -> None:
