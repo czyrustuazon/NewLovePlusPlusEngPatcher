@@ -1648,7 +1648,7 @@ Public archive (No-Intro / Internet Archive `3ds-boss-data`), task id from the C
 | Archive | Task ID | Size | Role |
 |---------|---------|------|------|
 | New Love Plus + (Japan) | `QwyHOPV4LsvQ2I3U` | 16 MB | This title’s whole SpotPass set. Vendored issue 28 is one file inside it. |
-| New Love Plus (Japan) | `NiAJFnn4fyAAiggq` | 1.4 TB | 2012 game. Server mirror of every magazine update plus player uploads, not one console’s save. |
+| New Love Plus (Japan) | `NiAJFnn4fyAAiggq` | 1.4 TB | 2012 game. CDN mirror of player uploads plus whatever magazine file was still on the server. Part `.000` measured in **§16.12**. Not one console’s save. |
 | New Love Plus – Nene / Rinko / Aika | `yMkh08f1lW0DafIi` / `XT7XAO9p7C9Rfvvx` / `BDgoKPBE6iIm6GvU` | 11 MB each | 2012 heroine tasks. Not this title’s magazine list. |
 
 Delivery of とわのウォッチャー started 2012-02-22. The official site on 2012-04-04 listed issue 6 as the current number. Issues were weekly: the server replaced the current issue, received copies stayed on the console, and missed numbers were not backfilled. Transcripts exist for issues 1–3 only ([NEWラブプラス wiki](https://w.atwiki.jp/newloveplus2ch/pages/126.html)). Issue 28 is the Cetaceaqua dump’s label, not a proven last issue.
@@ -1684,7 +1684,7 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 
 | Page | Layout | What stays |
 |------|--------|------------|
-| Right | `Lyt_Spot_U01` / `Pts_Page_U01a` | Banner `Pic_Tit_*`, rules `Pic_Line01`–`08`, sheet `Pic_Page01_04` / parts `Pic_Page01_00` |
+| Right | `Lyt_Spot_U01` / `Pts_Page_U01a` | Banner `Pic_Tit_*`, rules `Pic_Line01`–`08`. Sheet `Pic_Page01_04` / parts `Pic_Page01_00` stay size-zero; Holy Site draws the lines into `Tex_Info_01` (§16.11.3). |
 | Left | `Lyt_Spot_O01` / `Pts_Page_O01a` | Photo, 緊急速報, SPOT, AREA. Sheet panes hidden. |
 
 Hiding only the extra flipped panes (`Pic_Page01_03` / `_05`, parts `Pic_Page01_01`) left the backwards paragraph. The copy on the photo is the left layout’s own sheet (`Pic_Page01_04` and parts `Pic_Page01_00`), the same texture the right page shows. Narrowing that pane clipped both copies together. `Mag_Page_Efe01` is opaque RGB565 (gold); painting the paragraph there covered the banner. `Mag_Spot_Line01`–`06` are 16×16 fmt 7, stretched across the rules, so they cannot hold the paragraph. The left sheet is hidden by clearing the visible bit, alpha, and size on `Lyt_Spot_O01` `Pic_Page01_02`–`05` and `Pts_Page_O01a` `Pic_Page01_00` / `_01`. Shadow parts no longer name `Mag_Page01.bclim` (same-length rename to `Mag_Page02.bclim`).
@@ -1714,7 +1714,57 @@ For each source line `i`, at most eight:
 
 The SPOT name stays the `Tex_Name` cave string 「湖」. The AREA station stays the `Tex_Place` cave string. Neither is painted on `Mag_Page01` or on the badges.
 
-**Verified 2026-09-26 Azahar A:** holy-site spread only. The left page keeps the photo, 緊急速報, the vanilla pink SPOT badge, 「湖」 in the game font on that row, and the vanilla AREA badge with 奥十羽野駅 in the same font on the pink rule. No backwards paragraph. The right page keeps the banner, and each of the eight lake lines sits in the gap above its rule, indented from the spine.
+**Verified 2026-09-26 Azahar A:** holy-site spread only, before the section list. The left page keeps the photo, 緊急速報, the vanilla pink SPOT badge, 「湖」 in the game font on that row, and the vanilla AREA badge with 奥十羽野駅 in the same font on the pink rule. No backwards paragraph. The painted right-page sheet was later taken off the draw list; the eight lines now come from `Tex_Info_01` (§16.11.3).
+
+#### 16.11.2 Magazine list: dead ends (2026-09-26)
+
+The in-room tap still opens the holy-site spread. These attempts to put a magazine list up first were tried on Azahar A and put back. Do not repeat them. The holy-site mask (`mov #2` at `0x004DA664` / `0x00631354`), the name cave, and the book-only `beq` at `0x003E6948` stay.
+
+| Attempt | Result |
+|---------|--------|
+| Two synthetic records (ニューオープン, 恋愛の聖地) in the in-room parser | State 3 (`0x003E6908`) always falls through to the TownGuide constructor at `0x003E6D28`. The titles are copied into the publish buffer. They are not a menu. 「恋愛の聖地」 was then DrawText'd onto the first rule, over the paragraph. |
+| Magazine operator `0x001064F4` in the book slot, `+0x5e = 0xC` | White screen. vtable`+0x10` (`0x001040D8`) reads a null SpotPass session. |
+| Same operator, `+0x10` stubbed to `mov r0,#1; bx lr` | COMMUNICATION dialog: StreetPass registration sentence, いいえ / はい. `FUN_00195fa4` layout 7 mode 1. Then `bl FUN_004fd248` at `0x00104418` fatals (`0xD8E007F7`, ADR `0x005FD264`). |
+| That `bl` NOP'd so command 9 runs (`0x00104454` → `FUN_005fe780`) | Same dialog, then undefined instruction. `*0x008BFAEC` is null. The pump adds `#0x910` (`R0 = 0x910`) and jumps a null vtable. `PC = 0`, `LR = 0x006FE7A4`. |
+| Book tail redirected into state 6's `FUN_00195fa4` (layout 7) | ERROR card, same StreetPass sentence, one OK button. Layout index only changes the sentence. |
+| Room opener `0x003E6574` calls WebUIOperator `0x0014A31C` | `PC = 0`, `LR = 0x0024977C`. WebUI state 0 calls parent vtable`+0x58`. The room's slot is 0. |
+| That `blx` NOP'd (`0x00149778`) | Classroom on both screens. WebUI state 1 returns without drawing. Its parent is WebSequence (`0x003B03BC` / LoveplusModeHome), not the room. |
+| Book tick held in state 2 (`0x004DBA58`, `mov r0,#3` → `#2`) | Classroom on both screens. State 1's layouts are not shown. State 2 returns while its animation slot is empty. The spread is built from state 3 on. |
+| Factory `0x00249C2C` (2656-byte worker) stored at `*0x008BFAEC`, magazine hosted, `+0x10` stubbed, fatal `bl` NOP'd | StreetPass registration, then undefined instruction. `R8` is the worker. State 6 calls `FUN_005fe718`, which calls `FUN_004f9974` on `worker+0x4c` and jumps vtable`+0x24`. That slot is 0. `PC = 0`, `LR = 0x005F99B4`, `R2 = 0xB`. |
+| Same operator left in state 0, worker stored, `+0x10` stubbed, fatal `bl` kept | Classroom on both screens. State 0 (`0x001057E0`) returns before it allocates anything while `*0x008BFA50` `+0x50` / `+0x58` / `+0x59` are not the ready set. The stubbed draw paints nothing. |
+| Those three returns NOP'd | SpotPass tutorial (“Download game info”, then the City Viewer / DATA sentence), then undefined instruction after OK. State 10 (`0x00105CB4`) calls vtable`+0x5c` on `[this+0x60]`. That child is still null because `+0x10` is the function that builds it (`0x004525F4`, id `0x37`) and the stub returns first. `PC = 0`, `LR = 0x00205CB8`, `R0 = 0`. The City Viewer sentence is not the missing object. |
+| Same path, but the tap also calls `0x0044D370` slot 2 and `0x004525F4` id `0x37` | Same crash, same registers. Slot 2 of `*0x008A6558` is empty at the tap, so `+0x60` stays 0. |
+| That attach moved to after OK, and a null slot returns instead of `blx` | Tutorial, then a blank screen. State 11 (`0x00105CC0`) returns while `+0xdc` and `+0xdd` stay 0. The draw (`vtable+0x10`) is still stubbed, so nothing is painted once the tutorial window closes. |
+| Draw restored (caves moved out of `vtable+0x10`) | Classroom is replaced by the dotted 2D backdrop. After the download tutorial the white page stays empty. `+0xdc` never gets set: the list child (id `0x37`) is only created from UI-root slot 2, and that slot is empty, so state 11 (`0x00105CC0`) idles. |
+| After the tutorial, set `+0xdc` and enter MagList at inner state 6 (skip the StreetPass dialog, stay instead of dismissing) | Same empty page. State 6 polls the worker and does not paint titles onto this shell. |
+| Mask `mov #0x3f` at `0x004DA664` / `0x00631354` | The page arrow walks the six banners. That is the book pager, not a menu. The lined paragraph stays the lake text on every page. |
+
+Not launched, for a measured reason:
+
+- SaveErase (`0x0005C120`) is the object whose tick opens Myroom layout `0xC`. Its only caller allocates `0xA8`; the room opener allocates `0x90`. State `0xB` is another `FUN_00195fa4` call. State `0xD` with no article is the empty viewer; pills 9 and 10 (`0x0005B6DC`, `0x0005B724`) were already skipped because drawing on `+0x60` cleared the room.
+- WebSequence as the tap target waits in state 0 until `+0x64` and `+0x78` are both set. The constructor stores 0 in both.
+- `FUN_005fe5d0` does not allocate the worker. It stores `+0x46` on an object that must already exist at `*0x008BFAEC`. Magazine parent state 0 calls it, so entering that state while the global is null writes through 0.
+
+The cart row list is command 9 on that worker, after the window exists. The window without the worker is the StreetPass sentence above. The factory object is not enough either: command 9 can return, and `FUN_005fe718` still jumps the empty method at `worker+0x4c`.
+
+#### 16.11.3 Section names in `Tex_Info_01` (2026-09-26)
+
+**Verified Azahar A.** The right-page info pane `Tex_Info_01` (`Pts_Spot_U01`, 180×128) is null while merge is stubbed. The refresh at `0x004DCBD8` would DrawText `record+0x104` into index 0 on the right widget (`r6`) through `0x0024700C`. `src/patch_spotpass_embed.py` `apply_info_menu` binds `Pos_Spot_U01` / `Tex_Info_01` from the dead body at `0x006093FC` (the state-6 entry at `0x006093F4` stays `mov r0,#1; bx lr`) and draws six lines: New Open, Holy Site, START, FEVER, PICK UP, Photo Contest. The string is data at `0x006E6A38`. Those names first drew on top of the lake lines, and the 恋愛の聖地 banner still opened, because the mask stays bit 1. The two title-binder tail calls (`0x004DB6C8`, `0x004DB730`) are now `bx lr`, so the book does not swap the banner every frame. Clearing the picture’s visible flag, or writing its size after load, does not take it off the screen. `Pic_Page01_04` (`Lyt_Spot_U01`) and `Pic_Page01_00` (`Pts_Page_U01a`) are size-zero in the bclyt, so the painted `Mag_Page01` is not on the draw list. The lake pixels stay in that texture. Holy Site (index 1) points the info string at the eight-line sentence at `0x006E6F42` and DrawText puts it in `Tex_Info_01`. Any other open row keeps the empty string. The page-turn left/right move a `>` through those six names. The letter A opens the marked row: Holy Site clears the names, shows the 恋愛の聖地 banner, and draws the eight lake lines on the rules. The same page arrows put the six names back, with the `>` still on that row, and the lines go with the string. Confirmed Azahar A, 2026-09-27. The left page still has the photo, 「湖」, and 奥十羽野駅.
+
+### 16.12 NEW Love Plus archive, parts `.000`–`.003` (2026-09-26)
+
+These pieces came from the Internet Archive directory [3ds-boss-data-2](https://archive.org/download/3ds-boss-data-2). That listing shows `.000`–`.003` at 232.8G each (250,000,000,000-byte slices; the page prints GiB). Local copies were under `D:\Archive\Downloads\`. `.000` was **250,000,000,001** bytes: the 250 GB slice plus the one extra leading byte Archive.org added so the piece would upload. `.001` was **250,000,000,000** bytes and has no extra byte. The central directory is at the end of the last piece. `tools/scan_nl_spotpass_zip.py --walk-local` follows each stored local header. A `boss` payload’s length is the big-endian u32 at offset 8. `filelist.txt` / `tasksheet.xml` end at a 24-byte Zip64 data descriptor (`PK\x07\x08`, crc32, then two u64 sizes).
+
+`.000` held **267,273** files (**249,973,289,312** payload bytes) and stopped on `US/en/ITASK01/dateedit10971.boss` at logical `0x3A352082EF`. That `dateedit` is 946,292 bytes; 573,713 of them are in `.000`, and `.001` begins with the remaining 372,579 bytes plus the 24-byte descriptor (`--skip-first 372603`). `.001` then held **266,183** files (**249,972,712,412** payload bytes) and stopped on `DE/fr/ITASK01/dateedit10917.boss` at logical `0x3A3516BE6D`, 841,240 bytes short of the end of the piece. `.002` is another **250,000,000,000**-byte slice. It begins with the remaining 105,052 bytes of that `dateedit` plus the 24-byte descriptor (`--skip-first 105076`), then **264,684** files (**249,973,375,476** payload bytes), and stops on `MS/ru/ITASK01/dateedit10128.boss` at logical `0x3A351EC311`, 583,291 bytes short of the end. `.003` begins with the rest of that file: the first real header is `MO/ru/ITASK01/dateedit10692.boss` at file offset `0x58A11` (`--skip-first 363025`). That walk read **264,697** files (**249,973,655,456** payload bytes) and stopped on `KW/pt/ITASK01/dateedit10268.boss` at logical `0x3A35230D8D`, 44,130 bytes short of the end of the piece.
+
+| Part | `ITASK01` | `PTASK01` |
+|------|-----------|-----------|
+| `.000` | 264,235 entries. 263,725 are `dateeditNNNNN.boss`. Each `filelist.txt` is 37,054 bytes and lists 1000 numbered `dateedit` names. | 3,038 entries. `filelist.txt` is 86 bytes and names one file: `info.dat`, size **400,453**, unix **1395051340** (2014-03-17 10:15:40 UTC). `info.dat.boss` is **401,115** bytes, **1,004** region copies. |
+| `.001` | 264,433 entries. 263,899 more `dateedit` files. File lists are the same 1,000 numbered names. | 1,750 entries. **592** `info.dat.boss` copies, still **401,115** bytes. 582 catalog rows, every one size 400,453 and the same timestamp. |
+| `.002` | 264,684 entries, the whole piece. 264,150 are `dateedit`. 279 `filelist.txt`, 255 `tasksheet.xml` (same 1,000 numbered names). | None. No `info.dat`. |
+| `.003` | 264,697 entries, the whole piece. 264,151 are `dateedit`. 285 `tasksheet.xml`, 261 `filelist.txt` (same 1,000 numbered names). | None. No `info.dat`. |
+
+Name totals: `.000` is `dateedit` 263,725, `filelist.txt` 1,273, `tasksheet.xml` 1,271, `info.dat` 1,004. `.001` is `dateedit` 263,899, `tasksheet.xml` 849, `filelist.txt` 843, `info.dat` 592. `.002` is `dateedit` 264,150, `filelist.txt` 279, `tasksheet.xml` 255. `.003` is `dateedit` 264,151, `tasksheet.xml` 285, `filelist.txt` 261. `.000` and `.001` repeat the same magazine payload per region. `.002` and `.003` are only city date edits. Older weekly issues are not in `.000`–`.003`.
 
 ---
 

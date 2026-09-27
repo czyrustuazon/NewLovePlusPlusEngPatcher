@@ -8,7 +8,7 @@ sp = load_module("patch_spotpass_embed", SRC / "patch_spotpass_embed.py")
 
 
 def _vanilla_blob() -> bytearray:
-    data = bytearray(sp.ADDR_SPOTPASS_PAYLOAD + 0x920)
+    data = bytearray(sp.ADDR_LIST_BLOB + sp.LIST_BLOB_LEN)
     data[sp.ADDR_NEWFLAG : sp.ADDR_NEWFLAG + sp.NEWFLAG_LEN] = sp.VANILLA_FUN
     data[sp.ADDR_CONFIRM : sp.ADDR_CONFIRM + len(sp.VANILLA_CONFIRM)] = sp.VANILLA_CONFIRM
     data[sp.ADDR_READ_BL1 : sp.ADDR_READ_BL1 + 4] = sp.VANILLA_READ_BL1
@@ -22,6 +22,21 @@ def _vanilla_blob() -> bytearray:
     )
     data[sp.ADDR_DATA_KICK : sp.ADDR_DATA_KICK + 4] = sp.VANILLA_DATA_KICK
     data[sp.ADDR_MAGLIST_EXTRA : sp.ADDR_MAGLIST_EXTRA + 4] = sp.VANILLA_MAGLIST_EXTRA
+    data[sp.ADDR_MAGLIST_FATAL_BL : sp.ADDR_MAGLIST_FATAL_BL + 4] = (
+        sp.VANILLA_MAGLIST_FATAL_BL
+    )
+    data[sp.ADDR_HOME_OPEN_BL : sp.ADDR_HOME_OPEN_BL + 4] = sp.VANILLA_HOME_OPEN_BL
+    data[sp.ADDR_WEB_NOTIFY : sp.ADDR_WEB_NOTIFY + 4] = sp.VANILLA_WEB_NOTIFY
+    data[sp.ADDR_BOOK_OPEN_NEXT : sp.ADDR_BOOK_OPEN_NEXT + 4] = (
+        sp.VANILLA_BOOK_OPEN_NEXT
+    )
+    data[sp.ADDR_BOOK_CTOR : sp.ADDR_BOOK_CTOR + 4] = sp.VANILLA_BOOK_CTOR
+    data[sp.ADDR_MENU_CAVE : sp.ADDR_MENU_CAVE + len(sp.VANILLA_MENU_CAVE)] = (
+        sp.VANILLA_MENU_CAVE
+    )
+    data[sp.ADDR_MENU_DRAW : sp.ADDR_MENU_DRAW + len(sp.VANILLA_MENU_DRAW)] = (
+        sp.VANILLA_MENU_DRAW
+    )
     data[sp.ADDR_MAGLIST_NODATA_BEQ : sp.ADDR_MAGLIST_NODATA_BEQ + 4] = (
         sp.VANILLA_MAGLIST_NODATA_BEQ
     )
@@ -220,6 +235,122 @@ def test_area_name_cave_draws_station_into_tex_place():
         data[sp.ADDR_AREA_CAVE : sp.ADDR_AREA_CAVE + len(cave)]
         == sp.VANILLA_AREA_CAVE_BODY
     )
+
+
+def test_info_menu_draws_six_sections_into_tex_info():
+    cave = sp.build_info_menu_cave()
+    assert sp.ADDR_MENU_LIST_CAVE + len(cave) <= sp.ADDR_MENU_LIST_LIMIT
+    assert len(cave) == len(sp.VANILLA_STATE6_BODY) + 4
+    for line in ("New Open", "Holy Site", "START", "FEVER", "PICK UP", "Photo Contest"):
+        assert line.encode("utf-8") in sp.MENU_STRING
+    assert sp.MENU_STRING.startswith(b"> New Open\n")
+    assert sp.MENU_STRING.count(b"\n") == 5
+    text = sp.build_menu_text()
+    assert len(text) > len(sp.MENU_LINES) * sp.MENU_STRIDE
+    data = _vanilla_blob()
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_INFO_DRAW : sp.ADDR_INFO_DRAW + 4] == sp._bl(
+        sp.ADDR_INFO_DRAW, sp.ADDR_MENU_OPEN
+    )
+    assert data[sp.ADDR_INFO_DRAW + 4 : sp.ADDR_INFO_DRAW + 8] == sp._bl(
+        sp.ADDR_INFO_DRAW + 4, sp.ADDR_MENU_PAD
+    )
+    assert data[sp.ADDR_INFO_DRAW + 8 : sp.ADDR_INFO_DRAW + 12] == sp._bl(
+        sp.ADDR_INFO_DRAW + 8, sp.ADDR_MENU_LIST_CAVE
+    )
+    assert data[sp.ADDR_MENU_POLL : sp.ADDR_MENU_POLL + 4] == sp._bl(
+        sp.ADDR_MENU_POLL, sp.menu_poll_addr()
+    )
+    pad = sp.build_menu_pad_cave()
+    blob = sp.menu_control_blob()
+    assert sp.ADDR_MENU_PAD + len(blob) <= sp.ADDR_MENU_PAD_LIMIT
+    assert data[sp.ADDR_MENU_PAD : sp.ADDR_MENU_PAD + len(blob)] == blob
+    assert data[sp.ADDR_TWIN_STEP : sp.ADDR_TWIN_STEP + 4] == sp._bl(
+        sp.ADDR_TWIN_STEP, sp.ADDR_PAGE_BLOCK
+    )
+    assert data[sp.ADDR_PAGE_BLOCK : sp.ADDR_PAGE_BLOCK + len(sp.build_page_block())] == (
+        sp.build_page_block()
+    )
+    assert data[sp.ADDR_MENU_LIST_STR : sp.ADDR_MENU_LIST_STR + len(sp.MENU_STRING)] == (
+        sp.MENU_STRING
+    )
+    assert data[sp.ADDR_ARROW_SKIP : sp.ADDR_ARROW_SKIP + 4] == sp._b_cond(
+        0, sp.ADDR_ARROW_SKIP, sp.ADDR_MENU_ARROW
+    )
+    _arrow, paint_at = sp.build_menu_arrow_cave(sp.build_info_menu_cave())
+    back = sp.build_menu_back_stub(paint_at)
+    assert sp.ADDR_MENU_IDLE_POLL + len(back) <= sp.ADDR_MENU_IDLE_POLL_LIMIT
+    assert data[sp.ADDR_ARROW_IDLE : sp.ADDR_ARROW_IDLE + 4] == sp._b_cond(
+        0, sp.ADDR_ARROW_IDLE, sp.ADDR_ARROW_POLL
+    )
+    assert data[sp.ADDR_ARROW_POLL_TAIL : sp.ADDR_ARROW_POLL_TAIL + 4] == sp._b(
+        sp.ADDR_ARROW_POLL_TAIL, sp.ADDR_ARROW_LATCH
+    )
+    assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp._bl(
+        sp.ADDR_ARROW_STEP, sp.ADDR_PAGE_BLOCK
+    )
+    assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp._b(
+        sp.ADDR_ARROW_STEP + 4, sp.ADDR_ARROW_CONSUME
+    )
+    assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == back
+    for addr in sp.ADDR_ARROW_SHOW:
+        assert data[addr : addr + 4] == sp.PATCHED_ARROW_SHOW
+    assert data[sp.ADDR_PAGE_MASK_WALK : sp.ADDR_PAGE_MASK_WALK + 4] == (
+        sp.PATCHED_PAGE_MASK
+    )
+    assert data[sp.ADDR_PAGE_MASK_LOOKUP : sp.ADDR_PAGE_MASK_LOOKUP + 4] == (
+        sp.PATCHED_PAGE_MASK_LOOKUP
+    )
+    assert data[sp.ADDR_TITLE_BIND_FIXED : sp.ADDR_TITLE_BIND_FIXED + 4] == (
+        sp.PATCHED_TITLE_BIND_SKIP
+    )
+    assert data[sp.ADDR_TITLE_BIND_INDEX : sp.ADDR_TITLE_BIND_INDEX + 4] == (
+        sp.PATCHED_TITLE_BIND_SKIP
+    )
+    assert sp.revert_patch(data) is True
+    assert data[sp.ADDR_INFO_DRAW : sp.ADDR_INFO_DRAW + 12] == sp.VANILLA_INFO_DRAW
+    assert data[sp.ADDR_MENU_POLL : sp.ADDR_MENU_POLL + 4] == sp.VANILLA_MENU_POLL
+    assert data[sp.ADDR_MENU_PAD : sp.ADDR_MENU_PAD + len(blob)] == b"\x00" * len(blob)
+    assert data[sp.ADDR_PAGE_BLOCK : sp.ADDR_PAGE_BLOCK + len(sp.build_page_block())] == (
+        b"\x00" * len(sp.build_page_block())
+    )
+    assert data[sp.ADDR_TWIN_STEP : sp.ADDR_TWIN_STEP + 4] == sp._bl(
+        sp.ADDR_TWIN_STEP, sp.ADDR_PAGE_STEP
+    )
+    assert data[sp.ADDR_TITLE_BIND_FIXED : sp.ADDR_TITLE_BIND_FIXED + 4] == (
+        sp.VANILLA_TITLE_BIND_FIXED
+    )
+    assert data[sp.ADDR_TITLE_BIND_INDEX : sp.ADDR_TITLE_BIND_INDEX + 4] == (
+        sp.VANILLA_TITLE_BIND_INDEX
+    )
+    assert data[sp.ADDR_MENU_LIST_CAVE : sp.ADDR_MENU_LIST_CAVE + len(sp.VANILLA_STATE6_BODY)] == (
+        sp.VANILLA_STATE6_BODY
+    )
+    assert data[sp.ADDR_ARROW_SKIP : sp.ADDR_ARROW_SKIP + 4] == sp.VANILLA_ARROW_SKIP
+    assert data[sp.ADDR_ARROW_IDLE : sp.ADDR_ARROW_IDLE + 4] == sp.VANILLA_ARROW_IDLE
+    assert data[sp.ADDR_ARROW_POLL_TAIL : sp.ADDR_ARROW_POLL_TAIL + 4] == (
+        sp.VANILLA_ARROW_POLL_TAIL
+    )
+    assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp.VANILLA_ARROW_STEP
+    assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp.VANILLA_ARROW_CMN
+    assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == (
+        b"\x00" * len(back)
+    )
+    for addr in sp.ADDR_ARROW_SHOW:
+        assert data[addr : addr + 4] == sp.VANILLA_ARROW_HIDE
+    assert data[0x006094B8 : 0x006094BC] == sp.ARM_NOP
+
+
+def test_list_blob_is_not_installed_on_the_book():
+    """The index title draws on the first rule. The book branch stays."""
+    blob = sp.build_list_blob()
+    assert blob[12:].split(b"\x00", 1)[0] == "ニューオープン".encode("utf-8")
+    data = _vanilla_blob()
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_EMPTY_LIST_BEQ : sp.ADDR_EMPTY_LIST_BEQ + 4] == (
+        sp.PATCHED_EMPTY_LIST_BEQ
+    )
+    assert data[sp.ADDR_LIST_BLOB : sp.ADDR_LIST_BLOB + len(blob)] == b"\x00" * len(blob)
 
 
 def test_embed_rejects_unknown_function():

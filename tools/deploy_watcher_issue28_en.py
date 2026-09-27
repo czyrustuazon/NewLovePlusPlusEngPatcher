@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Paint issue 28's lake paragraph onto the Towano Watcher holy-site page (pkg 5265).
+"""Paint issue 28's lake paragraph onto Mag_Page01 (pkg 5265).
 
-Mag_Page01 is the shared sheet. The right page (Lyt_Spot_U01) keeps it.
-The left page (Lyt_Spot_O01) is that sheet flipped, so those panes are hidden.
-The heated-pool sentence belongs on FEVER; that corner stays out of the book
-because it uses this same sheet. See technical.md §16.11.
+The right-page panes that would show that sheet stay size-zero. Holy Site
+draws the sentence into Tex_Info_01 instead (§16.11.3). The left page is
+the same sheet flipped, so those panes stay hidden too. The heated-pool
+sentence belongs on FEVER; that corner stays out of the book because it
+uses this same sheet. See technical.md §16.11.
 """
 from __future__ import annotations
 
@@ -152,15 +153,14 @@ def patch_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
     # 「湖」 is DrawText in Tex_Name, same game font as the AREA station.
     # Painting it into the badge scaled the glyph and made it soft.
     # The upright sheet is Pic_Page01_04 (layout) and Pic_Page01_00 (page part).
+    # Both stay size-zero. The eight lines are DrawText in Tex_Info_01 when
+    # Holy Site is open, so the painted sheet cannot sit under the name list.
     # Every other Mag_Page01 pane is the backwards copy.
-    # O01 is the left page (photo, SPOT, AREA). Its sheet is the same
-    # Mag_Page01 the right page shows, so the paragraph lands there backwards.
-    # U01 is the right page (banner and rules). That sheet stays.
     hides = (
         ("blyt/Lyt_Spot_O01.bclyt", (b"Pic_Page01_02", b"Pic_Page01_03", b"Pic_Page01_04", b"Pic_Page01_05")),
-        ("blyt/Lyt_Spot_U01.bclyt", (b"Pic_Page01_02", b"Pic_Page01_03", b"Pic_Page01_05")),
+        ("blyt/Lyt_Spot_U01.bclyt", (b"Pic_Page01_02", b"Pic_Page01_03", b"Pic_Page01_04", b"Pic_Page01_05")),
         ("blyt/Pts_Page_O01a.bclyt", (b"Pic_Page01_00", b"Pic_Page01_01")),
-        ("blyt/Pts_Page_U01a.bclyt", (b"Pic_Page01_01",)),
+        ("blyt/Pts_Page_U01a.bclyt", (b"Pic_Page01_00", b"Pic_Page01_01")),
         ("blyt/Pts_Shadow_O.bclyt", (b"Pic_Page01_00", b"Pic_Page01_01")),
         ("blyt/Pts_Shadow_U.bclyt", (b"Pic_Page01_00", b"Pic_Page01_01")),
     )

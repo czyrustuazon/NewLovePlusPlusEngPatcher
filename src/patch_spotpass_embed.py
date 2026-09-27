@@ -162,6 +162,11 @@ VANILLA_AREA_CAVE_BODY = bytes.fromhex(
 ADDR_MAGLIST_EXTRA = 0x0010441C  # cmp r0,#0 after FUN_004fd248
 VANILLA_MAGLIST_EXTRA = bytes.fromhex("000050e3")  # cmp r0, #0
 PATCHED_MAGLIST_EXTRA = bytes.fromhex("0c0000ea")  # b 0x104454 mov r2,#9
+# bl FUN_004fd248. Leaving it in crashes with 0xD8E007F7. NOP-ing it
+# reaches command 9. A constructed worker still dies in FUN_005fe718:
+# PC=0, LR=0x005F99B4. Keep the call. Do not host this operator.
+ADDR_MAGLIST_FATAL_BL = 0x00104418
+VANILLA_MAGLIST_FATAL_BL = bytes.fromhex("8ae30feb")
 ADDR_MAGLIST_NODATA_BEQ = 0x00104434  # beq 0x1043c0 (restore; dead after EXTRA)
 VANILLA_MAGLIST_NODATA_BEQ = bytes.fromhex("e1ffff0a")
 ADDR_MAGLIST_CLEAR_LAYOUT = 0x001043FC  # str r10, [r4, #0x7c]
@@ -319,7 +324,224 @@ VANILLA_PAGE_MASK_LOOKUP = bytes.fromhex("8cc090e5")
 PATCHED_PAGE_MASK_LOOKUP = bytes.fromhex("02c0a0e3")  # mov ip, #2
 ADDR_EMPTY_LIST_BEQ = 0x003E6948  # beq 0x3e6d90
 VANILLA_EMPTY_LIST_BEQ = bytes.fromhex("1001000a")
+# Book-only rollback 69df39c jumps straight at the TownGuide constructor.
 PATCHED_EMPTY_LIST_BEQ = bytes.fromhex("f600000a")  # beq 0x3e6d28
+# Empty index: point the parser at a two-row contents blob, then fall
+# into the same fill that opens the book. Cave sits in the dead gate
+# body, after the area-name cave and before the pop at 0x14ECF8.
+# The magazine list operator shows the StreetPass prompt (layout 7).
+# FUN_004fd248 then fatals (0xD8E007F7). Skipping that call reaches
+# command 9 with a null worker (R8=0, PC=0, LR=0x006FE7A4). Do not
+# construct it in the book's slot.
+# The room tap builds TownGuideHome, which always opens the book.
+# WebUIOperator is the in-game browser, constructed the same way
+# (alloc, ctor, link) from 0x3b02c8 / 0x3b04b8 / 0x45125c.
+ADDR_HOME_OPEN_BL = 0x003E6574  # bl TownGuideHome ctor
+VANILLA_HOME_OPEN_BL = bytes.fromhex("590300eb")  # bl 0x3e72e0
+ADDR_WEB_UI_CTOR = 0x0014A31C
+# WebUI state 0 asks the parent to show it (vtable+0x58). The room
+# has no such slot (PC 0, LR 0x0024977C). Skipping that call leaves
+# the browser idle on the classroom. Its real parent is LoveplusModeHome.
+# Do not open it from the watcher tap.
+ADDR_WEB_NOTIFY = 0x00149778  # blx ip
+VANILLA_WEB_NOTIFY = bytes.fromhex("3cff2fe1")
+# Holding book tick state 2 (mov r0,#2 here) left the classroom.
+# State 1's layouts are not drawn. State 2 returns while its anim slot
+# is empty, and the spread is built in state 3+. Keep the vanilla mov.
+ADDR_BOOK_OPEN_NEXT = 0x004DBA58  # mov r0, #3
+VANILLA_BOOK_OPEN_NEXT = bytes.fromhex("0300a0e3")
+ADDR_BOOK_CTOR = 0x003E6D54  # bl TownGuideUIOperator ctor
+ADDR_MENU_CTOR = 0x001064F4
+ADDR_MENU_CAVE = 0x0014EBA4
+ADDR_BOOK_CTOR_RESUME = 0x003E6D58
+ADDR_MENU_DRAW = 0x001040D8  # magazine vtable+0x10
+VANILLA_BOOK_CTOR = bytes.fromhex("75d803eb")  # bl 0x4dcf30
+VANILLA_MENU_CAVE = bytes.fromhex("e832fbeba6b90eeb0040a0e1c4b90eeb")
+VANILLA_MENU_DRAW = bytes.fromhex("30402de90040a0e1")
+PATCHED_MENU_DRAW = bytes.fromhex("0100a0e31eff2fe1")  # mov r0,#1; bx lr
+# Factory at 0x249C2C allocates 0xA60 (2656). Forcing +0x5e=0xC and
+# skipping the fatal bl showed StreetPass, then FUN_005fe718 jumped
+# [worker+0x4c vtable+0x24]. State 0 is the untried entry: it calls
+# FUN_005fe5d0 on *0x008BFAEC and advances to state 1. The ctor already
+# stores +0x5e=0. Do not call apply_worker_host from apply_patch.
+ADDR_WORKER_FACTORY = 0x00249C2C
+ADDR_DRAW_BODY = 0x001040E0  # vtable+0x10 body; must stay vanilla so it can draw
+ADDR_DRAW_CHILD = 0x00104144
+# Dead body of FUN_006093f4. Entry is ret1. Stop before the live call at 0x6094C0.
+ADDR_WORKER_CAVE = 0x006093FC
+ADDR_STATE6_LIMIT = 0x006094C0
+# Contents list. The book draws record+0x104 into Tex_Info_01 (180x128,
+# right page) and merge leaves that pane null. This cave binds it and
+# draws the six section names. The string sits in .rodata; the code stays
+# in this dead body. Do not execute the string.
+ADDR_INFO_DRAW = 0x004DCBD8  # add r1, r5, #0x104 ; mov r0, r6 ; bl index 0
+VANILLA_INFO_DRAW = bytes.fromhex("411f85e20600a0e109a9f5eb")
+ADDR_MENU_LIST_CAVE = ADDR_WORKER_CAVE
+ADDR_MENU_LIST_LIMIT = 0x006094BC
+ADDR_MENU_LIST_STR = 0x006E6A38
+_INFO_DRAW = 0x0024700C
+_INFO_POS_VA = 0x00346FB0  # Pos_Spot_U01
+_INFO_TEX_VA = 0x00346FC0  # Tex_Info_01
+# Title binder tail calls. Leaving them in swaps the banner to 恋愛の聖地
+# because the mask is bit 1. bx lr keeps the layout's own banner.
+ADDR_TITLE_BIND_FIXED = 0x004DB6C8
+VANILLA_TITLE_BIND_FIXED = bytes.fromhex("52aef5ea")  # b 0x247018
+ADDR_TITLE_BIND_INDEX = 0x004DB730
+VANILLA_TITLE_BIND_INDEX = bytes.fromhex("38aef5ea")  # b 0x247018
+PATCHED_TITLE_BIND_SKIP = bytes.fromhex("1eff2fe1")  # bx lr
+MENU_LINES = (
+    "New Open",
+    "Holy Site",
+    "START",
+    "FEVER",
+    "PICK UP",
+    "Photo Contest",
+)
+# Fixed stride so the arrow cave can turn an index into a string address.
+MENU_STRIDE = 128
+MENU_STRING = (
+    "> New Open\n  Holy Site\n  START\n  FEVER\n  PICK UP\n  Photo Contest"
+).encode("utf-8") + b"\x00"
+# Dead body of the ret1 has-entry function, then its literal pool, stopping
+# before the live function at 0x609208. The arrow cave plus its pool sit here.
+ADDR_MENU_ARROW = 0x00609170
+ADDR_MENU_ARROW_LIMIT = 0x00609208
+VANILLA_MENU_ARROW_BODY = bytes.fromhex(
+    "1cd04de2000050e30000a0e31900000a0100a0e1c80400eb0050a0e15c009fe5"
+    "14008de50d00a0e1f655fceb0510a0e10d00a0e1d553fceb14008de514208de2"
+    "0a10a0e39d0f84e214b0ffeb000050e314009d050200000a0d00a0e10655fceb"
+    "14008de5c00fa0e1015080e20d00a0e10000a0e10500a0e11cd08de23080bde8"
+    "ffffe3e70d00a0e100f020e30000a0e100f020e39de3effa"
+)
+VANILLA_MENU_OPEN_BODY = bytes.fromhex(
+    "000050e32c00000a0100a0e1a30300eb0070a0e11020a0e30010a0e3ff0f82e2"
+    "ca35e8eb000050e30050a0030100000acd4cfceb0050a0e10500a0e1934ffceb"
+    "c00fa0e1010090e21500000a0040a0e30500a0e1b400d0e1000050e300f020e3"
+    "0f00009a0410a0e10500a0e1b84cfceb0710a0e100f020e36dd2efeb000050e3"
+    "00f020e30e00000a010084e27040ffe60500a0e1b400d0e1040050e100f020e3"
+    "efffff8a000055e30300000a000095e5041090e50500a0e131ff2fe10600a0e1"
+    "f081bde80160a0e3f5ffffea"
+)
+# Dead body after the has-list ret1 and the restored ldrb at 0x609608.
+# Prep and the sheet show/hide sit here. Stop before the next live function.
+ADDR_MENU_OPEN = 0x0060960C
+ADDR_MENU_OPEN_LIMIT = 0x006096D8
+# beq taken when the page mask has nowhere to turn. Both arrows land here.
+ADDR_ARROW_SKIP = 0x004DCCB4
+VANILLA_ARROW_SKIP = bytes.fromhex("0900000a")  # beq 0x4dcce0
+ADDR_ARROW_CONSUME = 0x004DCCE0
+# While the book is sitting still (+0x5e == 0) this beq skips the arrow
+# poll. Send it through the poll of both page widgets, then the latch read.
+ADDR_ARROW_IDLE = 0x004DCC30
+VANILLA_ARROW_IDLE = bytes.fromhex("4100000a")  # beq 0x4dcd3c
+ADDR_ARROW_POLL = 0x004DCC60  # vtable+0x84 on the left widget, then the right
+ADDR_ARROW_POLL_TAIL = 0x004DCC80
+VANILLA_ARROW_POLL_TAIL = bytes.fromhex("efffffea")  # b 0x4dcc44
+ADDR_ARROW_LATCH = 0x004DCC84
+# The page step used to run before the marker cave, and a real page
+# left the list. Branch straight to the cave instead.
+ADDR_ARROW_STEP = 0x004DCCA8
+VANILLA_ARROW_STEP = bytes.fromhex("6af6ffeb")  # bl 0x4da658
+VANILLA_ARROW_CMN = bytes.fromhex("010070e3")  # cmn r0, #1 at 0x4dccac
+# These two still call the page step. A real result stores a new page
+# and leaves the list. The block moves the marker, redraws, then
+# returns -1 so the press is only consumed.
+ADDR_TWIN_STEP = 0x004DA97C
+ADDR_THIRD_STEP = 0x004DAED8
+ADDR_PAGE_STEP = 0x004DA658
+# 26 zero bytes. The redraw wrapper uses 24. Do not touch 0x68F892,
+# and do not put this over the back stub at 0x68F8E0.
+ADDR_PAGE_BLOCK = 0x0068F878
+ADDR_PAGE_BLOCK_LIMIT = 0x0068F890
+# Name-input turns FUN_001fc304 into a branch and zeros the old body.
+# The button poll sits in that padding. apply_info_menu runs after the
+# romaji refresh, which clears this span first.
+ADDR_MENU_PAD = 0x001FC308
+ADDR_MENU_PAD_LIMIT = 0x001FC3A4
+# Steady book frames skip the info-draw hook once +0x5c is 0. This load
+# is on the path those frames do take, so the A poll has to run from here.
+ADDR_MENU_POLL = 0x004DCC10
+VANILLA_MENU_POLL = bytes.fromhex("8800d4e5")  # ldrb r0, [r4, #0x88]
+MENU_PAD_LEN = 108
+ADDR_KEYS = 0x005CB4C4
+# One page makes both directions return -1, and these movs then hide
+# the arrows, so the latches never get set. Leave the arrows shown.
+ADDR_ARROW_SHOW = (
+    0x004DCB34,  # name refresh, previous
+    0x004DCB58,  # name refresh, next
+    0x004DA8E4,  # other book update, previous
+    0x004DA908,  # other book update, next
+)
+VANILLA_ARROW_HIDE = bytes.fromhex("0010a0e3")  # mov r1, #0
+PATCHED_ARROW_SHOW = bytes.fromhex("0110a0e3")  # mov r1, #1
+# 32 zero bytes between a finished name-input branch and the romaji cave.
+ADDR_MENU_IDLE_POLL = 0x0068F8E0
+ADDR_MENU_IDLE_POLL_LIMIT = 0x0068F900
+# .data cell nothing else points at. +0 string VA, +4 index, +8 opened,
+# +12 VA of the empty string used while an article is open,
+# +16 last button word, +20 base VA of the six choice strings.
+ADDR_MENU_CELL = 0x007A5100
+ADDR_TITLE_BIND_FN = 0x00247018
+_SHEET_NAME = b"Pic_Page01_04\x00"
+_SHEET_PART = b"Pic_Page01_00\x00"
+_PANE_SHOW = 0x005E7D18  # finder in r0, r1 = 0 hides / 1 shows (pane+0xb7 bit 0)
+_LAKE_BODY = (
+    "第28号\n"
+    "今回の恋愛の聖地は\n"
+    "「湖」に決定しました！\n"
+    "湖面を伝わって流れる空気は\n"
+    "見た目も相まって清涼感抜群。\n"
+    "たまには趣を変え湖畔で\n"
+    "カノジョと過ごすのも\n"
+    "悪くないかもしれません。"
+).encode("utf-8") + b"\x00"
+ADDR_LAKE_BODY = 0x006E6F42  # vanilla zero pad, after the menu strings
+ADDR_WORKER_GLOBAL = 0x008BFAEC
+ADDR_SESSION_RET = 0x0024EB9C  # VA of mov r0,#0; bx lr
+ADDR_UI_ROOT = 0x008A6558  # slot 2 is the parent 0x4525f4 attaches id 0x37 to
+ADDR_UI_LOOKUP = 0x0044D370
+ADDR_UI_CHILD = 0x004525F4
+ADDR_CHILD_CALL = 0x00105CB4  # blx r3 on the null +0x60 child
+VANILLA_CHILD_CALL = bytes.fromhex("33ff2fe1")
+# State 11's taken path clears the inner state, then branches out.
+# Start MagList at inner state 6 instead, and fall into the idle exit.
+ADDR_MAGLIST_ENTER_INNER = 0x00105D38
+VANILLA_MAGLIST_ENTER_INNER = bytes.fromhex("6450c4e5580100ea")
+PATCHED_MAGLIST_ENTER_INNER = bytes.fromhex("0650a0e36450c4e5")  # mov r5,#6; strb
+# State 6's exit stores inner state 0x17, and the parent then dismisses.
+ADDR_MAGLIST_ST6_STAY = 0x00104534
+VANILLA_MAGLIST_ST6_STAY = bytes.fromhex("ebffffea")  # b 0x1044e8
+PATCHED_MAGLIST_ST6_STAY = bytes.fromhex("210000ea")  # b 0x1045c0 stay
+ADDR_CHILD_CAVE = 0x00609460
+VANILLA_CHILD_CAVE = bytes.fromhex(
+    "000090e588240deb000050e3600094050200000a3710a0e324390deb"
+    "600084e5000050e378408015e8009fe5000090e5000050e3b40084e5"
+    "2400000a2f010debb40094e5c04080e5b40094e5001090e55c1091e5"
+    "31ff2fe1"
+)
+VANILLA_STATE6_BODY = bytes.fromhex(
+    "4400d0e51cd04de2000050e30000a0e32300000a0100a0e1240400eb"
+    "0050a0e184009fe514008de50d00a0e15255fceb0510a0e10d00a0e1"
+    "3153fceb14008de514208de20610a0e39d0f84e270afffeb000050e3"
+    "0c00000a0d00a0e18654fceb14008de514208de20610a0e39d0f84e2"
+    "67afffeb000050e30300000a0010a0e30d00a0e19750fceb14008de5"
+    "14009de5c00fa0e1015080e20d00a0e10000a0e10500a0e11cd08de2"
+    "3080bde8ffffe3e70d00a0e100f020e30000a0e1"
+)
+VANILLA_WORKER_CAVE = bytes.fromhex(
+    "68019fe50cd04de2000090e5889dfdeb000050e30800000a"
+    "54019fe5000090e55c5090e5000055e30300000a0500a0e176f814eb"
+    "000050e34000000a00f020e3895dfceb0410a0e1df00a0e31613fdeb"
+    "0410a0e1e100a0e31313fdeb14019fe50210a0e3"
+)
+ADDR_LIST_CAVE = 0x0014ECE4
+ADDR_LIST_RESUME = 0x003E694C
+ADDR_LIST_BLOB = 0x006FC500
+LIST_BLOB_LEN = 0x4D2
+VANILLA_LIST_CAVE = bytes.fromhex("a2e302eb0500c4e1060000e0")
+_LIST_STRIDE = 306
+_LIST_OPEN = "ニューオープン".encode("utf-8") + b"\x00"
+_LIST_HOLY = "恋愛の聖地".encode("utf-8") + b"\x00"
 ADDR_WEB_ST14_NO_ARTICLE = 0x0005BC58  # beq hub when state 0xE has no article
 VANILLA_WEB_ST14_NO_ARTICLE = bytes.fromhex("70ffff0a")
 PATCHED_WEB_ST14_NO_ARTICLE = bytes.fromhex("0e00000a")  # beq 0x5BC98 stay
@@ -340,6 +562,12 @@ PATCHED_RET0 = bytes.fromhex("0000a0e31eff2fe1")  # mov r0,#0; bx lr
 ADDR_GATE_OVERLAY_BEQ = 0x0014E16C  # beq 0x14e2a4 when +0xb4 == -1
 VANILLA_GATE_OVERLAY_BEQ = bytes.fromhex("4c00000a")
 PATCHED_GATE_OVERLAY_B = bytes.fromhex("4c0000ea")  # b 0x14e2a4 skip 0x84 ERROR
+ADDR_MAG_ST0_BUSY = 0x001057F0  # bne epilogue when scene +0x50 != 0
+VANILLA_MAG_ST0_BUSY = bytes.fromhex("ab02001a")
+ADDR_MAG_ST0_FLAG1 = 0x001057FC  # beq epilogue when scene +0x58 == 0
+VANILLA_MAG_ST0_FLAG1 = bytes.fromhex("a802000a")
+ADDR_MAG_ST0_FLAG2 = 0x00105808  # beq epilogue when scene +0x59 == 0
+VANILLA_MAG_ST0_FLAG2 = bytes.fromhex("a502000a")
 ADDR_PARENT_ST0_BEQ = 0x0010581C  # beq skip FUN_005fe5d0 when +0x45==0
 VANILLA_PARENT_ST0_BEQ = bytes.fromhex("a002000a")
 ADDR_HASROWS_FLAG_BEQ = 0x005FE9F0  # beq return 0 unless +0x45/+0x46
@@ -458,7 +686,13 @@ def _b(here: int, target: int) -> bytes:
 
 def _ldr_pc(here: int, pool: int, rt: int = 0) -> bytes:
     imm = pool - (here + 8)
-    if not 0 <= imm <= 0xFFF:
+    if imm < 0:
+        imm = -imm
+        if imm > 0xFFF:
+            raise ValueError(f"ldr pool {pool:#x} out of range from {here:#x}")
+        # U=0: subtract the offset from pc.
+        return _u32(0xE5100000 | (15 << 16) | (rt << 12) | imm)
+    if imm > 0xFFF:
         raise ValueError(f"ldr pool {pool:#x} out of range from {here:#x}")
     return _u32(0xE5900000 | (15 << 16) | (rt << 12) | imm)
 
@@ -592,6 +826,709 @@ def apply_area_name(data: bytearray) -> None:
     data[ADDR_AREA_CAVE : ADDR_AREA_CAVE + len(cave)] = cave
     hook = _bl(ADDR_AREA_DRAW, ADDR_AREA_CAVE) + ARM_NOP + ARM_NOP
     data[ADDR_AREA_DRAW : ADDR_AREA_DRAW + 12] = hook
+
+
+def build_info_menu_cave(cave: int = ADDR_MENU_LIST_CAVE) -> bytes:
+    """Bind Tex_Info_01 on the right-page widget, then draw the six names.
+
+    Entered with r6 = the right widget (the same one the vanilla draw
+    passes to index 0). r4 and r5 are restored. Group 1 is tried first,
+    then group 0, matching the left-page name bind.
+    """
+    code = bytearray()
+    code += _u32(0xE92D4030)  # push {r4, r5, lr}
+    code += _u32(0xE24DD018)  # sub sp, sp, #0x18
+    code += _u32(0xE1A04006)  # mov r4, r6
+    code += _u32(0xE5940074)  # ldr r0, [r4, #0x74]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    skip_fix = len(code)
+    code += b"\x00" * 4  # bne draw
+    code += _u32(0xE3A00000)  # mov r0, #0
+    code += _u32(0xE5840070)  # str r0, [r4, #0x70]
+    global_fix = len(code)
+    code += b"\x00" * 4  # ldr r5, [pc, global]
+    code += _u32(0xE3A0C001)  # mov ip, #1
+    try_at = cave + len(code)
+    code += _u32(0xE5950000)  # ldr r0, [r5]
+    code += _u32(0xE5942008)  # ldr r2, [r4, #8]
+    code += _u32(0xE1A0100C)  # mov r1, ip
+    code += _bl(cave + len(code), _AREA_LOOKUP)
+    code += _u32(0xE3500000)  # cmp r0, #0
+    have_fix = len(code)
+    code += b"\x00" * 4  # bne have
+    code += _u32(0xE35C0000)  # cmp ip, #0
+    miss_fix = len(code)
+    code += b"\x00" * 4  # beq draw
+    code += _u32(0xE3A0C000)  # mov ip, #0
+    code += _b(cave + len(code), try_at)
+    have_at = cave + len(code)
+    code += _u32(0xE1A05000)  # mov r5, r0
+    code += _u32(0xE28D0010)  # add r0, sp, #0x10
+    code += _bl(cave + len(code), _AREA_FINDER_INIT)
+    code += _u32(0xE3A03000)  # mov r3, #0
+    code += _u32(0xE28D2010)  # add r2, sp, #0x10
+    pos_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, pos]
+    code += _u32(0xE1A00005)  # mov r0, r5
+    code += _bl(cave + len(code), _AREA_FIND)
+    code += _u32(0xE3A05000)  # mov r5, #0
+    code += _u32(0xE58D5000)  # str r5, [sp]
+    code += _u32(0xE58D5004)  # str r5, [sp, #4]
+    code += _u32(0xE58D5008)  # str r5, [sp, #8]
+    code += _u32(0xE58D500C)  # str r5, [sp, #0xc]
+    code += _u32(0xE3A030FF)  # mov r3, #0xff
+    tex_fix = len(code)
+    code += b"\x00" * 4  # ldr r2, [pc, tex]
+    code += _u32(0xE28D1010)  # add r1, sp, #0x10
+    code += _u32(0xE1A00004)  # mov r0, r4
+    code += _bl(cave + len(code), _AREA_STORE)
+    draw_at = cave + len(code)
+    str_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, cell]
+    code += _u32(0xE5911000)  # ldr r1, [r1]  ; cell holds the string VA
+    code += _u32(0xE1A00004)  # mov r0, r4
+    code += _bl(cave + len(code), _INFO_DRAW)
+    code += _u32(0xE28DD018)  # add sp, sp, #0x18
+    code += _u32(0xE8BD8030)  # pop {r4, r5, pc}
+    pool = cave + len(code)
+    code[skip_fix : skip_fix + 4] = _b_cond(0x1, cave + skip_fix, draw_at)
+    code[have_fix : have_fix + 4] = _b_cond(0x1, cave + have_fix, have_at)
+    code[miss_fix : miss_fix + 4] = _b_cond(0x0, cave + miss_fix, draw_at)
+    code[global_fix : global_fix + 4] = _ldr_pc(cave + global_fix, pool, 5)
+    code[pos_fix : pos_fix + 4] = _ldr_pc(cave + pos_fix, pool + 4, 1)
+    code[tex_fix : tex_fix + 4] = _ldr_pc(cave + tex_fix, pool + 8, 2)
+    code[str_fix : str_fix + 4] = _ldr_pc(cave + str_fix, pool + 12, 1)
+    blob = bytes(code)
+    blob += _u32(_AREA_GLOBAL_VA)
+    blob += _u32(_INFO_POS_VA)
+    blob += _u32(_INFO_TEX_VA)
+    blob += _u32(ADDR_MENU_CELL + 0x100000)
+    if cave + len(blob) > ADDR_MENU_LIST_LIMIT:
+        raise ValueError(
+            f"info menu cave ends @{cave + len(blob):#x}, past {ADDR_MENU_LIST_LIMIT:#x}"
+        )
+    return blob
+
+
+def menu_choice(index: int) -> bytes:
+    """Six lines, with ``> `` on ``index`` and two spaces on the others."""
+    rows = []
+    for n, line in enumerate(MENU_LINES):
+        rows.append(("> " if n == index else "  ") + line)
+    raw = ("\n".join(rows)).encode("utf-8") + b"\x00"
+    if len(raw) > MENU_STRIDE:
+        raise ValueError(f"menu choice {index} is {len(raw)} bytes")
+    return raw + b"\x00" * (MENU_STRIDE - len(raw))
+
+
+def build_menu_text() -> bytes:
+    """Six marked strings, then a 0 byte, then the sheet pane name."""
+    blob = bytearray()
+    for i in range(len(MENU_LINES)):
+        blob += menu_choice(i)
+    if len(blob) != len(MENU_LINES) * MENU_STRIDE:
+        raise ValueError("menu text stride drifted")
+    blob += b"\x00"  # empty string while an article is open
+    blob += _SHEET_NAME
+    blob += _SHEET_PART
+    return bytes(blob)
+
+
+def lake_body_va() -> int:
+    """VA of the Holy Site sentence, drawn into Tex_Info_01."""
+    return ADDR_LAKE_BODY + 0x100000
+
+
+def _menu_pool_addrs(menu_cave: bytes) -> tuple[int, int, int, int]:
+    """VAs the arrow and sheet caves load. Global already lives in the draw cave."""
+    base = ADDR_MENU_LIST_STR + 0x100000
+    empty = base + len(MENU_LINES) * MENU_STRIDE
+    name = empty + 1
+    global_at = ADDR_MENU_LIST_CAVE + len(menu_cave) - 16
+    return base, empty, name, global_at
+
+
+def build_menu_arrow_cave(menu_cave: bytes) -> tuple[bytes, int]:
+    """Page arrows move the marker, or close an open row.
+
+    Called with r1 < 0 for the previous arrow and r1 >= 0 for the next.
+    While a row is open, either arrow puts the list back: New Open banner,
+    lake sheet hidden, and the marked names drawn again. Returns with
+    r2 = cell and r1 = the string the page block redraws. A opens a row
+    from the button poll, not from here.
+    """
+    base, empty, name, _global_at = _menu_pool_addrs(menu_cave)
+    cave = ADDR_MENU_ARROW
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    code += _u32(0xE92D40D0)  # push {r4, r6, r7, lr}
+    cell_fix = len(code)
+    code += b"\x00" * 4  # ldr r4, [pc, cell]
+    code += _u32(0xE5940008)  # ldr r0, [r4, #8]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    back_fix = len(code)
+    code += b"\x00" * 4  # bne restore
+    code += _u32(0xE5940004)  # ldr r0, [r4, #4]
+    code += _u32(0xE3510000)  # cmp r1, #0
+    code += _u32(0xB2800005)  # addlt r0, r0, #5
+    code += _u32(0xA2800001)  # addge r0, r0, #1
+    code += _u32(0xE3500006)  # cmp r0, #6
+    code += _u32(0xA2400006)  # subge r0, r0, #6
+    code += _u32(0xE5840004)  # str r0, [r4, #4]
+    paint_fix = len(code)
+    code += b"\x00" * 4  # b paint
+    code += _u32(0xE3A00000)  # mov r0, #0
+    code += _u32(0xE5840008)  # str r0, [r4, #8]
+    code += _u32(0xE594601C)  # ldr r6, [r4, #0x1c]
+    code += _u32(0xE1A00006)  # mov r0, r6
+    code += _u32(0xE3A01000)  # mov r1, #0
+    code += _u32(0xE3A02000)  # mov r2, #0
+    code += _bl(at(), ADDR_TITLE_BIND_FN)
+    code += _u32(0xE3A00000)  # mov r0, #0
+    code += _bl(at(), ADDR_MENU_OPEN + 10 * 4)
+    code += _u32(0xE5940004)  # ldr r0, [r4, #4]
+    paint_at = at()
+    code += _u32(0xE5840004)  # str r0, [r4, #4]
+    base_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, base]
+    code += _u32(0xE0810380)  # add r0, r1, r0, lsl #7
+    code += _u32(0xE5840000)  # str r0, [r4]
+    code += _u32(0xE1A01000)  # mov r1, r0
+    code += _u32(0xE1A02004)  # mov r2, r4
+    code += _u32(0xE3E00000)  # mvn r0, #0
+    code += _u32(0xE8BD80D0)  # pop {r4, r6, r7, pc}
+    pool = at()
+    code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, pool, 4)
+    code[base_fix : base_fix + 4] = _ldr_pc(cave + base_fix, pool + 4, 1)
+    code[back_fix : back_fix + 4] = _b_cond(0x1, cave + back_fix, cave + paint_fix + 4)
+    code[paint_fix : paint_fix + 4] = _b(cave + paint_fix, paint_at)
+    code += _u32(ADDR_MENU_CELL + 0x100000)
+    code += _u32(base)
+    code += _u32(name)
+    del empty
+    if cave + len(code) > ADDR_MENU_ARROW_LIMIT:
+        raise ValueError(
+            f"menu arrow cave ends @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_ARROW_LIMIT:#x}"
+        )
+    return bytes(code), paint_at
+
+
+def build_menu_open_cave(menu_cave: bytes) -> bytes:
+    """Reset the list on a new page, and show or hide Pic_Page01_04.
+
+    Prep is the entry (bl from the info draw). The sheet helper starts
+    40 bytes later: r0 = 1 shows the lake lines, r0 = 0 hides them.
+    It clears pane+0xb7 bit 0, which is the game's own visibility flag,
+    on Pic_Page01_04 and the page-part copy Pic_Page01_00. The pad
+    calls that helper on the way out of every poll, so the list stays
+    clear and Holy Site keeps the lines. Layout group 1 is tried first,
+    then group 0.
+    """
+    _base, _empty, name, global_at = _menu_pool_addrs(menu_cave)
+    cave = ADDR_MENU_OPEN
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    # Prep. Remember the right-page widget, and set the list once.
+    # Resetting every frame while the text pane was still empty put the
+    # marker back on New Open after each arrow press.
+    code += _u32(0xE92D4010)  # push {r4, lr}
+    prep_cell = len(code)
+    code += b"\x00" * 4  # ldr r4, [pc, cell]
+    code += _u32(0xE584601C)  # str r6, [r4, #0x1c]
+    code += _u32(0xE5940018)  # ldr r0, [r4, #0x18]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _u32(0x18BD8010)  # popne {r4, pc}
+    prep_base = len(code)
+    code += b"\x00" * 4  # ldr r0, [pc, base]
+    code += _u32(0xE5840000)  # str r0, [r4]
+    code += _u32(0xE5840018)  # str r0, [r4, #0x18]
+    code += _u32(0xE8BD8010)  # pop {r4, pc}
+    if len(code) != 10 * 4:
+        raise ValueError(f"menu prep is {len(code)} bytes, sheet bl assumes 40")
+    # Sheet. r0 = show flag, r6 = right-page widget.
+    # Group 1 is the list's first try. The helper retries group 0.
+    code += _u32(0xE92D4030)  # push {r4, r5, lr}
+    code += _u32(0xE24DD010)  # sub sp, sp, #0x10
+    code += _u32(0xE1A04000)  # mov r4, r0
+    glob_fix = len(code)
+    code += b"\x00" * 4  # ldr r5, [pc, global]
+    code += _u32(0xE5950000)  # ldr r0, [r5]
+    code += _u32(0xE5962008)  # ldr r2, [r6, #8]
+    code += _u32(0xE3A01001)  # mov r1, #1
+    code += _bl(at(), ADDR_MENU_IDLE_POLL)
+    code += _u32(0xE3500000)  # cmp r0, #0
+    miss_fix = len(code)
+    code += b"\x00" * 4  # beq leave
+    code += _u32(0xE1A05000)  # mov r5, r0
+    code += _u32(0xE28D0008)  # add r0, sp, #8
+    code += _bl(at(), _AREA_FINDER_INIT)
+    code += _u32(0xE3A03000)  # mov r3, #0
+    code += _u32(0xE28D2008)  # add r2, sp, #8
+    name_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, name]
+    code += _u32(0xE58D1000)  # str r1, [sp]  Pic_Page01_04, part name follows
+    code += _u32(0xE1A00005)  # mov r0, r5
+    code += _bl(at(), _AREA_FIND)
+    # A miss leaves the finder empty. The show call returns without writing.
+    code += _u32(0xE1A01004)  # mov r1, r4
+    code += _u32(0xE28D0008)  # add r0, sp, #8
+    code += _bl(at(), _PANE_SHOW)
+    code += _u32(0xE28D0008)  # add r0, sp, #8
+    code += _bl(at(), _AREA_FINDER_INIT)
+    code += _u32(0xE3A03000)  # mov r3, #0
+    code += _u32(0xE28D2008)  # add r2, sp, #8
+    code += _u32(0xE59D1000)  # ldr r1, [sp]
+    code += _u32(0xE281100E)  # add r1, r1, #14  Pic_Page01_00
+    code += _u32(0xE1A00005)  # mov r0, r5
+    code += _bl(at(), _AREA_FIND)
+    code += _u32(0xE1A01004)  # mov r1, r4
+    code += _u32(0xE28D0008)  # add r0, sp, #8
+    code += _bl(at(), _PANE_SHOW)
+    leave_at = at()
+    code += _u32(0xE28DD010)  # add sp, sp, #0x10
+    code += _u32(0xE8BD8030)  # pop {r4, r5, pc}
+    # Pad returns here every poll. r4 is the cell, r6 the right widget.
+    # The sentence is text, so the picture stays hidden on every row.
+    frame_at = at()
+    code += _u32(0xE3A00000)  # mov r0, #0
+    code += _u32(0xE3A00000)
+    code += _u32(0xE3A00000)
+    code += _u32(0xE3A00000)
+    code += _bl(at(), cave + 10 * 4)
+    code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
+    if len(_SHEET_NAME) != 14:
+        raise ValueError("sheet name length drifted; the part name add is #14")
+    if frame_at != cave + len(code) - 24:
+        raise ValueError("sheet frame tail is not the last 24 bytes")
+    pool = ADDR_MENU_ARROW  # filled in once the arrow cave's pool is known
+    # The arrow builder places the pool at the end of its own bytes. Match it.
+    arrow, _paint_at = build_menu_arrow_cave(menu_cave)
+    pool = ADDR_MENU_ARROW + len(arrow) - 12
+    code[prep_cell : prep_cell + 4] = _ldr_pc(cave + prep_cell, pool, 4)
+    code[prep_base : prep_base + 4] = _ldr_pc(cave + prep_base, pool + 4, 0)
+    code[glob_fix : glob_fix + 4] = _ldr_pc(cave + glob_fix, global_at, 5)
+    code[name_fix : name_fix + 4] = _ldr_pc(cave + name_fix, pool + 8, 1)
+    code[miss_fix : miss_fix + 4] = _b_cond(0x0, cave + miss_fix, leave_at)
+    del name
+    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
+        raise ValueError(
+            f"menu open cave ends @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
+def sheet_frame_addr() -> int:
+    """Where the pad branches so every poll shows or hides the lake lines."""
+    cave = build_menu_open_cave(build_info_menu_cave())
+    return ADDR_MENU_OPEN + len(cave) - 24
+
+
+def build_menu_back_stub(_paint_at: int) -> bytes:
+    """Try layout group 0 after group 1 missed.
+
+    Entered with r0 = the global object, r1 = 1, r2 = the layout key,
+    and r5 = the address of that global. r2 and r5 survive the lookup.
+    Returns the layout in r0, or 0. The arrow cave restores the list
+    itself; this pad is only the second group try.
+    """
+    here = ADDR_MENU_IDLE_POLL
+    code = bytearray()
+    code += _u32(0xE92D4000)  # push {lr}
+    code += _bl(here + len(code), _AREA_LOOKUP)
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _u32(0x18BD8000)  # popne {pc}
+    code += _u32(0xE5950000)  # ldr r0, [r5]
+    code += _u32(0xE3A01000)  # mov r1, #0
+    code += _bl(here + len(code), _AREA_LOOKUP)
+    code += _u32(0xE8BD8000)  # pop {pc}
+    if here + len(code) > ADDR_MENU_IDLE_POLL_LIMIT:
+        raise ValueError(
+            f"menu group retry ends @{here + len(code):#x}, "
+            f"past {ADDR_MENU_IDLE_POLL_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
+def build_menu_pad_cave() -> bytes:
+    """A opens the marked row.
+
+    Called every frame from the info draw, with r6 the right-page widget
+    and r7 the screen. Left and right are handled by the move cave, which
+    sits in the bytes this used to spend on B. A is 3DS pad bit 0.
+    """
+    cave = ADDR_MENU_PAD
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    code += _u32(0xE92D4070)  # push {r4, r5, r6, lr}
+    # The reader just past this cave returns the HID pad word. Bit 0 is A.
+    code += _bl(at(), ADDR_MENU_PAD + MENU_PAD_LEN)
+    cell_fix = len(code)
+    code += b"\x00" * 4  # ldr r4, [pc, cell]
+    code += _u32(0xE5941010)  # ldr r1, [r4, #0x10]
+    code += _u32(0xE5840010)  # str r0, [r4, #0x10]
+    code += _u32(0xE1C02001)  # bic r2, r0, r1  newly pressed
+    code += _u32(0xE3120001)  # tst r2, #1  A
+    open_fix = len(code)
+    code += b"\x00" * 4  # bne open
+    code += _b(at(), sheet_frame_addr())
+    open_at = at()
+    code += _u32(0xE5945004)  # ldr r5, [r4, #4]
+    code += _u32(0xE3A00001)  # mov r0, #1
+    code += _u32(0xE5840008)  # str r0, [r4, #8]
+    code += _u32(0xE594000C)  # ldr r0, [r4, #0xc]
+    code += _u32(0xE5840000)  # str r0, [r4]
+    code += _u32(0xE1A00006)  # mov r0, r6
+    code += _u32(0xE1A01005)  # mov r1, r5
+    code += _u32(0xE3A02000)  # mov r2, #0
+    code += _bl(at(), ADDR_TITLE_BIND_FN)
+    code += _u32(0xE3550001)  # cmp r5, #1
+    holy_fix = len(code)
+    code += b"\x00" * 4  # bne leave
+    # Holy Site draws the lake sentence. Other rows keep the empty string.
+    code += _u32(0xE5940024)  # ldr r0, [r4, #0x24]
+    code += _u32(0xE5840000)  # str r0, [r4]
+    leave_at = at()
+    # The steady poll never reaches the info-draw hook, so clear the names here.
+    code += _u32(0xE5941000)  # ldr r1, [r4]
+    code += _u32(0xE1A00006)  # mov r0, r6
+    code += _bl(at(), _INFO_DRAW)
+    code += _b(at(), sheet_frame_addr())
+    pool = at()
+    code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, pool, 4)
+    code[open_fix : open_fix + 4] = _b_cond(0x1, cave + open_fix, open_at)
+    code[holy_fix : holy_fix + 4] = _b_cond(0x1, cave + holy_fix, leave_at)
+    code += _u32(ADDR_MENU_CELL + 0x100000)
+    if len(code) != MENU_PAD_LEN:
+        raise ValueError(
+            f"menu pad cave is {len(code)} bytes, move cave assumes {MENU_PAD_LEN}"
+        )
+    return bytes(code)
+
+
+def menu_move_addr() -> int:
+    return ADDR_MENU_PAD + len(build_menu_pad_cave())
+
+
+def menu_poll_addr() -> int:
+    """Steady-frame trampoline: poll A, then do the load it replaced."""
+    return menu_move_addr() + 32
+
+
+def build_menu_move_cave(cave: int | None = None) -> bytes:
+    """Return the HID shared-memory pad word. Bit 0 set means A is down.
+
+    Both hid:USER and hid:SPVR init the object at 0x009A13F8 (tail calls
+    into 0x600c). Its +4 is the mapped 0x2B0 block. The current pad is at
+    shared+0x1C. A missing map returns 0 instead of reading a null pointer.
+    """
+    if cave is None:
+        cave = menu_move_addr()
+    code = bytearray()
+    pool_fix = len(code)
+    code += b"\x00" * 4  # ldr r0, [pc, object]
+    code += _u32(0xE5900004)  # ldr r0, [r0, #4]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _u32(0x03A00000)  # moveq r0, #0
+    code += _u32(0x012FFF1E)  # bxeq lr
+    code += _u32(0xE590001C)  # ldr r0, [r0, #0x1C]
+    code += _u32(0xE12FFF1E)  # bx lr
+    pool = cave + len(code)
+    code[pool_fix : pool_fix + 4] = _ldr_pc(cave + pool_fix, pool, 0)
+    code += _u32(0x009A13F8)
+    if len(code) != 32:
+        raise ValueError(f"HID reader is {len(code)} bytes, poll trampoline assumes 32")
+    # Runs from the steady book path. Does the A poll, then the load it replaced.
+    code += _u32(0xE92D4000)  # push {lr}
+    code += _bl(cave + len(code), ADDR_MENU_PAD)
+    code += _u32(0xE5D40088)  # ldrb r0, [r4, #0x88]
+    code += _u32(0xE8BD8000)  # pop {pc}
+    move_len = ADDR_MENU_PAD_LIMIT - ADDR_MENU_PAD - MENU_PAD_LEN
+    if len(code) > move_len:
+        raise ValueError(f"menu move cave is {len(code)} bytes, slot is {move_len}")
+    code += b"\x00" * (move_len - len(code))
+    if len(code) != move_len:
+        raise ValueError(f"menu move cave is {len(code)} bytes, slot is {move_len}")
+    if cave + len(code) > ADDR_MENU_PAD_LIMIT:
+        raise ValueError(
+            f"menu move cave ends @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_PAD_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
+def menu_control_blob() -> bytes:
+    pad = build_menu_pad_cave()
+    move = build_menu_move_cave(ADDR_MENU_PAD + len(pad))
+    blob = pad + move
+    if len(blob) != ADDR_MENU_PAD_LIMIT - ADDR_MENU_PAD:
+        raise ValueError(f"menu controls are {len(blob)} bytes, slot is 156")
+    return blob
+
+
+def build_page_block() -> bytes:
+    """Move the marker, redraw it on the saved right-page widget, return -1.
+
+    r1 is already -1 for the previous arrow and +1 for the next. The move
+    leaves the cell pointer in r2. Prep stored the widget at cell+0x1c.
+    The following cmn/beq only consumes the press.
+    """
+    here = ADDR_PAGE_BLOCK
+    code = bytearray()
+    code += _u32(0xE92D4000)  # push {lr}
+    code += _bl(here + len(code), ADDR_MENU_ARROW)
+    code += _u32(0xE592001C)  # ldr r0, [r2, #0x1c]  widget saved by prep
+    code += _bl(here + len(code), _INFO_DRAW)
+    code += _u32(0xE3E00000)  # mvn r0, #0
+    code += _u32(0xE8BD8000)  # pop {pc}
+    if here + len(code) > ADDR_PAGE_BLOCK_LIMIT:
+        raise ValueError(
+            f"page block ends @{here + len(code):#x}, "
+            f"past {ADDR_PAGE_BLOCK_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
+def apply_info_menu(data: bytearray) -> None:
+    cave = build_info_menu_cave()
+    data[ADDR_MENU_LIST_CAVE : ADDR_MENU_LIST_CAVE + len(cave)] = cave
+    text = build_menu_text()
+    data[ADDR_MENU_LIST_STR : ADDR_MENU_LIST_STR + len(text)] = text
+    if data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] not in (
+        b"\x00" * len(_LAKE_BODY),
+        _LAKE_BODY,
+    ):
+        raise ValueError(f"lake sentence @{ADDR_LAKE_BODY:#x} is not empty")
+    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] = _LAKE_BODY
+    arrow, paint_at = build_menu_arrow_cave(cave)
+    data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(arrow)] = arrow
+    tail = ADDR_MENU_ARROW + len(arrow)
+    if tail < ADDR_MENU_ARROW_LIMIT:
+        data[tail:ADDR_MENU_ARROW_LIMIT] = b"\x00" * (ADDR_MENU_ARROW_LIMIT - tail)
+    opened = build_menu_open_cave(cave)
+    data[ADDR_MENU_OPEN : ADDR_MENU_OPEN + len(opened)] = opened
+    data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = _b_cond(
+        0, ADDR_ARROW_SKIP, ADDR_MENU_ARROW
+    )
+    pad = build_menu_pad_cave()
+    blob = menu_control_blob()
+    pad_at = data[ADDR_MENU_PAD : ADDR_MENU_PAD + len(blob)]
+    if pad_at != b"\x00" * len(blob) and pad_at != blob and pad_at[:4] != _u32(0xE92D4070):
+        raise ValueError(
+            f"menu pad @{ADDR_MENU_PAD:#x} is live code, not romaji padding"
+        )
+    data[ADDR_MENU_PAD : ADDR_MENU_PAD + len(blob)] = blob
+    hook = (
+        _bl(ADDR_INFO_DRAW, ADDR_MENU_OPEN)
+        + _bl(ADDR_INFO_DRAW + 4, ADDR_MENU_PAD)
+        + _bl(ADDR_INFO_DRAW + 8, ADDR_MENU_LIST_CAVE)
+    )
+    data[ADDR_INFO_DRAW : ADDR_INFO_DRAW + 12] = hook
+    poll = _bl(ADDR_MENU_POLL, menu_poll_addr())
+    there = bytes(data[ADDR_MENU_POLL : ADDR_MENU_POLL + 4])
+    if there not in (VANILLA_MENU_POLL, poll, b"\x00\x00\x00\x00"):
+        raise ValueError(f"menu poll @{ADDR_MENU_POLL:#x} is not the widget load")
+    data[ADDR_MENU_POLL : ADDR_MENU_POLL + 4] = poll
+    data[ADDR_TITLE_BIND_FIXED : ADDR_TITLE_BIND_FIXED + 4] = PATCHED_TITLE_BIND_SKIP
+    data[ADDR_TITLE_BIND_INDEX : ADDR_TITLE_BIND_INDEX + 4] = PATCHED_TITLE_BIND_SKIP
+    cell = ADDR_MENU_CELL
+    if len(data) >= cell + 40:
+        base = ADDR_MENU_LIST_STR + 0x100000
+        data[cell : cell + 4] = _u32(base)
+        data[cell + 4 : cell + 8] = _u32(0)
+        data[cell + 8 : cell + 12] = _u32(0)
+        data[cell + 12 : cell + 16] = _u32(base + len(MENU_LINES) * MENU_STRIDE)
+        data[cell + 16 : cell + 20] = _u32(0xFFFFFFFF)
+        data[cell + 20 : cell + 24] = _u32(base)
+        data[cell + 24 : cell + 28] = _u32(0)  # init once
+        data[cell + 28 : cell + 32] = _u32(0)  # right-page widget
+        data[cell + 32 : cell + 36] = _u32(0)  # screen widget
+        data[cell + 36 : cell + 40] = _u32(lake_body_va())
+    back = build_menu_back_stub(paint_at)
+    if len(data) >= ADDR_MENU_IDLE_POLL + len(back):
+        data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = back
+    data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = _b_cond(
+        0, ADDR_ARROW_IDLE, ADDR_ARROW_POLL
+    )
+    data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = _b(
+        ADDR_ARROW_POLL_TAIL, ADDR_ARROW_LATCH
+    )
+    data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = _bl(
+        ADDR_ARROW_STEP, ADDR_PAGE_BLOCK
+    )
+    data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = _b(
+        ADDR_ARROW_STEP + 4, ADDR_ARROW_CONSUME
+    )
+    for addr in ADDR_ARROW_SHOW:
+        data[addr : addr + 4] = PATCHED_ARROW_SHOW
+    block = build_page_block()
+    gap = data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)]
+    hole_tail = data[ADDR_PAGE_BLOCK_LIMIT : ADDR_PAGE_BLOCK_LIMIT + 2]
+    if gap != block and hole_tail != b"\x00\x00":
+        raise ValueError(f"page block @{ADDR_PAGE_BLOCK:#x} is not empty")
+    data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)] = block
+    for addr in (ADDR_TWIN_STEP, ADDR_THIRD_STEP):
+        data[addr : addr + 4] = _bl(addr, ADDR_PAGE_BLOCK)
+
+
+def build_list_blob() -> bytes:
+    """Two contents rows the in-room parser already understands.
+
+    Record stride is 306. The type byte is at +8 and sets one flag bit
+    (type 1 → bit 0, type 2 → bit 1). The title is the C string at +12.
+    A trailer halfword of -1 at +0x4D0 skips the extra block and opens
+    the book. The page mask stays bit 1, so the open spread is still
+    the holy-site page.
+    """
+    blob = bytearray(LIST_BLOB_LEN)
+    blob[0] = 1
+    blob[4:8] = _u32(2)
+    blob[8] = 1
+    blob[12 : 12 + len(_LIST_OPEN)] = _LIST_OPEN
+    holy = _LIST_STRIDE
+    blob[holy + 8] = 2
+    blob[holy + 12 : holy + 12 + len(_LIST_HOLY)] = _LIST_HOLY
+    blob[0x4D0:0x4D2] = struct.pack("<h", -1)
+    return bytes(blob)
+
+
+def build_list_cave(cave: int = ADDR_LIST_CAVE) -> bytes:
+    """Replace r7 with the contents blob and continue the record fill."""
+    code = bytearray()
+    code += _ldr_pc(cave, cave + 8, 7)  # ldr r7, [pc, #0]
+    code += _b(cave + len(code), ADDR_LIST_RESUME)
+    code += _u32(ADDR_LIST_BLOB + 0x100000)
+    if len(code) != len(VANILLA_LIST_CAVE):
+        raise ValueError(f"list cave {len(code)} != {len(VANILLA_LIST_CAVE)}")
+    if cave + len(code) > 0x0014ECF4:
+        raise ValueError(f"list cave ends @{cave + len(code):#x}")
+    return bytes(code)
+
+
+def list_beq() -> bytes:
+    return _b_cond(0, ADDR_EMPTY_LIST_BEQ, ADDR_LIST_CAVE)
+
+
+def apply_list_menu(data: bytearray) -> None:
+    blob = build_list_blob()
+    cave = build_list_cave()
+    data[ADDR_LIST_BLOB : ADDR_LIST_BLOB + len(blob)] = blob
+    data[ADDR_LIST_CAVE : ADDR_LIST_CAVE + len(cave)] = cave
+    data[ADDR_EMPTY_LIST_BEQ : ADDR_EMPTY_LIST_BEQ + 4] = list_beq()
+
+
+def build_menu_cave(cave: int = ADDR_MENU_CAVE) -> bytes:
+    """Construct the magazine list and start in MagList."""
+    code = bytearray()
+    code += _bl(cave + len(code), ADDR_MENU_CTOR)
+    code += _u32(0xE3A0100C)  # mov r1, #0xc
+    code += _u32(0xE5C0105E)  # strb r1, [r0, #0x5e]
+    code += _b(cave + len(code), ADDR_BOOK_CTOR_RESUME)
+    if len(code) != len(VANILLA_MENU_CAVE):
+        raise ValueError(f"menu cave {len(code)} != {len(VANILLA_MENU_CAVE)}")
+    if cave + len(code) > 0x0014EBC4:
+        raise ValueError(f"menu cave ends @{cave + len(code):#x}")
+    return bytes(code)
+
+
+def build_worker_cave(cave: int = ADDR_WORKER_CAVE) -> bytes:
+    """Allocate the worker, build the operator, then attach child id 0x37."""
+    code = bytearray()
+    code += _bl(cave + len(code), ADDR_WORKER_FACTORY)
+    pool_global = 88
+    pool_method = 92
+    pool_ui = 96
+    code += _ldr_pc(cave + len(code), cave + pool_global, 3)
+    code += _u32(0xE5830000)  # str r0, [r3]
+    code += _u32(0xE2801E92)  # add r1, r0, #0x920
+    code += _u32(0xE5801910)  # str r1, [r0, #0x910]
+    code += _ldr_pc(cave + len(code), cave + pool_method, 2)
+    code += _u32(0xE581200C)  # str r2, [r1, #0xc]
+    code += _bl(cave + len(code), ADDR_MENU_CTOR)
+    code += _u32(0xE1A05000)  # mov r5, r0
+    code += _ldr_pc(cave + len(code), cave + pool_ui, 0)
+    code += _u32(0xE3A01002)  # mov r1, #2
+    code += _u32(0xE5900000)  # ldr r0, [r0]
+    code += _bl(cave + len(code), ADDR_UI_LOOKUP)
+    skip = 80
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _b_cond(0, cave + len(code), cave + skip)
+    code += _u32(0xE3A01037)  # mov r1, #0x37
+    code += _bl(cave + len(code), ADDR_UI_CHILD)
+    code += _u32(0xE5850060)  # str r0, [r5, #0x60]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _u32(0x15805078)  # strne r5, [r0, #0x78]
+    if len(code) != skip:
+        raise ValueError(f"worker cave skip {len(code)} != {skip}")
+    code += _u32(0xE1A00005)  # mov r0, r5
+    code += _b(cave + len(code), ADDR_BOOK_CTOR_RESUME)
+    if len(code) != pool_global:
+        raise ValueError(f"worker cave code {len(code)} != {pool_global}")
+    code += _u32(ADDR_WORKER_GLOBAL)
+    code += _u32(ADDR_SESSION_RET)
+    code += _u32(ADDR_UI_ROOT)
+    if cave + len(code) > ADDR_CHILD_CAVE:
+        raise ValueError(f"worker cave ends @{cave + len(code):#x}")
+    return bytes(code)
+
+
+def build_child_cave(cave: int = ADDR_CHILD_CAVE) -> bytes:
+    """After the tutorial, signal state 11 to open the cart list.
+
+    The draw already stored the real worker at ``*0x008BFAEC``. Setting
+    ``+0xdc`` and one date byte makes state 11 enter MagList. The enter
+    patch starts that list at inner state 6, which polls rows and does
+    not open the StreetPass dialog.
+    """
+    code = bytearray()
+    code += _u32(0xE3A01001)  # mov r1, #1
+    code += _u32(0xE5C410DC)  # strb r1, [r4, #0xdc]
+    code += _u32(0xE5C41066)  # strb r1, [r4, #0x66]
+    code += _u32(0xE12FFF1E)  # bx lr
+    while len(code) < 88:
+        code += ARM_NOP
+    if len(code) != 88:
+        raise ValueError(f"child cave {len(code)} != 88")
+    if cave + len(code) > ADDR_STATE6_LIMIT:
+        raise ValueError(f"child cave ends @{cave + len(code):#x}")
+    return bytes(code)
+
+
+def apply_worker_host(data: bytearray) -> None:
+    data[ADDR_DRAW_BODY : ADDR_DRAW_BODY + len(VANILLA_WORKER_CAVE)] = VANILLA_WORKER_CAVE
+    data[ADDR_DRAW_CHILD : ADDR_DRAW_CHILD + len(VANILLA_CHILD_CAVE)] = VANILLA_CHILD_CAVE
+    data[ADDR_MENU_DRAW : ADDR_MENU_DRAW + len(VANILLA_MENU_DRAW)] = VANILLA_MENU_DRAW
+    cave = build_worker_cave()
+    data[ADDR_WORKER_CAVE : ADDR_WORKER_CAVE + len(cave)] = cave
+    child = build_child_cave()
+    data[ADDR_CHILD_CAVE : ADDR_CHILD_CAVE + len(child)] = child
+    data[ADDR_CHILD_CALL : ADDR_CHILD_CALL + 4] = _bl(ADDR_CHILD_CALL, ADDR_CHILD_CAVE)
+    data[ADDR_BOOK_CTOR : ADDR_BOOK_CTOR + 4] = _b(ADDR_BOOK_CTOR, ADDR_WORKER_CAVE)
+    for addr in (ADDR_MAG_ST0_BUSY, ADDR_MAG_ST0_FLAG1, ADDR_MAG_ST0_FLAG2):
+        data[addr : addr + 4] = ARM_NOP
+    data[ADDR_MAGLIST_ENTER_INNER : ADDR_MAGLIST_ENTER_INNER + 8] = (
+        PATCHED_MAGLIST_ENTER_INNER
+    )
+    data[ADDR_MAGLIST_ST6_STAY : ADDR_MAGLIST_ST6_STAY + 4] = (
+        PATCHED_MAGLIST_ST6_STAY
+    )
+
+
+def apply_menu_select(data: bytearray) -> None:
+    cave = build_menu_cave()
+    data[ADDR_MENU_CAVE : ADDR_MENU_CAVE + len(cave)] = cave
+    data[ADDR_BOOK_CTOR : ADDR_BOOK_CTOR + 4] = _b(ADDR_BOOK_CTOR, ADDR_MENU_CAVE)
+    data[ADDR_MENU_DRAW : ADDR_MENU_DRAW + len(PATCHED_MENU_DRAW)] = PATCHED_MENU_DRAW
 
 
 def _one_row(cave: int, count_off: int, row_off: int, resume: int, prelude: bytes = b"") -> bytes:
@@ -865,6 +1802,8 @@ def is_patched(data: bytes) -> bool:
         and data[ADDR_MERGE_BEQ : ADDR_MERGE_BEQ + 4] == VANILLA_MERGE_BEQ
         and data[ADDR_MERGE_PARSE : ADDR_MERGE_PARSE + MERGE_PARSE_LEN]
         == VANILLA_MERGE_PARSE
+        and data[ADDR_MAGLIST_FATAL_BL : ADDR_MAGLIST_FATAL_BL + 4]
+        == VANILLA_MAGLIST_FATAL_BL
         and data[ADDR_MAGLIST_EXTRA : ADDR_MAGLIST_EXTRA + 4] == PATCHED_MAGLIST_EXTRA
         and data[ADDR_MAGLIST_NODATA_BEQ : ADDR_MAGLIST_NODATA_BEQ + 4]
         == VANILLA_MAGLIST_NODATA_BEQ
@@ -876,13 +1815,23 @@ def is_patched(data: bytes) -> bool:
             data[addr : addr + 4] == ARM_NOP for addr, _ in WATCHER_NOP_SITES
         )
         and all(
-            data[addr : addr + 4] == patched
+            data[addr : addr + 4]
+            == patched
             for addr, _vanilla, patched in MAGLIST_WORD_SITES
         )
         and all(
             data[addr : addr + 4] == vanilla
             for addr, vanilla in WATCHER_RESTORE_SITES
         )
+        and data[ADDR_HOME_OPEN_BL : ADDR_HOME_OPEN_BL + 4] == VANILLA_HOME_OPEN_BL
+        and data[ADDR_WEB_NOTIFY : ADDR_WEB_NOTIFY + 4] == VANILLA_WEB_NOTIFY
+        and data[ADDR_BOOK_OPEN_NEXT : ADDR_BOOK_OPEN_NEXT + 4]
+        == VANILLA_BOOK_OPEN_NEXT
+        and data[ADDR_BOOK_CTOR : ADDR_BOOK_CTOR + 4] == VANILLA_BOOK_CTOR
+        and data[ADDR_MENU_CAVE : ADDR_MENU_CAVE + len(VANILLA_MENU_CAVE)]
+        == VANILLA_MENU_CAVE
+        and data[ADDR_MENU_DRAW : ADDR_MENU_DRAW + len(VANILLA_MENU_DRAW)]
+        == VANILLA_MENU_DRAW
         and data[ADDR_GATE_ENTRY : ADDR_GATE_ENTRY + 8] == PATCHED_RET0
         and data[ADDR_WEB_WATCHER_CLICK : ADDR_WEB_WATCHER_CLICK + 8]
         == VANILLA_WEB_WATCHER_CLICK
@@ -950,6 +1899,9 @@ def apply_patch(data: bytearray) -> bool:
     data[ADDR_MERGE_AC : ADDR_MERGE_AC + 4] = PATCHED_MERGE_AC
     data[ADDR_MERGE_BEQ : ADDR_MERGE_BEQ + 4] = VANILLA_MERGE_BEQ
     data[ADDR_MERGE_PARSE : ADDR_MERGE_PARSE + MERGE_PARSE_LEN] = VANILLA_MERGE_PARSE
+    data[ADDR_MAGLIST_FATAL_BL : ADDR_MAGLIST_FATAL_BL + 4] = (
+        VANILLA_MAGLIST_FATAL_BL
+    )
     data[ADDR_MAGLIST_EXTRA : ADDR_MAGLIST_EXTRA + 4] = PATCHED_MAGLIST_EXTRA
     data[ADDR_MAGLIST_NODATA_BEQ : ADDR_MAGLIST_NODATA_BEQ + 4] = (
         VANILLA_MAGLIST_NODATA_BEQ
@@ -972,6 +1924,11 @@ def apply_patch(data: bytearray) -> bool:
     data[ADDR_WEB_PILL_OTHER : ADDR_WEB_PILL_OTHER + 4] = PATCHED_WEB_PILL_OTHER
     data[ADDR_GATE_HASROWS_BL : ADDR_GATE_HASROWS_BL + 4] = VANILLA_GATE_HASROWS_BL
     apply_area_name(data)
+    apply_info_menu(data)
+    # Do not open WebUI here. It stays blank unless LoveplusModeHome
+    # is its parent, and that parent's show slot crashes on the room.
+    # Do not hold the book in state 2. That frame is not drawn.
+    data[ADDR_BOOK_OPEN_NEXT : ADDR_BOOK_OPEN_NEXT + 4] = VANILLA_BOOK_OPEN_NEXT
     data[ADDR_HASENTRY_LDRB : ADDR_HASENTRY_LDRB + 4] = VANILLA_TABLES_READY
     data[ADDR_HASLIST_LDRB : ADDR_HASLIST_LDRB + 4] = VANILLA_TABLES_READY
     data[ADDR_ISSUE_CAVE : ADDR_ISSUE_CAVE + len(VANILLA_ISSUE_BODY)] = (
@@ -1046,6 +2003,7 @@ def revert_patch(data: bytearray) -> bool:
     data[ADDR_MERGE_AC : ADDR_MERGE_AC + 4] = VANILLA_MERGE_AC
     data[ADDR_MERGE_BEQ : ADDR_MERGE_BEQ + 4] = VANILLA_MERGE_BEQ
     data[ADDR_MERGE_PARSE : ADDR_MERGE_PARSE + MERGE_PARSE_LEN] = VANILLA_MERGE_PARSE
+    data[ADDR_MAGLIST_FATAL_BL : ADDR_MAGLIST_FATAL_BL + 4] = VANILLA_MAGLIST_FATAL_BL
     data[ADDR_MAGLIST_EXTRA : ADDR_MAGLIST_EXTRA + 4] = VANILLA_MAGLIST_EXTRA
     data[ADDR_MAGLIST_NODATA_BEQ : ADDR_MAGLIST_NODATA_BEQ + 4] = (
         VANILLA_MAGLIST_NODATA_BEQ
@@ -1069,6 +2027,67 @@ def revert_patch(data: bytearray) -> bool:
     data[ADDR_AREA_CAVE : ADDR_AREA_CAVE + len(VANILLA_AREA_CAVE_BODY)] = (
         VANILLA_AREA_CAVE_BODY
     )
+    data[ADDR_INFO_DRAW : ADDR_INFO_DRAW + len(VANILLA_INFO_DRAW)] = VANILLA_INFO_DRAW
+    data[ADDR_MENU_POLL : ADDR_MENU_POLL + 4] = VANILLA_MENU_POLL
+    blob = menu_control_blob()
+    if data[ADDR_MENU_PAD : ADDR_MENU_PAD + len(blob)] == blob:
+        data[ADDR_MENU_PAD : ADDR_MENU_PAD + len(blob)] = b"\x00" * len(blob)
+    block = build_page_block()
+    if data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)] == block:
+        data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)] = b"\x00" * len(block)
+    for addr in (ADDR_TWIN_STEP, ADDR_THIRD_STEP):
+        if data[addr : addr + 4] == _bl(addr, ADDR_PAGE_BLOCK):
+            data[addr : addr + 4] = _bl(addr, ADDR_PAGE_STEP)
+    data[ADDR_TITLE_BIND_FIXED : ADDR_TITLE_BIND_FIXED + 4] = VANILLA_TITLE_BIND_FIXED
+    data[ADDR_TITLE_BIND_INDEX : ADDR_TITLE_BIND_INDEX + 4] = VANILLA_TITLE_BIND_INDEX
+    data[ADDR_MENU_LIST_STR : ADDR_MENU_LIST_STR + len(build_menu_text())] = b"\x00" * len(
+        build_menu_text()
+    )
+    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] = b"\x00" * len(_LAKE_BODY)
+    data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = VANILLA_ARROW_SKIP
+    data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = VANILLA_ARROW_IDLE
+    data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = VANILLA_ARROW_POLL_TAIL
+    data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = VANILLA_ARROW_STEP
+    data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = VANILLA_ARROW_CMN
+    _arrow, paint_at = build_menu_arrow_cave(build_info_menu_cave())
+    back = build_menu_back_stub(paint_at)
+    if len(data) >= ADDR_MENU_IDLE_POLL + len(back):
+        data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = b"\x00" * len(
+            back
+        )
+    for addr in ADDR_ARROW_SHOW:
+        data[addr : addr + 4] = VANILLA_ARROW_HIDE
+    data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(VANILLA_MENU_ARROW_BODY)] = (
+        VANILLA_MENU_ARROW_BODY
+    )
+    data[ADDR_MENU_OPEN : ADDR_MENU_OPEN + len(VANILLA_MENU_OPEN_BODY)] = (
+        VANILLA_MENU_OPEN_BODY
+    )
+    data[0x006094B8 : 0x006094BC] = ARM_NOP
+    data[ADDR_LIST_CAVE : ADDR_LIST_CAVE + len(VANILLA_LIST_CAVE)] = VANILLA_LIST_CAVE
+    data[ADDR_LIST_BLOB : ADDR_LIST_BLOB + LIST_BLOB_LEN] = b"\x00" * LIST_BLOB_LEN
+    data[ADDR_MENU_CAVE : ADDR_MENU_CAVE + len(VANILLA_MENU_CAVE)] = VANILLA_MENU_CAVE
+    data[ADDR_DRAW_BODY : ADDR_DRAW_BODY + len(VANILLA_WORKER_CAVE)] = (
+        VANILLA_WORKER_CAVE
+    )
+    data[ADDR_DRAW_CHILD : ADDR_DRAW_CHILD + len(VANILLA_CHILD_CAVE)] = (
+        VANILLA_CHILD_CAVE
+    )
+    data[ADDR_WORKER_CAVE : ADDR_WORKER_CAVE + len(VANILLA_STATE6_BODY)] = (
+        VANILLA_STATE6_BODY
+    )
+    data[ADDR_CHILD_CALL : ADDR_CHILD_CALL + 4] = VANILLA_CHILD_CALL
+    data[ADDR_MAGLIST_ENTER_INNER : ADDR_MAGLIST_ENTER_INNER + 8] = (
+        VANILLA_MAGLIST_ENTER_INNER
+    )
+    data[ADDR_MAGLIST_ST6_STAY : ADDR_MAGLIST_ST6_STAY + 4] = (
+        VANILLA_MAGLIST_ST6_STAY
+    )
+    data[ADDR_HOME_OPEN_BL : ADDR_HOME_OPEN_BL + 4] = VANILLA_HOME_OPEN_BL
+    data[ADDR_WEB_NOTIFY : ADDR_WEB_NOTIFY + 4] = VANILLA_WEB_NOTIFY
+    data[ADDR_BOOK_OPEN_NEXT : ADDR_BOOK_OPEN_NEXT + 4] = VANILLA_BOOK_OPEN_NEXT
+    data[ADDR_BOOK_CTOR : ADDR_BOOK_CTOR + 4] = VANILLA_BOOK_CTOR
+    data[ADDR_MENU_DRAW : ADDR_MENU_DRAW + len(VANILLA_MENU_DRAW)] = VANILLA_MENU_DRAW
     data[ADDR_HASENTRY_LDRB : ADDR_HASENTRY_LDRB + 4] = VANILLA_TABLES_READY
     data[ADDR_HASLIST_LDRB : ADDR_HASLIST_LDRB + 4] = VANILLA_TABLES_READY
     data[ADDR_ISSUE_CAVE : ADDR_ISSUE_CAVE + len(VANILLA_ISSUE_BODY)] = (
