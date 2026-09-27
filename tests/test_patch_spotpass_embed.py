@@ -295,8 +295,8 @@ def test_info_menu_draws_filled_sections_into_tex_info():
     assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp.VANILLA_ARROW_STEP
     assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp.VANILLA_ARROW_CMN
     assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == back
-    for addr in sp.ADDR_ARROW_SHOW:
-        assert data[addr : addr + 4] == sp.PATCHED_ARROW_SHOW
+    for addr, _vanilla, patched in sp.ARROW_EDGE:
+        assert data[addr : addr + 4] == bytes.fromhex(patched)
     assert data[sp.ADDR_PAGE_MASK_WALK : sp.ADDR_PAGE_MASK_WALK + 4] == (
         sp.PATCHED_PAGE_MASK
     )
@@ -340,8 +340,8 @@ def test_info_menu_draws_filled_sections_into_tex_info():
     assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == (
         b"\x00" * len(back)
     )
-    for addr in sp.ADDR_ARROW_SHOW:
-        assert data[addr : addr + 4] == sp.VANILLA_ARROW_HIDE
+    for addr, vanilla, _patched in sp.ARROW_EDGE:
+        assert data[addr : addr + 4] == bytes.fromhex(vanilla)
     assert data[0x006094B8 : 0x006094BC] == sp.ARM_NOP
 
 

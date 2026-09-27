@@ -471,16 +471,31 @@ ADDR_MENU_POLL = 0x004DCC10
 VANILLA_MENU_POLL = bytes.fromhex("8800d4e5")  # ldrb r0, [r4, #0x88]
 MENU_PAD_LEN = 108
 ADDR_KEYS = 0x005CB4C4
-# One page makes both directions return -1, and these movs then hide
-# the arrows, so the latches never get set. Leave the arrows shown.
-ADDR_ARROW_SHOW = (
-    0x004DCB34,  # name refresh, previous
-    0x004DCB58,  # name refresh, next
-    0x004DA8E4,  # other book update, previous
-    0x004DA908,  # other book update, next
+# The probe returns -1 when that direction has no page. Vanilla then hides
+# that arrow and skips the call when the direction is open, so a hidden
+# arrow stayed hidden after you turned. Each pair below always calls the
+# show helper: moveq r1,#0 when the probe is -1, movne r1,#1 otherwise.
+# First page hides the back arrow. Last page hides the forward arrow.
+_MOVEQ_HIDE = "0010a003"  # moveq r1, #0
+_MOVNE_SHOW = "0110a013"  # movne r1, #1
+_ARROW_NOP = "00f020e3"
+ARROW_EDGE = (
+    # name refresh, previous. bne; mov r1,#0
+    (0x004DCB30, "0200001a", _MOVEQ_HIDE),
+    (0x004DCB34, "0010a0e3", _MOVNE_SHOW),
+    # name refresh, next. nop; bne; mov r1,#0
+    (0x004DCB50, "00f020e3", _MOVEQ_HIDE),
+    (0x004DCB54, "0200001a", _MOVNE_SHOW),
+    (0x004DCB58, "0010a0e3", _ARROW_NOP),
+    # other book update, previous
+    (0x004DA8DC, "00f020e3", _MOVEQ_HIDE),
+    (0x004DA8E0, "0200001a", _MOVNE_SHOW),
+    (0x004DA8E4, "0010a0e3", _ARROW_NOP),
+    # other book update, next
+    (0x004DA900, "00f020e3", _MOVEQ_HIDE),
+    (0x004DA904, "0200001a", _MOVNE_SHOW),
+    (0x004DA908, "0010a0e3", _ARROW_NOP),
 )
-VANILLA_ARROW_HIDE = bytes.fromhex("0010a0e3")  # mov r1, #0
-PATCHED_ARROW_SHOW = bytes.fromhex("0110a0e3")  # mov r1, #1
 # 32 zero bytes between a finished name-input branch and the romaji cave.
 ADDR_MENU_IDLE_POLL = 0x0068F8E0
 ADDR_MENU_IDLE_POLL_LIMIT = 0x0068F900
@@ -1565,8 +1580,8 @@ def apply_info_menu(data: bytearray) -> None:
     # The front and back arrows turn the real page, so the number moves.
     data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = VANILLA_ARROW_STEP
     data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = VANILLA_ARROW_CMN
-    for addr in ADDR_ARROW_SHOW:
-        data[addr : addr + 4] = PATCHED_ARROW_SHOW
+    for addr, _vanilla, patched in ARROW_EDGE:
+        data[addr : addr + 4] = bytes.fromhex(patched)
     block = build_page_block()
     gap = data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)]
     hole_tail = data[ADDR_PAGE_BLOCK_LIMIT : ADDR_PAGE_BLOCK_LIMIT + 2]
@@ -2253,8 +2268,8 @@ def revert_patch(data: bytearray) -> bool:
         data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = b"\x00" * len(
             back
         )
-    for addr in ADDR_ARROW_SHOW:
-        data[addr : addr + 4] = VANILLA_ARROW_HIDE
+    for addr, vanilla, _patched in ARROW_EDGE:
+        data[addr : addr + 4] = bytes.fromhex(vanilla)
     data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(VANILLA_MENU_ARROW_BODY)] = (
         VANILLA_MENU_ARROW_BODY
     )
