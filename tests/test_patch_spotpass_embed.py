@@ -268,15 +268,13 @@ def test_info_menu_draws_filled_sections_into_tex_info():
     assert sp.ADDR_MENU_PAD + len(blob) <= sp.ADDR_MENU_PAD_LIMIT
     assert data[sp.ADDR_MENU_PAD : sp.ADDR_MENU_PAD + len(blob)] == blob
     assert data[sp.ADDR_TWIN_STEP : sp.ADDR_TWIN_STEP + 4] == sp._bl(
-        sp.ADDR_TWIN_STEP, sp.ADDR_PAGE_BLOCK
+        sp.ADDR_TWIN_STEP, sp.ADDR_PAGE_STEP
     )
     assert data[sp.ADDR_PAGE_BLOCK : sp.ADDR_PAGE_BLOCK + len(sp.build_page_block())] == (
         sp.build_page_block()
     )
     assert data[sp.ADDR_MENU_LIST_STR : sp.ADDR_MENU_LIST_STR + len(text)] == text
-    assert data[sp.ADDR_ARROW_SKIP : sp.ADDR_ARROW_SKIP + 4] == sp._b_cond(
-        0, sp.ADDR_ARROW_SKIP, sp.ADDR_MENU_ARROW
-    )
+    assert data[sp.ADDR_ARROW_SKIP : sp.ADDR_ARROW_SKIP + 4] == sp.VANILLA_ARROW_SKIP
     _arrow, paint_at = sp.build_menu_arrow_cave(sp.build_info_menu_cave())
     back = sp.build_menu_back_stub(paint_at)
     assert sp.ADDR_MENU_IDLE_POLL + len(back) <= sp.ADDR_MENU_IDLE_POLL_LIMIT
@@ -294,12 +292,8 @@ def test_info_menu_draws_filled_sections_into_tex_info():
     assert data[sp.ADDR_BACK_LEAVE : sp.ADDR_BACK_LEAVE + 4] == sp._b(
         sp.ADDR_BACK_LEAVE, sp.ADDR_ARROW_LATCH
     )
-    assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp._bl(
-        sp.ADDR_ARROW_STEP, sp.ADDR_PAGE_BLOCK
-    )
-    assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp._b(
-        sp.ADDR_ARROW_STEP + 4, sp.ADDR_ARROW_CONSUME
-    )
+    assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp.VANILLA_ARROW_STEP
+    assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp.VANILLA_ARROW_CMN
     assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == back
     for addr in sp.ADDR_ARROW_SHOW:
         assert data[addr : addr + 4] == sp.PATCHED_ARROW_SHOW

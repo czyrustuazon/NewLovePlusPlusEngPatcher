@@ -313,14 +313,15 @@ PATCHED_EMPTY_DIALOG_BEQ = bytes.fromhex("cefeff0a")  # beq 0x3e6908
 ADDR_EMPTY_LIST_STATE = 0x003E6944  # moveq r0, #6
 VANILLA_EMPTY_LIST_STATE = bytes.fromhex("0600a003")
 PATCHED_EMPTY_LIST_STATE = VANILLA_EMPTY_LIST_STATE
-# The book stays on the holy-site spread (bit 1). FEVER is a menu row:
-# its heated-pool sentence is drawn into the same text pane, not a second page.
+# The book opens on Holy Site and the arrows turn to FEVER. Bits 1 and 3
+# are those two corners. Empty corners stay clear, so the page number only
+# moves between 01/02 and 03/04.
 ADDR_PAGE_MASK_WALK = 0x004DA664  # ldr r2, [r4, #0x8c]
 VANILLA_PAGE_MASK_WALK = bytes.fromhex("8c2094e5")
-PATCHED_PAGE_MASK = bytes.fromhex("0220a0e3")  # mov r2, #2
+PATCHED_PAGE_MASK = bytes.fromhex("0a20a0e3")  # mov r2, #0x0a
 ADDR_PAGE_MASK_LOOKUP = 0x00631354  # ldr ip, [r0, #0x8c]
 VANILLA_PAGE_MASK_LOOKUP = bytes.fromhex("8cc090e5")
-PATCHED_PAGE_MASK_LOOKUP = bytes.fromhex("02c0a0e3")  # mov ip, #2
+PATCHED_PAGE_MASK_LOOKUP = bytes.fromhex("0ac0a0e3")  # mov ip, #0x0a
 ADDR_EMPTY_LIST_BEQ = 0x003E6948  # beq 0x3e6d90
 VANILLA_EMPTY_LIST_BEQ = bytes.fromhex("1001000a")
 # Book-only rollback 69df39c jumps straight at the TownGuide constructor.
@@ -1338,11 +1339,13 @@ def build_menu_back_stub(_paint_at: int) -> bytes:
 
 
 def build_menu_pad_cave() -> bytes:
-    """A opens the marked row.
+    """Follow the page the arrows just turned to.
 
-    Called every frame from the info draw, with r6 the right-page widget
-    and r7 the screen. Left and right are handled by the move cave, which
-    sits in the bytes this used to spend on B. A is 3DS pad bit 0.
+    Called every frame from the name refresh, with r4 the book, r6 the
+    right-page widget, and r8 the left-page widget.     ``[book+0x68]`` is 0 on
+    Holy Site and 1 on FEVER. Labels are drawn only while ``+0x5c`` is set,
+    so a turn does not draw into a page that is still rebuilding. The banner
+    and the sentence change only when the page does.
     """
     cave = ADDR_MENU_PAD
     code = bytearray()
@@ -1351,41 +1354,44 @@ def build_menu_pad_cave() -> bytes:
         return cave + len(code)
 
     code += _u32(0xE92D4070)  # push {r4, r5, r6, lr}
-    # The reader just past this cave returns the HID pad word. Bit 0 is A.
-    code += _bl(at(), ADDR_MENU_PAD + MENU_PAD_LEN)
+    # The turn clears +0x5c before the steady poll. Drawing then uses a
+    # widget whose method is still null. The content refresh calls this
+    # first, while +0x5c is still set.
+    code += _u32(0xE5D4005C)  # ldrb r0, [r4, #0x5c]
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _b(at(), sheet_frame_addr())  # placeholder, patched to beq
+    ready_fix = len(code) - 4
+    code += _u32(0xE5945068)  # ldr r5, [r4, #0x68]
     cell_fix = len(code)
     code += b"\x00" * 4  # ldr r4, [pc, cell]
-    # r8 is the left-page widget on the name refresh. Keep it for the labels.
     code += _u32(0xE5848020)  # str r8, [r4, #0x20]
-    code += _u32(0xE5941010)  # ldr r1, [r4, #0x10]
-    code += _u32(0xE5840010)  # str r0, [r4, #0x10]
-    code += _u32(0xE1C02001)  # bic r2, r0, r1  newly pressed
-    code += _u32(0xE3120001)  # tst r2, #1  A
-    open_fix = len(code)
-    code += b"\x00" * 4  # bne open
-    code += _b(at(), sheet_frame_addr())
-    open_at = at()
-    code += _u32(0xE5945004)  # ldr r5, [r4, #4]
-    code += _u32(0xE3A00001)  # mov r0, #1
-    code += _u32(0xE5840008)  # str r0, [r4, #8]
+    code += _u32(0xE3550000)  # cmp r5, #0
+    code += _u32(0x03A05001)  # moveq r5, #1
+    code += _u32(0x13A05003)  # movne r5, #3
+    code += _u32(0xE5940020)  # ldr r0, [r4, #0x20]
+    code += _u32(0xE1A01005)  # mov r1, r5
+    code += _bl(at(), ADDR_PLACE_LABELS)
+    code += _u32(0xE5940004)  # ldr r0, [r4, #4]
+    code += _u32(0xE1500005)  # cmp r0, r5
+    code += _b(at(), sheet_frame_addr())  # placeholder; patched to beq below
+    same_fix = len(code) - 4
+    code += _u32(0xE5845004)  # str r5, [r4, #4]
     code += _u32(0xE1A00006)  # mov r0, r6
     code += _u32(0xE1A01005)  # mov r1, r5
     code += _u32(0xE3A02000)  # mov r2, #0
     code += _bl(at(), ADDR_TITLE_BIND_FN)
     code += _bl(at(), sentence_pick_addr())
-    # Index 3 replaces 「湖」 and the station. Any other row keeps them.
-    code += _u32(0xE5940020)  # ldr r0, [r4, #0x20]
-    code += _u32(0xE1A01005)  # mov r1, r5
-    code += _bl(at(), ADDR_PLACE_LABELS)
-    # The steady poll never reaches the info-draw hook, so clear the names here.
     code += _u32(0xE5941000)  # ldr r1, [r4]
     code += _u32(0xE1A00006)  # mov r0, r6
     code += _bl(at(), _INFO_DRAW)
     code += _b(at(), sheet_frame_addr())
-    code += _u32(0)  # both exits branch away; keeps the reader at +108
-    pool = at()
-    code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, pool, 4)
-    code[open_fix : open_fix + 4] = _b_cond(0x1, cave + open_fix, open_at)
+    pool = 104
+    if len(code) > pool:
+        raise ValueError(f"menu pad body is {len(code)} bytes, literal is at {pool}")
+    code += b"\x00" * (pool - len(code))
+    code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, cave + pool, 4)
+    code[same_fix : same_fix + 4] = _b_cond(0, cave + same_fix, sheet_frame_addr())
+    code[ready_fix : ready_fix + 4] = _b_cond(0, cave + ready_fix, sheet_frame_addr())
     code += _u32(ADDR_MENU_CELL + 0x100000)
     if len(code) != MENU_PAD_LEN:
         raise ValueError(
@@ -1510,9 +1516,7 @@ def apply_info_menu(data: bytearray) -> None:
     data[ADDR_BACK_LEAVE : ADDR_BACK_LEAVE + 4] = _b(ADDR_BACK_LEAVE, ADDR_ARROW_LATCH)
     opened = build_menu_open_cave(cave)
     data[ADDR_MENU_OPEN : ADDR_MENU_OPEN + len(opened)] = opened
-    data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = _b_cond(
-        0, ADDR_ARROW_SKIP, ADDR_MENU_ARROW
-    )
+    data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = VANILLA_ARROW_SKIP
     pad = build_menu_pad_cave()
     blob = menu_control_blob()
     pad_at = data[ADDR_MENU_PAD : ADDR_MENU_PAD + len(blob)]
@@ -1538,7 +1542,7 @@ def apply_info_menu(data: bytearray) -> None:
     if len(data) >= cell + 44:
         base = ADDR_MENU_LIST_STR + 0x100000
         first = MENU_FILLED[0][0]
-        data[cell : cell + 4] = _u32(base + first * MENU_STRIDE)
+        data[cell : cell + 4] = _u32(lake_body_va())
         data[cell + 4 : cell + 8] = _u32(first)
         data[cell + 8 : cell + 12] = _u32(0)
         data[cell + 12 : cell + 16] = _u32(base + MENU_SLOT_COUNT * MENU_STRIDE)
@@ -1555,13 +1559,12 @@ def apply_info_menu(data: bytearray) -> None:
     data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = _b_cond(
         0, ADDR_ARROW_IDLE, back_finish_addr()
     )
+    data[ADDR_PAGE_MASK_WALK : ADDR_PAGE_MASK_WALK + 4] = PATCHED_PAGE_MASK
+    data[ADDR_PAGE_MASK_LOOKUP : ADDR_PAGE_MASK_LOOKUP + 4] = PATCHED_PAGE_MASK_LOOKUP
     data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = VANILLA_ARROW_POLL_TAIL
-    data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = _bl(
-        ADDR_ARROW_STEP, ADDR_PAGE_BLOCK
-    )
-    data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = _b(
-        ADDR_ARROW_STEP + 4, ADDR_ARROW_CONSUME
-    )
+    # The front and back arrows turn the real page, so the number moves.
+    data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = VANILLA_ARROW_STEP
+    data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = VANILLA_ARROW_CMN
     for addr in ADDR_ARROW_SHOW:
         data[addr : addr + 4] = PATCHED_ARROW_SHOW
     block = build_page_block()
@@ -1571,7 +1574,7 @@ def apply_info_menu(data: bytearray) -> None:
         raise ValueError(f"page block @{ADDR_PAGE_BLOCK:#x} is not empty")
     data[ADDR_PAGE_BLOCK : ADDR_PAGE_BLOCK + len(block)] = block
     for addr in (ADDR_TWIN_STEP, ADDR_THIRD_STEP):
-        data[addr : addr + 4] = _bl(addr, ADDR_PAGE_BLOCK)
+        data[addr : addr + 4] = _bl(addr, ADDR_PAGE_STEP)
 
 
 def build_list_blob() -> bytes:
