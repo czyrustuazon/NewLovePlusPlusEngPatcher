@@ -237,16 +237,18 @@ def test_area_name_cave_draws_station_into_tex_place():
     )
 
 
-def test_info_menu_draws_six_sections_into_tex_info():
+def test_info_menu_draws_filled_sections_into_tex_info():
     cave = sp.build_info_menu_cave()
     assert sp.ADDR_MENU_LIST_CAVE + len(cave) <= sp.ADDR_MENU_LIST_LIMIT
     assert len(cave) == len(sp.VANILLA_STATE6_BODY) + 4
-    for line in ("New Open", "Holy Site", "START", "FEVER", "PICK UP", "Photo Contest"):
-        assert line.encode("utf-8") in sp.MENU_STRING
-    assert sp.MENU_STRING.startswith(b"> New Open\n")
-    assert sp.MENU_STRING.count(b"\n") == 5
     text = sp.build_menu_text()
-    assert len(text) > len(sp.MENU_LINES) * sp.MENU_STRIDE
+    holy = text[sp.MENU_STRIDE : sp.MENU_STRIDE * 2]
+    fever = text[sp.MENU_STRIDE * 3 : sp.MENU_STRIDE * 4]
+    assert holy.startswith(b"> Holy Site\n  FEVER\x00")
+    assert fever.startswith(b"  Holy Site\n> FEVER\x00")
+    for absent in (b"New Open", b"START", b"PICK UP", b"Photo Contest"):
+        assert absent not in text
+    assert len(text) > sp.MENU_SLOT_COUNT * sp.MENU_STRIDE
     data = _vanilla_blob()
     assert sp.apply_patch(data) is True
     assert data[sp.ADDR_INFO_DRAW : sp.ADDR_INFO_DRAW + 4] == sp._bl(
@@ -271,9 +273,7 @@ def test_info_menu_draws_six_sections_into_tex_info():
     assert data[sp.ADDR_PAGE_BLOCK : sp.ADDR_PAGE_BLOCK + len(sp.build_page_block())] == (
         sp.build_page_block()
     )
-    assert data[sp.ADDR_MENU_LIST_STR : sp.ADDR_MENU_LIST_STR + len(sp.MENU_STRING)] == (
-        sp.MENU_STRING
-    )
+    assert data[sp.ADDR_MENU_LIST_STR : sp.ADDR_MENU_LIST_STR + len(text)] == text
     assert data[sp.ADDR_ARROW_SKIP : sp.ADDR_ARROW_SKIP + 4] == sp._b_cond(
         0, sp.ADDR_ARROW_SKIP, sp.ADDR_MENU_ARROW
     )
@@ -281,10 +281,18 @@ def test_info_menu_draws_six_sections_into_tex_info():
     back = sp.build_menu_back_stub(paint_at)
     assert sp.ADDR_MENU_IDLE_POLL + len(back) <= sp.ADDR_MENU_IDLE_POLL_LIMIT
     assert data[sp.ADDR_ARROW_IDLE : sp.ADDR_ARROW_IDLE + 4] == sp._b_cond(
-        0, sp.ADDR_ARROW_IDLE, sp.ADDR_ARROW_POLL
+        0, sp.ADDR_ARROW_IDLE, sp.back_finish_addr()
     )
-    assert data[sp.ADDR_ARROW_POLL_TAIL : sp.ADDR_ARROW_POLL_TAIL + 4] == sp._b(
-        sp.ADDR_ARROW_POLL_TAIL, sp.ADDR_ARROW_LATCH
+    assert data[sp.ADDR_ARROW_POLL_TAIL : sp.ADDR_ARROW_POLL_TAIL + 4] == (
+        sp.VANILLA_ARROW_POLL_TAIL
+    )
+    choice_at = sp.ADDR_MENU_ARROW + len(_arrow)
+    assert data[choice_at : choice_at + 28] == sp.build_back_choice(choice_at)
+    assert data[sp.ADDR_BACK_SET : sp.ADDR_BACK_SET + 4] == sp._b_cond(
+        1, sp.ADDR_BACK_SET, choice_at
+    )
+    assert data[sp.ADDR_BACK_LEAVE : sp.ADDR_BACK_LEAVE + 4] == sp._b(
+        sp.ADDR_BACK_LEAVE, sp.ADDR_ARROW_LATCH
     )
     assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp._bl(
         sp.ADDR_ARROW_STEP, sp.ADDR_PAGE_BLOCK
@@ -333,6 +341,8 @@ def test_info_menu_draws_six_sections_into_tex_info():
     )
     assert data[sp.ADDR_ARROW_STEP : sp.ADDR_ARROW_STEP + 4] == sp.VANILLA_ARROW_STEP
     assert data[sp.ADDR_ARROW_STEP + 4 : sp.ADDR_ARROW_STEP + 8] == sp.VANILLA_ARROW_CMN
+    assert data[sp.ADDR_BACK_SET : sp.ADDR_BACK_SET + 4] == sp.VANILLA_BACK_SET
+    assert data[sp.ADDR_BACK_LEAVE : sp.ADDR_BACK_LEAVE + 4] == sp.VANILLA_BACK_LEAVE
     assert data[sp.ADDR_MENU_IDLE_POLL : sp.ADDR_MENU_IDLE_POLL + len(back)] == (
         b"\x00" * len(back)
     )

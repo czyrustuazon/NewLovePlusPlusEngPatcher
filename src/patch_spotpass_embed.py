@@ -313,9 +313,8 @@ PATCHED_EMPTY_DIALOG_BEQ = bytes.fromhex("cefeff0a")  # beq 0x3e6908
 ADDR_EMPTY_LIST_STATE = 0x003E6944  # moveq r0, #6
 VANILLA_EMPTY_LIST_STATE = bytes.fromhex("0600a003")
 PATCHED_EMPTY_LIST_STATE = VANILLA_EMPTY_LIST_STATE
-# Issue 28's lake sentence belongs on 恋愛の聖地 (bit 1 → Mag_Tit03).
-# The other six cart corners stay out of the book. FEVER (bit 3) is the
-# heated-pool corner, but it uses this same sheet, so it stays out too.
+# The book stays on the holy-site spread (bit 1). FEVER is a menu row:
+# its heated-pool sentence is drawn into the same text pane, not a second page.
 ADDR_PAGE_MASK_WALK = 0x004DA664  # ldr r2, [r4, #0x8c]
 VANILLA_PAGE_MASK_WALK = bytes.fromhex("8c2094e5")
 PATCHED_PAGE_MASK = bytes.fromhex("0220a0e3")  # mov r2, #2
@@ -389,19 +388,15 @@ VANILLA_TITLE_BIND_FIXED = bytes.fromhex("52aef5ea")  # b 0x247018
 ADDR_TITLE_BIND_INDEX = 0x004DB730
 VANILLA_TITLE_BIND_INDEX = bytes.fromhex("38aef5ea")  # b 0x247018
 PATCHED_TITLE_BIND_SKIP = bytes.fromhex("1eff2fe1")  # bx lr
-MENU_LINES = (
-    "New Open",
-    "Holy Site",
-    "START",
-    "FEVER",
-    "PICK UP",
-    "Photo Contest",
+# Banner index, then the name drawn in the list. An issue leaves a corner
+# out when that corner has no sentence. Issue 28 has the lake and the pool.
+MENU_FILLED = (
+    (1, "Holy Site"),
+    (3, "FEVER"),
 )
-# Fixed stride so the arrow cave can turn an index into a string address.
+# Six stride slots. The arrow stores the banner index and adds index<<7.
+MENU_SLOT_COUNT = 6
 MENU_STRIDE = 128
-MENU_STRING = (
-    "> New Open\n  Holy Site\n  START\n  FEVER\n  PICK UP\n  Photo Contest"
-).encode("utf-8") + b"\x00"
 # Dead body of the ret1 has-entry function, then its literal pool, stopping
 # before the live function at 0x609208. The arrow cave plus its pool sit here.
 ADDR_MENU_ARROW = 0x00609170
@@ -426,18 +421,29 @@ VANILLA_MENU_OPEN_BODY = bytes.fromhex(
 # Prep and the sheet show/hide sit here. Stop before the next live function.
 ADDR_MENU_OPEN = 0x0060960C
 ADDR_MENU_OPEN_LIMIT = 0x006096D8
+# After the pad's pop. Draws 「湖」 / 奥十羽野駅, or the pool spot and a blank station.
+ADDR_PLACE_LABELS = ADDR_MENU_OPEN + 21 * 4
 # beq taken when the page mask has nowhere to turn. Both arrows land here.
 ADDR_ARROW_SKIP = 0x004DCCB4
 VANILLA_ARROW_SKIP = bytes.fromhex("0900000a")  # beq 0x4dcce0
 ADDR_ARROW_CONSUME = 0x004DCCE0
-# While the book is sitting still (+0x5e == 0) this beq skips the arrow
-# poll. Send it through the poll of both page widgets, then the latch read.
+# While the book is sitting still (+0x5e == 0) this beq used to skip the
+# arrow poll. It now enters the back-finish check: a pending もどる leave
+# completes, and every other idle frame still polls the page arrows.
 ADDR_ARROW_IDLE = 0x004DCC30
 VANILLA_ARROW_IDLE = bytes.fromhex("4100000a")  # beq 0x4dcd3c
 ADDR_ARROW_POLL = 0x004DCC60  # vtable+0x84 on the left widget, then the right
 ADDR_ARROW_POLL_TAIL = 0x004DCC80
+# Stay on the vanilla branch to the もどる check. A clear +0xdb byte falls
+# through to the page-arrow latch. A set byte leaves the book only while the
+# list is up. An open article restores that list instead.
 VANILLA_ARROW_POLL_TAIL = bytes.fromhex("efffffea")  # b 0x4dcc44
 ADDR_ARROW_LATCH = 0x004DCC84
+ADDR_BACK_SET = 0x004DCC4C
+VANILLA_BACK_SET = bytes.fromhex("0c00000a")  # beq 0x4dcc84
+ADDR_BACK_LEAVE = 0x004DCC50
+VANILLA_BACK_LEAVE = bytes.fromhex("0108a0e3")  # mov r0, #0x10000
+ADDR_BACK_LEAVE_CONT = 0x004DCC54
 # The page step used to run before the marker cave, and a real page
 # left the list. Branch straight to the cave instead.
 ADDR_ARROW_STEP = 0x004DCCA8
@@ -479,7 +485,8 @@ ADDR_MENU_IDLE_POLL = 0x0068F8E0
 ADDR_MENU_IDLE_POLL_LIMIT = 0x0068F900
 # .data cell nothing else points at. +0 string VA, +4 index, +8 opened,
 # +12 VA of the empty string used while an article is open,
-# +16 last button word, +20 base VA of the six choice strings.
+# +16 last button word, +20 base VA of the six choice strings,
+# +28 right-page widget, +32 left-page widget.
 ADDR_MENU_CELL = 0x007A5100
 ADDR_TITLE_BIND_FN = 0x00247018
 _SHEET_NAME = b"Pic_Page01_04\x00"
@@ -495,7 +502,26 @@ _LAKE_BODY = (
     "カノジョと過ごすのも\n"
     "悪くないかもしれません。"
 ).encode("utf-8") + b"\x00"
+# Issue 28's heated-pool paragraph, with the same issue header as Holy Site.
+# Line breaks are the ones in info.dat.
+_FEVER_BODY = (
+    "第28号\n"
+    "一年を通して水着で楽しめる大型\n"
+    "温水プール施設です。流れるプー\n"
+    "ルやウォータースライダーなどの\n"
+    "遊具だけでなく、軽食も楽しむこ\n"
+    "とができ、ここもカップルに人気\n"
+    "の定番スポットとなっています。"
+).encode("utf-8") + b"\x00"
+# The pool record names the facility and no station. 「湖」 / 奥十羽野駅 stay
+# the lake pair. Five ideographic spaces clear the station line.
+_POOL_SPOT = "温水プール".encode("utf-8") + b"\x00"
+_POOL_AREA = ("\u3000" * 5).encode("utf-8") + b"\x00"
+_PLACE_NAMES = _SPOT_NAME + _AREA_NAME + _POOL_SPOT + _POOL_AREA
 ADDR_LAKE_BODY = 0x006E6F42  # vanilla zero pad, after the menu strings
+ADDR_FEVER_BODY = ADDR_LAKE_BODY + len(_LAKE_BODY)
+ADDR_PLACE_NAMES = ADDR_FEVER_BODY + len(_FEVER_BODY)
+_SENTENCE_ROOM = 986
 ADDR_WORKER_GLOBAL = 0x008BFAEC
 ADDR_SESSION_RET = 0x0024EB9C  # VA of mov r0,#0; bx lr
 ADDR_UI_ROOT = 0x008A6558  # slot 2 is the parent 0x4525f4 attaches id 0x37 to
@@ -829,7 +855,7 @@ def apply_area_name(data: bytearray) -> None:
 
 
 def build_info_menu_cave(cave: int = ADDR_MENU_LIST_CAVE) -> bytes:
-    """Bind Tex_Info_01 on the right-page widget, then draw the six names.
+    """Bind Tex_Info_01 on the right-page widget, then draw the filled names.
 
     Entered with r6 = the right widget (the same one the vanilla draw
     passes to index 0). r4 and r5 are restored. Group 1 is tried first,
@@ -910,23 +936,27 @@ def build_info_menu_cave(cave: int = ADDR_MENU_LIST_CAVE) -> bytes:
     return blob
 
 
-def menu_choice(index: int) -> bytes:
-    """Six lines, with ``> `` on ``index`` and two spaces on the others."""
+def menu_choice(banner: int) -> bytes:
+    """The filled names, with ``> `` on ``banner``."""
     rows = []
-    for n, line in enumerate(MENU_LINES):
-        rows.append(("> " if n == index else "  ") + line)
+    for index, line in MENU_FILLED:
+        rows.append(("> " if index == banner else "  ") + line)
     raw = ("\n".join(rows)).encode("utf-8") + b"\x00"
     if len(raw) > MENU_STRIDE:
-        raise ValueError(f"menu choice {index} is {len(raw)} bytes")
+        raise ValueError(f"menu choice {banner} is {len(raw)} bytes")
     return raw + b"\x00" * (MENU_STRIDE - len(raw))
 
 
 def build_menu_text() -> bytes:
-    """Six marked strings, then a 0 byte, then the sheet pane name."""
+    """One stride slot per banner index, then a 0 byte, then the sheet name.
+
+    Slots with no sentence stay zero. The arrow never selects them.
+    """
+    filled = {index: menu_choice(index) for index, _line in MENU_FILLED}
     blob = bytearray()
-    for i in range(len(MENU_LINES)):
-        blob += menu_choice(i)
-    if len(blob) != len(MENU_LINES) * MENU_STRIDE:
+    for i in range(MENU_SLOT_COUNT):
+        blob += filled.get(i, b"\x00" * MENU_STRIDE)
+    if len(blob) != MENU_SLOT_COUNT * MENU_STRIDE:
         raise ValueError("menu text stride drifted")
     blob += b"\x00"  # empty string while an article is open
     blob += _SHEET_NAME
@@ -939,10 +969,35 @@ def lake_body_va() -> int:
     return ADDR_LAKE_BODY + 0x100000
 
 
+def fever_body_va() -> int:
+    """VA of the FEVER sentence, drawn into the same pane."""
+    return ADDR_FEVER_BODY + 0x100000
+
+
+def _article_blob() -> bytes:
+    """Lake sentence, pool sentence, then the four left-page labels."""
+    return _LAKE_BODY + _FEVER_BODY + _PLACE_NAMES
+
+
+def _place_vas() -> tuple[int, int, int, int]:
+    """Lake spot, lake station, pool spot, blank station."""
+    base = ADDR_PLACE_NAMES + 0x100000
+    spot = base
+    area = spot + len(_SPOT_NAME)
+    pool_spot = area + len(_AREA_NAME)
+    pool_area = pool_spot + len(_POOL_SPOT)
+    return spot, area, pool_spot, pool_area
+
+
+def _ldr_pc_eq(here: int, pool: int, rt: int) -> bytes:
+    word = struct.unpack("<I", _ldr_pc(here, pool, rt))[0]
+    return _u32(word & 0x0FFFFFFF)
+
+
 def _menu_pool_addrs(menu_cave: bytes) -> tuple[int, int, int, int]:
     """VAs the arrow and sheet caves load. Global already lives in the draw cave."""
     base = ADDR_MENU_LIST_STR + 0x100000
-    empty = base + len(MENU_LINES) * MENU_STRIDE
+    empty = base + MENU_SLOT_COUNT * MENU_STRIDE
     name = empty + 1
     global_at = ADDR_MENU_LIST_CAVE + len(menu_cave) - 16
     return base, empty, name, global_at
@@ -952,8 +1007,8 @@ def build_menu_arrow_cave(menu_cave: bytes) -> tuple[bytes, int]:
     """Page arrows move the marker, or close an open row.
 
     Called with r1 < 0 for the previous arrow and r1 >= 0 for the next.
-    While a row is open, either arrow puts the list back: New Open banner,
-    lake sheet hidden, and the marked names drawn again. Returns with
+    While a row is open, either arrow puts the list back on the marked
+    row's banner and draws that row's place names. Returns with
     r2 = cell and r1 = the string the page block redraws. A opens a row
     from the button poll, not from here.
     """
@@ -971,27 +1026,26 @@ def build_menu_arrow_cave(menu_cave: bytes) -> tuple[bytes, int]:
     code += _u32(0xE3500000)  # cmp r0, #0
     back_fix = len(code)
     code += b"\x00" * 4  # bne restore
+    # Issue 28's filled banners are 1 and 3. Either arrow swaps them.
     code += _u32(0xE5940004)  # ldr r0, [r4, #4]
-    code += _u32(0xE3510000)  # cmp r1, #0
-    code += _u32(0xB2800005)  # addlt r0, r0, #5
-    code += _u32(0xA2800001)  # addge r0, r0, #1
-    code += _u32(0xE3500006)  # cmp r0, #6
-    code += _u32(0xA2400006)  # subge r0, r0, #6
+    code += _u32(0xE3500001)  # cmp r0, #1
+    code += _u32(0x03A00003)  # moveq r0, #3
+    code += _u32(0x13A00001)  # movne r0, #1
     code += _u32(0xE5840004)  # str r0, [r4, #4]
     paint_fix = len(code)
     code += b"\x00" * 4  # b paint
     code += _u32(0xE3A00000)  # mov r0, #0
     code += _u32(0xE5840008)  # str r0, [r4, #8]
-    code += _u32(0xE594601C)  # ldr r6, [r4, #0x1c]
-    code += _u32(0xE1A00006)  # mov r0, r6
-    code += _u32(0xE3A01000)  # mov r1, #0
+    paint_at = at()
+    # Banner and place names follow the marked row, including a closed row.
+    code += _u32(0xE594001C)  # ldr r0, [r4, #0x1c]
+    code += _u32(0xE5941004)  # ldr r1, [r4, #4]
     code += _u32(0xE3A02000)  # mov r2, #0
     code += _bl(at(), ADDR_TITLE_BIND_FN)
-    code += _u32(0xE3A00000)  # mov r0, #0
-    code += _bl(at(), ADDR_MENU_OPEN + 10 * 4)
+    code += _u32(0xE5940020)  # ldr r0, [r4, #0x20]
+    code += _u32(0xE5941004)  # ldr r1, [r4, #4]
+    code += _bl(at(), ADDR_PLACE_LABELS)
     code += _u32(0xE5940004)  # ldr r0, [r4, #4]
-    paint_at = at()
-    code += _u32(0xE5840004)  # str r0, [r4, #4]
     base_fix = len(code)
     code += b"\x00" * 4  # ldr r1, [pc, base]
     code += _u32(0xE0810380)  # add r0, r1, r0, lsl #7
@@ -1017,18 +1071,43 @@ def build_menu_arrow_cave(menu_cave: bytes) -> tuple[bytes, int]:
     return bytes(code), paint_at
 
 
-def build_menu_open_cave(menu_cave: bytes) -> bytes:
-    """Reset the list on a new page, and show or hide Pic_Page01_04.
+def build_back_choice(at: int) -> bytes:
+    """もどる while an article is open returns to the list.
 
-    Prep is the entry (bl from the info draw). The sheet helper starts
-    40 bytes later: r0 = 1 shows the lake lines, r0 = 0 hides them.
-    It clears pane+0xb7 bit 0, which is the game's own visibility flag,
-    on Pic_Page01_04 and the page-part copy Pic_Page01_00. The pad
-    calls that helper on the way out of every poll, so the list stays
-    clear and Holy Site keeps the lines. Layout group 1 is tried first,
-    then group 0.
+    Entered only when the screen widget's back byte is set. The list cell
+    is the word 12 bytes before this cave. An open row redraws that list
+    and skips the leave, so the page is not rebuilt as New Open. A closed
+    list stores 0x10000 and continues the vanilla leave.
     """
-    _base, _empty, name, global_at = _menu_pool_addrs(menu_cave)
+    code = bytearray()
+
+    def here() -> int:
+        return at + len(code)
+
+    # The cell VA is the first pool word, 12 bytes above this cave.
+    code += _u32(0xE51F2014)  # ldr r2, [pc, #-0x14]
+    code += _u32(0xE5922008)  # ldr r2, [r2, #8]
+    code += _u32(0xE3520000)  # cmp r2, #0
+    code += _u32(0x03A00801)  # moveq r0, #0x10000
+    code += _b_cond(0, here(), ADDR_BACK_LEAVE_CONT)
+    code += _bl(here(), ADDR_PAGE_BLOCK)
+    code += _b(here(), 0x004DCCF0)
+    if len(code) != 28:
+        raise ValueError(f"back choice is {len(code)} bytes, the arrow tail has 28")
+    return bytes(code)
+
+
+def build_menu_open_cave(menu_cave: bytes) -> bytes:
+    """Reset the list on a new page.
+
+    Prep is the entry. Forty bytes later is a return, for the arrow
+    path that used to hide the picture. The sentence picker is the
+    next instruction: index 1 stores the lake lines, index 3 stores
+    the pool lines, and every other index leaves the empty string.
+    The picture panes stay size-zero in the layout. The place-label
+    drawer follows the pad's pop.
+    """
+    _base, _empty, _name, _global_at = _menu_pool_addrs(menu_cave)
     cave = ADDR_MENU_OPEN
     code = bytearray()
 
@@ -1047,76 +1126,55 @@ def build_menu_open_cave(menu_cave: bytes) -> bytes:
     code += _u32(0x18BD8010)  # popne {r4, pc}
     prep_base = len(code)
     code += b"\x00" * 4  # ldr r0, [pc, base]
-    code += _u32(0xE5840000)  # str r0, [r4]
+    # Slot 0 is empty. The cell already points at Holy Site. Remember that
+    # the list was set, then put that row's banner up once.
     code += _u32(0xE5840018)  # str r0, [r4, #0x18]
+    code += _bl(at(), bind_marked_addr())
     code += _u32(0xE8BD8010)  # pop {r4, pc}
     if len(code) != 10 * 4:
         raise ValueError(f"menu prep is {len(code)} bytes, sheet bl assumes 40")
-    # Sheet. r0 = show flag, r6 = right-page widget.
-    # Group 1 is the list's first try. The helper retries group 0.
-    code += _u32(0xE92D4030)  # push {r4, r5, lr}
-    code += _u32(0xE24DD010)  # sub sp, sp, #0x10
-    code += _u32(0xE1A04000)  # mov r4, r0
-    glob_fix = len(code)
-    code += b"\x00" * 4  # ldr r5, [pc, global]
-    code += _u32(0xE5950000)  # ldr r0, [r5]
-    code += _u32(0xE5962008)  # ldr r2, [r6, #8]
-    code += _u32(0xE3A01001)  # mov r1, #1
-    code += _bl(at(), ADDR_MENU_IDLE_POLL)
-    code += _u32(0xE3500000)  # cmp r0, #0
-    miss_fix = len(code)
-    code += b"\x00" * 4  # beq leave
-    code += _u32(0xE1A05000)  # mov r5, r0
-    code += _u32(0xE28D0008)  # add r0, sp, #8
-    code += _bl(at(), _AREA_FINDER_INIT)
-    code += _u32(0xE3A03000)  # mov r3, #0
-    code += _u32(0xE28D2008)  # add r2, sp, #8
-    name_fix = len(code)
-    code += b"\x00" * 4  # ldr r1, [pc, name]
-    code += _u32(0xE58D1000)  # str r1, [sp]  Pic_Page01_04, part name follows
-    code += _u32(0xE1A00005)  # mov r0, r5
-    code += _bl(at(), _AREA_FIND)
-    # A miss leaves the finder empty. The show call returns without writing.
-    code += _u32(0xE1A01004)  # mov r1, r4
-    code += _u32(0xE28D0008)  # add r0, sp, #8
-    code += _bl(at(), _PANE_SHOW)
-    code += _u32(0xE28D0008)  # add r0, sp, #8
-    code += _bl(at(), _AREA_FINDER_INIT)
-    code += _u32(0xE3A03000)  # mov r3, #0
-    code += _u32(0xE28D2008)  # add r2, sp, #8
-    code += _u32(0xE59D1000)  # ldr r1, [sp]
-    code += _u32(0xE281100E)  # add r1, r1, #14  Pic_Page01_00
-    code += _u32(0xE1A00005)  # mov r0, r5
-    code += _bl(at(), _AREA_FIND)
-    code += _u32(0xE1A01004)  # mov r1, r4
-    code += _u32(0xE28D0008)  # add r0, sp, #8
-    code += _bl(at(), _PANE_SHOW)
-    leave_at = at()
-    code += _u32(0xE28DD010)  # add sp, sp, #0x10
-    code += _u32(0xE8BD8030)  # pop {r4, r5, pc}
-    # Pad returns here every poll. r4 is the cell, r6 the right widget.
-    # The sentence is text, so the picture stays hidden on every row.
-    frame_at = at()
-    code += _u32(0xE3A00000)  # mov r0, #0
-    code += _u32(0xE3A00000)
-    code += _u32(0xE3A00000)
-    code += _u32(0xE3A00000)
-    code += _bl(at(), cave + 10 * 4)
+    code += _u32(0xE12FFF1E)  # bx lr  arrow's old hide call returns
+    # r4 = cell, r5 = index. Store the empty string, then a sentence.
+    if at() != sentence_pick_addr():
+        raise ValueError("sentence picker is not where the pad calls it")
+    code += _u32(0xE594000C)  # ldr r0, [r4, #0xc]
+    code += _u32(0xE5840000)  # str r0, [r4]
+    code += _u32(0xE3550001)  # cmp r5, #1
+    code += _u32(0x05940024)  # ldreq r0, [r4, #0x24]
+    code += _u32(0x05840000)  # streq r0, [r4]
+    code += _u32(0xE3550003)  # cmp r5, #3
+    code += _u32(0x05940028)  # ldreq r0, [r4, #0x28]
+    code += _u32(0x05840000)  # streq r0, [r4]
+    code += _u32(0xE12FFF1E)  # bx lr
     code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
-    if len(_SHEET_NAME) != 14:
-        raise ValueError("sheet name length drifted; the part name add is #14")
-    if frame_at != cave + len(code) - 24:
-        raise ValueError("sheet frame tail is not the last 24 bytes")
+    if at() - 4 != sheet_frame_addr():
+        raise ValueError("pad return is not the pop")
+    if at() != ADDR_PLACE_LABELS:
+        raise ValueError(
+            f"place labels @{at():#x}, expected {ADDR_PLACE_LABELS:#x}"
+        )
+    code += build_place_labels()
+    if at() != bind_marked_addr():
+        raise ValueError(
+            f"banner bind @{at():#x}, expected {bind_marked_addr():#x}"
+        )
+    code += build_bind_marked()
+    if at() != back_finish_addr():
+        raise ValueError(
+            f"back finish @{at():#x}, expected {back_finish_addr():#x}"
+        )
+    code += build_back_finish()
+    # Cover the old picture-hide cave so it cannot run.
+    gap = ADDR_MENU_OPEN_LIMIT - at()
+    if gap < 0:
+        raise ValueError(f"menu open cave ends @{at():#x}, past {ADDR_MENU_OPEN_LIMIT:#x}")
+    code += b"\x00" * gap
     pool = ADDR_MENU_ARROW  # filled in once the arrow cave's pool is known
     # The arrow builder places the pool at the end of its own bytes. Match it.
     arrow, _paint_at = build_menu_arrow_cave(menu_cave)
     pool = ADDR_MENU_ARROW + len(arrow) - 12
     code[prep_cell : prep_cell + 4] = _ldr_pc(cave + prep_cell, pool, 4)
     code[prep_base : prep_base + 4] = _ldr_pc(cave + prep_base, pool + 4, 0)
-    code[glob_fix : glob_fix + 4] = _ldr_pc(cave + glob_fix, global_at, 5)
-    code[name_fix : name_fix + 4] = _ldr_pc(cave + name_fix, pool + 8, 1)
-    code[miss_fix : miss_fix + 4] = _b_cond(0x0, cave + miss_fix, leave_at)
-    del name
     if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
         raise ValueError(
             f"menu open cave ends @{cave + len(code):#x}, "
@@ -1125,10 +1183,132 @@ def build_menu_open_cave(menu_cave: bytes) -> bytes:
     return bytes(code)
 
 
+def sentence_pick_addr() -> int:
+    """Index 1 stores the lake sentence, index 3 stores the pool sentence."""
+    return ADDR_MENU_OPEN + 11 * 4
+
+
+def bind_marked_addr() -> int:
+    """One-shot banner bind. Sits immediately after the place-label drawer."""
+    return ADDR_PLACE_LABELS + 80
+
+
+def back_finish_addr() -> int:
+    """Idle check after the one-shot banner bind. 16 bytes, fills the open cave."""
+    return bind_marked_addr() + 24
+
+
+def build_back_finish() -> bytes:
+    """Finish a もどる press, or keep polling the page arrows.
+
+    The idle beq lands here with r0 still ``[left widget +0x24]``. A stored
+    ``0x10000`` continues at the vanilla completion, which returns that code
+    once both page widgets reach state 5. Any other value polls the arrows.
+    """
+    cave = back_finish_addr()
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    code += _u32(0xE5941060)  # ldr r1, [r4, #0x60]
+    code += _u32(0xE3510801)  # cmp r1, #0x10000
+    code += _b_cond(0, at(), 0x004DCD3C)
+    code += _b(at(), ADDR_ARROW_POLL)
+    if len(code) != 16:
+        raise ValueError(f"back finish is {len(code)} bytes, the open cave has 16")
+    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
+        raise ValueError(
+            f"back finish ends @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
 def sheet_frame_addr() -> int:
-    """Where the pad branches so every poll shows or hides the lake lines."""
-    cave = build_menu_open_cave(build_info_menu_cave())
-    return ADDR_MENU_OPEN + len(cave) - 24
+    """Where the pad branches to pop its own frame."""
+    return ADDR_MENU_OPEN + 20 * 4
+
+
+def build_bind_marked() -> bytes:
+    """Point the right-page banner at the marked row.
+
+    r4 is the cell and r6 is the widget. r0 and r4 are restored.
+    """
+    cave = bind_marked_addr()
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    code += _u32(0xE92D4011)  # push {r0, r4, lr}
+    code += _u32(0xE5941004)  # ldr r1, [r4, #4]
+    code += _u32(0xE1A00006)  # mov r0, r6
+    code += _u32(0xE3A02000)  # mov r2, #0
+    code += _bl(at(), ADDR_TITLE_BIND_FN)
+    code += _u32(0xE8BD8011)  # pop {r0, r4, pc}
+    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
+        raise ValueError(
+            f"banner bind ends @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+        )
+    return bytes(code)
+
+
+def build_place_labels() -> bytes:
+    """Draw the left-page spot and station for the open row.
+
+    r0 is the left widget. r1 is the menu index. Index 3 draws 温水プール
+    and a blank station. Every other index draws 「湖」 and 奥十羽野駅.
+    A null widget returns without drawing.
+    """
+    cave = ADDR_PLACE_LABELS
+    code = bytearray()
+
+    def at() -> int:
+        return cave + len(code)
+
+    code += _u32(0xE3500000)  # cmp r0, #0
+    code += _u32(0x012FFF1E)  # bxeq lr
+    code += _u32(0xE92D4030)  # push {r4, r5, lr}
+    code += _u32(0xE1A04000)  # mov r4, r0
+    code += _u32(0xE1A05001)  # mov r5, r1
+    spot_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, lake spot]
+    code += _u32(0xE3550003)  # cmp r5, #3
+    pool_spot_fix = len(code)
+    code += b"\x00" * 4  # ldreq r1, [pc, pool spot]
+    code += _u32(0xE1A00004)  # mov r0, r4
+    code += _bl(at(), _AREA_DRAW_NAME)
+    area_fix = len(code)
+    code += b"\x00" * 4  # ldr r1, [pc, lake station]
+    code += _u32(0xE3550003)  # cmp r5, #3
+    pool_area_fix = len(code)
+    code += b"\x00" * 4  # ldreq r1, [pc, blank station]
+    code += _u32(0xE1A00004)  # mov r0, r4
+    code += _bl(at(), _AREA_DRAW_PLACE)
+    code += _u32(0xE8BD8030)  # pop {r4, r5, pc}
+    pool = at()
+    spot, area, pool_spot, pool_area = _place_vas()
+    # Pool order matches the loads: lake spot, pool spot, lake station, blank.
+    code[spot_fix : spot_fix + 4] = _ldr_pc(cave + spot_fix, pool, 1)
+    code[pool_spot_fix : pool_spot_fix + 4] = _ldr_pc_eq(
+        cave + pool_spot_fix, pool + 4, 1
+    )
+    code[area_fix : area_fix + 4] = _ldr_pc(cave + area_fix, pool + 8, 1)
+    code[pool_area_fix : pool_area_fix + 4] = _ldr_pc_eq(
+        cave + pool_area_fix, pool + 12, 1
+    )
+    code += _u32(spot)
+    code += _u32(pool_spot)
+    code += _u32(area)
+    code += _u32(pool_area)
+    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
+        raise ValueError(
+            f"place labels end @{cave + len(code):#x}, "
+            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+        )
+    return bytes(code)
 
 
 def build_menu_back_stub(_paint_at: int) -> bytes:
@@ -1175,6 +1355,8 @@ def build_menu_pad_cave() -> bytes:
     code += _bl(at(), ADDR_MENU_PAD + MENU_PAD_LEN)
     cell_fix = len(code)
     code += b"\x00" * 4  # ldr r4, [pc, cell]
+    # r8 is the left-page widget on the name refresh. Keep it for the labels.
+    code += _u32(0xE5848020)  # str r8, [r4, #0x20]
     code += _u32(0xE5941010)  # ldr r1, [r4, #0x10]
     code += _u32(0xE5840010)  # str r0, [r4, #0x10]
     code += _u32(0xE1C02001)  # bic r2, r0, r1  newly pressed
@@ -1186,28 +1368,24 @@ def build_menu_pad_cave() -> bytes:
     code += _u32(0xE5945004)  # ldr r5, [r4, #4]
     code += _u32(0xE3A00001)  # mov r0, #1
     code += _u32(0xE5840008)  # str r0, [r4, #8]
-    code += _u32(0xE594000C)  # ldr r0, [r4, #0xc]
-    code += _u32(0xE5840000)  # str r0, [r4]
     code += _u32(0xE1A00006)  # mov r0, r6
     code += _u32(0xE1A01005)  # mov r1, r5
     code += _u32(0xE3A02000)  # mov r2, #0
     code += _bl(at(), ADDR_TITLE_BIND_FN)
-    code += _u32(0xE3550001)  # cmp r5, #1
-    holy_fix = len(code)
-    code += b"\x00" * 4  # bne leave
-    # Holy Site draws the lake sentence. Other rows keep the empty string.
-    code += _u32(0xE5940024)  # ldr r0, [r4, #0x24]
-    code += _u32(0xE5840000)  # str r0, [r4]
-    leave_at = at()
+    code += _bl(at(), sentence_pick_addr())
+    # Index 3 replaces 「湖」 and the station. Any other row keeps them.
+    code += _u32(0xE5940020)  # ldr r0, [r4, #0x20]
+    code += _u32(0xE1A01005)  # mov r1, r5
+    code += _bl(at(), ADDR_PLACE_LABELS)
     # The steady poll never reaches the info-draw hook, so clear the names here.
     code += _u32(0xE5941000)  # ldr r1, [r4]
     code += _u32(0xE1A00006)  # mov r0, r6
     code += _bl(at(), _INFO_DRAW)
     code += _b(at(), sheet_frame_addr())
+    code += _u32(0)  # both exits branch away; keeps the reader at +108
     pool = at()
     code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, pool, 4)
     code[open_fix : open_fix + 4] = _b_cond(0x1, cave + open_fix, open_at)
-    code[holy_fix : holy_fix + 4] = _b_cond(0x1, cave + holy_fix, leave_at)
     code += _u32(ADDR_MENU_CELL + 0x100000)
     if len(code) != MENU_PAD_LEN:
         raise ValueError(
@@ -1304,17 +1482,32 @@ def apply_info_menu(data: bytearray) -> None:
     data[ADDR_MENU_LIST_CAVE : ADDR_MENU_LIST_CAVE + len(cave)] = cave
     text = build_menu_text()
     data[ADDR_MENU_LIST_STR : ADDR_MENU_LIST_STR + len(text)] = text
-    if data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] not in (
-        b"\x00" * len(_LAKE_BODY),
-        _LAKE_BODY,
-    ):
-        raise ValueError(f"lake sentence @{ADDR_LAKE_BODY:#x} is not empty")
-    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] = _LAKE_BODY
+    sentences = _article_blob()
+    if len(sentences) > _SENTENCE_ROOM:
+        raise ValueError(f"sentences are {len(sentences)} bytes, room is {_SENTENCE_ROOM}")
+    there = bytes(data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(sentences)])
+    articles = _LAKE_BODY + _FEVER_BODY
+    previous = (
+        b"\x00" * len(sentences),
+        sentences,
+        articles + b"\x00" * len(_PLACE_NAMES),
+        _LAKE_BODY + b"\x00" * (len(sentences) - len(_LAKE_BODY)),
+    )
+    if there not in previous:
+        raise ValueError(f"article sentences @{ADDR_LAKE_BODY:#x} are not empty")
+    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(sentences)] = sentences
     arrow, paint_at = build_menu_arrow_cave(cave)
     data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(arrow)] = arrow
-    tail = ADDR_MENU_ARROW + len(arrow)
-    if tail < ADDR_MENU_ARROW_LIMIT:
-        data[tail:ADDR_MENU_ARROW_LIMIT] = b"\x00" * (ADDR_MENU_ARROW_LIMIT - tail)
+    choice_at = ADDR_MENU_ARROW + len(arrow)
+    choice = build_back_choice(choice_at)
+    if choice_at + len(choice) != ADDR_MENU_ARROW_LIMIT:
+        raise ValueError(
+            f"back choice ends @{choice_at + len(choice):#x}, "
+            f"limit is {ADDR_MENU_ARROW_LIMIT:#x}"
+        )
+    data[choice_at : choice_at + len(choice)] = choice
+    data[ADDR_BACK_SET : ADDR_BACK_SET + 4] = _b_cond(1, ADDR_BACK_SET, choice_at)
+    data[ADDR_BACK_LEAVE : ADDR_BACK_LEAVE + 4] = _b(ADDR_BACK_LEAVE, ADDR_ARROW_LATCH)
     opened = build_menu_open_cave(cave)
     data[ADDR_MENU_OPEN : ADDR_MENU_OPEN + len(opened)] = opened
     data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = _b_cond(
@@ -1342,27 +1535,27 @@ def apply_info_menu(data: bytearray) -> None:
     data[ADDR_TITLE_BIND_FIXED : ADDR_TITLE_BIND_FIXED + 4] = PATCHED_TITLE_BIND_SKIP
     data[ADDR_TITLE_BIND_INDEX : ADDR_TITLE_BIND_INDEX + 4] = PATCHED_TITLE_BIND_SKIP
     cell = ADDR_MENU_CELL
-    if len(data) >= cell + 40:
+    if len(data) >= cell + 44:
         base = ADDR_MENU_LIST_STR + 0x100000
-        data[cell : cell + 4] = _u32(base)
-        data[cell + 4 : cell + 8] = _u32(0)
+        first = MENU_FILLED[0][0]
+        data[cell : cell + 4] = _u32(base + first * MENU_STRIDE)
+        data[cell + 4 : cell + 8] = _u32(first)
         data[cell + 8 : cell + 12] = _u32(0)
-        data[cell + 12 : cell + 16] = _u32(base + len(MENU_LINES) * MENU_STRIDE)
+        data[cell + 12 : cell + 16] = _u32(base + MENU_SLOT_COUNT * MENU_STRIDE)
         data[cell + 16 : cell + 20] = _u32(0xFFFFFFFF)
         data[cell + 20 : cell + 24] = _u32(base)
         data[cell + 24 : cell + 28] = _u32(0)  # init once
         data[cell + 28 : cell + 32] = _u32(0)  # right-page widget
-        data[cell + 32 : cell + 36] = _u32(0)  # screen widget
+        data[cell + 32 : cell + 36] = _u32(0)  # left-page widget
         data[cell + 36 : cell + 40] = _u32(lake_body_va())
+        data[cell + 40 : cell + 44] = _u32(fever_body_va())
     back = build_menu_back_stub(paint_at)
     if len(data) >= ADDR_MENU_IDLE_POLL + len(back):
         data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = back
     data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = _b_cond(
-        0, ADDR_ARROW_IDLE, ADDR_ARROW_POLL
+        0, ADDR_ARROW_IDLE, back_finish_addr()
     )
-    data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = _b(
-        ADDR_ARROW_POLL_TAIL, ADDR_ARROW_LATCH
-    )
+    data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = VANILLA_ARROW_POLL_TAIL
     data[ADDR_ARROW_STEP : ADDR_ARROW_STEP + 4] = _bl(
         ADDR_ARROW_STEP, ADDR_PAGE_BLOCK
     )
@@ -2043,7 +2236,9 @@ def revert_patch(data: bytearray) -> bool:
     data[ADDR_MENU_LIST_STR : ADDR_MENU_LIST_STR + len(build_menu_text())] = b"\x00" * len(
         build_menu_text()
     )
-    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_LAKE_BODY)] = b"\x00" * len(_LAKE_BODY)
+    data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(_article_blob())] = b"\x00" * len(
+        _article_blob()
+    )
     data[ADDR_ARROW_SKIP : ADDR_ARROW_SKIP + 4] = VANILLA_ARROW_SKIP
     data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = VANILLA_ARROW_IDLE
     data[ADDR_ARROW_POLL_TAIL : ADDR_ARROW_POLL_TAIL + 4] = VANILLA_ARROW_POLL_TAIL
@@ -2060,6 +2255,8 @@ def revert_patch(data: bytearray) -> bool:
     data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(VANILLA_MENU_ARROW_BODY)] = (
         VANILLA_MENU_ARROW_BODY
     )
+    data[ADDR_BACK_SET : ADDR_BACK_SET + 4] = VANILLA_BACK_SET
+    data[ADDR_BACK_LEAVE : ADDR_BACK_LEAVE + 4] = VANILLA_BACK_LEAVE
     data[ADDR_MENU_OPEN : ADDR_MENU_OPEN + len(VANILLA_MENU_OPEN_BODY)] = (
         VANILLA_MENU_OPEN_BODY
     )
