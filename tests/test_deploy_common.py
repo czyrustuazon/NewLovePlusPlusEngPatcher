@@ -50,6 +50,32 @@ def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypat
     assert bake.resolve() in targets
 
 
+def test_iter_deploy_targets_skips_ab_instances_when_disabled(tmp_path: Path, monkeypatch):
+    primary = tmp_path / "primary.img.bin"
+    primary.write_bytes(b"p")
+    inst = (
+        tmp_path
+        / "ab_test"
+        / "azahar_instances"
+        / "a"
+        / "user"
+        / "load"
+        / "mods"
+        / "00040000000F4E00"
+        / "romfs"
+        / "img.bin"
+    )
+    inst.parent.mkdir(parents=True)
+    inst.write_bytes(b"inst")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "missing-bake.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", tmp_path / "missing.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_INSTANCES", tmp_path / "ab_test" / "azahar_instances")
+    monkeypatch.setenv("NLPP_ALSO_AZAHAR", "0")
+
+    targets = deploy_common.iter_deploy_targets(primary)
+    assert targets == [primary.resolve()]
+
+
 def test_iter_deploy_targets_includes_ab_instances(tmp_path: Path, monkeypatch):
     primary = tmp_path / "primary.img.bin"
     primary.write_bytes(b"p")

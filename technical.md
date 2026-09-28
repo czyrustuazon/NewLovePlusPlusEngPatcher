@@ -1120,7 +1120,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 | `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
-| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/2_[Or this]/`) + LayeredFS (`out/1_[Either use this-LayerFS]/luma/`) |
+| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/1_[Either use this-CIA]/`) + LayeredFS (`out/2_[Or this-LayeredFS]/luma/`) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
 | `src/run_timer.py` | Live ``[timer]`` elapsed / 60s heartbeat for pack, gold rebuild, CIA patcher |
@@ -1233,6 +1233,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | Treated NCommonMSel deploys as “main menu” | Hub rows stayed JP while Gallery submenu was EN | **Main Menu list = `Title.arc` pkg 5261** (`Title_btn02_t01..t06`), not Text02/03/04/05 plates |
 | CESA left opt-in / off rebuild path | Boot warning stayed JP or vanished after ad-hoc patch | `pack_images` skips CESA unless `--only cesa` (white-boot history); no deploy until late |
 | Patched bake but not Azahar LayeredFS | Emulator still showed JP hub + old CESA after “success” | `iter_deploy_targets` only mirrored Azahar when `NLPP_ALSO_AZAHAR=1`; bake ≠ what Azahar loaded |
+| Gold rebuild popped `NLPP_ALSO_AZAHAR` | Drop CIA sat at `deploy_mail_home_en.py`, then `KeyboardInterrupt` in `splice_packages_into_img` `write_bytes` | Unset means mirror-on. Bake **and** `ab_test/azahar_instances/{a,b}/…/img.bin` each rewrote the whole ~680MB file per package (`open("wb")` truncates if that write is killed). Fix: rebuild sets `NLPP_ALSO_AZAHAR=0` unless `--also-azahar`. Splice is in-place (`r+b` seek to the package). |
 | Misleading bat error after deploy failure | “Need a .cia / set NLPP_VANILLA_IMG” after zlib fail | Generic message ignored the real traceback |
 | Old Drop CIA fell through without bake | English dialog + heroine names OK, **menus still JP** | Bat defaulted `PACKED_IMG` to `cache/new_img.bin` and could patch without `release/bake_img.bin`; menu chrome lives only in gold bake |
 | Assumed git clone includes English menus | Clean machine “patched in minutes” with JP UI | `release/bake_img.bin` is **gitignored** (~680 MB); clone has sources + scripts, not the pre-baked `img.bin` |
@@ -1308,7 +1309,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | `deploy_title_engpatch_en.py` + `deploy_cesa_en.py` on rebuild list | Hub rows + Eng Patch badge + boot warning on gold path |
 | Softkeys / multiwin / gallery / UI buttons / keyboard tabs on rebuild list | Remaining chrome deploy scripts in `DEPLOY_SCRIPTS` |
 | `release/name_input_code.bin` from bake | Drop injects it when present (bake always rebuilds it) |
-| Mirror Azahar LayeredFS by default on deploy | Emulator tests match bake (`NLPP_ALSO_AZAHAR=0` to opt out) |
+| Mirror Azahar on standalone `deploy_*`; gold rebuild stays bake-only unless `--also-azahar` | `NLPP_ALSO_AZAHAR` defaults on. Rebuild must set `0` explicitly — popping the var turns the mirror back on. Splice writes the package slot in place |
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
 | Drop CIA polls CI then rebuild; hard-stop without bake | Prevents silent “scripts-only” CIAs that look partially EN (§15.5) |
 | `fetch_release_bake.py --best-effort` + `try_fetch_gold()` | 404 / missing Release → exit 1 quietly; bat falls back to local rebuild |
@@ -1387,12 +1388,12 @@ decrypted .cia / .3ds / .cci dropped
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
         + apply_name_patches + name_input_code.bin when present
-  → out/1_[Either use this-LayerFS]/luma/ + out/2_[Or this]/NewLovePlusPlus-EN.cia + out/3_but not both
+  → out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia + out/2_[Or this-LayeredFS]/luma/ + out/3_[but not both]/
 ```
 
 Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-LayerFS]/`, `out/2_[Or this]/`, `out/3_but not both`, `out/logs/`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/logs/`.
 
 #### Environment overrides
 

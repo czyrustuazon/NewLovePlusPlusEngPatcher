@@ -578,11 +578,13 @@ def splice_packages_into_img(
 
     if dst.resolve() != img_bin.resolve():
         shutil.copy2(img_bin, dst)
-    data = bytearray(dst.read_bytes())
 
+    # Patch the package slot in place. Reading and rewriting all of img.bin
+    # (~680MB) per chrome script truncates the file on interrupt (open "wb")
+    # and made Drop CIA look hung at deploy_mail_home_en.py.
+    writes: list[tuple[int, bytes]] = []
     for index in patched:
         new_pkg = img_data / f"new_{index:04d}"
-        old_pkg = img_data / f"{index:04d}"
         if not new_pkg.is_file():
             raise PackError(f"missing {new_pkg}")
         res = image.entries[index]
@@ -602,13 +604,26 @@ def splice_packages_into_img(
         if len(blob) < pkg_len:
             print(
                 f"[splice] package {index:04d} padded {len(blob)} -> {pkg_len} "
-                f"(+{pkg_len - len(blob)} zeros)"
+                f"(+{pkg_len - len(blob)} zeros)",
+                flush=True,
             )
             blob = blob + b"\x00" * (pkg_len - len(blob))
-        data[base : base + pkg_len] = blob
-        print(f"[splice] package {index:04d} @ {base:#x} ({pkg_len} bytes)")
+        writes.append((base, blob))
+        print(
+            f"[splice] package {index:04d} @ {base:#x} ({pkg_len} bytes)",
+            flush=True,
+        )
 
-    dst.write_bytes(data)
+    if not writes:
+        return
+    with dst.open("r+b") as fh:
+        for base, blob in writes:
+            fh.seek(base)
+            n = fh.write(blob)
+            if n != len(blob):
+                raise PackError(
+                    f"short splice write at {base:#x}: {n} != {len(blob)}"
+                )
 
 
 def selective_ie_repack(img_bin: Path, img_data: Path, dst: Path, patched: list[int]) -> None:

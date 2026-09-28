@@ -2106,36 +2106,37 @@ def cleanup_patch_artifacts(
 # Dirs under out/ that survive post-patch cleanup (not patch scratch).
 _OUT_KEEP_DIRS = frozenset(
     {
-        OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
         OUT_CIA_PREFIX,  # patched CIA
+        OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
+        OUT_NOT_BOTH_NAME,  # folder: pick the CIA or LayeredFS, not both
         LAYEREDFS_DIR_NAME,  # leftover unprefixed luma/ from older builds
         "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "extdata_backup",  # Azahar extra-data / title-save snapshots
     }
 )
-_OUT_KEEP_FILES = frozenset(
-    {
-        OUT_NOT_BOTH_NAME,  # pick LayeredFS or CIA, not both
-    }
-)
+_OUT_KEEP_FILES: frozenset[str] = frozenset()
 
 
 def write_install_choice_note(out_root: Path | None = None) -> Path:
-    """Write out/3_but not both — use LayeredFS or the CIA, not both."""
+    """Write out/3_[but not both]/ — use the CIA or LayeredFS, not both."""
     root = Path(out_root) if out_root is not None else (ROOT / "out")
     root.mkdir(parents=True, exist_ok=True)
-    path = root / OUT_NOT_BOTH_NAME
+    folder = root / OUT_NOT_BOTH_NAME
+    if folder.is_file():
+        folder.unlink()
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / "README.txt"
     path.write_text(
         "\n".join(
             [
-                "Use either folder 1 (LayeredFS) or folder 2 (CIA). Do not use both.",
+                "Use either folder 1 (CIA) or folder 2 (LayeredFS). Do not use both.",
+                "",
+                f"{OUT_CIA_PREFIX}/",
+                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
                 "",
                 f"{OUT_LAYEREDFS_PREFIX}/",
                 f"  Copy {LAYEREDFS_DIR_NAME}/{TITLE_ID} to SD:/luma/titles/",
                 "  (enable Enable game patching in Luma).",
-                "",
-                f"{OUT_CIA_PREFIX}/",
-                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
                 "",
                 "LayeredFS on top of the English CIA would apply the patch twice.",
                 "",

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Rebuild the numbered CIA drop (`out/2_[Or this]/NewLovePlusPlus-EN.cia`) from the verified name-input stack.
+"""Rebuild the numbered CIA drop (`out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia`) from the verified name-input stack.
 
 Typical loop:
 
   1. python tools/deploy_name_input_en.py   # or .\\make.ps1 deploy-a
   2. Test in Azahar LayeredFS
   3. python tools/rebuild_test_cia.py
-  4. Install out/2_[Or this]/NewLovePlusPlus-EN.cia via FBI
-     or copy out/1_[Either use this-LayerFS]/luma/<titleid> to SD:/luma/titles/
+  4. Install out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia via FBI
+     or copy out/2_[Or this-LayeredFS]/luma/<titleid> to SD:/luma/titles/
      (one install path, not both)
 
 ROM path (first match): --rom, NLPP_ROM env, release/source_rom.txt, sibling CIA.

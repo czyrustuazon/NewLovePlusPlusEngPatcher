@@ -356,8 +356,13 @@ def test_cleanup_out_dir_keeps_prefixed_install_outputs(tmp_path: Path, monkeypa
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert luma.is_dir()
     assert cia.is_file()
+    assert note.parent.is_dir()
+    assert note.parent.name == patch_cia.OUT_NOT_BOTH_NAME
     assert note.is_file()
-    assert "Do not use both" in note.read_text(encoding="utf-8")
+    text = note.read_text(encoding="utf-8")
+    assert "Do not use both" in text
+    assert "folder 1 (CIA)" in text
+    assert "folder 2 (LayeredFS)" in text
     assert not (out / "scratch.bin").exists()
 
 

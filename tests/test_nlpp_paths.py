@@ -12,14 +12,14 @@ def test_title_id_constant():
 
 
 def test_drop_output_prefix_layout():
-    assert paths.OUT_LAYEREDFS_PREFIX == "1_[Either use this-LayerFS]"
-    assert paths.OUT_CIA_PREFIX == "2_[Or this]"
-    assert paths.OUT_NOT_BOTH_NAME == "3_but not both"
+    assert paths.OUT_CIA_PREFIX == "1_[Either use this-CIA]"
+    assert paths.OUT_LAYEREDFS_PREFIX == "2_[Or this-LayeredFS]"
+    assert paths.OUT_NOT_BOTH_NAME == "3_[but not both]"
     assert paths.LAYEREDFS_DIR_NAME == "luma"
     assert paths.CIA_FILENAME == "NewLovePlusPlus-EN.cia"
     assert paths.OUT_LAYEREDFS == paths.OUT / paths.OUT_LAYEREDFS_PREFIX / "luma"
     assert paths.OUT_CIA == paths.OUT / paths.OUT_CIA_PREFIX / "NewLovePlusPlus-EN.cia"
-    assert paths.OUT_NOT_BOTH == paths.OUT / "3_but not both"
+    assert paths.OUT_NOT_BOTH == paths.OUT / "3_[but not both]"
 
 
 def test_azahar_user_dir_from_env(monkeypatch, tmp_path: Path):

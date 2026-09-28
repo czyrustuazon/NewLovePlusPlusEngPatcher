@@ -48,9 +48,9 @@ GHIDRA_PROJECT = ROOT / "ghidra_nlpp"
 
 # Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
 # install path; original luma/ and CIA names stay inside.
-OUT_LAYEREDFS_PREFIX = "1_[Either use this-LayerFS]"
-OUT_CIA_PREFIX = "2_[Or this]"
-OUT_NOT_BOTH_NAME = "3_but not both"
+OUT_CIA_PREFIX = "1_[Either use this-CIA]"
+OUT_LAYEREDFS_PREFIX = "2_[Or this-LayeredFS]"
+OUT_NOT_BOTH_NAME = "3_[but not both]"
 LAYEREDFS_DIR_NAME = "luma"
 CIA_FILENAME = "NewLovePlusPlus-EN.cia"
 OUT_LAYEREDFS = OUT / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME

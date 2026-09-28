@@ -129,6 +129,50 @@ def test_pack_images_cleans_per_package():
     assert 'f"elapsed:          {timer.elapsed_str()}"' in text
 
 
+def test_splice_packages_patches_slot_in_place(tmp_path: Path, monkeypatch):
+    import sys
+    import types
+
+    img_bin = tmp_path / "img.bin"
+    original = bytearray(b"\x11" * 64)
+    img_bin.write_bytes(original)
+    img_data = tmp_path / "img_data"
+    img_data.mkdir()
+    (img_data / "new_0007").write_bytes(b"MAIL")
+
+    class FW:
+        base_offset = 16
+
+        def len(self) -> int:
+            return 8
+
+    class Entry:
+        fw = FW()
+
+    class FakeImage:
+        def __init__(self, _path: str):
+            self.entries = [None] * 8
+            self.entries[7] = Entry()
+
+        def parse(self, _full: bool) -> None:
+            return None
+
+    fake = types.ModuleType("img")
+    fake.Image = FakeImage
+    monkeypatch.setitem(sys.modules, "img", fake)
+
+    pack_images.splice_packages_into_img(img_bin, img_data, [7], img_bin)
+    data = img_bin.read_bytes()
+    assert len(data) == 64
+    assert data[16:24] == b"MAIL\x00\x00\x00\x00"
+    assert data[:16] == b"\x11" * 16
+    assert data[24:] == b"\x11" * 40
+
+    (img_data / "new_0007").write_bytes(b"TOO-LONG!!")
+    pack_images.splice_packages_into_img(img_bin, img_data, [7], img_bin)
+    assert img_bin.read_bytes() == data
+
+
 def test_rebuild_cleanup_scratch_skips_when_keep_work(monkeypatch):
     called = {"n": 0}
 

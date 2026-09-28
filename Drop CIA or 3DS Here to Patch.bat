@@ -223,7 +223,7 @@ REM Keep quotes inside the value so paths with spaces survive expansion
 REM (e.g. E:\zip game\... GitHub unzip folders).
 REM LayeredFS is written next to the CIA. code.bin is name_input_code.bin
 REM so English graphics load. Install the CIA or this folder, not both.
-set LAYEREDFS=--layeredfs-out "%~dp0out\1_[Either use this-LayerFS]\luma"
+set LAYEREDFS=--layeredfs-out "%~dp0out\2_[Or this-LayeredFS]\luma"
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -258,7 +258,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
   set "BAKE_STALE="
@@ -389,7 +389,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   echo Injecting gold bake: !PACKED_IMG!
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
 
@@ -402,9 +402,9 @@ if not "%ERR%"=="0" (
 )
 
 echo [+] Patched CIA:
-echo     %~dp0out\2_[Or this]\NewLovePlusPlus-EN.cia
+echo     %~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia
 echo [+] LayeredFS ^(use this or the CIA, not both^):
-echo     %~dp0out\1_[Either use this-LayerFS]\luma\00040000000F4E00
+echo     %~dp0out\2_[Or this-LayeredFS]\luma\00040000000F4E00
 echo     Copy that folder to SD:/luma/titles/ and enable game patching.
 echo     code.bin is included so English graphics load.
 echo.

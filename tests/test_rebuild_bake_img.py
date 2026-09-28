@@ -283,6 +283,13 @@ def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):
     assert "PNG optional:" not in text
 
 
+def test_rebuild_disables_azahar_mirror_unless_flag():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
+    assert 'env["NLPP_ALSO_AZAHAR"] = "0"' in text
+    assert 'env["NLPP_ALSO_AZAHAR"] = "1"' in text
+    assert 'env.pop("NLPP_ALSO_AZAHAR"' not in text
+
+
 def test_rebuild_skips_gold_bake_sidecars(tmp_path: Path):
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
     assert "cleanup_bake_img_baks" in text

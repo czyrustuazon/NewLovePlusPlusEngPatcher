@@ -511,10 +511,14 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     trb = find_vanilla_main_trb()
     if trb is not None:
         env["NLPP_VANILLA_TRB"] = str(trb)
+    # Deploy scripts treat a missing NLPP_ALSO_AZAHAR as mirror-on. Drop CIA
+    # does not pass --also-azahar; popping the var still spliced every chrome
+    # script into ab_test instances (a full img.bin rewrite each) and the
+    # bake aborted on that write. Set 0 unless the flag is explicit.
     if args.also_azahar:
         env["NLPP_ALSO_AZAHAR"] = "1"
     else:
-        env.pop("NLPP_ALSO_AZAHAR", None)
+        env["NLPP_ALSO_AZAHAR"] = "0"
 
     print(f"[rebuild] vanilla: {vanilla}", flush=True)
     print(f"[rebuild] bake:    {BAKE_IMG}", flush=True)
