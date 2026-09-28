@@ -42,6 +42,10 @@ OUT = ROOT / "out"
 # so a CIA build can wipe out/ without deleting the instances.
 AZAHAR_INSTANCES = ROOT / "ab_test" / "azahar_instances"
 
+# Local Ghidra project (code.bin database). Ghidra rewrites this while the
+# project is open. Never under OUT — Drop CIA deletes that tree.
+GHIDRA_PROJECT = ROOT / "ghidra_nlpp"
+
 # Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
 # install path; original luma/ and CIA names stay inside.
 OUT_LAYEREDFS_PREFIX = "1_[Either use this-LayerFS]"

@@ -83,6 +83,34 @@ def test_azahar_instances_live_outside_out():
     assert "out" not in inst.parts[-2:]
 
 
+def test_ghidra_project_lives_outside_out():
+    import nlpp_paths
+
+    assert nlpp_paths.GHIDRA_PROJECT == nlpp_paths.ROOT / "ghidra_nlpp"
+    assert nlpp_paths.OUT not in nlpp_paths.GHIDRA_PROJECT.parents
+
+
+def test_sources_do_not_point_ghidra_at_out():
+    root = Path(__file__).resolve().parents[1]
+    needles = (
+        "out/ghidra_nlpp",
+        "out\\ghidra_nlpp",
+        '"out" / "ghidra_nlpp"',
+    )
+    skip = {".git", "out", "cache", "ab_test", "conversation-archive"}
+    hits: list[str] = []
+    for pattern in ("*.py", "*.ps1", "*.bat"):
+        for path in root.rglob(pattern):
+            if path.resolve() == Path(__file__).resolve():
+                continue
+            if skip.intersection(path.parts):
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if any(needle in text for needle in needles):
+                hits.append(str(path.relative_to(root)))
+    assert hits == []
+
+
 def test_find_ui_png_fits_mismatched_size(tmp_path, monkeypatch):
     from PIL import Image
 
