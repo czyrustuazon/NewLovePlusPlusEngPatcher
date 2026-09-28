@@ -50,4 +50,4 @@ On **nlpp-gold-maker** (Actions secrets, not the public EngPatcher repo):
 | `NLPP_PROGRESS_TOKEN` | Prefer Worker `PROGRESS_API_TOKEN` (progress-only). `ADMIN_API_TOKEN` works but also gates `/api/admin/devlog`. |
 
 Local / Drop CIA auto-report uses EngPatcher `.env` (`NLPP_PROGRESS_*`).  
-Disable anywhere with `NLPP_PROGRESS_SKIP=1`. Manual: `.\make.ps1 progress`.
+Disable anywhere with `NLPP_PROGRESS_SKIP=1`. Manual: `.\ab_test\make.ps1 progress`.

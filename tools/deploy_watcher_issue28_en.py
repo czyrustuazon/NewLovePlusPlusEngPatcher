@@ -5,7 +5,7 @@ The right-page panes that would show that sheet stay size-zero. Holy Site
 draws the sentence into Tex_Info_01 instead (§16.11.3). The left page is
 the same sheet flipped, so those panes stay hidden too. The heated-pool
 sentence belongs on FEVER; that corner stays out of the book because it
-uses this same sheet. See technical.md §16.11.
+uses this same sheet. See docs/technical.md §16.11.
 """
 from __future__ import annotations
 

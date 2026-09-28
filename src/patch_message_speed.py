@@ -25,7 +25,7 @@ Two independent tables plus a voice/script cap:
 4. Options sample UTF-8 at ``0x005D1928`` (39+NUL). In-place EN
    ``This is a text-speed test.`` padded to the same 40-byte slot.
 
-Ghidra image base 0; runtime VA = file + ``0x100000``. See technical.md §21.
+Ghidra image base 0; runtime VA = file + ``0x100000``. See docs/technical.md §21.
 
   python src/patch_message_speed.py --dry-run
   python src/patch_message_speed.py --deploy-azahar

@@ -112,10 +112,10 @@ REM Pass Drop start into patch_cia.py so PATCH SUMMARY elapsed includes bake.
 set "STARTED_UNIX="
 if defined NLPP_T0 set STARTED_UNIX=--started-unix !NLPP_T0!
 
-echo Installing Python deps from requirements.txt ...
-"%PYTHON%" -m pip install -q -r "%~dp0requirements.txt"
+echo Installing Python deps from dev\requirements.txt ...
+"%PYTHON%" -m pip install -q -r "%~dp0dev\requirements.txt"
 if errorlevel 1 (
-  echo [!] pip install failed. Try: %PYTHON% -m pip install -r requirements.txt
+  echo [!] pip install failed. Try: %PYTHON% -m pip install -r dev\requirements.txt
   pause
   exit /b 1
 )
@@ -304,7 +304,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r requirements.txt
+        echo       pip install -r dev\requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -319,7 +319,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r requirements.txt
+        echo       pip install -r dev\requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause

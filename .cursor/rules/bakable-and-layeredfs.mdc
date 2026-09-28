@@ -27,4 +27,4 @@ Gold bake / Drop CIA is the **ship path**. Azahar LayeredFS is the emulator test
 - Bake-only with no LayeredFS apply path (untestable in the emulator loop).
 - Assume an existing `release/name_input_code.bin` already contains a new `code.bin` patch — bake **deletes and rewrites** it from vanilla.
 
-Details: `technical.md` §15.5 (bake) and §21 (Message Speed example).
+Details: `docs/technical.md` §15.5 (bake) and §21 (Message Speed example).

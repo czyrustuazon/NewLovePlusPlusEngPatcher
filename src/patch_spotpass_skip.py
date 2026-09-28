@@ -36,10 +36,10 @@ Patch:
   * ``moveq r0, #4`` → ``moveq r0, #0`` so a missing CDN stays idle.
 
 Does **not** apply Towano Watcher / city tables — that is
-``patch_spotpass_embed.py`` (technical.md §16.8). Does **not** gate Enoshima
+``patch_spotpass_embed.py`` (docs/technical.md §16.8). Does **not** gate Enoshima
 (already on-cart).
 
-Ghidra image base 0; runtime VA = file + ``0x100000``. See technical.md §16.7.
+Ghidra image base 0; runtime VA = file + ``0x100000``. See docs/technical.md §16.7.
 
   python src/patch_spotpass_skip.py --dry-run
   python src/patch_spotpass_skip.py --deploy-azahar

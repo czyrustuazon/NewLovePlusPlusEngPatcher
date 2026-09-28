@@ -13,7 +13,7 @@ This is the isolated a/b name-input proof + bake UI — not bake TRB alone
   # Roaming Azahar
   python tools/deploy_bleeding_edge_name_input.py
 
-  # Instance A / B (same as make.ps1)
+  # Instance A / B (same as .\ab_test\make.ps1)
   set NLPP_AZAHAR_USER_DIR=...\\ab_test\\azahar_instances\\a\\user
   python tools/deploy_bleeding_edge_name_input.py
 

@@ -73,7 +73,7 @@ Rules:
 
 ### Unverified / pending (external RE notes — do not treat as fact yet)
 
-Keep these in mind; promote into `technical.md` only after we verify or receive their upload:
+Keep these in mind; promote into `docs/technical.md` only after we verify or receive their upload:
 
 - Resident TOP may be a **pre-merged** development dump of some main-TRB texts (explains format difference), not a second runtime loader.
 - Main `textresource_jpn.trb` ≈ **~30k** lines/entries, but reuse across call sites → effective **~45–50k** string uses.
@@ -84,7 +84,7 @@ Keep these in mind; promote into `technical.md` only after we verify or receive 
 - Work in EngPatcher `src/patch_code.py` (and related); keep backups before hooks.
 - Prefer targeted patches with caves **inside** `.text` only after proving a scoped call site; avoid global string hooks.
 - **Bakable + LayeredFS:** every playable patch must ship in Drop CIA **and** have a LayeredFS apply path. See rule `bakable-and-layeredfs`.
-- Message Speed: `src/patch_message_speed.py` (Options `FUN_005d1e18` 18/12/6/0 → 14/8/2/0, TalkWindow table `0x006E3024` 40/70/90/110/220 → 10/18/22/28/55, tick cap `min(delay, table)` @ `0x0013B718` so voiced heroine/NPC lines honor the slider). Ships with `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. See `technical.md` §21.
+- Message Speed: `src/patch_message_speed.py` (Options `FUN_005d1e18` 18/12/6/0 → 14/8/2/0, TalkWindow table `0x006E3024` 40/70/90/110/220 → 10/18/22/28/55, tick cap `min(delay, table)` @ `0x0013B718` so voiced heroine/NPC lines honor the slider). Ships with `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. See `docs/technical.md` §21.
 - Runtime testing via Azahar LayeredFS:
   `mods/00040000000F4E00/exefs/code.bin` and/or `romfs/...`.
 
@@ -143,8 +143,8 @@ python tools/rebuild_bake_img.py --skip-pack              # keep bake; still reb
 ### Unit tests
 
 ```bash
-pip install -r requirements-dev.txt
+pip install -r dev/requirements-dev.txt
 python -m pytest tests/ -v
 ```
 
-Guards: `test_drop_bat_gold_flow.py`, `test_fetch_release_bake.py`, `test_patch_cia_gold_bake.py`. Update tests when changing bat/fetch/inject behavior. Details: `technical.md` §15.6.
+Guards: `test_drop_bat_gold_flow.py`, `test_fetch_release_bake.py`, `test_patch_cia_gold_bake.py`. Update tests when changing bat/fetch/inject behavior. Details: `docs/technical.md` §15.6.

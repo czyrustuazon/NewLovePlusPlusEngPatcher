@@ -66,7 +66,7 @@ entry.
 ## License
 
 By submitting a pull request, you agree your contribution to the EngPatcher original work
-is licensed under the terms in [`LICENSE`](./LICENSE) (MIT for this project's own code and
+is licensed under the terms in [`LICENSE`](../LICENSE) (MIT for this project's own code and
 assets — see that file for what it does and doesn't cover, including third-party components
 and game content).
 

@@ -3,7 +3,7 @@
 
 Typical loop:
 
-  1. python tools/deploy_name_input_en.py   # or .\\make.ps1 deploy-a
+  1. python tools/deploy_name_input_en.py   # or .\\ab_test\\make.ps1 deploy-a
   2. Test in Azahar LayeredFS
   3. python tools/rebuild_test_cia.py
   4. Install out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia via FBI

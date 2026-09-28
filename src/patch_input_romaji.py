@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hepburn romaji for the name-input gojūon grid (technical.md §17).
+Hepburn romaji for the name-input gojūon grid (docs/technical.md §17).
 
 Rewrites NameInput_DrawCell (0x1fc304) so DrawText shows romaji AND the
 7-byte insert buffer stores the same display string (so kana-direct /

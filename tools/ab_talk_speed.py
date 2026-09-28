@@ -7,9 +7,9 @@ B = same stack + ÷4 table, vanilla tick (cpy r6, r2) — player-only speed
 Options preview 14/8/2/0 is on **both**. Img.bin is not touched.
 
   python tools/ab_talk_speed.py
-  .\\make.ps1 talk-speed-ab
-  .\\make.ps1 launch-a
-  .\\make.ps1 launch-b
+  .\\ab_test\\make.ps1 talk-speed-ab
+  .\\ab_test\\make.ps1 launch-a
+  .\\ab_test\\make.ps1 launch-b
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def _mod(letter: str) -> Path:
     user = INSTANCES / letter / "user"
     if not user.is_dir():
         raise SystemExit(
-            f"missing instance {letter}: {user}\nRun: .\\make.ps1 instances"
+            f"missing instance {letter}: {user}\nRun: .\\ab_test\\make.ps1 instances"
         )
     return azahar_mod_root(TITLE_ID, user_dir=user)
 
@@ -108,8 +108,8 @@ def main() -> int:
         "\nA/B ready. Same TalkWindow table (10/18/22/28/55); only the voice/script cap differs.\n"
         "A = min(table, script/voice delay). B = table for player, vanilla heroine pace.\n"
         "Compare a heroine date line vs a player line on both instances.\n"
-        "  .\\make.ps1 launch-a\n"
-        "  .\\make.ps1 launch-b\n",
+        "  .\\ab_test\\make.ps1 launch-a\n"
+        "  .\\ab_test\\make.ps1 launch-b\n",
         flush=True,
     )
     return 0

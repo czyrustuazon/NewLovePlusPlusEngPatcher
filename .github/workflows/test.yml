@@ -36,9 +36,9 @@ jobs:
             git fetch --no-tags --depth=1 origin "+${GITHUB_SHA}:refs/remotes/origin/sha"
             git checkout --force -B ci "refs/remotes/origin/sha"
           fi
-          test -f requirements-dev.txt
+          test -f dev/requirements-dev.txt
           echo "Checked out $(git rev-parse --short HEAD)"
-          ls -la requirements-dev.txt requirements.txt pytest.ini tests | head -n 40
+          ls -la dev/requirements-dev.txt dev/requirements.txt tests | head -n 40
 
       - name: Verify Python
         run: |
@@ -47,7 +47,7 @@ jobs:
           python3 -m pip --version
 
       - name: Install dev dependencies
-        run: python3 -m pip install -r requirements-dev.txt
+        run: python3 -m pip install -r dev/requirements-dev.txt
 
       - name: Run unit tests
         run: python3 -m pytest tests/ -v

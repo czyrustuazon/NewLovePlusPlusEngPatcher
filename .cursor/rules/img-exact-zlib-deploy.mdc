@@ -29,7 +29,7 @@ splice_packages_into_img(MOD_IMG, img_data, [5245], MOD_IMG)
 | 4 | zlib body already > slot | Zopfli; binary-search gap salt / near-miss. **No** per-byte fine loop |
 | — | Shared header ARC (**5575**) | Rebuild **all** known EN toptex from vanilla together |
 
-Cold pack also parallelizes packages via `pack_images --pkg-workers` (see `technical.md` §12.5.3).
+Cold pack also parallelizes packages via `pack_images --pkg-workers` (see `docs/technical.md` §12.5.3).
 
 Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 

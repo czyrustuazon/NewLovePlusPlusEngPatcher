@@ -15,8 +15,9 @@ def _bat_text() -> str:
 
 def test_requirements_include_nlpp_tools_yaml():
     """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
-    req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    req = (ROOT / "dev" / "requirements.txt").read_text(encoding="utf-8")
     assert "PyYAML" in req
+    assert "dev\\requirements.txt" in _bat_text()
     setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
     assert '("yaml", "PyYAML")' in setup
 

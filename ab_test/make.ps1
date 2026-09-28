@@ -1,5 +1,4 @@
-# NLPP a/b Azahar workflow. Prefer repo root: .\make.ps1 help
-# Direct: .\ab_test\make.ps1 help
+# NLPP a/b Azahar workflow. From the repo root: .\ab_test\make.ps1 help
 param(
     [Parameter(Position = 0)]
     [string]$Target = "help"
@@ -216,14 +215,14 @@ function Launch-Instance([string]$Id) {
     if (Test-Path $bat) {
         Start-Process $bat
     } else {
-        throw "Run '.\make.ps1 instances' first. Missing $bat"
+        throw "Run '.\ab_test\make.ps1 instances' first. Missing $bat"
     }
 }
 
 $handlers = @{
     "help" = {
         @"
-NLPP a/b Azahar workflow (.\make.ps1 [target])
+NLPP a/b Azahar workflow (.\ab_test\make.ps1 [target])
 See ab_test\README.md
 
   paths          Show resolved folder paths
@@ -270,7 +269,7 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
 }
 
 if (-not $handlers.ContainsKey($Target)) {
-    Write-Error "Unknown target: $Target. Try: .\make.ps1 help"
+    Write-Error "Unknown target: $Target. Try: .\ab_test\make.ps1 help"
 }
 
 & $handlers[$Target]

@@ -3,10 +3,9 @@
 Dual isolated Azahar user dirs so you can A/B patches without fighting roaming
 `%AppData%\Azahar`. Title ID: `00040000000F4E00`.
 
-Call from **repo root** (shim) or directly:
+From the repo root:
 
 ```powershell
-.\make.ps1 help
 .\ab_test\make.ps1 help
 ```
 
@@ -14,13 +13,13 @@ Call from **repo root** (shim) or directly:
 
 1. Copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and set
    `AzaharExe`, `VanillaDump`, and optional `RomPath` for this machine.
-2. Build Azahar if needed: `.\make.ps1 build-azahar`
+2. Build Azahar if needed: `.\ab_test\make.ps1 build-azahar`
 3. Create instances + launch bats:
 
 ```powershell
-.\make.ps1 instances
-.\make.ps1 seed-a    # copies release\ bake into A; deploy-a does the same
-.\make.ps1 seed-b
+.\ab_test\make.ps1 instances
+.\ab_test\make.ps1 seed-a    # copies release\ bake into A; deploy-a does the same
+.\ab_test\make.ps1 seed-b
 ```
 
 `seed-*` and `deploy-*` copy the existing post-bake tree. They do not build a
@@ -47,11 +46,11 @@ argument.
 
 | Goal | Command |
 |------|---------|
-| Deploy current post-bake stack → A | `.\make.ps1 deploy-a` |
-| Same → B | `.\make.ps1 deploy-b` |
-| Launch A / B | `.\make.ps1 launch-a` / `launch-b` |
-| Roll back name-input baseline on A | `.\make.ps1 restore-a` |
-| Instances + post-bake copy onto A | `.\make.ps1 all-a` |
+| Deploy current post-bake stack → A | `.\ab_test\make.ps1 deploy-a` |
+| Same → B | `.\ab_test\make.ps1 deploy-b` |
+| Launch A / B | `.\ab_test\make.ps1 launch-a` / `launch-b` |
+| Roll back name-input baseline on A | `.\ab_test\make.ps1 restore-a` |
+| Instances + post-bake copy onto A | `.\ab_test\make.ps1 all-a` |
 
 **`seed-*` / `deploy-*`** copy what a finished bake already wrote:
 
@@ -65,8 +64,8 @@ argument.
 **Combine Bleeding-Edge bake + name-input:**
 
 ```powershell
-.\make.ps1 combine-a    # bake img + name_input_code.bin + name-kanji TRB → A
-.\make.ps1 combine      # same → roaming AppData
+.\ab_test\make.ps1 combine-a    # bake img + name_input_code.bin + name-kanji TRB → A
+.\ab_test\make.ps1 combine      # same → roaming AppData
 ```
 
 Script: `tools/deploy_bleeding_edge_name_input.py`. That is bake **UI** plus the
@@ -125,5 +124,5 @@ runtime VA ≈ file + `0x100000`). Compare against vanilla / expected bytes.
 ## Agent prefs (hard)
 
 - Do **not** tell the user to “fully quit Azahar” between tests — they already do.
-- Feature-specific RE (addresses, bans, verified stacks) lives in `technical.md`,
+- Feature-specific RE (addresses, bans, verified stacks) lives in `docs/technical.md`,
   not here. Keep this file about **how to run a/b**, not what was last patched.

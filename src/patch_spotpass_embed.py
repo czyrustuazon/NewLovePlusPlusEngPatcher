@@ -61,7 +61,7 @@ state machine (``FUN_006094c0`` / ``FUN_006088c8``) writes the blob into save:
 Boot skip (§16.7) still hides the nag. Payload lives in ``.rodata`` (NX on
 hardware). Stubs replace ``FUN_00609ab0`` in-place (RX).
 
-Ghidra image base 0; runtime VA = file + ``0x100000``. See technical.md §16.8.
+Ghidra image base 0; runtime VA = file + ``0x100000``. See docs/technical.md §16.8.
 
   python src/patch_spotpass_embed.py --dry-run
   python src/patch_spotpass_embed.py --deploy-azahar

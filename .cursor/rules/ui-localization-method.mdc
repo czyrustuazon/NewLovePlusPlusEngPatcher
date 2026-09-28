@@ -16,8 +16,8 @@ When a screen stays Japanese despite EN TRB:
 5. **If list/quest titles already EN but overflow the capsule:** TRB string too long — **shorten the EN string** (pane font size is global). Example: To-Do STRI **2837** `Girlfriend's Personal Photographer` → shorter synonym (`Personal Photographer`). Pack `0x0600` slot 22; `translations.json` + `patch_textresource.py`.
 6. **If TRB already EN for the same words:** wrong path (different asset or runtime buffer). Stop re-translating those keys.
 7. **If `translations.json` has EN but the screen is still the full JP sentence:** dump vanilla TRB and compare keys. A truncated JSON key (cut mid-phrase, e.g. `…デートを作` vs `…デートを作成してください。`) never matches, so rebuild keeps JP. Fix the **full** codebook string, then `deploy_name_kanji_trb.py`. Example: Anywhere Date empty list STRI **25183**.
-8. **If an ETC1A4 MultiWin 192×16 bar looks fried / pixel-y:** it is a **BCLIM**, not TRB. Zhoumaru stem may be the wrong file (Network) or an 8px strip. Full EN that is 2× Communication’s width cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, `technical.md` §12.4.1). Do not LANCZOS-fill a plate onto this bar.
-9. **If the Main Menu hub header is colorful tiled noise** (rows still EN): BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu`, not TRB. Zhoumaru `.check` dump had swizzled RGB (alpha still “Main Menu”). Encode gray “Main Menu” with the hub-label RGBA4444 path. Split RGB vs alpha before packing GPU dumps. `technical.md` **§15.1.1**.
+8. **If an ETC1A4 MultiWin 192×16 bar looks fried / pixel-y:** it is a **BCLIM**, not TRB. Zhoumaru stem may be the wrong file (Network) or an 8px strip. Full EN that is 2× Communication’s width cannot keep ~13px cores — shorten the **bar** copy (Girlfriend Comm. → **Heart to Heart**, `docs/technical.md` §12.4.1). Do not LANCZOS-fill a plate onto this bar.
+9. **If the Main Menu hub header is colorful tiled noise** (rows still EN): BCLIM `Title_menu_word` @ **5261** `Pts_Title_menu`, not TRB. Zhoumaru `.check` dump had swizzled RGB (alpha still “Main Menu”). Encode gray “Main Menu” with the hub-label RGBA4444 path. Split RGB vs alpha before packing GPU dumps. `docs/technical.md` **§15.1.1**.
 10. **If RGB565 yellow-key labels look deep-fried next to an A8 header / RGBA4444 button:** not word count. Vanilla uses chroma ramps (~17 colors). 1-bit crush is the fry. 2× Heisei, lerp plate→ink, quantize to the JP palette — **§12.4.4**.
 
 ## Verify identity before patching
@@ -54,4 +54,4 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
 | In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
 
-Details: `technical.md` §12.4–12.6.
+Details: `docs/technical.md` §12.4–12.6.

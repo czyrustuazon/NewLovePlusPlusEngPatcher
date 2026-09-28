@@ -15,7 +15,7 @@ Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
 the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
 ``Pts_Title_menu`` shows). Zhoumaru ``Title.check`` dump had swizzled RGB;
-packing it garbles first hub show (``technical.md`` §15.1.1). Rebuild this
+packing it garbles first hub show (``docs/technical.md`` §15.1.1). Rebuild this
 ARC from vanilla, never from ``bak_pre_title_engpatch`` (that bak is packed
 MOD). Never leave a magenta probe in gold bake.
 

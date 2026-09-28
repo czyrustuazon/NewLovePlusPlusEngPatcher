@@ -1,6 +1,6 @@
 # SpotPass rebuild
 
-One service owns the week. Players send comments, photos, and spot notes in. The service stores them, and on a cut it writes one `info.dat`. Every console then replaces the previous issue with that file. The 2012 CDN did the same job as two task names (`ITASK01` in, `PTASK01` out) on one host. This plan keeps that shape. Addresses and payload facts below are the ones already recorded in `technical.md` §16.
+One service owns the week. Players send comments, photos, and spot notes in. The service stores them, and on a cut it writes one `info.dat`. Every console then replaces the previous issue with that file. The 2012 CDN did the same job as two task names (`ITASK01` in, `PTASK01` out) on one host. This plan keeps that shape. Addresses and payload facts below are the ones already recorded in `docs/technical.md` §16.
 
 The current patch does not need this service. `src/patch_spotpass_embed.py` already plants issue 28 and spoofs the two BOSS replies. The service is how more than one player’s upload becomes the next week.
 

@@ -20,7 +20,7 @@ def test_ci_workflow_checks_out_with_plain_git():
     assert "pytest" in text
     # Must verify tree is present before pip install.
     assert text.index("Checkout repository") < text.index("Install dev dependencies")
-    assert text.index("test -f requirements-dev.txt") < text.index(
+    assert text.index("test -f dev/requirements-dev.txt") < text.index(
         "Install dev dependencies"
     )
 

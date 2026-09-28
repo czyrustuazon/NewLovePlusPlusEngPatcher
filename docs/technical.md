@@ -35,7 +35,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Profile white header** (`プロフィール`) is A8 `Plate_Text01_00_00` @ **5246** 144×28. Ship Heisei W5 on a 16px strip (same as Heart to Heart), not MPLUS and not Zhoumaru paint — **§12.4.2**.
 - **Profile Call / atlas labels** (`Last Name` / `Written` / `Called`) are RGB565 chroma @ **5252**. Use JP yellow/green/cyan **ramps** (2× Heisei), not 1-bit crush — **§12.4.4**.
 - **Profile hometown region chips** (`全国` / `北海道東北` / …) are RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252**, not DrawText. Zhoumaru two-line EN overflowed the rounded pills — contain-fit to the 6px inset (**§12.4.3**).
-- **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
+- **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\ab_test\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
 - **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
 
@@ -516,11 +516,11 @@ Treat dump `extracted/` as mostly **read-only**; write patches through EngPatche
 | Title extra data `00000F4E` “broken” | Communications reads `LP_NET` / `LP_NET_CARD` | Archives present; same file set/sizes as instance B |
 | SpotPass extra data `00000321` missing | Log: `Failed to open SpotPass ext data archive` | Boot SpotPass check only (§16). Not the StreetPass Communication menu |
 | MultiWin pkg **5237** extras / zopfli salt | Timed with Girlfriend Comm. header work | Packages decompress `unused_data=0`; rolling **5237** back did not stop the smash |
-| LayeredFS `img.bin.bak_*` in `romfs/` | Extra overlay files + `OpenLinkFile` in the same log | Still move baks to `_bak/` (`make.ps1 launch-a`); hang persisted with only `img.bin` + two TRBs |
+| LayeredFS `img.bin.bak_*` in `romfs/` | Extra overlay files + `OpenLinkFile` in the same log | Still move baks to `_bak/` (`.\ab_test\make.ps1 launch-a`); hang persisted with only `img.bin` + two TRBs |
 
 **Cause:** Azahar `File::OpenLinkFile` created a new session but **did not clone** the current handle. 3dbrew / libctru: “opens a clone / duplicate handle.” The stub set `offset=0`, `size=backend->GetSize()`, `subfile=false`. NLPP opens an extra-data **subfile** (`OpenSubFile`) then `OpenLinkFile`. `GetSize` on the clone then returned the **entire** extra-data blob (tens–hundreds of MB). The game treated that as a small `NLPPARC` record and heap-walked ASCII as pointers (`0x33373338`).
 
-**Fix (local Azahar, not CIA `img.bin`):** `File::OpenLinkFile` snapshots `priority` / `offset` / `size` / `subfile` from the source session *before* `ClientConnected`, then copies them onto the clone. `File::Close` must **not** close the shared backend while another session (the clone) is still live — that zeros later reads and brings the spinner back. Patch in this repo: `ab_test/patches/azahar-openlinkfile.patch`. `.\make.ps1 build-azahar` applies it if missing, rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`. Default log line: `OpenLinkFile … clone offset=… size=… subfile=… backend=…`. Drop CIA does not need this — hardware FS clones handles correctly.
+**Fix (local Azahar, not CIA `img.bin`):** `File::OpenLinkFile` snapshots `priority` / `offset` / `size` / `subfile` from the source session *before* `ClientConnected`, then copies them onto the clone. `File::Close` must **not** close the shared backend while another session (the clone) is still live — that zeros later reads and brings the spinner back. Patch in this repo: `ab_test/patches/azahar-openlinkfile.patch`. `.\ab_test\make.ps1 build-azahar` applies it if missing, rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`. Default log line: `OpenLinkFile … clone offset=… size=… subfile=… backend=…`. Drop CIA does not need this — hardware FS clones handles correctly.
 
 **Do not** restore extra data or re-splice **5237** / **5241** for this spinner. **Do not** treat missing `00000321` as a Communication-menu fix.
 
@@ -1047,7 +1047,7 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 4. Quantize each coverage to **12 ramp steps** (`RAMP_STEPS`). That keeps visible AA but few unique colors.
 
-`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. The 400×400 skip lives in `name_input_code.bin` (bake rebuild / Drop CIA). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`, `tests/test_patch_cesa_logo_scale.py`. A/B: `.\make.ps1 cesa-ab` then `launch-a` (thank-you) / `launch-b` (CESA EN, white stub).
+`deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. The 400×400 skip lives in `name_input_code.bin` (bake rebuild / Drop CIA). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`, `tests/test_patch_cesa_logo_scale.py`. A/B: `.\ab_test\make.ps1 cesa-ab` then `launch-a` (thank-you) / `launch-b` (CESA EN, white stub).
 
 #### Companion blurb (`logo_white` — 2026-09-15)
 
@@ -1317,7 +1317,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.3 Clone / first-drop checklist
 
-1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
+1. Python 3.10+ + `pip install -r dev/requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **Drop always from-scratch packs.** It deletes `out/`, `release/`, and the entire `cache/` folder, then `rebuild_bake_img.py --rom` extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine, 2026-09-18; §12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
@@ -1328,7 +1328,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 8. CESA: `tools/render_cesa_en.py` then `deploy_cesa_en.py` / rebuild tail — not ad-hoc `pe` repack. Rollback: `bake_img.bin.bak_pre_cesa`. **§12.7**.
 
-9. Dev sanity: `pip install -r requirements-dev.txt && python -m pytest tests/ -v` (§15.6).
+9. Dev sanity: `pip install -r dev/requirements-dev.txt && python -m pytest tests/ -v` (§15.6).
 
 ### 15.4 Package quick map (hub vs submenu)
 
@@ -1422,7 +1422,7 @@ When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubun
 Regression guards for the gold-bake workflow and core helpers:
 
 ```bash
-pip install -r requirements-dev.txt
+pip install -r dev/requirements-dev.txt
 python -m pytest tests/ -v
 ```
 
@@ -1825,15 +1825,15 @@ Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji i
 **Isolation (how name-input was proven):** Azahar **a/b** + **vanilla** `img.bin` / `code.bin.bak` — **not** bake alone. Full EN TRB maps gojūon `あ→A` and blanks those cells.
 
 ```bash
-.\make.ps1 deploy-a      # name-input + name-kanji TRB on vanilla img
-.\make.ps1 launch-a
+.\ab_test\make.ps1 deploy-a      # name-input + name-kanji TRB on vanilla img
+.\ab_test\make.ps1 launch-a
 ```
 
 **Combine with gold bake UI** (EN chrome + working Profile keyboard):
 
 ```bash
-.\make.ps1 combine-a     # instance A
-.\make.ps1 combine       # roaming AppData
+.\ab_test\make.ps1 combine-a     # instance A
+.\ab_test\make.ps1 combine       # roaming AppData
 # or: python tools/deploy_bleeding_edge_name_input.py --refresh-artifacts
 ```
 
@@ -1989,7 +1989,7 @@ Japanese readings still resolve for hiragana saves. English nicknames are not in
 
 ### 18.1 Dual Azahar instances
 
-Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test/README.md`**.
+Scripts: `ab_test/` (`.\ab_test\make.ps1`, or `make -C ab_test`). Guide: **`ab_test/README.md`**.
 
 | Item | Path / note |
 |------|-------------|
@@ -1997,7 +1997,7 @@ Scripts: `ab_test/` (call via root `.\make.ps1` / `Makefile`). Guide: **`ab_test
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
 | Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
-| Shared Nene save | `ab_test/saves/nene/` via `.\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
+| Shared Nene save | `ab_test/saves/nene/` via `.\ab_test\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
 
 Do **not** tell the user to quit Azahar between deploys (standing preference).
 
@@ -2009,7 +2009,7 @@ Community NLPPATCH scripts already ship in `rebuild_dbin2/` (NLPP-005). Offline 
 
 ### 18.3 Communications loading hang — OpenLinkFile (2026-09-18)
 
-See **§10.1**. `.\make.ps1 build-azahar` applies `ab_test/patches/azahar-openlinkfile.patch` and copies `azahar.exe` into the instance folders. Drop CIA / gold `img.bin` do not include this (hardware FS is fine).
+See **§10.1**. `.\ab_test\make.ps1 build-azahar` applies `ab_test/patches/azahar-openlinkfile.patch` and copies `azahar.exe` into the instance folders. Drop CIA / gold `img.bin` do not include this (hardware FS is fine).
 
 ### 18.4 Game Start hang — parent extra-data OpenLinkFile (2026-09-18)
 
@@ -2401,7 +2401,7 @@ Ship path: `apply_patch` from `tools/deploy_name_input_en.py` → `release/name_
 python tools/deploy_name_input_en.py --src extracted/exefs/code.bin.bak --out release/name_input_code.bin
 ```
 
-LayeredFS: copy that file to instance `exefs/code.bin` (and mod-root `code.bin`), or `--deploy-azahar` / `.\make.ps1 talk-speed-ab` (**A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
+LayeredFS: copy that file to instance `exefs/code.bin` (and mod-root `code.bin`), or `--deploy-azahar` / `.\ab_test\make.ps1 talk-speed-ab` (**A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
 
 Verified 2026-09-17: heroine date line on **A** matches player speed; **B** still crawls.
 

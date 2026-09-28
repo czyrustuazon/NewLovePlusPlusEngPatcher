@@ -130,7 +130,7 @@ def rebuild_main_trb(*, env: dict[str, str] | None = None) -> None:
 
     Uses the name-input filter (skip single kana/CJK keys) so gojūon cells stay
     JP glyphs for DrawCell/romaji — full EN TRB blanks the Profile keyboard.
-    See tools/deploy_name_kanji_trb.py / technical.md §17.
+    See tools/deploy_name_kanji_trb.py / docs/technical.md §17.
     """
     translations = require_translations_json()
     vanilla_trb = find_vanilla_main_trb()
@@ -585,7 +585,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         print(
             "[rebuild] PNG pack starting (historically ~16h; now typically under an hour, "
             "measured ~27 min on a high-thread desktop — empty-block-first + package "
-            "ProcessPool + zopfli pad; see technical.md §12.5.3). Watch [timer] lines "
+            "ProcessPool + zopfli pad; see docs/technical.md §12.5.3). Watch [timer] lines "
             "for live elapsed.",
             flush=True,
         )
