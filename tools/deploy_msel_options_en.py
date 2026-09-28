@@ -48,6 +48,9 @@ MOD_IMG, VANILLA = resolve_img_paths()
 IMG_DATA = ROOT / "out" / "options_tex_extract" / "img_data"
 PKG = 5245
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
+# Header plate only. The menu button shares the Text04_04 stem; a coverage
+# mask there is a solid stroke, heavier than Display / Sound / Password.
+FORCE_COVERAGE = frozenset({"Com_M_Sel_Plate_Text04_04_00"})
 # Ghidra OptionMenu_BindBtnTextures + BindPlateTextures (incl. Display/Sound pages).
 LABELS: list[tuple[str, str]] = [
     ("Com_M_Sel_Plate_Text03_00_00.bclim", "Options"),
@@ -121,7 +124,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False, stem: s
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
         rgba = Image.open(master).convert("RGBA")
-        if hard or (stem and stem.endswith("Text04_04_00")):
+        if hard or (stem in FORCE_COVERAGE):
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 40, 255, 0).astype(np.uint8)
             rgb = np.array(rgba.convert("RGBA"))

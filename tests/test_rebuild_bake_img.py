@@ -54,8 +54,11 @@ def test_msel_menus_include_event_gallery_rows():
     assert "Find Couple" in text
     assert "Join Double Date" in text
     assert "Heart to Heart" in text
+    assert '("Com_M_Sel_Btn_Text04_01_01.bclim", "Heart to Heart")' in text
     assert "SKIP_UI_PNG" in text
     assert "Com_M_Sel_Plate_Text04_01_01" in text.split("SKIP_UI_PNG")[1]
+    assert "FONT_BTN_H" in text
+    assert "Com_M_Sel_Btn_Text04_01_01" in text.split("FONT_BTN_H")[1]
     assert "GF_COMM_PLATE_FROM_MULTIWIN" not in text
     assert '"Com_M_Sel_Plate_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' not in text
 
@@ -89,6 +92,20 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "password_uribo_already" in deploy
 
 
+def test_card_name_labels_after_flist():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_card_name_labels_en.py") > scripts.index(
+        "deploy_card_flist_en.py"
+    )
+    text = (TOOLS / "deploy_card_name_labels_en.py").read_text(encoding="utf-8")
+    assert "B_Card04_txt01" in text
+    assert "B_Card04_txt06" in text
+    assert '"Name"' in text
+    assert "Girlfriend's Name" in text
+    assert "HEADER_CORE_PX" in text
+    assert "render_header_aa" not in text
+
+
 def test_dsel_data_visible_hooked():
     scripts = rebuild.DEPLOY_SCRIPTS
     assert "deploy_dsel_data_visible.py" in scripts
@@ -105,9 +122,11 @@ def test_softkey_deploy_after_confirm():
     softkey = scripts.index("deploy_softkey_back_next_en.py")
     quit_sk = scripts.index("deploy_softkey_quit_en.py")
     defaults = scripts.index("deploy_softkey_defaults_en.py")
+    sides = scripts.index("deploy_card_side_btn_en.py")
     assert softkey > confirm
     assert quit_sk > softkey
     assert defaults > quit_sk
+    assert sides > defaults
 
 
 def test_commu_settings_header_after_menus():
@@ -164,9 +183,13 @@ def test_msel_options_omits_quit_azahar_prompt():
     assert "add_password_input_plate" in text
     assert "--plate-only" in text
     assert "Com_M_Sel_Plate_Text04_04_00" in text
+    coverage = text.split("FORCE_COVERAGE", 1)[1].split(")", 1)[0]
+    assert "Plate_Text04_04_00" in coverage
+    assert "Btn_Text04_04" not in coverage
     plates = (TOOLS / "deploy_msel_opt_plates_en.py").read_text(encoding="utf-8")
     assert "Com_M_Sel_Plate_Text04_04_00" in plates
     assert "Communication Settings" in plates
+    assert 'stem == "Com_M_Sel_Plate_Text04_04_00"' in plates
 
 
 def test_multiwin_girlfriend_comm_self_renders():

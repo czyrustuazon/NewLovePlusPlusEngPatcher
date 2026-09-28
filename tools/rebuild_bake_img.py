@@ -61,16 +61,18 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_msel_options_en.py",
     "deploy_msel_opt_plates_en.py",
     "deploy_msel_menus_en.py",
-    "deploy_commu_settings_header_en.py",  # 5241 after menus (ETC1A4 Communication Settings plate)
+    "deploy_commu_settings_header_en.py",  # 5241 after menus (ETC1A4 通信設定 plate + row)
     "deploy_confirm_btn_en.py",
     "deploy_softkey_back_next_en.py",  # 5238 after Confirm OK
     "deploy_softkey_quit_en.py",  # 5238 やめる → Quit
-    "deploy_softkey_defaults_en.py",  # 5238 last-writer: 初期設定 → Restore Default
+    "deploy_softkey_defaults_en.py",  # 5238 初期設定 → Restore Default
+    "deploy_card_side_btn_en.py",  # 5238 last-writer: 表面/裏面 → Front Side / Back Side
     "deploy_display_settings_en.py",
     "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
     "deploy_card_flist_en.py",
+    "deploy_card_name_labels_en.py",  # 4152 after flist (keeps Received Date)
     "deploy_dsel_data_visible.py",  # 5152 Vis_Dsel_Data label sheet
     "deploy_status_stats_en.py",
     "deploy_myroom_main_en.py",

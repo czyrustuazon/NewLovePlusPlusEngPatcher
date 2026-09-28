@@ -109,9 +109,10 @@ def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, stem: str | None =
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
         rgba = Image.open(master).convert("RGBA")
-        # 5245 is packed to the slot. Extra EN plates need a coverage mask or
-        # Zhoumaru AA blows cmp_len (Communication Settings was +264).
-        if hard or (stem and stem.endswith("Text04_04_00")):
+        # 5245 is packed to the slot. The Communication Settings header plate
+        # needs a coverage mask or Zhoumaru AA blows cmp_len (was +264).
+        # The menu button is a different file; masking it makes a heavier stroke.
+        if hard or stem == "Com_M_Sel_Plate_Text04_04_00":
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 40, 255, 0).astype(np.uint8)
             rgb = np.array(rgba.convert("RGBA"))
