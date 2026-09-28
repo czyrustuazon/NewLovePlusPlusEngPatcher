@@ -334,44 +334,12 @@ from script_inject import resolve_script_source  # noqa: E402
 
 
 def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
-    total = 0
-    layers: dict[str, int] = {"manaka": 0, "eng_p": 0, "nlppatch": 0}
-    skipped = 0
-    for pack in PACKS:
-        src_dir = dbin_root / pack
-        if not src_dir.is_dir():
-            raise PatchError(f"missing packed scripts: {src_dir}")
-        dest_dir = romfs_dir / "script" / "bin" / pack
-        if not dest_dir.is_dir():
-            raise PatchError(f"RomFS missing script pack folder: {dest_dir}")
-        files = sorted(src_dir.glob("*.dbin2"))
-        if not files:
-            raise PatchError(f"no .dbin2 files in {src_dir}")
-        injected = 0
-        pack_layers: dict[str, int] = {}
-        for src in files:
-            chosen, tag = resolve_script_source(pack, src.stem, dbin_root)
-            if chosen is None:
-                skipped += 1
-                continue
-            shutil.copy2(chosen, dest_dir / src.name)
-            total += 1
-            injected += 1
-            if tag in layers:
-                layers[tag] += 1
-                pack_layers[tag] = pack_layers.get(tag, 0) + 1
-        layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
-        print(
-            f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"
-            f" — {len(files) - injected} JP (base ROM)"
-        )
-    print(
-        f"[inject] total EN: {total} "
-        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, nlppatch={layers['nlppatch']})"
-    )
-    if skipped:
-        print(f"[inject] {skipped} script slot(s) left Japanese")
-    return total
+    from script_inject import ScriptInjectError, inject_scripts  # noqa: E402
+
+    try:
+        return inject_scripts(romfs_dir, dbin_root, create_dirs=False)
+    except ScriptInjectError as exc:
+        raise PatchError(str(exc)) from exc
 
 
 def rebuild_romfs(romfs_dir: Path, out_bin: Path) -> None:

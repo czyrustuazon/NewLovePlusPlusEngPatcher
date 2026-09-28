@@ -1319,9 +1319,9 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 1. Python 3.10+ + `pip install -r requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
-3. **If `release/bake_img.bin` is missing or `release/bake_stamp.txt` does not match this RC**, Drop rebuilds from this tree **from scratch** (no `cache/img_pack`, leftover bake overwritten). Same-RC stamped bake is reused. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
+3. **Drop always from-scratch packs.** It deletes `out/`, `release/`, and the entire `cache/` folder, then `rebuild_bake_img.py --rom` extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine, 2026-09-18; §12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
-   Subsequent full packs with unchanged assets reuse ``cache/img_pack/`` (BCLIM + exact-zlib) and are typically minutes (`--no-cache` to force).
+   From-scratch does not reuse ``cache/img_pack/``. `--skip-pack` resumes deploys and leaves `cache/` in place.
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
 7. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
@@ -1381,7 +1381,7 @@ decrypted .cia / .3ds / .cci dropped
            fail (404, no repo, network) → continue
         2. if still no bake:
              rebuild_bake_img.py --rom <dropped ROM>
-             (long first time; vanilla from cache/vanilla_from_rom/;
+             (long first time; deletes cache/, then full RomFS extract into cache/vanilla_from_rom/;
               §12.5.3 empty-block-first + pkg ProcessPool)
         3. if still no bake:
              HARD STOP — do not patch (prevents half-EN CIA)
@@ -1393,7 +1393,7 @@ decrypted .cia / .3ds / .cci dropped
 
 Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. Durable artifacts stay: `release/bake_img.bin`, `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/logs/`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. From-scratch deletes `cache/` before extract, then writes a new full `cache/vanilla_from_rom/` (`Plus/` required). `--skip-pack` does not delete `cache/`. Artifacts of a finished Drop: `release/bake_img.bin`, that new `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/logs/`.
 
 #### Environment overrides
 

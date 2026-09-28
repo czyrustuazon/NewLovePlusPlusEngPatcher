@@ -14,7 +14,8 @@ ROMFS_OVERLAY = RELEASE / "romfs_overlay"
 TEXTRESOURCE = RELEASE / "textresource"
 OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
 
-# Optional PNG-pack intermediate (may be wiped; not gold).
+# From-scratch Drop / rebuild --rom deletes this whole tree, then refills it.
+# --skip-pack does not. Not gold.
 CACHE = ROOT / "cache"
 CACHE_NEW_IMG = CACHE / "new_img.bin"
 # Content-addressed BCLIM + exact-zlib slots for pack_images (see img_pack_cache.py).

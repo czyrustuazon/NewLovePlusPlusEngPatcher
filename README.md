@@ -115,7 +115,7 @@ Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_to
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/` and `release/` first.** The previous `release/bake_img.bin` and `release/bake_stamp.txt` are deleted, so the bat always packs from this tree. `PATCHER_RELEASE` is **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` is **3**. `cache/` (including `cache/img_pack`) is not wiped. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/` or `release/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first.** The previous `release/bake_img.bin`, `release/bake_stamp.txt`, vanilla RomFS, and PNG pack cache are deleted, so the bat always packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` is **3**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 
@@ -125,7 +125,7 @@ python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 
 That regenerates bake + TRBs from sources. A cold pack is typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine; historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
 
-- Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
+- Vanilla RomFS is re-extracted from the dropped ROM into `cache/vanilla_from_rom/` (full tree, including `Plus/`). A slim cache is refused.  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
 - Scripts-only CIA (no UI inject): `set NLPP_WITH_IMAGES=0`.
 
@@ -482,7 +482,7 @@ tools/
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; technical.md §15.5)
-cache/                       PNG scratch + vanilla_from_rom (gitignored; not wiped by Drop CIA)
+cache/                       PNG scratch + vanilla_from_rom (gitignored; Drop CIA deletes this folder on every from-scratch build)
 out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and logs/ (gitignored)
 ```
 

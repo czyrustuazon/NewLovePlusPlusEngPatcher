@@ -24,12 +24,13 @@ def test_requirements_include_nlpp_tools_yaml():
 def test_bat_wipes_out_and_release_before_build():
     text = _bat_text()
     wipe_idx = text.index("--wipe-cia-build")
-    assert "Wiping out\\ and release\\" in text
+    assert "Wiping out\\, release\\, and cache\\" in text
     assert "scratch_cleanup.py" in text
     assert wipe_idx < text.index("Using gold bake")
     assert wipe_idx < text.index("Injecting scripts + UI")
-    # cache holds vanilla extract / PNG scratch and is not part of the wipe.
-    assert "cache\\ is left as-is" in text
+    # From-scratch deletes cache/ (slim vanilla_from_rom must not survive).
+    assert "cache\\ is left as-is" not in text
+    assert "--preserve-rom" in text
     # A/B Azahar copies live outside out/ so this wipe does not delete them.
     assert "ab_test\\azahar_instances\\ is left as-is" in text
 
@@ -55,7 +56,8 @@ def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
     assert "patcher_version.py" in text
     assert "BAKE_STALE" in text
     assert "NLPP_REUSE_BAKE" in text
-    assert "NLPP_USE_PACK_CACHE" in text
+    assert "NLPP_USE_PACK_CACHE is ignored" in text
+    assert 'set "PACK_CACHE=--use-cache"' not in text
     assert "from scratch" in text.lower() or "from-scratch" in text
     # Reuse leftover bake is opt-in; default is stamp-check then rebuild.
     stale_idx = text.index("BAKE_STALE")

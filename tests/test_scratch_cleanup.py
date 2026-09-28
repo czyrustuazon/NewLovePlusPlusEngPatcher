@@ -35,6 +35,29 @@ def test_wipe_directory_recreates_empty(tmp_path: Path):
     assert not (release / "bake_img.bin").exists()
 
 
+def test_park_outside_copies_file_under_parent(tmp_path: Path):
+    parent = tmp_path / "cache"
+    src = parent / "rom_source" / "game.3ds"
+    src.parent.mkdir(parents=True)
+    src.write_bytes(b"rom")
+    outside = tmp_path / "desktop" / "game.3ds"
+    outside.parent.mkdir()
+    outside.write_bytes(b"desk")
+
+    parked = cleanup.park_outside(src, parent)
+    assert parked != src.resolve()
+    assert parked.is_file()
+    assert parked.read_bytes() == b"rom"
+    assert cleanup.park_outside(outside, parent) == outside.resolve()
+
+
+def test_wipe_cia_build_dirs_includes_cache():
+    text = (SRC / "scratch_cleanup.py").read_text(encoding="utf-8")
+    body = text.split("def wipe_cia_build_dirs", 1)[1].split("def remove_scratch", 1)[0]
+    assert "CACHE" in body
+    assert "OUT, RELEASE, CACHE" in body
+
+
 def test_wipe_directory_refuses_repo_root(tmp_path: Path):
     with pytest.raises(SystemExit, match="refusing"):
         cleanup.wipe_directory(tmp_path, root=tmp_path)

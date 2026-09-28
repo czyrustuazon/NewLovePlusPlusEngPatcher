@@ -63,6 +63,17 @@ def test_baseline_drop_rebuilds_from_rom_when_bake_missing():
     )
 
 
+def test_baseline_drop_refuses_slim_romfs_cache():
+    """A script-only cache must not be passed as --romfs (drops Plus/)."""
+    text = _bat()
+    assert 'if exist "%CACHE_ROMFS%\\script\\bin\\script"' not in text
+    assert "romfs\\Plus is missing" in text
+    plus_idx = text.index("romfs\\Plus is missing")
+    inject_idx = text.index("Injecting gold bake")
+    assert plus_idx < inject_idx
+    assert text.index('set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"') > plus_idx
+
+
 # ---------------------------------------------------------------------------
 # Vanilla extract — code.bin required + retries
 # ---------------------------------------------------------------------------

@@ -174,19 +174,27 @@ if "!HASH_ERR!"=="0" (
 )
 
 echo.
-echo Wiping out\ and release\ before this build...
-echo Previous CIA, logs, extra-data backups, gold bake,
-echo TRB overlay, and name-input code.bin in those folders are deleted.
-echo cache\ is left as-is.
+echo Wiping out\, release\, and cache\ before this from-scratch build...
+echo Previous CIA, logs, gold bake, TRB overlay, name-input code.bin,
+echo vanilla RomFS, and PNG pack cache are deleted and rebuilt.
 echo ab_test\azahar_instances\ is left as-is.
-echo Close anything using files under out\ or release\.
-"%PYTHON%" "%SRC%\scratch_cleanup.py" --wipe-cia-build
+echo Close anything using files under out\, release\, or cache\.
+set "NLPP_PARKED=%TEMP%\nlpp_parked_rom.txt"
+if exist "%NLPP_PARKED%" del /f /q "%NLPP_PARKED%" >nul 2>&1
+"%PYTHON%" "%SRC%\scratch_cleanup.py" --wipe-cia-build --preserve-rom "%CIA%" --preserve-out "%NLPP_PARKED%"
 if errorlevel 1 (
-  echo [!] Could not wipe out\ and release\.
+  echo [!] Could not wipe out\, release\, and cache\.
   echo     Close programs that have files open in those folders, then drop again.
   pause
   exit /b 1
 )
+if exist "%NLPP_PARKED%" (
+  set /p CIA=<"%NLPP_PARKED%"
+  del /f /q "%NLPP_PARKED%" >nul 2>&1
+  echo [wipe] dropped ROM lived under a wiped folder; using parked copy:
+  echo     "!CIA!"
+)
+set "NLPP_PARKED="
 echo.
 
 echo Injecting scripts + UI / rebuilding CIA...
@@ -194,19 +202,12 @@ echo Requires a decrypted .cia or .3ds/.cci ^(decrypt yourself first^).
 echo This can take several minutes and needs a few GB free disk.
 echo.
 
-REM Use an extracted RomFS as a *source copy* only — never --in-place-romfs
-REM (in-place previously overwrote img.bin with a bad UI pack).
+REM CIA RomFS comes from this run's full extract under cache\vanilla_from_rom.
+REM Set EXTRA_ROMFS only after rebuild, and only when Plus\ exists.
+REM A slim tree (script\ + img.bin, no Plus\) must never be passed as --romfs.
+REM Never --in-place-romfs (that overwrote img.bin with a bad UI pack).
 set "EXTRA_ROMFS="
-set "SIBLING_ROMFS=%~dp0..\New Love Plus Plus\extracted\romfs"
 set "CACHE_ROMFS=%~dp0cache\vanilla_from_rom\romfs"
-if exist "%SIBLING_ROMFS%\script\bin\script" (
-  echo Using RomFS template from sibling extracted ^(copied, not in-place^)
-  REM Keep quotes inside the value so paths with spaces survive expansion.
-  set EXTRA_ROMFS=--romfs "%SIBLING_ROMFS%"
-) else if exist "%CACHE_ROMFS%\script\bin\script" (
-  echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-  set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
-)
 
 REM UI ON by default. out\ and release\ were wiped above; this run fills them again.
 REM   release\bake_img.bin     — gold bake (built locally; gitignored)
@@ -276,8 +277,8 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set "NEED_REBUILD="
   if defined BAKE_STALE set "NEED_REBUILD=1"
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" set "NEED_REBUILD=1"
+  REM NLPP_USE_PACK_CACHE is ignored: from-scratch deletes cache\ before the pack.
   set "PACK_CACHE="
-  if /i "%NLPP_USE_PACK_CACHE%"=="1" set "PACK_CACHE=--use-cache"
   if defined NEED_REBUILD (
     REM Gold bake required. CI fetch only when reusing an unstamped-missing bake
     REM ^(NLPP_REUSE_BAKE=1^). RC from-scratch skips fetch so an old gold zip
@@ -296,8 +297,8 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo.
       echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
       echo This builds bake + textresource TRBs from assets\ ^(PNG pack + deploy chrome^).
-      echo Vanilla img.bin comes from the dropped ROM if no sibling extracted\ exists.
-      echo RC from-scratch pack ignores cache\img_pack. Leave this window open.
+      echo Vanilla RomFS is re-extracted from the dropped ROM ^(full tree, including Plus\^).
+      echo cache\ was deleted, so this pack is cold. Leave this window open.
       echo.
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
@@ -308,16 +309,11 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
         exit /b 1
-      )
-      REM Rebuild may have just filled cache\vanilla_from_rom — prefer it as RomFS template.
-      if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
-        echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-        set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
       )
     ) else if defined BAKE_STALE (
       echo.
       echo Overwriting leftover gold bake — running tools\rebuild_bake_img.py
-      echo RC from-scratch pack ignores cache\img_pack. Leave this window open.
+      echo cache\ was deleted, so this pack is cold. Leave this window open.
       echo.
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
@@ -328,10 +324,6 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
         exit /b 1
-      )
-      if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
-        echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-        set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
       )
     )
     if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
@@ -376,10 +368,6 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     if exist "%~dp0release\bake_img.bin" (
       set "PACKED_IMG=%~dp0release\bake_img.bin"
     )
-    if not defined EXTRA_ROMFS if exist "%CACHE_ROMFS%\script\bin\script" (
-      echo Using RomFS template from cache\vanilla_from_rom ^(copied, not in-place^)
-      set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
-    )
   )
   if not exist "%~dp0release\name_input_code.bin" (
     echo [!] release\name_input_code.bin still missing after rebuild — aborting.
@@ -388,6 +376,15 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
+  REM Full cart RomFS only. script\bin\script alone is the slim cache and drops Plus\.
+  if not exist "%CACHE_ROMFS%\Plus" (
+    echo [!] cache\vanilla_from_rom\romfs\Plus is missing.
+    echo     From-scratch rebuild did not extract a full RomFS. Refusing to build.
+    pause
+    exit /b 1
+  )
+  set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
+  echo Using full RomFS extracted this run: cache\vanilla_from_rom
   echo Injecting gold bake: !PACKED_IMG!
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )

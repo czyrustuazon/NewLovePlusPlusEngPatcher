@@ -11,11 +11,12 @@ Full workflow for agents: **`ab_test/README.md`**.
 
 ```powershell
 .\make.ps1 instances
-.\make.ps1 deploy-a    # current default stack → instance A
-.\make.ps1 save-nene   # shared Nene title save → A and B
+.\make.ps1 deploy-a    # existing post-bake LayeredFS → instance A
 .\make.ps1 launch-a
 .\make.ps1 restore-a
 ```
+
+`deploy-a` / `seed-a` copy `release/bake_img.bin`, `release/name_input_code.bin`, and `release/romfs_overlay/` into the instance, then overlay English `.dbin2` dialog with the same inject the CIA uses (`src/script_inject.py --layeredfs`). They do not seed vanilla `img.bin` and they do not start a bake. If those release files are missing, the command prompts that a bake should be done first and exits. Japanese script slots are left on the ROM.
 
 Instance roots: `ab_test/azahar_instances/{a,b}/user` (`NLPP_AZAHAR_USER_DIR`). Drop CIA wipes `out/`; these copies stay.
 Scripts: `ab_test/`. Feature details: `technical.md`.

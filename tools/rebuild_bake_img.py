@@ -34,7 +34,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 
-from extract_vanilla_from_rom import resolve_vanilla_img  # noqa: E402
+from extract_vanilla_from_rom import (  # noqa: E402
+    ensure_vanilla_from_rom,
+    resolve_vanilla_img,
+)
 from nlpp_paths import (  # noqa: E402
     ASSETS_TEXTRESOURCE,
     BAKE_IMG,
@@ -54,7 +57,7 @@ from nlpp_paths import (  # noqa: E402
 from patch_cia import PatchError, cleanup_out_dir  # noqa: E402
 from patcher_version import PATCHER_RELEASE, write_bake_stamp  # noqa: E402
 from run_timer import RunTimer  # noqa: E402
-from scratch_cleanup import remove_scratch  # noqa: E402
+from scratch_cleanup import park_outside, path_is_under, remove_scratch, wipe_directory  # noqa: E402
 
 # Shared-ARC-safe order (canonical last-writers for 5238/5190/5237/5380/5245/…).
 DEPLOY_SCRIPTS: list[str] = [
@@ -486,10 +489,39 @@ def main(argv: list[str] | None = None) -> int:
 
 def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     RELEASE.mkdir(parents=True, exist_ok=True)
+
+    # From-scratch only. --skip-pack leaves cache/ (resume still needs vanilla code).
+    # --reseed-from-pack reads cache/new_img.bin and must not be wiped first.
+    if not args.skip_pack and not args.reseed_from_pack:
+        if args.rom is not None and args.rom.exists() and path_is_under(args.rom, CACHE):
+            args.rom = park_outside(args.rom, CACHE)
+        if (
+            args.vanilla is not None
+            and args.vanilla.exists()
+            and path_is_under(args.vanilla, CACHE)
+        ):
+            args.vanilla = park_outside(args.vanilla, CACHE)
+        print("[rebuild] deleting cache/ (from-scratch; slim RomFS must not survive)", flush=True)
+        wipe_directory(CACHE, root=ROOT)
     CACHE.mkdir(parents=True, exist_ok=True)
 
     if args.vanilla is not None:
         vanilla = args.vanilla.resolve()
+    elif not args.skip_pack and not args.reseed_from_pack and args.rom is not None:
+        # Ignore sibling extracted/ and any cache that appeared after the wipe.
+        # slim=False keeps Plus/ (voice, BGM). A slim tree must not become the CIA.
+        try:
+            vanilla = ensure_vanilla_from_rom(
+                args.rom.resolve(), force=True, slim=False
+            )
+        except (FileNotFoundError, PatchError, OSError) as exc:
+            raise SystemExit(str(exc)) from exc
+        plus = CACHE / "vanilla_from_rom" / "romfs" / "Plus"
+        if not plus.is_dir():
+            raise SystemExit(
+                "from-scratch extract did not write cache/vanilla_from_rom/romfs/Plus. "
+                "Refusing to continue from a slim RomFS."
+            )
     else:
         try:
             vanilla = resolve_vanilla_img(rom=args.rom.resolve() if args.rom else None)

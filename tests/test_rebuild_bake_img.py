@@ -63,6 +63,19 @@ def test_msel_menus_include_event_gallery_rows():
     assert '"Com_M_Sel_Plate_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' not in text
 
 
+def test_rebuild_from_scratch_wipes_cache_and_extracts_full_romfs():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
+    start = text.index("From-scratch only")
+    end = text.index("if args.vanilla is not None")
+    chunk = text[start:end]
+    assert "wipe_directory(CACHE" in chunk
+    assert "not args.skip_pack and not args.reseed_from_pack" in chunk
+    assert "force=True, slim=False" in text[end:]
+    assert "romfs/Plus" in text
+    # Resume must not take the wipe branch.
+    assert "--skip-pack leaves cache/" in chunk
+
+
 def test_rebuild_rc_pack_is_from_scratch_by_default():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
     assert "--use-cache" in text

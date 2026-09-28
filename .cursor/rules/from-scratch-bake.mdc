@@ -21,6 +21,12 @@ python tools/rebuild_bake_img.py --rom <dropped ROM>
 
 That **will bake**: PNG pack → chrome deploys → TRB overlay → **always** rebuilds `release/name_input_code.bin` from vanilla (`code.bin.bak` preferred) via `deploy_name_input_en.py`. Then `patch_cia.py` injects bake + overlay + name-input.
 
+## `cache/` is deleted on every from-scratch build
+
+Drop and `rebuild_bake_img.py --rom` (no `--skip-pack`) delete the **entire** `cache/` folder, then extract a full RomFS from the dropped ROM (`ensure_vanilla_from_rom(..., force=True, slim=False)`). The CIA `--romfs` template is that new tree, and only if `cache/vanilla_from_rom/romfs/Plus` exists. A slim tree (`img.bin` + scripts, no `Plus/`) must not be packed.
+
+Do not undo this. Do not reuse `cache/vanilla_from_rom`, `cache/img_pack`, or `NLPP_USE_PACK_CACHE` across a from-scratch run. Do not point `--romfs` at `script\bin\script` alone. `--skip-pack` and `--reseed-from-pack` leave `cache/` in place; they are not from-scratch.
+
 PNG pack is the long part (typically under an hour cold; measured ~27 min on a high-thread desktop). Name-input rebuild is seconds. Watch `[timer]` lines.
 
 ## After name-input / cave changes
