@@ -366,3 +366,46 @@ def test_embed_rejects_unknown_function():
         assert "unexpected GetNsDataNewFlag" in str(exc)
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_map_comments_replace_citizen_bubble_bodies():
+    cave = sp.build_comment_cave()
+    assert sp.ADDR_COMMENT_CAVE + len(cave) <= sp.ADDR_MERGE_AC
+    placed = bytearray(sp.ADDR_COMMENT_CAVE + len(cave))
+    placed[sp.ADDR_COMMENT_CAVE : sp.ADDR_COMMENT_CAVE + len(cave)] = cave
+    assert sp._bl_target(placed, sp.ADDR_COMMENT_CAVE + 4) == sp.ADDR_TEXT_LOOKUP
+    assert sp._bl_target(placed, sp.ADDR_COMMENT_CAVE + 15 * 4) == sp.ADDR_BOUND_COPY
+    text = sp.build_comment_text()
+    assert text[48:].split(b"\x00", 1)[0]
+    assert "ラ一メン".encode("utf-8") in text
+    data = _vanilla_blob()
+    data[sp.ADDR_DESC_BL : sp.ADDR_DESC_BL + 4] = sp._bl(
+        sp.ADDR_DESC_BL, sp.ADDR_DESC_BUILD
+    )
+    for site in (sp.ADDR_BODY_BL, sp.ADDR_BODY_BL2):
+        data[site : site + 4] = sp._bl(site, sp.ADDR_TEXT_LOOKUP)
+    data[sp.ADDR_COMMENT_CAVE : sp.ADDR_COMMENT_CAVE + len(cave)] = (
+        sp.VANILLA_COMMENT_HOLE
+    )
+    assert sp.apply_map_comments(data) is True
+    assert data[sp.ADDR_DESC_BL : sp.ADDR_DESC_BL + 4] == sp._bl(
+        sp.ADDR_DESC_BL, sp.ADDR_DESC_BUILD
+    )
+    for site in (sp.ADDR_BODY_BL, sp.ADDR_BODY_BL2):
+        assert data[site : site + 4] == sp._bl(site, sp.ADDR_COMMENT_CAVE)
+    assert data[sp.ADDR_COMMENT_CAVE : sp.ADDR_COMMENT_CAVE + len(cave)] == cave
+    assert data[sp.ADDR_MERGE_PARSE : sp.ADDR_MERGE_PARSE + sp.MERGE_PARSE_LEN] == (
+        sp.VANILLA_MERGE_PARSE
+    )
+    assert data[sp.ADDR_MERGE_AC : sp.ADDR_MERGE_AC + 4] == sp.VANILLA_MERGE_AC
+    assert "ラ一メン".encode("utf-8") in data[sp.ADDR_COMMENT_TEXT : sp.ADDR_COMMENT_LIMIT]
+    assert sp.apply_map_comments(data) is False
+    sp._undo_map_comments(data)
+    assert data[sp.ADDR_DESC_BL : sp.ADDR_DESC_BL + 4] == sp._bl(
+        sp.ADDR_DESC_BL, sp.ADDR_DESC_BUILD
+    )
+    for site in (sp.ADDR_BODY_BL, sp.ADDR_BODY_BL2):
+        assert data[site : site + 4] == sp._bl(site, sp.ADDR_TEXT_LOOKUP)
+    assert data[sp.ADDR_COMMENT_CAVE : sp.ADDR_COMMENT_CAVE + len(cave)] == (
+        sp.VANILLA_COMMENT_HOLE
+    )

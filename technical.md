@@ -1657,7 +1657,7 @@ Delivery of とわのウォッチャー started 2012-02-22. The official site on
 
 The book §16.9 opens is seven cart spreads (pages 01–14) in TownGuide package **5265**. Banners change per corner. The lined body is one shared LA4 sheet, `timg/Mag_Page01.bclim` (320×248, fmt 2). The left page draws that same sheet flipped, which is why the cart ships it blank. SpotPass did not paint glyphs into it. Merge `FUN_006088c8` is still the §16.8 stub. Un-stubbing it crashed (`bl FUN_004e19b0` @ `0x00608984` after a bad ac:u WaitSync).
 
-Issue 28’s cleartext body is six city comments, one lake paragraph, and one heated-pool paragraph. The city comments belong on the map (街の声), not as extra magazine pages. The lake sentence is the pink 「恋愛の聖地」NEW誕生 corner (`Mag_Tit03`). The pool sentence is FEVER 今週の人気デートスポット (`Mag_Tit05`). Both corners used `Mag_Page01`. That sheet stays off the page. Holy Site and FEVER each draw their own sentence into `Tex_Info_01` (§16.11.3). A weekly file supplied the place strings, and the game drew them into one-sided text panes (`Tex_Name_00` / `Tex_Place_00`, 120×12, under `Anm_Rot` on `Lyt_Spot_O01`). Merge never fills those buffers. Both names below are a cave draw into those panes.
+Issue 28’s cleartext body is six city comments, one lake paragraph, and one heated-pool paragraph. The city comments belong on the map (街の声), not as extra magazine pages (§16.13). The lake sentence is the pink 「恋愛の聖地」NEW誕生 corner (`Mag_Tit03`). The pool sentence is FEVER 今週の人気デートスポット (`Mag_Tit05`). Both corners used `Mag_Page01`. That sheet stays off the page. Holy Site and FEVER each draw their own sentence into `Tex_Info_01` (§16.11.3). A weekly file supplied the place strings, and the game drew them into one-sided text panes (`Tex_Name_00` / `Tex_Place_00`, 120×12, under `Anm_Rot` on `Lyt_Spot_O01`). Merge never fills those buffers. Both names below are a cave draw into those panes.
 
 The page walker at `0x004DA658` loads the article mask from `[r4,#0x8c]` and counts bits 0–6. `FUN_00631348` @ `0x00631348` returns the bit index of the Nth set bit. The caller at `0x004DA710` (`cmp r1,#7`, then a jump table; file = VA − `0x100000`):
 
@@ -1776,6 +1776,38 @@ The local-header walk covers this zip. It is **1,603,977** stored files in seven
 | `.006` | 11,796 entries, the tail. 11,765 are numbered `dateedit`. 17 `filelist.txt`, 8 `tasksheet.xml`, plus the six timestamped copies above. | None. No `info.dat`. |
 
 Name totals: `.000` is `dateedit` 263,725, `filelist.txt` 1,273, `tasksheet.xml` 1,271, `info.dat` 1,004. `.001` is `dateedit` 263,899, `tasksheet.xml` 849, `filelist.txt` 843, `info.dat` 592. `.002` is `dateedit` 264,150, `filelist.txt` 279, `tasksheet.xml` 255. `.003` is `dateedit` 264,151, `tasksheet.xml` 285, `filelist.txt` 261. `.004` is `dateedit` 264,150, `tasksheet.xml` 265, `filelist.txt` 262. `.005` is `dateedit` 264,151, `tasksheet.xml` 259, `filelist.txt` 257. `.006` is `dateedit` 11,765, `filelist.txt` 17, `tasksheet.xml` 8, plus six timestamped `dateedit` names. `.000` and `.001` repeat the same magazine payload per region. `.002`–`.006` are only city date edits.
+
+### 16.13 Issue 28 city comments in the map bubble (2026-09-27)
+
+The six lines are the voice records in `tools/spotpass/info.dat`, offset `0x29A`, stride `0x7C`. Each record is signed とわの市の人々. The comment starts at record+24. The place id is the big-endian u16 at `rec[-4:-2]`: **1, 2, 3, 4, 6, 28**.
+
+| Place | Comment |
+|-------|---------|
+| 1 | ラ一メン最高です～よね～ (`一` is U+4E00) |
+| 2 | 最近，面白い映画は見ましたかぁ？ |
+| 3 | 古本屋の女店主は名探偵らしい。 |
+| 4 | ショッピング最高！！！ |
+| 6 | ぴょんぴょこビ－ム・・・なんて (fullwidth `－`) |
+| 28 | カメラを新調したいなぁ |
+
+Merge `FUN_006088c8` stays `mov r0,#1; bx lr`. The stock game never walks this payload; every `info.dat` use ends in a BOSS call. The strings are copied from the file into the bubble the street viewer already draws.
+
+That bubble is the one that says **People of Towano** and a one-liner. The speaker is TRB pack `0xB100` slot `0x41` (“People of Towano City”). The stock body the player photographed is pack `0xB105` slot 8: きゃー、出てきたこっち見てー！ (“Eek, it came out, look over here!”). The Ramen Shop card (“Don't miss the owner's famous noodles…”) is the shop TRB blurb. The floating tags “New Towano” and “Ramen Shop” are place names. A hook on `ShopUIOperator`’s description fill (`bl 0x005CB9C0` at `0x00259878`, text at record+`0xc8`) wrote into that blurb and the card did not change. `apply_map_comments` puts that `bl` back to `0x005CB9C0` if it finds the hook.
+
+The filler is `0x003D6ED8` (reached from `0x004917F8` through the thunk at `0x0048FA18`). It calls `FUN_005c0e7c` twice per bubble:
+
+| Site | What it writes |
+|------|----------------|
+| `0x003D7064` and `0x003D70BC` | Body. Pack and slot come from the halfword table. Dest is `record+0x21`, maxlen `0x41`. |
+| The call after each of those | Speaker. Fixed pack `0xB100`, slot `0x41`, maxlen `0x21`, dest is the start of the record. |
+
+`r4` is the bubble index, 0..9. `r5` is the record. The original `r1` (saved as `fp`) is an area index below 7. The cart’s 234 comment records (8 bytes each, file `0x006D36E8`) pick a line with area-bit tests and a month/flag switch on byte 1. They do not store place ids 1, 2, 3, 4, 6, or 28, so the replacement is not keyed off the focused building.
+
+The cave sits in the dead merge body at `0x00608930` (the entry stub never reaches it). It is `0x4C` bytes and stops before the ac:u site at `0x006089EC`. Both body `bl`s branch there. The cave calls `FUN_005c0e7c`, then if the pack is `0xB105` it copies one file line over `record+0x21`. Bubble index modulo 6 selects the line: slots 0..5 are the six places in the table order, and slots 6..9 repeat the first four. The copy is `0x0001026C`, which stores the NUL when the `0x41` buffer still has room. The table and the UTF-8 live at `0x006E7194`, after the article sentences and before `0x006E731C`. Each entry is `<HHI` place, pad, string VA.
+
+`apply_patch` calls `apply_map_comments` on the already-patched return and after the payload write. `tools/deploy_name_input_en.py` calls it after `apply_info_menu`, including when the embed is already applied, so a name-input rebuild still installs the bubble. The magazine mask stays `0x0A`.
+
+**Verified Azahar A, 2026-09-27:** street viewer, bubble “People of Towano” / ショッピング最高！！！. The Ramen Shop card still shows the noodles sentence.
 
 ---
 

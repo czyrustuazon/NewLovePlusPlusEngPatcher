@@ -104,6 +104,7 @@ from patch_spotpass_skip import (  # noqa: E402
 )
 from patch_spotpass_embed import (  # noqa: E402
     apply_info_menu,
+    apply_map_comments,
     apply_patch as apply_spotpass_embed,
     build_function_blob as build_spotpass_embed,
     is_patched as spotpass_embed_already,
@@ -230,6 +231,7 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_spotpass_embed(data)
         steps += 1
     apply_info_menu(data)
+    apply_map_comments(data)
 
     if password_uribo_already(data):
         print("[skip] password_uribo already applied")

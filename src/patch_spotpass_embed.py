@@ -706,6 +706,27 @@ VANILLA_MERGE_PARSE = bytes.fromhex(
     "0020a0e34c0294e50230a0e1240000efa01fb0e100008de5634be81b00009de50c129fe5000b51e15d00000a"
 )
 MERGE_PARSE_LEN = 0x2C
+# The shop-description bl was the wrong surface (the Ramen card stayed the
+# noodles sentence). It is restored to vanilla. The merge-body hole is now
+# the speech-bubble cave. Do not extend it to ADDR_MERGE_AC.
+ADDR_DESC_BL = 0x00259878
+ADDR_DESC_BUILD = 0x005CB9C0
+ADDR_BODY_BL = 0x003D7064  # citizen body, first group
+ADDR_BODY_BL2 = 0x003D70BC  # citizen body, second group
+ADDR_TEXT_LOOKUP = 0x005C0E7C
+ADDR_COMMENT_CAVE = 0x00608930
+ADDR_ZERO_MEM = 0x001FDDD8
+ADDR_BOUND_COPY = 0x0001026C
+ADDR_COMMENT_TEXT = 0x006E7194  # after the article sentences, before the next word
+ADDR_COMMENT_LIMIT = 0x006E731C
+_VOICE_OFF = 0x29A
+_VOICE_STRIDE = 0x7C
+_VOICE_COUNT = 6
+VANILLA_COMMENT_HOLE = bytes.fromhex(
+    "0180a0e30000cbe55200d6e5936f84e20000c5e54c0294e5000050e3"
+    "0100000a230000ef00a086e550a2c4e52e63fbeb00008de50d20a0e1"
+    "0e10a0e39d0f84e226b2ffeb000050e30090c505"
+)
 
 PAYLOAD_VA = ADDR_SPOTPASS_PAYLOAD + 0x100000
 
@@ -1832,6 +1853,154 @@ def build_issue_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
 PATCHED_WEB_PILL_LAYOUT = _b(ADDR_WEB_PILL_LAYOUT, ADDR_PILL_EPILOGUE)
 
 
+def _voice_comments() -> list[tuple[int, bytes]]:
+    """Place id and UTF-8 comment from the six 124-byte voice records."""
+    blob = INFO_DAT.read_bytes()
+    out: list[tuple[int, bytes]] = []
+    for i in range(_VOICE_COUNT):
+        rec = blob[_VOICE_OFF + i * _VOICE_STRIDE : _VOICE_OFF + (i + 1) * _VOICE_STRIDE]
+        text = rec[24:].split(b"\x00", 1)[0] + b"\x00"
+        place = int.from_bytes(rec[-4:-2], "big")
+        if not text or len(text) > 0x100:
+            raise ValueError(f"voice {i} is {len(text)} bytes")
+        out.append((place, text))
+    places = [place for place, _text in out]
+    if places != [1, 2, 3, 4, 6, 28]:
+        raise ValueError(f"voice places {places}")
+    return out
+
+
+def build_comment_text() -> bytes:
+    """Six comment entries, then the UTF-8 lines. Index is the bubble slot."""
+    voices = _voice_comments()
+    table = bytearray(8 * len(voices))
+    strings = bytearray()
+    str_at = ADDR_COMMENT_TEXT + len(table)
+    for i, (place, text) in enumerate(voices):
+        struct.pack_into("<HHI", table, i * 8, place, 0, str_at + len(strings) + 0x100000)
+        strings += text
+    blob = bytes(table) + bytes(strings)
+    if ADDR_COMMENT_TEXT + len(blob) > ADDR_COMMENT_LIMIT:
+        raise ValueError(
+            f"comments end @{ADDR_COMMENT_TEXT + len(blob):#x}, "
+            f"room ends @{ADDR_COMMENT_LIMIT:#x}"
+        )
+    return blob
+
+
+def build_comment_cave() -> bytes:
+    """Fill the stock citizen line, then swap the People-of-Towano body.
+
+    Entered in place of both ``bl FUN_005c0e7c`` sites. r2 is the text pack,
+    r4 is the bubble slot (0..9), and r5 is the record. Pack 0xB105 is the
+    bank whose slot 8 is the photographed line. The body sits at record+0x21
+    and is 0x41 bytes. Slots 0..5 take the six file lines in place order;
+    slots 6..9 repeat the first four. The bounded copy stores the NUL.
+    The last word of the hole stays the vanilla instruction after ``pop``.
+    """
+    if ADDR_COMMENT_TEXT < ADDR_LAKE_BODY + len(_article_blob()):
+        raise ValueError("comment text overlaps the article sentences")
+    c = ADDR_COMMENT_CAVE
+    # Pool sits at word 17. The ldr is word 10: pc is cave+48, pool is cave+68.
+    pool_at = c + 17 * 4
+    ldr_at = c + 10 * 4
+    words = [
+        0xE92D4014,  # push {r2, r4, lr}
+        int.from_bytes(_bl(c + 4, ADDR_TEXT_LOOKUP), "little"),
+        0xE59D2000,  # ldr r2, [sp]
+        0xE3A010B1,  # mov r1, #0xb1
+        0xE1A01401,  # mov r1, r1, lsl #8
+        0xE2811005,  # add r1, r1, #5
+        0xE1520001,  # cmp r2, r1
+        0x18BD8014,  # popne {r2, r4, pc}
+        0xE3540006,  # cmp r4, #6
+        0x22444006,  # subhs r4, r4, #6
+        int.from_bytes(_ldr_pc(ldr_at, pool_at, 3), "little"),
+        0xE0834184,  # add r4, r3, r4, lsl #3
+        0xE5941004,  # ldr r1, [r4, #4]
+        0xE3A02041,  # mov r2, #0x41
+        0xE2850021,  # add r0, r5, #0x21
+        int.from_bytes(_bl(c + 15 * 4, ADDR_BOUND_COPY), "little"),
+        0xE8BD8014,  # pop {r2, r4, pc}
+        ADDR_COMMENT_TEXT + 0x100000,
+    ]
+    cave = b"".join(_u32(w) for w in words) + VANILLA_COMMENT_HOLE[-4:]
+    if len(cave) != len(VANILLA_COMMENT_HOLE):
+        raise ValueError(
+            f"comment cave {len(cave):#x} != hole {len(VANILLA_COMMENT_HOLE):#x}"
+        )
+    if c + len(cave) > ADDR_MERGE_AC:
+        raise ValueError("comment cave reaches the ac:u site")
+    return cave
+
+
+def _body_bls(data: bytes, target: int) -> list[bytes]:
+    return [_bl(site, target) for site in (ADDR_BODY_BL, ADDR_BODY_BL2)]
+
+
+def apply_map_comments(data: bytearray) -> bool:
+    """Draw the six citizen lines into the map speech-bubble body."""
+    if len(data) < ADDR_COMMENT_LIMIT:
+        return False
+    cave = build_comment_cave()
+    shop_hook = _bl(ADDR_DESC_BL, ADDR_COMMENT_CAVE)
+    shop_was_hooked = bytes(data[ADDR_DESC_BL : ADDR_DESC_BL + 4]) == shop_hook
+    if shop_was_hooked:
+        data[ADDR_DESC_BL : ADDR_DESC_BL + 4] = _bl(ADDR_DESC_BL, ADDR_DESC_BUILD)
+    current = [
+        bytes(data[site : site + 4]) for site in (ADDR_BODY_BL, ADDR_BODY_BL2)
+    ]
+    if current == _body_bls(data, ADDR_COMMENT_CAVE):
+        already = True
+    elif current == _body_bls(data, ADDR_TEXT_LOOKUP):
+        already = False
+    else:
+        return False
+    hole = bytes(data[ADDR_COMMENT_CAVE : ADDR_COMMENT_CAVE + len(cave)])
+    if already:
+        if hole != cave:
+            raise ValueError(f"comment cave @{ADDR_COMMENT_CAVE:#x} changed")
+    elif not shop_was_hooked and hole != VANILLA_COMMENT_HOLE:
+        raise ValueError(f"comment cave @{ADDR_COMMENT_CAVE:#x} is not the merge body")
+    text = build_comment_text()
+    span = ADDR_COMMENT_LIMIT - ADDR_COMMENT_TEXT
+    data[ADDR_COMMENT_CAVE : ADDR_COMMENT_CAVE + len(cave)] = cave
+    data[ADDR_COMMENT_TEXT : ADDR_COMMENT_LIMIT] = b"\x00" * span
+    data[ADDR_COMMENT_TEXT : ADDR_COMMENT_TEXT + len(text)] = text
+    for site, word in zip((ADDR_BODY_BL, ADDR_BODY_BL2), _body_bls(data, ADDR_COMMENT_CAVE)):
+        data[site : site + 4] = word
+    if not already:
+        print(
+            f"[spotpass-embed] map bubbles @{ADDR_BODY_BL:#x}/{ADDR_BODY_BL2:#x} "
+            f"-> cave @{ADDR_COMMENT_CAVE:#x}"
+        )
+    return not already
+
+
+def _undo_map_comments(data: bytearray) -> None:
+    if len(data) < ADDR_COMMENT_LIMIT:
+        return
+    bubble = _body_bls(data, ADDR_COMMENT_CAVE)
+    current = [
+        bytes(data[site : site + 4]) for site in (ADDR_BODY_BL, ADDR_BODY_BL2)
+    ]
+    shop_hook = _bl(ADDR_DESC_BL, ADDR_COMMENT_CAVE)
+    shop = bytes(data[ADDR_DESC_BL : ADDR_DESC_BL + 4]) == shop_hook
+    if current != bubble and not shop:
+        return
+    cave = build_comment_cave()
+    if current == bubble:
+        for site, word in zip(
+            (ADDR_BODY_BL, ADDR_BODY_BL2), _body_bls(data, ADDR_TEXT_LOOKUP)
+        ):
+            data[site : site + 4] = word
+    if shop:
+        data[ADDR_DESC_BL : ADDR_DESC_BL + 4] = _bl(ADDR_DESC_BL, ADDR_DESC_BUILD)
+    data[ADDR_COMMENT_CAVE : ADDR_COMMENT_CAVE + len(cave)] = VANILLA_COMMENT_HOLE
+    span = ADDR_COMMENT_LIMIT - ADDR_COMMENT_TEXT
+    data[ADDR_COMMENT_TEXT : ADDR_COMMENT_LIMIT] = b"\x00" * span
+
+
 def _bl_target(data: bytes, site: int) -> int | None:
     insn = int.from_bytes(data[site : site + 4], "little")
     if insn >> 24 != 0xEB:
@@ -2088,6 +2257,7 @@ def _old_embed(data: bytes) -> bool:
 def apply_patch(data: bytearray) -> bool:
     """Embed NsData + spoof NewFlag; copy into ReadNsData dest, not merge."""
     if is_patched(data):
+        apply_map_comments(data)
         print("[spotpass-embed] already patched (NewFlag=1 + DATA kick + ReadNsData memcpy)")
         return False
     if not is_vanilla(data) and not _old_embed(data):
@@ -2152,6 +2322,7 @@ def apply_patch(data: bytearray) -> bool:
     data[ADDR_ROW2_EMPTY : ADDR_ROW2_EMPTY + 4] = VANILLA_ROW2_EMPTY
     data[ADDR_MSG3_ENTRY : ADDR_MSG3_ENTRY + 4] = VANILLA_MSG3_ENTRY
     data[ADDR_SPOTPASS_PAYLOAD : ADDR_SPOTPASS_PAYLOAD + len(payload)] = payload
+    apply_map_comments(data)
     print(
         f"[spotpass-embed] NewFlag=1 @{ADDR_NEWFLAG:#x}, "
         f"ReadNsData memcpy @{memcpy:#x} dest r1 or payload VA, "
@@ -2204,6 +2375,7 @@ def revert_patch(data: bytearray) -> bool:
         return False
     if not is_patched(data) and not _old_embed(data):
         raise ValueError("cannot revert: SpotPass embed is neither vanilla nor patched")
+    _undo_map_comments(data)
     data[ADDR_NEWFLAG : ADDR_NEWFLAG + NEWFLAG_LEN] = VANILLA_FUN
     data[ADDR_CONFIRM : ADDR_CONFIRM + len(VANILLA_CONFIRM)] = VANILLA_CONFIRM
     data[ADDR_READ_BL1 : ADDR_READ_BL1 + 4] = VANILLA_READ_BL1
