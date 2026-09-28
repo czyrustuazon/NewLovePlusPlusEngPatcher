@@ -23,7 +23,7 @@ REGION_LOCK_OFF = 0x2018
 
 SHORT_TITLE = "New Love Plus+"
 # FBI / HOME show short on top, long underneath. One sentence; 127 UTF-16 chars max.
-LONG_TITLE = "New Love Plus+: Date Manaka, Nene, or Rinko and share everyday life together."
+LONG_TITLE = "NLP+: Date Manaka, Nene, or Rinko and share everyday life together."
 PUBLISHER = "KONAMI"
 
 # SMDH region lock-out bitmask (3dbrew). Bit set = that region may launch.
