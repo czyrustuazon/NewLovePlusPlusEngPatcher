@@ -44,7 +44,7 @@ from patch_input_romaji import (
     sub_imm,
     u32,
 )
-from patch_input_cave_map import TEXT_PAGE_END
+from patch_input_cave_map import ADDR_COMMU_HEADER_CAVE
 
 ADDR = 0x002573AC
 SIZE = 0xB0  # 0x002573AC .. 0x0025745B
@@ -196,8 +196,10 @@ def apply_patch(data: bytearray) -> None:
     cave = cave_addr()
     blob = build_blob(base=cave)
     end = cave + len(blob)
-    if end > TEXT_PAGE_END:
-        raise ValueError(f"strcat cave {end:#x} past .text {TEXT_PAGE_END:#x}")
+    if end > ADDR_COMMU_HEADER_CAVE:
+        raise ValueError(
+            f"strcat cave {end:#x} overlaps commu header {ADDR_COMMU_HEADER_CAVE:#x}"
+        )
     head = bytes(data[ADDR : ADDR + 8])
     if head != VANILLA_HEAD and not is_patched(data):
         raise ValueError(f"unexpected FUN_002573ac head {head.hex()}")

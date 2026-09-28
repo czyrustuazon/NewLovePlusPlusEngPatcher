@@ -18,7 +18,7 @@ from __future__ import annotations
 import argparse
 import struct
 
-from patch_input_cave_map import TEXT_PAGE_END
+from patch_input_cave_map import ADDR_COMMU_HEADER_CAVE, TEXT_PAGE_END
 from patch_input_romaji import (
     add_imm,
     add_reg,
@@ -226,8 +226,10 @@ def apply_patch(data: bytearray) -> bool:
     base = cave_addr()
     blob, labs = build_blob(base=base)
     end = base + len(blob)
-    if end > TEXT_PAGE_END:
-        raise ValueError(f"call-romaji cave {end:#x} past .text {TEXT_PAGE_END:#x}")
+    if end > ADDR_COMMU_HEADER_CAVE:
+        raise ValueError(
+            f"call-romaji cave {end:#x} overlaps commu header {ADDR_COMMU_HEADER_CAVE:#x}"
+        )
     if is_patched(data):
         print(f"[call-romaji] already patched cave @{base:#x}")
         return False

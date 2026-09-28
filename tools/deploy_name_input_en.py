@@ -19,6 +19,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
   11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
   12. patch_password_uribo                  # UriboKasa* slots 33–35 grant ウリボー傘, not 内部
+  13. patch_commu_settings_header           # Communication Settings white-bar DrawText
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -112,6 +113,10 @@ from patch_spotpass_embed import (  # noqa: E402
 from patch_password_uribo import (  # noqa: E402
     apply_patch as apply_password_uribo,
     is_patched as password_uribo_already,
+)
+from patch_commu_settings_header import (  # noqa: E402
+    apply_patch as apply_commu_header,
+    is_patched as commu_header_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -237,6 +242,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] password_uribo already applied")
     else:
         apply_password_uribo(data)
+        steps += 1
+
+    if commu_header_already(data):
+        print("[skip] commu_settings_header already applied")
+    else:
+        apply_commu_header(data)
         steps += 1
 
     return steps

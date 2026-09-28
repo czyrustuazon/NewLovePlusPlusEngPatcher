@@ -21,6 +21,10 @@ TEXT_SIZE = 0x0068F7FC
 # 2 KiB zero pad at the end of the last RX page.
 ADDR_SHARED_PAD = 0x0068F800
 ADDR_ROMAJI_CAVE = 0x0068F900
+# Communication Settings header DrawText. Last 44 bytes of the RX page,
+# after the romaji / strcat / call-romaji caves.
+ADDR_COMMU_HEADER_CAVE = 0x0068FFD4
+COMMU_HEADER_CAVE_LEN = TEXT_PAGE_END - ADDR_COMMU_HEADER_CAVE
 # TalkWindow delay cap (min vs table). Cand nullguard starts at +0x40.
 # +0x28 attach-null (lyt); +0xA0 FindPaneByName null vtable (was candmode_reset).
 ADDR_TALK_CAP_CAVE = ADDR_SHARED_PAD

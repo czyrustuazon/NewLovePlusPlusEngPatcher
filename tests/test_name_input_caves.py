@@ -179,7 +179,7 @@ def test_skip_ascii_dakuten_is_inplace_strcat_branch():
 def test_strcat_raw_replaces_makestr_join():
     cave = strcat_raw.cave_addr()
     blob = strcat_raw.build_blob(base=cave)
-    assert cave + len(blob) <= cave_map.TEXT_PAGE_END
+    assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
     from nlpp_paths import find_vanilla_code
 
     src = find_vanilla_code()
@@ -212,7 +212,7 @@ def test_call_romaji_caves_assemble_and_hook_vanilla():
     """Called-list *3 walk + ASCII fallback stay in .text RX after strcat."""
     cave = call_romaji.cave_addr()
     blob, labs = call_romaji.build_blob(base=cave)
-    assert cave + len(blob) <= cave_map.TEXT_PAGE_END
+    assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
     assert labs["utf8_off"] == cave
     assert "call01" in labs and "call02" in labs
     assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
