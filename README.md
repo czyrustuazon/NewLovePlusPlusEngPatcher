@@ -60,7 +60,7 @@ The git repo still does not contain a dump. You bring your own decrypted CIA or 
 2. Drop your **decrypted** `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
-Drop CIA **deletes `out/` and `release/` completely** before it starts, then packs a new gold bake. A previous bake, CIA, log, Azahar copy under `out/`, or extra-data backup in those folders is removed. `cache/` stays. Expect a full pack (typically under an hour; see below) on every drop.
+Drop CIA **deletes `out/` and `release/` completely** before it starts, then packs a new gold bake. A previous bake, CIA, log, Azahar copy under `out/`, or extra-data backup in those folders is removed. `cache/` stays. Expect a full pack (roughly **40 minutes to 2 hours**, depending on hardware; see below) on every drop.
 
 ### Sharing a build (skip the cold PNG pack)
 
@@ -123,7 +123,7 @@ The drop bat then runs:
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. A cold pack is typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine; historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `docs/technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. A cold pack is typically **about 40 minutes to 2 hours**, depending on hardware (historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `docs/technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
 
 - Vanilla RomFS is re-extracted from the dropped ROM into `cache/vanilla_from_rom/` (full tree, including `Plus/`). A slim cache is refused.  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
@@ -370,7 +370,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/1
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Cold PNG pack** is CPU-bound exact-zlib (see `docs/technical.md` §12.5.3): empty-block-first + `--pkg-workers` + zopfli empty-block pad. Watch live ``[timer]`` elapsed / heartbeat lines. Measured **~27 min** on a high-thread desktop; typical multi-core is often **under an hour** (historically ~16h sequential zopfli). Warm `cache/img_pack/` re-packs are typically minutes.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `docs/technical.md` §12.5.3): empty-block-first + `--pkg-workers` + zopfli empty-block pad. Watch live ``[timer]`` elapsed / heartbeat lines. Expect roughly **40 minutes to 2 hours** depending on hardware (historically ~16h sequential zopfli). Warm `cache/img_pack/` re-packs are typically minutes.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
