@@ -424,6 +424,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | `nlpp-tools` (`ie`, `pe`, `png2bclim`, `png2texi`, …) | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** — thank you to **kiwiz** |
+| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order. |
 | Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |

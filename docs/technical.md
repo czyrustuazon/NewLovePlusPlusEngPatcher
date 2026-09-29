@@ -283,7 +283,8 @@ Prefer `assets/images/<Name>.check/` over raw trees when both exist.
 Implementation: `EngPatcher/src/bclimutil.py`
 
 - Morton / Z-order 8×8 tiles: `d2xy`, `gcm`
-- ETC1A4: `etc1_scramble`, `encode_etc1a4_pixels` (etcpak + byte-reversed color + scramble)
+- ETC1A4: `etc1_scramble`, `encode_etc1a4_pixels` (etcpak + byte-reversed color + scramble). A same-size edit keeps any 8×8 tile whose pixels already match the decoded original (`decode_etc1a4_pixels`), so the rest of the texture is not re-compressed.
+- RGB8 (fmt 6) is stored **B, G, R**. RGBA8 (fmt 9) is stored **A, B, G, R**. Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
 - Same-size writers: `png_to_bclim_a8_same_size`, `png_to_bclim_rgba4444_same_size`, `png_to_bclim_etc1a4_same_size`
 
 ### 5.2 Hard rules for conversion
