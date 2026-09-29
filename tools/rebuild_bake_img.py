@@ -583,8 +583,8 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             flush=True,
         )
         print(
-            "[rebuild] PNG pack starting (historically ~16h; now typically under an hour, "
-            "measured ~27 min on a high-thread desktop — empty-block-first + package "
+            "[rebuild] PNG pack starting (historically ~16h sequential zopfli; "
+            "now roughly 40 minutes to 2 hours depending on hardware — empty-block-first + package "
             "ProcessPool + zopfli pad; see docs/technical.md §12.5.3). Watch [timer] lines "
             "for live elapsed.",
             flush=True,

@@ -27,7 +27,7 @@ Drop and `rebuild_bake_img.py --rom` (no `--skip-pack`) delete the **entire** `c
 
 Do not undo this. Do not reuse `cache/vanilla_from_rom`, `cache/img_pack`, or `NLPP_USE_PACK_CACHE` across a from-scratch run. Do not point `--romfs` at `script\bin\script` alone. `--skip-pack` and `--reseed-from-pack` leave `cache/` in place; they are not from-scratch.
 
-PNG pack is the long part (typically under an hour cold; measured ~27 min on a high-thread desktop). Name-input rebuild is seconds. Watch `[timer]` lines.
+PNG pack is the long part (roughly 40 minutes to 2 hours cold, depending on hardware). Name-input rebuild is seconds. Watch `[timer]` lines.
 
 ## After name-input / cave changes
 

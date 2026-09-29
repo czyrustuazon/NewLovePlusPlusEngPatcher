@@ -27,7 +27,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
 - Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**; title-loop NX abort **§15.7**).
-- Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers` + zopfli pad; typically under an hour): **§12.5.3**.
+- Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers` + zopfli pad; roughly 40 minutes to 2 hours, depending on hardware): **§12.5.3**.
 
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
@@ -978,8 +978,7 @@ Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on h
 
 | Machine | Cold full gold rebuild (`rebuild_bake_img.py`) |
 |---------|--------------------------------------------------|
-| High-thread desktop (e.g. 32-thread / `--pkg-workers` default) | Measured **~27 min** end-to-end (2026-09-18) |
-| Typical modern multi-core desktop (e.g. 8-core / `--pkg-workers` default) | Often **under an hour** if many ARCs hit the zlib fast path |
+| Typical hardware (`--pkg-workers` default) | Roughly **40 minutes to 2 hours**, depending on the machine |
 | Low-core / `--pkg-workers 1` | Longer — can still approach historical ~16h if every tight ARC hits zopfli |
 | Warm `cache/img_pack/` + bake present | **Minutes** (Drop CIA reuses bake) |
 
@@ -1320,7 +1319,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 1. Python 3.10+ + `pip install -r dev/requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **Drop always from-scratch packs.** It deletes `out/`, `release/`, and the entire `cache/` folder, then `rebuild_bake_img.py --rom` extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
-4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine, 2026-09-18; §12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
+4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **about 40 minutes to 2 hours**, depending on hardware (§12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
    From-scratch does not reuse ``cache/img_pack/``. `--skip-pack` resumes deploys and leaves `cache/` in place.
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
@@ -1349,7 +1348,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically under an hour; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc3`** (`PATCHER_RELEASE` / Eng Patch badge / `CIA_TITLE_VERSION` **3**) until the next bump.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc3`** (`PATCHER_RELEASE` / Eng Patch badge / `CIA_TITLE_VERSION` **3**) until the next bump.
 
 #### What git contains vs what a patched CIA needs
 
