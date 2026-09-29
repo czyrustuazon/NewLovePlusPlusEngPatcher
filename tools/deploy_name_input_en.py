@@ -16,6 +16,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
   8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
+  9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
   11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
   12. patch_password_uribo                  # UriboKasa* slots 33–35 grant ウリボー傘, not 内部
@@ -45,6 +46,7 @@ from patch_bplace_list_pane import apply_patch as apply_bplace_list_pane  # noqa
 from patch_code import (  # noqa: E402
     apply_name_pane_patches,
     patch_cesa_logo_white_native_size,
+    patch_nintendo_logo_skip_thank_flash,
 )
 from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
@@ -223,6 +225,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         steps += 1
     else:
         print("[skip] cesa logo_white native size already applied")
+
+    if patch_nintendo_logo_skip_thank_flash(data):
+        print("[cesa] Nintendo logo beat skips the thank-you texture")
+        steps += 1
+    else:
+        print("[skip] nintendo logo thank-flash already cleared")
 
     if spotpass_skip_already(data):
         print("[skip] spotpass_skip already applied")

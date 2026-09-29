@@ -359,6 +359,7 @@ The format byte indexes a 20-byte row at file `0x006E9964`. Word 1 is the GX int
 |------|--------------------------------------------------------|
 | `src/patch_lyt_null_pane.py` | English `Pts_Copyright` adds `Pic_EngPatch`. A null child on hub rebuild makes `FindPaneByName` `BLX` address 0 (**§15.7**). The guard lets the menu finish drawing. |
 | `patch_cesa_logo_white_native_size` | Retail forces a 400×400 quad on `logo_white`. The English TEXI is 240×320; the hook keeps that size (**§12.7**). |
+| `patch_nintendo_logo_skip_thank_flash` | NintendoLogo writes `logo_white` into both panes, so the thank-you banner flashes on both screens before CESA. The pool id is cleared; CesaLogo still sets left = CESA and right = the banner (**§12.7**). |
 
 `deploy_name_input_en.py` rebuilds that `code.bin` from vanilla. An older ExeFS, or a LayeredFS folder with only `romfs/img.bin`, still has the retail loader and misses both hooks.
 
@@ -1015,7 +1016,9 @@ The **blank screen beside CESA** is `logo_white.texi` (verified Azahar A/B, 2026
 | 9 | `ProductionLogo_320X240.texi` | `0x5A000A` |
 | 10 | `Upper_ThankYou_00.texi` | `0x5A000B` |
 
-CesaLogo (`FUN_0016f338`): `+0x60 = 0x5A0002` (`CESA_240X400`) and `+0x64 = 0x5A0008` (`logo_white`) in orientation 0/2. State 2 (`FUN_0016ec1c`) binds both via `FUN_005af3ac`. Vanilla then forces a **400×400** quad on `0x5A0008` (`s19` at `0x0016ed84`) so the 16×16 white stub fills the pane. A real TEX at that size stretches and clips. `patch_cesa_logo_white_native_size` (`src/patch_code.py`) turns the `bne` at `0x0016ED80` into an always-`b` so bind keeps `FUN_005aeef4`'s TEXI size (**240×320**). Ships in `deploy_name_input_en.py` → `release/name_input_code.bin`. `NintendoLogo` also binds `0x5A0008` (white flash).
+CesaLogo (`FUN_0016f338`): `+0x60 = 0x5A0002` (`CESA_240X400`) and `+0x64 = 0x5A0008` (`logo_white`) in orientation 0/2. State 2 (`FUN_0016ec1c`) binds both via `FUN_005af3ac`. Vanilla then forces a **400×400** quad on `0x5A0008` (`s19` at `0x0016ed84`) so the 16×16 white stub fills the pane. A real TEX at that size stretches and clips. `patch_cesa_logo_white_native_size` (`src/patch_code.py`) turns the `bne` at `0x0016ED80` into an always-`b` so bind keeps `FUN_005aeef4`'s TEXI size (**240×320**). Ships in `deploy_name_input_en.py` → `release/name_input_code.bin`.
+
+`NintendoLogo` ctor `FUN_0016ea1c` loads one pool word at `0x0016EA8C` (`0x5A0008`) and stores it in **both** `+0x60` and `+0x64`. State 2 then binds that id on both panes. Vanilla `logo_white` was a 16×16 white stub, so this beat was a white flash. With the English thank-you TEX in that slot, the banner flashes on both screens before CESA. `patch_nintendo_logo_skip_thank_flash` writes `0` into that pool word. State 2 already skips a zero id (`cmp r1, #0` @ `0x0016ED5C`). CesaLogo's pool (`0x0016F3C4` right = `logo_white`, `0x0016F3D0` left = `CESA_240X400`) is untouched.
 
 **Wrong slots (right pane stayed white):** `Bottom_Thank` (`0x5A0001`), `CESA_400X240` (`0x5A0003`), `ProductionLogo_320X240` (`0x5A000A`). Patching CesaLogo IDs to those slots duplicated CESA / Love Plus Production eyecatches — do not remap `+0x60`/`+0x64`. Landscape **320×240** art on `logo_white` sat on its side next to portrait CESA.
 
@@ -1333,7 +1336,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 | UI | Package | Deploy / note |
 |----|---------|----------------|
-| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `logo_white` 240×320; PACK rebuild) + `patch_cesa_logo_white_native_size` in `name_input_code.bin`. **§12.7** |
+| Boot CESA warning | **90** | `render_cesa_en.py` → `deploy_cesa_en.py` (CESA + `logo_white` 240×320; PACK rebuild) + `patch_cesa_logo_white_native_size` + `patch_nintendo_logo_skip_thank_flash` in `name_input_code.bin`. **§12.7** |
 | Main Menu **rows** + Eng Patch badge | **5261** Title.arc | `deploy_title_engpatch_en.py` (hub labels + `Eng_Patch.bclim`; replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 | Gallery / Comm / Data **homes** | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select | **5153** | `deploy_gallery_common_en.py` |
@@ -1855,6 +1858,7 @@ a/b guide: **`ab_test/README.md`**.
 | 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
+| 9b | Nintendo thank flash | `patch_nintendo_logo_skip_thank_flash` | zero `0x0016EA8C` so the boot beat does not bind `logo_white` on both screens |
 | 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `FUN_000ea254` hide `+0xa8` then dismiss + NOP `FUN_004b17b0` 0x2b61 show + `FUN_004b119c` 0x1e7 pane + `FUN_00319320` @ `0xEED44` + leftover `FUN_0059a010` NOPs + NetDl jt0 + `moveq #4`→`#0` (**§16.7**) |
 | 11 | SpotPass NsData embed | `src/patch_spotpass_embed.py` | Bake Watcher #28; spoof NewFlag/ReadNsData after save load (**§16.8**) |
 | 12 | ウリボー傘 grant | `src/patch_password_uribo.py` | `UriboKasa*` slots 33–35 → item ids 465/466/467; `cmp r4,#0x21` → `#0x24` so they are presents, not 内部 (**§22**) |
@@ -1977,7 +1981,7 @@ Romaji insert is 1-byte ASCII, so `*3` steps **past the NUL** into leftover kana
 
 `src/patch_input_call_romaji.py` (after strcat in `deploy_name_input_en.py`):
 
-1. `*3` / `+3` → `GetUtf8CharByteLength` (ASCII +1, stops before leftover)
+1. `*3` / `+3` → `GetUtf8CharByteLength` (ASCII +1, stops before leftover). That helper writes `r1` (`mov r1, r0`) and `r2` on multibyte leads. The `*3` cave keeps the byte cursor in `r3` and the remaining count in saved `r4`, and reads `ldrb r0, [r6, r3]`. A pointer in `r1` data-aborts on hardware (ASCII `T` → FAR `0x55`, Luma PC `0x0078FEFC`).
 2. Non-empty ASCII Called name skips the JP dictionary and jumps into the existing strncpy+DrawText tail so the **typed string** is candidate 0
 
 Japanese readings still resolve for hiragana saves. English nicknames are not in pack 0x7100 (voice); she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`).

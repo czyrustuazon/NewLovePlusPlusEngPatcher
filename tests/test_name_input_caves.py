@@ -214,6 +214,12 @@ def test_call_romaji_caves_assemble_and_hook_vanilla():
     blob, labs = call_romaji.build_blob(base=cave)
     assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
     assert labs["utf8_off"] == cave
+    # GetUtf8CharByteLength writes r1. Cursor is ldrb r0, [r6, r3], not r1.
+    off = labs["utf8_off"] - cave
+    adv = labs["utf8_adv"] - cave
+    walk = blob[off:adv]
+    assert bytes.fromhex("0300d6e7") in walk  # ldrb r0, [r6, r3]
+    assert bytes.fromhex("0610a0e1") not in walk  # mov r1, r6
     assert "call01" in labs and "call02" in labs
     assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
     assert bytes.fromhex("0cf028e1") in blob  # msr cpsr_f, r12
