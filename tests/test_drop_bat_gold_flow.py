@@ -50,6 +50,7 @@ def test_bat_polls_ci_before_local_rebuild():
     rebuild_idx = text.index("running tools\\rebuild_bake_img.py")
     assert fetch_idx < rebuild_idx
     assert "--best-effort" in text
+    assert "building locally from the dropped ROM" in text
 
 
 def test_bat_rc_ignores_leftover_bake_without_matching_stamp():

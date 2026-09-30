@@ -1414,7 +1414,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 
 #### nlpp-gold-maker CI (optional accelerator)
 
-When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. The Drop CIA bat **polls this automatically** when local bake is absent.
+When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. If that Release already has both assets, the runner downloads them and skips the PNG pack unless image-pack inputs changed since the published EngPatcher commit, or the dispatch sets `force_pack`. If `github.com:443` is unreachable, the runner bakes offline from its local vanilla files and does not upload. Drop CIA does the same: `fetch_release_bake.py` returns immediately when GitHub is unreachable, then `rebuild_bake_img.py` packs from the dropped ROM. The Drop CIA bat **polls this automatically** when local bake is absent.
 
 **Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold`.
 

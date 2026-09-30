@@ -30,6 +30,7 @@ def test_gold_dispatch_defaults_to_nlpp_gold_maker():
     text = GOLD_WORKFLOW.read_text(encoding="utf-8")
     assert 'GOLD="${{ github.repository_owner }}/nlpp-gold-maker"' in text
     assert "secrets.NLPP_GOLD_DISPATCH_TOKEN" in text
+    assert "force_pack" in text
     assert 'GOLD="${{ github.repository_owner }}/nlpp-gold"' not in text
     assert "*/nlpp-gold)" in text
     assert "${GOLD%/nlpp-gold}/nlpp-gold-maker" in text

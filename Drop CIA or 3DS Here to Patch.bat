@@ -315,7 +315,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo.
       "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
       if errorlevel 1 (
-        echo [fetch] No published gold bake — will build locally from assets.
+        echo [fetch] GitHub gold bake unavailable — building locally from the dropped ROM.
       )
     )
     if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (

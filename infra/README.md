@@ -12,8 +12,12 @@ Push or merge to **`main`** only (other branches do not trigger):
 git push origin main
 ```
 
-Workflow **Request gold Release** pings **nlpp-gold-maker**, which rebuilds from that
-commit and updates the rolling Release tag **`gold`**:
+Workflow **Request gold Release** pings **nlpp-gold-maker**. If Release tag **`gold`**
+already has `bake_img.bin`, the runner downloads it and refreshes TRB, chrome, and
+name-input on that file instead of a full PNG pack. If `github.com:443` is unreachable,
+it bakes offline from the vanilla files on the runner and does not upload a Release.
+A full pack still runs when the Release is missing, PNG-pack inputs changed since the
+published EngPatcher commit, or you dispatch with **force_pack**. The rolling Release tag stays **`gold`**:
 
 - `bake_img.bin`
 - `romfs_overlay.zip`

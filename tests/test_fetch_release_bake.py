@@ -83,13 +83,35 @@ def test_try_fetch_gold_no_repo(release_dir: Path):
     assert "no gold repo" in msg
 
 
+def test_try_fetch_gold_offline_skips_download(release_dir: Path):
+    def fail_urlopen(_url, _token):
+        raise AssertionError("offline fetch must not call GitHub")
+
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=False),
+        patch.object(fetch_mod, "_urlopen", fail_urlopen),
+    ):
+        ok, msg = fetch_mod.try_fetch_gold(
+            repo="owner/nlpp-gold",
+            tag="gold",
+            token=None,
+            out_dir=release_dir,
+        )
+    assert ok is False
+    assert "no internet" in msg
+    assert not (release_dir / "bake_img.bin").exists()
+
+
 def test_try_fetch_gold_404_falls_back(release_dir: Path):
     def raise_404(_url, _token):
         raise urllib.error.HTTPError(
             "https://api.github.com/x", 404, "Not Found", hdrs=None, fp=None
         )
 
-    with patch.object(fetch_mod, "_urlopen", raise_404):
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", raise_404),
+    ):
         ok, msg = fetch_mod.try_fetch_gold(
             repo="owner/nlpp-gold",
             tag="gold",
@@ -127,7 +149,10 @@ def test_try_fetch_gold_downloads_and_extracts_overlay(release_dir: Path):
             return overlay_bytes
         raise AssertionError(f"unexpected url: {url}")
 
-    with patch.object(fetch_mod, "_urlopen", fake_urlopen):
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", fake_urlopen),
+    ):
         ok, msg = fetch_mod.try_fetch_gold(
             repo="owner/nlpp-gold",
             tag="gold",
@@ -167,7 +192,10 @@ def test_main_best_effort_exits_1_when_ci_missing(release_dir: Path):
             "https://api.github.com/x", 404, "Not Found", hdrs=None, fp=None
         )
 
-    with patch.object(fetch_mod, "_urlopen", raise_404):
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", raise_404),
+    ):
         rc = fetch_mod.main(
             [
                 "--best-effort",
@@ -187,7 +215,10 @@ def test_main_without_best_effort_raises_on_missing(release_dir: Path):
             "https://api.github.com/x", 404, "Not Found", hdrs=None, fp=None
         )
 
-    with patch.object(fetch_mod, "_urlopen", raise_404):
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", raise_404),
+    ):
         with pytest.raises(SystemExit, match="404"):
             fetch_mod.main(
                 [

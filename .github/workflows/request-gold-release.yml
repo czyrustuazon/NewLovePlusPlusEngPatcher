@@ -7,6 +7,8 @@
 #   (default: <owner>/nlpp-gold-maker — not the old <owner>/nlpp-gold slug)
 #
 # Rolling Release tag on nlpp-gold-maker: "gold" (assets overwritten each run).
+# If that Release already has bake_img.bin, the bake job downloads it and skips
+# the PNG pack unless force_pack is set or image-pack inputs changed.
 # Consumers: python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
 
 name: Request gold Release
@@ -19,6 +21,10 @@ on:
     inputs:
       skip_pack:
         description: "Ask nlpp-gold-maker to skip PNG pack (TRB/deploys only)"
+        type: boolean
+        default: false
+      force_pack:
+        description: "Full PNG pack even if a gold Release bake already exists"
         type: boolean
         default: false
       engpatcher_ref:
@@ -50,8 +56,12 @@ jobs:
           fi
 
           SKIP=false
+          FORCE=false
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.skip_pack }}" = "true" ]; then
             SKIP=true
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force_pack }}" = "true" ]; then
+            FORCE=true
           fi
 
           GOLD="${{ vars.NLPP_GOLD_REPO }}"
@@ -71,9 +81,10 @@ jobs:
             echo "tag=$TAG"
             echo "ref=$REF"
             echo "skip_pack=$SKIP"
+            echo "force_pack=$FORCE"
             echo "gold_repo=$GOLD"
           } >> "$GITHUB_OUTPUT"
-          echo "Dispatch → $GOLD  release_tag=$TAG  engpatcher_ref=$REF  skip_pack=$SKIP"
+          echo "Dispatch → $GOLD  release_tag=$TAG  engpatcher_ref=$REF  skip_pack=$SKIP  force_pack=$FORCE"
 
       - name: repository_dispatch → nlpp-gold-maker
         env:
@@ -89,6 +100,7 @@ jobs:
             --arg tag "${{ steps.meta.outputs.tag }}" \
             --arg ref "${{ steps.meta.outputs.ref }}" \
             --arg skip "${{ steps.meta.outputs.skip_pack }}" \
+            --arg force "${{ steps.meta.outputs.force_pack }}" \
             --arg sha "${{ github.sha }}" \
             --arg repo "${{ github.repository }}" \
             '{
@@ -97,6 +109,7 @@ jobs:
                 tag: $tag,
                 engpatcher_ref: $ref,
                 skip_pack: ($skip == "true"),
+                force_pack: ($force == "true"),
                 source_sha: $sha,
                 source_repo: $repo
               }
