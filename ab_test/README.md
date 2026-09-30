@@ -14,6 +14,7 @@ From the repo root:
 1. Copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and set
    `AzaharExe`, `VanillaDump`, and optional `RomPath` for this machine.
 2. Build Azahar if needed: `.\ab_test\make.ps1 build-azahar`
+   That applies `ab_test/patches/azahar-openlinkfile.patch` when `file.cpp` still stubs `OpenLinkFile` (log line `clone offset=`), rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
 3. Create instances + launch bats:
 
 ```powershell
@@ -49,6 +50,7 @@ argument.
 | Deploy current post-bake stack → A | `.\ab_test\make.ps1 deploy-a` |
 | Same → B | `.\ab_test\make.ps1 deploy-b` |
 | Launch A / B | `.\ab_test\make.ps1 launch-a` / `launch-b` |
+| Shared Nene title save → A and B | `.\ab_test\make.ps1 save-nene` |
 | Roll back name-input baseline on A | `.\ab_test\make.ps1 restore-a` |
 | Instances + post-bake copy onto A | `.\ab_test\make.ps1 all-a` |
 
@@ -91,10 +93,12 @@ Or set the env inside a small wrapper the same way `ab_test/make.ps1` does
 
 | Path | Role |
 |------|------|
-| `ab_test/make.ps1` | Targets: instances, seed, deploy, restore, launch, build-azahar |
+| `ab_test/make.ps1` | Targets: instances, seed, deploy, restore, launch, build-azahar, save-nene |
+| `ab_test/patches/azahar-openlinkfile.patch` | Vendored Azahar `OpenLinkFile` clone fix (`build-azahar` applies it) |
 | `ab_test/setup_azahar_instances.ps1` | Copies azahar.exe + ICU DLLs; writes Launch-*.bat |
 | `ab_test/paths.local.ps1` | Machine paths (gitignored) |
 | `ab_test/azahar_instances/{a,b}/` | Isolated user dirs + local azahar copy |
+| `ab_test/saves/nene/` | Local Nene title save (gitignored). `save-nene` installs it |
 | `src/nlpp_paths.py` | Resolves Azahar mod paths from env |
 
 ## LayeredFS notes

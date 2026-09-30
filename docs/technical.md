@@ -2003,7 +2003,7 @@ Scripts: `ab_test/` (`.\ab_test\make.ps1`, or `make -C ab_test`). Guide: **`ab_t
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
 | Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
-| Shared Nene save | `ab_test/saves/nene/` via `.\ab_test\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data |
+| Shared Nene save | `ab_test/saves/nene/` via `.\ab_test\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data. The pack is gitignored; CI skips `test_repo_nene_pack_has_lp2h_header` when it is absent |
 
 Do **not** tell the user to quit Azahar between deploys (standing preference).
 

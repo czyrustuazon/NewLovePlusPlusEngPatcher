@@ -463,7 +463,8 @@ ab_test/
   setup_azahar_instances.ps1
   paths.local.ps1.example    → paths.local.ps1 (gitignored)
   azahar_instances/{a,b}/    portable Azahar + saves (survives a CIA wipe)
-  saves/nene/                shared Nene title save (`.\ab_test\make.ps1 save-nene`)
+  patches/azahar-openlinkfile.patch  Azahar OpenLinkFile clone (`build-azahar`)
+  saves/nene/                local Nene title save, gitignored (`.\ab_test\make.ps1 save-nene`)
 assets/
   scripts/                   finished DBIN2 XML
   images/                    finished UI PNGs (+ editor sources)
