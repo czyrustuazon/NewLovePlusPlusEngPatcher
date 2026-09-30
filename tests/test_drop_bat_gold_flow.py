@@ -110,6 +110,16 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert "Scripts-only patch" not in text
 
 
+def test_bat_stops_when_drop_zone_script_is_missing():
+    """A lone bat pauses. It does not download a second copy of the repo."""
+    text = _bat_text()
+    missing = text.index("Cannot find src\\drop_zone.ps1")
+    assert missing < text.index("goto :run_patch")
+    assert "Extract the entire archive / repo first" in text
+    assert "NLPP_ENG_PATCH_REPO" not in text
+    assert "ensure_patcher_tree" not in text
+
+
 def test_bat_drop_timer_avoids_for_f_python_quoting():
     """cmd FOR /F '"%PYTHON%" -c "import' treats python.exe\" -c \"import as the exe."""
     text = _bat_text()

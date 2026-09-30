@@ -974,7 +974,7 @@ When zopfli comes in *short* of the slot, pad the finished stream at EOB with em
 
 Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on how many ARCs miss the zlib fast path (tight ETC1A4 softkeys still often need zopfli).
 
-**Live elapsed timer:** `pack_images`, `rebuild_bake_img`, and `patch_cia` print ``[timer]`` lines — start wall-clock, stage marks, a heartbeat every 60s while still running, and ``[timer] total …`` at finish. Watch those for actual runtime (do not rely on a fixed hour estimate). Gold rebuild also writes the wall-clock total to `[rebuild] OK` and `out/logs/rebuild_*.txt`.
+**Live elapsed timer:** `pack_images`, `rebuild_bake_img`, and `patch_cia` keep one bottom row (Docker-style, redrawn in place): the run name, elapsed time, then the progress bar and the file being read. That clock follows Drop's ``NLPP_T0`` stamp, so it keeps counting when gold rebuild hands off to the CIA step (each of those is its own ``RunTimer``). The bar fill is green. A scrolling line that starts with ``[tag]`` takes that tag's color (`[pack]` and `[trb]` differ; failures stay red). The percent is the whole Drop (`src/overall_progress.py`): PNG pack, each chrome deploy, and the CIA rebuild move it. A from-scratch Drop gives the rebuild 0–80% and the CIA step 80–100% (`NLPP_OVERALL_LO` / `NLPP_OVERALL_HI`, set only when a rebuild actually ran). Stage marks still scroll above that row. ``[timer] total …`` prints at finish. Piped logs and ``NLPP_PLAIN_LOG=1`` use the old line log instead: start, stage marks, a heartbeat every 60s, the total, and an ``overall`` line only when the integer percent changes. ``NO_COLOR`` turns the colors off. Gold rebuild also writes its summary into ``out/log.txt``.
 
 **Ballpark (cold, no bake cache) — engineering estimate only:**
 
@@ -1126,7 +1126,8 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/1_[Either use this-CIA]/`) + LayeredFS (`out/2_[Or this-LayeredFS]/luma/`) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
-| `src/run_timer.py` | Live ``[timer]`` elapsed / 60s heartbeat for pack, gold rebuild, CIA patcher |
+| `src/run_timer.py` | Elapsed time on the same bottom row as the progress bar and current file (plain log + 60s heartbeat if not a TTY / ``NLPP_PLAIN_LOG=1``) |
+| `src/overall_progress.py` | Overall percent on that same row. Drop maps rebuild to 0–80 and the CIA step to 80–100 |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
@@ -1248,7 +1249,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc3`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc4`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1323,7 +1324,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 1. Python 3.10+ + `pip install -r dev/requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
 3. **Drop always from-scratch packs.** It deletes `out/`, `release/`, and the entire `cache/` folder, then `rebuild_bake_img.py --rom` extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
-4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **about 40 minutes to 2 hours**, depending on hardware (§12.5.3); leave the window open and watch `[timer]` / `[exact-zlib]` / `[pack]` progress.
+4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **about 40 minutes to 2 hours**, depending on hardware (§12.5.3); leave the window open. The bottom line leads with the run name and elapsed time, then the percent bar and the package being packed.
    From-scratch does not reuse ``cache/img_pack/``. `--skip-pack` resumes deploys and leaves `cache/` in place.
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
@@ -1352,7 +1353,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc3`** (`PATCHER_RELEASE` / Eng Patch badge / `CIA_TITLE_VERSION` **3**) until the next bump.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc4`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **4**.
 
 #### What git contains vs what a patched CIA needs
 
@@ -1394,9 +1395,9 @@ decrypted .cia / .3ds / .cci dropped
   → out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia + out/2_[Or this-LayeredFS]/luma/ + out/3_[but not both]/
 ```
 
-Each successful patch writes the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/logs/`**: a timestamped `patch_YYYYMMDD_HHMMSS.txt` plus `latest.txt`. That folder survives `out/` cleanup. `--log PATH` chooses a file (or a directory to write into). `--no-log` or `NLPP_NO_LOG=1` skips it. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
+Each successful patch appends the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/log.txt`**. The same file already holds the image-pack report and gold-rebuild summary from that Drop. It sits in the root of `out/` and survives `out/` cleanup. `--log PATH` chooses a different file (or `log.txt` inside a directory). `--no-log` or `NLPP_NO_LOG=1` skips the summary. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. From-scratch deletes `cache/` before extract, then writes a new full `cache/vanilla_from_rom/` (`Plus/` required). `--skip-pack` does not delete `cache/`. Artifacts of a finished Drop: `release/bake_img.bin`, that new `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/logs/`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. From-scratch deletes `cache/` before extract, then writes a new full `cache/vanilla_from_rom/` (`Plus/` required). `--skip-pack` does not delete `cache/`. Artifacts of a finished Drop: `release/bake_img.bin`, that new `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/log.txt`.
 
 #### Environment overrides
 
@@ -1408,7 +1409,8 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
 | `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
-| `NLPP_NO_LOG=1` | Skip writing `out/logs/` PATCH SUMMARY files |
+| `NLPP_NO_LOG=1` | Skip appending the PATCH SUMMARY to `out/log.txt` |
+| `NLPP_OVERALL_LO` / `NLPP_OVERALL_HI` | Map this process's 0–100% onto that slice of the Drop bar. Drop sets 0–80 for a rebuild that actually runs, then 80–100 for `patch_cia.py`. Unset means the process owns 0–100. |
 
 #### nlpp-gold-maker CI (optional accelerator)
 
@@ -1432,7 +1434,7 @@ python -m pytest tests/ -v
 | Test module | Guards |
 |-------------|--------|
 | `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
-| `test_patch_summary.py` | PATCH SUMMARY rows + `out/logs/` write / `--no-log` / cleanup keeps `logs/` |
+| `test_patch_summary.py` | PATCH SUMMARY rows + `out/log.txt` append / `--no-log` / cleanup keeps `log.txt` |
 | `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback |
 | `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
 | `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |
@@ -2448,5 +2450,5 @@ Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa
 
 ---
 
-*Last updated 2026-09-20 — rc-3 merged to main (still stamped `v1.0.0-rc3` / CIA title version 3); UI PNG masters **1745** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2; gold fetch repo `nlpp-gold-maker`.*
+*Last updated 2026-09-29 — title badge stamped `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2; gold fetch repo `nlpp-gold-maker`.*
 

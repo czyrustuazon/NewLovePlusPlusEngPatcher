@@ -12,13 +12,19 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 from collections import defaultdict
+from collections.abc import Iterator
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+from contextlib import contextmanager
+from multiprocessing import Queue
 from pathlib import Path
+from queue import Empty
 
 from darcutil import DarcArchive
 from image_map import normalize_folder_key, resolve_folder
 from img_pack_cache import ImgPackCache, compress_to_exact_slot_cached
+from live_status import StatusStream, live
 from nlpp_paths import CACHE_IMG_PACK
 from run_timer import RunTimer
 from scratch_cleanup import remove_scratch
@@ -67,9 +73,17 @@ class PackError(RuntimeError):
     pass
 
 
+def _say(msg: str, *, job: str = "status") -> None:
+    """Print ``msg``, or park it on the pinned status block when that is up."""
+    if live.active:
+        live.set_job(job, msg)
+    else:
+        print(msg, flush=True)
+
+
 def _run(cmd: list[str | Path], cwd: Path | None = None) -> None:
     printable = " ".join(str(c) for c in cmd)
-    print(f"  > {printable}")
+    _say(f"  > {printable}", job="cmd")
     proc = subprocess.run(
         [str(c) for c in cmd],
         cwd=str(cwd) if cwd else None,
@@ -79,10 +93,57 @@ def _run(cmd: list[str | Path], cwd: Path | None = None) -> None:
         errors="replace",
     )
     if proc.stdout.strip():
-        print(proc.stdout.rstrip())
+        last = proc.stdout.strip().splitlines()[-1]
+        if live.active:
+            live.set_job("cmd", last)
+        else:
+            print(proc.stdout.rstrip())
     if proc.returncode != 0:
         err = (proc.stderr or proc.stdout or "").strip()
+        if live.active:
+            live.log(err)
         raise PackError(f"command failed ({proc.returncode}): {printable}\n{err}")
+
+
+def _pool_init(status_q: Queue) -> None:
+    """Send worker progress to the parent pin instead of scrolling the console."""
+    sys.stdout = StatusStream(lambda line: status_q.put(("out", os.getpid(), line)))
+    sys.stderr = StatusStream(
+        lambda line: status_q.put(("err", os.getpid(), line)),
+        emit_all=True,
+    )
+
+
+@contextmanager
+def _capture_job(key: object) -> Iterator[None]:
+    """In-process package work: keep its progress on one pinned row."""
+    if not live.active:
+        yield
+        return
+    old_out, old_err = sys.stdout, sys.stderr
+    sys.stdout = StatusStream(lambda line: live.set_job(key, line))
+    sys.stderr = StatusStream(live.log, emit_all=True)
+    try:
+        yield
+    finally:
+        sys.stdout = old_out
+        sys.stderr = old_err
+        live.clear_job(key)
+
+
+def _report_package(done: int, total: int, res: dict, timer: RunTimer) -> None:
+    status = "ok" if res.get("ok") else "FAIL"
+    line = (
+        f"[pack] [{done}/{total}] pkg {res['index']:04d} "
+        f"{status} touched={res.get('touched')} "
+        f"elapsed={timer.elapsed_str()}"
+    )
+    if live.active:
+        live.set_progress(done, total, "packages")
+        if not res.get("ok"):
+            live.log(line)
+        return
+    print(line, flush=True)
 
 
 def _require_tools() -> None:
@@ -280,9 +341,9 @@ def unpack_packages(img_bin: Path, img_data: Path, indices: set[int]) -> None:
     img_data.mkdir(parents=True, exist_ok=True)
     needed = sorted(i for i in indices if not (img_data / f"{i:04d}").is_file())
     if not needed:
-        print(f"[ie] packages already unpacked ({len(indices)})")
+        _say(f"[ie] packages already unpacked ({len(indices)})", job="unpack")
         return
-    print(f"[ie] unpacking {len(needed)} package(s) from img.bin ...")
+    _say(f"[ie] unpacking {len(needed)} package(s) from img.bin ...", job="unpack")
     _run(
         [
             sys.executable,
@@ -306,7 +367,7 @@ def ensure_package_data(img_data: Path, index: int) -> Path:
     if not pkg.is_file():
         raise PackError(f"missing unpacked package {pkg}")
     if not pkg_dir.is_dir() or not any(pkg_dir.glob("*.arc")):
-        print(f"[pe] unpack {index:04d}")
+        _say(f"[pe] unpack {index:04d}", job="unpack")
         _run([sys.executable, PE, str(pkg), "unpack"], cwd=NLPP_TOOLS)
     return pkg_dir
 
@@ -883,11 +944,13 @@ def pack_images(
 
             if sequential:
                 # One package at a time so ie/pe unpack trees do not pile up.
-                for index, items in jobs:
-                    unpack_packages(img_bin, img_data, {index})
-                    ensure_package_data(img_data, index)
-                    results.append(
-                        _process_one_package(
+                for n, (index, items) in enumerate(jobs, 1):
+                    if live.active:
+                        live.set_progress(n - 1, len(jobs), "packages")
+                    with _capture_job(index):
+                        unpack_packages(img_bin, img_data, {index})
+                        ensure_package_data(img_data, index)
+                        res = _process_one_package(
                             index,
                             items,
                             str(img_data),
@@ -896,45 +959,82 @@ def pack_images(
                             fine_tune=fine_tune,
                             cache_dir=cache_dir_s,
                         )
-                    )
+                    results.append(res)
+                    _report_package(n, len(jobs), res, timer)
             else:
                 unpack_packages(img_bin, img_data, set(by_pkg))
                 # pe-unpack all packages on the main thread (avoids concurrent pe races).
-                for index in sorted(by_pkg):
+                for n, index in enumerate(sorted(by_pkg), 1):
+                    if live.active:
+                        live.set_progress(n - 1, len(by_pkg), "unpack")
                     ensure_package_data(img_data, index)
-                print(
-                    f"[pack] ProcessPool: {len(jobs)} packages, "
-                    f"workers={min(pkg_workers, len(jobs))}",
-                    flush=True,
+                workers_n = min(pkg_workers, len(jobs))
+                _say(
+                    f"[pack] ProcessPool: {len(jobs)} packages, workers={workers_n}",
+                    job="unpack",
                 )
-                with ProcessPoolExecutor(
-                    max_workers=min(pkg_workers, len(jobs))
-                ) as pool:
-                    futures = {
-                        pool.submit(
-                            _process_one_package,
-                            index,
-                            items,
-                            str(img_data),
-                            str(conv),
-                            png_workers,
-                            fine_tune,
-                            cache_dir_s,
-                        ): index
-                        for index, items in jobs
-                    }
-                    done = 0
-                    for fut in as_completed(futures):
-                        done += 1
-                        res = fut.result()
-                        results.append(res)
-                        status = "ok" if res.get("ok") else "FAIL"
-                        print(
-                            f"[pack] [{done}/{len(jobs)}] pkg {res['index']:04d} "
-                            f"{status} touched={res.get('touched')} "
-                            f"elapsed={timer.elapsed_str()}",
-                            flush=True,
-                        )
+                status_q: Queue | None = Queue() if live.active else None
+                stop_drain = threading.Event()
+                drain_thread: threading.Thread | None = None
+                if status_q is not None:
+
+                    def _drain(q: Queue = status_q, stop: threading.Event = stop_drain) -> None:
+                        while True:
+                            try:
+                                item = q.get(timeout=0.3)
+                            except Empty:
+                                if stop.is_set():
+                                    return
+                                continue
+                            try:
+                                kind, pid, line = item
+                            except (TypeError, ValueError):
+                                continue
+                            if kind == "err":
+                                live.log(line)
+                            else:
+                                live.set_job(pid, line)
+
+                    drain_thread = threading.Thread(
+                        target=_drain, name="pack-status", daemon=True
+                    )
+                    drain_thread.start()
+                    live.clear_job("unpack")
+                    live.clear_job("cmd")
+                    live.set_progress(0, len(jobs), "packages")
+                pool_kwargs: dict = {"max_workers": workers_n}
+                if status_q is not None:
+                    pool_kwargs["initializer"] = _pool_init
+                    pool_kwargs["initargs"] = (status_q,)
+                try:
+                    with ProcessPoolExecutor(**pool_kwargs) as pool:
+                        futures = {
+                            pool.submit(
+                                _process_one_package,
+                                index,
+                                items,
+                                str(img_data),
+                                str(conv),
+                                png_workers,
+                                fine_tune,
+                                cache_dir_s,
+                            ): index
+                            for index, items in jobs
+                        }
+                        done = 0
+                        for fut in as_completed(futures):
+                            done += 1
+                            res = fut.result()
+                            results.append(res)
+                            _report_package(done, len(jobs), res, timer)
+                finally:
+                    stop_drain.set()
+                    if drain_thread is not None:
+                        drain_thread.join(timeout=2.0)
+                    if status_q is not None:
+                        status_q.close()
+                    if live.active:
+                        live.clear_jobs()
 
             results.sort(key=lambda r: r["index"])
             for res in results:

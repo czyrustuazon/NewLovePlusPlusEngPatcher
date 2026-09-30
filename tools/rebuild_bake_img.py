@@ -23,10 +23,13 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
+from collections import deque
+from collections.abc import Callable
 from datetime import datetime
 from pathlib import Path
 
@@ -38,6 +41,8 @@ from extract_vanilla_from_rom import (  # noqa: E402
     ensure_vanilla_from_rom,
     resolve_vanilla_img,
 )
+from live_status import latest_progress_line, live, relax_stdio_errors  # noqa: E402
+from overall_progress import OverallBar  # noqa: E402
 from nlpp_paths import (  # noqa: E402
     ASSETS_TEXTRESOURCE,
     BAKE_IMG,
@@ -56,6 +61,7 @@ from nlpp_paths import (  # noqa: E402
 )
 from patch_cia import PatchError, cleanup_out_dir  # noqa: E402
 from patcher_version import PATCHER_RELEASE, write_bake_stamp  # noqa: E402
+from run_log import write_log  # noqa: E402
 from run_timer import RunTimer  # noqa: E402
 from scratch_cleanup import park_outside, path_is_under, remove_scratch, wipe_directory  # noqa: E402
 
@@ -100,10 +106,144 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_cesa_en.py",
 ]
 
+_PACK_PROGRESS = re.compile(r"\[pack\] \[(\d+)/(\d+)\]")
 
-def run(cmd: list[str], *, env: dict[str, str] | None = None) -> None:
-    print("\n==>", " ".join(cmd), flush=True)
-    subprocess.run(cmd, check=True, cwd=str(ROOT), env=env)
+
+def _chrome_label(name: str) -> str:
+    """``deploy_profile_en.py`` → ``profile``."""
+    stem = name[:-3] if name.endswith(".py") else name
+    if stem.startswith("deploy_"):
+        stem = stem[len("deploy_") :]
+    if stem.endswith("_en"):
+        stem = stem[:-3]
+    return stem.replace("_", " ")
+
+
+def _deploy_plan(args: argparse.Namespace) -> list[tuple[str, list[str], str]]:
+    """``(script, extra argv, progress label)`` in run order.
+
+    ``deploy_multiwin_headers_en.py`` runs twice (``--full``, then extras).
+    Repeated stems get a ``(2)`` suffix so each pass is its own step.
+    """
+    if args.skip_deploys:
+        return []
+    scripts = list(DEPLOY_SCRIPTS)
+    if args.include_sound_settings:
+        idx = scripts.index("deploy_display_settings_en.py") + 1
+        scripts.insert(idx, "deploy_sound_settings_en.py")
+    plan: list[tuple[str, list[str], str]] = []
+    seen: dict[str, int] = {}
+
+    def _unique(base: str) -> str:
+        n = seen.get(base, 0) + 1
+        seen[base] = n
+        return base if n == 1 else f"{base} ({n})"
+
+    for name in scripts:
+        if name == "deploy_multiwin_headers_en.py":
+            # --full first, then extras on the live ARC. Do not combine extras
+            # into the vanilla --full pass (pad short zopfli / exact_zlib).
+            plan.append((name, ["--full"], _unique(_chrome_label(name))))
+            plan.append((name, [], _unique(_chrome_label(name) + " extras")))
+        else:
+            plan.append((name, [], _unique(_chrome_label(name))))
+    return plan
+
+
+def _rebuild_steps(
+    args: argparse.Namespace,
+) -> tuple[list[tuple[str, float]], list[tuple[str, list[str], str]]]:
+    """Weights are relative time, not file counts. PNG pack dominates a cold run.
+
+    ``--skip-pack`` drops that weight so the chrome scripts the window is
+    walking fill the bar instead of sitting under a finished pack.
+    """
+    steps: list[tuple[str, float]] = []
+    doing_pack = not args.skip_pack and not args.reseed_from_pack
+    if doing_pack and args.rom is not None:
+        steps.append(("extract ROM", 8.0))
+    if doing_pack:
+        steps.append(("PNG pack", 55.0))
+    elif args.reseed_from_pack:
+        steps.append(("reseed bake", 2.0))
+    if not args.skip_trb:
+        steps.append(("text", 3.0))
+    deploys = _deploy_plan(args)
+    for _name, _extra, label in deploys:
+        steps.append((label, 1.0))
+    if args.include_sms:
+        steps.append(("SMS", 2.0))
+    steps.append(("name-input", 4.0))
+    return steps, deploys
+
+
+def _child_env(env: dict[str, str] | None, *, pipe: bool) -> dict[str, str]:
+    """Child stdio must not raise UnicodeEncodeError on a cp1252 console.
+
+    A piped child is decoded as UTF-8. An inherited console keeps that
+    console's encoding and replaces characters it cannot print.
+    """
+    child = os.environ.copy() if env is None else dict(env)
+    if "PYTHONIOENCODING" not in child:
+        if pipe:
+            child["PYTHONIOENCODING"] = "utf-8:replace"
+        else:
+            enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+            child["PYTHONIOENCODING"] = f"{enc}:replace"
+    return child
+
+
+def run(
+    cmd: list[str],
+    *,
+    env: dict[str, str] | None = None,
+    on_line: Callable[[str], None] | None = None,
+) -> None:
+    printable = " ".join(cmd)
+    stream = live.active or on_line is not None
+    if not stream:
+        print("\n==>", printable, flush=True)
+        subprocess.run(
+            cmd, check=True, cwd=str(ROOT), env=_child_env(env, pipe=False)
+        )
+        return
+
+    # Child stdout is a pipe, so the script logs in the plain style. Keep the
+    # latest line on the pin instead of letting that log scroll.
+    if live.active:
+        live.log(f"==> {printable}")
+    else:
+        print("\n==>", printable, flush=True)
+    proc = subprocess.Popen(
+        cmd,
+        cwd=str(ROOT),
+        env=_child_env(env, pipe=True),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    tail: deque[str] = deque(maxlen=30)
+    assert proc.stdout is not None
+    for raw in proc.stdout:
+        if on_line is not None:
+            on_line(raw)
+        text = latest_progress_line(raw)
+        if not text:
+            continue
+        if live.active:
+            tail.append(text)
+            live.set_job("step", text)
+        else:
+            print(text, flush=True)
+    code = proc.wait()
+    if live.active:
+        live.clear_job("step")
+    if code != 0:
+        if live.active and tail:
+            live.log("\n".join(tail))
+        raise subprocess.CalledProcessError(code, cmd)
 
 
 def sync_trb_overlay() -> None:
@@ -194,8 +334,12 @@ def pack_ui(
     cache_dir: Path | None = None,
     pkg_workers: int | None = None,
     keep_work: bool = False,
-) -> Path:
-    """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake."""
+    on_line: Callable[[str], None] | None = None,
+) -> tuple[Path, str | None]:
+    """PNG pack → cache/new_img.bin (optional intermediate), then copy to bake.
+
+    Returns the bake path and the image-pack report text (folded into out/log.txt).
+    """
     CACHE.mkdir(parents=True, exist_ok=True)
     RELEASE.mkdir(parents=True, exist_ok=True)
     work = ROOT / "out" / "rebuild_bake_img_work"
@@ -225,8 +369,12 @@ def pack_ui(
         cmd.append("--no-cache")
     elif cache_dir is not None:
         cmd.extend(["--cache-dir", str(cache_dir)])
+    report_text: str | None = None
     try:
-        run(cmd)
+        run(cmd, on_line=on_line)
+        report = work / "image_pack_report.txt"
+        if report.is_file():
+            report_text = report.read_text(encoding="utf-8", errors="replace")
         if not CACHE_NEW_IMG.is_file():
             raise SystemExit(f"pack_images did not write {CACHE_NEW_IMG}")
         shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
@@ -234,7 +382,7 @@ def pack_ui(
         if not keep_work:
             # Durable copy is release/bake_img.bin; the cache duplicate is ~680MB.
             remove_scratch(CACHE_NEW_IMG, label="duplicate cache/new_img.bin")
-        return BAKE_IMG
+        return BAKE_IMG, report_text
     finally:
         if not keep_work:
             remove_scratch(work, label="rebuild_bake_img_work")
@@ -294,35 +442,30 @@ def write_rebuild_log(
     *,
     elapsed: str,
     started_at: str,
-    logs_dir: Path | None = None,
+    log_path: Path | None = None,
+    pack_report: str | None = None,
     when: datetime | None = None,
 ) -> Path | None:
-    """Write gold-rebuild summary to ``out/logs/rebuild_*.txt`` + ``rebuild_latest.txt``.
+    """Write the gold-rebuild section of ``out/log.txt``. Never raises.
 
-    Survives ``cleanup_out_dir`` (``logs/`` is kept). Never raises.
+    Replaces the file so one Drop starts clean. The CIA patch appends after this.
+    ``pack_report`` is the image-pack report from the same run, when there was one.
     """
-    dest = logs_dir if logs_dir is not None else ROOT / "out" / "logs"
+    dest = log_path if log_path is not None else ROOT / "out" / "log.txt"
     now = when or datetime.now()
-    try:
-        dest.mkdir(parents=True, exist_ok=True)
-        path = dest / f"rebuild_{now.strftime('%Y%m%d_%H%M%S')}.txt"
-        header = [
-            f"New Love Plus+ English Patcher  {PATCHER_RELEASE}",
-            "Gold rebuild",
-            f"Logged:  {now.strftime('%Y-%m-%d %H:%M:%S')}",
-            f"Started: {started_at}",
-            f"Time:    {elapsed}",
-            "",
-        ]
-        text = "\n".join(header + lines).rstrip() + "\n"
-        path.write_text(text, encoding="utf-8")
-        latest = dest / "rebuild_latest.txt"
-        if path.resolve() != latest.resolve():
-            latest.write_text(text, encoding="utf-8")
-        return path
-    except OSError as exc:
-        print(f"[log] warning: could not write rebuild log: {exc}", flush=True)
-        return None
+    header = [
+        f"New Love Plus+ English Patcher  {PATCHER_RELEASE}",
+        "Gold rebuild",
+        f"Logged:  {now.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Started: {started_at}",
+        f"Time:    {elapsed}",
+        "",
+    ]
+    body = "\n".join(header + lines).rstrip() + "\n"
+    report = (pack_report or "").strip()
+    if report:
+        body = report + "\n\n" + body
+    return write_log(body, dest=dest, append=False)
 
 
 def build_name_input_code(*, rom: Path | None) -> Path:
@@ -390,6 +533,7 @@ def build_name_input_code(*, rom: Path | None) -> Path:
 
 
 def main(argv: list[str] | None = None) -> int:
+    relax_stdio_errors()
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--vanilla",
@@ -488,6 +632,16 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
+    steps, deploys = _rebuild_steps(args)
+    bar = OverallBar(steps)
+
+    def _on_pack_line(line: str) -> None:
+        match = _PACK_PROGRESS.search(line)
+        if match is None:
+            return
+        done, total = int(match.group(1)), int(match.group(2))
+        bar.goto("PNG pack", (done / total) if total else 1.0)
+
     RELEASE.mkdir(parents=True, exist_ok=True)
 
     # From-scratch only. --skip-pack leaves cache/ (resume still needs vanilla code).
@@ -511,9 +665,11 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         # Ignore sibling extracted/ and any cache that appeared after the wipe.
         # slim=False keeps Plus/ (voice, BGM). A slim tree must not become the CIA.
         try:
+            bar.goto("extract ROM", 0.0)
             vanilla = ensure_vanilla_from_rom(
                 args.rom.resolve(), force=True, slim=False
             )
+            bar.goto("extract ROM", 1.0)
         except (FileNotFoundError, PatchError, OSError) as exc:
             raise SystemExit(str(exc)) from exc
         plus = CACHE / "vanilla_from_rom" / "romfs" / "Plus"
@@ -555,12 +711,14 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
     print(f"[rebuild] vanilla: {vanilla}", flush=True)
     print(f"[rebuild] bake:    {BAKE_IMG}", flush=True)
     keep_work = bool(args.keep_work)
+    pack_report: str | None = None
 
     if args.reseed_from_pack:
         if not CACHE_NEW_IMG.is_file():
             raise SystemExit(f"--reseed-from-pack needs {CACHE_NEW_IMG}")
         shutil.copy2(CACHE_NEW_IMG, BAKE_IMG)
         print(f"[bake] reseeded from PNG pack -> {BAKE_IMG}", flush=True)
+        bar.goto("reseed bake", 1.0)
         timer.mark("reseeded bake from cache/new_img.bin")
     elif args.skip_pack:
         if BAKE_IMG.is_file():
@@ -585,13 +743,14 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         print(
             "[rebuild] PNG pack starting (historically ~16h sequential zopfli; "
             "now roughly 40 minutes to 2 hours depending on hardware — empty-block-first + package "
-            "ProcessPool + zopfli pad; see docs/technical.md §12.5.3). Watch [timer] lines "
-            "for live elapsed.",
+            "ProcessPool + zopfli pad; see docs/technical.md §12.5.3). "
+            "Elapsed time stays on the bottom line; the percent bar is just above it.",
             flush=True,
         )
         timer.mark("PNG pack starting")
+        bar.goto("PNG pack", 0.0)
         timer.stop_heartbeat()  # pack_images has its own [timer] heartbeat
-        pack_ui(
+        _, pack_report = pack_ui(
             vanilla,
             workers=args.workers,
             pkg_workers=args.pkg_workers,
@@ -599,7 +758,9 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             no_cache=(not args.use_cache) or args.no_cache,
             cache_dir=args.cache_dir,
             keep_work=keep_work,
+            on_line=_on_pack_line,
         )
+        bar.goto("PNG pack", 1.0)
         timer.start_heartbeat()
         timer.mark("PNG pack done")
         cleanup_rebuild_scratch(keep_work=keep_work)
@@ -608,30 +769,22 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     if not args.skip_trb:
         timer.mark("rebuilding main TRB")
+        bar.goto("text", 0.0)
         rebuild_main_trb(env=env)
+        bar.goto("text", 1.0)
     sync_trb_overlay()
     cleanup_rebuild_scratch(keep_work=keep_work)
 
-    if not args.skip_deploys:
-        scripts = list(DEPLOY_SCRIPTS)
-        if args.include_sound_settings:
-            idx = scripts.index("deploy_display_settings_en.py") + 1
-            scripts.insert(idx, "deploy_sound_settings_en.py")
-        timer.mark(f"running {len(scripts)} deploy scripts")
-        for name in scripts:
+    if deploys:
+        timer.mark(f"running {len(deploys)} deploy scripts")
+        for name, extra, label in deploys:
             script = ROOT / "tools" / name
             if not script.is_file():
                 raise SystemExit(f"missing deploy script: {script}")
-            extra = (
-                ["--full"] if name == "deploy_multiwin_headers_en.py" else []
-            )
-            run([sys.executable, str(script)] + extra, env=env)
-            timer.mark(f"deploy done: {name}")
-            if name == "deploy_multiwin_headers_en.py":
-                # Girlfriend Communication etc. on the live ARC. Pad short zopfli
-                # (exact_zlib); do not combine extras into the vanilla --full pass.
-                run([sys.executable, str(script)], env=env)
-                timer.mark("deploy done: deploy_multiwin_headers_en.py extras")
+            bar.goto(label, 0.0)
+            run([sys.executable, str(script), *extra], env=env)
+            bar.goto(label, 1.0)
+            timer.mark(f"deploy done: {label}")
             cleanup_rebuild_scratch(keep_work=keep_work)
 
     if args.include_sms:
@@ -642,6 +795,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
                 "or omit --include-sms"
             )
         timer.mark("SMS maildic deploy")
+        bar.goto("SMS", 0.0)
         run(
             [
                 sys.executable,
@@ -652,13 +806,16 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
             ],
             env=env,
         )
+        bar.goto("SMS", 1.0)
         cleanup_rebuild_scratch(keep_work=keep_work)
 
     sync_trb_overlay()
     cleanup_bake_img_baks(BAKE_IMG)
 
     timer.mark("building name-input code.bin")
+    bar.goto("name-input", 0.0)
     name_code = build_name_input_code(rom=args.rom.resolve() if args.rom else None)
+    bar.goto("name-input", 1.0)
     if not NAME_INPUT_CODE.is_file():
         raise SystemExit(f"required name-input missing: {NAME_INPUT_CODE}")
 
@@ -684,10 +841,12 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         summary,
         elapsed=elapsed,
         started_at=timer.started_at,
+        pack_report=pack_report,
     )
     if log_path is not None:
-        print(f"  rebuild log:   {log_path}", flush=True)
+        print(f"  log:           {log_path}", flush=True)
     cleanup_rebuild_scratch(keep_work=keep_work)
+    bar.finish()
     timer.finish("gold rebuild OK")
     return 0
 

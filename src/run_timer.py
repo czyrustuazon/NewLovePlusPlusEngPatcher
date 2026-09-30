@@ -1,13 +1,21 @@
 """Wall-clock elapsed timer for long EngPatcher runs (bake / pack / CIA patch).
 
-Prints ``[timer]`` lines at start, on stage marks, on a heartbeat while still
-running, and a total at finish — so a multi-hour PNG pack is never silent.
+On a terminal the bottom row leads with the run name and elapsed time,
+then the progress bar and the file being read. It redraws in place. When
+Drop set ``NLPP_T0``, that clock runs from the bat start through gold
+rebuild and the CIA step. Stage marks still scroll above
+that row, each ``[tag]`` in its own color. Piped logs and ``NLPP_PLAIN_LOG=1``
+print ``[timer]`` lines at start, on stage marks, on a 60s heartbeat, and a
+total at finish.
 """
 
 from __future__ import annotations
 
+import os
 import threading
 import time
+
+from live_status import live
 
 
 def format_elapsed(seconds: float) -> str:
@@ -46,6 +54,19 @@ def elapsed_since_unix(started_unix: float, *, now: float | None = None) -> str:
     return format_elapsed(end - started_unix)
 
 
+def drop_elapsed_str() -> str | None:
+    """Time since the Drop bat stamped ``NLPP_T0``.
+
+    Gold rebuild and the CIA patch are separate processes, each with its own
+    ``RunTimer``. The bottom row uses this stamp so that clock does not restart
+    at the CIA step. Standalone runs leave the variable unset.
+    """
+    started = parse_unix_start(os.environ.get("NLPP_T0"))
+    if started is None:
+        return None
+    return elapsed_since_unix(started)
+
+
 class RunTimer:
     """Track how long the current patcher/bake step has been running."""
 
@@ -56,6 +77,7 @@ class RunTimer:
         heartbeat_s: float | None = 60.0,
     ) -> None:
         self.label = label
+        self.stage = "running"
         self.t0 = time.monotonic()
         self.started_at = time.strftime("%Y-%m-%d %H:%M:%S")
         self._hb_s = heartbeat_s
@@ -65,6 +87,7 @@ class RunTimer:
             f"[timer] {label} started at {self.started_at}",
             flush=True,
         )
+        self._live = live.try_acquire(self)
         if heartbeat_s is not None and heartbeat_s > 0:
             self.start_heartbeat()
 
@@ -75,16 +98,26 @@ class RunTimer:
         return format_elapsed(self.elapsed())
 
     def mark(self, msg: str) -> None:
-        print(f"[timer] {self.elapsed_str()} — {msg}", flush=True)
+        self.stage = msg
+        line = f"[timer] {self.elapsed_str()} — {msg}"
+        if self._live:
+            live.log(line)
+            live.refresh(force=True)
+        else:
+            print(line, flush=True)
 
     def start_heartbeat(self) -> None:
         if self._thread is not None:
             return
-        interval = float(self._hb_s or 60.0)
+        interval = 1.0 if self._live else float(self._hb_s or 60.0)
         self._stop.clear()
 
         def _loop() -> None:
             while not self._stop.wait(interval):
+                if self._live:
+                    if live.owner is self:
+                        live.refresh(force=True)
+                    continue
                 print(
                     f"[timer] still running — elapsed {self.elapsed_str()} "
                     f"({self.label})",
@@ -107,7 +140,11 @@ class RunTimer:
 
     def finish(self, msg: str = "finished") -> None:
         self.stop_heartbeat()
-        print(f"[timer] total {self.elapsed_str()} — {msg}", flush=True)
+        line = f"[timer] total {self.elapsed_str()} — {msg}"
+        if self._live:
+            live.release(self)
+            self._live = False
+        print(line, flush=True)
 
     def __enter__(self) -> RunTimer:
         return self

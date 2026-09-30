@@ -19,6 +19,11 @@ TEXT_PAGE_END = 0x00690000
 TEXT_SIZE = 0x0068F7FC
 
 # 2 KiB zero pad at the end of the last RX page.
+# Dead tail of FUN_002573ac (file 0x002573AC, 0xB0 bytes). The strcat patch
+# branches away at the first instruction; the chunk-walk guard uses the rest.
+ADDR_CHUNK_WALK_CAVE = 0x002573B0
+ADDR_CHUNK_WALK_LIMIT = 0x0025745C
+
 ADDR_SHARED_PAD = 0x0068F800
 ADDR_ROMAJI_CAVE = 0x0068F900
 # Communication Settings header DrawText. Last 44 bytes of the RX page,

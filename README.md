@@ -23,8 +23,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/1_[Either use this-CIA]/` and a Luma **LayeredFS** folder at `out/2_[Or this-LayeredFS]/luma/` (includes `code.bin`). Use one install path  
-10. **Clean** `out/` to numbered CIA + LayeredFS folders + `3_[but not both]/` + `logs/` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)  
-11. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
+10. **Clean** `out/` to numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)
+11. **Append a PATCH SUMMARY** to `out/log.txt` (same file as the image-pack report and gold-rebuild summary; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
@@ -115,7 +115,7 @@ Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_to
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/`, `release/`, and `cache/` first.** The previous `release/bake_img.bin`, `release/bake_stamp.txt`, vanilla RomFS, and PNG pack cache are deleted, so the bat always packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc3`** on main; Eng Patch badge / `CIA_TITLE_VERSION` is **3**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first.** The previous `release/bake_img.bin`, `release/bake_stamp.txt`, vanilla RomFS, and PNG pack cache are deleted, so the bat always packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc4`** on main. `CIA_TITLE_VERSION` is **4**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 
@@ -123,7 +123,7 @@ The drop bat then runs:
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. A cold pack is typically **about 40 minutes to 2 hours**, depending on hardware (historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `docs/technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. A cold pack is typically **about 40 minutes to 2 hours**, depending on hardware (historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `docs/technical.md` §12.5.3. The console keeps one bottom line: the overall percent (PNG pack, then each chrome script, then the CIA step), the file in progress, and the elapsed time. Each ``[tag]`` line has its own color.
 
 - Vanilla RomFS is re-extracted from the dropped ROM into `cache/vanilla_from_rom/` (full tree, including `Plus/`). A slim cache is refused.  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
@@ -201,14 +201,14 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `out/2_[Or this-LayeredFS]/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` (**or** install the CIA, not both) |
 | `out/2_[Or this-LayeredFS]/luma/README.txt` | Install steps for Luma / Azahar |
 | `out/3_[but not both]/` | Folder reminder: pick the CIA **or** LayeredFS |
-| `out/logs/latest.txt` | PATCH SUMMARY from the last successful run (timestamped copies alongside) |
+| `out/log.txt` | One log for the run: image-pack report, gold rebuild, and PATCH SUMMARY |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
 | `release/textresource/` | Durable TRB / translation work |
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, logs, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered CIA + LayeredFS folders + `3_[but not both]/` + `logs/`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, patch log, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
 **Pick one install path** (see `out/3_[but not both]/`): LayeredFS on top of the English CIA applies the patch twice.
 
@@ -327,8 +327,8 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → name patches (plain Takane/Rinko/Nene in scripts + resident/img tables)
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
-  → write PATCH SUMMARY log to out/logs/
-  → clean out/ (keep numbered CIA/LayeredFS folders + 3_[but not both]/ + logs/)
+  → append PATCH SUMMARY to out/log.txt
+  → clean out/ (keep numbered CIA/LayeredFS folders + 3_[but not both]/ + log.txt)
 ```
 
 CLI example (cartridge dump → English CIA):
@@ -490,7 +490,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; docs/technical.md §15.5)
 cache/                       PNG scratch + vanilla_from_rom (gitignored; Drop CIA deletes this folder on every from-scratch build)
-out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and logs/ (gitignored)
+out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and log.txt (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
@@ -560,7 +560,7 @@ python tools/rebuild_bake_img.py --skip-pack          # resume after PNG pack
 
 # Full CIA patch (prefers release/bake_img.bin; same as the .bat)
 python src/patch_cia.py --cia "path\to\game.cia"
-# PATCH SUMMARY log: out/logs/patch_YYYYMMDD_HHMMSS.txt + latest.txt
+# Run log: out/log.txt (image pack + gold rebuild + PATCH SUMMARY)
 # python src/patch_cia.py --cia "path\to\game.cia" --log D:\patch.txt
 # python src/patch_cia.py --cia "path\to\game.cia" --no-log
 

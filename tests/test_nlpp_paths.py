@@ -20,6 +20,7 @@ def test_drop_output_prefix_layout():
     assert paths.OUT_LAYEREDFS == paths.OUT / paths.OUT_LAYEREDFS_PREFIX / "luma"
     assert paths.OUT_CIA == paths.OUT / paths.OUT_CIA_PREFIX / "NewLovePlusPlus-EN.cia"
     assert paths.OUT_NOT_BOTH == paths.OUT / "3_[but not both]"
+    assert paths.OUT_LOG == paths.OUT / "log.txt"
 
 
 def test_azahar_user_dir_from_env(monkeypatch, tmp_path: Path):

@@ -47,6 +47,7 @@ def test_name_input_caves_are_inside_text_rx():
     assert sc + len(strcat_raw.build_blob(base=sc)) <= end
     cr = call_romaji.cave_addr()
     assert cr + len(call_romaji.build_blob()[0]) <= end
+    assert cave_map.ADDR_CHUNK_WALK_CAVE < cave_map.ADDR_CHUNK_WALK_LIMIT <= end
     assert cave_map.OLD_RODATA_SHARED_PAD >= end
     assert cave_map.OLD_RODATA_ROMAJI_CAVE >= end
 

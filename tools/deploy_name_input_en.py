@@ -13,6 +13,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
+  7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
   7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
   8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
@@ -92,6 +93,10 @@ from patch_input_skip_ascii_dakuten import (  # noqa: E402
 )
 from patch_input_strcat_raw import (  # noqa: E402
     apply_patch as apply_strcat_raw,
+)
+from patch_chunk_walk_guard import (  # noqa: E402
+    apply_patch as apply_chunk_walk,
+    is_patched as chunk_walk_already,
 )
 from patch_input_call_romaji import (  # noqa: E402
     apply_patch as apply_call_romaji,
@@ -208,6 +213,12 @@ def apply_name_input_stack(data: bytearray) -> int:
     apply_strcat_raw(data)
     steps += 1
 
+    if chunk_walk_already(data):
+        print("[skip] chunk_walk_guard already applied")
+    else:
+        apply_chunk_walk(data)
+        steps += 1
+
     if call_romaji_already(data):
         print("[skip] call_romaji already applied")
     else:
@@ -286,6 +297,9 @@ def main(argv: list[str] | None = None) -> int:
         build_site_cave(CAND_CAVE2, 0x001FBD28, 0x001FBD4C, 11)
         build_fillflag_cave()
         build_spotpass_embed()
+        from patch_chunk_walk_guard import build_cave
+
+        build_cave()
         print("dry-run OK (caves assemble)")
         return 0
 

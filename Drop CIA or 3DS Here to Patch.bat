@@ -6,6 +6,16 @@ REM Drag a New Love Plus+ .cia / .3ds / .cci onto this file, or double-click for
 title New Love Plus+ - Drop ROM to Patch
 set "SRC=%~dp0src"
 
+if not exist "%SRC%\drop_zone.ps1" (
+  echo.
+  echo [error] Cannot find src\drop_zone.ps1 next to this bat.
+  echo         Extract the entire archive / repo first, then run the bat from inside that folder.
+  echo         Running it from inside a zip, or copying only the bat out, does this.
+  echo.
+  pause
+  exit /b 1
+)
+
 if not "%~1"=="" goto :run_patch
 
 where powershell >nul 2>&1
@@ -20,7 +30,14 @@ if errorlevel 1 (
 )
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%SRC%\drop_zone.ps1"
-exit /b %ERRORLEVEL%
+if errorlevel 1 (
+  echo.
+  echo [error] Drop window failed. The message above is the reason.
+  echo.
+  pause
+  exit /b 1
+)
+exit /b 0
 
 :run_patch
 REM Stage dump path via PowerShell first. Names with Japanese glyphs or parentheses
@@ -108,6 +125,10 @@ if exist "%NLPP_T0_FILE%" (
 )
 set "NLPP_T0_FILE="
 if defined NLPP_T0 echo [timer] Drop CIA started
+REM Whole Drop is 0-100. A rebuild that actually runs owns 0-80; the CIA step then owns 80-100.
+set "NLPP_OVERALL_LO=0"
+set "NLPP_OVERALL_HI=100"
+set "NLPP_REBUILD_RAN="
 REM Pass Drop start into patch_cia.py so PATCH SUMMARY elapsed includes bake.
 set "STARTED_UNIX="
 if defined NLPP_T0 set STARTED_UNIX=--started-unix !NLPP_T0!
@@ -175,7 +196,7 @@ if "!HASH_ERR!"=="0" (
 
 echo.
 echo Wiping out\, release\, and cache\ before this from-scratch build...
-echo Previous CIA, logs, gold bake, TRB overlay, name-input code.bin,
+echo Previous CIA, patch log, gold bake, TRB overlay, name-input code.bin,
 echo vanilla RomFS, and PNG pack cache are deleted and rebuilt.
 echo ab_test\azahar_instances\ is left as-is.
 echo Close anything using files under out\, release\, or cache\.
@@ -259,6 +280,10 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     pause
     exit /b 1
   )
+  if defined NLPP_REBUILD_RAN (
+    set "NLPP_OVERALL_LO=80"
+    set "NLPP_OVERALL_HI=100"
+  )
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
@@ -300,6 +325,8 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo Vanilla RomFS is re-extracted from the dropped ROM ^(full tree, including Plus\^).
       echo cache\ was deleted, so this pack is cold. Leave this window open.
       echo.
+      set "NLPP_OVERALL_LO=0"
+      set "NLPP_OVERALL_HI=80"
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
@@ -310,11 +337,14 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
         pause
         exit /b 1
       )
+      set "NLPP_REBUILD_RAN=1"
     ) else if defined BAKE_STALE (
       echo.
       echo Overwriting leftover gold bake — running tools\rebuild_bake_img.py
       echo cache\ was deleted, so this pack is cold. Leave this window open.
       echo.
+      set "NLPP_OVERALL_LO=0"
+      set "NLPP_OVERALL_HI=80"
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
@@ -325,6 +355,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
         pause
         exit /b 1
       )
+      set "NLPP_REBUILD_RAN=1"
     )
     if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
       echo.
@@ -358,6 +389,8 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     echo Gold artifacts incomplete ^(Eng Patch and/or name_input_code.bin missing^).
     echo Finishing with rebuild_bake_img.py --skip-pack ^(retries; no soft skips^)...
     echo.
+    set "NLPP_OVERALL_LO=0"
+    set "NLPP_OVERALL_HI=80"
     "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" --skip-pack
     if errorlevel 1 (
       echo [!] rebuild_bake_img.py --skip-pack failed — see traceback above.
@@ -365,6 +398,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       pause
       exit /b 1
     )
+    set "NLPP_REBUILD_RAN=1"
     if exist "%~dp0release\bake_img.bin" (
       set "PACKED_IMG=%~dp0release\bake_img.bin"
     )
@@ -386,6 +420,10 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set EXTRA_ROMFS=--romfs "%CACHE_ROMFS%"
   echo Using full RomFS extracted this run: cache\vanilla_from_rom
   echo Injecting gold bake: !PACKED_IMG!
+  if defined NLPP_REBUILD_RAN (
+    set "NLPP_OVERALL_LO=80"
+    set "NLPP_OVERALL_HI=100"
+  )
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
@@ -421,9 +459,8 @@ if defined NLPP_T0 (
   )
 )
 echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
-echo [+] Patch log ^(same summary^):
-echo     %~dp0out\logs\latest.txt
-echo     ^(timestamped copies stay in out\logs\^)
+echo [+] Patch log:
+echo     %~dp0out\log.txt
 echo.
 echo [+] Install over the existing title in FBI/Azahar. Do NOT delete the title first
 echo     ^(that orphans extra data^). CIA title version is CIA_TITLE_VERSION for this RC
@@ -433,7 +470,7 @@ echo [+] Azahar extra data backup/restore:
 echo     python tools\restore_azahar_extdata.py backup
 echo     python tools\restore_azahar_extdata.py restore
 echo.
-echo [+] out\ cleaned ^(scratch removed; kept the CIA folder + logs + extdata_backup^).
+echo [+] out\ cleaned ^(scratch removed; kept the CIA folder + log.txt + extdata_backup^).
 echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
 echo.
 
@@ -442,6 +479,11 @@ REM NLPP_PROGRESS_*). Missing config or network must never fail the patch.
 echo Reporting script-text progress ^(optional^)...
 "%PYTHON%" "%SRC%\report_progress.py" --best-effort
 if errorlevel 1 echo [progress] optional update skipped ^(patch still OK^)
+echo.
+if exist "%~dp0out" (
+  echo Opening out\ ...
+  start "" explorer "%~dp0out"
+)
 echo.
 pause
 exit /b 0

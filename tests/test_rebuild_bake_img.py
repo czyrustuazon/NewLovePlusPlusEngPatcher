@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 from conftest import TOOLS, load_module
 
@@ -23,6 +24,51 @@ def test_deploy_scripts_include_menu_chrome():
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
+
+
+def _rebuild_args(**over):
+    base = dict(
+        skip_pack=False,
+        reseed_from_pack=False,
+        rom=None,
+        skip_trb=False,
+        skip_deploys=False,
+        include_sound_settings=False,
+        include_sms=False,
+    )
+    base.update(over)
+    return SimpleNamespace(**base)
+
+
+def test_deploy_plan_runs_multiwin_full_then_extras():
+    plan = rebuild._deploy_plan(_rebuild_args())
+    assert len(plan) == len(rebuild.DEPLOY_SCRIPTS) + 1
+    multi = [row for row in plan if row[0] == "deploy_multiwin_headers_en.py"]
+    assert [row[1] for row in multi] == [["--full"], []]
+    labels = [row[2] for row in plan]
+    assert len(labels) == len(set(labels))
+    assert "profile" in labels
+    assert "ui buttons (2)" in labels
+
+
+def test_skip_pack_drops_the_png_weight_so_chrome_fills_the_bar():
+    steps, _deploys = rebuild._rebuild_steps(_rebuild_args(skip_pack=True))
+    names = [name for name, _weight in steps]
+    assert "PNG pack" not in names
+    assert "extract ROM" not in names
+    assert names[0] == "text"
+    assert names[-1] == "name-input"
+
+
+def test_cold_rebuild_weights_pack_above_each_chrome_script():
+    steps, deploys = rebuild._rebuild_steps(
+        _rebuild_args(rom=Path("game.cia"))
+    )
+    weights = dict(steps)
+    assert weights["extract ROM"] == 8.0
+    assert weights["PNG pack"] == 55.0
+    assert weights["profile"] == 1.0
+    assert len(deploys) == len(rebuild.DEPLOY_SCRIPTS) + 1
 
 
 def test_msel_menus_include_event_gallery_rows():
@@ -163,8 +209,37 @@ def test_multiwin_after_datadelete():
 
 def test_multiwin_bake_runs_full_then_extras():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
-    assert '["--full"] if name == "deploy_multiwin_headers_en.py"' in text
-    assert "deploy_multiwin_headers_en.py extras" in text
+    assert 'name == "deploy_multiwin_headers_en.py"' in text
+    assert '["--full"]' in text
+    assert "into the vanilla --full pass" in text
+    plan = rebuild._deploy_plan(_rebuild_args())
+    multi = [row for row in plan if row[0] == "deploy_multiwin_headers_en.py"]
+    assert [row[1] for row in multi] == [["--full"], []]
+
+
+def test_day_counter_log_line_is_cp1252_safe():
+    """Drop CIA uses a cp1252 console; a Japanese log line aborts the bake."""
+    text = (TOOLS / "deploy_day_counter_en.py").read_text(encoding="utf-8")
+    printed = [
+        line
+        for line in text.splitlines()
+        if "print(" in line and "patched resident TRB" in line
+    ]
+    assert printed
+    for line in printed:
+        line.encode("cp1252")
+
+
+def test_child_stdio_replaces_unencodable(monkeypatch):
+    monkeypatch.delenv("PYTHONIOENCODING", raising=False)
+    monkeypatch.setattr(rebuild.sys, "stdout", type("Out", (), {"encoding": "cp1252"})())
+    env = rebuild._child_env(None, pipe=False)
+    assert env["PYTHONIOENCODING"] == "cp1252:replace"
+    piped = rebuild._child_env({"PATH": "x"}, pipe=True)
+    assert piped["PYTHONIOENCODING"] == "utf-8:replace"
+    assert piped["PATH"] == "x"
+    kept = rebuild._child_env({"PYTHONIOENCODING": "utf-8"}, pipe=False)
+    assert kept["PYTHONIOENCODING"] == "utf-8"
 
 
 def test_myroom_options_after_shared_arc_writers():
@@ -328,19 +403,19 @@ def test_write_rebuild_log_includes_total_time(tmp_path: Path):
         elapsed="3m05s",
         started_at="2026-09-17 01:00:00",
     )
-    logs = tmp_path / "logs"
     path = rebuild.write_rebuild_log(
         lines,
         elapsed="3m05s",
         started_at="2026-09-17 01:00:00",
-        logs_dir=logs,
+        log_path=tmp_path / "log.txt",
+        pack_report="NLPP image pack report\npackages patched: 2\n",
         when=datetime(2026, 9, 17, 1, 3, 5),
     )
-    assert path == logs / "rebuild_20260917_010305.txt"
+    assert path == tmp_path / "log.txt"
     text = path.read_text(encoding="utf-8")
-    assert "Gold rebuild" in text
+    assert text.index("NLPP image pack report") < text.index("Gold rebuild")
     assert "Time:    3m05s" in text
     assert "Started: 2026-09-17 01:00:00" in text
     assert "time:          3m05s  (started 2026-09-17 01:00:00)" in text
-    latest = logs / "rebuild_latest.txt"
-    assert latest.read_text(encoding="utf-8") == text
+    assert not (tmp_path / "rebuild_latest.txt").exists()
+    assert not (tmp_path / "logs").exists()

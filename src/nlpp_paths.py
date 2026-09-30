@@ -57,6 +57,9 @@ CIA_FILENAME = "NewLovePlusPlus-EN.cia"
 OUT_LAYEREDFS = OUT / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME
 OUT_CIA = OUT / OUT_CIA_PREFIX / CIA_FILENAME
 OUT_NOT_BOTH = OUT / OUT_NOT_BOTH_NAME
+# One Drop log: image pack + gold rebuild + PATCH SUMMARY. Not out/logs/.
+OUT_LOG_NAME = "log.txt"
+OUT_LOG = OUT / OUT_LOG_NAME
 
 # Commit-worthy translation source (regenerates release TRBs).
 ASSETS_TEXTRESOURCE = ROOT / "assets" / "textresource"

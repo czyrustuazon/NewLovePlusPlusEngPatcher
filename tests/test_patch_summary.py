@@ -189,11 +189,13 @@ def test_drop_bat_mentions_patch_summary():
     assert "STARTED_UNIX" in bat
     assert "--started-unix" in bat
     assert "run_timer.py" in bat
-    assert "out\\logs\\latest.txt" in bat
+    assert "out\\log.txt" in bat
     assert "Patch log" in bat
     assert "restore_azahar_extdata.py" in bat
     assert "Do NOT delete the title" in bat
     assert "CIA_TITLE_VERSION" in bat
+    assert "NLPP_OVERALL_LO" in bat
+    assert "NLPP_REBUILD_RAN" in bat
 
 
 def test_patch_cia_requires_name_input_for_ui_inject():
@@ -258,9 +260,11 @@ def test_format_patch_log_includes_summary_and_counts(tmp_path: Path):
     assert patch_cia.PATCHER_RELEASE in text
 
 
-def test_write_patch_summary_log_timestamped_and_latest(tmp_path: Path):
-    logs = tmp_path / "logs"
-    path = logs / "patch_20260910_192100.txt"
+def test_write_patch_summary_log_appends_default_file(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
+    path = patch_cia.default_patch_log_path()
+    path.parent.mkdir(parents=True)
+    path.write_text("NLPP image pack report\n\nGold rebuild\n", encoding="utf-8")
     lines = ["", "=" * 60, "  PATCH SUMMARY — read this before testing", "=" * 60, ""]
     written = patch_cia.write_patch_summary_log(
         path,
@@ -269,11 +273,12 @@ def test_write_patch_summary_log_timestamped_and_latest(tmp_path: Path):
         when=datetime(2026, 9, 10, 19, 21, 0),
     )
     assert written == path
-    assert path.is_file()
-    latest = logs / "latest.txt"
-    assert latest.is_file()
-    assert "PATCH SUMMARY" in path.read_text(encoding="utf-8")
-    assert latest.read_text(encoding="utf-8") == path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    assert "Gold rebuild" in text
+    assert "PATCH SUMMARY" in text
+    assert "image pack report" in text
+    assert not (path.parent / "latest.txt").exists()
+    assert not (path.parent / "logs").exists()
 
 
 def test_write_patch_summary_log_skips_latest_outside_logs_dir(tmp_path: Path):
@@ -290,21 +295,19 @@ def test_resolve_patch_log_path_default_and_flags(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
     when = datetime(2026, 9, 10, 19, 21, 0)
     default = patch_cia.default_patch_log_path(when=when)
-    assert default == tmp_path / "out" / "logs" / "patch_20260910_192100.txt"
+    assert default == tmp_path / "out" / "log.txt"
 
     custom = tmp_path / "my.log"
     assert patch_cia.resolve_patch_log_path(
         argparse.Namespace(log=str(custom), no_log=False)
     ) == custom.resolve()
 
-    logs_dir = tmp_path / "logs"
-    logs_dir.mkdir()
+    log_dir = tmp_path / "somewhere"
+    log_dir.mkdir()
     resolved = patch_cia.resolve_patch_log_path(
-        argparse.Namespace(log=str(logs_dir), no_log=False)
+        argparse.Namespace(log=str(log_dir), no_log=False)
     )
-    assert resolved.parent == logs_dir.resolve()
-    assert resolved.name.startswith("patch_")
-    assert resolved.suffix == ".txt"
+    assert resolved == log_dir.resolve() / "log.txt"
 
     assert (
         patch_cia.resolve_patch_log_path(
@@ -319,14 +322,16 @@ def test_resolve_patch_log_path_default_and_flags(tmp_path: Path, monkeypatch):
     )
 
 
-def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
+def test_cleanup_out_dir_keeps_log_file(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
     out = tmp_path / "out"
     out.mkdir()
     (out / "scratch.bin").write_bytes(b"x")
-    logs = out / "logs"
-    logs.mkdir()
-    (logs / "latest.txt").write_text("summary\n", encoding="utf-8")
+    log = out / "log.txt"
+    log.write_text("summary\n", encoding="utf-8")
+    old_logs = out / "logs"
+    old_logs.mkdir()
+    (old_logs / "latest.txt").write_text("old\n", encoding="utf-8")
     cia = out / "NewLovePlusPlus-EN.cia"
     cia.write_bytes(b"cia")
     luma = out / "luma"
@@ -337,7 +342,8 @@ def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert cia.is_file()
     assert luma.is_dir()
-    assert (logs / "latest.txt").is_file()
+    assert log.read_text(encoding="utf-8") == "summary\n"
+    assert not old_logs.exists()
     assert (bak / "keep.txt").is_file()
     assert not (out / "scratch.bin").exists()
 
