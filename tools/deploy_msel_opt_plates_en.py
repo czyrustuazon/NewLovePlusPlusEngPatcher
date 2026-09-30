@@ -33,7 +33,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -107,9 +109,10 @@ def make_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, stem: str | None =
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
         rgba = Image.open(master).convert("RGBA")
-        # 5245 is packed to the slot. Extra EN plates need a coverage mask or
-        # Zhoumaru AA blows cmp_len (Communication Settings was +264).
-        if hard or (stem and stem.endswith("Text04_04_00")):
+        # 5245 is packed to the slot. The Communication Settings header plate
+        # needs a coverage mask or Zhoumaru AA blows cmp_len (was +264).
+        # The menu button is a different file; masking it makes a heavier stroke.
+        if hard or stem == "Com_M_Sel_Plate_Text04_04_00":
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 40, 255, 0).astype(np.uint8)
             rgb = np.array(rgba.convert("RGBA"))
@@ -162,10 +165,7 @@ def _patch_candidate(
 def main() -> int:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_opt_plates")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "opt_plates")
 
     OUT.mkdir(parents=True, exist_ok=True)
     pkg_dir = OUT / "img_data"
@@ -263,7 +263,7 @@ def main() -> int:
             raise SystemExit("DMST changed")
     print("DMST OK", flush=True)
     targets = list(iter_deploy_targets(MOD_IMG))
-    inst_root = ROOT / "out" / "azahar_instances"
+    inst_root = AZAHAR_INSTANCES
     seen = {p.resolve() for p in targets}
     for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
         rp = img.resolve()

@@ -10,7 +10,7 @@ FillKeyboard_* when mode<6; heap garbage >=6 skips every filler and leaves an
 empty gojuon checkerboard (pager 1/1).
 
 Does NOT touch +0x24. Forcing +0x24=0 (removed candmode_reset) kills taps —
-see technical.md §17.2.
+see docs/technical.md §17.2.
 
 Call site: file 0x1fa828 (mov r5,#0), resume 0x1fa82c. Cave in last .text page.
 Works on vanilla RedrawKeyboard without candmode_reset.

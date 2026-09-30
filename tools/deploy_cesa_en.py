@@ -23,7 +23,7 @@ from patch_cesa import (  # noqa: E402
 )
 from nlpp_paths import find_vanilla_img  # noqa: E402
 
-from deploy_common import iter_deploy_targets, resolve_img_paths  # noqa: E402
+from deploy_common import maybe_backup_img, iter_deploy_targets, resolve_img_paths  # noqa: E402
 from render_cesa_en import render_cesa_companion_en, render_cesa_en  # noqa: E402
 
 MOD_IMG, _FALLBACK_VANILLA = resolve_img_paths()
@@ -73,10 +73,7 @@ def main() -> int:
         print("[warn] missing CESA PNGs — skipping CESA EN", flush=True)
         return 0
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_cesa")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "cesa")
 
     OUT.mkdir(parents=True, exist_ok=True)
     work = OUT / "work"

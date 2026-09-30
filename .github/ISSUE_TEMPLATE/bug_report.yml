@@ -6,7 +6,7 @@ body:
     attributes:
       value: |
         This is for "something is broken," not for volunteer task tracking — see
-        [CONTRIBUTING.md](../../CONTRIBUTING.md) if you're looking to pick up work instead.
+        [CONTRIBUTING.md](../CONTRIBUTING.md) if you're looking to pick up work instead.
         You can also report bugs in the project Discord.
 
   - type: textarea

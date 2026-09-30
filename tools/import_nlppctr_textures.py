@@ -101,7 +101,7 @@ UI_PACKAGE_KEYS: tuple[str, ...] = (
     "gallery_common",
 )
 
-# Verified dump hash → (folder_key, bclim_stem) from technical.md (seed hints).
+# Verified dump hash → (folder_key, bclim_stem) from docs/technical.md (seed hints).
 KNOWN_HASHES: dict[str, tuple[str, str]] = {
     "F305C9338867CC37": ("ncommonicon", "Com_btn_m01_b"),
     "4352FF452CC91909": ("ncommonicon", "Com_btn_t01_b"),

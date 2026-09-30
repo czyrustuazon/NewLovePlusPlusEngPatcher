@@ -6,7 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Durable release artifacts (gold bake + RomFS overlays). Not wipeable scratch.
+# Gold bake + RomFS overlays. Drop CIA deletes this tree before each build.
 RELEASE = ROOT / "release"
 BAKE_IMG = RELEASE / "bake_img.bin"
 NAME_INPUT_CODE = RELEASE / "name_input_code.bin"
@@ -14,7 +14,8 @@ ROMFS_OVERLAY = RELEASE / "romfs_overlay"
 TEXTRESOURCE = RELEASE / "textresource"
 OVERLAY_TRB_DIR = ROMFS_OVERLAY / "SystemData" / "TextResource"
 
-# Optional PNG-pack intermediate (may be wiped; not gold).
+# From-scratch Drop / rebuild --rom deletes this whole tree, then refills it.
+# --skip-pack does not. Not gold.
 CACHE = ROOT / "cache"
 CACHE_NEW_IMG = CACHE / "new_img.bin"
 # Content-addressed BCLIM + exact-zlib slots for pack_images (see img_pack_cache.py).
@@ -35,19 +36,30 @@ CACHE_VANILLA_RESIDENT_TRB = (
 )
 CACHE_VANILLA_SCRIPT = CACHE_VANILLA_ROMFS / "script" / "bin" / "script"
 
-# Scratch
+# Scratch. Drop CIA deletes this tree before each build.
 OUT = ROOT / "out"
+
+# A/B Azahar copies (exe, user dir, saves). Lives under gitignored ab_test/
+# so a CIA build can wipe out/ without deleting the instances.
+AZAHAR_INSTANCES = ROOT / "ab_test" / "azahar_instances"
+
+# Local Ghidra project (code.bin database). Ghidra rewrites this while the
+# project is open. Never under OUT — Drop CIA deletes that tree.
+GHIDRA_PROJECT = ROOT / "ghidra_nlpp"
 
 # Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
 # install path; original luma/ and CIA names stay inside.
-OUT_LAYEREDFS_PREFIX = "1_[Either use this-LayerFS]"
-OUT_CIA_PREFIX = "2_[Or this]"
-OUT_NOT_BOTH_NAME = "3_but not both"
+OUT_CIA_PREFIX = "1_[Either use this-CIA]"
+OUT_LAYEREDFS_PREFIX = "2_[Or this-LayeredFS]"
+OUT_NOT_BOTH_NAME = "3_[but not both]"
 LAYEREDFS_DIR_NAME = "luma"
 CIA_FILENAME = "NewLovePlusPlus-EN.cia"
 OUT_LAYEREDFS = OUT / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME
 OUT_CIA = OUT / OUT_CIA_PREFIX / CIA_FILENAME
 OUT_NOT_BOTH = OUT / OUT_NOT_BOTH_NAME
+# One Drop log: image pack + gold rebuild + PATCH SUMMARY. Not out/logs/.
+OUT_LOG_NAME = "log.txt"
+OUT_LOG = OUT / OUT_LOG_NAME
 
 # Commit-worthy translation source (regenerates release TRBs).
 ASSETS_TEXTRESOURCE = ROOT / "assets" / "textresource"

@@ -5,7 +5,7 @@ Uses backups beside the live files when present; otherwise copies vanilla
 exefs/code.bin from the dump. Honors NLPP_AZAHAR_USER_DIR / AZAHAR_USER_DIR.
 
   python tools/restore_name_input_baseline.py
-  $env:NLPP_AZAHAR_USER_DIR = '...\\out\\azahar_instances\\a\\user'
+  $env:NLPP_AZAHAR_USER_DIR = '...\\ab_test\\azahar_instances\\a\\user'
   python tools/restore_name_input_baseline.py
 """
 from __future__ import annotations

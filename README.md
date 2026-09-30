@@ -15,26 +15,42 @@ Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.co
 Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 
 1. **Verify** the dump (SHA-1) before touching anything  
-2. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-3. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
-4. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
-5. **Optionally patch `code.bin`** — single-pane player-name draw so roman letters aren’t one-glyph-per-box (`--patch-code`)  
-6. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter) and Profile name-input from `release/name_input_code.bin` when present  
-7. **Apply TRB overlay** from `release/romfs_overlay/` when present  
-8. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`)  
-9. **Clean** `out/` to numbered LayeredFS + CIA folders + `3_but not both` + `logs/` (optional SpotPass via `build_spotpass_inject.py`)  
-10. **Write a PATCH SUMMARY log** to `out/logs/` (timestamped + `latest.txt`; `--no-log` / `NLPP_NO_LOG=1` to skip)
+2. **Wipe `out/` and `release/`** completely, then recreate both empty. That deletes the previous CIA, logs, `out/extdata_backup/`, gold bake, TRB overlay, and name-input `code.bin`. `cache/` and the A/B Azahar copies in `ab_test/azahar_instances/` are left in place. `python src/patch_cia.py` on its own does not do this wipe  
+3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
+4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`  
+5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
+6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
+7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
+8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
+9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/1_[Either use this-CIA]/` and a Luma **LayeredFS** folder at `out/2_[Or this-LayeredFS]/luma/` (includes `code.bin`). Use one install path  
+10. **Clean** `out/` to numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)
+11. **Append a PATCH SUMMARY** to `out/log.txt` (same file as the image-pack report and gold-rebuild summary; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
 |-----------------|--------------:|
 | Finished dialog scripts (XML → `.dbin2`) | 480 scripts → 1644 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
-| Unique EN UI PNG masters (`IMAGE_MAP`) | **1727** in **92 / 95** folders |
+| Unique EN UI PNG masters (`IMAGE_MAP`) | **1745** in **95 / 95** folders |
 | Chrome subset (site “UI textures”) | **562** in **25 / 25** folders |
-| Still empty | `intro111`, `intro203`, `intro304` |
 
-PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs.
+PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; 2026-09-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 95 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
 
 Title ID: `00040000000F4E00`
+
+---
+
+## Why this rebuilds a CIA
+
+Most 3DS mods ship as a Luma LayeredFS folder. You copy the changed files to `sdmc:/luma/titles/<titleid>/`, the stock install or cartridge stays untouched, and a bad mod is removed by deleting the folder. That became the usual path because a lot of games store textures and text as loose RomFS files, a public mod page can host those files without hosting the game, and rebuilding a CIA means unpacking the RomFS, rebuilding its hash tree, and reinstalling through FBI.
+
+This project started from the other problem: images, dialog, and `code.bin` each had their own patch, and nothing required them to be the same game. Copying one of them left English names and script on Japanese menus. Drop CIA injects the gold `img.bin`, the script and TRB overlay, and `name_input_code.bin` together, and it stops if the bake is missing instead of emitting that half-English title. A LayeredFS folder of whichever piece you happened to have would still have been those separate routes.
+
+The English release is also its own installable title, which a loose overlay does not produce.
+
+- **HOME menu, region, and product code live in the CIA.** Vanilla shows ニューラブプラス＋, region Japan, product code `CTR-P-BLPJ`. LayeredFS does not rewrite the SMDH or the NCCH header. The rebuilt CIA sets the English title **New Love Plus+**, a USA region lock by default, and product code `CTR-P-BLPE`. The title ID stays `00040000000F4E00`, so existing saves still match. Other regions: `--cia-region japan|europe|free`.
+- **Menus are one archive.** UI chrome sits inside `img.bin` (about 680 MB), so a LayeredFS copy of the English UI is still that whole file. Drop CIA deletes `release/` at the start of every build and packs a new `release/bake_img.bin` before inject.
+- **FBI, Azahar, and Citra install a CIA.** A dropped `.3ds` / `.cci` is rebuilt into the same CIA at `out/1_[Either use this-CIA]/`. The patcher also writes `out/2_[Or this-LayeredFS]/` for a Luma overlay on a stock install, or for emulator tests. Use that folder **or** the CIA. Stacking them applies the English files twice (`out/3_[but not both]/`).
+
+The git repo still does not contain a dump. You bring your own decrypted CIA or `.3ds`. `release/bake_img.bin` and the finished CIA are generated on your machine (or fetched as a bake by collaborators) and are not committed.
 
 ---
 
@@ -44,13 +60,13 @@ Title ID: `00040000000F4E00`
 2. Drop your **decrypted** `.cia` / `.3ds` / `.cci` on the window (or use Browse → Patch)  
    — or drag the file directly onto the `.bat`
 
-With a ready gold bake (`release/bake_img.bin` + overlay), patching usually finishes in **a few minutes**.
+Drop CIA **deletes `out/` and `release/` completely** before it starts, then packs a new gold bake. A previous bake, CIA, log, Azahar copy under `out/`, or extra-data backup in those folders is removed. `cache/` stays. Expect a full pack (roughly **40 minutes to 2 hours**, depending on hardware; see below) on every drop.
 
-### Sharing a build (skip the ~3-hour bake)
+### Sharing a build (skip the cold PNG pack)
 
 `release/bake_img.bin` is **gitignored** (too large for GitHub). Assets under `assets/` **are** in the repo.
 
-**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold** Ubuntu runner
+**Preferred:** push/merge to EngPatcher **`main`** → **nlpp-gold-maker** Ubuntu runner
 builds `release/` and updates GitHub Release tag `gold`. See
 [`infra/README.md`](infra/README.md). Collaborators:
 
@@ -66,7 +82,9 @@ Manual handoff still works:
    - `release/bake_img.bin` — English UI bake  
    - `release/romfs_overlay/` — TRB overlay  
    - `release/textresource/` — optional but useful  
-3. They supply **their own** matching dump and run the drop bat.
+3. They supply **their own** matching dump.
+
+Running the drop bat deletes that copied `release/` and packs again from `assets/`. To inject a bake already on disk, run `python src/patch_cia.py` (that command does not wipe `out/` or `release/`).
 
 Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA patching stays on **Windows**.
 
@@ -75,43 +93,43 @@ Do **not** ship the game dump, `cache/`, `out/`, or `*.bak_pre_*` sidecars. CIA 
 Dual isolated Azahar user dirs for LayeredFS experiments (no fighting roaming AppData):
 
 ```powershell
-.\make.ps1 instances
-.\make.ps1 deploy-a    # default: name-input stack → instance A
-.\make.ps1 save-nene   # shared Nene title save → A and B
-.\make.ps1 launch-a
-.\make.ps1 restore-a
+.\ab_test\make.ps1 instances
+.\ab_test\make.ps1 deploy-a    # default: name-input stack → instance A
+.\ab_test\make.ps1 save-nene   # shared Nene title save → A and B
+.\ab_test\make.ps1 launch-a
+.\ab_test\make.ps1 restore-a
 ```
 
-Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1`. Name-input RE: `technical.md` §17.
+Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1`. Name-input RE: `docs/technical.md` §17.
 
 ### Companion site progress bar
 
 Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed by
 `src/report_progress.py` (EN TRB vs vanilla JP). It auto-POSTs after a TRB
-`rebuild`, after a successful Drop CIA run, and from **nlpp-gold** CI — when
+`rebuild`, after a successful Drop CIA run, and from **nlpp-gold-maker** CI — when
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
-nlpp-gold Actions secrets). Graphics/menus stay manual in the site admin —
-use **562** (chrome) or **1727** (all mapped UI masters) from the table above.
-See [`infra/README.md`](infra/README.md). Manual: `.\make.ps1 progress`.
+nlpp-gold-maker Actions secrets). Graphics/menus stay manual in the site admin —
+use **562** (chrome) or **1745** (all mapped UI masters) from the table above.
+See [`infra/README.md`](infra/README.md). Manual: `.\ab_test\make.ps1 progress`.
 Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
-### First-time gold bake (only if `release/bake_img.bin` is missing)
+### Gold bake (every Drop CIA)
 
-**RC default:** leftover `release/bake_img.bin` from an older unzip is **ignored** unless `release/bake_stamp.txt` matches this release (`v1.0.0-rc3`) **and** the UI PNG fingerprint (so a community menu pack cannot sit in `assets/images/` while Drop reuses a pre-pack bake). That forces a from-scratch pack (no `cache/img_pack`). Same-RC second drop reuses the stamped bake only when PNG masters are unchanged. Opt out: `set NLPP_REUSE_BAKE=1`. Warm pack: `set NLPP_USE_PACK_CACHE=1`. `rebuild_bake_img.py --skip-pack` does **not** refresh that fingerprint when PNGs changed.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first.** The previous `release/bake_img.bin`, `release/bake_stamp.txt`, vanilla RomFS, and PNG pack cache are deleted, so the bat always packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc4`** on main. `CIA_TITLE_VERSION` is **4**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_REUSE_BAKE=1` skips the stamp check after the wipe; the local bake is already gone, so that flag only lets the bat poll GitHub before the local pack. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
-If bake is absent (or stamp mismatches), the drop bat auto-runs:
+The drop bat then runs:
 
 ```bash
 python tools/rebuild_bake_img.py --rom path\to\game.cia   # or .3ds / .cci
 ```
 
-That regenerates bake + TRBs from sources. A cold pack is typically **under an hour** on a multi-core desktop (measured **~27 min** on a high-thread machine; historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `technical.md` §12.5.3. Console prints live ``[timer]`` elapsed every stage / every 60s — use that for actual finish time.
+That regenerates bake + TRBs from sources. A cold pack is typically **about 40 minutes to 2 hours**, depending on hardware (historically ~16h sequential zopfli). Empty-block-first + `--pkg-workers` + zopfli undershoot pad; see `docs/technical.md` §12.5.3. The console keeps one bottom line: the overall percent (PNG pack, then each chrome script, then the CIA step), the file in progress, and the elapsed time. Each ``[tag]`` line has its own color.
 
-- Vanilla `img.bin` is taken from the dropped ROM when sibling `extracted/` is missing (`cache/vanilla_from_rom/`).  
+- Vanilla RomFS is re-extracted from the dropped ROM into `cache/vanilla_from_rom/` (full tree, including `Plus/`). A slim cache is refused.  
 - Resume after pack finishes: `python tools/rebuild_bake_img.py --skip-pack` (from **repo root**).  
 - Scripts-only CIA (no UI inject): `set NLPP_WITH_IMAGES=0`.
 
-Details / pitfalls: `technical.md` §15.
+Details / pitfalls: `docs/technical.md` §15.
 
 ### Required dump
 
@@ -133,7 +151,7 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 - Windows x64  
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
-- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML — drop-bat runs this)  
+- `pip install -r dev/requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML — drop-bat runs this)  
 - A few GB free disk (RomFS rebuild is large)  
 - A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
 - First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
@@ -179,41 +197,56 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 
 | Path | Description |
 |------|-------------|
-| `out/1_[Either use this-LayerFS]/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` (**or** install the CIA, not both) |
-| `out/1_[Either use this-LayerFS]/luma/README.txt` | Install steps for Luma / Azahar |
-| `out/2_[Or this]/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra (**or** use LayeredFS, not both) |
-| `out/3_but not both` | Reminder: pick LayeredFS **or** the CIA |
-| `out/logs/latest.txt` | PATCH SUMMARY from the last successful run (timestamped copies alongside) |
+| `out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra (**or** use LayeredFS, not both) |
+| `out/2_[Or this-LayeredFS]/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` (**or** install the CIA, not both) |
+| `out/2_[Or this-LayeredFS]/luma/README.txt` | Install steps for Luma / Azahar |
+| `out/3_[but not both]/` | Folder reminder: pick the CIA **or** LayeredFS |
+| `out/log.txt` | One log for the run: image-pack report, gold rebuild, and PATCH SUMMARY |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
 | `release/textresource/` | Durable TRB / translation work |
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-After a successful patch, `out/` is cleaned to **numbered LayeredFS + CIA folders + `3_but not both` + `logs/`** (plus `azahar_instances/` / `extdata_backup/` if present). Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to retain scratch. SpotPass inject is optional: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, patch log, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
-**Pick one install path** (see `out/3_but not both`): LayeredFS on top of the English CIA applies the patch twice.
+**Pick one install path** (see `out/3_[but not both]/`): LayeredFS on top of the English CIA applies the patch twice.
 
 **LayeredFS install**
 
-- **Luma (3DS):** copy `out/1_[Either use this-LayerFS]/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
+- **Luma (3DS):** copy `out/2_[Or this-LayeredFS]/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
 - **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
 
-Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
+**Why the folder’s `code.bin` has to be the one this repo built**
+
+Retail `code.bin` already loads textures. A BCLIM in `romfs/img.bin` is accepted only when its pointer is 128-byte aligned, the `CLIM` header and `imag` block match, and the format byte hits a GPU row (A8, RGBA4444, ETC1A4, and the rest). A valid English texture gets that far on an unpatched executable. Details: [`docs/technical.md` §5.4](docs/technical.md).
+
+This overlay still needs `release/name_input_code.bin` beside `romfs/`, because two English graphics are outside that loader:
+
+1. **Main Menu Eng Patch badge.** The title layout adds a picture pane retail does not have. When the hub rebuilds, that pane can be a null child, and retail `FindPaneByName` jumps to address 0. The menu aborts before it finishes drawing. The patched executable skips that attach ([`docs/technical.md` §15.7](docs/technical.md)).
+2. **CESA thank-you blurb.** Retail draws the companion logo as a 400×400 quad. The English texture is 240×320. The patched executable keeps that real size so the blurb stays on the pane ([`docs/technical.md` §12.7](docs/technical.md)).
+
+Drop CIA copies that file to `code.bin` in the LayeredFS folder. Luma and Azahar pick it up only when it is there. A folder with English `img.bin` and no `code.bin` runs the retail ExeFS: the textures are present, then the hub aborts and the thank-you quad is the wrong size. If a CIA rebuild fails and the overlay has no `code.bin`, that LayeredFS folder is deleted.
+
+Use the `code.bin` from the same Drop CIA run. It is rebuilt from vanilla during the bake (`deploy_name_input_en.py`). An older ExeFS can miss one of those two hooks. The same file also carries the romaji name keyboard, Message Speed, and the SpotPass Watcher embed.  
+
+Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` exists (`NLPP_ALSO_AZAHAR=0` to opt out). For iterative testing prefer `ab_test/` instances (`.\ab_test\make.ps1 deploy-a`) over roaming AppData — see [`ab_test/README.md`](ab_test/README.md).
 
 ### Known issues
 
-- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/2_[Or this]/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
+- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
 
 ---
 
 ## SpotPass (とわのウォッチャー / boot check)
 
-SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle — those are StreetPass / local wireless). NLPP checks for SpotPass NsData at **cold boot** and shows either an apply prompt or **“No SpotPass data found.”**
+SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle — those are StreetPass / local wireless). NLPP checks for SpotPass NsData at **cold boot** and used to show either an apply prompt or **“No SpotPass data found.”**
 
-Archived BOSS content (「とわのウォッチャー」第28号) is vendored under `tools/spotpass/` — **thank you to Cetaceaqua** for providing that SpotPass dump. Full RE notes: [`technical.md` §16](technical.md).
+Archived BOSS content (「とわのウォッチャー」第28号) is vendored under `tools/spotpass/` — **thank you to Cetaceaqua** for providing that SpotPass dump. Full RE notes: [`docs/technical.md` §16](docs/technical.md).
 
-**Included in the patch workflow:** LayeredFS + CIA by default. SpotPass inject is **optional** afterward:
+**Ship path — no inject.** Drop CIA / `release/name_input_code.bin` embeds the 2324-byte payload and spoofs BOSS `GetNsDataNewFlag` / `ReadNsData` after a save is loaded (`src/patch_spotpass_skip.py` + `src/patch_spotpass_embed.py`). The boot nag is suppressed; Watcher / city / meal tables merge once via the stock apply path. You do **not** need to paste `extdata/…/00000321/boss/info.dat`. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not this blob.
+
+**Optional BOSS-shaped file** (hardware BOSS DBs / Azahar HLE experiments only — not required for the English CIA):
 
 ```bash
 python tools/build_spotpass_inject.py          # → out/spotpass_real3ds/info.dat
@@ -294,14 +327,14 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → name patches (plain Takane/Rinko/Nene in scripts + resident/img tables)
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
-  → write PATCH SUMMARY log to out/logs/
-  → clean out/ (keep numbered LayeredFS/CIA folders + 3_but not both + logs/; azahar_instances/ preserved)
+  → append PATCH SUMMARY to out/log.txt
+  → clean out/ (keep numbered CIA/LayeredFS folders + 3_[but not both]/ + log.txt)
 ```
 
 CLI example (cartridge dump → English CIA):
 
 ```bash
-python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2_[Or this]/NewLovePlusPlus-EN.cia"
+python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia"
 ```
 
 **Heroine names**
@@ -317,8 +350,9 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 
 **Player name UI (`code.bin`)**
 
-- Opt-in: `--patch-code` rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8).  
-- Standalone: `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
+- **Default (gold / Drop CIA):** inject `release/name_input_code.bin` from `deploy_name_input_en.py` — romaji Profile keyboard, Message Speed, title-loop null-pane guard (`docs/technical.md` §17 / §21). Bake always rebuilds it from vanilla.  
+- Older opt-in `--patch-code` only rewrites `SetNameCharsToPanes` / clear / backspace so the whole name draws in one pane (max still 8). It is **not** the name-input stack.  
+- Standalone (legacy): `python src/patch_code.py` (uses `cache/vanilla_from_rom` or sibling dump) or `python src/patch_code.py path\to\code.bin`  
 - LayeredFS installs `code.bin` next to `romfs/` (Azahar/Luma ExeFS overlay).  
 - CIA builds unpack/repack ExeFS via `3dstool`.
 
@@ -336,19 +370,19 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/2
 - No sibling dump needed: pass `--rom game.cia|.3ds|.cci` (drop-bat does this automatically).  
 - Drop-bat **auto-runs a full rebuild** if bake is missing, then patches the CIA.  
 - Drop-bat / `patch_cia.py` **prefer `release/bake_img.bin`** when present; inject `release/name_input_code.bin` when present.  
-- **Cold PNG pack** is CPU-bound exact-zlib (see `technical.md` §12.5.3): empty-block-first + `--pkg-workers` + zopfli empty-block pad. Watch live ``[timer]`` elapsed / heartbeat lines. Measured **~27 min** on a high-thread desktop; typical multi-core is often **under an hour** (historically ~16h sequential zopfli). Warm `cache/img_pack/` re-packs are typically minutes.  
+- **Cold PNG pack** is CPU-bound exact-zlib (see `docs/technical.md` §12.5.3): empty-block-first + `--pkg-workers` + zopfli empty-block pad. Watch live ``[timer]`` elapsed / heartbeat lines. Expect roughly **40 minutes to 2 hours** depending on hardware (historically ~16h sequential zopfli). Warm `cache/img_pack/` re-packs are typically minutes.  
 - Resume deploys only: `python tools/rebuild_bake_img.py --skip-pack`.  
 - Optional PNG-only scratch: `cache/new_img.bin` via `pack_images` / `NLPP_REPACK_IMAGES=1` — incomplete vs gold; does not refresh bake.  
 - Scripts-only: `set NLPP_WITH_IMAGES=0` or `--no-images`.  
 - Parallel convert: `--workers` / `--image-workers`. Fine-tune opt-in: `--fine-tune` / `--image-fine-tune` (very slow).  
-- Exact-length zlib for compressed ARCs: `src/exact_zlib.py` (see `technical.md` §12.5 / §15).  
+- Exact-length zlib for compressed ARCs: `src/exact_zlib.py` (see `docs/technical.md` §12.5 / §15).  
 - The drop bat does **not** mutate your RomFS dump in-place.
 
 **Main Menu vs submenus**
 
 | Screen | Package | Notes |
 |--------|---------|--------|
-| Main Menu **rows** (Game Start, Options, …) | **5261** `Title.arc` | `deploy_title_main_menu_en.py` |
+| Main Menu **rows** + Eng Patch badge | **5261** `Title.arc` | `deploy_title_engpatch_en.py` (replaces labels-only `deploy_title_main_menu_en.py` in bake) |
 | Gallery / Communication / Data Management homes | **5244 / 5241 / 5242** | `deploy_msel_menus_en.py` |
 | Gallery girl-select / multiwin headers | **5153** / **5237** | `deploy_gallery_common_en.py` / `deploy_multiwin_headers_en.py` |
 | Softkeys Back / Next / Confirm / Quit / Restore Default | **5238** | `deploy_softkey_back_next_en.py` + `deploy_confirm_btn_en.py` + `deploy_softkey_quit_en.py` + `deploy_softkey_defaults_en.py` |
@@ -390,6 +424,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | `nlpp-tools` (`ie`, `pe`, `png2bclim`, `png2texi`, …) | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** — thank you to **kiwiz** |
+| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order. |
 | Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
@@ -413,15 +448,23 @@ Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](h
 
 ```
 Drop CIA or 3DS Here to Patch.bat   ← only end-user entry point
-Makefile / make.ps1                 ← shim → ab_test/make.ps1
 README.md
-technical.md                 RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
+LICENSE                          MIT for this project's own code
+.env.example                     copy to .env (progress-bar token; gitignored .env)
+docs/technical.md                RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
+.github/CONTRIBUTING.md          how to pick up a task
+.github/CODE_OF_CONDUCT.md
+dev/requirements.txt             Drop CIA installs these (Pillow, numpy, zopfli, etcpak, PyYAML)
+dev/requirements-dev.txt         pytest
 ab_test/
   README.md                  Azahar dual-instance workflow
-  make.ps1                   instances / seed / deploy / launch / restore / save-nene
+  make.ps1                   .\ab_test\make.ps1 instances / deploy / launch / restore
+  Makefile                   make -C ab_test <target>
   setup_azahar_instances.ps1
   paths.local.ps1.example    → paths.local.ps1 (gitignored)
-  saves/nene/                shared Nene title save (`.\make.ps1 save-nene`)
+  azahar_instances/{a,b}/    portable Azahar + saves (survives a CIA wipe)
+  patches/azahar-openlinkfile.patch  Azahar OpenLinkFile clone (`build-azahar`)
+  saves/nene/                local Nene title save, gitignored (`.\ab_test\make.ps1 save-nene`)
 assets/
   scripts/                   finished DBIN2 XML
   images/                    finished UI PNGs (+ editor sources)
@@ -446,9 +489,9 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-release/                     gold bake + TRB overlay (binaries gitignored; see technical.md §15.5)
-cache/                       PNG scratch + vanilla_from_rom (gitignored)
-out/                         wipeable scratch + numbered LayeredFS/CIA drops + logs/ + azahar_instances (gitignored)
+release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; docs/technical.md §15.5)
+cache/                       PNG scratch + vanilla_from_rom (gitignored; Drop CIA deletes this folder on every from-scratch build)
+out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and log.txt (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).
@@ -471,13 +514,13 @@ Browser kits so translators can help **without Python**. Three sibling trees:
 2. Open **`index.html`** → tabs:
    - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-   - **Images** — **full UI PNG audit** (**1727** unique masters in **92 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Empty: `intro111`, `intro203`, `intro304`.
+   - **Images** — **full UI PNG audit** (**1745** unique masters in **95 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
 Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. Image replacements must match original width × height.
 
-**What’s in the kits (sources):** see **`technical.md` §20.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompts: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md` (contribute pages), `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md` (progress numbers).
+**What’s in the kits (sources):** see **`docs/technical.md` §20.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompts: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md` (contribute pages), `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md` (progress numbers).
 
 ### For maintainers
 
@@ -499,7 +542,7 @@ python ingest_strings.py their-nlpp-strings.json --apply
 python ingest_images.py their-nlpp-images.json --apply
 ```
 
-Edit kit UI in EngPatcher `tools/localization_workbench/*.html`, then re-export. Full pack schema, validation rules, and session notes: **`technical.md` §20**.
+Edit kit UI in EngPatcher `tools/localization_workbench/*.html`, then re-export. Full pack schema, validation rules, and session notes: **`docs/technical.md` §20**.
 
 
 
@@ -518,7 +561,7 @@ python tools/rebuild_bake_img.py --skip-pack          # resume after PNG pack
 
 # Full CIA patch (prefers release/bake_img.bin; same as the .bat)
 python src/patch_cia.py --cia "path\to\game.cia"
-# PATCH SUMMARY log: out/logs/patch_YYYYMMDD_HHMMSS.txt + latest.txt
+# Run log: out/log.txt (image pack + gold rebuild + PATCH SUMMARY)
 # python src/patch_cia.py --cia "path\to\game.cia" --log D:\patch.txt
 # python src/patch_cia.py --cia "path\to\game.cia" --no-log
 
@@ -543,19 +586,17 @@ python src/patch_names.py --romfs "path\to\romfs"
 python src/patch_names.py --dbin rebuild_dbin2
 
 # Name-input LayeredFS (Azahar a/b)
-.\make.ps1 deploy-a
-.\make.ps1 launch-a
+.\ab_test\make.ps1 deploy-a
+.\ab_test\make.ps1 launch-a
 # or: python tools/deploy_name_input_en.py
 
-# Hub main menu / CESA only (onto release/bake_img.bin)
-python tools/deploy_title_main_menu_en.py
+# Hub main menu + Eng Patch badge / CESA only (onto release/bake_img.bin)
+python tools/deploy_title_engpatch_en.py
 python tools/deploy_cesa_en.py
 
-# SpotPass inject (boot NsData — see technical.md §16)
-# Default after patch_cia / drop-bat: real3ds → out/spotpass_real3ds/
-python tools/build_spotpass_inject.py
-python tools/build_spotpass_inject.py --azahar
-# patch_cia flags: --skip-spotpass | --spotpass-mode azahar | --spotpass-install-azahar
+# SpotPass inject (optional real extdata — Watcher #28 is already in name_input_code.bin)
+# python tools/build_spotpass_inject.py
+# python tools/build_spotpass_inject.py --azahar
 
 # Patch code.bin only (finds cache/vanilla_from_rom or sibling dump)
 python src/patch_code.py
@@ -577,4 +618,4 @@ python src/patcher.py build --clean
 - A dump of the game — you must supply your own matching **decrypted** CIA / `.3ds`.  
 - A ROM decryptor — decrypt outside this tool, then drop the clear dump.  
 - An on-console retail re-encryptor.  
-- A GitHub-hosted gold bake — ship `release/bake_img.bin` separately if you want others to skip a cold local rebuild.
+- A gold bake **in this git repo** — `release/bake_img.bin` is gitignored. Fetch from **nlpp-gold-maker** Release tag `gold` (`tools/fetch_release_bake.py`) or rebuild locally.

@@ -50,6 +50,93 @@ def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypat
     assert bake.resolve() in targets
 
 
+def test_iter_deploy_targets_skips_ab_instances_when_disabled(tmp_path: Path, monkeypatch):
+    primary = tmp_path / "primary.img.bin"
+    primary.write_bytes(b"p")
+    inst = (
+        tmp_path
+        / "ab_test"
+        / "azahar_instances"
+        / "a"
+        / "user"
+        / "load"
+        / "mods"
+        / "00040000000F4E00"
+        / "romfs"
+        / "img.bin"
+    )
+    inst.parent.mkdir(parents=True)
+    inst.write_bytes(b"inst")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "missing-bake.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", tmp_path / "missing.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_INSTANCES", tmp_path / "ab_test" / "azahar_instances")
+    monkeypatch.setenv("NLPP_ALSO_AZAHAR", "0")
+
+    targets = deploy_common.iter_deploy_targets(primary)
+    assert targets == [primary.resolve()]
+
+
+def test_iter_deploy_targets_includes_ab_instances(tmp_path: Path, monkeypatch):
+    primary = tmp_path / "primary.img.bin"
+    primary.write_bytes(b"p")
+    inst = (
+        tmp_path
+        / "ab_test"
+        / "azahar_instances"
+        / "a"
+        / "user"
+        / "load"
+        / "mods"
+        / "00040000000F4E00"
+        / "romfs"
+        / "img.bin"
+    )
+    inst.parent.mkdir(parents=True)
+    inst.write_bytes(b"inst")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "missing-bake.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", tmp_path / "missing.img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_INSTANCES", tmp_path / "ab_test" / "azahar_instances")
+    monkeypatch.delenv("NLPP_ALSO_AZAHAR", raising=False)
+
+    targets = deploy_common.iter_deploy_targets(primary)
+    assert inst.resolve() in targets
+
+
+def test_azahar_instances_live_outside_out():
+    inst = deploy_common.AZAHAR_INSTANCES
+    assert inst.parent.name == "ab_test"
+    assert inst.name == "azahar_instances"
+    assert "out" not in inst.parts[-2:]
+
+
+def test_ghidra_project_lives_outside_out():
+    import nlpp_paths
+
+    assert nlpp_paths.GHIDRA_PROJECT == nlpp_paths.ROOT / "ghidra_nlpp"
+    assert nlpp_paths.OUT not in nlpp_paths.GHIDRA_PROJECT.parents
+
+
+def test_sources_do_not_point_ghidra_at_out():
+    root = Path(__file__).resolve().parents[1]
+    needles = (
+        "out/ghidra_nlpp",
+        "out\\ghidra_nlpp",
+        '"out" / "ghidra_nlpp"',
+    )
+    skip = {".git", "out", "cache", "ab_test", "conversation-archive"}
+    hits: list[str] = []
+    for pattern in ("*.py", "*.ps1", "*.bat"):
+        for path in root.rglob(pattern):
+            if path.resolve() == Path(__file__).resolve():
+                continue
+            if skip.intersection(path.parts):
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if any(needle in text for needle in needles):
+                hits.append(str(path.relative_to(root)))
+    assert hits == []
+
+
 def test_find_ui_png_fits_mismatched_size(tmp_path, monkeypatch):
     from PIL import Image
 
@@ -179,3 +266,42 @@ def test_profile_header_glyph_height_matches_heart_to_heart():
     assert 11 <= glyph_h(prof) <= 14
     assert h2h.size == (192, 16)
     assert prof.size == (144, 16)
+
+
+def test_skip_full_img_backup_for_gold_bake(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    bake.write_bytes(b"bake")
+    other = tmp_path / "img.bin"
+    other.write_bytes(b"mod")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    assert deploy_common.skip_full_img_backup(bake) is True
+    assert deploy_common.skip_full_img_backup(other) is False
+    monkeypatch.setenv("NLPP_NO_IMG_BACKUP", "1")
+    assert deploy_common.skip_full_img_backup(other) is True
+
+
+def test_maybe_backup_img_skips_gold_bake(tmp_path: Path, monkeypatch, capsys):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    bake.write_bytes(b"bake-bytes")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    bak = deploy_common.maybe_backup_img(bake, "confirm_btn")
+    assert bak == bake.with_suffix(".bin.bak_pre_confirm_btn")
+    assert not bak.is_file()
+    assert "skip img backup" in capsys.readouterr().out
+
+
+def test_maybe_backup_img_copies_layeredfs(tmp_path: Path, monkeypatch):
+    bake = tmp_path / "release" / "bake_img.bin"
+    bake.parent.mkdir(parents=True)
+    img = tmp_path / "azahar" / "img.bin"
+    img.parent.mkdir(parents=True)
+    img.write_bytes(b"layeredfs")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", bake)
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    bak = deploy_common.maybe_backup_img(img, "confirm_btn")
+    assert bak.is_file()
+    assert bak.read_bytes() == b"layeredfs"

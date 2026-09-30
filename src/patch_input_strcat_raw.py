@@ -44,7 +44,7 @@ from patch_input_romaji import (
     sub_imm,
     u32,
 )
-from patch_input_cave_map import TEXT_PAGE_END
+from patch_input_cave_map import ADDR_CHUNK_WALK_CAVE, ADDR_COMMU_HEADER_CAVE
 
 ADDR = 0x002573AC
 SIZE = 0xB0  # 0x002573AC .. 0x0025745B
@@ -196,14 +196,24 @@ def apply_patch(data: bytearray) -> None:
     cave = cave_addr()
     blob = build_blob(base=cave)
     end = cave + len(blob)
-    if end > TEXT_PAGE_END:
-        raise ValueError(f"strcat cave {end:#x} past .text {TEXT_PAGE_END:#x}")
+    if end > ADDR_COMMU_HEADER_CAVE:
+        raise ValueError(
+            f"strcat cave {end:#x} overlaps commu header {ADDR_COMMU_HEADER_CAVE:#x}"
+        )
     head = bytes(data[ADDR : ADDR + 8])
     if head != VANILLA_HEAD and not is_patched(data):
         raise ValueError(f"unexpected FUN_002573ac head {head.hex()}")
     data[cave : end] = blob
     data[ADDR : ADDR + 4] = b_ins(ADDR, cave)
-    data[ADDR + 4 : ADDR + SIZE] = NOP * ((SIZE - 4) // 4)
+    # The tail is the chunk-walk guard. Do not NOP it.
+    if not (ADDR + 4 <= ADDR_CHUNK_WALK_CAVE <= ADDR + SIZE):
+        raise ValueError(
+            f"chunk-walk cave {ADDR_CHUNK_WALK_CAVE:#x} is outside "
+            f"FUN_002573ac tail {ADDR + 4:#x}..{ADDR + SIZE:#x}"
+        )
+    if ADDR_CHUNK_WALK_CAVE > ADDR + 4:
+        span = ADDR_CHUNK_WALK_CAVE - (ADDR + 4)
+        data[ADDR + 4 : ADDR_CHUNK_WALK_CAVE] = NOP * (span // 4)
     print(f"[strcat-raw] FUN_002573ac -> cave @{cave:#x} ({len(blob):#x})")
 
 

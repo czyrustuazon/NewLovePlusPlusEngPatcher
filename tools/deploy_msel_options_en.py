@@ -35,7 +35,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -46,6 +48,9 @@ MOD_IMG, VANILLA = resolve_img_paths()
 IMG_DATA = ROOT / "out" / "options_tex_extract" / "img_data"
 PKG = 5245
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
+# Header plate only. The menu button shares the Text04_04 stem; a coverage
+# mask there is a solid stroke, heavier than Display / Sound / Password.
+FORCE_COVERAGE = frozenset({"Com_M_Sel_Plate_Text04_04_00"})
 # Ghidra OptionMenu_BindBtnTextures + BindPlateTextures (incl. Display/Sound pages).
 LABELS: list[tuple[str, str]] = [
     ("Com_M_Sel_Plate_Text03_00_00.bclim", "Options"),
@@ -119,7 +124,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool = False, stem: s
     master = find_ui_png(("NCommonMSel(3).check",), stem or "", (w, h)) if stem else None
     if master is not None:
         rgba = Image.open(master).convert("RGBA")
-        if hard or (stem and stem.endswith("Text04_04_00")):
+        if hard or (stem in FORCE_COVERAGE):
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 40, 255, 0).astype(np.uint8)
             rgb = np.array(rgba.convert("RGBA"))
@@ -436,7 +441,7 @@ def add_password_input_plate(arc: bytes, tmp: Path, cmp_len: int) -> bytes:
 
 def _deploy_targets() -> list[Path]:
     targets = list(iter_deploy_targets(MOD_IMG))
-    inst_root = ROOT / "out" / "azahar_instances"
+    inst_root = AZAHAR_INSTANCES
     seen = {p.resolve() for p in targets}
     for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
         rp = img.resolve()
@@ -457,12 +462,10 @@ def main() -> None:
     )
     args = ap.parse_args()
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_msel5245")
-    if not bak.is_file():
-        if not MOD_IMG.is_file():
-            raise SystemExit(f"missing {MOD_IMG}")
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created bak from current mod img")
+    if not MOD_IMG.is_file():
+        raise SystemExit(f"missing {MOD_IMG}")
+    maybe_backup_img(MOD_IMG, "msel5245")
+    vanilla_src = VANILLA if VANILLA.is_file() else MOD_IMG
 
     IMG_DATA.mkdir(parents=True, exist_ok=True)
     tmp = ROOT / "out" / "msel5245_en" / "_fit"
@@ -470,7 +473,7 @@ def main() -> None:
     new_pkg = IMG_DATA / f"new_{PKG:04d}"
 
     if args.plate_only:
-        src_img = MOD_IMG if MOD_IMG.is_file() else bak
+        src_img = MOD_IMG
         image = ImgBin(str(src_img))
         image.parse(False)
         res = image.entries[PKG]
@@ -489,16 +492,18 @@ def main() -> None:
         )
         splice_arc(src_pkg, patched_arc, new_pkg)
     else:
-        image = ImgBin(str(bak))
+        image = ImgBin(str(vanilla_src))
         image.parse(False)
         res = image.entries[PKG]
         if res is None:
             raise SystemExit(f"pkg {PKG} missing")
         src_pkg = IMG_DATA / f"{PKG:04d}"
         src_pkg.write_bytes(
-            bak.read_bytes()[res.fw.base_offset : res.fw.base_offset + res.fw.len()]
+            vanilla_src.read_bytes()[
+                res.fw.base_offset : res.fw.base_offset + res.fw.len()
+            ]
         )
-        print(f"vanilla package {PKG} ({src_pkg.stat().st_size} bytes)")
+        print(f"vanilla package {PKG} from {vanilla_src} ({src_pkg.stat().st_size} bytes)")
         pkg = Package(FileWindow(str(src_pkg)), 0)
         pkg.parse(False)
         arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))

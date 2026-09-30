@@ -4,12 +4,63 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from conftest import SRC, TOOLS, load_module
 
 cleanup = load_module("scratch_cleanup", SRC / "scratch_cleanup.py")
 pack_images = load_module("pack_images", SRC / "pack_images.py")
 rebuild = load_module("rebuild_bake_img", TOOLS / "rebuild_bake_img.py")
 patch_cia = load_module("patch_cia", SRC / "patch_cia.py")
+
+
+def test_wipe_directory_recreates_empty(tmp_path: Path):
+    root = tmp_path / "repo"
+    out = root / "out"
+    nested = out / "nested_scratch" / "a"
+    nested.mkdir(parents=True)
+    (nested / "save.bin").write_bytes(b"save")
+    (out / "NewLovePlusPlus-EN.cia").write_bytes(b"cia")
+    release = root / "release"
+    release.mkdir()
+    (release / "bake_img.bin").write_bytes(b"bake")
+    (release / "romfs_overlay" / "SystemData").mkdir(parents=True)
+
+    cleanup.wipe_directory(out, root=root)
+    cleanup.wipe_directory(release, root=root)
+
+    assert out.is_dir() and list(out.iterdir()) == []
+    assert release.is_dir() and list(release.iterdir()) == []
+    assert not (nested / "save.bin").exists()
+    assert not (release / "bake_img.bin").exists()
+
+
+def test_park_outside_copies_file_under_parent(tmp_path: Path):
+    parent = tmp_path / "cache"
+    src = parent / "rom_source" / "game.3ds"
+    src.parent.mkdir(parents=True)
+    src.write_bytes(b"rom")
+    outside = tmp_path / "desktop" / "game.3ds"
+    outside.parent.mkdir()
+    outside.write_bytes(b"desk")
+
+    parked = cleanup.park_outside(src, parent)
+    assert parked != src.resolve()
+    assert parked.is_file()
+    assert parked.read_bytes() == b"rom"
+    assert cleanup.park_outside(outside, parent) == outside.resolve()
+
+
+def test_wipe_cia_build_dirs_includes_cache():
+    text = (SRC / "scratch_cleanup.py").read_text(encoding="utf-8")
+    body = text.split("def wipe_cia_build_dirs", 1)[1].split("def remove_scratch", 1)[0]
+    assert "CACHE" in body
+    assert "OUT, RELEASE, CACHE" in body
+
+
+def test_wipe_directory_refuses_repo_root(tmp_path: Path):
+    with pytest.raises(SystemExit, match="refusing"):
+        cleanup.wipe_directory(tmp_path, root=tmp_path)
 
 
 def test_remove_scratch_deletes_file_and_dir(tmp_path: Path):
@@ -72,7 +123,9 @@ def test_rebuild_cleans_scratch_by_default():
     assert "duplicate cache/new_img.bin" in text
     assert "rebuild_bake_img_work" in text
     assert "--keep-work" in text
-    assert "vanilla bake bak" in text
+    assert "cleanup_bake_img_baks" in text
+    assert "NLPP_NO_IMG_BACKUP" in text
+    assert "seed_vanilla_bak" not in text
 
 
 def test_extract_deletes_work_dir():
@@ -97,6 +150,50 @@ def test_pack_images_cleans_per_package():
     assert 'label="pack img_data"' in text
     assert "elapsed={timer.elapsed_str()}" in text
     assert 'f"elapsed:          {timer.elapsed_str()}"' in text
+
+
+def test_splice_packages_patches_slot_in_place(tmp_path: Path, monkeypatch):
+    import sys
+    import types
+
+    img_bin = tmp_path / "img.bin"
+    original = bytearray(b"\x11" * 64)
+    img_bin.write_bytes(original)
+    img_data = tmp_path / "img_data"
+    img_data.mkdir()
+    (img_data / "new_0007").write_bytes(b"MAIL")
+
+    class FW:
+        base_offset = 16
+
+        def len(self) -> int:
+            return 8
+
+    class Entry:
+        fw = FW()
+
+    class FakeImage:
+        def __init__(self, _path: str):
+            self.entries = [None] * 8
+            self.entries[7] = Entry()
+
+        def parse(self, _full: bool) -> None:
+            return None
+
+    fake = types.ModuleType("img")
+    fake.Image = FakeImage
+    monkeypatch.setitem(sys.modules, "img", fake)
+
+    pack_images.splice_packages_into_img(img_bin, img_data, [7], img_bin)
+    data = img_bin.read_bytes()
+    assert len(data) == 64
+    assert data[16:24] == b"MAIL\x00\x00\x00\x00"
+    assert data[:16] == b"\x11" * 16
+    assert data[24:] == b"\x11" * 40
+
+    (img_data / "new_0007").write_bytes(b"TOO-LONG!!")
+    pack_images.splice_packages_into_img(img_bin, img_data, [7], img_bin)
+    assert img_bin.read_bytes() == data
 
 
 def test_rebuild_cleanup_scratch_skips_when_keep_work(monkeypatch):

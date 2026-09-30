@@ -15,10 +15,25 @@ def _bat_text() -> str:
 
 def test_requirements_include_nlpp_tools_yaml():
     """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
-    req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    req = (ROOT / "dev" / "requirements.txt").read_text(encoding="utf-8")
     assert "PyYAML" in req
+    assert "dev\\requirements.txt" in _bat_text()
     setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
     assert '("yaml", "PyYAML")' in setup
+
+
+def test_bat_wipes_out_and_release_before_build():
+    text = _bat_text()
+    wipe_idx = text.index("--wipe-cia-build")
+    assert "Wiping out\\, release\\, and cache\\" in text
+    assert "scratch_cleanup.py" in text
+    assert wipe_idx < text.index("Using gold bake")
+    assert wipe_idx < text.index("Injecting scripts + UI")
+    # From-scratch deletes cache/ (slim vanilla_from_rom must not survive).
+    assert "cache\\ is left as-is" not in text
+    assert "--preserve-rom" in text
+    # A/B Azahar copies live outside out/ so this wipe does not delete them.
+    assert "ab_test\\azahar_instances\\ is left as-is" in text
 
 
 def test_bat_defaults_packed_img_to_release_bake():
@@ -35,6 +50,7 @@ def test_bat_polls_ci_before_local_rebuild():
     rebuild_idx = text.index("running tools\\rebuild_bake_img.py")
     assert fetch_idx < rebuild_idx
     assert "--best-effort" in text
+    assert "building locally from the dropped ROM" in text
 
 
 def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
@@ -42,7 +58,8 @@ def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
     assert "patcher_version.py" in text
     assert "BAKE_STALE" in text
     assert "NLPP_REUSE_BAKE" in text
-    assert "NLPP_USE_PACK_CACHE" in text
+    assert "NLPP_USE_PACK_CACHE is ignored" in text
+    assert 'set "PACK_CACHE=--use-cache"' not in text
     assert "from scratch" in text.lower() or "from-scratch" in text
     # Reuse leftover bake is opt-in; default is stamp-check then rebuild.
     stale_idx = text.index("BAKE_STALE")
@@ -87,10 +104,36 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
     # Unquoted %~dp0 paths split on spaces (E:\zip game\...) and argparse
     # reports the leftover as unrecognized arguments: ...\name_input_code.bin
-    assert (
-        'LAYEREDFS_OUT=--layeredfs-out "%~dp0out\\1_[Either use this-LayerFS]\\luma"'
-        in text
-    )
-    assert r'out\2_[Or this]\NewLovePlusPlus-EN.cia' in text
-    assert r"out\3_but not both" in text
+    assert 'set LAYEREDFS=--layeredfs-out "%~dp0out\\2_[Or this-LayeredFS]\\luma"' in text
+    assert text.count("!LAYEREDFS!") == 2
+    assert r'out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia' in text
+    assert "Copy that folder to SD:/luma/titles/" in text
     assert "Scripts-only patch" not in text
+
+
+def test_bat_stops_when_drop_zone_script_is_missing():
+    """A lone bat pauses. It does not download a second copy of the repo."""
+    text = _bat_text()
+    missing = text.index("Cannot find src\\drop_zone.ps1")
+    assert missing < text.index("goto :run_patch")
+    assert "Extract the entire archive / repo first" in text
+    assert "NLPP_ENG_PATCH_REPO" not in text
+    assert "ensure_patcher_tree" not in text
+
+
+def test_bat_drop_timer_avoids_for_f_python_quoting():
+    """cmd FOR /F '"%PYTHON%" -c "import' treats python.exe\" -c \"import as the exe."""
+    text = _bat_text()
+    assert "run_timer.py" in text
+    assert "--now" in text
+    assert "nlpp_t0.txt" in text
+    assert "nlpp_elapsed.txt" in text
+    assert "Time to finish" in text
+    assert "STARTED_UNIX" in text
+    assert "--started-unix" in text
+    # Drop start must reach patch_cia.py (PATCH SUMMARY), not only the bat echo.
+    assert "!STARTED_UNIX!" in text
+    # The broken start-clock line (and the matching elapsed FOR /F).
+    assert "import time; print(int(time.time()))" not in text
+    assert "for /f %%T in" not in text
+    assert 'for /f "delims=" %%E in' not in text

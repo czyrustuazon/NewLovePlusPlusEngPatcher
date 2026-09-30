@@ -7,6 +7,9 @@ from pathlib import Path
 from PIL import Image
 
 from bclimutil import (
+    decode_bclim_to_image,
+    decode_etc1a4_pixels,
+    encode_etc1a4_pixels,
     parse_bclim,
     png_to_bclim_etc1a4_same_size,
     png_to_bclim_same_size,
@@ -111,6 +114,57 @@ def test_etc1a4_1x1_passes_pack_validator_again(tmp_path: Path):
     ok, reason = _bclim_looks_valid(produced, orig.stat().st_size)
     assert ok, reason
     assert produced.stat().st_size == 104
+
+
+def test_rgb8_stored_as_bgr(tmp_path: Path):
+    w, h = 8, 8
+    orig = _write_bclim(tmp_path, w, h, 6, bytes(w * h * 3))
+    png = tmp_path / "t.png"
+    Image.new("RGBA", (w, h), (255, 0, 0, 255)).save(png)
+    out = png_to_bclim_same_size(png, orig)
+    pix, ow, oh, fmt, _ = parse_bclim(out)
+    assert (ow, oh, fmt) == (w, h, 6)
+    assert pix[:3] == bytes((0, 0, 255))
+    assert decode_bclim_to_image(out).getpixel((0, 0)) == (255, 0, 0, 255)
+
+
+def test_rgba8_stored_as_abgr(tmp_path: Path):
+    w, h = 8, 8
+    orig = _write_bclim(tmp_path, w, h, 9, bytes(w * h * 4))
+    png = tmp_path / "t.png"
+    Image.new("RGBA", (w, h), (10, 20, 30, 200)).save(png)
+    out = png_to_bclim_same_size(png, orig)
+    pix, ow, oh, fmt, _ = parse_bclim(out)
+    assert (ow, oh, fmt) == (w, h, 9)
+    assert pix[:4] == bytes((200, 30, 20, 10))
+    assert decode_bclim_to_image(out).getpixel((0, 0)) == (10, 20, 30, 200)
+
+
+def test_etc1a4_keeps_untouched_tiles(tmp_path: Path):
+    w, h = 16, 8
+    img = Image.new("RGBA", (w, h))
+    px = img.load()
+    for y in range(h):
+        for x in range(w):
+            px[x, y] = ((x * 17) & 255, (y * 40) & 255, 90, 255)
+    raw = encode_etc1a4_pixels(img, w, h)
+    decoded = decode_etc1a4_pixels(raw, w, h)
+    assert encode_etc1a4_pixels(decoded, w, h, keep=raw) == raw
+
+    edited = decoded.copy()
+    ep = edited.load()
+    for y in range(8):
+        for x in range(8, 16):
+            ep[x, y] = (0, 255, 0, 255)
+    mixed = encode_etc1a4_pixels(edited, w, h, keep=raw)
+    assert mixed[:64] == raw[:64]
+    assert mixed[64:] != raw[64:]
+
+    orig = _write_bclim(tmp_path, w, h, 0xB, raw)
+    png = tmp_path / "t.png"
+    decoded.save(png)
+    out = png_to_bclim_etc1a4_same_size(png, orig)
+    assert parse_bclim(out)[0] == raw
 
 
 def test_etc1a4_can_grow_logical_height(tmp_path: Path):

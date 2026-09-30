@@ -13,9 +13,15 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
+  7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
   7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
   8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
+  9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
+  10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
+  11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
+  12. patch_password_uribo                  # UriboKasa* slots 33–35 grant ウリボー傘, not 内部
+  13. patch_commu_settings_header           # Communication Settings white-bar DrawText
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -41,6 +47,7 @@ from patch_bplace_list_pane import apply_patch as apply_bplace_list_pane  # noqa
 from patch_code import (  # noqa: E402
     apply_name_pane_patches,
     patch_cesa_logo_white_native_size,
+    patch_nintendo_logo_skip_thank_flash,
 )
 from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
@@ -87,6 +94,10 @@ from patch_input_skip_ascii_dakuten import (  # noqa: E402
 from patch_input_strcat_raw import (  # noqa: E402
     apply_patch as apply_strcat_raw,
 )
+from patch_chunk_walk_guard import (  # noqa: E402
+    apply_patch as apply_chunk_walk,
+    is_patched as chunk_walk_already,
+)
 from patch_input_call_romaji import (  # noqa: E402
     apply_patch as apply_call_romaji,
     is_patched as call_romaji_already,
@@ -94,6 +105,25 @@ from patch_input_call_romaji import (  # noqa: E402
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
     is_fully_patched as message_speed_already,
+)
+from patch_spotpass_skip import (  # noqa: E402
+    apply_patch as apply_spotpass_skip,
+    is_patched as spotpass_skip_already,
+)
+from patch_spotpass_embed import (  # noqa: E402
+    apply_info_menu,
+    apply_map_comments,
+    apply_patch as apply_spotpass_embed,
+    build_function_blob as build_spotpass_embed,
+    is_patched as spotpass_embed_already,
+)
+from patch_password_uribo import (  # noqa: E402
+    apply_patch as apply_password_uribo,
+    is_patched as password_uribo_already,
+)
+from patch_commu_settings_header import (  # noqa: E402
+    apply_patch as apply_commu_header,
+    is_patched as commu_header_already,
 )
 
 from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
@@ -183,6 +213,12 @@ def apply_name_input_stack(data: bytearray) -> int:
     apply_strcat_raw(data)
     steps += 1
 
+    if chunk_walk_already(data):
+        print("[skip] chunk_walk_guard already applied")
+    else:
+        apply_chunk_walk(data)
+        steps += 1
+
     if call_romaji_already(data):
         print("[skip] call_romaji already applied")
     else:
@@ -200,6 +236,38 @@ def apply_name_input_stack(data: bytearray) -> int:
         steps += 1
     else:
         print("[skip] cesa logo_white native size already applied")
+
+    if patch_nintendo_logo_skip_thank_flash(data):
+        print("[cesa] Nintendo logo beat skips the thank-you texture")
+        steps += 1
+    else:
+        print("[skip] nintendo logo thank-flash already cleared")
+
+    if spotpass_skip_already(data):
+        print("[skip] spotpass_skip already applied")
+    else:
+        apply_spotpass_skip(data)
+        steps += 1
+
+    if spotpass_embed_already(data):
+        print("[skip] spotpass_embed already applied")
+    else:
+        apply_spotpass_embed(data)
+        steps += 1
+    apply_info_menu(data)
+    apply_map_comments(data)
+
+    if password_uribo_already(data):
+        print("[skip] password_uribo already applied")
+    else:
+        apply_password_uribo(data)
+        steps += 1
+
+    if commu_header_already(data):
+        print("[skip] commu_settings_header already applied")
+    else:
+        apply_commu_header(data)
+        steps += 1
 
     return steps
 
@@ -228,6 +296,10 @@ def main(argv: list[str] | None = None) -> int:
         build_site_cave(CAND_CAVE1, 0x001FBC0C, 0x001FBC30, 6)
         build_site_cave(CAND_CAVE2, 0x001FBD28, 0x001FBD4C, 11)
         build_fillflag_cave()
+        build_spotpass_embed()
+        from patch_chunk_walk_guard import build_cave
+
+        build_cave()
         print("dry-run OK (caves assemble)")
         return 0
 

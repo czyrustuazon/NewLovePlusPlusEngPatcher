@@ -51,6 +51,15 @@ ADDR_CESA_LOGO_WHITE_BNE = 0x0016ED80
 ORIG_CESA_LOGO_WHITE_BNE = bytes.fromhex("0400001a")  # bne loc_16ed98
 PATCH_CESA_LOGO_WHITE_B = bytes.fromhex("040000ea")  # b   loc_16ed98
 
+# NintendoLogo ctor FUN_0016ea1c loads this pool word into both pane slots
+# (+0x60 and +0x64). It is logo_white (0x5A0008). Vanilla was a 16×16 white
+# stub, so the beat was a white flash. The English thank-you TEX shows on
+# both screens until CesaLogo. State 2 skips a zero ID (cmp r1,#0; beq).
+# CesaLogo's pool is separate: left CESA, right logo_white.
+ADDR_NINTENDO_LOGO_TEX_ID = 0x0016EA8C
+ORIG_NINTENDO_LOGO_TEX_ID = bytes.fromhex("08005a00")  # 0x005A0008
+PATCH_NINTENDO_LOGO_TEX_ID = bytes.fromhex("00000000")
+
 ADDR_CLEAR_PANE = 0x0054B5FC
 ADDR_MAKE_STR = 0x005A1EC8
 ADDR_DRAW_TEXT = 0x0054B880
@@ -566,6 +575,27 @@ def patch_cesa_logo_white_native_size(data: bytearray) -> bool:
         )
     data[ADDR_CESA_LOGO_WHITE_BNE : ADDR_CESA_LOGO_WHITE_BNE + 4] = (
         PATCH_CESA_LOGO_WHITE_B
+    )
+    return True
+
+
+def patch_nintendo_logo_skip_thank_flash(data: bytearray) -> bool:
+    """Don't bind the thank-you TEX on the Nintendo logo beat.
+
+    CesaLogo still sets left = CESA and right = logo_white. NintendoLogo
+    was copying logo_white into both panes, so the banner flashed on both
+    screens first. A zero ID is skipped by the shared state-2 bind loop.
+    """
+    cur = bytes(data[ADDR_NINTENDO_LOGO_TEX_ID : ADDR_NINTENDO_LOGO_TEX_ID + 4])
+    if cur == PATCH_NINTENDO_LOGO_TEX_ID:
+        return False
+    if cur != ORIG_NINTENDO_LOGO_TEX_ID:
+        raise ValueError(
+            f"unexpected NintendoLogo texture id at "
+            f"{ADDR_NINTENDO_LOGO_TEX_ID:#x}: {cur.hex()}"
+        )
+    data[ADDR_NINTENDO_LOGO_TEX_ID : ADDR_NINTENDO_LOGO_TEX_ID + 4] = (
+        PATCH_NINTENDO_LOGO_TEX_ID
     )
     return True
 

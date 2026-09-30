@@ -332,7 +332,7 @@ class SERI(Element):
                 if k in SERI.FN_INDEX:
                     fh.write(struct.pack("=2H", name_off, curr_off))
                     fh.seek(data_abs_off + curr_off)
-                    v = self.str_table.find_str_slot(v) + 1
+                    v = self.str_table.find_ref_slot(k, v) + 1
                     fh.write(struct.pack("I", v))
                     typ_name = b"i"
                     curr_off += 4
@@ -406,7 +406,7 @@ class SERI(Element):
             if k in SERI.ARR_FN_INDEX:
                 atyp_name = b"i"
                 for v in data:
-                    v = self.str_table.find_str_slot(v) + 1
+                    v = self.str_table.find_ref_slot(k, v) + 1
                     fh.write(struct.pack("I", v))
                     aval_table.append(curr_off)
                     curr_off += 0x4
@@ -435,6 +435,7 @@ class StrTable(object):
         self.data = data
         self.slots = []
         self.map = {}
+        self.last = {}
 
     def __getitem__(self, pos):
         end = self.data.index(b"\0", pos)
@@ -444,10 +445,12 @@ class StrTable(object):
         self.data = data
         self.slots = list(slots)
         self.map = {}
+        self.last = {}
 
         for i, v in enumerate(self.slots):
             if self[v] not in self.map:
                 self.map[self[v]] = i
+            self.last[self[v]] = i
 
     def find_str(self, s):
         return self.data.index(s + b"\0")
@@ -469,18 +472,33 @@ class StrTable(object):
     def find_str_slot(self, s):
         return self.map[s]
 
+    def find_ref_slot(self, key, s):
+        """Slot a SERI reference field points at, matching vanilla packages.
+
+        A .texi's SERI (TEXI) and TEX entries share a name, SERI first.
+        `tex` refers to the TEX entry (last slot); `texi`/`list` and every
+        other reference field refer to the first slot. Resolving `tex` to the
+        first slot made `pe repack` point textures at their own metadata and
+        garbled every texture in the package in-game. (Checked against all
+        27,974 references in the vanilla img.bin.)
+        """
+        return self.last[s] if key == b"tex" else self.map[s]
+
     def push_str_slot(self, s):
         self.map[s] = len(self.slots)
+        self.last[s] = len(self.slots)
         self.slots.append(self.add_str(s))
 
     def clear(self):
         self.data = b""
         self.slots = []
         self.map = {}
+        self.last = {}
 
     def clear_slots(self):
         self.slots = []
         self.map = {}
+        self.last = {}
 
 
 """

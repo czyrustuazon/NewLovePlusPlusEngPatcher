@@ -59,6 +59,17 @@ def _default_gold_repo() -> str | None:
     return None
 
 
+def github_reachable(timeout: float = 5.0) -> bool:
+    """True when github.com:443 accepts a TCP connection."""
+    import socket
+
+    try:
+        with socket.create_connection(("github.com", 443), timeout=timeout):
+            return True
+    except OSError:
+        return False
+
+
 def _urlopen(url: str, token: str | None) -> bytes:
     req = urllib.request.Request(url, method="GET")
     req.add_header("User-Agent", "nlpp-fetch-release-bake")
@@ -122,6 +133,9 @@ def try_fetch_gold(
 
     if not repo:
         return False, "no gold repo (set NLPP_GITHUB_REPO or clone from GitHub)"
+
+    if not github_reachable():
+        return False, "no internet (github.com:443 unreachable); build the bake locally"
 
     print(f"[fetch] polling GitHub Release {repo} @ {tag!r}", flush=True)
     try:

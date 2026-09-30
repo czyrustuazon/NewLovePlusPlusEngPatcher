@@ -38,6 +38,7 @@ from mdcutil import (  # noqa: E402
 )
 from deploy_common import (  # noqa: E402
     find_vanilla_img,
+    skip_full_img_backup,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -163,10 +164,12 @@ def main() -> None:
                 )
 
         bak = dest.parent / BAK_NAME
-        if not args.no_backup and not bak.is_file():
+        if args.no_backup or skip_full_img_backup(dest):
+            print(f"skip img backup: {bak.name}")
+        elif not bak.is_file():
             print(f"backup -> {bak}")
             shutil.copy2(dest, bak)
-        elif bak.is_file():
+        else:
             print(f"backup exists: {bak}")
 
         print(f"splicing into {dest}")

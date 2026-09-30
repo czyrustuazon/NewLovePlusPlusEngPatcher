@@ -36,6 +36,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
 )
@@ -195,10 +196,7 @@ def main() -> int:
     print("=== render keyboard labels ===", flush=True)
     write_asset_pngs()
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_input_keyboard")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "input_keyboard")
 
     # Virgin ARCs — prior live EN Clear/text + gap salt can push InputN over slot.
     base_img = VANILLA

@@ -13,7 +13,10 @@ Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply ther
 """
 from __future__ import annotations
 
+import argparse
 import json
+import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,6 +81,66 @@ def nlppatch_script_dir() -> Path | None:
 
 def script_prefix(stem: str) -> str:
     return stem[0].lower() if stem else ""
+
+
+class ScriptInjectError(Exception):
+    """English dialog inject could not run (missing pack or destination)."""
+
+
+def inject_scripts(
+    romfs_dir: Path,
+    eng_root: Path | None = None,
+    *,
+    create_dirs: bool = False,
+) -> int:
+    """Copy the same EN ``.dbin2`` set the CIA gets into ``romfs_dir``.
+
+    ``create_dirs=False`` matches a full extracted RomFS (CIA rebuild): each
+    ``script/bin/<pack>`` folder must already exist. ``create_dirs=True`` is
+    for Azahar LayeredFS, which only needs the English files overlaid on the
+    vanilla ROM. Stems that stay Japanese are not written.
+    """
+    eng_root = eng_root or DEFAULT_ENG_DBIN
+    total = 0
+    layers: dict[str, int] = {"manaka": 0, "eng_p": 0, "nlppatch": 0}
+    skipped = 0
+    for pack in PACKS:
+        src_dir = eng_root / pack
+        if not src_dir.is_dir():
+            raise ScriptInjectError(f"missing packed scripts: {src_dir}")
+        dest_dir = romfs_dir / "script" / "bin" / pack
+        if not dest_dir.is_dir():
+            if not create_dirs:
+                raise ScriptInjectError(f"RomFS missing script pack folder: {dest_dir}")
+            dest_dir.mkdir(parents=True, exist_ok=True)
+        files = sorted(src_dir.glob("*.dbin2"))
+        if not files:
+            raise ScriptInjectError(f"no .dbin2 files in {src_dir}")
+        injected = 0
+        pack_layers: dict[str, int] = {}
+        for src in files:
+            chosen, tag = resolve_script_source(pack, src.stem, eng_root)
+            if chosen is None:
+                skipped += 1
+                continue
+            shutil.copy2(chosen, dest_dir / src.name)
+            total += 1
+            injected += 1
+            if tag in layers:
+                layers[tag] += 1
+                pack_layers[tag] = pack_layers.get(tag, 0) + 1
+        layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
+        print(
+            f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"
+            f" — {len(files) - injected} JP (base ROM)"
+        )
+    print(
+        f"[inject] total EN: {total} "
+        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, nlppatch={layers['nlppatch']})"
+    )
+    if skipped:
+        print(f"[inject] {skipped} script slot(s) left Japanese")
+    return total
 
 
 def resolve_script_source(
@@ -151,3 +214,32 @@ def coverage_summary(eng_root: Path | None = None) -> dict[str, int | bool]:
     layers["english_stems"] = en
     layers["english_pct"] = round(100.0 * en / SCRIPT_PACK_TOTAL, 1)
     return layers
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Overlay CIA-equivalent English dialog onto an Azahar LayeredFS romfs tree."""
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument(
+        "--layeredfs",
+        type=Path,
+        required=True,
+        help="Azahar instance romfs directory (script/bin folders are created)",
+    )
+    ap.add_argument(
+        "--dbin",
+        type=Path,
+        default=DEFAULT_ENG_DBIN,
+        help="English .dbin2 root (default: rebuild_dbin2)",
+    )
+    args = ap.parse_args(argv)
+    try:
+        count = inject_scripts(args.layeredfs, args.dbin, create_dirs=True)
+    except ScriptInjectError as exc:
+        print(f"[inject] {exc}", file=sys.stderr)
+        return 1
+    print(f"[inject] layeredfs OK ({count} EN .dbin2)", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
