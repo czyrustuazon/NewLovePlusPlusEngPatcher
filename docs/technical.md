@@ -1323,7 +1323,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 1. Python 3.10+ + `pip install -r dev/requirements.txt` (**must** include Pillow, numpy, zopfli, **etcpak**, PyYAML).
 2. Drop known-dump `.cia` / `.3ds` / `.cci` on **`Drop CIA or 3DS Here to Patch.bat`** (or run `patch_cia.py` / `rebuild_bake_img.py --rom …` manually).
-3. **Drop always from-scratch packs.** It deletes `out/`, `release/`, and the entire `cache/` folder, then `rebuild_bake_img.py --rom` extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. CI gold fetch only if `NLPP_REUSE_BAKE=1`. See **§15.5**.
+3. **Drop downloads the published gold bake, then packs locally only if that fails.** It deletes `out/`, `release/`, and the entire `cache/` folder, polls GitHub Release tag `gold`, and uses that bake when the download succeeds. A missing Release or no internet falls through to `rebuild_bake_img.py --rom`, which extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. `NLPP_SKIP_GOLD_FETCH=1` skips the poll. See **§15.5**.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **about 40 minutes to 2 hours**, depending on hardware (§12.5.3); leave the window open. The bottom line leads with the run name and elapsed time, then the percent bar and the package being packed.
    From-scratch does not reuse ``cache/img_pack/``. `--skip-pack` resumes deploys and leaves `cache/` in place.
 5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
@@ -1375,20 +1375,17 @@ Design goal: **self-contained clone** — everything needed to *build* the bake 
 decrypted .cia / .3ds / .cci dropped
   → pip install requirements.txt + setup_tools.py
   → SHA-1 gate (known dumps)
-  → if release/bake_img.bin exists:
-        use gold bake → patch CIA in minutes
-  → else (fresh clone):
-        1. fetch_release_bake.py --best-effort
-             poll GitHub Release {owner}/nlpp-gold-maker @ tag gold
-             (owner from git remote or NLPP_GITHUB_REPO)
-           success → release/bake_img.bin + romfs_overlay/
-           fail (404, no repo, network) → continue
-        2. if still no bake:
-             rebuild_bake_img.py --rom <dropped ROM>
-             (long first time; deletes cache/, then full RomFS extract into cache/vanilla_from_rom/;
-              §12.5.3 empty-block-first + pkg ProcessPool)
-        3. if still no bake:
-             HARD STOP — do not patch (prevents half-EN CIA)
+  → wipe out/, release/, and cache/
+  → unless NLPP_SKIP_GOLD_FETCH=1:
+        fetch_release_bake.py --best-effort
+          poll GitHub Release {owner}/nlpp-gold-maker @ tag gold
+          success → use release/bake_img.bin + romfs_overlay/ (no local PNG pack)
+          fail (404, no repo, no internet) → continue
+  → if still no bake:
+        rebuild_bake_img.py --rom <dropped ROM>
+        (deletes cache/, then full RomFS extract into cache/vanilla_from_rom/)
+  → if still no bake:
+        HARD STOP — do not patch (prevents half-EN CIA)
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
         + apply_name_patches + name_input_code.bin when present

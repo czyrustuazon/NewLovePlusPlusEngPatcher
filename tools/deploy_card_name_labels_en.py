@@ -53,8 +53,9 @@ LABELS = [
     ("timg/B_Card04_txt01.bclim", "Name"),
     ("timg/B_Card04_txt06.bclim", "Girlfriend's Name"),
 ]
-# Lyt_B_Card04_btn stores the field row hidden (pane flag bit 0 clear).
-# The open path never sets that bit, so the sheet draws with no row.
+# Lyt_B_Card04_btn field row. Vanilla stores these with pane flag bit 0
+# clear. A later --skip-pack on a bake that already set the bit must still
+# find them; only a missing name is an error.
 SHOW_PANES = {
     "Vis_White_Base",
     *(f"Vis_com_btn_m_{i:02d}" for i in range(9)),
@@ -74,7 +75,11 @@ def _deploy_targets() -> list[Path]:
 
 
 def show_field_row(layout: bytes) -> bytes:
-    """Set the visible bit on the card field-row panes. Same file length."""
+    """Set the visible bit on the card field-row panes. Same file length.
+
+    Idempotent. ``--skip-pack`` re-runs this on a bake whose bits are already
+    set; counting only a hidden-to-visible flip aborts the gold rebuild.
+    """
     import struct
 
     data = bytearray(layout)
@@ -91,10 +96,8 @@ def show_field_row(layout: bytes) -> bytes:
         if tag in (b"pan1", b"pic1"):
             name = bytes(data[off + 12 : off + 36]).split(b"\x00", 1)[0].decode("ascii")
             if name in SHOW_PANES:
-                flag = data[off + 8]
-                if flag & 1 == 0:
-                    data[off + 8] = flag | 1
-                    shown.append(name)
+                data[off + 8] = data[off + 8] | 1
+                shown.append(name)
         off += size
     if set(shown) != SHOW_PANES:
         raise RuntimeError(f"field-row panes missing: {sorted(SHOW_PANES - set(shown))}")

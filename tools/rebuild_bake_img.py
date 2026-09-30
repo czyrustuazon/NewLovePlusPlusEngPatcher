@@ -617,17 +617,19 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
 
-    timer = RunTimer("gold rebuild", heartbeat_s=60.0)
+    from_github = os.environ.get("NLPP_GITHUB_BAKE", "").strip() == "1"
+    label = "GitHub gold bake" if from_github else "gold rebuild"
+    timer = RunTimer(label, heartbeat_s=60.0)
     try:
         return _main_rebuild(args, timer)
     except SystemExit:
-        timer.finish(f"gold rebuild stopped (elapsed {timer.elapsed_str()})")
+        timer.finish(f"{label} stopped (elapsed {timer.elapsed_str()})")
         raise
     except Exception:
-        timer.finish("gold rebuild failed")
+        timer.finish(f"{label} failed")
         raise
     except KeyboardInterrupt:
-        timer.finish("gold rebuild aborted")
+        timer.finish(f"{label} aborted")
         raise
 
 
@@ -847,7 +849,7 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
         print(f"  log:           {log_path}", flush=True)
     cleanup_rebuild_scratch(keep_work=keep_work)
     bar.finish()
-    timer.finish("gold rebuild OK")
+    timer.finish(f"{timer.label} OK")
     return 0
 
 

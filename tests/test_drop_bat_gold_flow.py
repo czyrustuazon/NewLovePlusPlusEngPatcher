@@ -51,6 +51,8 @@ def test_bat_polls_ci_before_local_rebuild():
     assert fetch_idx < rebuild_idx
     assert "--best-effort" in text
     assert "building locally from the dropped ROM" in text
+    assert "NLPP_GITHUB_BAKE=1" in text
+    assert "1;95" in text
 
 
 def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
@@ -58,10 +60,14 @@ def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
     assert "patcher_version.py" in text
     assert "BAKE_STALE" in text
     assert "NLPP_REUSE_BAKE" in text
+    assert "FETCHED_GOLD" in text
     assert "NLPP_USE_PACK_CACHE is ignored" in text
     assert 'set "PACK_CACHE=--use-cache"' not in text
     assert "from scratch" in text.lower() or "from-scratch" in text
-    # Reuse leftover bake is opt-in; default is stamp-check then rebuild.
+    # A GitHub download is used even when the wiped stamp would look stale.
+    assert "if not defined BAKE_STALE if /i not" not in text
+    fetch_idx = text.index("fetch_release_bake.py")
+    assert fetch_idx < text.index("BAKE_STALE")
     stale_idx = text.index("BAKE_STALE")
     inject_idx = text.index("Injecting gold bake")
     assert stale_idx < inject_idx

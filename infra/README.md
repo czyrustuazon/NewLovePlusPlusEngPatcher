@@ -16,6 +16,8 @@ Workflow **Request gold Release** pings **nlpp-gold-maker**. If Release tag **`g
 already has `bake_img.bin`, the runner downloads it and refreshes TRB, chrome, and
 name-input on that file instead of a full PNG pack. If `github.com:443` is unreachable,
 it bakes offline from the vanilla files on the runner and does not upload a Release.
+A run that will publish a new bake deletes Release tag **`gold`** first, so Drop
+packs locally until the new bake is uploaded.
 A full pack still runs when the Release is missing, PNG-pack inputs changed since the
 published EngPatcher commit, or you dispatch with **force_pack**. The rolling Release tag stays **`gold`**:
 

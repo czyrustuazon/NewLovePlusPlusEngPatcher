@@ -188,11 +188,36 @@ def test_overall_stays_above_the_timer_when_the_pin_is_short(monkeypatch):
     assert "9s" in text
     assert "[pack] pkg 5245" in text
     assert text.find("gold rebuild") < text.find("9s")
+    assert "\033[1;95m" not in text
     assert text.find("9s") < text.find("46.0%")
     assert text.find("9s") < text.find("[pack] pkg 5245")
     assert "2/10" not in text
     pin = text.split("\033[2K", 1)[1]
     assert f"\033[{tag_color('pack')}m" in pin
+
+
+def test_github_bake_label_is_pink(monkeypatch):
+    import live_status
+
+    monkeypatch.delenv("NO_COLOR", raising=False)
+    monkeypatch.setattr(
+        live_status.shutil,
+        "get_terminal_size",
+        lambda fallback=(80, 24): os.terminal_size((120, 10)),
+    )
+    raw = _Mem()
+    status = LiveStatus()
+    status._raw = raw
+    status._installed = True
+    status._owner = SimpleNamespace(
+        label="GitHub gold bake",
+        stage="profile",
+        elapsed_str=lambda: "9s",
+    )
+    status._overall = (10.0, "name-input")
+    status._paint_body()
+    text = "".join(raw.parts)
+    assert "\033[1;95mGitHub gold bake\033[0m" in text
 
 
 def test_pin_clock_follows_drop_start_not_the_step_timer(monkeypatch):

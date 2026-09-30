@@ -237,9 +237,11 @@ REM Optional PNG scratch:
 REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
-REM Bake was just deleted, so the stamp check fails and this run packs locally.
-REM   NLPP_REUSE_BAKE=1  skips that stamp check and may poll GitHub first
-REM   NLPP_SKIP_GOLD_FETCH=1  offline — skip CI poll, build locally only
+REM After the wipe, poll GitHub Release tag gold.
+REM   success → use that bake (no local PNG pack)
+REM   missing Release or no internet → rebuild_bake_img.py --rom
+REM   NLPP_SKIP_GOLD_FETCH=1  skip the poll and pack locally
+REM   NLPP_REUSE_BAKE=1  skip the stamp check on a leftover local bake
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 REM Keep quotes inside the value so paths with spaces survive expansion
 REM (e.g. E:\zip game\... GitHub unzip folders).
@@ -286,9 +288,27 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
-  REM RC: leftover bake from an older unzip is ignored unless bake_stamp matches.
+  REM Default: download the published gold bake. Local pack only if that
+  REM Release is missing or GitHub cannot be reached.
+  set "FETCHED_GOLD="
+  if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
+    echo.
+    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "Polling GitHub Release tag gold..."
+    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails"
+    echo.
+    "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
+    if errorlevel 1 (
+      "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "[fetch] GitHub gold bake unavailable — building locally from the dropped ROM."
+    ) else (
+      set "FETCHED_GOLD=1"
+      set "NLPP_GITHUB_BAKE=1"
+      "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "Using GitHub gold bake: release\bake_img.bin"
+    )
+  )
+  REM A leftover local bake is ignored unless bake_stamp matches.
+  REM A bake just downloaded from GitHub is used as-is.
   set "BAKE_STALE="
-  if /i not "%NLPP_REUSE_BAKE%"=="1" (
+  if not defined FETCHED_GOLD if /i not "%NLPP_REUSE_BAKE%"=="1" (
     "%PYTHON%" "%SRC%\patcher_version.py"
     if errorlevel 1 set "BAKE_STALE=1"
   )
@@ -302,22 +322,10 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set "NEED_REBUILD="
   if defined BAKE_STALE set "NEED_REBUILD=1"
   if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" set "NEED_REBUILD=1"
+  if defined FETCHED_GOLD set "NEED_REBUILD="
   REM NLPP_USE_PACK_CACHE is ignored: from-scratch deletes cache\ before the pack.
   set "PACK_CACHE="
   if defined NEED_REBUILD (
-    REM Gold bake required. CI fetch only when reusing an unstamped-missing bake
-    REM ^(NLPP_REUSE_BAKE=1^). RC from-scratch skips fetch so an old gold zip
-    REM cannot mask this tree's assets.
-    if not defined BAKE_STALE if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
-      echo.
-      echo No gold bake at release\bake_img.bin — polling GitHub Release tag gold...
-      echo ^(set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails^)
-      echo.
-      "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
-      if errorlevel 1 (
-        echo [fetch] GitHub gold bake unavailable — building locally from the dropped ROM.
-      )
-    )
     if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
       echo.
       echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
