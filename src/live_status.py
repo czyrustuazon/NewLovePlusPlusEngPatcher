@@ -562,7 +562,9 @@ class LiveStatus:
         job_s = _clip(job, job_s)
         pieces: list[str] = []
         if label:
-            pieces.append(paint(label, "33"))
+            # Bright magenta when this step is the published GitHub bake.
+            label_color = "1;95" if "github" in label.lower() else "33"
+            pieces.append(paint(label, label_color))
         if elapsed:
             pieces.append(paint(elapsed, "33"))
         if frac is not None:
