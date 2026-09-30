@@ -245,8 +245,151 @@ def etc1_scramble(width: int, height: int) -> list[int]:
     return tile_scramble
 
 
-def encode_etc1a4_pixels(img: Image.Image, width: int, height: int) -> bytes:
-    """Compress RGBA to 3DS ETC1A4 (fmt 0xB) with Ohana scramble + color endian."""
+_ETC1_MOD = (
+    (2, 8),
+    (5, 17),
+    (9, 29),
+    (13, 42),
+    (18, 60),
+    (24, 80),
+    (33, 106),
+    (47, 183),
+)
+
+
+def _decode_etc1_block(block: bytes) -> list[tuple[int, int, int]]:
+    """One little-endian ETC1 block → 16 RGB triples, index ``x * 4 + y``."""
+    v = int.from_bytes(block, "little")
+    diff = (v >> 33) & 1
+    flip = (v >> 32) & 1
+    if diff:
+        r1, g1, b1 = (v >> 59) & 31, (v >> 51) & 31, (v >> 43) & 31
+        dr, dg, db = (v >> 56) & 7, (v >> 48) & 7, (v >> 40) & 7
+        dr = dr - 8 if dr >= 4 else dr
+        dg = dg - 8 if dg >= 4 else dg
+        db = db - 8 if db >= 4 else db
+
+        def exp5(c: int) -> int:
+            return (c << 3) | (c >> 2)
+
+        c1 = (exp5(r1), exp5(g1), exp5(b1))
+        c2 = (
+            exp5(max(0, min(31, r1 + dr))),
+            exp5(max(0, min(31, g1 + dg))),
+            exp5(max(0, min(31, b1 + db))),
+        )
+    else:
+
+        def exp4(c: int) -> int:
+            return (c << 4) | c
+
+        c1 = (exp4((v >> 60) & 15), exp4((v >> 52) & 15), exp4((v >> 44) & 15))
+        c2 = (exp4((v >> 56) & 15), exp4((v >> 48) & 15), exp4((v >> 40) & 15))
+    cw1, cw2 = (v >> 37) & 7, (v >> 34) & 7
+    cols: list[tuple[int, int, int]] = []
+    for i in range(16):
+        x, y = i >> 2, i & 3
+        # MSB of the 2-bit selector sits at bit 16+i. Matches etcpak's blocks.
+        code = ((v >> (16 + i)) & 1) << 1 | ((v >> i) & 1)
+        second = (x >= 2) if flip == 0 else (y >= 2)
+        base = c2 if second else c1
+        cw = cw2 if second else cw1
+        mod = _ETC1_MOD[cw][code & 1]
+        if code >= 2:
+            mod = -mod
+        cols.append(
+            (
+                max(0, min(255, base[0] + mod)),
+                max(0, min(255, base[1] + mod)),
+                max(0, min(255, base[2] + mod)),
+            )
+        )
+    return cols
+
+
+def decode_etc1a4_pixels(data: bytes, width: int, height: int) -> Image.Image:
+    """Decode an ETC1A4 payload (Ohana / 8×8-tile order) to RGBA."""
+    if width % 4 or height % 4:
+        raise ValueError(f"ETC1A4 size {width}x{height} is not a multiple of 4")
+    need = (width // 4) * (height // 4) * 16
+    if len(data) < need:
+        raise ValueError(f"ETC1A4 buffer {len(data)} < {need}")
+    scramble = etc1_scramble(width, height)
+    raster_at: list[int] = [0] * len(scramble)
+    for raster, file_i in enumerate(scramble):
+        raster_at[file_i] = raster
+    bx_n = width // 4
+    img = Image.new("RGBA", (width, height))
+    px = img.load()
+    for file_i, raster in enumerate(raster_at):
+        block = data[file_i * 16 : (file_i + 1) * 16]
+        ox = (raster % bx_n) * 4
+        oy = (raster // bx_n) * 4
+        cols = _decode_etc1_block(block[8:16])
+        for i, (r, g, b) in enumerate(cols):
+            nibble = (block[i >> 1] >> ((i & 1) * 4)) & 0xF
+            px[ox + (i >> 2), oy + (i & 3)] = (r, g, b, nibble * 17)
+    return img
+
+
+def _retain_unchanged_etc1a4_tiles(
+    fresh: bytes,
+    img: Image.Image,
+    width: int,
+    height: int,
+    keep: bytes | None,
+) -> bytes:
+    """Copy original 8×8 tiles whose pixels already match ``img``.
+
+    ETC1 is lossy, so re-encoding a tile the edit did not touch replaces
+    the shipped blocks with a different approximation. Tiles are contiguous
+    in file order (the Ohana scramble is that 8×8 walk).
+    """
+    if (
+        keep is None
+        or len(keep) != len(fresh)
+        or width % 8
+        or height % 8
+        or img.size != (width, height)
+    ):
+        return fresh
+    old = decode_etc1a4_pixels(keep, width, height)
+    opx = old.load()
+    npx = img.load()
+    out = bytearray(fresh)
+    tiles_x = width // 8
+    for ty in range(0, height, 8):
+        for tx in range(0, width, 8):
+            same = True
+            for y in range(ty, ty + 8):
+                for x in range(tx, tx + 8):
+                    nr, ng, nb, na = npx[x, y]
+                    or_, og, ob, oa = opx[x, y]
+                    if (na // 17) != (oa // 17) or (nr, ng, nb) != (or_, og, ob):
+                        same = False
+                        break
+                if not same:
+                    break
+            if not same:
+                continue
+            tile = (ty // 8) * tiles_x + (tx // 8)
+            off = tile * 64
+            out[off : off + 64] = keep[off : off + 64]
+    return bytes(out)
+
+
+def encode_etc1a4_pixels(
+    img: Image.Image,
+    width: int,
+    height: int,
+    *,
+    keep: bytes | None = None,
+) -> bytes:
+    """Compress RGBA to 3DS ETC1A4 (fmt 0xB) with Ohana scramble + color endian.
+
+    ``keep``, when it is an existing payload of the same size, supplies the
+    8×8 tiles that ``img`` did not change.
+    """
     src = img.convert("RGBA")
     if src.size != (width, height):
         canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
@@ -290,7 +433,7 @@ def encode_etc1a4_pixels(img: Image.Image, width: int, height: int) -> bytes:
     out = bytearray(need)
     for j, src_i in enumerate(inv):
         out[j * 16 : (j + 1) * 16] = linear[src_i * 16 : (src_i + 1) * 16]
-    return bytes(out)
+    return _retain_unchanged_etc1a4_tiles(bytes(out), src, width, height, keep)
 
 
 def png_to_bclim_a8_same_size(png: Path, orig_bclim: Path) -> bytes:
@@ -395,7 +538,7 @@ def png_to_bclim_etc1a4_same_size(png: Path, orig_bclim: Path) -> bytes:
         canvas = Image.new("RGBA", (pot_w, pot_h), (0, 0, 0, 0))
         canvas.paste(src.crop((0, 0, min(width, src.width), min(height, src.height))), (0, 0))
         src = canvas
-    pixels = encode_etc1a4_pixels(src, pot_w, pot_h)
+    pixels = encode_etc1a4_pixels(src, pot_w, pot_h, keep=pix)
     if len(pixels) != len(pix):
         raise ValueError(f"ETC1A4 size mismatch {len(pixels)} != {len(pix)}")
     out = pixels + footer
@@ -438,21 +581,28 @@ def encode_la4_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
 
 
 def encode_rgb8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
-    """RGB8 (fmt 6). Transparent → black."""
+    """RGB8 (fmt 6), stored B, G, R.
+
+    Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
+    Transparent pixels become black.
+    """
 
     def write(r: int, g: int, b: int, a: int) -> bytes:
         if a < 16:
             r = g = b = 0
-        return bytes([r, g, b])
+        return bytes([b, g, r])
 
     return encode_tiled_pixels(img, pot_w, pot_h, write)
 
 
 def encode_rgba8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
-    """RGBA8 (fmt 9)."""
+    """RGBA8 (fmt 9), stored A, B, G, R.
+
+    Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
+    """
 
     def write(r: int, g: int, b: int, a: int) -> bytes:
-        return bytes([r, g, b, a])
+        return bytes([a, b, g, r])
 
     return encode_tiled_pixels(img, pot_w, pot_h, write)
 
@@ -525,7 +675,14 @@ def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
     """Best-effort RGBA decode for packing masters. None if format unknown."""
     pix, w, h, fmt, _ft = parse_bclim(raw)
     if fmt == 0xB:
-        return None
+        try:
+            pot_w, pot_h = canvas_for_pixel_bytes(len(pix), w, h, 1)
+            full = decode_etc1a4_pixels(pix, pot_w, pot_h)
+        except ValueError:
+            return None
+        if full.size == (w, h):
+            return full
+        return full.crop((0, 0, w, h))
     if fmt == 1:
 
         def read_a8(buf: bytes, i: int) -> tuple[int, int, int, int]:
@@ -562,7 +719,8 @@ def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
 
         def read_rgb8(buf: bytes, i: int) -> tuple[int, int, int, int]:
             o = i * 3
-            return (buf[o], buf[o + 1], buf[o + 2], 255)
+            # Stored B, G, R. Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
+            return (buf[o + 2], buf[o + 1], buf[o], 255)
 
         return _decode_tiled(pix, w, h, 3, read_rgb8)
     if fmt == 8:
@@ -580,7 +738,8 @@ def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
 
         def read_rgba8(buf: bytes, i: int) -> tuple[int, int, int, int]:
             o = i * 4
-            return (buf[o], buf[o + 1], buf[o + 2], buf[o + 3])
+            # Stored A, B, G, R. Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
+            return (buf[o + 3], buf[o + 2], buf[o + 1], buf[o])
 
         return _decode_tiled(pix, w, h, 4, read_rgba8)
     if fmt == 0xD:

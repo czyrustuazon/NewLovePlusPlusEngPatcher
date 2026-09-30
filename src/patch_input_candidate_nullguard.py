@@ -32,12 +32,12 @@ Fix: redirect each site to a small cave that checks r0 for null *before*
 the dereference. If null, take the exact same path vanilla already takes
 for the r1==0 case (same target register zeroed, same branch target) --
 this doesn't change behavior for the working case at all, it only adds the
-missing guard for the crashing one. See technical.md SS3.3h.
+missing guard for the crashing one. See docs/technical.md SS3.3h.
 
 Whether this closes the "candidate list stays 0/0" symptom outright, or
 just removes the crash and leaves a display bug to chase further, is not
 yet known -- this patch is a targeted crash fix. Verified as part of the
-name-input stack in technical.md §17 (with pane-registry nullguard +
+name-input stack in docs/technical.md §17 (with pane-registry nullguard +
 fillflag_reset; without candmode_reset).
 
 Rollback: exefs/code.bin.bak_pre_fillcand_nullguard.
@@ -65,7 +65,7 @@ RESUME2 = 0x001FBD28
 POST2 = 0x001FBD4C
 REG2 = 11
 
-# Shared pad in last .text RX page (technical.md §17). Not 0x006E6A38 (.rodata).
+# Shared pad in last .text RX page (docs/technical.md §17). Not 0x006E6A38 (.rodata).
 # Sub-range +0x40/+0x60 — keep clear of pane nullguard (+0x90) and fillflag (+0xC0).
 CAVE1 = ADDR_CAVE + 0x40
 CAVE2 = ADDR_CAVE + 0x60

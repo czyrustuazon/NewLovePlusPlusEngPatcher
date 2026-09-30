@@ -89,6 +89,39 @@ def test_summary_includes_time_to_finish(tmp_path: Path, monkeypatch):
     assert "[OK]      Time to finish: 4m32s  (started 2026-09-08 00:12:03)" in text
 
 
+def test_summary_timing_uses_drop_start_not_inject_timer(monkeypatch):
+    """PATCH SUMMARY must include bake; CIA RunTimer alone is ~1m inject."""
+    drop_start = 1_000_000.0
+    monkeypatch.setenv("NLPP_T0", f"{int(drop_start)}\r")
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, started = patch_cia.summary_timing(
+        timer, _args(), now=drop_start + 3723
+    )
+    timer.finish("test")
+    assert elapsed == "1h02m03s"
+    assert started == patch_cia.format_started_at(drop_start)
+    # Inject-only clock stays short; summary must not use it.
+    assert timer.elapsed() < 5
+
+
+def test_summary_timing_cli_overrides_env(monkeypatch):
+    monkeypatch.setenv("NLPP_T0", "1000")
+    args = _args(started_unix="2000")
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, _started = patch_cia.summary_timing(timer, args, now=2065)
+    timer.finish("test")
+    assert elapsed == "1m05s"
+
+
+def test_summary_timing_falls_back_to_inject_timer_without_t0(monkeypatch):
+    monkeypatch.delenv("NLPP_T0", raising=False)
+    timer = patch_cia.RunTimer("CIA patcher", heartbeat_s=None)
+    elapsed, started = patch_cia.summary_timing(timer, _args())
+    timer.finish("test")
+    assert elapsed == timer.elapsed_str()
+    assert started == timer.started_at
+
+
 def test_summary_includes_bumped_title_version(tmp_path: Path, monkeypatch):
     bake = tmp_path / "bake.bin"
     bake.write_bytes(b"gold")
@@ -153,12 +186,16 @@ def test_drop_bat_mentions_patch_summary():
     assert "incomplete patches abort" in bat
     assert "Time to finish" in bat
     assert "NLPP_T0" in bat
+    assert "STARTED_UNIX" in bat
+    assert "--started-unix" in bat
     assert "run_timer.py" in bat
-    assert "out\\logs\\latest.txt" in bat
+    assert "out\\log.txt" in bat
     assert "Patch log" in bat
     assert "restore_azahar_extdata.py" in bat
     assert "Do NOT delete the title" in bat
     assert "CIA_TITLE_VERSION" in bat
+    assert "NLPP_OVERALL_LO" in bat
+    assert "NLPP_REBUILD_RAN" in bat
 
 
 def test_patch_cia_requires_name_input_for_ui_inject():
@@ -223,9 +260,11 @@ def test_format_patch_log_includes_summary_and_counts(tmp_path: Path):
     assert patch_cia.PATCHER_RELEASE in text
 
 
-def test_write_patch_summary_log_timestamped_and_latest(tmp_path: Path):
-    logs = tmp_path / "logs"
-    path = logs / "patch_20260910_192100.txt"
+def test_write_patch_summary_log_appends_default_file(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
+    path = patch_cia.default_patch_log_path()
+    path.parent.mkdir(parents=True)
+    path.write_text("NLPP image pack report\n\nGold rebuild\n", encoding="utf-8")
     lines = ["", "=" * 60, "  PATCH SUMMARY — read this before testing", "=" * 60, ""]
     written = patch_cia.write_patch_summary_log(
         path,
@@ -234,11 +273,12 @@ def test_write_patch_summary_log_timestamped_and_latest(tmp_path: Path):
         when=datetime(2026, 9, 10, 19, 21, 0),
     )
     assert written == path
-    assert path.is_file()
-    latest = logs / "latest.txt"
-    assert latest.is_file()
-    assert "PATCH SUMMARY" in path.read_text(encoding="utf-8")
-    assert latest.read_text(encoding="utf-8") == path.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    assert "Gold rebuild" in text
+    assert "PATCH SUMMARY" in text
+    assert "image pack report" in text
+    assert not (path.parent / "latest.txt").exists()
+    assert not (path.parent / "logs").exists()
 
 
 def test_write_patch_summary_log_skips_latest_outside_logs_dir(tmp_path: Path):
@@ -255,21 +295,19 @@ def test_resolve_patch_log_path_default_and_flags(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
     when = datetime(2026, 9, 10, 19, 21, 0)
     default = patch_cia.default_patch_log_path(when=when)
-    assert default == tmp_path / "out" / "logs" / "patch_20260910_192100.txt"
+    assert default == tmp_path / "out" / "log.txt"
 
     custom = tmp_path / "my.log"
     assert patch_cia.resolve_patch_log_path(
         argparse.Namespace(log=str(custom), no_log=False)
     ) == custom.resolve()
 
-    logs_dir = tmp_path / "logs"
-    logs_dir.mkdir()
+    log_dir = tmp_path / "somewhere"
+    log_dir.mkdir()
     resolved = patch_cia.resolve_patch_log_path(
-        argparse.Namespace(log=str(logs_dir), no_log=False)
+        argparse.Namespace(log=str(log_dir), no_log=False)
     )
-    assert resolved.parent == logs_dir.resolve()
-    assert resolved.name.startswith("patch_")
-    assert resolved.suffix == ".txt"
+    assert resolved == log_dir.resolve() / "log.txt"
 
     assert (
         patch_cia.resolve_patch_log_path(
@@ -284,14 +322,16 @@ def test_resolve_patch_log_path_default_and_flags(tmp_path: Path, monkeypatch):
     )
 
 
-def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
+def test_cleanup_out_dir_keeps_log_file(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
     out = tmp_path / "out"
     out.mkdir()
     (out / "scratch.bin").write_bytes(b"x")
-    logs = out / "logs"
-    logs.mkdir()
-    (logs / "latest.txt").write_text("summary\n", encoding="utf-8")
+    log = out / "log.txt"
+    log.write_text("summary\n", encoding="utf-8")
+    old_logs = out / "logs"
+    old_logs.mkdir()
+    (old_logs / "latest.txt").write_text("old\n", encoding="utf-8")
     cia = out / "NewLovePlusPlus-EN.cia"
     cia.write_bytes(b"cia")
     luma = out / "luma"
@@ -302,7 +342,8 @@ def test_cleanup_out_dir_keeps_logs(tmp_path: Path, monkeypatch):
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert cia.is_file()
     assert luma.is_dir()
-    assert (logs / "latest.txt").is_file()
+    assert log.read_text(encoding="utf-8") == "summary\n"
+    assert not old_logs.exists()
     assert (bak / "keep.txt").is_file()
     assert not (out / "scratch.bin").exists()
 
@@ -321,8 +362,13 @@ def test_cleanup_out_dir_keeps_prefixed_install_outputs(tmp_path: Path, monkeypa
     patch_cia.cleanup_out_dir(out_cia=cia)
     assert luma.is_dir()
     assert cia.is_file()
+    assert note.parent.is_dir()
+    assert note.parent.name == patch_cia.OUT_NOT_BOTH_NAME
     assert note.is_file()
-    assert "Do not use both" in note.read_text(encoding="utf-8")
+    text = note.read_text(encoding="utf-8")
+    assert "Do not use both" in text
+    assert "folder 1 (CIA)" in text
+    assert "folder 2 (LayeredFS)" in text
     assert not (out / "scratch.bin").exists()
 
 
@@ -335,9 +381,12 @@ def test_parser_has_log_flags():
     assert args.skip_cia_meta is False
     assert args.title_ver is None
     assert args.keep_title_ver is False
+    assert args.started_unix is None
     assert patch_cia.OUT_CIA_PREFIX in args.out
     assert patch_cia.CIA_FILENAME in args.out
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"
     args = p.parse_args(["--cia", "game.cia", "--no-log"])
     assert args.no_log is True
+    args = p.parse_args(["--cia", "game.cia", "--started-unix", "1758410000"])
+    assert args.started_unix == "1758410000"

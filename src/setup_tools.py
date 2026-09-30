@@ -145,7 +145,7 @@ def ensure_python_deps() -> None:
         except ImportError:
             missing.append(pip_name)
     if missing:
-        req = ROOT / "requirements.txt"
+        req = ROOT / "dev" / "requirements.txt"
         print()
         print(f"[!] Missing Python packages: {', '.join(missing)}")
         print(f"    Run:  {sys.executable} -m pip install -r \"{req}\"")

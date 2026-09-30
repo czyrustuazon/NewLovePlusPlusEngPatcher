@@ -8,7 +8,7 @@ B = same bake, pkg 90 restored to English CESA only (blank right pane, idx vanil
 Both instances start from vanilla code.bin so CesaLogo is not skipped.
 A then gets the 1-insn logo_white native-size patch; B stays stock so the
 16×16 stub still fills the pane.
-Launch with: .\\make.ps1 launch-a   /   .\\make.ps1 launch-b
+Launch with: .\\ab_test\\make.ps1 launch-a   /   .\\ab_test\\make.ps1 launch-b
 """
 from __future__ import annotations
 
@@ -24,6 +24,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 from img import Image as ImgBin  # noqa: E402
 from img import Package  # noqa: E402
 from nlpp_paths import (  # noqa: E402
+    AZAHAR_INSTANCES,
     BAKE_IMG,
     TITLE_ID,
     azahar_mod_root,
@@ -49,7 +50,7 @@ from patch_cesa import (  # noqa: E402
 from patch_code import patch_cesa_logo_white_native_size  # noqa: E402
 
 CESA_PNG = ROOT / "assets" / "images" / "cesa" / "CESA_240X400.png"
-INSTANCES = ROOT / "out" / "azahar_instances"
+INSTANCES = AZAHAR_INSTANCES
 COMPANION_DEC_LEN = VANILLA_PKG90_DEC_LEN + COMPANION_TEX_W * COMPANION_TEX_H * 3
 
 
@@ -136,7 +137,7 @@ def main() -> int:
     if not (INSTANCES / "a" / "Launch-a.bat").is_file():
         raise SystemExit(
             "Azahar instances missing. From repo root run:\n"
-            "  .\\make.ps1 instances"
+            "  .\\ab_test\\make.ps1 instances"
         )
 
     mod_a = _instance_mod("a")
@@ -175,8 +176,8 @@ def main() -> int:
     print(
         "\nA/B ready. Boot A — Thanks should be a 240×320 portrait column like CESA.\n"
         "B keeps English CESA and a blank white right pane.\n"
-        "  .\\make.ps1 launch-a\n"
-        "  .\\make.ps1 launch-b\n",
+        "  .\\ab_test\\make.ps1 launch-a\n"
+        "  .\\ab_test\\make.ps1 launch-b\n",
         flush=True,
     )
     return 0

@@ -1,7 +1,8 @@
 # Release infra (gold publish)
 
 You change assets/code in **this** EngPatcher repo. Gold binaries are built and
-uploaded by **nlpp-gold** (Ubuntu self-hosted → GitHub Releases).
+uploaded by **nlpp-gold-maker** (Ubuntu self-hosted → GitHub Releases; EngPatcher
+workflow nickname: nlpp-gold).
 
 ## Publish a bake
 
@@ -11,8 +12,12 @@ Push or merge to **`main`** only (other branches do not trigger):
 git push origin main
 ```
 
-Workflow **Request gold Release** pings nlpp-gold, which rebuilds from that
-commit and updates the rolling Release tag **`gold`**:
+Workflow **Request gold Release** pings **nlpp-gold-maker**. If Release tag **`gold`**
+already has `bake_img.bin`, the runner downloads it and refreshes TRB, chrome, and
+name-input on that file instead of a full PNG pack. If `github.com:443` is unreachable,
+it bakes offline from the vanilla files on the runner and does not upload a Release.
+A full pack still runs when the Release is missing, PNG-pack inputs changed since the
+published EngPatcher commit, or you dispatch with **force_pack**. The rolling Release tag stays **`gold`**:
 
 - `bake_img.bin`
 - `romfs_overlay.zip`
@@ -36,12 +41,12 @@ Docs / runner: local `Documents/nlpp-gold` or the GitHub **nlpp-gold-maker** rep
 
 ## Companion site progress bar (script text)
 
-After each gold bake, nlpp-gold runs `engpatcher/src/report_progress.py` and
+After each gold bake, nlpp-gold-maker runs `engpatcher/src/report_progress.py` and
 POSTs `scriptTranslated` / `scriptTotal` / `scriptPercent` to the companion
 site Worker (`POST /api/admin/progress`). The site bar reads `GET /api/progress`
 live (~30 s edge cache) — no site rebuild.
 
-On **nlpp-gold** (Actions secrets, not the public EngPatcher repo):
+On **nlpp-gold-maker** (Actions secrets, not the public EngPatcher repo):
 
 | Secret | Value |
 |--------|--------|
@@ -49,4 +54,4 @@ On **nlpp-gold** (Actions secrets, not the public EngPatcher repo):
 | `NLPP_PROGRESS_TOKEN` | Prefer Worker `PROGRESS_API_TOKEN` (progress-only). `ADMIN_API_TOKEN` works but also gates `/api/admin/devlog`. |
 
 Local / Drop CIA auto-report uses EngPatcher `.env` (`NLPP_PROGRESS_*`).  
-Disable anywhere with `NLPP_PROGRESS_SKIP=1`. Manual: `.\make.ps1 progress`.
+Disable anywhere with `NLPP_PROGRESS_SKIP=1`. Manual: `.\ab_test\make.ps1 progress`.

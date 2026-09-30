@@ -33,7 +33,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -88,7 +90,7 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
     ],
     5241: [  # Communication
         ("Com_M_Sel_Plate_Text04_00_00.bclim", "Communication"),
-        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Girlfriend Communication"),
+        ("Com_M_Sel_Btn_Text04_01_01.bclim", "Heart to Heart"),
         ("Com_M_Sel_Btn_Text04_01_02.bclim", "Girlfriend Introduction"),
         ("Com_M_Sel_Btn_Text04_01_03.bclim", "Double Date"),
         # Girlfriend Comm. session rows (２人会話を募集 / ３人会話を募集 / 会話に参加)
@@ -125,6 +127,11 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
 PNG_STEM_OVERRIDE: dict[str, str] = {}
 # Paint カノジョ通信 ourselves as "Heart to Heart" at 144×28 (not the 8px strip).
 SKIP_UI_PNG = {"Com_M_Sel_Plate_Text04_01_01"}
+# Home-menu pill. Zhoumaru Btn_Text04_01_01 is the long "Girlfriend Communication".
+# Heisei W5 reads thin on this row; Heisei W7 goes darker than Name Card.
+# Geomanist Regular matches that pill's weight at gh 18 on 246×48.
+FONT_BTN_H = {"Com_M_Sel_Btn_Text04_01_01": 18}
+ROW_FONT = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "Geomanist-Regular.ttf"
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -170,6 +177,31 @@ def render_en_alpha(w: int, h: int, text: str, target_h: int) -> np.ndarray:
     raise RuntimeError(f"cannot fit {text!r} into {w}x{h}")
 
 
+def render_row_heisei(w: int, h: int, text: str, target_h: int) -> np.ndarray:
+    """Geomanist Regular row, same weight as the Zhoumaru Communication pills."""
+    for size in range(target_h + 6, 8, -1):
+        scale = 2
+        big = Image.new("L", (w * scale, h * scale), 0)
+        dr = ImageDraw.Draw(big)
+        f = ImageFont.truetype(str(ROW_FONT), size=size * scale)
+        b = dr.textbbox((0, 0), text, font=f)
+        tw, th = b[2] - b[0], b[3] - b[1]
+        if tw > w * scale - 8:
+            continue
+        x = (w * scale - tw) // 2 - b[0]
+        y = (h * scale - th) // 2 - b[1]
+        dr.text((x, y), text, font=f, fill=255)
+        cand = np.array(big.resize((w, h), Image.Resampling.BILINEAR))
+        if glyph_h(cand) <= target_h:
+            peak = float(cand.max())
+            if peak <= 0:
+                continue
+            return np.clip(cand.astype(np.float32) * (255.0 / peak), 0, 255).astype(
+                np.uint8
+            )
+    raise RuntimeError(f"cannot fit {text!r} into {w}x{h}")
+
+
 def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, stem: str | None = None) -> bytes:
     canvas, w, h = decode_a8(raw)
     png = tmp / "t.png"
@@ -189,7 +221,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
             PNG_STEM_OVERRIDE.get(stem, stem),
             (w, h),
         )
-        if stem in SKIP_UI_PNG:
+        if stem in SKIP_UI_PNG or stem in FONT_BTN_H:
             master = None
     if master is not None:
         rgba = Image.open(master).convert("RGBA")
@@ -209,7 +241,12 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
     if stem in SKIP_UI_PNG:
         th = min(13, h - 4)
         print(f"  font-render {stem} {en!r} {w}x{h} target_h={th}", flush=True)
-    en_a = render_en_alpha(w, h, en, th)
+    if stem in FONT_BTN_H:
+        th = FONT_BTN_H[stem]
+        print(f"  font-render {stem} {en!r} {w}x{h} target_h={th}", flush=True)
+        en_a = render_row_heisei(w, h, en, th)
+    else:
+        en_a = render_en_alpha(w, h, en, th)
     if hard:
         en_a = np.where(en_a >= 96, 255, 0).astype(np.uint8)
     out = np.maximum(np.zeros_like(jp), en_a)
@@ -372,10 +409,7 @@ def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
-    bak_menus = MOD_IMG.with_suffix(".bin.bak_pre_msel_menus")
-    if not bak_menus.is_file():
-        bak_menus.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak_menus, flush=True)
+    bak_menus = maybe_backup_img(MOD_IMG, "msel_menus")
 
     vanilla_img = pick_vanilla()
     print("vanilla ARC source:", vanilla_img, flush=True)
@@ -421,7 +455,7 @@ def main() -> None:
     # Splice onto current LayeredFS (keeps Options 5245 etc.)
     try:
         targets = list(iter_deploy_targets(MOD_IMG))
-        inst_root = ROOT / "out" / "azahar_instances"
+        inst_root = AZAHAR_INSTANCES
         seen = {p.resolve() for p in targets}
         for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
             rp = img.resolve()

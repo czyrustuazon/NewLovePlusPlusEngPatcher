@@ -37,7 +37,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     find_ui_png,
+    maybe_backup_img,
     iter_deploy_targets,
     render_header_aa,
     resolve_img_paths,
@@ -107,7 +109,7 @@ def _compress_slot(patched: bytes, cmp_len: int) -> tuple[bytes, bytes]:
 
 def _deploy_targets() -> list[Path]:
     targets = list(iter_deploy_targets(MOD_IMG))
-    inst_root = ROOT / "out" / "azahar_instances"
+    inst_root = AZAHAR_INSTANCES
     seen = {p.resolve() for p in targets}
     for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
         rp = img.resolve()
@@ -223,10 +225,7 @@ def main() -> int:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_myroom_options")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "myroom_options")
 
     OUT.mkdir(parents=True, exist_ok=True)
     pkg_dir = OUT / "img_data"

@@ -17,10 +17,12 @@ sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
 from img import Image as ImgBin  # noqa: E402
+from live_status import relax_stdio_errors  # noqa: E402
 from pack_images import splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     OVERLAY_TRB_DIR,
+    maybe_backup_img,
     TEXTRESOURCE,
     iter_deploy_targets,
     resolve_img_paths,
@@ -55,6 +57,7 @@ def patch_trb_bytes(data: bytearray) -> bool:
 
 
 def main() -> None:
+    relax_stdio_errors()
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
 
@@ -67,7 +70,7 @@ def main() -> None:
     blob = bytearray(src_trb.read_bytes())
     if patch_trb_bytes(blob):
         src_trb.write_bytes(blob)
-        print(f"patched resident TRB 日目 -> ' Day  ' ({src_trb})", flush=True)
+        print(f"patched resident TRB day suffix -> ' Day  ' ({src_trb})", flush=True)
     else:
         print(f"resident TRB already has Day suffix ({src_trb})", flush=True)
 
@@ -77,10 +80,7 @@ def main() -> None:
         p.write_bytes(trb_live)
         print("wrote", p, flush=True)
 
-    bak_img = MOD_IMG.with_suffix(".bin.bak_pre_day_counter")
-    if not bak_img.is_file():
-        bak_img.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak_img, flush=True)
+    bak_img = maybe_backup_img(MOD_IMG, "day_counter")
 
     if len(trb_live) != 223280:
         raise SystemExit(f"unexpected resident TRB size {len(trb_live)}")

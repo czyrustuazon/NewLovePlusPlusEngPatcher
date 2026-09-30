@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 from conftest import TOOLS, load_module
 
@@ -23,6 +24,51 @@ def test_deploy_scripts_include_menu_chrome():
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
+
+
+def _rebuild_args(**over):
+    base = dict(
+        skip_pack=False,
+        reseed_from_pack=False,
+        rom=None,
+        skip_trb=False,
+        skip_deploys=False,
+        include_sound_settings=False,
+        include_sms=False,
+    )
+    base.update(over)
+    return SimpleNamespace(**base)
+
+
+def test_deploy_plan_runs_multiwin_full_then_extras():
+    plan = rebuild._deploy_plan(_rebuild_args())
+    assert len(plan) == len(rebuild.DEPLOY_SCRIPTS) + 1
+    multi = [row for row in plan if row[0] == "deploy_multiwin_headers_en.py"]
+    assert [row[1] for row in multi] == [["--full"], []]
+    labels = [row[2] for row in plan]
+    assert len(labels) == len(set(labels))
+    assert "profile" in labels
+    assert "ui buttons (2)" in labels
+
+
+def test_skip_pack_drops_the_png_weight_so_chrome_fills_the_bar():
+    steps, _deploys = rebuild._rebuild_steps(_rebuild_args(skip_pack=True))
+    names = [name for name, _weight in steps]
+    assert "PNG pack" not in names
+    assert "extract ROM" not in names
+    assert names[0] == "text"
+    assert names[-1] == "name-input"
+
+
+def test_cold_rebuild_weights_pack_above_each_chrome_script():
+    steps, deploys = rebuild._rebuild_steps(
+        _rebuild_args(rom=Path("game.cia"))
+    )
+    weights = dict(steps)
+    assert weights["extract ROM"] == 8.0
+    assert weights["PNG pack"] == 55.0
+    assert weights["profile"] == 1.0
+    assert len(deploys) == len(rebuild.DEPLOY_SCRIPTS) + 1
 
 
 def test_msel_menus_include_event_gallery_rows():
@@ -54,10 +100,26 @@ def test_msel_menus_include_event_gallery_rows():
     assert "Find Couple" in text
     assert "Join Double Date" in text
     assert "Heart to Heart" in text
+    assert '("Com_M_Sel_Btn_Text04_01_01.bclim", "Heart to Heart")' in text
     assert "SKIP_UI_PNG" in text
     assert "Com_M_Sel_Plate_Text04_01_01" in text.split("SKIP_UI_PNG")[1]
+    assert "FONT_BTN_H" in text
+    assert "Com_M_Sel_Btn_Text04_01_01" in text.split("FONT_BTN_H")[1]
     assert "GF_COMM_PLATE_FROM_MULTIWIN" not in text
     assert '"Com_M_Sel_Plate_Text04_01_00": "Com_M_Sel_Plate_Text04_01_01"' not in text
+
+
+def test_rebuild_from_scratch_wipes_cache_and_extracts_full_romfs():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
+    start = text.index("From-scratch only")
+    end = text.index("if args.vanilla is not None")
+    chunk = text[start:end]
+    assert "wipe_directory(CACHE" in chunk
+    assert "not args.skip_pack and not args.reseed_from_pack" in chunk
+    assert "force=True, slim=False" in text[end:]
+    assert "romfs/Plus" in text
+    # Resume must not take the wipe branch.
+    assert "--skip-pack leaves cache/" in chunk
 
 
 def test_rebuild_rc_pack_is_from_scratch_by_default():
@@ -81,6 +143,36 @@ def test_rebuild_name_input_is_required_not_optional():
     deploy = (TOOLS / "deploy_name_input_en.py").read_text(encoding="utf-8")
     assert "apply_message_speed" in deploy
     assert "message_speed_already" in deploy
+    assert "apply_spotpass_skip" in deploy
+    assert "spotpass_skip_already" in deploy
+    assert "apply_spotpass_embed" in deploy
+    assert "spotpass_embed_already" in deploy
+    assert "apply_password_uribo" in deploy
+    assert "password_uribo_already" in deploy
+
+
+def test_card_name_labels_after_flist():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_card_name_labels_en.py") > scripts.index(
+        "deploy_card_flist_en.py"
+    )
+    text = (TOOLS / "deploy_card_name_labels_en.py").read_text(encoding="utf-8")
+    assert "B_Card04_txt01" in text
+    assert "B_Card04_txt06" in text
+    assert '"Name"' in text
+    assert "Girlfriend's Name" in text
+    assert "HEADER_CORE_PX" in text
+    assert "render_header_aa" not in text
+
+
+def test_dsel_data_visible_hooked():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert "deploy_dsel_data_visible.py" in scripts
+    text = (TOOLS / "deploy_dsel_data_visible.py").read_text(encoding="utf-8")
+    assert "Vis_Dsel_Data" in text
+    assert "Pts_Dsel_Data" in text
+    assert '("Pic_Dsel_data",)' in text
+    assert "5152" in text
 
 
 def test_softkey_deploy_after_confirm():
@@ -89,9 +181,23 @@ def test_softkey_deploy_after_confirm():
     softkey = scripts.index("deploy_softkey_back_next_en.py")
     quit_sk = scripts.index("deploy_softkey_quit_en.py")
     defaults = scripts.index("deploy_softkey_defaults_en.py")
+    sides = scripts.index("deploy_card_side_btn_en.py")
     assert softkey > confirm
     assert quit_sk > softkey
     assert defaults > quit_sk
+    assert sides > defaults
+
+
+def test_commu_settings_header_after_menus():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_commu_settings_header_en.py") > scripts.index(
+        "deploy_msel_menus_en.py"
+    )
+    text = (TOOLS / "deploy_commu_settings_header_en.py").read_text(encoding="utf-8")
+    assert "Com_M_Sel_Plate_Text04_04_00" in text
+    assert "Com_M_Sel_Btn_Text04_04_00" in text
+    assert "Communication Settings" in text
+    assert "5241" in text
 
 
 def test_multiwin_after_datadelete():
@@ -103,8 +209,37 @@ def test_multiwin_after_datadelete():
 
 def test_multiwin_bake_runs_full_then_extras():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8", errors="replace")
-    assert '["--full"] if name == "deploy_multiwin_headers_en.py"' in text
-    assert "deploy_multiwin_headers_en.py extras" in text
+    assert 'name == "deploy_multiwin_headers_en.py"' in text
+    assert '["--full"]' in text
+    assert "into the vanilla --full pass" in text
+    plan = rebuild._deploy_plan(_rebuild_args())
+    multi = [row for row in plan if row[0] == "deploy_multiwin_headers_en.py"]
+    assert [row[1] for row in multi] == [["--full"], []]
+
+
+def test_day_counter_log_line_is_cp1252_safe():
+    """Drop CIA uses a cp1252 console; a Japanese log line aborts the bake."""
+    text = (TOOLS / "deploy_day_counter_en.py").read_text(encoding="utf-8")
+    printed = [
+        line
+        for line in text.splitlines()
+        if "print(" in line and "patched resident TRB" in line
+    ]
+    assert printed
+    for line in printed:
+        line.encode("cp1252")
+
+
+def test_child_stdio_replaces_unencodable(monkeypatch):
+    monkeypatch.delenv("PYTHONIOENCODING", raising=False)
+    monkeypatch.setattr(rebuild.sys, "stdout", type("Out", (), {"encoding": "cp1252"})())
+    env = rebuild._child_env(None, pipe=False)
+    assert env["PYTHONIOENCODING"] == "cp1252:replace"
+    piped = rebuild._child_env({"PATH": "x"}, pipe=True)
+    assert piped["PYTHONIOENCODING"] == "utf-8:replace"
+    assert piped["PATH"] == "x"
+    kept = rebuild._child_env({"PYTHONIOENCODING": "utf-8"}, pipe=False)
+    assert kept["PYTHONIOENCODING"] == "utf-8"
 
 
 def test_myroom_options_after_shared_arc_writers():
@@ -136,9 +271,13 @@ def test_msel_options_omits_quit_azahar_prompt():
     assert "add_password_input_plate" in text
     assert "--plate-only" in text
     assert "Com_M_Sel_Plate_Text04_04_00" in text
+    coverage = text.split("FORCE_COVERAGE", 1)[1].split(")", 1)[0]
+    assert "Plate_Text04_04_00" in coverage
+    assert "Btn_Text04_04" not in coverage
     plates = (TOOLS / "deploy_msel_opt_plates_en.py").read_text(encoding="utf-8")
     assert "Com_M_Sel_Plate_Text04_04_00" in plates
     assert "Communication Settings" in plates
+    assert 'stem == "Com_M_Sel_Plate_Text04_04_00"' in plates
 
 
 def test_multiwin_girlfriend_comm_self_renders():
@@ -232,6 +371,27 @@ def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):
     assert "PNG optional:" not in text
 
 
+def test_rebuild_disables_azahar_mirror_unless_flag():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
+    assert 'env["NLPP_ALSO_AZAHAR"] = "0"' in text
+    assert 'env["NLPP_ALSO_AZAHAR"] = "1"' in text
+    assert 'env.pop("NLPP_ALSO_AZAHAR"' not in text
+
+
+def test_rebuild_skips_gold_bake_sidecars(tmp_path: Path):
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
+    assert "cleanup_bake_img_baks" in text
+    assert 'env["NLPP_NO_IMG_BACKUP"] = "1"' in text
+    assert "seed_vanilla_bak" not in text
+    bake = tmp_path / "bake_img.bin"
+    bake.write_bytes(b"gold")
+    leftover = tmp_path / "bake_img.bin.bak_pre_cesa"
+    leftover.write_bytes(b"old")
+    rebuild.cleanup_bake_img_baks(bake)
+    assert bake.read_bytes() == b"gold"
+    assert not leftover.exists()
+
+
 def test_write_rebuild_log_includes_total_time(tmp_path: Path):
     lines = rebuild.format_rebuild_ok_lines(
         bake=tmp_path / "bake_img.bin",
@@ -243,19 +403,19 @@ def test_write_rebuild_log_includes_total_time(tmp_path: Path):
         elapsed="3m05s",
         started_at="2026-09-17 01:00:00",
     )
-    logs = tmp_path / "logs"
     path = rebuild.write_rebuild_log(
         lines,
         elapsed="3m05s",
         started_at="2026-09-17 01:00:00",
-        logs_dir=logs,
+        log_path=tmp_path / "log.txt",
+        pack_report="NLPP image pack report\npackages patched: 2\n",
         when=datetime(2026, 9, 17, 1, 3, 5),
     )
-    assert path == logs / "rebuild_20260917_010305.txt"
+    assert path == tmp_path / "log.txt"
     text = path.read_text(encoding="utf-8")
-    assert "Gold rebuild" in text
+    assert text.index("NLPP image pack report") < text.index("Gold rebuild")
     assert "Time:    3m05s" in text
     assert "Started: 2026-09-17 01:00:00" in text
     assert "time:          3m05s  (started 2026-09-17 01:00:00)" in text
-    latest = logs / "rebuild_latest.txt"
-    assert latest.read_text(encoding="utf-8") == text
+    assert not (tmp_path / "rebuild_latest.txt").exists()
+    assert not (tmp_path / "logs").exists()

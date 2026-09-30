@@ -29,10 +29,13 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from live_status import latest_progress_line, live, relax_stdio_errors
+from overall_progress import finish_bound, overall_scope, tick
 from nlpp_paths import (
     CACHE_VANILLA_CODE,
     CIA_FILENAME,
     LAYEREDFS_DIR_NAME,
+    NAME_INPUT_CODE,
     OUT_CIA,
     OUT_CIA_PREFIX,
     OUT_LAYEREDFS_PREFIX,
@@ -40,7 +43,14 @@ from nlpp_paths import (
     find_vanilla_code,
 )
 from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
-from run_timer import RunTimer
+from nlpp_paths import OUT_LOG_NAME
+from run_log import write_log
+from run_timer import (
+    RunTimer,
+    elapsed_since_unix,
+    format_started_at,
+    parse_unix_start,
+)
 from scratch_cleanup import is_reparse_dir as _is_reparse_dir
 from scratch_cleanup import path_is_under, remove_scratch
 from smdh_meta import (
@@ -117,7 +127,11 @@ class PatchError(RuntimeError):
 
 def _run(cmd: list[str | Path], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
     printable = " ".join(str(c) for c in cmd)
-    print(f"  > {printable}")
+    pinned = live.active
+    if pinned:
+        live.set_job("cmd", f"> {printable}")
+    else:
+        print(f"  > {printable}")
     proc = subprocess.run(
         [str(c) for c in cmd],
         cwd=str(cwd) if cwd else None,
@@ -126,6 +140,20 @@ def _run(cmd: list[str | Path], cwd: Path | None = None, check: bool = True) -> 
         encoding="utf-8",
         errors="replace",
     )
+    if pinned:
+        last = latest_progress_line((proc.stdout or "") + "\n" + (proc.stderr or ""))
+        if last:
+            live.set_job("cmd", last)
+        if check and proc.returncode != 0:
+            detail = "\n".join(
+                part.strip()
+                for part in (proc.stdout, proc.stderr)
+                if part and part.strip()
+            )
+            if detail:
+                live.log(detail)
+            raise PatchError(f"command failed ({proc.returncode}): {printable}")
+        return proc
     if proc.stdout.strip():
         print(proc.stdout.rstrip())
     if proc.stderr.strip():
@@ -328,44 +356,12 @@ from script_inject import resolve_script_source  # noqa: E402
 
 
 def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
-    total = 0
-    layers: dict[str, int] = {"manaka": 0, "eng_p": 0, "nlppatch": 0}
-    skipped = 0
-    for pack in PACKS:
-        src_dir = dbin_root / pack
-        if not src_dir.is_dir():
-            raise PatchError(f"missing packed scripts: {src_dir}")
-        dest_dir = romfs_dir / "script" / "bin" / pack
-        if not dest_dir.is_dir():
-            raise PatchError(f"RomFS missing script pack folder: {dest_dir}")
-        files = sorted(src_dir.glob("*.dbin2"))
-        if not files:
-            raise PatchError(f"no .dbin2 files in {src_dir}")
-        injected = 0
-        pack_layers: dict[str, int] = {}
-        for src in files:
-            chosen, tag = resolve_script_source(pack, src.stem, dbin_root)
-            if chosen is None:
-                skipped += 1
-                continue
-            shutil.copy2(chosen, dest_dir / src.name)
-            total += 1
-            injected += 1
-            if tag in layers:
-                layers[tag] += 1
-                pack_layers[tag] = pack_layers.get(tag, 0) + 1
-        layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
-        print(
-            f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"
-            f" — {len(files) - injected} JP (base ROM)"
-        )
-    print(
-        f"[inject] total EN: {total} "
-        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, nlppatch={layers['nlppatch']})"
-    )
-    if skipped:
-        print(f"[inject] {skipped} script slot(s) left Japanese")
-    return total
+    from script_inject import ScriptInjectError, inject_scripts  # noqa: E402
+
+    try:
+        return inject_scripts(romfs_dir, dbin_root, create_dirs=False)
+    except ScriptInjectError as exc:
+        raise PatchError(str(exc)) from exc
 
 
 def rebuild_romfs(romfs_dir: Path, out_bin: Path) -> None:
@@ -723,6 +719,7 @@ def write_layeredfs(
     resident_src: Path | None = None,
     code_bin_src: Path | None = None,
     patch_code: bool = False,
+    patched_code: Path | None = None,
     skip_name_patches: bool = False,
     romfs_overlay: Path | None = None,
 ) -> int:
@@ -772,7 +769,17 @@ def write_layeredfs(
         print(f"[layeredfs] copying img.bin ({img_bin.stat().st_size:,} bytes) ...")
         shutil.copy2(img_bin, dest_img)
 
-    if patch_code:
+    dest_code = title_root / "code.bin"
+    # Drop leaves LayeredFS off. When it is turned back on, still ship the
+    # same code.bin the CIA injects — not vanilla, and not only if --patch-code.
+    prebuilt = patched_code if patched_code and patched_code.is_file() else None
+    if prebuilt is None and not patch_code and NAME_INPUT_CODE.is_file():
+        prebuilt = NAME_INPUT_CODE
+    if prebuilt is not None:
+        dest_code.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(prebuilt, dest_code)
+        print(f"[layeredfs] code.bin <- {prebuilt}")
+    elif patch_code:
         src = code_bin_src if code_bin_src and code_bin_src.is_file() else find_vanilla_code()
         if src is None or not src.is_file():
             looked = code_bin_src or DEFAULT_CODE_BIN
@@ -783,9 +790,8 @@ def write_layeredfs(
             )
         from patch_code import write_patched_code_bin
 
-        dest_code = title_root / "code.bin"
         write_patched_code_bin(src, dest_code, force=True)
-        print(f"[layeredfs] code.bin (single-pane name draw)")
+        print("[layeredfs] code.bin (single-pane name draw)")
 
     if romfs_overlay is not None:
         apply_romfs_overlay(title_romfs, romfs_overlay)
@@ -814,7 +820,7 @@ def write_layeredfs(
                 f"     {title_folder}",
                 "   so you end up with:",
                 f"     SD:/luma/titles/{title_folder}/",
-                "   (the folder must contain romfs/ and optionally code.bin)",
+                "   (the folder must contain romfs/ and code.bin)",
                 "",
                 "4. In Luma configuration, enable:",
                 "     Enable game patching",
@@ -833,7 +839,10 @@ def write_layeredfs(
                 "  romfs/script/bin/{NLP_01,NLP_02,script}/*.dbin2  — English dialog",
                 "  romfs/SystemData/.../textresource_resident_jpn.trb — heroine names",
                 "  romfs/img.bin — English UI textures (when UI bake was included)",
-                "  code.bin — optional name-input fix (only with --patch-code)",
+                "  code.bin — this repo's patched ExeFS, beside romfs/",
+                "    Retail code loads a valid BCLIM. This file is still required:",
+                "    - title hub: skip a null Eng Patch pane so the menu can finish drawing",
+                "    - CESA thank-you: keep the 240x320 logo instead of a 400x400 quad",
                 "Dialog nickname tokens (▲高嶺＊＊▲ etc.) are kept in scripts;",
                 "resident TRB / img.bin use plain English heroine names — see src/patch_names.py.",
                 "",
@@ -841,8 +850,10 @@ def write_layeredfs(
                 "Do not also install the patched CIA from folder 2 — pick one.",
                 "Same install style as LovePlusProject/NLPPATCH releases.",
                 "",
-                "Note: the drop patcher writes this folder before rebuilding the CIA.",
-                "If the CIA step fails, this Luma overlay is still kept on disk.",
+                "English graphics load only when code.bin is in this folder.",
+                "That file is release/name_input_code.bin from the same build, not a",
+                "vanilla or leftover ExeFS. A failed CIA rebuild keeps this folder",
+                "only when that code.bin is present.",
                 "",
             ]
         ),
@@ -1038,15 +1049,63 @@ def _layeredfs_title_dir(out_dir: Path) -> Path:
     return out_dir / TITLE_ID
 
 
-def _print_layeredfs_recovery(out_dir: Path) -> None:
+def _layeredfs_code_bin(out_dir: Path) -> Path:
+    return _layeredfs_title_dir(out_dir) / "code.bin"
+
+
+def _layeredfs_graphics_ready(out_dir: Path) -> bool:
+    """English UI in the overlay loads only when code.bin was written with it."""
+    code = _layeredfs_code_bin(out_dir)
+    try:
+        return code.is_file() and code.stat().st_size > 0
+    except OSError:
+        return False
+
+
+def _discard_incomplete_layeredfs(out_dir: Path) -> None:
+    """Delete a LayeredFS drop that cannot show English graphics."""
+    title_dir = _layeredfs_title_dir(out_dir)
+    remove_scratch(title_dir, label=f"incomplete LayeredFS {title_dir}")
+    readme = out_dir / "README.txt"
+    if readme.is_file():
+        try:
+            readme.unlink()
+        except OSError as exc:
+            print(f"[layeredfs] warning: {readme}: {exc}")
+    try:
+        if out_dir.is_dir() and not any(out_dir.iterdir()):
+            out_dir.rmdir()
+    except OSError:
+        pass
+
+
+def _print_layeredfs_recovery(out_dir: Path) -> bool:
+    """Keep the overlay after a CIA failure only when code.bin is present.
+
+    Returns True when the folder is still an installable Luma drop.
+    """
     title_dir = _layeredfs_title_dir(out_dir)
     if not title_dir.is_dir():
-        return
+        return False
+    if not _layeredfs_graphics_ready(out_dir):
+        print()
+        print("=== LayeredFS removed ===")
+        print(f"Folder:  {title_dir}")
+        print(
+            "CIA rebuild failed. This overlay has no code.bin, so English "
+            "graphics would not load. Removed the incomplete LayeredFS folder."
+        )
+        _discard_incomplete_layeredfs(out_dir)
+        return False
     print()
     print("=== Luma LayeredFS still available ===")
     print(f"Folder:  {title_dir}")
     print(f"Install: SD:/luma/titles/{TITLE_ID}/  (see {out_dir / 'README.txt'})")
-    print("The CIA rebuild failed, but this overlay can still be used on Luma CFW.")
+    print(
+        "The CIA rebuild failed. code.bin is in this folder, so the English "
+        "graphics can still load on Luma CFW."
+    )
+    return True
 
 
 def rebuild_patched_cia(
@@ -1061,6 +1120,7 @@ def rebuild_patched_cia(
     romfs_overlay: Path | None,
 ) -> int:
     """Extract, inject, and rebuild the output CIA. Returns the CIA title version."""
+    tick("extract", 0.0)
     # 1–2) Extract game CXI (+ optional manual) from decrypted rom
     title_ver: int | None = None
     if args.cxi and Path(args.cxi).is_file():
@@ -1087,6 +1147,8 @@ def rebuild_patched_cia(
         )
 
     parts = split_cxi(cxi, work / "ncch_parts")
+    tick("extract", 1.0)
+    tick("RomFS", 0.0)
     keep_work = bool(getattr(args, "keep_work", False))
 
     def _drop(path: Path | None, label: str | None = None) -> None:
@@ -1172,6 +1234,8 @@ def rebuild_patched_cia(
     _drop(work / "code_namepatch_dec.bin")
 
     # 4) Rebuild containers
+    tick("RomFS", 1.0)
+    tick("rebuild CIA", 0.0)
     new_romfs = work / "romfs_patched.bin"
     rebuild_romfs(romfs_dir, new_romfs)
 
@@ -1198,6 +1262,7 @@ def rebuild_patched_cia(
             out_cia=out_cia,
             packed_img=packed_img,
         )
+    tick("rebuild CIA", 1.0)
     return title_ver
 
 
@@ -1605,22 +1670,48 @@ def build_patch_summary(
     return lines
 
 
+def resolve_started_unix(args: argparse.Namespace | None = None) -> float | None:
+    """Drop CIA wall-clock start: ``--started-unix``, else ``NLPP_T0`` env."""
+    raw = getattr(args, "started_unix", None) if args is not None else None
+    parsed = parse_unix_start(raw)
+    if parsed is not None:
+        return parsed
+    return parse_unix_start(os.environ.get("NLPP_T0"))
+
+
+def summary_timing(
+    timer: RunTimer,
+    args: argparse.Namespace | None = None,
+    *,
+    now: float | None = None,
+) -> tuple[str, str]:
+    """Elapsed + started_at for PATCH SUMMARY.
+
+    Drop CIA stamps ``NLPP_T0`` before pip / SHA-1 / gold bake. The CIA
+    ``RunTimer`` only covers inject, so without this the summary stays ~1m.
+    """
+    t0 = resolve_started_unix(args)
+    if t0 is not None:
+        return elapsed_since_unix(t0, now=now), format_started_at(t0)
+    return timer.elapsed_str(), timer.started_at
+
+
 def _env_flag(name: str) -> bool:
     return str(os.environ.get(name, "")).strip().lower() in {"1", "true", "yes", "on"}
 
 
 def default_patch_log_path(*, when: datetime | None = None) -> Path:
-    """Timestamped PATCH SUMMARY log under out/logs/."""
-    stamp = (when or datetime.now()).strftime("%Y%m%d_%H%M%S")
-    return ROOT / "out" / "logs" / f"patch_{stamp}.txt"
+    """Single run log at ``out/log.txt`` (``when`` is unused; kept for callers)."""
+    del when
+    return ROOT / "out" / OUT_LOG_NAME
 
 
 def resolve_patch_log_path(args: argparse.Namespace) -> Path | None:
-    """Where to write the PATCH SUMMARY log, or None to skip.
+    """Where to write the PATCH SUMMARY, or None to skip.
 
-    Default: ``out/logs/patch_YYYYMMDD_HHMMSS.txt``. ``--no-log`` or
-    ``NLPP_NO_LOG=1`` disables. ``--log PATH`` writes that file (or, if PATH is
-    an existing directory, a timestamped file inside it).
+    Default: ``out/log.txt``, appended after a gold-rebuild section when that
+    file already exists. ``--no-log`` or ``NLPP_NO_LOG=1`` disables. ``--log
+    PATH`` writes that file (or ``log.txt`` inside PATH when PATH is a directory).
     """
     if getattr(args, "no_log", False) or _env_flag("NLPP_NO_LOG"):
         return None
@@ -1628,8 +1719,7 @@ def resolve_patch_log_path(args: argparse.Namespace) -> Path | None:
     if raw:
         p = Path(raw).expanduser()
         if p.is_dir():
-            stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            return (p / f"patch_{stamp}.txt").resolve()
+            return (p / OUT_LOG_NAME).resolve()
         return p.resolve()
     return default_patch_log_path()
 
@@ -1682,23 +1772,17 @@ def write_patch_summary_log(
     out_cia: Path | None = None,
     when: datetime | None = None,
 ) -> Path | None:
-    """Write PATCH SUMMARY log + ``latest.txt`` sibling. Never raises."""
+    """Append the PATCH SUMMARY to ``out/log.txt``. Never raises.
+
+    A custom ``--log`` file is overwritten and is not copied beside itself.
+    """
+    text = format_patch_log(lines, rom_in=rom_in, out_cia=out_cia, when=when)
+    append = False
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        text = format_patch_log(lines, rom_in=rom_in, out_cia=out_cia, when=when)
-        path.write_text(text, encoding="utf-8")
-        # Mirror to latest.txt only inside a logs/ folder (Drop CIA default).
-        if path.parent.name.lower() == "logs":
-            latest = path.parent / "latest.txt"
-            if path.resolve() != latest.resolve():
-                try:
-                    latest.write_text(text, encoding="utf-8")
-                except OSError:
-                    pass
-        return path
-    except OSError as exc:
-        print(f"[log] warning: could not write {path}: {exc}", flush=True)
-        return None
+        append = path.resolve() == default_patch_log_path().resolve()
+    except OSError:
+        append = False
+    return write_log(text, dest=path, append=append)
 
 
 def print_patch_summary(
@@ -1735,7 +1819,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     out_cia.parent.mkdir(parents=True, exist_ok=True)
 
     timer = RunTimer("CIA patcher", heartbeat_s=60.0)
-    print("=== NLPP English Patcher (→ CIA) ===")
+    print("=== NLPP English Patcher (-> CIA) ===")
     print(f"input:  {rom_in} ({kind})")
     print(f"dbin:   {dbin_root}")
     print(f"work:   {work}")
@@ -1752,6 +1836,19 @@ def cmd_patch(args: argparse.Namespace) -> int:
         raise
 
 
+def _cia_steps(args: argparse.Namespace) -> list[tuple[str, float]]:
+    """Relative time inside the CIA process. Repack spends most of it on PNGs."""
+    ui = 55.0 if getattr(args, "repack_images", False) else 2.0
+    return [
+        ("hash", 1.0),
+        ("UI images", ui),
+        ("LayeredFS", 4.0),
+        ("extract", 3.0),
+        ("RomFS", 10.0),
+        ("rebuild CIA", 6.0),
+    ]
+
+
 def _cmd_patch_body(
     args: argparse.Namespace,
     rom_in: Path,
@@ -1761,13 +1858,30 @@ def _cmd_patch_body(
     out_cia: Path,
     timer: RunTimer,
 ) -> int:
+    with overall_scope(_cia_steps(args)):
+        return _cmd_patch_body_impl(
+            args, rom_in, kind, dbin_root, work, out_cia, timer
+        )
+
+
+def _cmd_patch_body_impl(
+    args: argparse.Namespace,
+    rom_in: Path,
+    kind: str,
+    dbin_root: Path,
+    work: Path,
+    out_cia: Path,
+    timer: RunTimer,
+) -> int:
     # Verify dump identity before extract / image / RomFS work.
+    tick("hash", 0.0)
     if args.skip_hash:
         print("[hash] skipped (--skip-hash)")
     else:
         verify_cia_sha1(rom_in, expected=args.expect_sha1)
     print()
     timer.mark("hash OK")
+    tick("hash", 1.0)
 
     packed_img: Path | None = None
     layered_img: Path | None = None
@@ -1776,12 +1890,14 @@ def _cmd_patch_body(
         # scripts-only ships name-input code.bin + vanilla JP menus / no Eng
         # Patch badge — the Sep 2026 Desktop CIA regression.
         timer.mark("resolving / packing UI img.bin")
+        tick("UI images", 0.0)
         packed_img = pack_ui_images(args, work)
         layered_img = packed_img
         timer.mark("UI img.bin ready")
         _require_name_input_for_ui(args)
     elif args.no_images:
         print("[images] skipped (--no-images)")
+    tick("UI images", 1.0)
 
     romfs_hint = Path(args.romfs).resolve() if args.romfs else (
         DEFAULT_ROMFS if DEFAULT_ROMFS.is_dir() else None
@@ -1810,6 +1926,7 @@ def _cmd_patch_body(
     if args.layeredfs_out:
         layeredfs_out = Path(args.layeredfs_out).resolve()
         timer.mark("writing LayeredFS")
+        tick("LayeredFS", 0.0)
         write_layeredfs(
             layeredfs_out,
             dbin_root,
@@ -1817,16 +1934,19 @@ def _cmd_patch_body(
             resident_src=resident_src,
             code_bin_src=code_bin_src,
             patch_code=args.patch_code,
+            patched_code=Path(args.inject_code) if args.inject_code else None,
             skip_name_patches=args.skip_name_patches,
             romfs_overlay=romfs_overlay,
         )
         layeredfs_written = _layeredfs_title_dir(layeredfs_out).is_dir()
         write_install_choice_note()
+    tick("LayeredFS", 1.0)
 
     if args.layeredfs_only:
         print()
         print("Done (LayeredFS only). No CIA rebuilt.")
-        print(f"Time: {timer.elapsed_str()}  (started {timer.started_at})")
+        elapsed, started_at = summary_timing(timer, args)
+        print(f"Time: {elapsed}  (started {started_at})")
         summary = build_patch_summary(
             out_cia=None,
             packed_img=packed_img,
@@ -1835,8 +1955,8 @@ def _cmd_patch_body(
             romfs_overlay=romfs_overlay,
             args=args,
             layeredfs_only=True,
-            elapsed=timer.elapsed_str(),
-            started_at=timer.started_at,
+            elapsed=elapsed,
+            started_at=started_at,
         )
         print_patch_summary(summary)
         if args.keep_work:
@@ -1845,6 +1965,7 @@ def _cmd_patch_body(
             cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
             print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
         _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=None)
+        finish_bound()
         timer.finish("CIA patcher OK (LayeredFS only)")
         return 0
 
@@ -1863,20 +1984,21 @@ def _cmd_patch_body(
         )
     except PatchError:
         if layeredfs_written and layeredfs_out is not None:
-            write_install_choice_note()
-            _print_layeredfs_recovery(layeredfs_out)
+            if _print_layeredfs_recovery(layeredfs_out):
+                write_install_choice_note()
         raise
 
     print()
     print("=== Done ===")
     print(f"Patched CIA: {out_cia}")
     print(f"Size:        {out_cia.stat().st_size:,} bytes")
-    print(f"Time:        {timer.elapsed_str()}  (started {timer.started_at})")
+    elapsed, started_at = summary_timing(timer, args)
+    print(f"Time:        {elapsed}  (started {started_at})")
     if packed_img is not None and packed_img.is_file():
         print(f"Packed UI:   {packed_img}")
-    if layeredfs_out is not None and layeredfs_out.is_dir():
+    if layeredfs_written and layeredfs_out is not None:
         print(f"LayeredFS:   {layeredfs_out}")
-    write_install_choice_note()
+        write_install_choice_note()
     summary = build_patch_summary(
         out_cia=out_cia,
         packed_img=packed_img,
@@ -1885,8 +2007,8 @@ def _cmd_patch_body(
         romfs_overlay=romfs_overlay,
         args=args,
         layeredfs_only=False,
-        elapsed=timer.elapsed_str(),
-        started_at=timer.started_at,
+        elapsed=elapsed,
+        started_at=started_at,
         title_ver=title_ver,
     )
     print_patch_summary(summary)
@@ -1913,19 +2035,30 @@ def _cmd_patch_body(
         cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
         print(
             "  - out/ cleaned (kept numbered LayeredFS/CIA folders, "
-            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/)."
+            f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/)."
         )
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
+    finish_bound()
     timer.finish("CIA patcher OK")
     return 0
 
 
 def _log_keep_paths(log_path: Path | None) -> list[Path]:
-    """Keep the log file (and its parent dir) if it lives under out/."""
+    """Keep the log file if it lives under out/. Do not keep out/ itself."""
     if log_path is None:
         return []
-    return [log_path, log_path.parent]
+    out_root = (ROOT / "out").resolve()
+    try:
+        resolved = log_path.resolve()
+    except OSError:
+        return [log_path]
+    if resolved == out_root:
+        return []
+    parent = resolved.parent
+    if parent == out_root:
+        return [resolved]
+    return [resolved, parent]
 
 
 def _emit_patch_log(
@@ -2008,37 +2141,36 @@ def cleanup_patch_artifacts(
 # Dirs under out/ that survive post-patch cleanup (not patch scratch).
 _OUT_KEEP_DIRS = frozenset(
     {
-        OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
         OUT_CIA_PREFIX,  # patched CIA
+        OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
+        OUT_NOT_BOTH_NAME,  # folder: pick the CIA or LayeredFS, not both
         LAYEREDFS_DIR_NAME,  # leftover unprefixed luma/ from older builds
-        "azahar_instances",  # a/b test workflow (ab_test/)
-        "logs",  # PATCH SUMMARY logs (timestamped + latest.txt)
         "extdata_backup",  # Azahar extra-data / title-save snapshots
     }
 )
-_OUT_KEEP_FILES = frozenset(
-    {
-        OUT_NOT_BOTH_NAME,  # pick LayeredFS or CIA, not both
-    }
-)
+_OUT_KEEP_FILES = frozenset({OUT_LOG_NAME})
 
 
 def write_install_choice_note(out_root: Path | None = None) -> Path:
-    """Write out/3_but not both — use LayeredFS or the CIA, not both."""
+    """Write out/3_[but not both]/ — use the CIA or LayeredFS, not both."""
     root = Path(out_root) if out_root is not None else (ROOT / "out")
     root.mkdir(parents=True, exist_ok=True)
-    path = root / OUT_NOT_BOTH_NAME
+    folder = root / OUT_NOT_BOTH_NAME
+    if folder.is_file():
+        folder.unlink()
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / "README.txt"
     path.write_text(
         "\n".join(
             [
-                "Use either folder 1 (LayeredFS) or folder 2 (CIA). Do not use both.",
+                "Use either folder 1 (CIA) or folder 2 (LayeredFS). Do not use both.",
+                "",
+                f"{OUT_CIA_PREFIX}/",
+                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
                 "",
                 f"{OUT_LAYEREDFS_PREFIX}/",
                 f"  Copy {LAYEREDFS_DIR_NAME}/{TITLE_ID} to SD:/luma/titles/",
                 "  (enable Enable game patching in Luma).",
-                "",
-                f"{OUT_CIA_PREFIX}/",
-                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
                 "",
                 "LayeredFS on top of the English CIA would apply the patch twice.",
                 "",
@@ -2055,7 +2187,7 @@ def cleanup_out_dir(
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
     quiet: bool = False,
 ) -> None:
-    """Wipe EngPatcher out/ except CIA(s), numbered install folders, logs, backups."""
+    """Wipe EngPatcher out/ except CIA(s), numbered install folders, log.txt, backups."""
     out_root = (ROOT / "out").resolve()
     if not out_root.is_dir():
         return
@@ -2124,14 +2256,14 @@ def cleanup_out_dir(
     if removed:
         print(
             f"[cleanup] out/ kept: {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
-            f"{OUT_NOT_BOTH_NAME}, logs/, azahar_instances/, extdata_backup/ "
+            f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/ "
             f"({removed} other item(s) removed)"
         )
     elif not quiet:
         print(
             "[cleanup] out/ already clean "
             f"({OUT_LAYEREDFS_PREFIX} + {OUT_CIA_PREFIX} + {OUT_NOT_BOTH_NAME} "
-            "+ logs + azahar_instances + extdata_backup)"
+            f"+ {OUT_LOG_NAME} + extdata_backup)"
         )
 
 
@@ -2198,16 +2330,16 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Keep out/ scratch after a successful build "
         f"(default: leave {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
-        f"{OUT_NOT_BOTH_NAME}, out/logs/, out/azahar_instances/, "
+        f"{OUT_NOT_BOTH_NAME}, out/{OUT_LOG_NAME}, "
         "out/extdata_backup/)",
     )
     p.add_argument(
         "--log",
         default=None,
         metavar="PATH",
-        help="Write the PATCH SUMMARY to PATH. Omit this flag to use "
-        "out/logs/patch_YYYYMMDD_HHMMSS.txt (and latest.txt). "
-        "If PATH is a directory, write a timestamped file inside it.",
+        help="Write the PATCH SUMMARY to PATH. Omit this flag to append "
+        f"out/{OUT_LOG_NAME} (gold rebuild writes the same file first). "
+        f"If PATH is a directory, write {OUT_LOG_NAME} inside it.",
     )
     p.add_argument(
         "--no-log",
@@ -2357,10 +2489,21 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Also sync SpotPass info.dat into Azahar AppData sdmc extdata 00000321/boss/",
     )
+    p.add_argument(
+        "--started-unix",
+        default=None,
+        metavar="SECONDS",
+        help=(
+            "Drop CIA wall-clock start (unix seconds). PATCH SUMMARY elapsed "
+            "is from this instant (pip / hash / bake / inject). "
+            "Default: NLPP_T0 environment variable."
+        ),
+    )
     return p
 
 
 def main(argv: list[str] | None = None) -> int:
+    relax_stdio_errors()
     args = build_parser().parse_args(argv)
     try:
         return cmd_patch(args)

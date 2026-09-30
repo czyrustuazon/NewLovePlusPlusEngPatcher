@@ -13,7 +13,7 @@ Typical use, after a translation batch::
                                               # and auto-POSTs when .env is set
     py src/report_progress.py                 # manual / CI / Drop CIA.bat
 
-Or via the make shim: ``.\\make.ps1 progress``.
+Or: ``.\\ab_test\\make.ps1 progress``.
 
 Config lives outside the repo (this is a public repo -- the site's admin surface
 should not be discoverable from it). Copy ``.env.example`` to ``.env`` and set:

@@ -6,11 +6,11 @@ handler inside the shared 60-cell keyboard/candidate pane-warmup loop.
 (Renamed in Ghidra after this investigation: FUN_00545550 -> Pane_AttachToParent,
 FUN_00542230 -> IntrusiveDList_InsertFront. Kept as FUN_ addresses below since
 that's how they were identified live -- see those functions' plate comments in
-Ghidra, or the Known-APIs table in technical.md / .cursor/rules/ghidra-mcp.mdc,
+Ghidra, or the Known-APIs table in docs/technical.md / .cursor/rules/ghidra-mcp.mdc,
 for the current names.)
 
 Root cause (live GDB-traced 2026-08-13, arm-none-eabi-gdb over Azahar's
-gdbstub, port 24689 -- see technical.md SS3.3j; supersedes the SS3.3i
+gdbstub, port 24689 -- see docs/technical.md SS3.3j; supersedes the SS3.3i
 CreateTextPane theory, which was live-disproven: 35 real CreateTextPane
 calls traced clean in the same session):
 
@@ -57,7 +57,7 @@ when there is nothing valid to register. This does not change behavior for
 any call where the slot is non-zero (the pane pool is otherwise unaffected
 -- CreateTextPane itself is proven fine, see SS3.3j).
 
-Part of the verified name-input stack (technical.md §17). Safe with
+Part of the verified name-input stack (docs/technical.md §17). Safe with
 candidate_nullguard + fillflag_reset; do not combine with the removed
 candmode_reset (+0x24 force-zero kills taps).
 
@@ -79,7 +79,7 @@ EXPECT_SITE = bytes.fromhex("6e2b0deb")  # bl 0x00545550
 
 CALL_TARGET = 0x00545550
 
-# Same last-.text RX pad as the fillcand nullguard (technical.md §17).
+# Same last-.text RX pad as the fillcand nullguard (docs/technical.md §17).
 # Sub-range +0x90 — keep clear of candidate (+0x40/+0x60) and fillflag (+0xC0).
 CAVE = ADDR_CAVE + 0x90
 CAVE_LEN = 0x10

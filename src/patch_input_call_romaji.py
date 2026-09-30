@@ -11,6 +11,12 @@ This patch:
   2. For a non-empty ASCII Called name, skips the JP dictionary and draws
      the typed string as candidate 0 (so AKIKO is selectable)
 
+``GetUtf8CharByteLength`` (``0x005BF4E8``) always writes ``r1`` (``mov r1, r0``)
+and writes ``r2`` on multibyte leads. The ``*3`` walk must keep its cursor in
+registers that call leaves alone (``r3`` byte offset, saved ``r4`` count,
+base ``r6``). Holding the pointer in ``r1`` data-aborts on hardware: ASCII
+``T`` (``0x54``) comes back in ``r1``, and the next ``ldrb`` reads ``0x55``.
+
 Ships in ``deploy_name_input_en.py`` / ``release/name_input_code.bin``.
 """
 from __future__ import annotations
@@ -18,7 +24,7 @@ from __future__ import annotations
 import argparse
 import struct
 
-from patch_input_cave_map import TEXT_PAGE_END
+from patch_input_cave_map import ADDR_COMMU_HEADER_CAVE, TEXT_PAGE_END
 from patch_input_romaji import (
     add_imm,
     add_reg,
@@ -99,24 +105,25 @@ def _build_stream() -> list:
         stream.append(("b_abs", addr))
 
     L("utf8_off")
-    OP(push(0x400E))  # r1-r3, lr
-    OP(mov_reg(1, 6))
-    OP(mov_reg(2, 10))
+    # r6 = Called string, r10 = char index. Return byte offset in r0.
+    # Count lives in r4 (dead at the *3 site, saved anyway). Offset lives in
+    # r3. Both survive GetUtf8CharByteLength; r1/r2 do not.
+    OP(push(0x401E))  # r1-r4, lr
+    OP(mov_reg(4, 10))
     OP(mov_imm(3, 0))
     L("off_loop")
-    OP(cmp_imm(2, 0))
+    OP(cmp_imm(4, 0))
     B("off_done", cond=0x0)
-    OP(ldrb_imm(0, 1, 0))
+    OP(u32(0xE7D60003))  # ldrb r0, [r6, r3]
     OP(cmp_imm(0, 0))
     B("off_done", cond=0x0)
     BL(ADDR_UTF8_LEN)
-    OP(add_reg(1, 1, 0))
     OP(add_reg(3, 3, 0))
-    OP(sub_imm(2, 2, 1))
+    OP(sub_imm(4, 4, 1))
     B("off_loop")
     L("off_done")
     OP(mov_reg(0, 3))
-    OP(pop(0x800E))
+    OP(pop(0x801E))  # r1-r4, pc
 
     L("utf8_adv")
     # Replaces `add r4, #3` between `cmp r7, r10` and `blt`. ADD does not
@@ -226,8 +233,10 @@ def apply_patch(data: bytearray) -> bool:
     base = cave_addr()
     blob, labs = build_blob(base=base)
     end = base + len(blob)
-    if end > TEXT_PAGE_END:
-        raise ValueError(f"call-romaji cave {end:#x} past .text {TEXT_PAGE_END:#x}")
+    if end > ADDR_COMMU_HEADER_CAVE:
+        raise ValueError(
+            f"call-romaji cave {end:#x} overlaps commu header {ADDR_COMMU_HEADER_CAVE:#x}"
+        )
     if is_patched(data):
         print(f"[call-romaji] already patched cave @{base:#x}")
         return False

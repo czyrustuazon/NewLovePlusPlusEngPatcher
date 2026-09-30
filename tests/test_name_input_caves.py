@@ -47,6 +47,7 @@ def test_name_input_caves_are_inside_text_rx():
     assert sc + len(strcat_raw.build_blob(base=sc)) <= end
     cr = call_romaji.cave_addr()
     assert cr + len(call_romaji.build_blob()[0]) <= end
+    assert cave_map.ADDR_CHUNK_WALK_CAVE < cave_map.ADDR_CHUNK_WALK_LIMIT <= end
     assert cave_map.OLD_RODATA_SHARED_PAD >= end
     assert cave_map.OLD_RODATA_ROMAJI_CAVE >= end
 
@@ -179,7 +180,7 @@ def test_skip_ascii_dakuten_is_inplace_strcat_branch():
 def test_strcat_raw_replaces_makestr_join():
     cave = strcat_raw.cave_addr()
     blob = strcat_raw.build_blob(base=cave)
-    assert cave + len(blob) <= cave_map.TEXT_PAGE_END
+    assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
     from nlpp_paths import find_vanilla_code
 
     src = find_vanilla_code()
@@ -212,8 +213,14 @@ def test_call_romaji_caves_assemble_and_hook_vanilla():
     """Called-list *3 walk + ASCII fallback stay in .text RX after strcat."""
     cave = call_romaji.cave_addr()
     blob, labs = call_romaji.build_blob(base=cave)
-    assert cave + len(blob) <= cave_map.TEXT_PAGE_END
+    assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
     assert labs["utf8_off"] == cave
+    # GetUtf8CharByteLength writes r1. Cursor is ldrb r0, [r6, r3], not r1.
+    off = labs["utf8_off"] - cave
+    adv = labs["utf8_adv"] - cave
+    walk = blob[off:adv]
+    assert bytes.fromhex("0300d6e7") in walk  # ldrb r0, [r6, r3]
+    assert bytes.fromhex("0610a0e1") not in walk  # mov r1, r6
     assert "call01" in labs and "call02" in labs
     assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
     assert bytes.fromhex("0cf028e1") in blob  # msr cpsr_f, r12

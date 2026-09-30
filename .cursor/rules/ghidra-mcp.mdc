@@ -7,9 +7,11 @@ alwaysApply: true
 
 ## Setup
 
-1. `GetMcpTools` for schema before calling tools.
+1. `GetDynamicTools` (`namespace: "user-ghidra"`) for schema before calling tools (`CallDynamicTool`).
 2. `list_open_programs` / `list_instances` + `connect_instance` if needed.
 3. Prefer current program `code.bin` (image base **0**).
+
+Headless and new projects use repo-root `ghidra_nlpp/` (`nlpp_paths.GHIDRA_PROJECT`). Do not pass `out/ghidra_nlpp`. Drop CIA deletes `out/`, and nothing in the patcher recreates a project there.
 
 ## Addresses
 

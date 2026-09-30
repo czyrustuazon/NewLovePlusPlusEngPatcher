@@ -11,11 +11,13 @@
 | `NLPTextTool/` | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) | XML ↔ `.dbin2` (needs .NET SDK to build) |
 | `NLPUnpacker/` | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) | Older `img.bin` unpacker (C#) |
 | `../assets/fonts/MPLUS1p-Regular.ttf` | M PLUS 1p (SIL OFL) | UI glyph renders for deploy scripts |
-| `spotpass/` + `build_spotpass_inject.py` | Archived NLPP SpotPass BOSS dump | Build `info.dat` inject for Azahar or real 3DS (`--real3ds` → `out/spotpass_real3ds/`) |
+| `spotpass/` + `build_spotpass_inject.py` | Archived NLPP SpotPass BOSS dump | Optional real `info.dat` inject; Watcher #28 is baked via `patch_spotpass_embed.py` |
 
 Full credit list: see root [`README.md`](../README.md#credits).
 
-### SpotPass inject
+### SpotPass inject (optional)
+
+Watcher #28 ships in Drop CIA `code.bin` (`patch_spotpass_embed.py`). These commands only build a BOSS-shaped extdata file:
 
 ```bash
 python tools/build_spotpass_inject.py --real3ds    # CFW + FBI Ext Save Data

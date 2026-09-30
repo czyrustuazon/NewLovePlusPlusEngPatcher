@@ -123,6 +123,42 @@ def write_tree(out_dir: Path, blob: bytes, *, include_readme: bool) -> Path:
     return dest
 
 
+def install_user_boss(user_dir: Path, blob: bytes) -> list[Path]:
+    """Write ``info.dat`` into a portable Azahar user SDMC.
+
+    This Azahar opens Boss extdata using the ROM extdata id (``00000F4E``),
+    under ``…/extdata/00000000/<id>/boss/``. Also drop the shared ``00000321``
+    copy the hardware path uses.
+    """
+    zeros = "0" * 32
+    root = (
+        user_dir
+        / "sdmc"
+        / "Nintendo 3DS"
+        / zeros
+        / zeros
+        / "extdata"
+        / "00000000"
+    )
+    bosses = [root / "00000321" / "boss"]
+    if root.is_dir():
+        for child in root.iterdir():
+            boss = child / "boss"
+            if boss.is_dir():
+                bosses.append(boss)
+    written: list[Path] = []
+    seen: set[Path] = set()
+    for boss in bosses:
+        if boss in seen:
+            continue
+        seen.add(boss)
+        boss.mkdir(parents=True, exist_ok=True)
+        dest = boss / "info.dat"
+        dest.write_bytes(blob)
+        written.append(dest)
+    return written
+
+
 def install_azahar(blob: bytes) -> Path:
     AZAHAR_BOSS.mkdir(parents=True, exist_ok=True)
     (AZAHAR_BOSS.parent / "user").mkdir(parents=True, exist_ok=True)

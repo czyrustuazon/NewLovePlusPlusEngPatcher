@@ -15,7 +15,7 @@ Main Menu is a white column — soft white-on-white vanishes; use white glyphs
 Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
 the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
 ``Pts_Title_menu`` shows). Zhoumaru ``Title.check`` dump had swizzled RGB;
-packing it garbles first hub show (``technical.md`` §15.1.1). Rebuild this
+packing it garbles first hub show (``docs/technical.md`` §15.1.1). Rebuild this
 ARC from vanilla, never from ``bak_pre_title_engpatch`` (that bak is packed
 MOD). Never leave a magenta probe in gold bake.
 
@@ -51,7 +51,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    AZAHAR_INSTANCES,
     UI_FONT,
+    maybe_backup_img,
     find_ui_png,
     iter_deploy_targets,
     resolve_img_paths,
@@ -445,10 +447,7 @@ def main() -> int:
     if not UI_FONT.is_file():
         raise SystemExit(f"missing UI font {UI_FONT}")
 
-    bak = MOD_IMG.with_suffix(".bin.bak_pre_title_engpatch")
-    if not bak.is_file():
-        bak.write_bytes(MOD_IMG.read_bytes())
-        print("created", bak, flush=True)
+    bak = maybe_backup_img(MOD_IMG, "title_engpatch")
 
     OUT.mkdir(parents=True, exist_ok=True)
     ASSET.mkdir(parents=True, exist_ok=True)
@@ -629,7 +628,7 @@ def main() -> int:
 
     try:
         targets = list(iter_deploy_targets(MOD_IMG))
-        inst_root = ROOT / "out" / "azahar_instances"
+        inst_root = AZAHAR_INSTANCES
         seen = {p.resolve() for p in targets}
         for img in inst_root.glob("*/user/load/mods/00040000000F4E00/romfs/img.bin"):
             rp = img.resolve()

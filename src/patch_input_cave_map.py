@@ -19,8 +19,17 @@ TEXT_PAGE_END = 0x00690000
 TEXT_SIZE = 0x0068F7FC
 
 # 2 KiB zero pad at the end of the last RX page.
+# Dead tail of FUN_002573ac (file 0x002573AC, 0xB0 bytes). The strcat patch
+# branches away at the first instruction; the chunk-walk guard uses the rest.
+ADDR_CHUNK_WALK_CAVE = 0x002573B0
+ADDR_CHUNK_WALK_LIMIT = 0x0025745C
+
 ADDR_SHARED_PAD = 0x0068F800
 ADDR_ROMAJI_CAVE = 0x0068F900
+# Communication Settings header DrawText. Last 44 bytes of the RX page,
+# after the romaji / strcat / call-romaji caves.
+ADDR_COMMU_HEADER_CAVE = 0x0068FFD4
+COMMU_HEADER_CAVE_LEN = TEXT_PAGE_END - ADDR_COMMU_HEADER_CAVE
 # TalkWindow delay cap (min vs table). Cand nullguard starts at +0x40.
 # +0x28 attach-null (lyt); +0xA0 FindPaneByName null vtable (was candmode_reset).
 ADDR_TALK_CAP_CAVE = ADDR_SHARED_PAD
@@ -29,3 +38,6 @@ TALK_CAP_CAVE_LEN = 0x28
 # Historical pads in .rodata — never execute from these on hardware.
 OLD_RODATA_SHARED_PAD = 0x006E6A38
 OLD_RODATA_ROMAJI_CAVE = 0x006FBB08
+# SpotPass NsData body (data only). Same pad as OLD_RODATA_ROMAJI_CAVE.
+ADDR_SPOTPASS_PAYLOAD = OLD_RODATA_ROMAJI_CAVE
+SPOTPASS_PAYLOAD_MAX = 0x1001

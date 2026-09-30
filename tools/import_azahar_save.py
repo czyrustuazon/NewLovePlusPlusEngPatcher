@@ -10,7 +10,7 @@ Packs live under ab_test/saves/<id>/ (extracted). A zip with the same
 
   python tools/import_azahar_save.py --list
   python tools/import_azahar_save.py --pack nene
-  python tools/import_azahar_save.py --pack nene --user-dir out/azahar_instances/a/user
+  python tools/import_azahar_save.py --pack nene --user-dir ab_test/azahar_instances/a/user
   python tools/import_azahar_save.py --zip path/to/save.zip
 
 Existing title-save files (only) are snapshotted under out/extdata_backup/
