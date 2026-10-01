@@ -16,6 +16,38 @@ if not exist "%SRC%\drop_zone.ps1" (
   exit /b 1
 )
 
+REM Install Python packages before the drop window or any patch step.
+call :find_python
+if not defined PYTHON (
+  echo.
+  echo [!] Python 3.10+ not found.
+  echo.
+  echo     Fix ^(pick one^):
+  echo       1. Install from https://www.python.org/downloads/
+  echo          and CHECK "Add python.exe to PATH"
+  echo       2. Or install from Microsoft Store: "Python 3.12"
+  echo.
+  echo     If you disabled "App execution aliases" for python.exe:
+  echo     that only helps after a real install is on PATH / via py.
+  echo     Try opening a NEW Command Prompt and running:  py -3 --version
+  echo.
+  pause
+  exit /b 1
+)
+
+if /i "%NLPP_PY_DEPS%"=="1" goto :deps_ready
+echo.
+echo Installing Python packages ^(pip install -r requirements.txt^) ...
+"%PYTHON%" -m pip install -r "%~dp0requirements.txt"
+if errorlevel 1 (
+  echo [!] pip install failed. Try: %PYTHON% -m pip install -r requirements.txt
+  pause
+  exit /b 1
+)
+echo.
+set "NLPP_PY_DEPS=1"
+:deps_ready
+
 if not "%~1"=="" goto :run_patch
 
 where powershell >nul 2>&1
@@ -81,26 +113,6 @@ if not exist "%CIA%" (
   exit /b 1
 )
 
-REM Resolve a real Python (not the Microsoft Store stub). Prefer PATH, then py launcher,
-REM then common install folders — new installs often only get "py" or miss PATH.
-call :find_python
-if not defined PYTHON (
-  echo.
-  echo [!] Python 3.10+ not found.
-  echo.
-  echo     Fix ^(pick one^):
-  echo       1. Install from https://www.python.org/downloads/
-  echo          and CHECK "Add python.exe to PATH"
-  echo       2. Or install from Microsoft Store: "Python 3.12"
-  echo.
-  echo     If you disabled "App execution aliases" for python.exe:
-  echo     that only helps after a real install is on PATH / via py.
-  echo     Try opening a NEW Command Prompt and running:  py -3 --version
-  echo.
-  pause
-  exit /b 1
-)
-
 echo.
 echo  ============================================
 echo   New Love Plus+ English Patcher
@@ -133,14 +145,6 @@ REM Pass Drop start into patch_cia.py so PATCH SUMMARY elapsed includes bake.
 set "STARTED_UNIX="
 if defined NLPP_T0 set STARTED_UNIX=--started-unix !NLPP_T0!
 
-echo Installing Python deps from dev\requirements.txt ...
-"%PYTHON%" -m pip install -q -r "%~dp0dev\requirements.txt"
-if errorlevel 1 (
-  echo [!] pip install failed. Try: %PYTHON% -m pip install -r dev\requirements.txt
-  pause
-  exit /b 1
-)
-echo.
 echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb^) ...
 echo Decrypt your dump yourself first - this patcher does not include decrypt.exe.
 "%PYTHON%" "%SRC%\setup_tools.py"
@@ -339,7 +343,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r dev\requirements.txt
+        echo       pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -357,7 +361,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r dev\requirements.txt
+        echo       pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause

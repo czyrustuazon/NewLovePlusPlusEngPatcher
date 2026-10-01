@@ -284,6 +284,9 @@ function Move-LayeredFsBackups([string]$Id) {
 
 function Launch-Instance([string]$Id) {
     Move-LayeredFsBackups $Id
+    if ($env:NLPP_EMU_NAME_WALK_ABORT -eq "1") {
+        Write-Host "NLPP_EMU_NAME_WALK_ABORT=1 (name-walk load emulates the 2026-10-01 18:36 data abort)"
+    }
     $bat = Join-Path $Paths.Instances "$Id\Launch-$Id.bat"
     if (Test-Path $bat) {
         Start-Process $bat

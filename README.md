@@ -151,7 +151,7 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 - Windows x64  
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
-- `pip install -r dev/requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML — drop-bat runs this)  
+- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML via `dev/requirements.txt` — the drop bat runs this first)  
 - A few GB free disk (RomFS rebuild is large)  
 - A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
 - First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
@@ -454,7 +454,8 @@ LICENSE                          MIT for this project's own code
 docs/technical.md                RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
 .github/CONTRIBUTING.md          how to pick up a task
 .github/CODE_OF_CONDUCT.md
-dev/requirements.txt             Drop CIA installs these (Pillow, numpy, zopfli, etcpak, PyYAML)
+requirements.txt                 Drop CIA runs `pip install -r` this first
+dev/requirements.txt             runtime pins (Pillow, numpy, zopfli, etcpak, PyYAML)
 dev/requirements-dev.txt         pytest
 ab_test/
   README.md                  Azahar dual-instance workflow

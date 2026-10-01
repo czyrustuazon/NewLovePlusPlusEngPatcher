@@ -17,9 +17,18 @@ def test_requirements_include_nlpp_tools_yaml():
     """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
     req = (ROOT / "dev" / "requirements.txt").read_text(encoding="utf-8")
     assert "PyYAML" in req
-    assert "dev\\requirements.txt" in _bat_text()
+    root_req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    assert "-r dev/requirements.txt" in root_req
+    text = _bat_text()
+    assert 'pip install -r "%~dp0requirements.txt"' in text
+    # Deps install before the drop window and before any patch step.
+    install_idx = text.index('pip install -r "%~dp0requirements.txt"')
+    assert install_idx < text.index("goto :run_patch")
+    assert install_idx < text.index("setup_tools.py")
+    assert "NLPP_PY_DEPS" in text
     setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
     assert '("yaml", "PyYAML")' in setup
+    assert "pip" in setup and "install" in setup
 
 
 def test_bat_wipes_out_and_release_before_build():

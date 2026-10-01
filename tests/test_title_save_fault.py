@@ -135,7 +135,15 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
     """Execute the guard cave. A load missing from ``mem`` is the hardware abort."""
     pc = entry
     reads: list[int] = []
-    for _ in range(64):
+
+    def load(addr: int) -> int:
+        if base <= addr < base + len(blob) and ((addr - base) & 3) == 0:
+            return struct.unpack_from("<I", blob, addr - base)[0]
+        if addr not in mem:
+            raise AssertionError(f"unmapped read {addr:#x}")
+        return mem[addr]
+
+    for _ in range(256):
         if not base <= pc < base + len(blob):
             raise AssertionError(f"pc left cave: {pc:#x}")
         w = struct.unpack_from("<I", blob, pc - base)[0]
@@ -144,6 +152,7 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
         c = regs.get("c", 0)
         take = {
             0: z == 1,
+            1: z == 0,  # ne
             2: c == 1,
             3: c == 0,
             0xE: True,
@@ -174,23 +183,39 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             rn = (w >> 16) & 0xF
             addr = regs[rn]
             reads.append(addr)
-            if addr not in mem:
-                raise AssertionError(f"unmapped read {addr:#x}")
-            regs[rd] = mem[addr]
+            regs[rd] = load(addr)
             regs[rn] = (addr + (w & 0xFFF)) & 0xFFFFFFFF
             pc += 4
             continue
         if (w & 0x0F800000) == 0x05800000:  # ldr/str imm, pre, up
             rd = (w >> 12) & 0xF
             rn = (w >> 16) & 0xF
-            addr = (regs[rn] + (w & 0xFFF)) & 0xFFFFFFFF
+            imm = w & 0xFFF
+            addr = ((pc + 8) if rn == 15 else regs[rn]) + imm
+            addr &= 0xFFFFFFFF
             if (w >> 20) & 1:
                 reads.append(addr)
-                if addr not in mem:
-                    raise AssertionError(f"unmapped read {addr:#x}")
-                regs[rd] = mem[addr]
+                regs[rd] = load(addr)
             else:
                 mem[addr] = regs[rd]
+            pc += 4
+            continue
+        if (w & 0x0F800000) == 0x05000000:  # ldr/str imm, pre, down
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            addr = (regs[rn] - (w & 0xFFF)) & 0xFFFFFFFF
+            if (w >> 20) & 1:
+                reads.append(addr)
+                regs[rd] = load(addr)
+            else:
+                mem[addr] = regs[rd]
+            pc += 4
+            continue
+        if (w & 0x0FF0F000) == 0x01500000 and (w & 0xFF0) == 0:  # cmp reg
+            rn = (w >> 16) & 0xF
+            rm = w & 0xF
+            regs["z"] = int(regs[rn] == regs[rm])
+            regs["c"] = int(regs[rn] >= regs[rm])
             pc += 4
             continue
         if (w & 0x0FF0F000) == 0x03500000:  # cmp imm
@@ -216,6 +241,14 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             rn = (w >> 16) & 0xF
             rm = w & 0xF
             regs[rd] = (regs[rn] + regs[rm]) & 0xFFFFFFFF
+            pc += 4
+            continue
+        if (w & 0x0E500FF0) == 0x005000B0:  # ldrh rd, [rn]  (imm12 == 0)
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            addr = regs[rn]
+            reads.append(addr)
+            regs[rd] = load(addr) & 0xFFFF
             pc += 4
             continue
         raise AssertionError(f"unhandled {w:#x} at {pc:#x}")
@@ -433,3 +466,354 @@ def test_title_object_pointer_stops_before_the_field_load():
     ret, reads = _run_cave(blob, base, base, {0: bad, 1: 0x080013F0}, {})
     assert ret == 0
     assert bad + 0x10 not in reads
+
+
+def test_fs_open_skips_null_handle_pointer():
+    """A null fs:USER pointer with a real .text return skips the load."""
+    from patch_chunk_walk_guard import build_fs_open_cave, fs_open_cave_addr
+
+    base = fs_open_cave_addr()
+    blob = build_fs_open_cave(base)
+    sp = 0x08550BC4
+    mem = {sp + 0x34: 0x006EB888}
+    ret, reads = _run_cave(blob, base, base, {0: 0, 13: sp}, mem)
+    assert ret == 0
+    assert sp + 0x34 in reads
+    assert 0 not in reads
+
+    handle = 0x08001250
+    session = 0x00012A00
+    caller = 0x006EB888
+    ret, reads = _run_cave(
+        blob, base, base, {0: handle, 13: sp}, {handle: session, sp + 0x34: caller}
+    )
+    assert ret == session
+    assert reads == [handle, sp + 0x34]
+
+
+def test_fs_open_unwinds_when_the_handle_word_is_zero():
+    """A valid pointer holding handle 0 still must not return to address 0."""
+    from patch_chunk_walk_guard import (
+        ADDR_TEX_BIND_FAIL,
+        ADDR_TEX_BIND_RET,
+        build_fs_open_cave,
+        fs_open_cave_addr,
+    )
+
+    base = fs_open_cave_addr()
+    blob = build_fs_open_cave(base)
+    sp = 0x08550B8C
+    handle = 0x08000F50
+    obj = 0x08001310
+    mem = {sp + off: 0 for off in range(0x38, 0x74, 4)}
+    mem[handle] = 0
+    mem[sp + 0x34] = 0
+    mem[sp + 0x64] = obj
+    mem[sp + 0x70] = ADDR_TEX_BIND_RET
+    regs = {0: handle, 13: sp}
+    ret, reads = _run_cave(blob, base, base, regs, mem)
+    assert ret == ("leave", ADDR_TEX_BIND_FAIL)
+    assert regs[4] == obj
+    assert regs[13] == sp + 0x74
+    assert reads[0] == handle
+
+
+def test_fs_open_unwinds_layout_return():
+    """Saved LR ``mat1`` is the layout. Resume the texture-bind failure path."""
+    from patch_chunk_walk_guard import (
+        ADDR_TEX_BIND_FAIL,
+        ADDR_TEX_BIND_RET,
+        build_fs_open_cave,
+        fs_open_cave_addr,
+    )
+
+    base = fs_open_cave_addr()
+    blob = build_fs_open_cave(base)
+    sp = 0x08550BC4
+    obj = 0x08001250
+    mem = {sp + off: 0 for off in range(0x38, 0x74, 4)}
+    mem[sp + 0x34] = 0x15B76308  # mat1, outside .text
+    mem[sp + 0x64] = obj
+    mem[sp + 0x70] = ADDR_TEX_BIND_RET
+    regs = {0: 0, 13: sp}
+    ret, reads = _run_cave(blob, base, base, regs, mem)
+    assert ret == ("leave", ADDR_TEX_BIND_FAIL)
+    assert regs[4] == obj
+    assert regs[13] == sp + 0x74
+    assert 0 not in reads
+
+
+def test_fs_open_resumes_the_layout_constructor():
+    """No texture-bind frame. Popping the saved return would execute address 0."""
+    from patch_chunk_walk_guard import (
+        ADDR_LYT_CTOR_FAIL,
+        ADDR_LYT_CTOR_RET,
+        build_fs_open_cave,
+        build_fs_open_miss,
+        fs_open_cave_addr,
+        fs_open_miss_addr,
+    )
+
+    base = fs_open_cave_addr()
+    blob = build_fs_open_cave(base)
+    sp = 0x0855031C - 0x38
+    mem = {sp + off: 0 for off in range(0x34, 0x38 + 0x80, 4)}
+    mem[sp + 0x34] = 0
+    mem[sp + 0x38 + 0x60] = ADDR_LYT_CTOR_RET
+    regs = {0: 0, 13: sp}
+    ret, _reads = _run_cave(blob, base, base, regs, mem)
+    miss = fs_open_miss_addr()
+    assert ret == ("leave", miss)
+
+    miss_blob = build_fs_open_miss(miss)
+    ret, _reads = _run_cave(miss_blob, miss, miss, regs, mem)
+    assert ret == ("leave", ADDR_LYT_CTOR_FAIL)
+    assert regs[13] == sp + 0x38 + 0x64
+
+
+def test_tex_release_skips_null_list():
+    """Luma 2026-10-01 02:57: ``ldr r5, [r0, #8]`` with r0 = 0 (FAR 8)."""
+    from patch_chunk_walk_guard import (
+        ADDR_TEX_REL_FAIL,
+        ADDR_TEX_REL_RESUME,
+        build_tex_release_cave,
+        tex_release_cave_addr,
+    )
+
+    base = tex_release_cave_addr()
+    blob = build_tex_release_cave(base)
+    ret, reads = _run_cave(blob, base, base, {0: 0, 7: 0}, {})
+    assert ret == ("leave", ADDR_TEX_REL_FAIL)
+    assert reads == []
+
+    obj = 0x08001250
+    ret, reads = _run_cave(blob, base, base, {0: obj, 7: 0}, {obj + 8: 0})
+    assert ret == ("leave", ADDR_TEX_REL_FAIL)
+    assert reads == [obj + 8]
+
+    inner = 0x08002000
+    ret, reads = _run_cave(blob, base, base, {0: obj, 7: 0}, {obj + 8: inner})
+    assert ret == ("leave", ADDR_TEX_REL_RESUME)
+    assert reads == [obj + 8]
+
+
+def test_field_getter_skips_null_object():
+    """Index 0 on a null pane object must not load ``[r0, #0x60]``."""
+    from patch_chunk_walk_guard import (
+        ADDR_FIELD_FAIL,
+        ADDR_FIELD_RESUME,
+        build_field_cave,
+        field_cave_addr,
+    )
+
+    base = field_cave_addr()
+    blob = build_field_cave(base)
+    ret, reads = _run_cave(blob, base, base, {0: 0, 1: 0}, {})
+    assert ret == ("leave", ADDR_FIELD_FAIL)
+    assert reads == []
+
+    obj = 0x08648830
+    ret, reads = _run_cave(blob, base, base, {0: obj, 1: 0}, {})
+    assert ret == ("leave", ADDR_FIELD_RESUME)
+    assert reads == []
+
+
+def test_field_getter_twin_skips_null_object():
+    """The second copy is what the caller uses for ``r5``."""
+    from patch_chunk_walk_guard import (
+        ADDR_FIELD_B_FAIL,
+        ADDR_FIELD_B_RESUME,
+        build_field_cave,
+        field_b_cave_addr,
+    )
+
+    base = field_b_cave_addr()
+    blob = build_field_cave(base, resume=ADDR_FIELD_B_RESUME, fail=ADDR_FIELD_B_FAIL)
+    ret, reads = _run_cave(blob, base, base, {0: 0, 1: 0}, {})
+    assert ret == ("leave", ADDR_FIELD_B_FAIL)
+    assert reads == []
+
+    obj = 0x08648830
+    ret, reads = _run_cave(blob, base, base, {0: obj, 1: 0}, {})
+    assert ret == ("leave", ADDR_FIELD_B_RESUME)
+    assert reads == []
+
+
+def test_oct1_boot_dump_is_null_fs_open():
+    """Before the title screen: OpenFileDirectly dereferences a null handle pointer."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_0118.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x0012381C
+    assert regs[0] == 0
+    assert regs[19] == 0  # FAR
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0xE5900000  # ldr r0, [r0]
+
+
+def test_oct1_second_dump_returns_into_the_layout():
+    """Handle 0 popped PC into the BCLYT ``mat1`` section (prefetch, XN)."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_0225.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 2)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x15B76308
+    assert regs[0] == 0xD8E007F7
+    assert regs[14] == 0x00123820
+    assert regs[18] & 0xF == 0xD  # IFSR permission, section
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0x3174616D  # 'mat1'
+
+
+def test_oct1_third_dump_is_null_texture_release():
+    """After the file-open unwind: texture release loads ``[r0, #8]`` and r0 is 0."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_0257.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x006E96DC
+    assert regs[0] == 0
+    assert regs[14] == 0x006C60D4
+    assert regs[19] == 8  # FAR
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0xE5905008  # ldr r5, [r0, #8]
+
+
+def test_oct1_fourth_dump_prefetches_address_zero():
+    """Title music is up. OpenFileDirectly returns to a saved LR of 0."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_0316.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 2)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0
+    assert regs[0] == 0xD8E007F7
+    assert regs[14] == 0x00123820
+    assert regs[10] == 0x316C7874  # txl1
+    assert regs[18] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+
+
+def test_oct1_fifth_dump_is_null_pane_field():
+    """Pane field getter loads ``[r0, #0x60]`` and the object is null."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_1750.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x00291888
+    assert regs[0] == 0
+    assert regs[1] == 0
+    assert regs[14] == 0x0022B640
+    assert regs[19] == 0x60
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0x05900060  # ldreq r0, [r0, #0x60]
+
+
+def test_oct1_sixth_dump_is_null_pane_field_twin():
+    """The twin getter loads ``[r0, #0x60]`` for the second lookup result."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_1758.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x002920BC
+    assert regs[0] == 0
+    assert regs[1] == 0
+    assert regs[14] == 0x0022B650
+    assert regs[19] == 0x60
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0x05900060
+
+
+def test_oct1_seventh_dump_prefetches_address_zero():
+    """Title bg open. Saved return is 0 and the bind frame is gone."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_1804.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 2)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0
+    assert regs[0] == 0xD8E007F7
+    assert regs[14] == 0x00123820
+    assert regs[10] == 0x316C7874
+    assert regs[18] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+
+
+def test_oct1_eighth_dump_is_name_offset_past_the_file():
+    """Directory entry offset 0x746954 plus the string base is unmapped."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_1836.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x00644D78
+    assert regs[14] == 0x002FD740
+    assert regs[0] == 0x00746954
+    assert regs[1] == 0x1594A9A4
+    assert regs[4] == 0x160912F8
+    assert regs[19] == 0x160912F8
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0xE1D400B0  # ldrh r0, [r4]
+
+
+def test_name_walk_skips_an_offset_past_the_file():
+    """A name offset of 1 MiB or more returns -1 without the halfword load."""
+    from patch_chunk_walk_guard import (
+        ADDR_NAME_FAIL,
+        ADDR_NAME_RESUME,
+        build_name_cave,
+        name_cave_addr,
+    )
+
+    base = name_cave_addr()
+    blob = build_name_cave(base)
+    wild = 0x160912F8
+    ret, reads = _run_cave(blob, base, base, {0: 0x00746954, 4: wild}, {})
+    assert ret == ("leave", ADDR_NAME_FAIL)
+    assert wild not in reads
+
+    name = 0x1594A9C4
+    ret, reads = _run_cave(blob, base, base, {0: 0x20, 4: name}, {name: 0x62})
+    assert ret == ("leave", ADDR_NAME_RESUME)
+    assert reads == [name]

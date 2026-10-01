@@ -50,6 +50,11 @@ argument.
 | Deploy current post-bake stack → A | `.\ab_test\make.ps1 deploy-a` |
 | Same → B | `.\ab_test\make.ps1 deploy-b` |
 | Launch A / B | `.\ab_test\make.ps1 launch-a` / `launch-b` |
+
+`NLPP_EMU_NAME_WALK_ABORT=1` before launch makes Azahar force the 2026-10-01 18:36
+directory offset (`0x746954`) and data-abort the vanilla `ldrh` at `0x644D78`.
+The name-walk cave replaces that load, so the guarded `code.bin` returns not-found
+instead. Rebuild with `.\ab_test\make.ps1 build-azahar` after that emulator change.
 | Shared Nene title save → A and B | `.\ab_test\make.ps1 save-nene` |
 | Roll back name-input baseline on A | `.\ab_test\make.ps1 restore-a` |
 | Instances + post-bake copy onto A | `.\ab_test\make.ps1 all-a` |
