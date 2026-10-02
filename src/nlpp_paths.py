@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -104,6 +105,77 @@ AZAHAR_MOD_IMG = AZAHAR_MOD_ROMFS / "img.bin"
 AZAHAR_MOD_TRB_DIR = AZAHAR_MOD_ROMFS / "SystemData" / "TextResource"
 DEFAULT_VANILLA_CODE = DEFAULT_EXTRACTED / "exefs" / "code.bin"
 DEFAULT_VANILLA_CODE_BAK = DEFAULT_EXTRACTED / "exefs" / "code.bin.bak"
+
+
+def _windows_drive_roots() -> list[Path]:
+    if os.name != "nt":
+        return []
+    import ctypes
+
+    bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+    return [Path(f"{chr(65 + i)}:/") for i in range(26) if bitmask & (1 << i)]
+
+
+def luma_title_code(title_id: str = TITLE_ID) -> Path | None:
+    """Mounted Luma overlay ``luma/titles/<tid>/code.bin``, if a card is present.
+
+    ``NLPP_LUMA_TITLE`` may be that ``code.bin`` or the title directory.
+    Otherwise every existing Windows drive is checked. Luma also accepts
+    ``exefs/code.bin``; this project's 3DS card keeps ``code.bin`` beside ``romfs/``.
+    """
+    env = os.environ.get("NLPP_LUMA_TITLE")
+    if env:
+        p = Path(env).expanduser()
+        if p.is_file():
+            return p.resolve()
+        if p.is_dir():
+            for rel in ("code.bin", Path("exefs") / "code.bin"):
+                cand = p / rel
+                if cand.is_file():
+                    return cand.resolve()
+            return (p / "code.bin").resolve()
+    for root in _windows_drive_roots():
+        for rel in (
+            Path("luma") / "titles" / title_id / "code.bin",
+            Path("luma") / "titles" / title_id / "exefs" / "code.bin",
+        ):
+            cand = root / rel
+            try:
+                if cand.is_file():
+                    return cand.resolve()
+            except OSError:
+                continue
+    return None
+
+
+def install_luma_title_code(src: Path, *, backup_tag: str = "name_walk") -> Path | None:
+    """Copy a decompressed ``code.bin`` onto the mounted Luma title overlay.
+
+    No-op when no card is present. The first copy keeps
+    ``code.bin.bak_pre_<tag>`` beside the live file.
+    """
+    src = src.resolve()
+    if not src.is_file():
+        raise FileNotFoundError(src)
+    src_bytes = src.read_bytes()
+    # Drop's LayeredFS unit tests pass a short stand-in. A real ExeFS is ~8 MiB.
+    if len(src_bytes) < 1_000_000:
+        return None
+    dest = luma_title_code()
+    if dest is None:
+        print("[luma] no SD card with luma/titles code.bin")
+        return None
+    if dest.is_file() and dest.read_bytes() == src_bytes:
+        print(f"[luma] code.bin already current: {dest}")
+        return dest
+    bak = dest.with_name(f"code.bin.bak_pre_{backup_tag}")
+    if dest.is_file() and not bak.exists():
+        shutil.copy2(dest, bak)
+        print(f"[luma] backup {bak.name}")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(src_bytes)
+    print(f"[luma] code.bin <- {src.name} ({dest})")
+    return dest
 
 
 def find_vanilla_code() -> Path | None:

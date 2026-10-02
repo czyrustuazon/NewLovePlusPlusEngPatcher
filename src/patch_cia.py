@@ -41,6 +41,7 @@ from nlpp_paths import (
     OUT_LAYEREDFS_PREFIX,
     OUT_NOT_BOTH_NAME,
     find_vanilla_code,
+    install_luma_title_code,
 )
 from patcher_version import CIA_TITLE_VERSION, PATCHER_RELEASE
 from nlpp_paths import OUT_LOG_NAME
@@ -779,6 +780,7 @@ def write_layeredfs(
         dest_code.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(prebuilt, dest_code)
         print(f"[layeredfs] code.bin <- {prebuilt}")
+        install_luma_title_code(prebuilt)
     elif patch_code:
         src = code_bin_src if code_bin_src and code_bin_src.is_file() else find_vanilla_code()
         if src is None or not src.is_file():
@@ -792,6 +794,7 @@ def write_layeredfs(
 
         write_patched_code_bin(src, dest_code, force=True)
         print("[layeredfs] code.bin (single-pane name draw)")
+        install_luma_title_code(dest_code)
 
     if romfs_overlay is not None:
         apply_romfs_overlay(title_romfs, romfs_overlay)

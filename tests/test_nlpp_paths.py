@@ -75,6 +75,28 @@ def test_find_translations_json_prefers_assets(tmp_path: Path, monkeypatch):
     assert paths.find_translations_json() == assets.resolve()
 
 
+def test_luma_title_code_from_env(tmp_path: Path, monkeypatch):
+    title = tmp_path / "00040000000F4E00"
+    title.mkdir()
+    code = title / "code.bin"
+    old = b"o" * 1_000_000
+    new = b"n" * 1_000_000
+    code.write_bytes(old)
+    monkeypatch.setenv("NLPP_LUMA_TITLE", str(title))
+    assert paths.luma_title_code() == code.resolve()
+
+    src = tmp_path / "name_input_code.bin"
+    src.write_bytes(new)
+    written = paths.install_luma_title_code(src, backup_tag="name_walk")
+    assert written == code.resolve()
+    assert code.read_bytes() == new
+    assert (title / "code.bin.bak_pre_name_walk").read_bytes() == old
+
+    written = paths.install_luma_title_code(src, backup_tag="name_walk")
+    assert written == code.resolve()
+    assert (title / "code.bin.bak_pre_name_walk").read_bytes() == old
+
+
 def test_find_vanilla_code_env(tmp_path: Path, monkeypatch):
     code = tmp_path / "code.bin"
     code.write_bytes(b"code")
