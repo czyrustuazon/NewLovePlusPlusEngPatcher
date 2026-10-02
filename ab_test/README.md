@@ -130,6 +130,14 @@ python -c "from pathlib import Path; import os; p=Path(os.environ['NLPP_AZAHAR_U
 Replace `FILE_OFF` with the file offset you care about (Ghidra image base 0;
 runtime VA ≈ file + `0x100000`). Compare against vanilla / expected bytes.
 
+## MCP server
+
+`tools/ab_mcp_server.py` (registered in the repo-root `.mcp.json`, needs `pip install mcp`)
+exposes this workflow to agents: `ab_make` (allow-listed `make.ps1` targets; not
+`progress`, which POSTs), `ab_status`, `ab_diff` (A vs B mod tree), `ab_read_bytes`,
+`ab_log_tail`, `ab_log_search`, `ab_log_markers`, `ab_stop` (kills that instance's
+azahar.exe only).
+
 ## Agent prefs (hard)
 
 - Do **not** tell the user to “fully quit Azahar” between tests — they already do.
