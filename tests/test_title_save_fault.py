@@ -230,6 +230,12 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             regs[(w >> 12) & 0xF] = _dec_imm12(w & 0xFFF)
             pc += 4
             continue
+        if (w & 0x0FE00000) == 0x02400000:  # sub imm
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            regs[rd] = (regs[rn] - _dec_imm12(w & 0xFFF)) & 0xFFFFFFFF
+            pc += 4
+            continue
         if (w & 0x0FE00000) == 0x02800000:  # add imm
             rd = (w >> 12) & 0xF
             rn = (w >> 16) & 0xF
@@ -243,6 +249,32 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             regs[rd] = (regs[rn] + regs[rm]) & 0xFFFFFFFF
             pc += 4
             continue
+        if (w & 0x0FF00000) == 0x05D00000:  # ldrb rd, [rn, #imm]
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            addr = (regs[rn] + (w & 0xFFF)) & 0xFFFFFFFF
+            reads.append(addr)
+            regs[rd] = load(addr) & 0xFF
+            pc += 4
+            continue
+        if (w & 0x0FF00FF0) == 0x07900000 and (w & 0xF0) == 0:
+            # ldr rd, [rn, rm]
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            rm = w & 0xF
+            addr = (regs[rn] + regs[rm]) & 0xFFFFFFFF
+            reads.append(addr)
+            regs[rd] = load(addr)
+            pc += 4
+            continue
+        if (w & 0x0FFFFFFF) == 0x08BD8010:  # pop {r4, pc}
+            sp = regs[13]
+            reads.append(sp)
+            regs[4] = load(sp)
+            reads.append(sp + 4)
+            regs[15] = load(sp + 4)
+            regs[13] = (sp + 8) & 0xFFFFFFFF
+            return ("leave", regs[15]), reads
         if (w & 0x0E500FF0) == 0x005000B0:  # ldrh rd, [rn]  (imm12 == 0)
             rd = (w >> 12) & 0xF
             rn = (w >> 16) & 0xF
@@ -817,3 +849,97 @@ def test_name_walk_skips_an_offset_past_the_file():
     ret, reads = _run_cave(blob, base, base, {0: 0x20, 4: name}, {name: 0x62})
     assert ret == ("leave", ADDR_NAME_RESUME)
     assert reads == [name]
+
+
+def test_oct1_ninth_dump_is_null_menu_vtable():
+    """The first lookup result is null and the virtual call loads ``[r0]``."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261001_1958.dmp").read_bytes()
+    )
+    assert dump["version"] == (1 << 16) | 3
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["process"].startswith(b"nlpp")
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x002EEDA8
+    assert regs[0] == 0
+    assert regs[4] == 0
+    assert regs[14] == 0x003C604C
+    assert regs[19] == 0
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    assert (regs[16] & 0x20) == 0
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0xE5900000  # ldr r0, [r0]
+
+
+def test_menu_vt_returns_when_the_object_is_null():
+    """A null object pops the frame. A real object still loads the vtable."""
+    from patch_chunk_walk_guard import ADDR_MENU_VT_RESUME, build_menu_vt_cave, menu_vt_cave_addr
+
+    base = menu_vt_cave_addr()
+    blob = build_menu_vt_cave(base)
+    sp = 0x08001000
+    ret, reads = _run_cave(
+        blob, base, base, {0: 0, 13: sp}, {sp: 0, sp + 4: 0x003C604C}
+    )
+    assert ret == ("leave", 0x003C604C)
+    assert reads == [sp, sp + 4]
+
+    obj = 0x08690250
+    ret, reads = _run_cave(
+        blob, base, base, {0: obj, 13: sp}, {obj: 0x00100000, sp: 0, sp + 4: 0x003C604C}
+    )
+    assert ret == ("leave", ADDR_MENU_VT_RESUME)
+    assert reads == [obj]
+
+
+def test_idx_load_skips_the_fourcc_base():
+    """``r2`` equal to the IDX tag must not be added to the heap pointer."""
+    from patch_chunk_walk_guard import (
+        ADDR_IDX_LOAD_FAIL,
+        ADDR_IDX_LOAD_RESUME,
+        build_idx_load_cave,
+    )
+
+    blob = build_idx_load_cave()
+    base = 0x00190100
+    table = 0x1574E4E0
+    idx = 0x20584449
+    ret, reads = _run_cave(blob, base, base, {1: table, 2: idx}, {})
+    assert ret == ("leave", ADDR_IDX_LOAD_FAIL)
+    assert reads == []
+
+    low = 0x0110E113
+    ret, reads = _run_cave(blob, base, base, {1: table, 2: low}, {})
+    assert ret == ("leave", ADDR_IDX_LOAD_FAIL)
+    assert reads == []
+
+    ret, reads = _run_cave(blob, base, base, {1: table, 2: 0}, {table: 0x20})
+    assert ret == ("leave", ADDR_IDX_LOAD_RESUME)
+    assert reads == [table]
+
+    slot = table + 0x20
+    ret, reads = _run_cave(blob, base, base, {1: table, 2: 0x20}, {slot: 0x11})
+    assert ret == ("leave", ADDR_IDX_LOAD_RESUME)
+    assert reads == [slot]
+
+
+def test_node_byte_skips_an_unmapped_sum():
+    """``sl`` at ``0x56AF97CF`` must not be read at ``+0x14``."""
+    from patch_chunk_walk_guard import (
+        ADDR_IDX_LOAD_FAIL,
+        ADDR_NODE_BYTE_RESUME,
+        build_node_byte_cave,
+    )
+
+    blob = build_node_byte_cave()
+    base = 0x00190350
+    wild = 0x56AF97CF
+    ret, reads = _run_cave(blob, base, base, {10: wild}, {})
+    assert ret == ("leave", ADDR_IDX_LOAD_FAIL)
+    assert wild + 0x14 not in reads
+
+    node = 0x1573F550
+    ret, reads = _run_cave(blob, base, base, {10: node}, {node + 0x14: 3})
+    assert ret == ("leave", ADDR_NODE_BYTE_RESUME)
+    assert reads == [node + 0x14]

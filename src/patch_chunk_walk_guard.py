@@ -89,6 +89,24 @@ bits of the directory entry (``0x1594A9A4 + 0x746954``). That page is
 not mapped. An offset of 1 MiB or more takes the walker's own
 not-found epilogue (``mvn r0, #0``), which the caller already checks.
 
+The next boot (Luma 2026-10-01 19:58) data-aborts at file ``0x1EEDA8``
+(runtime ``0x2EEDA8``, ``ldr r0, [r0]``, FAR 0). The caller passed the
+first lookup result in ``r6``, which is 0, into a virtual call through
+``[object+0x94]``. The caller's next instruction replaces ``r0``, so a
+null object pops the frame and returns.
+
+The title screen then data-aborts at file ``0x544338`` (runtime
+``0x644338``, ``ldr r1, [r2, r1]``). ``r2`` is the fourcc ``IDX ``
+(``0x20584449``) and ``r1`` is a heap pointer, so the sum is unmapped.
+A base outside ``[0x08000000, 0x20000000)`` skips to this
+function's epilogue. ``0x20584449`` (the ``IDX `` tag) is above that
+window; ``0x0110E113`` is below it. Both used to be added to a real
+pointer. The backdrop can stay unbuilt for that node.
+The next read in that function, file ``0x544348`` (``ldrb r0, [sl, #0x14]``),
+faults when the loaded offset makes ``sl`` itself unmapped (FAR
+``0x56AF97E3``, ``sl`` ``0x56AF97CF``). ``sl`` at or above ``0x20000000``
+takes the same epilogue.
+
 The caves sit in the dead tail of ``FUN_002573ac`` (strcat-raw branches away
 at the first instruction) so they stay in ``.text`` RX. Apply strcat-raw first.
 The OpenFileDirectly guard uses the NOP tail of ``SetNameCharsToPanes``
@@ -191,6 +209,26 @@ ADDR_NAME_FAIL = 0x00544E00  # add sp, #0xc; mvn r0, #0; pop
 VANILLA_NAME = bytes.fromhex("b000d4e1")  # ldrh r0, [r4]
 # A real name sits next to the directory. 0x746954 is past the file.
 NAME_OFF_MAX = 0x00100000
+# Virtual call: push {r4,lr}; mov r4, r0; ldr r0, [r0]; ldr r1, [r0, #0x94].
+ADDR_MENU_VT = 0x001EEDA8
+ADDR_MENU_VT_RESUME = 0x001EEDAC
+VANILLA_MENU_VT = bytes.fromhex("000090e5")  # ldr r0, [r0]
+# Title draw: ldr r1, [r2, r1]. r1 is already a heap address; r2 is a
+# file delta. 0 keeps the logo and the scrolling background. The IDX tag
+# and the 0x0110E113 delta are past this.
+ADDR_IDX_LOAD = 0x00544338
+ADDR_IDX_LOAD_RESUME = 0x0054433C
+ADDR_IDX_LOAD_FAIL = 0x005445C8  # add sp; vpop; pop
+VANILLA_IDX_LOAD = bytes.fromhex("011092e7")  # ldr r1, [r2, r1]
+IDX_DELTA_MAX = 0x01000000
+ADDR_IDX_LOAD_CAVE = 0x00190100
+ADDR_IDX_LOAD_LIMIT = 0x00190110
+# Following byte load: ldrb r0, [sl, #0x14]. sl is the offset applied to the table.
+ADDR_NODE_BYTE = 0x00544348
+ADDR_NODE_BYTE_RESUME = 0x0054434C
+VANILLA_NODE_BYTE = bytes.fromhex("1400dae5")  # ldrb r0, [sl, #0x14]
+ADDR_NODE_BYTE_CAVE = 0x00190350
+ADDR_NODE_BYTE_LIMIT = 0x00190360
 # Texture release: ldr r5, [r0, #8]. Caller ignores r0. r7 is already 0.
 ADDR_TEX_REL = 0x005E96DC
 ADDR_TEX_REL_RESUME = 0x005E96E0
@@ -791,6 +829,82 @@ def build_name_cave(base: int | None = None) -> bytes:
     return blob
 
 
+def menu_vt_cave_addr() -> int:
+    """NOP bytes after the name-walk cave."""
+    return name_cave_addr() + len(build_name_cave())
+
+
+def build_menu_vt_cave(base: int | None = None) -> bytes:
+    """Return from the virtual call when the object is null.
+
+    The entry already pushed ``r4``. The caller overwrites ``r0``.
+    """
+    if base is None:
+        base = menu_vt_cave_addr()
+    body = bytearray()
+    body += cmp_imm(0, 0)
+    # popeq {r4, pc}
+    body += _u32(0x08BD8010)
+    body += VANILLA_MENU_VT
+    body += b_ins(base + len(body), ADDR_MENU_VT_RESUME)
+    blob = bytes(body)
+    tail = ADDR_BACKSPACE + SIZE_BACKSPACE
+    if base < name_cave_addr() + len(build_name_cave()):
+        raise ValueError(f"menu vt cave {base:#x} overlaps the name cave")
+    if base + len(blob) > tail:
+        raise ValueError(
+            f"menu vt cave {base:#x}+{len(blob):#x} exceeds the "
+            f"BackspaceNameCharPane tail ending {tail:#x}"
+        )
+    return blob
+
+
+def build_idx_load_cave(base: int = ADDR_IDX_LOAD_CAVE) -> bytes:
+    """Skip ``ldr r1, [r2, r1]`` when ``r2`` is not a small file delta.
+
+    ``r1`` is the table address. A delta of 0 still loads it, which is the
+    logo and the background track. A delta of 16 MiB or more takes the
+    epilogue.
+    """
+    body = bytearray()
+    body += cmp_imm(2, IDX_DELTA_MAX)
+    bhs_at = len(body)
+    body += b"\x00\x00\x00\x00"
+    body += VANILLA_IDX_LOAD
+    body += b_ins(base + len(body), ADDR_IDX_LOAD_RESUME)
+    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
+    blob = bytes(body)
+    if base != ADDR_IDX_LOAD_CAVE:
+        raise ValueError(f"idx load cave is fixed at {ADDR_IDX_LOAD_CAVE:#x}")
+    if base + len(blob) > ADDR_IDX_LOAD_LIMIT:
+        raise ValueError(
+            f"idx load cave {base:#x}+{len(blob):#x} exceeds {ADDR_IDX_LOAD_LIMIT:#x}"
+        )
+    return blob
+
+
+def build_node_byte_cave(base: int = ADDR_NODE_BYTE_CAVE) -> bytes:
+    """Skip ``ldrb r0, [sl, #0x14]`` when ``sl`` is at or above the heap.
+
+    The fail branch is the same epilogue as the IDX-base guard.
+    """
+    body = bytearray()
+    body += cmp_imm(10, HEAP_HI)
+    bhs_at = len(body)
+    body += b"\x00\x00\x00\x00"
+    body += _u32(0xE5DA0014)  # ldrb r0, [sl, #0x14]
+    body += b_ins(base + len(body), ADDR_NODE_BYTE_RESUME)
+    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
+    blob = bytes(body)
+    if base != ADDR_NODE_BYTE_CAVE:
+        raise ValueError(f"node byte cave is fixed at {ADDR_NODE_BYTE_CAVE:#x}")
+    if base + len(blob) > ADDR_NODE_BYTE_LIMIT:
+        raise ValueError(
+            f"node byte cave {base:#x}+{len(blob):#x} exceeds {ADDR_NODE_BYTE_LIMIT:#x}"
+        )
+    return blob
+
+
 def is_patched(data: bytes) -> bool:
     blob, labs = build_cave()
     fixup = build_fixup_cave()
@@ -819,6 +933,10 @@ def is_patched(data: bytes) -> bool:
     miss = build_fs_open_miss(miss_at)
     name_at = name_cave_addr()
     name = build_name_cave(name_at)
+    menu_at = menu_vt_cave_addr()
+    menu = build_menu_vt_cave(menu_at)
+    idx = build_idx_load_cave()
+    node = build_node_byte_cave()
     deref = labs["deref"]
     advance = labs["advance"]
     return (
@@ -854,6 +972,14 @@ def is_patched(data: bytes) -> bool:
         and bytes(data[miss_at : miss_at + len(miss)]) == miss
         and data[ADDR_NAME : ADDR_NAME + 4] == b_ins(ADDR_NAME, name_at)
         and bytes(data[name_at : name_at + len(name)]) == name
+        and data[ADDR_MENU_VT : ADDR_MENU_VT + 4] == b_ins(ADDR_MENU_VT, menu_at)
+        and bytes(data[menu_at : menu_at + len(menu)]) == menu
+        and data[ADDR_IDX_LOAD : ADDR_IDX_LOAD + 4]
+        == b_ins(ADDR_IDX_LOAD, ADDR_IDX_LOAD_CAVE)
+        and bytes(data[ADDR_IDX_LOAD_CAVE : ADDR_IDX_LOAD_CAVE + len(idx)]) == idx
+        and data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4]
+        == b_ins(ADDR_NODE_BYTE, ADDR_NODE_BYTE_CAVE)
+        and bytes(data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)]) == node
     )
 
 
@@ -984,6 +1110,34 @@ def apply_patch(data: bytearray) -> None:
     name_slot = bytes(data[name_at : name_at + len(name)])
     if name_slot != name and name_slot != nop() * (len(name) // 4):
         raise ValueError(f"name cave @{name_at:#x} is not padding: {name_slot.hex()}")
+    menu_at = menu_vt_cave_addr()
+    menu = build_menu_vt_cave(menu_at)
+    menu_hook = b_ins(ADDR_MENU_VT, menu_at)
+    menu_head = bytes(data[ADDR_MENU_VT : ADDR_MENU_VT + 4])
+    if menu_head != VANILLA_MENU_VT and menu_head != menu_hook:
+        raise ValueError(f"unexpected menu vt at {ADDR_MENU_VT:#x}: {menu_head.hex()}")
+    menu_slot = bytes(data[menu_at : menu_at + len(menu)])
+    if menu_slot != menu and menu_slot != nop() * (len(menu) // 4):
+        raise ValueError(f"menu vt cave @{menu_at:#x} is not padding: {menu_slot.hex()}")
+    idx = build_idx_load_cave()
+    idx_hook = b_ins(ADDR_IDX_LOAD, ADDR_IDX_LOAD_CAVE)
+    idx_head = bytes(data[ADDR_IDX_LOAD : ADDR_IDX_LOAD + 4])
+    if idx_head != VANILLA_IDX_LOAD and idx_head != idx_hook:
+        raise ValueError(f"unexpected idx load at {ADDR_IDX_LOAD:#x}: {idx_head.hex()}")
+    idx_slot = bytes(data[ADDR_IDX_LOAD_CAVE : ADDR_IDX_LOAD_CAVE + len(idx)])
+    # Three NOPs, then an unreferenced alignment word before the next function.
+    idx_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
+    if idx_slot != idx and idx_slot != idx_pad:
+        raise ValueError(f"idx load cave is not padding: {idx_slot.hex()}")
+    node = build_node_byte_cave()
+    node_hook = b_ins(ADDR_NODE_BYTE, ADDR_NODE_BYTE_CAVE)
+    node_head = bytes(data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4])
+    if node_head != VANILLA_NODE_BYTE and node_head != node_hook:
+        raise ValueError(f"unexpected node byte at {ADDR_NODE_BYTE:#x}: {node_head.hex()}")
+    node_slot = bytes(data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)])
+    node_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
+    if node_slot != node and node_slot != nop() * (len(node) // 4) and node_slot != node_pad:
+        raise ValueError(f"node byte cave is not padding: {node_slot.hex()}")
     # NOP the rest of each helper so a mid-function branch cannot reach ldrne.
     data[ADDR_DEREF : ADDR_DEREF + DEREF_LEN] = NOP * (DEREF_LEN // 4)
     data[ADDR_ADVANCE : ADDR_ADVANCE + ADVANCE_LEN] = NOP * (ADVANCE_LEN // 4)
@@ -1019,6 +1173,12 @@ def apply_patch(data: bytearray) -> None:
     data[miss_at : miss_at + len(miss)] = miss
     data[name_at : name_at + len(name)] = name
     data[ADDR_NAME : ADDR_NAME + 4] = name_hook
+    data[menu_at : menu_at + len(menu)] = menu
+    data[ADDR_MENU_VT : ADDR_MENU_VT + 4] = menu_hook
+    data[ADDR_IDX_LOAD_CAVE : ADDR_IDX_LOAD_CAVE + len(idx)] = idx
+    data[ADDR_IDX_LOAD : ADDR_IDX_LOAD + 4] = idx_hook
+    data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)] = node
+    data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4] = node_hook
     print(
         f"[chunk-walk] deref @{ADDR_DEREF:#x} / advance @{ADDR_ADVANCE:#x} "
         f"-> @{ADDR_CHUNK_WALK_CAVE:#x} ({len(blob):#x}); "
@@ -1036,5 +1196,8 @@ def apply_patch(data: bytearray) -> None:
         f"field @{ADDR_FIELD:#x} -> @{field_at:#x} ({len(field):#x}); "
         f"field b @{ADDR_FIELD_B:#x} -> @{field_b_at:#x} ({len(field_b):#x}); "
         f"fs miss @{miss_at:#x} ({len(miss):#x}); "
-        f"name @{ADDR_NAME:#x} -> @{name_at:#x} ({len(name):#x})"
+        f"name @{ADDR_NAME:#x} -> @{name_at:#x} ({len(name):#x}); "
+        f"menu vt @{ADDR_MENU_VT:#x} -> @{menu_at:#x} ({len(menu):#x}); "
+        f"idx load @{ADDR_IDX_LOAD:#x} -> @{ADDR_IDX_LOAD_CAVE:#x} ({len(idx):#x}); "
+        f"node byte @{ADDR_NODE_BYTE:#x} -> @{ADDR_NODE_BYTE_CAVE:#x} ({len(node):#x})"
     )
