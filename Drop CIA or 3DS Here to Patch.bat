@@ -37,7 +37,7 @@ if not defined PYTHON (
 
 if /i "%NLPP_PY_DEPS%"=="1" goto :deps_ready
 echo.
-echo Installing Python packages ^(pip install -r requirements.txt^) ...
+echo Installing Python packages ^(py -3 -m pip install -r requirements.txt^) ...
 "%PYTHON%" -m pip install -r "%~dp0requirements.txt"
 if errorlevel 1 (
   echo [!] pip install failed. Try: %PYTHON% -m pip install -r requirements.txt
@@ -298,7 +298,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
     echo.
     "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "Polling GitHub Release tag gold..."
-    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails"
+    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "czyrustuazon/nlpp-gold-maker (set NLPP_GITHUB_REPO to override)"
     echo.
     "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
     if errorlevel 1 (
@@ -343,7 +343,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r requirements.txt
+        echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -361,7 +361,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r requirements.txt
+        echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -423,6 +423,19 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   REM Full cart RomFS only. script\bin\script alone is the slim cache and drops Plus\.
+  REM A complete gold download does not extract the dropped cart. Pull Plus\
+  REM here so CIA inject does not rerun menu chrome just to get a RomFS tree.
+  if not exist "%CACHE_ROMFS%\Plus" (
+    echo.
+    echo Extracting full RomFS from the dropped ROM ^(Plus\ voice and BGM^)...
+    echo.
+    "%PYTHON%" "%SRC%\extract_vanilla_from_rom.py" --rom "%CIA%"
+    if errorlevel 1 (
+      echo [!] Could not extract a full RomFS from the dropped ROM.
+      pause
+      exit /b 1
+    )
+  )
   if not exist "%CACHE_ROMFS%\Plus" (
     echo [!] cache\vanilla_from_rom\romfs\Plus is missing.
     echo     From-scratch rebuild did not extract a full RomFS. Refusing to build.

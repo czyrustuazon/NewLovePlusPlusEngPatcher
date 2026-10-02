@@ -22,6 +22,7 @@ A full pack still runs when the Release is missing, PNG-pack inputs changed sinc
 published EngPatcher commit, or you dispatch with **force_pack**. The rolling Release tag stays **`gold`**:
 
 - `bake_img.bin`
+- `name_input_code.bin`
 - `romfs_overlay.zip`
 
 ## Consume a bake

@@ -71,8 +71,9 @@ builds `release/` and updates GitHub Release tag `gold`. See
 [`infra/README.md`](infra/README.md). Collaborators:
 
 ```bash
-python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
-# or: set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker
+python tools/fetch_release_bake.py --tag gold
+# default repo: czyrustuazon/nlpp-gold-maker
+# or: set NLPP_GITHUB_REPO=other-owner/nlpp-gold-maker
 ```
 
 Manual handoff still works:
@@ -151,7 +152,7 @@ Many other decrypted CIAs will fail the hash check (by design). Use `--expect-sh
 
 - Windows x64  
 - Python 3.10+ (the drop bat finds `python`, `py -3`, or common install folders)  
-- `pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML via `dev/requirements.txt` — the drop bat runs this first)  
+- `py -3 -m pip install -r requirements.txt` (Pillow, numpy, zopfli, **etcpak**, PyYAML via `dev/requirements.txt` — the drop bat runs this first)  
 - A few GB free disk (RomFS rebuild is large)  
 - A **decrypted** dump (GodMode9, Batch CIA 3DS Decryptor Redux, etc.)  
 - First run verifies vendored `tools/cia/` bins (`3dstool` / `ctrtool` / `makerom` / `seeddb`); downloads only if a bin is missing  
@@ -454,7 +455,7 @@ LICENSE                          MIT for this project's own code
 docs/technical.md                RE notes (§15 gold bake, §16 SpotPass, §17 name-input, §18 a/b)
 .github/CONTRIBUTING.md          how to pick up a task
 .github/CODE_OF_CONDUCT.md
-requirements.txt                 Drop CIA runs `pip install -r` this first
+requirements.txt                 Drop CIA installs this first (`py -3 -m pip install -r`)
 dev/requirements.txt             runtime pins (Pillow, numpy, zopfli, etcpak, PyYAML)
 dev/requirements-dev.txt         pytest
 ab_test/

@@ -113,7 +113,7 @@ Keep these in mind; promote into `docs/technical.md` only after we verify or rec
 
 1. **`release/bake_img.bin` exists** → inject as-is; patch finishes in minutes.
 2. **Missing** (normal on clean clone):
-   - `tools/fetch_release_bake.py --best-effort` — poll `{owner}/nlpp-gold-maker` Release tag `gold` (404 OK → fall through).
+   - `tools/fetch_release_bake.py --best-effort` — poll `czyrustuazon/nlpp-gold-maker` Release tag `gold` (404 OK → fall through).
    - Still missing → `tools/rebuild_bake_img.py --rom <dropped.cia|.3ds>` (cold PNG pack roughly 40 minutes to 2 hours, depending on hardware). From-scratch **deletes all of `cache/`** first, then extracts a full RomFS (`Plus/` included) into `cache/vanilla_from_rom/`. Do not reuse a slim cache or `NLPP_USE_PACK_CACHE`.
    - Still missing → **hard stop** (do not emit half-EN CIA).
 3. `patch_cia.py` injects: `rebuild_dbin2` + gold `img.bin` + `romfs_overlay/` + **`release/name_input_code.bin`** (always rebuilt at the end of `rebuild_bake_img.py` from vanilla `code.bin.bak`).
@@ -127,7 +127,7 @@ Name-input caves must be in `.text` RX (`patch_input_cave_map.py`). See rule `fr
 | Variable | Effect |
 |----------|--------|
 | `NLPP_SKIP_GOLD_FETCH=1` | Offline: skip GitHub poll, go straight to local rebuild |
-| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (`OWNER/nlpp-gold-maker`) |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (default `czyrustuazon/nlpp-gold-maker`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only (explicit; no menus) |
 | `NLPP_REPACK_IMAGES=1` | Dev PNG scratch `cache/new_img.bin` only — incomplete vs gold |
 

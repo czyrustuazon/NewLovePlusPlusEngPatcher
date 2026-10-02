@@ -1122,7 +1122,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
 | `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
-| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
+| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold`, plus `name_input_code.bin` when that Release has it (`--best-effort` for Drop CIA fallback) |
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/1_[Either use this-CIA]/`) + LayeredFS (`out/2_[Or this-LayeredFS]/luma/`) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
@@ -1378,7 +1378,7 @@ decrypted .cia / .3ds / .cci dropped
   → wipe out/, release/, and cache/
   → unless NLPP_SKIP_GOLD_FETCH=1:
         fetch_release_bake.py --best-effort
-          poll GitHub Release {owner}/nlpp-gold-maker @ tag gold
+          poll GitHub Release czyrustuazon/nlpp-gold-maker @ tag gold
           success → use release/bake_img.bin + romfs_overlay/ (no local PNG pack)
           fail (404, no repo, no internet) → continue
   → if still no bake:
@@ -1401,7 +1401,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | Variable | Effect |
 |----------|--------|
 | `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
-| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (`OWNER/nlpp-gold-maker`) |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (default `czyrustuazon/nlpp-gold-maker`) |
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
@@ -1411,7 +1411,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 
 #### nlpp-gold-maker CI (optional accelerator)
 
-When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. If that Release already has both assets, the runner downloads them and skips the PNG pack unless image-pack inputs changed since the published EngPatcher commit, or the dispatch sets `force_pack`. If `github.com:443` is unreachable, the runner bakes offline from its local vanilla files and does not upload. Drop CIA does the same: `fetch_release_bake.py` returns immediately when GitHub is unreachable, then `rebuild_bake_img.py` packs from the dropped ROM. The Drop CIA bat **polls this automatically** when local bake is absent.
+When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin`, `name_input_code.bin`, and `romfs_overlay.zip`. If that Release already has the bake and overlay, the runner downloads them and skips the PNG pack unless image-pack inputs changed since the published EngPatcher commit, or the dispatch sets `force_pack`. A Release that matches the EngPatcher SHA but is missing `name_input_code.bin` rebuilds only that file. If `github.com:443` is unreachable, the runner bakes offline from its local vanilla files and does not upload. Drop CIA does the same: `fetch_release_bake.py` returns immediately when GitHub is unreachable, then `rebuild_bake_img.py` packs from the dropped ROM. The Drop CIA bat **polls this automatically** when local bake is absent.
 
 **Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold`.
 
