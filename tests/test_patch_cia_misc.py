@@ -76,12 +76,17 @@ def test_next_cia_title_version_explicit_and_keep():
     assert patch_cia.next_cia_title_version(3, release_ver=2, keep_source=True) == 3
 
 
-def test_next_cia_title_version_rejects_dump_not_below_pin():
-    try:
-        patch_cia.next_cia_title_version(5, release_ver=5)
-        raise AssertionError("expected PatchError")
-    except patch_cia.PatchError as exc:
-        assert "CIA_TITLE_VERSION" in str(exc)
+def test_next_cia_title_version_warns_and_bumps_when_dump_not_below_pin(
+    capsys,
+):
+    assert patch_cia.next_cia_title_version(5, release_ver=5) == 6
+    assert patch_cia.next_cia_title_version(32, release_ver=4) == 33
+    out = capsys.readouterr().out
+    assert "WARNING" in out
+    assert "CIA_TITLE_VERSION" in out
+    assert (
+        patch_cia.next_cia_title_version(0xFFFF, release_ver=4) == 0xFFFF
+    )
 
 
 def test_resolve_cia_title_version_rejects_both_flags():

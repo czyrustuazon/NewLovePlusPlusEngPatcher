@@ -855,8 +855,8 @@ def write_layeredfs(
                 "",
                 "English graphics load only when code.bin is in this folder.",
                 "That file is release/name_input_code.bin from the same build, not a",
-                "vanilla or leftover ExeFS. A failed CIA rebuild keeps this folder",
-                "only when that code.bin is present.",
+                "vanilla or leftover ExeFS. A failed CIA rebuild deletes this folder",
+                "so a half-finished Drop never leaves installable leftovers.",
                 "",
             ]
         ),
@@ -1052,23 +1052,10 @@ def _layeredfs_title_dir(out_dir: Path) -> Path:
     return out_dir / TITLE_ID
 
 
-def _layeredfs_code_bin(out_dir: Path) -> Path:
-    return _layeredfs_title_dir(out_dir) / "code.bin"
-
-
-def _layeredfs_graphics_ready(out_dir: Path) -> bool:
-    """English UI in the overlay loads only when code.bin was written with it."""
-    code = _layeredfs_code_bin(out_dir)
-    try:
-        return code.is_file() and code.stat().st_size > 0
-    except OSError:
-        return False
-
-
-def _discard_incomplete_layeredfs(out_dir: Path) -> None:
-    """Delete a LayeredFS drop that cannot show English graphics."""
+def _discard_layeredfs_drop(out_dir: Path) -> None:
+    """Delete a LayeredFS drop (title folder + README) and prune empty parents."""
     title_dir = _layeredfs_title_dir(out_dir)
-    remove_scratch(title_dir, label=f"incomplete LayeredFS {title_dir}")
+    remove_scratch(title_dir, label=f"failed LayeredFS {title_dir}")
     readme = out_dir / "README.txt"
     if readme.is_file():
         try:
@@ -1078,37 +1065,70 @@ def _discard_incomplete_layeredfs(out_dir: Path) -> None:
     try:
         if out_dir.is_dir() and not any(out_dir.iterdir()):
             out_dir.rmdir()
+        parent = out_dir.parent
+        out_root = (ROOT / "out").resolve()
+        if (
+            parent.is_dir()
+            and parent.resolve() != out_root
+            and path_is_under(parent, out_root)
+            and not any(parent.iterdir())
+        ):
+            parent.rmdir()
     except OSError:
         pass
 
 
-def _print_layeredfs_recovery(out_dir: Path) -> bool:
-    """Keep the overlay after a CIA failure only when code.bin is present.
+def _discard_partial_out_cia(out_cia: Path) -> None:
+    """Remove a CIA left behind by a failed rebuild, plus an empty parent under out/."""
+    try:
+        if out_cia.is_file():
+            print(f"[cleanup] removing incomplete CIA {out_cia}")
+            out_cia.unlink()
+    except OSError as exc:
+        print(f"[cleanup] warning: {out_cia}: {exc}")
+        return
+    try:
+        parent = out_cia.parent
+        out_root = (ROOT / "out").resolve()
+        if (
+            parent.is_dir()
+            and parent.resolve() != out_root
+            and path_is_under(parent, out_root)
+            and not any(parent.iterdir())
+        ):
+            parent.rmdir()
+    except OSError:
+        pass
 
-    Returns True when the folder is still an installable Luma drop.
-    """
-    title_dir = _layeredfs_title_dir(out_dir)
-    if not title_dir.is_dir():
-        return False
-    if not _layeredfs_graphics_ready(out_dir):
-        print()
-        print("=== LayeredFS removed ===")
-        print(f"Folder:  {title_dir}")
-        print(
-            "CIA rebuild failed. This overlay has no code.bin, so English "
-            "graphics would not load. Removed the incomplete LayeredFS folder."
-        )
-        _discard_incomplete_layeredfs(out_dir)
-        return False
-    print()
-    print("=== Luma LayeredFS still available ===")
-    print(f"Folder:  {title_dir}")
-    print(f"Install: SD:/luma/titles/{TITLE_ID}/  (see {out_dir / 'README.txt'})")
-    print(
-        "The CIA rebuild failed. code.bin is in this folder, so the English "
-        "graphics can still load on Luma CFW."
-    )
-    return True
+
+def _discard_install_choice_note() -> None:
+    """Remove out/3_[but not both] written before a failed CIA rebuild."""
+    folder = ROOT / "out" / OUT_NOT_BOTH_NAME
+    if not folder.exists():
+        return
+    remove_scratch(folder, label=f"install-choice note {folder}")
+
+
+def _discard_outputs_after_cia_failure(
+    layeredfs_out: Path | None,
+    *,
+    out_cia: Path | None,
+) -> None:
+    """On CIA rebuild failure, delete everything this run already wrote under out/."""
+    if layeredfs_out is not None:
+        title_dir = _layeredfs_title_dir(layeredfs_out)
+        if title_dir.is_dir() or (layeredfs_out / "README.txt").is_file():
+            print()
+            print("=== LayeredFS removed ===")
+            if title_dir.is_dir():
+                print(f"Folder:  {title_dir}")
+            print(
+                "CIA rebuild failed. Removed the LayeredFS folder built by this run."
+            )
+            _discard_layeredfs_drop(layeredfs_out)
+    if out_cia is not None:
+        _discard_partial_out_cia(out_cia)
+    _discard_install_choice_note()
 
 
 def rebuild_patched_cia(
@@ -1290,6 +1310,10 @@ def next_cia_title_version(
     Default is ``CIA_TITLE_VERSION`` from ``patcher_version.py`` (bump that
     integer when merging an RC into main). Fresh clones then ship the same
     number as everyone else instead of resetting to dump+1.
+
+    If the dump's version is already >= the pin (e.g. hShop CIA at 32), warn
+    and use dump+1 so the build still finishes and FBI can install-over
+    without deleting saves/extra data. Does not hard-fail.
     """
     src = source_ver if source_ver is not None else 0
     if src < 0 or src > TITLE_VER_MAX:
@@ -1320,11 +1344,26 @@ def next_cia_title_version(
             "(set it in src/patcher_version.py)"
         )
     if src >= pin:
-        raise PatchError(
-            f"dump title version {src} >= CIA_TITLE_VERSION {pin}. "
-            "Increase CIA_TITLE_VERSION in src/patcher_version.py "
-            "(must go up on each RC merge to main)."
+        # Soft warn only: hard-failing blocked hShop/re-patched dumps (e.g. ver
+        # 32) while CIA_TITLE_VERSION still trailed. Still stamp a version above
+        # the dump so FBI can install-over without deleting the title (saves /
+        # extra data). Prefer bumping CIA_TITLE_VERSION on the next RC merge.
+        if src >= TITLE_VER_MAX:
+            print(
+                f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION "
+                f"{pin}, and cannot bump past {TITLE_VER_MAX}; keeping dump "
+                "version (FBI may ask to delete the title and wipe extra data). "
+                "Increase CIA_TITLE_VERSION in src/patcher_version.py when you can."
+            )
+            return src
+        chosen = src + 1
+        print(
+            f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION {pin}. "
+            f"Using {chosen} so FBI can install over without deleting saves/"
+            "extra data. Increase CIA_TITLE_VERSION in src/patcher_version.py "
+            "(bump on each RC merge to main)."
         )
+        return chosen
     print(
         f"[cia] title version {pin} ({PATCHER_RELEASE}, CIA_TITLE_VERSION; "
         f"dump {src} — bump the constant when merging RC to main)"
@@ -1985,10 +2024,11 @@ def _cmd_patch_body_impl(
             packed_img=packed_img,
             romfs_overlay=romfs_overlay,
         )
-    except PatchError:
-        if layeredfs_written and layeredfs_out is not None:
-            if _print_layeredfs_recovery(layeredfs_out):
-                write_install_choice_note()
+    except Exception:
+        _discard_outputs_after_cia_failure(
+            layeredfs_out if layeredfs_written else None,
+            out_cia=out_cia,
+        )
         raise
 
     print()
