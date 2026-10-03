@@ -77,13 +77,15 @@ def test_next_cia_title_version_explicit_and_keep():
 
 
 def test_next_cia_title_version_warns_and_bumps_when_dump_not_below_pin(
-    capsys,
+    capsys, monkeypatch
 ):
+    monkeypatch.delenv("NO_COLOR", raising=False)
     assert patch_cia.next_cia_title_version(5, release_ver=5) == 6
     assert patch_cia.next_cia_title_version(32, release_ver=4) == 33
     out = capsys.readouterr().out
     assert "WARNING" in out
     assert "CIA_TITLE_VERSION" in out
+    assert "\033[91m" in out
     assert (
         patch_cia.next_cia_title_version(0xFFFF, release_ver=4) == 0xFFFF
     )

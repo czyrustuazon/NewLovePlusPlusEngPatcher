@@ -29,7 +29,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from live_status import latest_progress_line, live, relax_stdio_errors
+from live_status import latest_progress_line, live, paint, relax_stdio_errors
 from overall_progress import finish_bound, overall_scope, tick
 from nlpp_paths import (
     CACHE_VANILLA_CODE,
@@ -1350,18 +1350,24 @@ def next_cia_title_version(
         # extra data). Prefer bumping CIA_TITLE_VERSION on the next RC merge.
         if src >= TITLE_VER_MAX:
             print(
-                f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION "
-                f"{pin}, and cannot bump past {TITLE_VER_MAX}; keeping dump "
-                "version (FBI may ask to delete the title and wipe extra data). "
-                "Increase CIA_TITLE_VERSION in src/patcher_version.py when you can."
+                paint(
+                    f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION "
+                    f"{pin}, and cannot bump past {TITLE_VER_MAX}; keeping dump "
+                    "version (FBI may ask to delete the title and wipe extra data). "
+                    "Increase CIA_TITLE_VERSION in src/patcher_version.py when you can.",
+                    "91",
+                )
             )
             return src
         chosen = src + 1
         print(
-            f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION {pin}. "
-            f"Using {chosen} so FBI can install over without deleting saves/"
-            "extra data. Increase CIA_TITLE_VERSION in src/patcher_version.py "
-            "(bump on each RC merge to main)."
+            paint(
+                f"[cia] WARNING: dump title version {src} >= CIA_TITLE_VERSION {pin}. "
+                f"Using {chosen} so FBI can install over without deleting saves/"
+                "extra data. Increase CIA_TITLE_VERSION in src/patcher_version.py "
+                "(bump on each RC merge to main).",
+                "91",
+            )
         )
         return chosen
     print(
