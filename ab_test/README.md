@@ -55,6 +55,11 @@ argument.
 directory offset (`0x746954`) and data-abort the vanilla `ldrh` at `0x644D78`.
 The name-walk cave replaces that load, so the guarded `code.bin` returns not-found
 instead. Rebuild with `.\ab_test\make.ps1 build-azahar` after that emulator change.
+
+`NLPP_EMU_PANE_FLAG=1` before launch nulls `r6` once at the `beq` at `0x3C5FCC`
+(first time `[r4+0x50]` is 0), matching the 2026-10-03 00:50 dump: vanilla
+`ldrb r0, [r6, #0x5f]` at `0x3C6070` data-aborts with FAR `0x5F`. The guarded
+`code.bin` branches to a null check and takes the menu-update epilogue.
 | Shared Nene title save → A and B | `.\ab_test\make.ps1 save-nene` |
 | Roll back name-input baseline on A | `.\ab_test\make.ps1 restore-a` |
 | Instances + post-bake copy onto A | `.\ab_test\make.ps1 all-a` |

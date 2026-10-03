@@ -277,6 +277,18 @@ VANILLA_NODE_BYTE = bytes.fromhex("1400dae5")  # ldrb r0, [sl, #0x14]
 ADDR_NODE_BYTE_CAVE = 0x00190350
 ADDR_NODE_BYTE_LIMIT = 0x00190360
 # Free-list best fit: ldr r2, [r0, #4]. r0 is the node. PUPU is not one.
+# Luma 2026-10-03 00:50: file 0x2C6070 ``ldrb r0, [r6, #0x5f]`` with r6 == 0
+# (FAR 0x5F). r6 is the first pane lookup in the title menu update. The
+# ``beq`` at 0x2C5FCC is the only way in, so it goes through a null check
+# and the epilogue at 0x2C6040 instead.
+ADDR_PANE_FLAG_BR = 0x002C5FCC
+ADDR_PANE_FLAG_LOAD = 0x002C6070
+ADDR_PANE_FLAG_FAIL = 0x002C6040  # pop {r3-r8, sb, pc}
+VANILLA_PANE_FLAG_BR = bytes.fromhex("2700000a")  # beq 0x2C6070
+# Zero padding the heap link pad uses when APPLY_HEAP_AND_PAK is on.
+ADDR_PANE_FLAG_CAVE = 0x005AEC0C
+ADDR_PANE_FLAG_CAVE_LEN = 12
+
 ADDR_HEAP_WALK = 0x0000DE4C
 ADDR_HEAP_WALK_RESUME = 0x0000DE50
 ADDR_HEAP_WALK_FAIL = 0x0000DE7C  # cmp r7, #0; return null if none
@@ -1026,6 +1038,18 @@ def build_node_byte_cave(base: int = ADDR_NODE_BYTE_CAVE) -> bytes:
     return blob
 
 
+def build_pane_flag_cave(base: int = ADDR_PANE_FLAG_CAVE) -> bytes:
+    """Take the menu-update epilogue when the pane in ``r6`` is null."""
+    body = bytearray()
+    body += cmp_imm(6, 0)
+    body += b_cond(0, base + len(body), ADDR_PANE_FLAG_FAIL)  # beq
+    body += b_ins(base + len(body), ADDR_PANE_FLAG_LOAD)
+    blob = bytes(body)
+    if len(blob) != ADDR_PANE_FLAG_CAVE_LEN:
+        raise ValueError(f"pane flag cave is {len(blob):#x} bytes")
+    return blob
+
+
 def heap_walk_stub_addr() -> int:
     """Last 8 bytes of the strcat tail, after the fixup cave."""
     return fixup_cave_addr() + len(build_fixup_cave())
@@ -1437,6 +1461,7 @@ def is_patched(data: bytes) -> bool:
     menu = build_menu_vt_cave(menu_at)
     idx = build_idx_load_cave()
     node = build_node_byte_cave()
+    pane = build_pane_flag_cave()
     heap = build_heap_walk_cave()
     stub_at = heap_walk_stub_addr()
     stub = build_heap_walk_stub(stub_at)
@@ -1492,6 +1517,9 @@ def is_patched(data: bytes) -> bool:
         and data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4]
         == b_ins(ADDR_NODE_BYTE, ADDR_NODE_BYTE_CAVE)
         and bytes(data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)]) == node
+        and data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4]
+        == b_cond(0, ADDR_PANE_FLAG_BR, ADDR_PANE_FLAG_CAVE)
+        and bytes(data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)]) == pane
         and data[ADDR_ROW_CLEAR : ADDR_ROW_CLEAR + 4]
         == b_ins(ADDR_ROW_CLEAR, ADDR_ROW_GATE)
         and bytes(data[ADDR_ROW_GATE : ADDR_ROW_GATE + len(row_gate)]) == row_gate
@@ -1692,6 +1720,16 @@ def apply_patch(data: bytearray) -> None:
     node_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
     if node_slot != node and node_slot != nop() * (len(node) // 4) and node_slot != node_pad:
         raise ValueError(f"node byte cave is not padding: {node_slot.hex()}")
+    if APPLY_HEAP_AND_PAK:
+        raise ValueError("pane flag cave shares the heap link pad slot")
+    pane = build_pane_flag_cave()
+    pane_hook = b_cond(0, ADDR_PANE_FLAG_BR, ADDR_PANE_FLAG_CAVE)
+    pane_head = bytes(data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4])
+    if pane_head != VANILLA_PANE_FLAG_BR and pane_head != pane_hook:
+        raise ValueError(f"unexpected pane flag branch at {ADDR_PANE_FLAG_BR:#x}: {pane_head.hex()}")
+    pane_slot = bytes(data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)])
+    if pane_slot != pane and pane_slot != bytes(len(pane)):
+        raise ValueError(f"pane flag cave is not padding: {pane_slot.hex()}")
     heap = build_heap_walk_cave()
     heap_hook = b_ins(ADDR_HEAP_WALK, ADDR_HEAP_WALK_CAVE)
     heap_head = bytes(data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4])
@@ -1824,6 +1862,8 @@ def apply_patch(data: bytearray) -> None:
     data[ADDR_IDX_LOAD : ADDR_IDX_LOAD + 4] = idx_hook
     data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)] = node
     data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4] = node_hook
+    data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)] = pane
+    data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4] = pane_hook
     print(
         f"[chunk-walk] deref @{ADDR_DEREF:#x} / advance @{ADDR_ADVANCE:#x} "
         f"-> @{ADDR_CHUNK_WALK_CAVE:#x} ({len(blob):#x}); "
@@ -1845,6 +1885,7 @@ def apply_patch(data: bytearray) -> None:
         f"menu vt @{ADDR_MENU_VT:#x} -> @{menu_at:#x} ({len(menu):#x}); "
         f"idx load @{ADDR_IDX_LOAD:#x} -> @{ADDR_IDX_LOAD_CAVE:#x} ({len(idx):#x}); "
         f"node byte @{ADDR_NODE_BYTE:#x} -> @{ADDR_NODE_BYTE_CAVE:#x} ({len(node):#x}); "
+        f"pane flag @{ADDR_PANE_FLAG_BR:#x} -> @{ADDR_PANE_FLAG_CAVE:#x}; "
         f"heap/pak {'on' if APPLY_HEAP_AND_PAK else 'vanilla (boot)'} "
         f"walk @{ADDR_HEAP_WALK:#x} link @{ADDR_HEAP_LINK:#x} "
         f"pak @{ADDR_PAK_INIT:#x}"

@@ -1317,3 +1317,37 @@ def test_pak_alloc_pops_when_malloc_returns_null():
     if imm & 0x800000:
         imm -= 0x1000000
     assert (ADDR_FILLCAND_TAIL + 4) + 8 + (imm << 2) == POST1
+
+
+def test_oct3_dump_is_null_pane_flag_load():
+    """``ldrb r0, [r6, #0x5f]`` with a null pane lookup in the title menu update."""
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261003_0050.dmp").read_bytes()
+    )
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert dump["title_id"] == TITLE_ID
+    regs = dump["regs"]
+    assert regs[15] == 0x003C6070
+    assert regs[6] == 0
+    assert regs[19] == 0x5F
+    assert regs[17] & 0xF == DFSR_TRANSLATION_SECTION
+    fault = _u32(dump["code"], len(dump["code"]) - 4)
+    assert fault == 0xE5D6005F  # ldrb r0, [r6, #0x5f]
+
+
+def test_pane_flag_cave_exits_when_the_pane_is_null():
+    from patch_chunk_walk_guard import (
+        ADDR_PANE_FLAG_CAVE,
+        ADDR_PANE_FLAG_FAIL,
+        ADDR_PANE_FLAG_LOAD,
+        build_pane_flag_cave,
+    )
+
+    blob = build_pane_flag_cave()
+    base = ADDR_PANE_FLAG_CAVE
+    ret, reads = _run_cave(blob, base, base, {6: 0, "z": 1}, {})
+    assert ret == ("leave", ADDR_PANE_FLAG_FAIL)
+    assert reads == []
+    ret, reads = _run_cave(blob, base, base, {6: 0x08690250, "z": 0}, {})
+    assert ret == ("leave", ADDR_PANE_FLAG_LOAD)
+    assert reads == []

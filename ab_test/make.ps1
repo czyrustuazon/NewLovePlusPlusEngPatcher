@@ -300,6 +300,9 @@ function Launch-Instance([string]$Id) {
     if ($env:NLPP_EMU_NAME_WALK_ABORT -eq "1") {
         Write-Host "NLPP_EMU_NAME_WALK_ABORT=1 (name-walk load emulates the 2026-10-01 18:36 data abort)"
     }
+    if ($env:NLPP_EMU_PANE_FLAG -eq "1") {
+        Write-Host "NLPP_EMU_PANE_FLAG=1 (menu update gets one null pane in r6, the 2026-10-03 00:50 dump)"
+    }
     $bat = Join-Path $Paths.Instances "$Id\Launch-$Id.bat"
     if (Test-Path $bat) {
         Start-Process $bat
