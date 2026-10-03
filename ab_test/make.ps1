@@ -88,6 +88,23 @@ function Ensure-AzaharOpenLinkFile {
     }
 }
 
+function Copy-AzaharRuntimeDlls([string]$DestDir) {
+    # ICU was always copied next to the exe. Qt6Multimedia is also a hard
+    # load at startup; without it, double-clicking azahar.exe (or a PATH
+    # that lacks msys64\clang64\bin) shows "Qt6Multimedia.dll was not found".
+    $msysBin = "C:\msys64\clang64\bin"
+    $dlls = @(
+        "libicudt78.dll", "libicuin78.dll", "libicuuc78.dll",
+        "Qt6Multimedia.dll", "Qt6MultimediaWidgets.dll", "Qt6MultimediaQuick.dll"
+    )
+    foreach ($dll in $dlls) {
+        $src = Join-Path $msysBin $dll
+        if (Test-Path $src) {
+            Copy-Item $src (Join-Path $DestDir $dll) -Force
+        }
+    }
+}
+
 function Copy-AzaharToInstances {
     $exe = $Paths.AzaharExe
     if (-not (Test-Path $exe)) { return }
@@ -95,7 +112,8 @@ function Copy-AzaharToInstances {
         $destDir = Join-Path $Paths.Instances $id
         if (-not (Test-Path $destDir)) { continue }
         Copy-Item $exe (Join-Path $destDir "azahar.exe") -Force
-        Write-Host "Copied azahar.exe -> $destDir"
+        Copy-AzaharRuntimeDlls $destDir
+        Write-Host "Copied azahar.exe + runtime DLLs -> $destDir"
     }
 }
 
@@ -112,12 +130,7 @@ function Build-Azahar {
         ninja citra_meta
         if ($LASTEXITCODE -ne 0) { throw "ninja failed" }
         $release = Split-Path -Parent $Paths.AzaharExe
-        foreach ($dll in @("libicudt78.dll", "libicuin78.dll", "libicuuc78.dll")) {
-            $src = Join-Path $msysBin $dll
-            if (Test-Path $src) {
-                Copy-Item $src (Join-Path $release $dll) -Force
-            }
-        }
+        Copy-AzaharRuntimeDlls $release
         Write-Host "Built: $($Paths.AzaharExe)"
         Copy-AzaharToInstances
     } finally {

@@ -96,16 +96,57 @@ first lookup result in ``r6``, which is 0, into a virtual call through
 null object pops the frame and returns.
 
 The title screen then data-aborts at file ``0x544338`` (runtime
-``0x644338``, ``ldr r1, [r2, r1]``). ``r2`` is the fourcc ``IDX ``
-(``0x20584449``) and ``r1`` is a heap pointer, so the sum is unmapped.
-A base outside ``[0x08000000, 0x20000000)`` skips to this
-function's epilogue. ``0x20584449`` (the ``IDX `` tag) is above that
-window; ``0x0110E113`` is below it. Both used to be added to a real
-pointer. The backdrop can stay unbuilt for that node.
+``0x644338``, ``ldr r1, [r2, r1]``). ``r1`` is already the table address
+and ``r2`` is a file delta. A delta of 0 still loads the table, which
+draws the logo and the scrolling background. A delta of 16 MiB or more
+(the ``IDX `` tag ``0x20584449``, and ``0x0110E113``) skips to this
+function's epilogue.
 The next read in that function, file ``0x544348`` (``ldrb r0, [sl, #0x14]``),
 faults when the loaded offset makes ``sl`` itself unmapped (FAR
 ``0x56AF97E3``, ``sl`` ``0x56AF97CF``). ``sl`` at or above ``0x20000000``
 takes the same epilogue.
+
+Leaving the save-file screen data-aborts at file ``0xDE4C`` (runtime
+``0x10DE4C``, ``ldr r2, [r0, #4]``, FAR ``0x55505554``). ``r0`` is the
+free-list node and it is the fourcc ``PUPU`` (``0x55505550``). The
+allocator's own end (``cmp r7, #0`` at file ``0xDE7C``) returns null when
+no block was chosen, and the save-screen caller already checks that.
+A node at or above ``0x20000000`` takes that end instead of reading
+``[node+4]``.
+
+The same allocator then writes through the chosen block's backward
+link at file ``0xDEE0`` (``str r0, [r2, #8]``, FAR ``0x55505558``).
+``r2`` is again ``PUPU``. That link is left alone, and the block is
+still returned. A free-list next of ``PUPU`` becomes the heap's end
+sentinel, and a previous node of ``PUPU`` makes the remainder the
+heap head, so the next image buffer can still be allocated.
+
+The next boot data-aborts in the PACK init at file ``0xD3B0``
+(runtime ``0x10D3B0``, ``stm r5, {r1, r6}``, FAR 0). ``r5`` is
+``[global+0xc]`` and it is 0; ``r1`` is the ``PAK `` fourcc. A null
+table skips those header stores and the init keeps going. Returning
+from the pop there leaves the object empty and the boot stays black.
+The allocation that follows returns 0 when heap 0 has no block, and
+file ``0xD3E4`` (``strb r1, [r0]``) then writes through that null.
+A null allocation pops the frame with ``r0`` still 0. A real
+allocation is stored at ``[table, #4]`` only when the table exists.
+
+The next instruction in that boot is file ``0x151E4`` (runtime
+``0x1151E4``, ``ldrb r0, [r4, #0x13]``, FAR ``0x6F3``). ``r4`` is
+``[global+0xc] + index * 20``, and the global word is 0, so the
+address is ``0x6E0``. The caller's ``cmp r0, #0`` takes the failure
+path, and this function already returns 0 from file ``0x15278``.
+A null base takes that pop. The check is Thumb in the padding after
+the message-speed sample (the sample rewrite clears those bytes, so
+the hook is written again after that rewrite).
+
+Returning 0 there is what the caller at file ``0xD9B4`` treats as
+"create the entry". That path calls file ``0x14F00``, which loads
+the same null base and faults at file ``0x14F40`` (``ldrb r1, [r7,
+#0x13]``, FAR ``0x6F3``). ``tst r1, #8`` already skips the body, so a
+null base sets ``r1`` to 8 and returns to that test. The 16 bytes are
+the fillcand null tail plus the pad after it; the tail moves to the
+8 zero bytes before the commu-header cave.
 
 The caves sit in the dead tail of ``FUN_002573ac`` (strcat-raw branches away
 at the first instruction) so they stay in ``.text`` RX. Apply strcat-raw first.
@@ -124,11 +165,17 @@ from patch_input_romaji import (
     b_cond,
     b_ins,
     bl,
+    blx_imm,
     cmp_imm,
     cmp_reg,
     ldr_imm,
     mov_imm,
+    mov_imm_cond,
+    mov_reg,
+    orr_reg,
     str_imm,
+    sub_imm,
+    sub_reg,
 )
 from patch_code import (
     ADDR_BACKSPACE,
@@ -229,6 +276,79 @@ ADDR_NODE_BYTE_RESUME = 0x0054434C
 VANILLA_NODE_BYTE = bytes.fromhex("1400dae5")  # ldrb r0, [sl, #0x14]
 ADDR_NODE_BYTE_CAVE = 0x00190350
 ADDR_NODE_BYTE_LIMIT = 0x00190360
+# Free-list best fit: ldr r2, [r0, #4]. r0 is the node. PUPU is not one.
+ADDR_HEAP_WALK = 0x0000DE4C
+ADDR_HEAP_WALK_RESUME = 0x0000DE50
+ADDR_HEAP_WALK_FAIL = 0x0000DE7C  # cmp r7, #0; return null if none
+VANILLA_HEAP_WALK = bytes.fromhex("042090e5")  # ldr r2, [r0, #4]
+# Three dead words after the deref hook. The next helper starts at +0x10.
+ADDR_HEAP_WALK_CAVE = ADDR_DEREF + 4
+ADDR_HEAP_WALK_CAVE_LEN = 12
+# Neighbor link: str r0, [r2, #8] after ldr r2, [r7, #0xc]. PUPU is r2.
+ADDR_HEAP_LINK = 0x0000DED4
+ADDR_HEAP_LINK_BODY = 0x0000DED8
+ADDR_HEAP_LINK_END = 0x0000DEEC
+VANILLA_HEAP_LINK = bytes.fromhex("0c2097e5")  # ldr r2, [r7, #0xc]
+# Twelve zero bytes after bx lr, before a float literal at +0xc.
+ADDR_HEAP_LINK_PAD = 0x005AEC0C
+ADDR_HEAP_LINK_PAD_LEN = 12
+# str r0, [r2, #0x10] / str r0, [r2, #0x14] for the other two links.
+ADDR_HEAP_BIN = 0x0000DEEC
+ADDR_HEAP_BIN_END = 0x0000DF14
+# Size fixup was at 0xDF0C. It slides down so the bin check can reject null.
+ADDR_HEAP_TAIL = 0x0000DF14
+ADDR_HEAP_FAIL = 0x0000DF2C
+ADDR_HEAP_FAIL_OLD = 0x0000DF24
+ADDR_HEAP_TAIL_END = 0x0000DF40
+ADDR_HEAP_SUCCESS = 0x0000DF50
+ADDR_HEAP_UNLOCK = 0x0001FD88
+ADDR_HEAP_EMPTY = 0x0000DE48
+ADDR_HEAP_NOFIT = 0x0000DE80
+VANILLA_HEAP_BIN = bytes.fromhex("142097e5")  # ldr r2, [r7, #0x14]
+# Row clear: str r0, [r1] with r1 = 0x3E0. The empty span already jumps here.
+ADDR_ROW_CLEAR = 0x00029020
+ADDR_ROW_STORE = 0x00029024
+ADDR_ROW_RESUME = 0x00029028
+ADDR_ROW_SKIP = 0x0002903C
+VANILLA_ROW_CLEAR = bytes.fromhex("0500008a")  # bhi skip
+ROW_PTR_MIN = 0x00001000
+# Dead bytes after a pop, and alignment zeros before the strcat cave.
+ADDR_ROW_GATE = 0x000D4C90
+ADDR_ROW_CHECK = 0x0068FDA8
+# memset: stm r0! after malloc returned 0. Caller checks the pointer on return.
+ADDR_MEMSET = 0x001FDDD8
+ADDR_MEMSET_BODY = 0x001FDDDC
+VANILLA_MEMSET = bytes.fromhex("0020a0e3")  # mov r2, #0
+ADDR_MEMSET_CAVE = 0x0064790C
+ADDR_MEMSET_STUB = 0x0021D5B4
+# PACK init. r5 = [global+0xc]; stm through a null r5 is the boot abort.
+ADDR_PAK_INIT = 0x0000D3A4
+ADDR_PAK_INIT_END = 0x0000D3C4
+ADDR_PAK_POP = 0x0000D634
+VANILLA_PAK_INIT = bytes.fromhex(
+    "0620a0e10c5090e50200a0e3420085e8"
+    "086085e5b071c5e11260c5e51300c5e5"
+)
+# Soft-failing PACK when the table/alloc is null blacks the boot (the caller
+# keeps going with an empty archive). The heap walk/link splice can also
+# starve that alloc. Leave both vanilla until the free-list fix is proven
+# not to empty the heap at CESA/PACK setup. Instance B (no heap/PACK soft
+# fail) still draws; A with those soft fails stayed black with no abort.
+APPLY_HEAP_AND_PAK = False
+# Same null [global+0xc], indexed. ldrb r0, [r4, #0x13].
+ADDR_PAK_TABLE = 0x000151E4
+ADDR_PAK_TABLE_FAIL = 0x00015278  # mov r0, #0; pop {r4, r5, r6, pc}
+ADDR_PAK_TABLE_CAVE = 0x005D1934  # after "Speed test." in the sample pool
+ADDR_PAK_TABLE_CAVE_LEN = 12
+VANILLA_PAK_TABLE = bytes.fromhex("1300d4e5")
+# Create-path sibling of the table load. ldrb r1, [r7, #0x13].
+ADDR_PAK_FLAG = 0x00014F40
+ADDR_PAK_FLAG_CAVE = 0x0068F850  # fillcand cave1 null tail + the 8-byte pad
+ADDR_PAK_FLAG_CAVE_LEN = 16
+ADDR_FILLCAND_TAIL = 0x0068FFCC  # 8 zeros before the commu-header cave
+VANILLA_PAK_FLAG = bytes.fromhex("1310d7e5")  # ldrb r1, [r7, #0x13]
+_PAK_TABLE_JP = "メッセージ速度テストです。".encode("utf-8") + b"\x00"
+VANILLA_PAK_TABLE_CAVE = _PAK_TABLE_JP[-ADDR_PAK_TABLE_CAVE_LEN:]
 # Texture release: ldr r5, [r0, #8]. Caller ignores r0. r7 is already 0.
 ADDR_TEX_REL = 0x005E96DC
 ADDR_TEX_REL_RESUME = 0x005E96E0
@@ -245,6 +365,7 @@ VANILLA_FIELD = bytes.fromhex("000051e3")  # cmp r1, #0
 
 HEAP_LO = 0x08000000
 HEAP_HI = 0x20000000
+HEAP_SPAN = HEAP_HI - HEAP_LO
 # PUPU is 0x55505550. A real node this walker steps is far smaller, and a
 # size this large wraps the next pointer back into a mapped page.
 MAX_SIZE = 0x01000000
@@ -905,6 +1026,385 @@ def build_node_byte_cave(base: int = ADDR_NODE_BYTE_CAVE) -> bytes:
     return blob
 
 
+def heap_walk_stub_addr() -> int:
+    """Last 8 bytes of the strcat tail, after the fixup cave."""
+    return fixup_cave_addr() + len(build_fixup_cave())
+
+
+def build_heap_walk_stub(base: int | None = None) -> bytes:
+    """``ldr r2, [r0, #4]`` then the size compare."""
+    if base is None:
+        base = heap_walk_stub_addr()
+    body = bytearray()
+    body += VANILLA_HEAP_WALK
+    body += b_ins(base + len(body), ADDR_HEAP_WALK_RESUME)
+    blob = bytes(body)
+    if base + len(blob) > ADDR_CHUNK_WALK_LIMIT:
+        raise ValueError(
+            f"heap walk stub {base:#x}+{len(blob):#x} exceeds "
+            f"{ADDR_CHUNK_WALK_LIMIT:#x}"
+        )
+    return blob
+
+
+def build_heap_walk_cave(base: int = ADDR_HEAP_WALK_CAVE) -> bytes:
+    """Skip ``ldr r2, [r0, #4]`` when the free-list node is past the heap.
+
+    ``PUPU`` (``0x55505550``) arrives as ``r0``. The fail branch is
+    ``cmp r7, #0``, so a block already chosen is kept and an empty
+    search returns null. The load lives in the strcat tail.
+    """
+    body = bytearray()
+    body += cmp_imm(0, HEAP_HI)
+    body += b_cond(2, base + len(body), ADDR_HEAP_WALK_FAIL)
+    body += b_ins(base + len(body), heap_walk_stub_addr())
+    blob = bytes(body)
+    if len(blob) != ADDR_HEAP_WALK_CAVE_LEN:
+        raise ValueError(
+            f"heap walk cave is {len(blob):#x} bytes, slot is "
+            f"{ADDR_HEAP_WALK_CAVE_LEN:#x}"
+        )
+    if base + len(blob) > ADDR_DEREF + DEREF_LEN:
+        raise ValueError(
+            f"heap walk cave {base:#x}+{len(blob):#x} overlaps the "
+            f"next helper at {ADDR_DEREF + DEREF_LEN:#x}"
+        )
+    return blob
+
+
+def _ldr_cond(cond: int, rd: int, rn: int, imm: int) -> bytes:
+    return _u32((cond << 28) | 0x05900000 | (rn << 16) | (rd << 12) | imm)
+
+
+def _str_cond(cond: int, rd: int, rn: int, imm: int) -> bytes:
+    return _u32((cond << 28) | 0x05800000 | (rn << 16) | (rd << 12) | imm)
+
+
+def build_heap_link_pad(base: int = ADDR_HEAP_LINK_PAD) -> bytes:
+    """Load ``[r7, #0xc]`` and reduce it to a heap offset in ``r12``."""
+    body = bytearray()
+    body += ldr_imm(2, 7, 0xC)
+    body += sub_imm(12, 2, HEAP_LO)
+    body += b_ins(base + len(body), ADDR_HEAP_LINK_BODY)
+    blob = bytes(body)
+    if len(blob) != ADDR_HEAP_LINK_PAD_LEN:
+        raise ValueError(
+            f"heap link pad is {len(blob):#x} bytes, slot is {ADDR_HEAP_LINK_PAD_LEN:#x}"
+        )
+    return blob
+
+
+def build_heap_link_body(base: int = ADDR_HEAP_LINK_BODY) -> bytes:
+    """Skip the backward-link stores when that neighbor is off the heap.
+
+    The block's own links are still updated, so the allocation returns.
+    """
+    body = bytearray()
+    body += cmp_imm(12, HEAP_SPAN)
+    body += _str_cond(3, 2, 0, 0xC)  # strlo r2, [r0, #0xc]
+    body += _str_cond(3, 0, 2, 8)  # strlo r0, [r2, #8]
+    # Keep the allocated block off this list when the old link was PUPU.
+    body += _str_cond(3, 0, 7, 0xC)  # strlo r0, [r7, #0xc]
+    body += _str_cond(3, 7, 0, 8)  # strlo r7, [r0, #8]
+    blob = bytes(body)
+    if base + len(blob) != ADDR_HEAP_LINK_END:
+        raise ValueError(
+            f"heap link body {base:#x}+{len(blob):#x} ends "
+            f"{base + len(blob):#x}, expected {ADDR_HEAP_LINK_END:#x}"
+        )
+    return blob
+
+
+def _with_cond(word: bytes, cond: int) -> bytes:
+    raw = int.from_bytes(word, "little")
+    return _u32((raw & 0x0FFFFFFF) | ((cond & 0xF) << 28))
+
+
+def build_heap_bin(base: int = ADDR_HEAP_BIN) -> bytes:
+    """Splice the remainder without storing through 0 or ``PUPU``.
+
+    A null or high next becomes the heap end sentinel. A null previous
+    node becomes the new heap head, so the leftover block stays
+    reachable. A high previous node is not stored through.
+    """
+    body = bytearray()
+    body += ldr_imm(2, 7, 0x14)
+    body += cmp_imm(2, 0)
+    body += _with_cond(cmp_imm(2, HEAP_HI), 1)  # cmpne r2, #HEAP_HI
+    body += _ldr_cond(2, 2, 5, 8)  # ldrhs r2, [r5, #8]
+    body += str_imm(2, 0, 0x14)
+    body += ldr_imm(2, 7, 0x10)
+    body += cmp_imm(2, 0)
+    body += _str_cond(0, 0, 5, 4)  # streq r0, [r5, #4]
+    body += _with_cond(cmp_imm(2, HEAP_HI), 1)  # cmpne r2, #HEAP_HI
+    body += _str_cond(3, 0, 2, 0x14)  # strlo r0, [r2, #0x14]
+    blob = bytes(body)
+    if base + len(blob) != ADDR_HEAP_BIN_END:
+        raise ValueError(
+            f"heap bin body {base:#x}+{len(blob):#x} ends "
+            f"{base + len(blob):#x}, expected {ADDR_HEAP_BIN_END:#x}"
+        )
+    return blob
+
+
+def build_heap_tail(base: int = ADDR_HEAP_TAIL) -> bytes:
+    """Size split, then the null return, packed into the old epilogue."""
+    body = bytearray()
+    body += ldr_imm(2, 7, 4)
+    body += sub_reg(2, 2, 1)
+    body += sub_imm(2, 2, 0x20)
+    body += str_imm(2, 0, 4)
+    body += str_imm(1, 7, 4)
+    body += b_ins(base + len(body), ADDR_HEAP_SUCCESS)
+    body += mov_reg(0, 13)
+    body += bl(base + len(body), ADDR_HEAP_UNLOCK)
+    body += mov_reg(0, 13)
+    body += mov_reg(0, 7)
+    body += _u32(0xE8BD80F8)  # pop {r3, r4, r5, r6, r7, pc}
+    blob = bytes(body)
+    if base + len(blob) != ADDR_HEAP_TAIL_END:
+        raise ValueError(
+            f"heap tail {base:#x}+{len(blob):#x} ends "
+            f"{base + len(blob):#x}, expected {ADDR_HEAP_TAIL_END:#x}"
+        )
+    return blob
+
+
+def build_row_gate(base: int = ADDR_ROW_GATE) -> bytes:
+    """Keep the original empty-span branch, then range-check the pointer."""
+    body = bytearray()
+    body += b_cond(8, base + len(body), ADDR_ROW_SKIP)  # bhi skip
+    body += b_ins(base + len(body), ADDR_ROW_CHECK)
+    blob = bytes(body)
+    if len(blob) != 8:
+        raise ValueError(f"row gate is {len(blob):#x} bytes")
+    return blob
+
+
+def build_row_check(base: int = ADDR_ROW_CHECK) -> bytes:
+    """Skip ``str r0, [r1]`` when ``r1`` is below a real buffer."""
+    body = bytearray()
+    body += cmp_imm(1, ROW_PTR_MIN)
+    body += b_cond(2, base + len(body), ADDR_ROW_STORE)  # bhs store
+    body += b_ins(base + len(body), ADDR_ROW_SKIP)
+    blob = bytes(body)
+    if len(blob) != 12:
+        raise ValueError(f"row check is {len(blob):#x} bytes")
+    return blob
+
+
+def build_memset_cave(base: int = ADDR_MEMSET_CAVE) -> bytes:
+    """Return before the fill when the destination is null."""
+    body = bytearray()
+    body += cmp_imm(0, 0)
+    body += bx_lr(0)  # bxeq lr
+    body += b_ins(base + len(body), ADDR_MEMSET_STUB)
+    blob = bytes(body)
+    if len(blob) != 12:
+        raise ValueError(f"memset cave is {len(blob):#x} bytes")
+    return blob
+
+
+def build_memset_stub(base: int = ADDR_MEMSET_STUB) -> bytes:
+    body = bytearray()
+    body += mov_imm(2, 0)
+    body += b_ins(base + len(body), ADDR_MEMSET_BODY)
+    blob = bytes(body)
+    if len(blob) != 8:
+        raise ValueError(f"memset stub is {len(blob):#x} bytes")
+    return blob
+
+
+def build_pak_init(base: int = ADDR_PAK_INIT) -> bytes:
+    """Skip the header stores when the table is null. Keep building the object.
+
+    ``mov r2, r6`` was dead (``r2`` is overwritten before it is read), and
+    ``r2`` is 0, so ``stm {r1, r2, r6}`` covers the old ``stm`` plus the
+    store at ``+8``. The halfword and two bytes at ``+0x10`` pack into
+    ``0x02000001``. That frees the branch which skips those four stores.
+    ``r2`` stays 0, which is the heap index the allocation below uses.
+    """
+    body = bytearray()
+    body += mov_reg(2, 6)
+    body += ldr_imm(5, 0, 0xC)
+    body += cmp_imm(5, 0)
+    body += b_cond(0, base + len(body), ADDR_PAK_INIT_END)
+    body += mov_imm(0, 2)
+    body += _u32(0xE8850046)  # stm r5, {r1, r2, r6}
+    body += orr_reg(12, 7, 0, 24)  # orr r12, r7, r0, lsl #24 → 0x02000001
+    body += str_imm(12, 5, 0x10)
+    blob = bytes(body)
+    if base + len(blob) != ADDR_PAK_INIT_END:
+        raise ValueError(
+            f"pak init {base:#x}+{len(blob):#x} ends "
+            f"{base + len(blob):#x}, expected {ADDR_PAK_INIT_END:#x}"
+        )
+    return blob
+
+
+def _thumb_blx(here: int, target: int) -> bytes:
+    """Thumb BLX to a word-aligned ARM address."""
+    pc = (here + 4) & ~3
+    off = (target - pc) & 0xFFFFFFFF
+    if off & 3:
+        raise ValueError(f"thumb blx target {target:#x} is not word aligned")
+    sign = (off >> 24) & 1
+    i1 = (off >> 23) & 1
+    i2 = (off >> 22) & 1
+    imm10 = (off >> 12) & 0x3FF
+    imm10l = (off >> 2) & 0x3FF
+    j1 = (~(i1 ^ sign)) & 1
+    j2 = (~(i2 ^ sign)) & 1
+    hw1 = 0xF000 | (sign << 10) | imm10
+    hw2 = 0xC000 | (j1 << 13) | (j2 << 11) | (imm10l << 1)
+    return hw1.to_bytes(2, "little") + hw2.to_bytes(2, "little")
+
+
+def build_pak_table_cave(base: int = ADDR_PAK_TABLE_CAVE) -> bytes:
+    """Return 0 when the table base is null. Otherwise load the flag byte.
+
+    Entered from ARM with ``blx``. ``r0`` is the base and ``r4`` is the
+    indexed address. ``lr`` is the ``tst`` after the load. A null base
+    branches to this function's ``mov r0, #0; pop``.
+    """
+    if base != ADDR_PAK_TABLE_CAVE:
+        raise ValueError(f"pak table cave is fixed at {ADDR_PAK_TABLE_CAVE:#x}")
+    body = bytearray()
+    body += (0x2800).to_bytes(2, "little")  # cmp r0, #0
+    body += (0xD101).to_bytes(2, "little")  # bne.n load
+    body += _thumb_blx(base + 4, ADDR_PAK_TABLE_FAIL)
+    body += (0x7CE0).to_bytes(2, "little")  # ldrb r0, [r4, #0x13]
+    body += (0x4770).to_bytes(2, "little")  # bx lr
+    blob = bytes(body)
+    if len(blob) != ADDR_PAK_TABLE_CAVE_LEN:
+        raise ValueError(f"pak table cave is {len(blob):#x} bytes")
+    if base + len(blob) != 0x005D1940:
+        raise ValueError("pak table cave runs into the flag check")
+    return blob
+
+
+def apply_pak_table(data: bytearray) -> None:
+    """Write the table-base check. Safe after the message-speed sample rewrite."""
+    cave = build_pak_table_cave()
+    hook = blx_imm(ADDR_PAK_TABLE, ADDR_PAK_TABLE_CAVE)
+    head = bytes(data[ADDR_PAK_TABLE : ADDR_PAK_TABLE + 4])
+    if head != VANILLA_PAK_TABLE and head != hook:
+        raise ValueError(f"unexpected pak table load at {ADDR_PAK_TABLE:#x}: {head.hex()}")
+    slot = bytes(data[ADDR_PAK_TABLE_CAVE : ADDR_PAK_TABLE_CAVE + len(cave)])
+    if slot not in (cave, VANILLA_PAK_TABLE_CAVE, b"\x00" * len(cave)):
+        raise ValueError(f"pak table cave is not padding: {slot.hex()}")
+    data[ADDR_PAK_TABLE_CAVE : ADDR_PAK_TABLE_CAVE + len(cave)] = cave
+    data[ADDR_PAK_TABLE : ADDR_PAK_TABLE + 4] = hook
+    print(
+        f"[pak-table] @{ADDR_PAK_TABLE:#x} -> @{ADDR_PAK_TABLE_CAVE:#x} "
+        f"({len(cave):#x})"
+    )
+
+
+ADDR_PAK_ALLOC = 0x0000D3D8  # str r0, [r5, #4] after the PACK malloc
+VANILLA_PAK_ALLOC = bytes.fromhex("040085e5")
+ADDR_PAK_FLAG_CHECK = 0x005D1940  # ARM, after the table check in the sample pool
+ADDR_PAK_FLAG_CHECK_LEN = 16
+
+
+def build_pak_flag_cave(base: int = ADDR_PAK_FLAG_CHECK) -> bytes:
+    """Set bit 3 when the table base is null, else load the flag byte.
+
+    Entered by ``bl`` with ``r1`` still the base and ``r7`` the indexed
+    address. ``lr`` is ``tst r1, #8``. ``r1 = 8`` makes that test take
+    the epilogue. A real base still loads ``[r7, #0x13]``.
+    """
+    body = bytearray()
+    body += cmp_imm(1, 0)
+    body += mov_imm_cond(0, 1, 8)  # moveq r1, #8
+    body += _u32(0x15D71013)  # ldrneb r1, [r7, #0x13]
+    body += _u32(0xE12FFF1E)  # bx lr
+    blob = bytes(body)
+    if len(blob) != ADDR_PAK_FLAG_CHECK_LEN:
+        raise ValueError(f"pak flag cave is {len(blob):#x} bytes")
+    if base + len(blob) != 0x005D1950:
+        raise ValueError("pak flag cave runs into the next instruction")
+    return blob
+
+
+def build_pak_alloc_cave(base: int = ADDR_PAK_FLAG_CAVE) -> bytes:
+    """Pop when the PACK allocation is null. Otherwise keep the table link.
+
+    Thumb, entered by ARM ``blx`` so ``lr`` is the ``mov r1, #0x50`` after
+    the store. A null ``r0`` takes the frame pop at ``0xD634`` (``r0``
+    stays 0). A null table skips ``str r0, [r5, #4]``.
+    """
+    body = bytearray()
+    body += (0x2800).to_bytes(2, "little")  # cmp r0, #0
+    body += (0xD101).to_bytes(2, "little")  # bne.n past the blx
+    body += _thumb_blx(base + 4, ADDR_PAK_POP)
+    body += (0x2D00).to_bytes(2, "little")  # cmp r5, #0
+    body += (0xD000).to_bytes(2, "little")  # beq.n bx
+    body += (0x6068).to_bytes(2, "little")  # str r0, [r5, #4]
+    body += (0x4770).to_bytes(2, "little")  # bx lr
+    blob = bytes(body)
+    if len(blob) != ADDR_PAK_FLAG_CAVE_LEN:
+        raise ValueError(f"pak alloc cave is {len(blob):#x} bytes")
+    return blob
+
+
+def _fillcand_tail(at: int) -> bytes:
+    """``mov r6, #0; b`` the fillcand site-1 null path, from ``at``."""
+    from patch_input_candidate_nullguard import POST1, REG1, b_ins as cand_b
+    from patch_input_candidate_nullguard import mov_imm0
+
+    return mov_imm0(REG1) + cand_b(at + 4, POST1)
+
+
+def apply_pak_flag(data: bytearray) -> None:
+    """Pop the PACK init when its allocation is null.
+
+    The fillcand null tail moves to the pad before the commu header so
+    this cave can sit in the shared RX page. Apply after fillcand and
+    after the commu header.
+    """
+    from patch_input_candidate_nullguard import CAVE1, beq as cand_beq
+
+    cave = build_pak_alloc_cave()
+    hook = blx_imm(ADDR_PAK_ALLOC, ADDR_PAK_FLAG_CAVE)
+    tail = _fillcand_tail(ADDR_FILLCAND_TAIL)
+    old_tail = _fillcand_tail(CAVE1 + 0x10)
+    head = bytes(data[ADDR_PAK_ALLOC : ADDR_PAK_ALLOC + 4])
+    if head != VANILLA_PAK_ALLOC and head != hook:
+        raise ValueError(f"unexpected pak alloc store at {ADDR_PAK_ALLOC:#x}: {head.hex()}")
+    slot = bytes(data[ADDR_PAK_FLAG_CAVE : ADDR_PAK_FLAG_CAVE + len(cave)])
+    if slot not in (cave, old_tail + b"\x00" * 8):
+        raise ValueError(f"pak alloc cave is not the fillcand tail: {slot.hex()}")
+    dest = bytes(data[ADDR_FILLCAND_TAIL : ADDR_FILLCAND_TAIL + len(tail)])
+    if dest != tail and dest != b"\x00" * len(tail):
+        raise ValueError(f"fillcand tail pad is not empty: {dest.hex()}")
+    beq_at = CAVE1 + 4
+    old_beq = cand_beq(beq_at, CAVE1 + 0x10)
+    new_beq = cand_beq(beq_at, ADDR_FILLCAND_TAIL)
+    got = bytes(data[beq_at : beq_at + 4])
+    if got != old_beq and got != new_beq:
+        raise ValueError(f"unexpected fillcand beq at {beq_at:#x}: {got.hex()}")
+    data[ADDR_FILLCAND_TAIL : ADDR_FILLCAND_TAIL + len(tail)] = tail
+    data[beq_at : beq_at + 4] = new_beq
+    data[ADDR_PAK_FLAG_CAVE : ADDR_PAK_FLAG_CAVE + len(cave)] = cave
+    data[ADDR_PAK_ALLOC : ADDR_PAK_ALLOC + 4] = hook
+    flag = build_pak_flag_cave()
+    flag_hook = bl(ADDR_PAK_FLAG, ADDR_PAK_FLAG_CHECK)
+    flag_head = bytes(data[ADDR_PAK_FLAG : ADDR_PAK_FLAG + 4])
+    if flag_head != VANILLA_PAK_FLAG and flag_head != flag_hook:
+        raise ValueError(f"unexpected pak flag load at {ADDR_PAK_FLAG:#x}: {flag_head.hex()}")
+    data[ADDR_PAK_FLAG_CHECK : ADDR_PAK_FLAG_CHECK + len(flag)] = flag
+    data[ADDR_PAK_FLAG : ADDR_PAK_FLAG + 4] = flag_hook
+    print(
+        f"[pak-alloc] @{ADDR_PAK_ALLOC:#x} -> @{ADDR_PAK_FLAG_CAVE:#x} "
+        f"({len(cave):#x}); fillcand tail @{ADDR_FILLCAND_TAIL:#x}"
+    )
+    print(
+        f"[pak-flag] @{ADDR_PAK_FLAG:#x} -> @{ADDR_PAK_FLAG_CHECK:#x} "
+        f"({len(flag):#x})"
+    )
+
+
 def is_patched(data: bytes) -> bool:
     blob, labs = build_cave()
     fixup = build_fixup_cave()
@@ -937,6 +1437,18 @@ def is_patched(data: bytes) -> bool:
     menu = build_menu_vt_cave(menu_at)
     idx = build_idx_load_cave()
     node = build_node_byte_cave()
+    heap = build_heap_walk_cave()
+    stub_at = heap_walk_stub_addr()
+    stub = build_heap_walk_stub(stub_at)
+    link_pad = build_heap_link_pad()
+    link_body = build_heap_link_body()
+    heap_bin = build_heap_bin()
+    heap_tail = build_heap_tail()
+    row_gate = build_row_gate()
+    row_check = build_row_check()
+    memset_cave = build_memset_cave()
+    memset_stub = build_memset_stub()
+    pak = build_pak_init()
     deref = labs["deref"]
     advance = labs["advance"]
     return (
@@ -980,6 +1492,48 @@ def is_patched(data: bytes) -> bool:
         and data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4]
         == b_ins(ADDR_NODE_BYTE, ADDR_NODE_BYTE_CAVE)
         and bytes(data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)]) == node
+        and data[ADDR_ROW_CLEAR : ADDR_ROW_CLEAR + 4]
+        == b_ins(ADDR_ROW_CLEAR, ADDR_ROW_GATE)
+        and bytes(data[ADDR_ROW_GATE : ADDR_ROW_GATE + len(row_gate)]) == row_gate
+        and bytes(data[ADDR_ROW_CHECK : ADDR_ROW_CHECK + len(row_check)]) == row_check
+        and data[ADDR_MEMSET : ADDR_MEMSET + 4] == b_ins(ADDR_MEMSET, ADDR_MEMSET_CAVE)
+        and bytes(data[ADDR_MEMSET_CAVE : ADDR_MEMSET_CAVE + len(memset_cave)])
+        == memset_cave
+        and bytes(data[ADDR_MEMSET_STUB : ADDR_MEMSET_STUB + len(memset_stub)])
+        == memset_stub
+        and (
+            (
+                APPLY_HEAP_AND_PAK
+                and data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4]
+                == b_ins(ADDR_HEAP_WALK, ADDR_HEAP_WALK_CAVE)
+                and bytes(data[ADDR_HEAP_WALK_CAVE : ADDR_HEAP_WALK_CAVE + len(heap)])
+                == heap
+                and bytes(data[stub_at : stub_at + len(stub)]) == stub
+                and data[ADDR_HEAP_LINK : ADDR_HEAP_LINK + 4]
+                == b_ins(ADDR_HEAP_LINK, ADDR_HEAP_LINK_PAD)
+                and bytes(data[ADDR_HEAP_LINK_PAD : ADDR_HEAP_LINK_PAD + len(link_pad)])
+                == link_pad
+                and bytes(
+                    data[ADDR_HEAP_LINK_BODY : ADDR_HEAP_LINK_BODY + len(link_body)]
+                )
+                == link_body
+                and bytes(data[ADDR_HEAP_BIN : ADDR_HEAP_BIN + len(heap_bin)])
+                == heap_bin
+                and bytes(data[ADDR_HEAP_TAIL : ADDR_HEAP_TAIL + len(heap_tail)])
+                == heap_tail
+                and data[ADDR_HEAP_EMPTY : ADDR_HEAP_EMPTY + 4]
+                == b_cond(0, ADDR_HEAP_EMPTY, ADDR_HEAP_FAIL)
+                and data[ADDR_HEAP_NOFIT : ADDR_HEAP_NOFIT + 4]
+                == b_cond(0, ADDR_HEAP_NOFIT, ADDR_HEAP_FAIL)
+                and bytes(data[ADDR_PAK_INIT : ADDR_PAK_INIT + len(pak)]) == pak
+            )
+            or (
+                not APPLY_HEAP_AND_PAK
+                and data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4] == VANILLA_HEAP_WALK
+                and bytes(data[ADDR_PAK_INIT : ADDR_PAK_INIT + len(VANILLA_PAK_INIT)])
+                == VANILLA_PAK_INIT
+            )
+        )
     )
 
 
@@ -1138,10 +1692,81 @@ def apply_patch(data: bytearray) -> None:
     node_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
     if node_slot != node and node_slot != nop() * (len(node) // 4) and node_slot != node_pad:
         raise ValueError(f"node byte cave is not padding: {node_slot.hex()}")
+    heap = build_heap_walk_cave()
+    heap_hook = b_ins(ADDR_HEAP_WALK, ADDR_HEAP_WALK_CAVE)
+    heap_head = bytes(data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4])
+    if heap_head != VANILLA_HEAP_WALK and heap_head != heap_hook:
+        raise ValueError(f"unexpected heap walk at {ADDR_HEAP_WALK:#x}: {heap_head.hex()}")
+    stub_at = heap_walk_stub_addr()
+    stub = build_heap_walk_stub(stub_at)
+    if stub_at != end:
+        raise ValueError(f"heap walk stub @{stub_at:#x} is not the fixup slack")
+    link_pad = build_heap_link_pad()
+    link_hook = b_ins(ADDR_HEAP_LINK, ADDR_HEAP_LINK_PAD)
+    link_head = bytes(data[ADDR_HEAP_LINK : ADDR_HEAP_LINK + 4])
+    if link_head != VANILLA_HEAP_LINK and link_head != link_hook:
+        raise ValueError(f"unexpected heap link at {ADDR_HEAP_LINK:#x}: {link_head.hex()}")
+    link_body = build_heap_link_body()
+    link_slot = bytes(data[ADDR_HEAP_LINK_BODY : ADDR_HEAP_LINK_BODY + len(link_body)])
+    link_van = bytes.fromhex(
+        "0c2080e50c2097e5080082e50c0087e5087080e5"
+    )
+    if link_slot != link_body and link_slot != link_van:
+        raise ValueError(f"heap link body is not vanilla: {link_slot.hex()}")
+    pad_slot = bytes(data[ADDR_HEAP_LINK_PAD : ADDR_HEAP_LINK_PAD + len(link_pad)])
+    if pad_slot != link_pad and pad_slot != b"\x00" * len(link_pad):
+        raise ValueError(f"heap link pad is not empty: {pad_slot.hex()}")
+    heap_bin = build_heap_bin()
+    heap_tail = build_heap_tail()
+    split = heap_bin + heap_tail
+    split_slot = bytes(data[ADDR_HEAP_BIN : ADDR_HEAP_TAIL_END])
+    split_van = bytes.fromhex(
+        "142097e5100082e5102097e5140082e5102097e5102080e5"
+        "142097e5142080e5042097e5012042e0202042e2042080e5"
+        "041087e50a0000ea0d00a0e1964700eb0d00a0e100f020e3"
+        "0000a0e10700a0e1f880bde8"
+    )
+    if split_slot != split and split_slot != split_van:
+        raise ValueError(f"heap split body is not vanilla: {split_slot.hex()}")
+    for site in (ADDR_HEAP_EMPTY, ADDR_HEAP_NOFIT):
+        word = bytes(data[site : site + 4])
+        if word not in (
+            b_cond(0, site, ADDR_HEAP_FAIL_OLD),
+            b_cond(0, site, ADDR_HEAP_FAIL),
+        ):
+            raise ValueError(f"unexpected heap fail branch at {site:#x}: {word.hex()}")
+    row_gate = build_row_gate()
+    row_check = build_row_check()
+    row_head = bytes(data[ADDR_ROW_CLEAR : ADDR_ROW_CLEAR + 4])
+    if row_head != VANILLA_ROW_CLEAR and row_head != b_ins(ADDR_ROW_CLEAR, ADDR_ROW_GATE):
+        raise ValueError(f"unexpected row clear at {ADDR_ROW_CLEAR:#x}: {row_head.hex()}")
+    gate_slot = bytes(data[ADDR_ROW_GATE : ADDR_ROW_GATE + len(row_gate)])
+    check_slot = bytes(data[ADDR_ROW_CHECK : ADDR_ROW_CHECK + len(row_check)])
+    if gate_slot != row_gate and gate_slot != b"\x00" * len(row_gate):
+        raise ValueError(f"row gate is not padding: {gate_slot.hex()}")
+    if check_slot != row_check and check_slot != b"\x00" * len(row_check):
+        raise ValueError(f"row check is not padding: {check_slot.hex()}")
+    memset_cave = build_memset_cave()
+    memset_stub = build_memset_stub()
+    memset_head = bytes(data[ADDR_MEMSET : ADDR_MEMSET + 4])
+    if memset_head != VANILLA_MEMSET and memset_head != b_ins(ADDR_MEMSET, ADDR_MEMSET_CAVE):
+        raise ValueError(f"unexpected memset at {ADDR_MEMSET:#x}: {memset_head.hex()}")
+    m_cave = bytes(data[ADDR_MEMSET_CAVE : ADDR_MEMSET_CAVE + len(memset_cave)])
+    m_stub = bytes(data[ADDR_MEMSET_STUB : ADDR_MEMSET_STUB + len(memset_stub)])
+    if m_cave != memset_cave and m_cave != b"\x00" * len(memset_cave):
+        raise ValueError(f"memset cave is not padding: {m_cave.hex()}")
+    if m_stub != memset_stub and m_stub != b"\x00" * len(memset_stub):
+        raise ValueError(f"memset stub is not padding: {m_stub.hex()}")
+    pak = build_pak_init()
+    pak_slot = bytes(data[ADDR_PAK_INIT : ADDR_PAK_INIT + len(pak)])
+    if pak_slot != pak and pak_slot != VANILLA_PAK_INIT:
+        raise ValueError(f"unexpected pak init at {ADDR_PAK_INIT:#x}: {pak_slot.hex()}")
     # NOP the rest of each helper so a mid-function branch cannot reach ldrne.
     data[ADDR_DEREF : ADDR_DEREF + DEREF_LEN] = NOP * (DEREF_LEN // 4)
     data[ADDR_ADVANCE : ADDR_ADVANCE + ADVANCE_LEN] = NOP * (ADVANCE_LEN // 4)
     data[ADDR_DEREF : ADDR_DEREF + 4] = b_ins(ADDR_DEREF, labs["deref"])
+    if APPLY_HEAP_AND_PAK:
+        data[ADDR_HEAP_WALK_CAVE : ADDR_HEAP_WALK_CAVE + len(heap)] = heap
     data[ADDR_ADVANCE : ADDR_ADVANCE + 4] = b_ins(ADDR_ADVANCE, labs["advance"])
     data[ADDR_CHUNK_WALK_CAVE : ADDR_CHUNK_WALK_CAVE + len(blob)] = blob
     data[ADDR_FIXUP : ADDR_FIXUP + 4] = bl(ADDR_FIXUP, fixup_at)
@@ -1149,6 +1774,26 @@ def apply_patch(data: bytearray) -> None:
     if end < ADDR_CHUNK_WALK_LIMIT:
         slack = ADDR_CHUNK_WALK_LIMIT - end
         data[end:ADDR_CHUNK_WALK_LIMIT] = NOP * (slack // 4)
+    data[stub_at : stub_at + len(stub)] = stub
+    if APPLY_HEAP_AND_PAK:
+        data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4] = heap_hook
+        data[ADDR_HEAP_LINK_PAD : ADDR_HEAP_LINK_PAD + len(link_pad)] = link_pad
+        data[ADDR_HEAP_LINK : ADDR_HEAP_LINK + 4] = link_hook
+        data[ADDR_HEAP_LINK_BODY : ADDR_HEAP_LINK_BODY + len(link_body)] = link_body
+        data[ADDR_HEAP_BIN : ADDR_HEAP_TAIL_END] = split
+        data[ADDR_HEAP_EMPTY : ADDR_HEAP_EMPTY + 4] = b_cond(
+            0, ADDR_HEAP_EMPTY, ADDR_HEAP_FAIL
+        )
+        data[ADDR_HEAP_NOFIT : ADDR_HEAP_NOFIT + 4] = b_cond(
+            0, ADDR_HEAP_NOFIT, ADDR_HEAP_FAIL
+        )
+        data[ADDR_PAK_INIT : ADDR_PAK_INIT + len(pak)] = pak
+    data[ADDR_ROW_GATE : ADDR_ROW_GATE + len(row_gate)] = row_gate
+    data[ADDR_ROW_CHECK : ADDR_ROW_CHECK + len(row_check)] = row_check
+    data[ADDR_ROW_CLEAR : ADDR_ROW_CLEAR + 4] = b_ins(ADDR_ROW_CLEAR, ADDR_ROW_GATE)
+    data[ADDR_MEMSET_CAVE : ADDR_MEMSET_CAVE + len(memset_cave)] = memset_cave
+    data[ADDR_MEMSET_STUB : ADDR_MEMSET_STUB + len(memset_stub)] = memset_stub
+    data[ADDR_MEMSET : ADDR_MEMSET + 4] = b_ins(ADDR_MEMSET, ADDR_MEMSET_CAVE)
     # Advance NOP tail is written above; the title-bg cave replaces part of it.
     data[ADDR_TITLE_RELOC_CAVE : ADDR_TITLE_RELOC_CAVE + len(title)] = title
     data[ADDR_TITLE_RELOC : ADDR_TITLE_RELOC + 4] = title_hook
@@ -1199,5 +1844,8 @@ def apply_patch(data: bytearray) -> None:
         f"name @{ADDR_NAME:#x} -> @{name_at:#x} ({len(name):#x}); "
         f"menu vt @{ADDR_MENU_VT:#x} -> @{menu_at:#x} ({len(menu):#x}); "
         f"idx load @{ADDR_IDX_LOAD:#x} -> @{ADDR_IDX_LOAD_CAVE:#x} ({len(idx):#x}); "
-        f"node byte @{ADDR_NODE_BYTE:#x} -> @{ADDR_NODE_BYTE_CAVE:#x} ({len(node):#x})"
+        f"node byte @{ADDR_NODE_BYTE:#x} -> @{ADDR_NODE_BYTE_CAVE:#x} ({len(node):#x}); "
+        f"heap/pak {'on' if APPLY_HEAP_AND_PAK else 'vanilla (boot)'} "
+        f"walk @{ADDR_HEAP_WALK:#x} link @{ADDR_HEAP_LINK:#x} "
+        f"pak @{ADDR_PAK_INIT:#x}"
     )

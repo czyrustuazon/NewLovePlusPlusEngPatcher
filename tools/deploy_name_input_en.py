@@ -274,6 +274,8 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_commu_header(data)
         steps += 1
 
+    # PACK table/alloc soft-fails black the boot when the archive heap is
+    # empty; leave them off with APPLY_HEAP_AND_PAK until that is fixed.
     return steps
 
 

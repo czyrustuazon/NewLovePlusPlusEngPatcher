@@ -155,6 +155,7 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             1: z == 0,  # ne
             2: c == 1,
             3: c == 0,
+            8: c == 1 and z == 0,  # hi
             0xE: True,
         }.get(cond)
         if take is None:
@@ -281,6 +282,25 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
             addr = regs[rn]
             reads.append(addr)
             regs[rd] = load(addr) & 0xFFFF
+            pc += 4
+            continue
+        if (w & 0x0FFF0FF0) == 0x01A00000:  # mov rd, rm
+            regs[(w >> 12) & 0xF] = regs[w & 0xF]
+            pc += 4
+            continue
+        if (w & 0x0FF00000) == 0x08800000:  # stm rn, {list}
+            addr = regs[(w >> 16) & 0xF]
+            for reg in range(16):
+                if w & (1 << reg):
+                    mem[addr] = regs[reg]
+                    addr = (addr + 4) & 0xFFFFFFFF
+            pc += 4
+            continue
+        if (w & 0x0FE00010) == 0x01800000 and ((w >> 5) & 3) == 0:  # orr rd, rn, rm, lsl #sh
+            rd = (w >> 12) & 0xF
+            rn = (w >> 16) & 0xF
+            sh = (w >> 7) & 0x1F
+            regs[rd] = (regs[rn] | ((regs[w & 0xF] << sh) & 0xFFFFFFFF)) & 0xFFFFFFFF
             pc += 4
             continue
         raise AssertionError(f"unhandled {w:#x} at {pc:#x}")
@@ -943,3 +963,357 @@ def test_node_byte_skips_an_unmapped_sum():
     ret, reads = _run_cave(blob, base, base, {10: node}, {node + 0x14: 3})
     assert ret == ("leave", ADDR_NODE_BYTE_RESUME)
     assert reads == [node + 0x14]
+
+
+def test_heap_walk_stops_on_pupu():
+    """A free-list node of ``PUPU`` must not be read at ``+4``."""
+    from patch_chunk_walk_guard import (
+        ADDR_HEAP_WALK_CAVE,
+        ADDR_HEAP_WALK_FAIL,
+        ADDR_HEAP_WALK_RESUME,
+        build_heap_walk_cave,
+        build_heap_walk_stub,
+        heap_walk_stub_addr,
+    )
+
+    base = ADDR_HEAP_WALK_CAVE
+    blob = build_heap_walk_cave(base)
+    stub_at = heap_walk_stub_addr()
+    stub = build_heap_walk_stub(stub_at)
+    pupu = 0x55505550
+    ret, reads = _run_cave(blob, base, base, {0: pupu}, {})
+    assert ret == ("leave", ADDR_HEAP_WALK_FAIL)
+    assert reads == []
+
+    node = 0x14826480
+    ret, reads = _run_cave(blob, base, base, {0: node}, {})
+    assert ret == ("leave", stub_at)
+    assert reads == []
+    ret, reads = _run_cave(stub, stub_at, stub_at, {0: node}, {node + 4: 0x80})
+    assert ret == ("leave", ADDR_HEAP_WALK_RESUME)
+    assert reads == [node + 4]
+
+
+def _run_fallthrough(blob: bytes, base: int, regs: dict[int, int], mem: dict[int, int]):
+    """Run a cave that continues into the next instruction instead of branching."""
+    try:
+        _run_cave(blob, base, base, regs, mem)
+    except AssertionError as exc:
+        text = str(exc)
+        if not text.startswith("pc left cave:"):
+            raise
+        return
+    raise AssertionError("cave returned without reaching its end")
+
+
+def test_heap_link_does_not_write_through_pupu():
+    """A ``PUPU`` backward link is not stored through. A real neighbor is."""
+    from patch_chunk_walk_guard import (
+        ADDR_HEAP_LINK_BODY,
+        ADDR_HEAP_LINK_PAD,
+        build_heap_bin,
+        build_heap_link_body,
+        build_heap_link_pad,
+    )
+
+    pad = build_heap_link_pad()
+    body = build_heap_link_body()
+    pupu = 0x55505550
+    block = 0x14826480
+    rem = 0x14A26520
+    mem = {block + 0xC: pupu}
+    regs = {0: rem, 7: block, 12: 0}
+    ret, reads = _run_cave(pad, ADDR_HEAP_LINK_PAD, ADDR_HEAP_LINK_PAD, regs, mem)
+    assert ret == ("leave", ADDR_HEAP_LINK_BODY)
+    assert reads == [block + 0xC]
+    _run_fallthrough(body, ADDR_HEAP_LINK_BODY, regs, mem)
+    assert pupu + 8 not in mem
+    assert mem[block + 0xC] == pupu
+    assert rem + 8 not in mem
+
+    neighbor = 0x15700040
+    mem = {block + 0xC: neighbor, neighbor + 8: 0}
+    regs = {0: rem, 7: block, 12: 0}
+    _run_cave(pad, ADDR_HEAP_LINK_PAD, ADDR_HEAP_LINK_PAD, regs, mem)
+    _run_fallthrough(body, ADDR_HEAP_LINK_BODY, regs, mem)
+    assert mem[rem + 0xC] == neighbor
+    assert mem[neighbor + 8] == rem
+    assert mem[block + 0xC] == rem
+    assert mem[rem + 8] == block
+
+    blob = build_heap_bin()
+    heap = 0x009A3D14
+    sentinel = 0x15FFFFE0
+    nxt = 0x15710020
+    mem = {
+        block + 0x14: pupu,
+        block + 0x10: 0,
+        heap + 8: sentinel,
+        heap + 4: block,
+    }
+    regs = {0: rem, 5: heap, 7: block, "z": 0, "c": 0}
+    _run_fallthrough(blob, 0x0000DEEC, regs, mem)
+    assert 0x14 not in mem
+    assert mem[rem + 0x14] == sentinel
+    assert mem[heap + 4] == rem
+
+    mem = {
+        block + 0x14: nxt,
+        block + 0x10: neighbor,
+        heap + 8: sentinel,
+        heap + 4: block,
+    }
+    regs = {0: rem, 5: heap, 7: block, "z": 0, "c": 0}
+    _run_fallthrough(blob, 0x0000DEEC, regs, mem)
+    assert mem[rem + 0x14] == nxt
+    assert mem[neighbor + 0x14] == rem
+    assert mem[heap + 4] == block
+
+    mem = {
+        block + 0x14: nxt,
+        block + 0x10: pupu,
+        heap + 8: sentinel,
+        heap + 4: block,
+    }
+    regs = {0: rem, 5: heap, 7: block, "z": 0, "c": 0}
+    _run_fallthrough(blob, 0x0000DEEC, regs, mem)
+    assert pupu + 0x14 not in mem
+    assert mem[heap + 4] == block
+    assert mem[rem + 0x14] == nxt
+
+
+def test_row_clear_skips_a_tiny_pointer():
+    """``str r0, [r1]`` at ``0x3E0`` takes the empty-span exit."""
+    from patch_chunk_walk_guard import (
+        ADDR_ROW_CHECK,
+        ADDR_ROW_GATE,
+        ADDR_ROW_SKIP,
+        ADDR_ROW_STORE,
+        build_row_check,
+        build_row_gate,
+    )
+
+    gate = build_row_gate()
+    check = build_row_check()
+    ret, reads = _run_cave(gate, ADDR_ROW_GATE, ADDR_ROW_GATE, {1: 0x3E0, 7: 0, "z": 0, "c": 0}, {})
+    assert ret == ("leave", ADDR_ROW_CHECK)
+    assert reads == []
+    ret, reads = _run_cave(check, ADDR_ROW_CHECK, ADDR_ROW_CHECK, {1: 0x3E0, "z": 0, "c": 0}, {})
+    assert ret == ("leave", ADDR_ROW_SKIP)
+    assert reads == []
+
+    ret, reads = _run_cave(
+        check, ADDR_ROW_CHECK, ADDR_ROW_CHECK, {1: 0x0088E9F8, 0: 0, "z": 0, "c": 0}, {}
+    )
+    assert ret == ("leave", ADDR_ROW_STORE)
+
+
+def test_memset_returns_when_the_buffer_is_null():
+    """A null destination must not enter the ``stm`` fill."""
+    from patch_chunk_walk_guard import (
+        ADDR_MEMSET_BODY,
+        ADDR_MEMSET_CAVE,
+        ADDR_MEMSET_STUB,
+        build_memset_cave,
+        build_memset_stub,
+    )
+
+    cave = build_memset_cave()
+    stub = build_memset_stub()
+    ret, reads = _run_cave(cave, ADDR_MEMSET_CAVE, ADDR_MEMSET_CAVE, {0: 0, 14: 0x00107190}, {})
+    assert ret == 0
+    assert reads == []
+
+    buf = 0x088E9C0
+    ret, reads = _run_cave(cave, ADDR_MEMSET_CAVE, ADDR_MEMSET_CAVE, {0: buf, 14: 0x00107190}, {})
+    assert ret == ("leave", ADDR_MEMSET_STUB)
+    ret, reads = _run_cave(stub, ADDR_MEMSET_STUB, ADDR_MEMSET_STUB, {0: buf, 14: 0x00107190}, {})
+    assert ret == ("leave", ADDR_MEMSET_BODY)
+    assert reads == []
+
+
+def test_pak_init_skips_the_header_when_the_table_is_null():
+    """``stm r5, {r1, r6}`` at ``0x10D3B0`` faults when ``[global+0xc]`` is 0.
+
+    The rest of the init still runs. A real table still gets the header.
+    """
+    from patch_chunk_walk_guard import ADDR_PAK_INIT, ADDR_PAK_INIT_END, build_pak_init
+
+    blob = build_pak_init()
+    glob = 0x08001000
+    pak = 0x204B4150
+    mem = {glob + 0xC: 0}
+    regs = {0: glob, 1: pak, 4: 0x14A00000, 6: 0, 7: 1}
+    ret, reads = _run_cave(blob, ADDR_PAK_INIT, ADDR_PAK_INIT, regs, mem)
+    assert ret == ("leave", ADDR_PAK_INIT_END)
+    assert reads == [glob + 0xC]
+    assert 0 not in mem
+    assert 0x14A00000 not in mem
+
+    struct = 0x15700000
+    mem = {glob + 0xC: struct}
+    regs = {0: glob, 1: pak, 6: 0, 7: 1}
+    _run_fallthrough(blob, ADDR_PAK_INIT, regs, mem)
+    assert mem[struct] == pak
+    assert mem[struct + 4] == 0
+    assert mem[struct + 8] == 0
+    assert mem[struct + 0x10] == 0x02000001
+    assert regs[0] == 2
+
+
+def test_pak_table_skips_a_null_base():
+    """``ldrb r0, [r4, #0x13]`` faults when ``[global+0xc]`` is 0."""
+    from patch_chunk_walk_guard import (
+        ADDR_PAK_TABLE_CAVE,
+        ADDR_PAK_TABLE_FAIL,
+        build_pak_table_cave,
+    )
+
+    cave = build_pak_table_cave()
+    assert cave.hex() == "002801d143f69ee4e07c7047"
+    assert ADDR_PAK_TABLE_CAVE + len(cave) == 0x005D1940
+
+    def run(r0: int, r4: int, lr: int, mem: dict[int, int]):
+        import struct
+
+        regs = {0: r0, 4: r4, 14: lr}
+        reads: list[int] = []
+        pc = ADDR_PAK_TABLE_CAVE
+        for _ in range(8):
+            off = pc - ADDR_PAK_TABLE_CAVE
+            hw = struct.unpack_from("<H", cave, off)[0]
+            if hw == 0x2800:  # cmp r0, #0
+                z = regs[0] == 0
+                pc += 2
+                continue
+            if (hw & 0xFF00) == 0xD100:  # bne.n
+                imm = hw & 0xFF
+                if imm & 0x80:
+                    imm -= 0x100
+                dest = (pc + 4 + imm * 2) & 0xFFFFFFFF
+                pc = dest if not z else pc + 2
+                continue
+            if (hw & 0xF800) == 0xF000:  # blx
+                hw2 = struct.unpack_from("<H", cave, off + 2)[0]
+                sign = (hw >> 10) & 1
+                imm10 = hw & 0x3FF
+                j1 = (hw2 >> 13) & 1
+                j2 = (hw2 >> 11) & 1
+                imm10l = (hw2 >> 1) & 0x3FF
+                i1 = (~(j1 ^ sign)) & 1
+                i2 = (~(j2 ^ sign)) & 1
+                imm = (sign << 24) | (i1 << 23) | (i2 << 22) | (imm10 << 12) | (imm10l << 2)
+                if sign:
+                    imm -= 0x2000000
+                aligned = (pc + 4) & ~3
+                return ("leave", (aligned + imm) & 0xFFFFFFFF), reads
+            if hw == 0x7CE0:  # ldrb r0, [r4, #0x13]
+                addr = (regs[4] + 0x13) & 0xFFFFFFFF
+                if addr not in mem:
+                    raise AssertionError(f"unmapped read {addr:#x}")
+                reads.append(addr)
+                regs[0] = mem[addr] & 0xFF
+                pc += 2
+                continue
+            if hw == 0x4770:  # bx lr
+                return ("leave", regs[14]), reads
+            raise AssertionError(f"unhandled thumb {hw:#x} at {pc:#x}")
+        raise AssertionError("pak table cave did not return")
+
+    ret, reads = run(0, 0x6E0, 0x151E8, {})
+    assert ret == ("leave", ADDR_PAK_TABLE_FAIL)
+    assert reads == []
+
+    struct = 0x15700000
+    ret, reads = run(struct, struct + 0x6E0, 0x151E8, {struct + 0x6E0 + 0x13: 0x6})
+    assert ret == ("leave", 0x151E8)
+    assert reads == [struct + 0x6E0 + 0x13]
+
+
+def test_pak_alloc_pops_when_malloc_returns_null():
+    """``strb r1, [r0]`` faults when the PACK allocation returns 0."""
+    from patch_chunk_walk_guard import (
+        ADDR_FILLCAND_TAIL,
+        ADDR_PAK_ALLOC,
+        ADDR_PAK_FLAG_CAVE,
+        ADDR_PAK_POP,
+        build_pak_alloc_cave,
+    )
+    from patch_input_candidate_nullguard import POST1
+
+    cave = build_pak_alloc_cave()
+    assert cave.hex() == "002801d17df5eee6002d00d068607047"
+
+    def run(r0: int, r5: int, lr: int, mem: dict[int, int]):
+        regs = {0: r0, 5: r5, 14: lr}
+        z = False
+        writes: list[int] = []
+        pc = ADDR_PAK_FLAG_CAVE
+        for _ in range(8):
+            off = pc - ADDR_PAK_FLAG_CAVE
+            hw = struct.unpack_from("<H", cave, off)[0]
+            if hw in (0x2800, 0x2D00):  # cmp r0/r5, #0
+                reg = 0 if hw == 0x2800 else 5
+                z = regs[reg] == 0
+                pc += 2
+                continue
+            if (hw & 0xFF00) in (0xD000, 0xD100):
+                imm = hw & 0xFF
+                if imm & 0x80:
+                    imm -= 0x100
+                dest = (pc + 4 + imm * 2) & 0xFFFFFFFF
+                take = z if (hw & 0xFF00) == 0xD000 else not z
+                pc = dest if take else pc + 2
+                continue
+            if (hw & 0xF800) == 0xF000:  # blx to the frame pop
+                return ("leave", ADDR_PAK_POP), writes
+            if hw == 0x6068:  # str r0, [r5, #4]
+                addr = (regs[5] + 4) & 0xFFFFFFFF
+                if addr < 0x1000:
+                    raise AssertionError(f"unmapped write {addr:#x}")
+                mem[addr] = regs[0]
+                writes.append(addr)
+                pc += 2
+                continue
+            if hw == 0x4770:  # bx lr
+                return ("leave", regs[14]), writes
+            raise AssertionError(f"unhandled thumb {hw:#x} at {pc:#x}")
+        raise AssertionError("pak alloc cave did not return")
+
+    ret, writes = run(0, 0, 0xD3DC, {})
+    assert ret == ("leave", ADDR_PAK_POP)
+    assert writes == []
+
+    table = 0x15700000
+    ret, writes = run(0x14800000, table, 0xD3DC, {})
+    assert ret == ("leave", 0xD3DC)
+    assert writes == [table + 4]
+
+    ret, writes = run(0x14800000, 0, 0xD3DC, {})
+    assert ret == ("leave", 0xD3DC)
+    assert writes == []
+
+    from nlpp_paths import find_vanilla_code
+
+    vanilla_path = find_vanilla_code()
+    if vanilla_path is None:
+        return
+    from patch_chunk_walk_guard import apply_pak_flag
+    from patch_input_candidate_nullguard import CAVE1, apply_patch as apply_cand
+
+    data = bytearray(vanilla_path.read_bytes())
+    apply_cand(data)
+    apply_pak_flag(data)
+    apply_pak_flag(data)
+    assert data[ADDR_PAK_ALLOC : ADDR_PAK_ALLOC + 4] != bytes.fromhex("040085e5")
+    assert data[ADDR_PAK_FLAG_CAVE : ADDR_PAK_FLAG_CAVE + 16] == cave
+    beq = struct.unpack_from("<I", data, CAVE1 + 4)[0]
+    imm = beq & 0xFFFFFF
+    if imm & 0x800000:
+        imm -= 0x1000000
+    assert (CAVE1 + 4) + 8 + (imm << 2) == ADDR_FILLCAND_TAIL
+    branch = struct.unpack_from("<I", data, ADDR_FILLCAND_TAIL + 4)[0]
+    imm = branch & 0xFFFFFF
+    if imm & 0x800000:
+        imm -= 0x1000000
+    assert (ADDR_FILLCAND_TAIL + 4) + 8 + (imm << 2) == POST1
