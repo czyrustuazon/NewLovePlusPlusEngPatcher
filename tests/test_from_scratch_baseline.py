@@ -390,32 +390,46 @@ def test_layeredfs_falls_back_to_release_code_when_inject_unset(
     assert "optionally code.bin" not in readme
     assert "still kept on disk" not in readme
     assert "English graphics load only when code.bin is in this folder." in readme
+    assert "failed CIA rebuild deletes this folder" in readme
 
 
-def test_layeredfs_recovery_deletes_overlay_without_code_bin(tmp_path: Path, capsys):
+def test_cia_failure_deletes_layeredfs_without_code_bin(tmp_path: Path, capsys):
     out = tmp_path / "luma"
     title = out / patch_cia.TITLE_ID
     (title / "romfs").mkdir(parents=True)
     (title / "romfs" / "img.bin").write_bytes(b"img")
     (out / "README.txt").write_text("install me\n", encoding="utf-8")
-    assert patch_cia._print_layeredfs_recovery(out) is False
+    patch_cia._discard_outputs_after_cia_failure(out, out_cia=None)
     assert not title.exists()
     assert not (out / "README.txt").exists()
     assert not out.exists()
     err = capsys.readouterr().out
     assert "LayeredFS removed" in err
-    assert "no code.bin" in err
 
 
-def test_layeredfs_recovery_keeps_overlay_with_code_bin(tmp_path: Path, capsys):
-    out = tmp_path / "luma"
+def test_cia_failure_deletes_layeredfs_with_code_bin(
+    tmp_path: Path, monkeypatch, capsys
+):
+    out_root = tmp_path / "out"
+    layered_prefix = out_root / patch_cia.OUT_LAYEREDFS_PREFIX
+    out = layered_prefix / "luma"
     title = out / patch_cia.TITLE_ID
     title.mkdir(parents=True)
     (title / "code.bin").write_bytes(b"patched")
     (out / "README.txt").write_text("install me\n", encoding="utf-8")
-    assert patch_cia._print_layeredfs_recovery(out) is True
-    assert (title / "code.bin").read_bytes() == b"patched"
-    assert (out / "README.txt").is_file()
+    cia = out_root / patch_cia.CIA_FILENAME
+    cia.write_bytes(b"partial")
+    note = out_root / patch_cia.OUT_NOT_BOTH_NAME
+    note.mkdir(parents=True)
+    (note / "README.txt").write_text("pick one\n", encoding="utf-8")
+    monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
+    patch_cia._discard_outputs_after_cia_failure(out, out_cia=cia)
+    assert not title.exists()
+    assert not out.exists()
+    assert not layered_prefix.exists()
+    assert not cia.exists()
+    assert cia.parent == out_root and out_root.is_dir()  # the CIA sits in out/ itself
+    assert not note.exists()
     err = capsys.readouterr().out
-    assert "Luma LayeredFS still available" in err
-    assert "code.bin is in this folder" in err
+    assert "LayeredFS removed" in err
+    assert "incomplete CIA" in err

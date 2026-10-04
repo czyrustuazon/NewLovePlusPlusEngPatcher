@@ -11,6 +11,7 @@ from conftest import ROOT, SRC, TOOLS
 
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+from nlpp_paths import find_vanilla_main_trb
 from patch_password_serials import (
     PASSWORD_CAT,
     SHARED_SERIALS,
@@ -18,7 +19,7 @@ from patch_password_serials import (
 )
 from patch_textresource import LOOKUP_PATH, dump_entries, load_lookup, parse_chunks
 
-VANILLA = (
+VANILLA = find_vanilla_main_trb() or (
     ROOT.parent
     / "New Love Plus Plus"
     / "extracted"

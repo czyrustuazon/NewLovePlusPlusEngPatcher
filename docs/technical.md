@@ -1122,8 +1122,8 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
 | `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
-| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold` (`--best-effort` for Drop CIA fallback) |
-| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/1_[Either use this-CIA]/`) + LayeredFS (`out/2_[Or this-LayeredFS]/luma/`) |
+| `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold`, plus `name_input_code.bin` when that Release has it (`--best-effort` for Drop CIA fallback) |
+| `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/NewLovePlusPlus-EN.cia`). LayeredFS only with `--layeredfs-out` (white-screens on hardware, see README) |
 | `src/extract_vanilla_from_rom.py` | Decrypt/extract vanilla `img.bin` + TRBs from dropped `.cia`/`.3ds` → `cache/vanilla_from_rom/` |
 | `src/exact_zlib.py` | Exact-length zlib: **empty-block first**, then zopfli / gap-tune / near-miss |
 | `src/run_timer.py` | Elapsed time on the same bottom row as the progress bar and current file (plain log + 60s heartbeat if not a TTY / ``NLPP_PLAIN_LOG=1``) |
@@ -1378,7 +1378,7 @@ decrypted .cia / .3ds / .cci dropped
   → wipe out/, release/, and cache/
   → unless NLPP_SKIP_GOLD_FETCH=1:
         fetch_release_bake.py --best-effort
-          poll GitHub Release {owner}/nlpp-gold-maker @ tag gold
+          poll GitHub Release czyrustuazon/nlpp-gold-maker @ tag gold
           success → use release/bake_img.bin + romfs_overlay/ (no local PNG pack)
           fail (404, no repo, no internet) → continue
   → if still no bake:
@@ -1389,19 +1389,19 @@ decrypted .cia / .3ds / .cci dropped
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
         + apply_name_patches + name_input_code.bin when present
-  → out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia + out/2_[Or this-LayeredFS]/luma/ + out/3_[but not both]/
+  → out/NewLovePlusPlus-EN.cia
 ```
 
 Each successful patch appends the **PATCH SUMMARY** (the `[OK]` / `[SKIPPED]` / `[WARN]` box) to **`out/log.txt`**. The same file already holds the image-pack report and gold-rebuild summary from that Drop. It sits in the root of `out/` and survives `out/` cleanup. `--log PATH` chooses a different file (or `log.txt` inside a directory). `--no-log` or `NLPP_NO_LOG=1` skips the summary. Full `[images]` / `[inject]` console lines are still console-only — redirect stdout if you need those for diagnosis.
 
-Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. From-scratch deletes `cache/` before extract, then writes a new full `cache/vanilla_from_rom/` (`Plus/` required). `--skip-pack` does not delete `cache/`. Artifacts of a finished Drop: `release/bake_img.bin`, that new `cache/vanilla_from_rom/`, `out/1_[Either use this-CIA]/`, `out/2_[Or this-LayeredFS]/`, `out/3_[but not both]/`, `out/log.txt`.
+Scratch cleanup is incremental (not only at the end): PNG pack drops each package’s ie/pe unpack after `new_XXXX` is written; gold rebuild deletes `out/rebuild_bake_img_work`, the duplicate `cache/new_img.bin`, deploy `out/*` dirs, and any leftover `bake_img.bin.bak_pre_*` sidecars (gold bake no longer writes those ~680MB copies); CIA rebuild deletes extracted CXI, `romfs.bin`, the injected RomFS tree, `romfs_patched.bin`, and `patched.cxi` as soon as the next container exists. `--keep-work` keeps pack/deploy scratch, not bake sidecars. From-scratch deletes `cache/` before extract, then writes a new full `cache/vanilla_from_rom/` (`Plus/` required). `--skip-pack` does not delete `cache/`. Artifacts of a finished Drop: `release/bake_img.bin`, that new `cache/vanilla_from_rom/`, `out/NewLovePlusPlus-EN.cia`, `out/log.txt`.
 
 #### Environment overrides
 
 | Variable | Effect |
 |----------|--------|
 | `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
-| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (`OWNER/nlpp-gold-maker`) |
+| `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (default `czyrustuazon/nlpp-gold-maker`) |
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
@@ -1411,7 +1411,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 
 #### nlpp-gold-maker CI (optional accelerator)
 
-When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin` + `romfs_overlay.zip`. If that Release already has both assets, the runner downloads them and skips the PNG pack unless image-pack inputs changed since the published EngPatcher commit, or the dispatch sets `force_pack`. If `github.com:443` is unreachable, the runner bakes offline from its local vanilla files and does not upload. Drop CIA does the same: `fetch_release_bake.py` returns immediately when GitHub is unreachable, then `rebuild_bake_img.py` packs from the dropped ROM. The Drop CIA bat **polls this automatically** when local bake is absent.
+When set up (`infra/README.md`), pushes to EngPatcher `main` can trigger an Ubuntu runner that publishes rolling Release tag **`gold`** with `bake_img.bin`, `name_input_code.bin`, and `romfs_overlay.zip`. If that Release already has the bake and overlay, the runner downloads them and skips the PNG pack unless image-pack inputs changed since the published EngPatcher commit, or the dispatch sets `force_pack`. A Release that matches the EngPatcher SHA but is missing `name_input_code.bin` rebuilds only that file. If `github.com:443` is unreachable, the runner bakes offline from its local vanilla files and does not upload. Drop CIA does the same: `fetch_release_bake.py` returns immediately when GitHub is unreachable, then `rebuild_bake_img.py` packs from the dropped ROM. The Drop CIA bat **polls this automatically** when local bake is absent.
 
 **Not required** for the self-contained design — if CI is missing or returns 404, local `rebuild_bake_img.py` is the fallback. Manual fetch: `python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold`.
 

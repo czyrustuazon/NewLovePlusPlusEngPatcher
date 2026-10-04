@@ -3,6 +3,9 @@
 .env.*
 !.env.example
 
+# Drop CIA stamp: last synced EngPatcher main commit (no git)
+.nlpp_main_sha
+
 # Python
 __pycache__/
 *.py[cod]
@@ -30,12 +33,14 @@ tools/*
 !tools/render_cesa_en.py
 !tools/ab_cesa_bake.py
 !tools/ab_talk_speed.py
+!tools/ab_mcp_server.py
 !tools/import_*.py
 !tools/deploy_common.py
 !tools/fit_ui_masters.py
 !tools/rebuild_bake_img.py
 !tools/rebuild_test_cia.py
 !tools/fetch_release_bake.py
+!tools/fetch_main_tree.py
 !tools/build_spotpass_inject.py
 !tools/scan_nl_spotpass_zip.py
 !tools/spotpass/

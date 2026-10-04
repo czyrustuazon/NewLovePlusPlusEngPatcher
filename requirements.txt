@@ -1,0 +1,3 @@
+# Drop CIA installs this before anything else.
+# Pins live in dev/requirements.txt.
+-r dev/requirements.txt

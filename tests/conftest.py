@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 import sys
 from pathlib import Path
+
+# CI has no release/bake_img.bin. Importing deploy_* modules must not exit.
+os.environ.setdefault("NLPP_ALLOW_MISSING_DEPLOY_IMG", "1")
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"

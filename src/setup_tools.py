@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import urllib.request
@@ -145,12 +146,35 @@ def ensure_python_deps() -> None:
         except ImportError:
             missing.append(pip_name)
     if missing:
-        req = ROOT / "dev" / "requirements.txt"
+        req = ROOT / "requirements.txt"
+        if not req.is_file():
+            req = ROOT / "dev" / "requirements.txt"
         print()
         print(f"[!] Missing Python packages: {', '.join(missing)}")
-        print(f"    Run:  {sys.executable} -m pip install -r \"{req}\"")
+        print(f"    Installing:  {sys.executable} -m pip install -r \"{req}\"")
         print()
-        raise SystemExit("Python dependencies missing")
+        proc = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "-r", str(req)],
+            check=False,
+        )
+        if proc.returncode != 0:
+            raise SystemExit("pip install failed")
+        still_missing: list[str] = []
+        for mod, pip_name in (
+            ("PIL", "Pillow"),
+            ("numpy", "numpy"),
+            ("zopfli", "zopfli"),
+            ("etcpak", "etcpak"),
+            ("yaml", "PyYAML"),
+        ):
+            try:
+                __import__(mod)
+            except ImportError:
+                still_missing.append(pip_name)
+        if still_missing:
+            raise SystemExit(
+                "Python dependencies still missing: " + ", ".join(still_missing)
+            )
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Download gold bake + romfs_overlay from GitHub Releases.
+"""Download gold bake, name-input code.bin, and romfs_overlay from GitHub Releases.
 
-Gold Releases are published from the **nlpp-gold-maker** repo (not this EngPatcher
-remote). Pass ``--repo OWNER/nlpp-gold-maker`` or set ``NLPP_GITHUB_REPO``.
-The rolling bake from EngPatcher ``main`` is Release tag ``gold``.
+Gold Releases are published from the public **nlpp-gold-maker** repo (not this
+EngPatcher remote). The default is ``czyrustuazon/nlpp-gold-maker``. Override
+with ``--repo`` or ``NLPP_GITHUB_REPO``. The rolling bake from EngPatcher
+``main`` is Release tag ``gold``.
 
 Examples:
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag latest
-  python tools/fetch_release_bake.py --repo OWNER/nlpp-gold-maker --tag gold --force
+  python tools/fetch_release_bake.py --tag gold
+  python tools/fetch_release_bake.py --repo czyrustuazon/nlpp-gold-maker --tag latest
+  python tools/fetch_release_bake.py --tag gold --force
 """
 from __future__ import annotations
 
@@ -23,40 +24,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "release"
+# Public gold-bake Releases. A zip of EngPatcher has no git remote, so Drop
+# cannot infer this from origin. Env / --repo still override it.
+DEFAULT_GOLD_REPO = "czyrustuazon/nlpp-gold-maker"
 
 
-def _repo_from_git() -> str | None:
-    git = ROOT / ".git" / "config"
-    if not git.is_file():
-        return None
-    text = git.read_text(encoding="utf-8", errors="replace")
-    for line in text.splitlines():
-        line = line.strip()
-        if "github.com" not in line.lower():
-            continue
-        if "github.com:" in line:
-            part = line.split("github.com:", 1)[1]
-        elif "github.com/" in line:
-            part = line.split("github.com/", 1)[1]
-        else:
-            continue
-        part = part.removesuffix(".git").strip().strip("/")
-        if part.count("/") == 1:
-            return part
-    return None
+def _default_gold_repo() -> str:
+    """Public nlpp-gold-maker Release repo.
 
-
-def _default_gold_repo() -> str | None:
-    """nlpp-gold-maker Release repo (not the EngPatcher clone remote)."""
+    ``NLPP_GITHUB_REPO`` / ``NLPP_GOLD_REPO`` override the baked-in repo.
+    A git remote is not required (zip downloads have none).
+    """
     for key in ("NLPP_GITHUB_REPO", "NLPP_GOLD_REPO"):
         val = os.environ.get(key, "").strip()
         if val:
             return val
-    origin = _repo_from_git()
-    if origin and "/" in origin:
-        owner = origin.split("/", 1)[0]
-        return f"{owner}/nlpp-gold-maker"
-    return None
+    return DEFAULT_GOLD_REPO
 
 
 def github_reachable(timeout: float = 5.0) -> bool:
@@ -105,13 +88,18 @@ def _github_asset_urls(repo: str, tag: str, token: str | None) -> dict[str, str]
         raise LookupError(meta["message"])
     by_name = {a["name"]: a["browser_download_url"] for a in meta.get("assets", [])}
     need = ("bake_img.bin", "romfs_overlay.zip")
+    optional = ("name_input_code.bin",)
     missing = [n for n in need if n not in by_name]
     if missing:
         raise LookupError(
             f"Release {tag!r} on {repo} missing assets {missing} "
             f"(have: {sorted(by_name) or 'none'})"
         )
-    return {n: by_name[n] for n in need}
+    found = {n: by_name[n] for n in need}
+    for name in optional:
+        if name in by_name:
+            found[name] = by_name[name]
+    return found
 
 
 def try_fetch_gold(
@@ -141,8 +129,17 @@ def try_fetch_gold(
     try:
         urls = _github_asset_urls(repo, tag, token)
         overlay_zip = out / "romfs_overlay.zip"
+        code = out / "name_input_code.bin"
         _download(urls["bake_img.bin"], bake, token, dry_run=dry_run)
         _download(urls["romfs_overlay.zip"], overlay_zip, token, dry_run=dry_run)
+        if "name_input_code.bin" in urls:
+            _download(urls["name_input_code.bin"], code, token, dry_run=dry_run)
+        else:
+            print(
+                "[fetch] Release has no name_input_code.bin "
+                "(older gold bake; Drop will rebuild that file locally)",
+                flush=True,
+            )
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
             return False, f"no Release {tag!r} on {repo} (404)"
@@ -182,7 +179,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--repo",
         default=_default_gold_repo(),
-        help="OWNER/nlpp-gold-maker (default: NLPP_GITHUB_REPO or <origin-owner>/nlpp-gold-maker)",
+        help=(
+            "OWNER/nlpp-gold-maker "
+            f"(default: {DEFAULT_GOLD_REPO}, or NLPP_GITHUB_REPO)"
+        ),
     )
     ap.add_argument(
         "--tag",

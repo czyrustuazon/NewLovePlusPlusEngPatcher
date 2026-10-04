@@ -16,6 +16,63 @@ if not exist "%SRC%\drop_zone.ps1" (
   exit /b 1
 )
 
+REM Install Python packages before the drop window or any patch step.
+call :find_python
+if not defined PYTHON (
+  echo.
+  echo [!] Python 3.10+ not found.
+  echo.
+  echo     Fix ^(pick one^):
+  echo       1. Install from https://www.python.org/downloads/
+  echo          and CHECK "Add python.exe to PATH"
+  echo       2. Or install from Microsoft Store: "Python 3.12"
+  echo.
+  echo     If you disabled "App execution aliases" for python.exe:
+  echo     that only helps after a real install is on PATH / via py.
+  echo     Try opening a NEW Command Prompt and running:  py -3 --version
+  echo.
+  pause
+  exit /b 1
+)
+
+REM Best-effort: overlay tip of EngPatcher main ^(no git^). Release-zip users
+REM stay current. Offline / 404 keeps the local tree. .git checkouts skip.
+REM   NLPP_SKIP_SOURCE_FETCH=1   skip
+REM   NLPP_FORCE_SOURCE_FETCH=1  sync even with .git
+REM   NLPP_SOURCE_REPO=owner/repo
+REM Exit 2 = tree updated — re-exec once so the new bat/scripts run.
+if /i "%NLPP_SOURCE_SYNCED%"=="1" goto :source_sync_done
+if /i "%NLPP_SKIP_SOURCE_FETCH%"=="1" goto :source_sync_done
+if not exist "%~dp0tools\fetch_main_tree.py" goto :source_sync_done
+echo.
+echo Checking EngPatcher sources against GitHub main...
+"%PYTHON%" "%~dp0tools\fetch_main_tree.py" --best-effort
+set "NLPP_SOURCE_RC=!ERRORLEVEL!"
+if "!NLPP_SOURCE_RC!"=="2" (
+  echo.
+  echo [fetch] Sources updated from main — restarting Drop CIA once...
+  echo.
+  set "NLPP_SOURCE_SYNCED=1"
+  set "NLPP_PY_DEPS="
+  call "%~f0" %*
+  exit /b !ERRORLEVEL!
+)
+:source_sync_done
+set "NLPP_SOURCE_RC="
+
+if /i "%NLPP_PY_DEPS%"=="1" goto :deps_ready
+echo.
+echo Installing Python packages ^(py -3 -m pip install -r requirements.txt^) ...
+"%PYTHON%" -m pip install -r "%~dp0requirements.txt"
+if errorlevel 1 (
+  echo [!] pip install failed. Try: %PYTHON% -m pip install -r requirements.txt
+  pause
+  exit /b 1
+)
+echo.
+set "NLPP_PY_DEPS=1"
+:deps_ready
+
 if not "%~1"=="" goto :run_patch
 
 where powershell >nul 2>&1
@@ -81,26 +138,6 @@ if not exist "%CIA%" (
   exit /b 1
 )
 
-REM Resolve a real Python (not the Microsoft Store stub). Prefer PATH, then py launcher,
-REM then common install folders — new installs often only get "py" or miss PATH.
-call :find_python
-if not defined PYTHON (
-  echo.
-  echo [!] Python 3.10+ not found.
-  echo.
-  echo     Fix ^(pick one^):
-  echo       1. Install from https://www.python.org/downloads/
-  echo          and CHECK "Add python.exe to PATH"
-  echo       2. Or install from Microsoft Store: "Python 3.12"
-  echo.
-  echo     If you disabled "App execution aliases" for python.exe:
-  echo     that only helps after a real install is on PATH / via py.
-  echo     Try opening a NEW Command Prompt and running:  py -3 --version
-  echo.
-  pause
-  exit /b 1
-)
-
 echo.
 echo  ============================================
 echo   New Love Plus+ English Patcher
@@ -133,14 +170,6 @@ REM Pass Drop start into patch_cia.py so PATCH SUMMARY elapsed includes bake.
 set "STARTED_UNIX="
 if defined NLPP_T0 set STARTED_UNIX=--started-unix !NLPP_T0!
 
-echo Installing Python deps from dev\requirements.txt ...
-"%PYTHON%" -m pip install -q -r "%~dp0dev\requirements.txt"
-if errorlevel 1 (
-  echo [!] pip install failed. Try: %PYTHON% -m pip install -r dev\requirements.txt
-  pause
-  exit /b 1
-)
-echo.
 echo Fetching / checking CIA tools ^(3dstool, ctrtool, makerom, seeddb^) ...
 echo Decrypt your dump yourself first - this patcher does not include decrypt.exe.
 "%PYTHON%" "%SRC%\setup_tools.py"
@@ -245,9 +274,10 @@ REM   NLPP_REUSE_BAKE=1  skip the stamp check on a leftover local bake
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 REM Keep quotes inside the value so paths with spaces survive expansion
 REM (e.g. E:\zip game\... GitHub unzip folders).
-REM LayeredFS is written next to the CIA. code.bin is name_input_code.bin
-REM so English graphics load. Install the CIA or this folder, not both.
-set LAYEREDFS=--layeredfs-out "%~dp0out\2_[Or this-LayeredFS]\luma"
+REM LayeredFS is off: it white-screens on real hardware (Luma v10.3 and v13).
+REM Only the CIA is built. Pass --layeredfs-out to patch_cia.py by hand to
+REM get an emulator overlay.
+set "LAYEREDFS="
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -286,7 +316,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     set "NLPP_OVERALL_LO=80"
     set "NLPP_OVERALL_HI=100"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM Default: download the published gold bake. Local pack only if that
   REM Release is missing or GitHub cannot be reached.
@@ -294,7 +324,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   if /i not "%NLPP_SKIP_GOLD_FETCH%"=="1" (
     echo.
     "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "Polling GitHub Release tag gold..."
-    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "set NLPP_GITHUB_REPO=OWNER/nlpp-gold-maker if auto-detect fails"
+    "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "czyrustuazon/nlpp-gold-maker (set NLPP_GITHUB_REPO to override)"
     echo.
     "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
     if errorlevel 1 (
@@ -339,7 +369,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r dev\requirements.txt
+        echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -357,7 +387,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       if errorlevel 1 (
         echo [!] rebuild_bake_img.py failed — see traceback above.
         echo     Common fixes:
-        echo       pip install -r dev\requirements.txt
+        echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
         echo       Or set NLPP_VANILLA_IMG if vanilla extract failed.
         pause
@@ -419,6 +449,19 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   set INJECT_CODE=--inject-code "%~dp0release\name_input_code.bin"
   echo Including Profile name-input code.bin from release\name_input_code.bin
   REM Full cart RomFS only. script\bin\script alone is the slim cache and drops Plus\.
+  REM A complete gold download does not extract the dropped cart. Pull Plus\
+  REM here so CIA inject does not rerun menu chrome just to get a RomFS tree.
+  if not exist "%CACHE_ROMFS%\Plus" (
+    echo.
+    echo Extracting full RomFS from the dropped ROM ^(Plus\ voice and BGM^)...
+    echo.
+    "%PYTHON%" "%SRC%\extract_vanilla_from_rom.py" --rom "%CIA%"
+    if errorlevel 1 (
+      echo [!] Could not extract a full RomFS from the dropped ROM.
+      pause
+      exit /b 1
+    )
+  )
   if not exist "%CACHE_ROMFS%\Plus" (
     echo [!] cache\vanilla_from_rom\romfs\Plus is missing.
     echo     From-scratch rebuild did not extract a full RomFS. Refusing to build.
@@ -432,7 +475,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     set "NLPP_OVERALL_LO=80"
     set "NLPP_OVERALL_HI=100"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
 
@@ -445,11 +488,8 @@ if not "%ERR%"=="0" (
 )
 
 echo [+] Patched CIA:
-echo     %~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia
-echo [+] LayeredFS ^(use this or the CIA, not both^):
-echo     %~dp0out\2_[Or this-LayeredFS]\luma\00040000000F4E00
-echo     Copy that folder to SD:/luma/titles/ and enable game patching.
-echo     code.bin is included so English graphics load.
+echo     %~dp0out\NewLovePlusPlus-EN.cia
+echo     Install it with FBI. LayeredFS is not built ^(it does not boot on hardware^).
 echo.
 if defined NLPP_T0 (
   set "NLPP_ELAPSED="

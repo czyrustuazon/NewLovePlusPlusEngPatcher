@@ -50,6 +50,16 @@ argument.
 | Deploy current post-bake stack → A | `.\ab_test\make.ps1 deploy-a` |
 | Same → B | `.\ab_test\make.ps1 deploy-b` |
 | Launch A / B | `.\ab_test\make.ps1 launch-a` / `launch-b` |
+
+`NLPP_EMU_NAME_WALK_ABORT=1` before launch makes Azahar force the 2026-10-01 18:36
+directory offset (`0x746954`) and data-abort the vanilla `ldrh` at `0x644D78`.
+The name-walk cave replaces that load, so the guarded `code.bin` returns not-found
+instead. Rebuild with `.\ab_test\make.ps1 build-azahar` after that emulator change.
+
+`NLPP_EMU_PANE_FLAG=1` before launch nulls `r6` once at the `beq` at `0x3C5FCC`
+(first time `[r4+0x50]` is 0), matching the 2026-10-03 00:50 dump: vanilla
+`ldrb r0, [r6, #0x5f]` at `0x3C6070` data-aborts with FAR `0x5F`. The guarded
+`code.bin` branches to a null check and takes the menu-update epilogue.
 | Shared Nene title save → A and B | `.\ab_test\make.ps1 save-nene` |
 | Roll back name-input baseline on A | `.\ab_test\make.ps1 restore-a` |
 | Instances + post-bake copy onto A | `.\ab_test\make.ps1 all-a` |
@@ -124,6 +134,14 @@ python -c "from pathlib import Path; import os; p=Path(os.environ['NLPP_AZAHAR_U
 
 Replace `FILE_OFF` with the file offset you care about (Ghidra image base 0;
 runtime VA ≈ file + `0x100000`). Compare against vanilla / expected bytes.
+
+## MCP server
+
+`tools/ab_mcp_server.py` (registered in the repo-root `.mcp.json`, needs `pip install mcp`)
+exposes this workflow to agents: `ab_make` (allow-listed `make.ps1` targets; not
+`progress`, which POSTs), `ab_status`, `ab_diff` (A vs B mod tree), `ab_read_bytes`,
+`ab_log_tail`, `ab_log_search`, `ab_log_markers`, `ab_stop` (kills that instance's
+azahar.exe only).
 
 ## Agent prefs (hard)
 

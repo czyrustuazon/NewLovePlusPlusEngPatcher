@@ -35,6 +35,26 @@ def test_resolve_img_paths_env_override(tmp_path: Path, monkeypatch):
     assert primary == custom.resolve()
 
 
+def test_resolve_img_paths_missing_bake(tmp_path: Path, monkeypatch):
+    """No bake anywhere: exit with a hint, unless pytest's import-time escape is on."""
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "release" / "bake_img.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", tmp_path / "azahar.img.bin")
+    monkeypatch.setenv("NLPP_DEPLOY_IMG", "")
+    monkeypatch.setattr(deploy_common, "find_vanilla_img", lambda: None)
+
+    monkeypatch.delenv("NLPP_ALLOW_MISSING_DEPLOY_IMG", raising=False)
+    try:
+        deploy_common.resolve_img_paths()
+        raise AssertionError("expected SystemExit")
+    except SystemExit as exc:
+        assert "No deploy img.bin target" in str(exc)
+
+    monkeypatch.setenv("NLPP_ALLOW_MISSING_DEPLOY_IMG", "1")
+    primary, van = deploy_common.resolve_img_paths()
+    assert primary == (tmp_path / "release" / "bake_img.bin").resolve()
+    assert van == primary
+
+
 def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypatch):
     primary = tmp_path / "primary.img.bin"
     bake = tmp_path / "release" / "bake_img.bin"

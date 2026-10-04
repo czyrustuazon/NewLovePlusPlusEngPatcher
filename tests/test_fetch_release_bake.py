@@ -29,17 +29,13 @@ def test_default_gold_repo_from_env(monkeypatch):
     assert fetch_mod._default_gold_repo() == "acme/nlpp-gold"
 
 
-def test_default_gold_repo_derives_owner_from_git(tmp_path, monkeypatch):
+def test_default_gold_repo_is_public_without_git(tmp_path, monkeypatch):
+    """Zip downloads have no origin. The public gold repo is still the default."""
     monkeypatch.delenv("NLPP_GITHUB_REPO", raising=False)
     monkeypatch.delenv("NLPP_GOLD_REPO", raising=False)
-    git_dir = tmp_path / ".git"
-    git_dir.mkdir()
-    (git_dir / "config").write_text(
-        '[remote "origin"]\n\turl = git@github.com:myowner/NewLovePlusPlusEngPatcher.git\n',
-        encoding="utf-8",
-    )
     with patch.object(fetch_mod, "ROOT", tmp_path):
-        assert fetch_mod._default_gold_repo() == "myowner/nlpp-gold-maker"
+        assert fetch_mod._default_gold_repo() == "czyrustuazon/nlpp-gold-maker"
+        assert fetch_mod.DEFAULT_GOLD_REPO == "czyrustuazon/nlpp-gold-maker"
 
 
 def test_github_asset_urls_requires_both_assets():
@@ -172,6 +168,49 @@ def test_try_fetch_gold_downloads_and_extracts_overlay(release_dir: Path):
         / "textresource_jpn.trb"
     )
     assert trb.is_file()
+    assert not (release_dir / "name_input_code.bin").exists()
+
+
+def test_try_fetch_gold_downloads_name_input_when_published(release_dir: Path):
+    overlay_payload = io.BytesIO()
+    with zipfile.ZipFile(overlay_payload, "w") as zf:
+        zf.writestr("romfs_overlay/marker.txt", b"ok")
+    overlay_bytes = overlay_payload.getvalue()
+    urls = {
+        "bake_img.bin": "https://example.test/bake_img.bin",
+        "romfs_overlay.zip": "https://example.test/romfs_overlay.zip",
+        "name_input_code.bin": "https://example.test/name_input_code.bin",
+    }
+
+    def fake_urlopen(url, _token):
+        if "releases" in url:
+            assets = [
+                {"name": k, "browser_download_url": v} for k, v in urls.items()
+            ]
+            return json.dumps({"assets": assets}).encode()
+        if url.endswith("bake_img.bin"):
+            return b"GOLD_BAKE"
+        if url.endswith("romfs_overlay.zip"):
+            return overlay_bytes
+        if url.endswith("name_input_code.bin"):
+            return b"NAME_CODE"
+        raise AssertionError(f"unexpected url: {url}")
+
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", fake_urlopen),
+    ):
+        ok, msg = fetch_mod.try_fetch_gold(
+            repo="owner/nlpp-gold",
+            tag="gold",
+            token=None,
+            out_dir=release_dir,
+            force=True,
+        )
+
+    assert ok is True
+    assert "downloaded" in msg
+    assert (release_dir / "name_input_code.bin").read_bytes() == b"NAME_CODE"
 
 
 def test_main_best_effort_exits_0_on_success(release_dir: Path):

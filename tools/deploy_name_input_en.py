@@ -126,7 +126,12 @@ from patch_commu_settings_header import (  # noqa: E402
     is_patched as commu_header_already,
 )
 
-from nlpp_paths import AZAHAR_MOD_CODE, AZAHAR_MOD_ROOT, NAME_INPUT_CODE  # noqa: E402
+from nlpp_paths import (  # noqa: E402
+    AZAHAR_MOD_CODE,
+    AZAHAR_MOD_ROOT,
+    NAME_INPUT_CODE,
+    install_luma_title_code,
+)
 
 MOD = AZAHAR_MOD_ROOT
 DEST = AZAHAR_MOD_CODE
@@ -269,6 +274,8 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_commu_header(data)
         steps += 1
 
+    # PACK table/alloc soft-fails black the boot when the archive heap is
+    # empty; leave them off with APPLY_HEAP_AND_PAK until that is fixed.
     return steps
 
 
@@ -313,6 +320,7 @@ def main(argv: list[str] | None = None) -> int:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(data)
         print(f"wrote {out} ({steps} new step(s))")
+        install_luma_title_code(out)
         return 0
 
     dest = (args.out or DEST).resolve()
@@ -332,6 +340,7 @@ def main(argv: list[str] | None = None) -> int:
     if dest.resolve() == DEST.resolve():
         shutil.copy2(dest, MOD / "code.bin")
     print(f"wrote {dest} ({steps} new step(s))")
+    install_luma_title_code(dest)
     print("Rollback: python tools/restore_name_input_baseline.py")
     return 0
 

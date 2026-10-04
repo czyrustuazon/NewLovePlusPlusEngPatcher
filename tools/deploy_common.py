@@ -142,6 +142,10 @@ def resolve_img_paths() -> tuple[Path, Path]:
         primary = BAKE_IMG.resolve()
     elif AZAHAR_MOD_IMG.is_file():
         primary = AZAHAR_MOD_IMG.resolve()
+    elif os.environ.get("NLPP_ALLOW_MISSING_DEPLOY_IMG") == "1":
+        # pytest imports every deploy_* module, and most call this at import.
+        # CI has no bake, so hand back the expected path instead of exiting.
+        primary = BAKE_IMG.resolve()
     else:
         raise SystemExit(
             "No deploy img.bin target. Run tools/rebuild_bake_img.py first, or set "

@@ -25,7 +25,11 @@ OUT_DIR = ROOT / "release" / "textresource"  # durable generated TRBs
 ASSETS_TR_DIR = ROOT / "assets" / "textresource"  # commit-worthy translations source
 DEFAULT_TRANSLATIONS = ASSETS_TR_DIR / "translations.json"
 
-DEFAULT_TRB = (
+from nlpp_paths import AZAHAR_MOD_TRB_DIR as AZAHAR_DIR
+from nlpp_paths import find_vanilla_main_trb
+
+# Sibling dump first, then cache/vanilla_from_rom (filled by Drop CIA).
+DEFAULT_TRB = find_vanilla_main_trb() or (
     ROOT.parent
     / "New Love Plus Plus"
     / "extracted"
@@ -34,8 +38,6 @@ DEFAULT_TRB = (
     / "TextResource"
     / "textresource_jpn.trb"
 )
-
-from nlpp_paths import AZAHAR_MOD_TRB_DIR as AZAHAR_DIR
 
 JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
 # SpotPass one-liner kept for backwards-compatible --inplace

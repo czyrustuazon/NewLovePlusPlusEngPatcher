@@ -17,9 +17,18 @@ def test_requirements_include_nlpp_tools_yaml():
     """Gold unpack (`ie`) imports yaml; drop-bat pip must install PyYAML."""
     req = (ROOT / "dev" / "requirements.txt").read_text(encoding="utf-8")
     assert "PyYAML" in req
-    assert "dev\\requirements.txt" in _bat_text()
+    root_req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    assert "-r dev/requirements.txt" in root_req
+    text = _bat_text()
+    assert 'pip install -r "%~dp0requirements.txt"' in text
+    # Deps install before the drop window and before any patch step.
+    install_idx = text.index('pip install -r "%~dp0requirements.txt"')
+    assert install_idx < text.index("goto :run_patch")
+    assert install_idx < text.index("setup_tools.py")
+    assert "NLPP_PY_DEPS" in text
     setup = (ROOT / "src" / "setup_tools.py").read_text(encoding="utf-8")
     assert '("yaml", "PyYAML")' in setup
+    assert "pip" in setup and "install" in setup
 
 
 def test_bat_wipes_out_and_release_before_build():
@@ -110,21 +119,39 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
     # Unquoted %~dp0 paths split on spaces (E:\zip game\...) and argparse
     # reports the leftover as unrecognized arguments: ...\name_input_code.bin
-    assert 'set LAYEREDFS=--layeredfs-out "%~dp0out\\2_[Or this-LayeredFS]\\luma"' in text
+    # LayeredFS is off (white screen on hardware). The CIA sits directly in out\.
+    assert 'set "LAYEREDFS="' in text
+    assert "--layeredfs-out" not in text.split('set "LAYEREDFS="')[1].split("\n")[0]
     assert text.count("!LAYEREDFS!") == 2
-    assert r'out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia' in text
-    assert "Copy that folder to SD:/luma/titles/" in text
+    assert r'out\NewLovePlusPlus-EN.cia' in text
+    assert "1_[Either use this-CIA]" not in text
+    assert "Copy that folder to SD:/luma/titles/" not in text
     assert "Scripts-only patch" not in text
 
 
 def test_bat_stops_when_drop_zone_script_is_missing():
-    """A lone bat pauses. It does not download a second copy of the repo."""
+    """A lone bat pauses. Sync needs an extracted Release zip first."""
     text = _bat_text()
     missing = text.index("Cannot find src\\drop_zone.ps1")
     assert missing < text.index("goto :run_patch")
     assert "Extract the entire archive / repo first" in text
-    assert "NLPP_ENG_PATCH_REPO" not in text
+    # Source sync runs only after Python is found and the tree already exists.
+    assert missing < text.index("fetch_main_tree.py")
     assert "ensure_patcher_tree" not in text
+
+
+def test_bat_best_effort_syncs_main_sources_before_deps():
+    """Release-zip users overlay tip of main (no git); failure never hard-stops."""
+    text = _bat_text()
+    sync_idx = text.index("fetch_main_tree.py")
+    deps_idx = text.index('pip install -r "%~dp0requirements.txt"')
+    assert sync_idx < deps_idx
+    assert "--best-effort" in text
+    assert "NLPP_SKIP_SOURCE_FETCH" in text
+    assert "NLPP_SOURCE_SYNCED" in text
+    assert "restarting Drop CIA once" in text
+    # Exit 2 from the helper means re-exec; other codes continue.
+    assert 'if "!NLPP_SOURCE_RC!"=="2"' in text
 
 
 def test_bat_drop_timer_avoids_for_f_python_quoting():
