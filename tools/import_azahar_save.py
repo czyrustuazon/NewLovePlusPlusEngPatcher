@@ -38,6 +38,7 @@ from restore_azahar_extdata import (  # noqa: E402
     TITLE_LOW,
     backup_trees,
     discover_sd_title_saves,
+    long_path,
 )
 
 DEFAULT_SAVES_ROOT = ROOT / "ab_test" / "saves"

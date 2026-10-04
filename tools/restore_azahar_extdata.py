@@ -48,6 +48,18 @@ EXTDATA_IDS = frozenset(
     }
 )
 NAND_SAVE_REL = f"title/{TITLE_HIGH}/{TITLE_LOW}/data"
+
+
+def long_path(path: Path) -> Path:
+    """Windows extended-length form. Azahar's sdmc tree plus a backup prefix passes 260 chars."""
+    if sys.platform != "win32":
+        return path
+    text = str(path.resolve())
+    if text.startswith("\\\\?\\"):
+        return Path(text)
+    if text.startswith("\\\\"):
+        return Path("\\\\?\\UNC\\" + text[2:])
+    return Path("\\\\?\\" + text)
 SD_SAVE_REL = f"title/{TITLE_HIGH}/{TITLE_LOW}/data"
 DEFAULT_BACKUP_ROOT = ROOT / "out" / "extdata_backup"
 MANIFEST_NAME = "manifest.json"
@@ -130,8 +142,8 @@ def backup_trees(
         rel = src_root.relative_to(user_dir)
         dst_root = dest / rel
         if dst_root.exists():
-            shutil.rmtree(dst_root)
-        shutil.copytree(src_root, dst_root)
+            shutil.rmtree(long_path(dst_root))
+        shutil.copytree(long_path(src_root), long_path(dst_root))
         for src_file in iter_files(src_root):
             rel_file = src_file.relative_to(user_dir)
             records.append(

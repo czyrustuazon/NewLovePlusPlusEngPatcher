@@ -87,9 +87,9 @@ def test_list_and_install_named_pack(tmp_path: Path):
     assert meta.read_bytes() == b"M" * 16
     backups = list((tmp_path / "backups").iterdir())
     assert len(backups) == 1
-    assert (backups[0] / dest_slot.relative_to(user) / "savedata0").read_bytes() == (
-        b"old-save"
-    )
+    # pytest's tmp dir plus Azahar's sdmc tree passes 260 chars on Windows.
+    backed_up = mod.long_path(backups[0] / dest_slot.relative_to(user) / "savedata0")
+    assert backed_up.read_bytes() == b"old-save"
 
 
 def test_import_zip_creates_zero_id_tree(tmp_path: Path):
