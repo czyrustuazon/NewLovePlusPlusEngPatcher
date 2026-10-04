@@ -22,8 +22,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
 7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
 8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
-9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/1_[Either use this-CIA]/` and a Luma **LayeredFS** folder at `out/2_[Or this-LayeredFS]/luma/` (includes `code.bin`). Use one install path  
-10. **Clean** `out/` to numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)
+9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/NewLovePlusPlus-EN.cia`. A Luma LayeredFS folder is **not** built (see [LayeredFS does not work on hardware](#layeredfs-does-not-work-on-hardware))
+10. **Clean** `out/` to the CIA + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`; `build_spotpass_inject.py` is optional)
 11. **Append a PATCH SUMMARY** to `out/log.txt` (same file as the image-pack report and gold-rebuild summary; `--no-log` / `NLPP_NO_LOG=1` to skip)
 
 | Included assets | Approx. count |
@@ -48,7 +48,7 @@ The English release is also its own installable title, which a loose overlay doe
 
 - **HOME menu, region, and product code live in the CIA.** Vanilla shows ニューラブプラス＋, region Japan, product code `CTR-P-BLPJ`. LayeredFS does not rewrite the SMDH or the NCCH header. The rebuilt CIA sets the English title **New Love Plus+**, a USA region lock by default, and product code `CTR-P-BLPE`. The title ID stays `00040000000F4E00`, so existing saves still match. Other regions: `--cia-region japan|europe|free`.
 - **Menus are one archive.** UI chrome sits inside `img.bin` (about 680 MB), so a LayeredFS copy of the English UI is still that whole file. Drop CIA deletes `release/` at the start of every build and packs a new `release/bake_img.bin` before inject.
-- **FBI, Azahar, and Citra install a CIA.** A dropped `.3ds` / `.cci` is rebuilt into the same CIA at `out/1_[Either use this-CIA]/`. The patcher also writes `out/2_[Or this-LayeredFS]/` for a Luma overlay on a stock install, or for emulator tests. Use that folder **or** the CIA. Stacking them applies the English files twice (`out/3_[but not both]/`).
+- **FBI, Azahar, and Citra install a CIA.** A dropped `.3ds` / `.cci` is rebuilt into the same CIA at `out/NewLovePlusPlus-EN.cia`. Install that. Drop CIA no longer writes a Luma LayeredFS folder, because it white-screens on real hardware (see [LayeredFS does not work on hardware](#layeredfs-does-not-work-on-hardware)).
 
 The git repo still does not contain a dump. You bring your own decrypted CIA or `.3ds`. `release/bake_img.bin` and the finished CIA are generated on your machine (or fetched as a bake by collaborators) and are not committed.
 
@@ -198,10 +198,7 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 
 | Path | Description |
 |------|-------------|
-| `out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra (**or** use LayeredFS, not both) |
-| `out/2_[Or this-LayeredFS]/luma/00040000000F4E00/` | Luma LayeredFS overlay — copy to `SD:/luma/titles/` (**or** install the CIA, not both) |
-| `out/2_[Or this-LayeredFS]/luma/README.txt` | Install steps for Luma / Azahar |
-| `out/3_[but not both]/` | Folder reminder: pick the CIA **or** LayeredFS |
+| `out/NewLovePlusPlus-EN.cia` | Patched **decrypted** CIA — install with FBI, or open in Azahar/Citra |
 | `out/log.txt` | One log for the run: image-pack report, gold rebuild, and PATCH SUMMARY |
 | `release/bake_img.bin` | Gold UI `img.bin` (preferred by drop-bat / `patch_cia`) |
 | `release/romfs_overlay/` | Durable RomFS overlay (TRBs); auto-applied if present |
@@ -209,14 +206,17 @@ SSH commit signing is optional and not documented here — GitHub may leave SSH-
 | `cache/new_img.bin` | Optional PNG-pack scratch (incomplete vs gold) |
 | `cache/vanilla_from_rom/` | Vanilla RomFS extracted from a dropped ROM when needed |
 
-Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, patch log, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **numbered CIA + LayeredFS folders + `3_[but not both]/` + `log.txt`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
+Before that build starts, Drop CIA deletes **`out/` and `release/` completely** (previous CIA, patch log, `extdata_backup/`, gold bake, overlay, name-input `code.bin`) and recreates both empty. `cache/` and `ab_test/azahar_instances/` are not part of that wipe. After a successful patch, `out/` is cleaned again to **the CIA + `log.txt`**. Large intermediates (unpacked packages, extracted CXI/RomFS, duplicate `img.bin` copies) are deleted **as soon as each step finishes**, not only at the end. Pass `--keep-work` to `patch_cia.py` to retain scratch from that inject step; it does not skip the Drop CIA wipe. Towano Watcher #28 ships in `release/name_input_code.bin` (no boss paste). Optional real-extdata inject: `python tools/build_spotpass_inject.py` → `out/spotpass_real3ds/`.
 
-**Pick one install path** (see `out/3_[but not both]/`): LayeredFS on top of the English CIA applies the patch twice.
+### LayeredFS does not work on hardware
 
-**LayeredFS install**
+Install the CIA. A Luma LayeredFS folder is no longer built by Drop CIA.
 
-- **Luma (3DS):** copy `out/2_[Or this-LayeredFS]/luma/00040000000F4E00` to `SD:/luma/titles/` and enable *Enable game patching*  
-- **Azahar / Citra:** copy that folder into the emulator’s `load/mods/` directory  
+On a real 3DS, every romfs override white-screens after the CESA warnings (music keeps playing). That was tested on Luma v10.3 and v13 with the baked `img.bin`, with an unmodified vanilla `img.bin`, and with a single script file. A guarded `code.bin` alone boots to the title, and the same files installed as a CIA boot fine, so the patches are not the problem. The cause is not confirmed. The likely one is that the game opens `img.bin` in a way a path-based redirect does not cover.
+
+The crash-guards added for the title scene (null panes, bad name-walk offsets, non-heap texture pointers) came from LayeredFS runs. They ride along in `name_input_code.bin`, which the CIA also uses, and the CIA boots fine.
+
+LayeredFS still works for emulator tests. Pass `--layeredfs-out <folder>` to `src/patch_cia.py` to write one by hand, then copy it into Azahar/Citra’s `load/mods/`. The A/B workflow in `ab_test/` does this for you.
 
 **Why the folder’s `code.bin` has to be the one this repo built**
 
@@ -235,7 +235,7 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 
 ### Known issues
 
-- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
+- **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
 
 ---
 
@@ -329,13 +329,13 @@ decrypted .cia  OR  decrypted .3ds/.cci
   → inject gold bake img.bin + romfs_overlay TRBs
   → rebuild RomFS → CXI → CIA (makerom, decrypted)
   → append PATCH SUMMARY to out/log.txt
-  → clean out/ (keep numbered CIA/LayeredFS folders + 3_[but not both]/ + log.txt)
+  → clean out/ (keep the CIA + log.txt)
 ```
 
 CLI example (cartridge dump → English CIA):
 
 ```bash
-python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/1_[Either use this-CIA]/NewLovePlusPlus-EN.cia"
+python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/NewLovePlusPlus-EN.cia"
 ```
 
 **Heroine names**
@@ -493,7 +493,7 @@ tools/
 rebuild_dbin2/               finished English .dbin2 scripts
 release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; docs/technical.md §15.5)
 cache/                       PNG scratch + vanilla_from_rom (gitignored; Drop CIA deletes this folder on every from-scratch build)
-out/                         Drop CIA deletes this folder before each build; the run then writes the CIA, LayeredFS drop, and log.txt (gitignored)
+out/                         Drop CIA deletes this folder before each build; the run then writes the CIA and log.txt (gitignored)
 ```
 
 Finished `.dbin2` scripts used at patch time live in `rebuild_dbin2/` (generated from `assets/scripts`).

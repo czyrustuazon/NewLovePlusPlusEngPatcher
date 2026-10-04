@@ -417,8 +417,7 @@ def test_cia_failure_deletes_layeredfs_with_code_bin(
     title.mkdir(parents=True)
     (title / "code.bin").write_bytes(b"patched")
     (out / "README.txt").write_text("install me\n", encoding="utf-8")
-    cia = out_root / patch_cia.OUT_CIA_PREFIX / patch_cia.CIA_FILENAME
-    cia.parent.mkdir(parents=True)
+    cia = out_root / patch_cia.CIA_FILENAME
     cia.write_bytes(b"partial")
     note = out_root / patch_cia.OUT_NOT_BOTH_NAME
     note.mkdir(parents=True)
@@ -429,7 +428,7 @@ def test_cia_failure_deletes_layeredfs_with_code_bin(
     assert not out.exists()
     assert not layered_prefix.exists()
     assert not cia.exists()
-    assert not cia.parent.exists()
+    assert cia.parent == out_root and out_root.is_dir()  # the CIA sits in out/ itself
     assert not note.exists()
     err = capsys.readouterr().out
     assert "LayeredFS removed" in err

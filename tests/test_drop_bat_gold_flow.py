@@ -119,10 +119,13 @@ def test_bat_requires_name_input_and_rejects_images_off():
     assert 'INJECT_CODE=--inject-code "%~dp0release\\name_input_code.bin"' in text
     # Unquoted %~dp0 paths split on spaces (E:\zip game\...) and argparse
     # reports the leftover as unrecognized arguments: ...\name_input_code.bin
-    assert 'set LAYEREDFS=--layeredfs-out "%~dp0out\\2_[Or this-LayeredFS]\\luma"' in text
+    # LayeredFS is off (white screen on hardware). The CIA sits directly in out\.
+    assert 'set "LAYEREDFS="' in text
+    assert "--layeredfs-out" not in text.split('set "LAYEREDFS="')[1].split("\n")[0]
     assert text.count("!LAYEREDFS!") == 2
-    assert r'out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia' in text
-    assert "Copy that folder to SD:/luma/titles/" in text
+    assert r'out\NewLovePlusPlus-EN.cia' in text
+    assert "1_[Either use this-CIA]" not in text
+    assert "Copy that folder to SD:/luma/titles/" not in text
     assert "Scripts-only patch" not in text
 
 

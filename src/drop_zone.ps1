@@ -172,20 +172,15 @@ $go.Add_Click({
     # Quote explicitly — Start-Process ArgumentList does not protect spaces/parens.
     $p = Start-Process -FilePath $bat -ArgumentList "`"$launchPath`"" -WorkingDirectory $root -PassThru -Wait
     if ($p.ExitCode -eq 0) {
-        $status.Text = "Done. Pick LayeredFS (1) or CIA (2) — not both. See out\logs\"
+        $status.Text = "Done. Install out\NewLovePlusPlus-EN.cia with FBI. See out\log.txt"
         [System.Windows.Forms.MessageBox]::Show(
-            "Use either LayeredFS or the CIA, not both (see out\3_but not both).`n`nLayeredFS:`n$root\out\1_[Either use this-LayerFS]\luma\00040000000F4E00`n(copy to SD:/luma/titles/)`n`nPatched CIA:`n$root\out\2_[Or this]\NewLovePlusPlus-EN.cia`n`nPatch log (PATCH SUMMARY):`n$root\out\logs\latest.txt`n`nScratch work files were cleaned up.",
+            "Patched CIA (install with FBI):`n$root\out\NewLovePlusPlus-EN.cia`n`nPatch log (PATCH SUMMARY):`n$root\out\log.txt`n`nScratch work files were cleaned up.",
             "Patch complete",
             [Windows.Forms.MessageBoxButtons]::OK,
             [Windows.Forms.MessageBoxIcon]::Information
         ) | Out-Null
     } else {
-        $luma = Join-Path $root "out\1_[Either use this-LayerFS]\luma\00040000000F4E00"
-        if (Test-Path -LiteralPath $luma) {
-            $status.Text = "CIA failed; Luma overlay at out\1_[Either use this-LayerFS]\luma\ — see console log."
-        } else {
-            $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
-        }
+        $status.Text = "Patch failed (exit $($p.ExitCode)). Check the console log."
     }
     $go.Enabled = $true
     $browse.Enabled = $true

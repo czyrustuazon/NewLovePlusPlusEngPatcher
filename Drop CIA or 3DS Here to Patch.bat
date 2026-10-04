@@ -249,9 +249,10 @@ REM   NLPP_REUSE_BAKE=1  skip the stamp check on a leftover local bake
 if not exist "%~dp0cache" mkdir "%~dp0cache"
 REM Keep quotes inside the value so paths with spaces survive expansion
 REM (e.g. E:\zip game\... GitHub unzip folders).
-REM LayeredFS is written next to the CIA. code.bin is name_input_code.bin
-REM so English graphics load. Install the CIA or this folder, not both.
-set LAYEREDFS=--layeredfs-out "%~dp0out\2_[Or this-LayeredFS]\luma"
+REM LayeredFS is off: it white-screens on real hardware (Luma v10.3 and v13).
+REM Only the CIA is built. Pass --layeredfs-out to patch_cia.py by hand to
+REM get an emulator overlay.
+set "LAYEREDFS="
 set "PACKED_IMG=%~dp0release\bake_img.bin"
 if exist "%~dp0release\bake_img.bin" (
   echo Using gold bake: release\bake_img.bin
@@ -290,7 +291,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     set "NLPP_OVERALL_LO=80"
     set "NLPP_OVERALL_HI=100"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "%~dp0cache\new_img.bin" --repack-images !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 ) else (
   REM Default: download the published gold bake. Local pack only if that
   REM Release is missing or GitHub cannot be reached.
@@ -449,7 +450,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     set "NLPP_OVERALL_LO=80"
     set "NLPP_OVERALL_HI=100"
   )
-  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
+  "%PYTHON%" "%SRC%\patch_cia.py" --cia "%CIA%" --out "%~dp0out\NewLovePlusPlus-EN.cia" --packed-img "!PACKED_IMG!" !EXTRA_ROMFS! %SKIP_HASH% !LAYEREDFS! !INJECT_CODE! !STARTED_UNIX!
 )
 set ERR=%ERRORLEVEL%
 
@@ -462,11 +463,8 @@ if not "%ERR%"=="0" (
 )
 
 echo [+] Patched CIA:
-echo     %~dp0out\1_[Either use this-CIA]\NewLovePlusPlus-EN.cia
-echo [+] LayeredFS ^(use this or the CIA, not both^):
-echo     %~dp0out\2_[Or this-LayeredFS]\luma\00040000000F4E00
-echo     Copy that folder to SD:/luma/titles/ and enable game patching.
-echo     code.bin is included so English graphics load.
+echo     %~dp0out\NewLovePlusPlus-EN.cia
+echo     Install it with FBI. LayeredFS is not built ^(it does not boot on hardware^).
 echo.
 if defined NLPP_T0 (
   set "NLPP_ELAPSED="

@@ -355,8 +355,7 @@ def test_cleanup_out_dir_keeps_prefixed_install_outputs(tmp_path: Path, monkeypa
     (out / "scratch.bin").write_bytes(b"x")
     luma = out / patch_cia.OUT_LAYEREDFS_PREFIX / patch_cia.LAYEREDFS_DIR_NAME / "00040000000F4E00"
     luma.mkdir(parents=True)
-    cia = out / patch_cia.OUT_CIA_PREFIX / patch_cia.CIA_FILENAME
-    cia.parent.mkdir(parents=True)
+    cia = out / patch_cia.CIA_FILENAME
     cia.write_bytes(b"cia")
     note = patch_cia.write_install_choice_note(out)
     patch_cia.cleanup_out_dir(out_cia=cia)
@@ -367,8 +366,8 @@ def test_cleanup_out_dir_keeps_prefixed_install_outputs(tmp_path: Path, monkeypa
     assert note.is_file()
     text = note.read_text(encoding="utf-8")
     assert "Do not use both" in text
-    assert "folder 1 (CIA)" in text
-    assert "folder 2 (LayeredFS)" in text
+    assert "Use the CIA, not LayeredFS" in text
+    assert "white screen" in text
     assert not (out / "scratch.bin").exists()
 
 
@@ -382,7 +381,7 @@ def test_parser_has_log_flags():
     assert args.title_ver is None
     assert args.keep_title_ver is False
     assert args.started_unix is None
-    assert patch_cia.OUT_CIA_PREFIX in args.out
+    assert args.out == str(patch_cia.OUT_CIA)
     assert patch_cia.CIA_FILENAME in args.out
     args = p.parse_args(["--cia", "game.cia", "--log", "out/mylog.txt"])
     assert args.log == "out/mylog.txt"

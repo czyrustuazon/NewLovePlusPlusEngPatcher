@@ -37,7 +37,6 @@ from nlpp_paths import (
     LAYEREDFS_DIR_NAME,
     NAME_INPUT_CODE,
     OUT_CIA,
-    OUT_CIA_PREFIX,
     OUT_LAYEREDFS_PREFIX,
     OUT_NOT_BOTH_NAME,
     find_vanilla_code,
@@ -849,8 +848,10 @@ def write_layeredfs(
                 "Dialog nickname tokens (▲高嶺＊＊▲ etc.) are kept in scripts;",
                 "resident TRB / img.bin use plain English heroine names — see src/patch_names.py.",
                 "",
-                "No CIA reinstall is required when using LayeredFS.",
-                "Do not also install the patched CIA from folder 2 — pick one.",
+                "WARNING: LayeredFS did not boot on real 3DS hardware with Luma",
+                "(v10.3 and v13): white screen, even with an unmodified img.bin.",
+                "Install the patched CIA instead. Keep this folder for emulator tests.",
+                "Do not also install the patched CIA — pick one.",
                 "Same install style as LovePlusProject/NLPPATCH releases.",
                 "",
                 "English graphics load only when code.bin is in this folder.",
@@ -2083,8 +2084,8 @@ def _cmd_patch_body_impl(
     else:
         cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
         print(
-            "  - out/ cleaned (kept numbered LayeredFS/CIA folders, "
-            f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/)."
+            "  - out/ cleaned (kept the CIA, "
+            f"{OUT_LOG_NAME}, extdata_backup/)."
         )
         print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
@@ -2190,7 +2191,6 @@ def cleanup_patch_artifacts(
 # Dirs under out/ that survive post-patch cleanup (not patch scratch).
 _OUT_KEEP_DIRS = frozenset(
     {
-        OUT_CIA_PREFIX,  # patched CIA
         OUT_LAYEREDFS_PREFIX,  # LayeredFS drop (contains luma/)
         OUT_NOT_BOTH_NAME,  # folder: pick the CIA or LayeredFS, not both
         LAYEREDFS_DIR_NAME,  # leftover unprefixed luma/ from older builds
@@ -2212,14 +2212,14 @@ def write_install_choice_note(out_root: Path | None = None) -> Path:
     path.write_text(
         "\n".join(
             [
-                "Use either folder 1 (CIA) or folder 2 (LayeredFS). Do not use both.",
+                "Use the CIA, not LayeredFS. Do not use both.",
                 "",
-                f"{OUT_CIA_PREFIX}/",
-                f"  Install {CIA_FILENAME} with FBI, or open it in Azahar/Citra.",
+                f"{CIA_FILENAME} (in out/)",
+                "  Install it with FBI, or open it in Azahar/Citra.",
                 "",
                 f"{OUT_LAYEREDFS_PREFIX}/",
-                f"  Copy {LAYEREDFS_DIR_NAME}/{TITLE_ID} to SD:/luma/titles/",
-                "  (enable Enable game patching in Luma).",
+                "  Experimental. It does not boot on real 3DS hardware with Luma",
+                "  (white screen), so use it for emulator tests only.",
                 "",
                 "LayeredFS on top of the English CIA would apply the patch twice.",
                 "",
@@ -2304,14 +2304,14 @@ def cleanup_out_dir(
             print(f"[cleanup] warning: {child.name}: {exc}")
     if removed:
         print(
-            f"[cleanup] out/ kept: {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
+            f"[cleanup] out/ kept: the CIA, {OUT_LAYEREDFS_PREFIX}/, "
             f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/ "
             f"({removed} other item(s) removed)"
         )
     elif not quiet:
         print(
             "[cleanup] out/ already clean "
-            f"({OUT_LAYEREDFS_PREFIX} + {OUT_CIA_PREFIX} + {OUT_NOT_BOTH_NAME} "
+            f"(the CIA + {OUT_LAYEREDFS_PREFIX} + {OUT_NOT_BOTH_NAME} "
             f"+ {OUT_LOG_NAME} + extdata_backup)"
         )
 
@@ -2378,7 +2378,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--keep-work",
         action="store_true",
         help="Keep out/ scratch after a successful build "
-        f"(default: leave {OUT_LAYEREDFS_PREFIX}/, {OUT_CIA_PREFIX}/, "
+        f"(default: leave the CIA, {OUT_LAYEREDFS_PREFIX}/, "
         f"{OUT_NOT_BOTH_NAME}, out/{OUT_LOG_NAME}, "
         "out/extdata_backup/)",
     )

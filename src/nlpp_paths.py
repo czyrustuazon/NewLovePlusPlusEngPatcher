@@ -48,15 +48,15 @@ AZAHAR_INSTANCES = ROOT / "ab_test" / "azahar_instances"
 # project is open. Never under OUT — Drop CIA deletes that tree.
 GHIDRA_PROJECT = ROOT / "ghidra_nlpp"
 
-# Drop-bat / patch_cia ship artifacts. Prefix folders tell users to pick one
-# install path; original luma/ and CIA names stay inside.
-OUT_CIA_PREFIX = "1_[Either use this-CIA]"
+# Drop-bat / patch_cia ship artifacts. The CIA sits directly in out/. LayeredFS
+# is off by default (it does not boot on real hardware, see README) and only
+# written when patch_cia is given --layeredfs-out.
 OUT_LAYEREDFS_PREFIX = "2_[Or this-LayeredFS]"
 OUT_NOT_BOTH_NAME = "3_[but not both]"
 LAYEREDFS_DIR_NAME = "luma"
 CIA_FILENAME = "NewLovePlusPlus-EN.cia"
 OUT_LAYEREDFS = OUT / OUT_LAYEREDFS_PREFIX / LAYEREDFS_DIR_NAME
-OUT_CIA = OUT / OUT_CIA_PREFIX / CIA_FILENAME
+OUT_CIA = OUT / CIA_FILENAME
 OUT_NOT_BOTH = OUT / OUT_NOT_BOTH_NAME
 # One Drop log: image pack + gold rebuild + PATCH SUMMARY. Not out/logs/.
 OUT_LOG_NAME = "log.txt"
