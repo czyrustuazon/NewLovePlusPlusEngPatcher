@@ -130,13 +130,28 @@ def test_bat_requires_name_input_and_rejects_images_off():
 
 
 def test_bat_stops_when_drop_zone_script_is_missing():
-    """A lone bat pauses. It does not download a second copy of the repo."""
+    """A lone bat pauses. Sync needs an extracted Release zip first."""
     text = _bat_text()
     missing = text.index("Cannot find src\\drop_zone.ps1")
     assert missing < text.index("goto :run_patch")
     assert "Extract the entire archive / repo first" in text
-    assert "NLPP_ENG_PATCH_REPO" not in text
+    # Source sync runs only after Python is found and the tree already exists.
+    assert missing < text.index("fetch_main_tree.py")
     assert "ensure_patcher_tree" not in text
+
+
+def test_bat_best_effort_syncs_main_sources_before_deps():
+    """Release-zip users overlay tip of main (no git); failure never hard-stops."""
+    text = _bat_text()
+    sync_idx = text.index("fetch_main_tree.py")
+    deps_idx = text.index('pip install -r "%~dp0requirements.txt"')
+    assert sync_idx < deps_idx
+    assert "--best-effort" in text
+    assert "NLPP_SKIP_SOURCE_FETCH" in text
+    assert "NLPP_SOURCE_SYNCED" in text
+    assert "restarting Drop CIA once" in text
+    # Exit 2 from the helper means re-exec; other codes continue.
+    assert 'if "!NLPP_SOURCE_RC!"=="2"' in text
 
 
 def test_bat_drop_timer_avoids_for_f_python_quoting():

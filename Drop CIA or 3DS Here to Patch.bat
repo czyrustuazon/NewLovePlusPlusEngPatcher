@@ -35,6 +35,31 @@ if not defined PYTHON (
   exit /b 1
 )
 
+REM Best-effort: overlay tip of EngPatcher main ^(no git^). Release-zip users
+REM stay current. Offline / 404 keeps the local tree. .git checkouts skip.
+REM   NLPP_SKIP_SOURCE_FETCH=1   skip
+REM   NLPP_FORCE_SOURCE_FETCH=1  sync even with .git
+REM   NLPP_SOURCE_REPO=owner/repo
+REM Exit 2 = tree updated — re-exec once so the new bat/scripts run.
+if /i "%NLPP_SOURCE_SYNCED%"=="1" goto :source_sync_done
+if /i "%NLPP_SKIP_SOURCE_FETCH%"=="1" goto :source_sync_done
+if not exist "%~dp0tools\fetch_main_tree.py" goto :source_sync_done
+echo.
+echo Checking EngPatcher sources against GitHub main...
+"%PYTHON%" "%~dp0tools\fetch_main_tree.py" --best-effort
+set "NLPP_SOURCE_RC=!ERRORLEVEL!"
+if "!NLPP_SOURCE_RC!"=="2" (
+  echo.
+  echo [fetch] Sources updated from main — restarting Drop CIA once...
+  echo.
+  set "NLPP_SOURCE_SYNCED=1"
+  set "NLPP_PY_DEPS="
+  call "%~f0" %*
+  exit /b !ERRORLEVEL!
+)
+:source_sync_done
+set "NLPP_SOURCE_RC="
+
 if /i "%NLPP_PY_DEPS%"=="1" goto :deps_ready
 echo.
 echo Installing Python packages ^(py -3 -m pip install -r requirements.txt^) ...
