@@ -216,6 +216,8 @@ On a real 3DS, every romfs override white-screens after the CESA warnings (music
 
 The crash-guards added for the title scene (null panes, bad name-walk offsets, non-heap texture pointers) came from LayeredFS runs. They ride along in `name_input_code.bin`, which the CIA also uses, and the CIA boots fine.
 
+The full investigation, what was ruled out, and what to try next are in [docs/layeredfs-investigation.md](docs/layeredfs-investigation.md).
+
 LayeredFS still works for emulator tests. Pass `--layeredfs-out <folder>` to `src/patch_cia.py` to write one by hand, then copy it into Azahar/Citra’s `load/mods/`. The A/B workflow in `ab_test/` does this for you.
 
 **Why the folder’s `code.bin` has to be the one this repo built**

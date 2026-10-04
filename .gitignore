@@ -41,6 +41,7 @@ tools/*
 !tools/rebuild_test_cia.py
 !tools/fetch_release_bake.py
 !tools/fetch_main_tree.py
+!tools/make_code_ips.py
 !tools/build_spotpass_inject.py
 !tools/scan_nl_spotpass_zip.py
 !tools/spotpass/
