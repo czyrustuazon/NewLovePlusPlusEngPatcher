@@ -156,6 +156,8 @@ uses the NOP tail of ``BackspaceNameCharPane``. Apply name panes first.
 """
 from __future__ import annotations
 
+import os
+
 import struct
 
 from patch_input_cave_map import ADDR_CHUNK_WALK_CAVE, ADDR_CHUNK_WALK_LIMIT
@@ -289,6 +291,13 @@ VANILLA_PANE_FLAG_BR = bytes.fromhex("2700000a")  # beq 0x2C6070
 ADDR_PANE_FLAG_CAVE = 0x005AEC0C
 ADDR_PANE_FLAG_CAVE_LEN = 12
 
+# Luma 2026-10-03 03:45 (v13): file 0x5C60C4 ``ldr r2, [r6, #0xb2c]`` with r6 == 0.
+# r6 is ``this`` of the resource-bind loop. The vanilla NOP after ``cmp r0, #0``
+# becomes ``cmpne r6, #0`` so the existing ``beq`` skips a null object too.
+ADDR_BIND_THIS = 0x005C60BC
+BIND_THIS_SKIP = bytes.fromhex("00f020e3")  # nop
+BIND_THIS_CMP = bytes.fromhex("000056" "13")  # cmpne r6, #0
+
 ADDR_HEAP_WALK = 0x0000DE4C
 ADDR_HEAP_WALK_RESUME = 0x0000DE50
 ADDR_HEAP_WALK_FAIL = 0x0000DE7C  # cmp r7, #0; return null if none
@@ -363,6 +372,10 @@ _PAK_TABLE_JP = "メッセージ速度テストです。".encode("utf-8") + b"\x
 VANILLA_PAK_TABLE_CAVE = _PAK_TABLE_JP[-ADDR_PAK_TABLE_CAVE_LEN:]
 # Texture release: ldr r5, [r0, #8]. Caller ignores r0. r7 is already 0.
 ADDR_TEX_REL = 0x005E96DC
+# Inner-pointer check lives in the idle heap-walk slot (nops unless APPLY_HEAP_AND_PAK).
+ADDR_TEX_REL_TAIL = 0x00015668
+ADDR_TEX_REL_TAIL_LEN = 12
+OLD_TEX_REL_CAVE = bytes.fromhex("000050e30565110a085090e5000055e30265110ae36411ea")
 ADDR_TEX_REL_RESUME = 0x005E96E0
 ADDR_TEX_REL_FAIL = 0x005E9758  # mov r0, r7; pop {r4-r8, pc}
 VANILLA_TEX_REL = bytes.fromhex("085090e5")  # ldr r5, [r0, #8]
@@ -395,6 +408,21 @@ def _u32(x: int) -> bytes:
 
 def bx_lr(cond: int = 0xE) -> bytes:
     return _u32((cond << 28) | 0x012FFF1E)
+
+
+# NLPP_DIAG_TRAP=1 builds each guard's fail branch as a conditional ``bl`` to a
+# UDF word. The Luma dump's LR then names the first guard that fires on
+# hardware (the slot is the idle heap-walk cave). Never ship.
+DIAG_TRAP = os.environ.get("NLPP_DIAG_TRAP") == "1"
+ADDR_DIAG_UDF = 0x005D1944  # zero pad after the speed-test string
+
+
+def fail_b(cond: int, here: int, target: int, trap: bool = True) -> bytes:
+    if DIAG_TRAP and trap:
+        return _u32(
+            (cond << 28) | 0x0B000000 | (((ADDR_DIAG_UDF - here - 8) >> 2) & 0xFFFFFF)
+        )
+    return b_cond(cond, here, target)
 
 
 def build_cave(base: int = ADDR_CHUNK_WALK_CAVE) -> tuple[bytes, dict[str, int]]:
@@ -508,7 +536,7 @@ def build_fixup_cave(base: int | None = None) -> bytes:
     body += mov_imm(0, 0)
     body += str_imm(0, 4, 8)
     body += b_ins(base + len(body), ADDR_FIXUP_SKIP)
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, bad)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, bad)
     blob = bytes(body)
     if base + len(blob) > ADDR_CHUNK_WALK_LIMIT:
         raise ValueError(
@@ -537,8 +565,8 @@ def build_title_reloc_cave(base: int = ADDR_TITLE_RELOC_CAVE) -> bytes:
     body += str_imm(3, 1, 4)
     body += mov_imm(0, 0)
     body += bx_lr()
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
     if base + len(blob) > ADDR_TITLE_RELOC_LIMIT:
         raise ValueError(
@@ -569,9 +597,9 @@ def build_title_index_cave(base: int = ADDR_TITLE_INDEX_CAVE) -> bytes:
     body += b_ins(base + len(body), ADDR_TITLE_INDEX_RESUME)
     fail = base + len(body)
     body += b_ins(base + len(body), ADDR_TITLE_INDEX_FAIL)
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
-    body[bhs2_at : bhs2_at + 4] = b_cond(2, base + bhs2_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
+    body[bhs2_at : bhs2_at + 4] = fail_b(2, base + bhs2_at, fail)
     blob = bytes(body)
     if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
         raise ValueError(
@@ -605,8 +633,8 @@ def build_clyt_cave(base: int | None = None) -> bytes:
     fail = base + len(body)
     body += POP_R4
     body += bx_lr()
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
     if base < ADDR_TITLE_INDEX_CAVE + len(build_title_index_cave()):
         raise ValueError(f"clyt cave {base:#x} overlaps the title index cave")
@@ -639,8 +667,8 @@ def build_lyt_hdr_cave(base: int | None = None) -> bytes:
     body += b_ins(base + len(body), ADDR_LYT_HDR_RESUME)
     fail = base + len(body)
     body += b_ins(base + len(body), ADDR_LYT_HDR_FAIL)
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
     if base < clyt_cave_addr() + len(build_clyt_cave()):
         raise ValueError(f"layout header cave {base:#x} overlaps the clyt cave")
@@ -671,8 +699,8 @@ def build_vt_cave(base: int | None = None) -> bytes:
     body += b_ins(base + len(body), ADDR_VT_RESUME)
     fail = base + len(body)
     body += b_ins(base + len(body), ADDR_VT_FAIL)
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
     if base < lyt_hdr_cave_addr() + len(build_lyt_hdr_cave()):
         raise ValueError(f"vt cave {base:#x} overlaps the layout header cave")
@@ -707,8 +735,8 @@ def build_title_obj_cave(base: int | None = None) -> bytes:
     fail = base + len(body)
     body += mov_imm(0, 0)
     body += bx_lr()
-    body[blo_at : blo_at + 4] = b_cond(3, base + blo_at, fail)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, fail)
+    body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
     if base < vt_cave_addr() + len(build_vt_cave()):
         raise ValueError(f"title object cave {base:#x} overlaps the vt cave")
@@ -798,36 +826,43 @@ def tex_release_cave_addr() -> int:
 
 
 def build_tex_release_cave(base: int | None = None) -> bytes:
-    """Skip the texture release when the list object or its inner pointer is null.
+    """Skip the texture release when the list object is off the heap.
 
-    The function has already stored 0 in ``r7``. The fail branch is its
-    epilogue, which returns that 0. The caller does not use the result.
+    Luma 2026-10-03 03:48 faulted on ``ldr r5, [r0, #8]`` with ``r0`` =
+    0x3F800000 (a float). ``r1`` is free: the function already copied it to
+    ``r6``. After the load the inner pointer is checked in the tail cave.
     """
     if base is None:
         base = tex_release_cave_addr()
     body = bytearray()
-
-    def at(mark: int | None = None) -> int:
-        return base + (len(body) if mark is None else mark)
-
-    body += cmp_imm(0, 0)
-    beq_obj = len(body)
+    body += sub_imm(1, 0, HEAP_LO)
+    body += cmp_imm(1, HEAP_SPAN)
+    bhs_obj = len(body)
     body += b"\x00\x00\x00\x00"
     body += VANILLA_TEX_REL
-    body += cmp_imm(5, 0)
-    beq_inner = len(body)
-    body += b"\x00\x00\x00\x00"
-    body += b_ins(at(), ADDR_TEX_REL_RESUME)
-    body[beq_obj : beq_obj + 4] = b_cond(0, at(beq_obj), ADDR_TEX_REL_FAIL)
-    body[beq_inner : beq_inner + 4] = b_cond(0, at(beq_inner), ADDR_TEX_REL_FAIL)
+    body += b_ins(base + len(body), ADDR_TEX_REL_TAIL)
+    body[bhs_obj : bhs_obj + 4] = fail_b(
+        2, base + bhs_obj, ADDR_TEX_REL_FAIL, trap=False
+    )
     blob = bytes(body)
-    tail = ADDR_SET + SIZE_SET
     if base < fs_open_cave_addr() + len(build_fs_open_cave()):
         raise ValueError(f"texture release cave {base:#x} overlaps the fs open cave")
-    if base + len(blob) > tail:
+    if base + len(blob) > ADDR_NODE_BYTE_CAVE:
         raise ValueError(
-            f"texture release cave {base:#x}+{len(blob):#x} exceeds {tail:#x}"
+            f"texture release cave {base:#x}+{len(blob):#x} runs into the node byte cave"
         )
+    return blob
+
+
+def build_tex_release_tail(base: int = ADDR_TEX_REL_TAIL) -> bytes:
+    """Skip the release when the loaded inner pointer is null."""
+    body = bytearray()
+    body += cmp_imm(5, 0)
+    body += fail_b(0, base + len(body), ADDR_TEX_REL_FAIL, trap=False)
+    body += b_ins(base + len(body), ADDR_TEX_REL_RESUME)
+    blob = bytes(body)
+    if len(blob) != ADDR_TEX_REL_TAIL_LEN:
+        raise ValueError(f"texture release tail is {len(blob):#x} bytes")
     return blob
 
 
@@ -867,7 +902,7 @@ def build_field_cave(
     body += b"\x00\x00\x00\x00"
     body += VANILLA_FIELD
     body += b_ins(at(), resume)
-    body[beq_null : beq_null + 4] = b_cond(0, at(beq_null), fail)
+    body[beq_null : beq_null + 4] = fail_b(0, at(beq_null), fail, trap=False)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
     if base < ADDR_BACKSPACE or base + len(blob) > tail:
@@ -948,7 +983,7 @@ def build_name_cave(base: int | None = None) -> bytes:
     body += cmp_imm(0, NAME_OFF_MAX)
     # ldrhlo r0, [r4]
     body += _u32(0x31D400B0)
-    body += b_cond(2, base + len(body), ADDR_NAME_FAIL)
+    body += fail_b(2, base + len(body), ADDR_NAME_FAIL)
     body += b_ins(base + len(body), ADDR_NAME_RESUME)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
@@ -1005,7 +1040,7 @@ def build_idx_load_cave(base: int = ADDR_IDX_LOAD_CAVE) -> bytes:
     body += b"\x00\x00\x00\x00"
     body += VANILLA_IDX_LOAD
     body += b_ins(base + len(body), ADDR_IDX_LOAD_RESUME)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
     blob = bytes(body)
     if base != ADDR_IDX_LOAD_CAVE:
         raise ValueError(f"idx load cave is fixed at {ADDR_IDX_LOAD_CAVE:#x}")
@@ -1027,7 +1062,7 @@ def build_node_byte_cave(base: int = ADDR_NODE_BYTE_CAVE) -> bytes:
     body += b"\x00\x00\x00\x00"
     body += _u32(0xE5DA0014)  # ldrb r0, [sl, #0x14]
     body += b_ins(base + len(body), ADDR_NODE_BYTE_RESUME)
-    body[bhs_at : bhs_at + 4] = b_cond(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
+    body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
     blob = bytes(body)
     if base != ADDR_NODE_BYTE_CAVE:
         raise ValueError(f"node byte cave is fixed at {ADDR_NODE_BYTE_CAVE:#x}")
@@ -1042,7 +1077,7 @@ def build_pane_flag_cave(base: int = ADDR_PANE_FLAG_CAVE) -> bytes:
     """Take the menu-update epilogue when the pane in ``r6`` is null."""
     body = bytearray()
     body += cmp_imm(6, 0)
-    body += b_cond(0, base + len(body), ADDR_PANE_FLAG_FAIL)  # beq
+    body += fail_b(0, base + len(body), ADDR_PANE_FLAG_FAIL, trap=False)  # beq
     body += b_ins(base + len(body), ADDR_PANE_FLAG_LOAD)
     blob = bytes(body)
     if len(blob) != ADDR_PANE_FLAG_CAVE_LEN:
@@ -1080,7 +1115,7 @@ def build_heap_walk_cave(base: int = ADDR_HEAP_WALK_CAVE) -> bytes:
     """
     body = bytearray()
     body += cmp_imm(0, HEAP_HI)
-    body += b_cond(2, base + len(body), ADDR_HEAP_WALK_FAIL)
+    body += fail_b(2, base + len(body), ADDR_HEAP_WALK_FAIL)
     body += b_ins(base + len(body), heap_walk_stub_addr())
     blob = bytes(body)
     if len(blob) != ADDR_HEAP_WALK_CAVE_LEN:
@@ -1500,6 +1535,7 @@ def is_patched(data: bytes) -> bool:
         and bytes(data[obj_at : obj_at + len(obj)]) == obj
         and data[ADDR_FS_OPEN : ADDR_FS_OPEN + 4] == bl(ADDR_FS_OPEN, fs_at)
         and bytes(data[fs_at : fs_at + len(fs)]) == fs
+        and bytes(data[ADDR_TEX_REL_TAIL : ADDR_TEX_REL_TAIL + 12]) == build_tex_release_tail()
         and data[ADDR_TEX_REL : ADDR_TEX_REL + 4] == b_ins(ADDR_TEX_REL, rel_at)
         and bytes(data[rel_at : rel_at + len(rel)]) == rel
         and data[ADDR_FIELD : ADDR_FIELD + 4] == b_ins(ADDR_FIELD, field_at)
@@ -1520,6 +1556,7 @@ def is_patched(data: bytes) -> bool:
         and data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4]
         == b_cond(0, ADDR_PANE_FLAG_BR, ADDR_PANE_FLAG_CAVE)
         and bytes(data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)]) == pane
+        and bytes(data[ADDR_BIND_THIS : ADDR_BIND_THIS + 4]) == BIND_THIS_CMP
         and data[ADDR_ROW_CLEAR : ADDR_ROW_CLEAR + 4]
         == b_ins(ADDR_ROW_CLEAR, ADDR_ROW_GATE)
         and bytes(data[ADDR_ROW_GATE : ADDR_ROW_GATE + len(row_gate)]) == row_gate
@@ -1643,7 +1680,7 @@ def apply_patch(data: bytearray) -> None:
     if fs_head != VANILLA_FS_OPEN and fs_head != fs_hook and (fs_head_w >> 24) != 0xEB:
         raise ValueError(f"unexpected fs open at {ADDR_FS_OPEN:#x}: {fs_head.hex()}")
     fs_slot = bytes(data[fs_at : fs_at + len(fs)])
-    if fs_slot != fs and fs_slot != nop() * (len(fs) // 4):
+    if not DIAG_TRAP and fs_slot != fs and fs_slot != nop() * (len(fs) // 4):
         raise ValueError(f"fs open cave @{fs_at:#x} is not padding: {fs_slot.hex()}")
     rel_at = tex_release_cave_addr()
     rel = build_tex_release_cave(rel_at)
@@ -1652,8 +1689,19 @@ def apply_patch(data: bytearray) -> None:
     if rel_head != VANILLA_TEX_REL and rel_head != rel_hook:
         raise ValueError(f"unexpected texture release at {ADDR_TEX_REL:#x}: {rel_head.hex()}")
     rel_slot = bytes(data[rel_at : rel_at + len(rel)])
-    if rel_slot != rel and rel_slot != nop() * (len(rel) // 4):
+    if (
+        not DIAG_TRAP
+        and rel_slot != rel
+        and rel_slot != nop() * (len(rel) // 4)
+        and rel_slot != OLD_TEX_REL_CAVE[: len(rel)]
+    ):
         raise ValueError(f"texture release cave @{rel_at:#x} is not padding: {rel_slot.hex()}")
+    rel_tail = build_tex_release_tail()
+    tail_slot = bytes(data[ADDR_TEX_REL_TAIL : ADDR_TEX_REL_TAIL + len(rel_tail)])
+    # Vanilla still holds the deref helper here. The NOP fill below clears it.
+    deref_van = bytes.fromhex("000050e3000090151eff2fe1")
+    if tail_slot not in (rel_tail, nop() * (len(rel_tail) // 4), deref_van):
+        raise ValueError(f"texture release tail is not padding: {tail_slot.hex()}")
     field_at = field_cave_addr()
     field = build_field_cave(field_at)
     field_hook = b_ins(ADDR_FIELD, field_at)
@@ -1661,7 +1709,7 @@ def apply_patch(data: bytearray) -> None:
     if field_head != VANILLA_FIELD and field_head != field_hook:
         raise ValueError(f"unexpected field getter at {ADDR_FIELD:#x}: {field_head.hex()}")
     field_slot = bytes(data[field_at : field_at + len(field)])
-    if field_slot != field and field_slot != nop() * (len(field) // 4):
+    if not DIAG_TRAP and field_slot != field and field_slot != nop() * (len(field) // 4):
         raise ValueError(f"field cave @{field_at:#x} is not padding: {field_slot.hex()}")
     field_b_at = field_b_cave_addr()
     field_b = build_field_cave(
@@ -1674,14 +1722,14 @@ def apply_patch(data: bytearray) -> None:
             f"unexpected field getter at {ADDR_FIELD_B:#x}: {field_b_head.hex()}"
         )
     field_b_slot = bytes(data[field_b_at : field_b_at + len(field_b)])
-    if field_b_slot != field_b and field_b_slot != nop() * (len(field_b) // 4):
+    if not DIAG_TRAP and field_b_slot != field_b and field_b_slot != nop() * (len(field_b) // 4):
         raise ValueError(
             f"field cave @{field_b_at:#x} is not padding: {field_b_slot.hex()}"
         )
     miss_at = fs_open_miss_addr()
     miss = build_fs_open_miss(miss_at)
     miss_slot = bytes(data[miss_at : miss_at + len(miss)])
-    if miss_slot != miss and miss_slot != nop() * (len(miss) // 4):
+    if not DIAG_TRAP and miss_slot != miss and miss_slot != nop() * (len(miss) // 4):
         raise ValueError(f"fs open miss cave @{miss_at:#x} is not padding: {miss_slot.hex()}")
     name_at = name_cave_addr()
     name = build_name_cave(name_at)
@@ -1690,7 +1738,7 @@ def apply_patch(data: bytearray) -> None:
     if name_head != VANILLA_NAME and name_head != name_hook:
         raise ValueError(f"unexpected name walk at {ADDR_NAME:#x}: {name_head.hex()}")
     name_slot = bytes(data[name_at : name_at + len(name)])
-    if name_slot != name and name_slot != nop() * (len(name) // 4):
+    if not DIAG_TRAP and name_slot != name and name_slot != nop() * (len(name) // 4):
         raise ValueError(f"name cave @{name_at:#x} is not padding: {name_slot.hex()}")
     menu_at = menu_vt_cave_addr()
     menu = build_menu_vt_cave(menu_at)
@@ -1699,7 +1747,7 @@ def apply_patch(data: bytearray) -> None:
     if menu_head != VANILLA_MENU_VT and menu_head != menu_hook:
         raise ValueError(f"unexpected menu vt at {ADDR_MENU_VT:#x}: {menu_head.hex()}")
     menu_slot = bytes(data[menu_at : menu_at + len(menu)])
-    if menu_slot != menu and menu_slot != nop() * (len(menu) // 4):
+    if not DIAG_TRAP and menu_slot != menu and menu_slot != nop() * (len(menu) // 4):
         raise ValueError(f"menu vt cave @{menu_at:#x} is not padding: {menu_slot.hex()}")
     idx = build_idx_load_cave()
     idx_hook = b_ins(ADDR_IDX_LOAD, ADDR_IDX_LOAD_CAVE)
@@ -1709,7 +1757,7 @@ def apply_patch(data: bytearray) -> None:
     idx_slot = bytes(data[ADDR_IDX_LOAD_CAVE : ADDR_IDX_LOAD_CAVE + len(idx)])
     # Three NOPs, then an unreferenced alignment word before the next function.
     idx_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
-    if idx_slot != idx and idx_slot != idx_pad:
+    if not DIAG_TRAP and idx_slot != idx and idx_slot != idx_pad:
         raise ValueError(f"idx load cave is not padding: {idx_slot.hex()}")
     node = build_node_byte_cave()
     node_hook = b_ins(ADDR_NODE_BYTE, ADDR_NODE_BYTE_CAVE)
@@ -1718,17 +1766,20 @@ def apply_patch(data: bytearray) -> None:
         raise ValueError(f"unexpected node byte at {ADDR_NODE_BYTE:#x}: {node_head.hex()}")
     node_slot = bytes(data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)])
     node_pad = nop() * 3 + bytes.fromhex("0c2f7c00")
-    if node_slot != node and node_slot != nop() * (len(node) // 4) and node_slot != node_pad:
+    if not DIAG_TRAP and node_slot != node and node_slot != nop() * (len(node) // 4) and node_slot != node_pad:
         raise ValueError(f"node byte cave is not padding: {node_slot.hex()}")
     if APPLY_HEAP_AND_PAK:
         raise ValueError("pane flag cave shares the heap link pad slot")
+    bind_head = bytes(data[ADDR_BIND_THIS : ADDR_BIND_THIS + 4])
+    if bind_head != BIND_THIS_SKIP and bind_head != BIND_THIS_CMP:
+        raise ValueError(f"unexpected bind loop at {ADDR_BIND_THIS:#x}: {bind_head.hex()}")
     pane = build_pane_flag_cave()
     pane_hook = b_cond(0, ADDR_PANE_FLAG_BR, ADDR_PANE_FLAG_CAVE)
     pane_head = bytes(data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4])
     if pane_head != VANILLA_PANE_FLAG_BR and pane_head != pane_hook:
         raise ValueError(f"unexpected pane flag branch at {ADDR_PANE_FLAG_BR:#x}: {pane_head.hex()}")
     pane_slot = bytes(data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)])
-    if pane_slot != pane and pane_slot != bytes(len(pane)):
+    if not DIAG_TRAP and pane_slot != pane and pane_slot != bytes(len(pane)):
         raise ValueError(f"pane flag cave is not padding: {pane_slot.hex()}")
     heap = build_heap_walk_cave()
     heap_hook = b_ins(ADDR_HEAP_WALK, ADDR_HEAP_WALK_CAVE)
@@ -1752,7 +1803,7 @@ def apply_patch(data: bytearray) -> None:
     if link_slot != link_body and link_slot != link_van:
         raise ValueError(f"heap link body is not vanilla: {link_slot.hex()}")
     pad_slot = bytes(data[ADDR_HEAP_LINK_PAD : ADDR_HEAP_LINK_PAD + len(link_pad)])
-    if pad_slot != link_pad and pad_slot != b"\x00" * len(link_pad):
+    if pad_slot not in (link_pad, pane, b"\x00" * len(link_pad)):
         raise ValueError(f"heap link pad is not empty: {pad_slot.hex()}")
     heap_bin = build_heap_bin()
     heap_tail = build_heap_tail()
@@ -1847,7 +1898,12 @@ def apply_patch(data: bytearray) -> None:
     data[ADDR_TITLE_OBJ : ADDR_TITLE_OBJ + 4] = obj_hook
     data[fs_at : fs_at + len(fs)] = fs
     data[ADDR_FS_OPEN : ADDR_FS_OPEN + 4] = fs_hook
+    # An older build left a longer cave here. Clear the stale tail words.
+    old_len = len(OLD_TEX_REL_CAVE)
+    if bytes(data[rel_at : rel_at + old_len]) == OLD_TEX_REL_CAVE:
+        data[rel_at : rel_at + old_len] = nop() * (old_len // 4)
     data[rel_at : rel_at + len(rel)] = rel
+    data[ADDR_TEX_REL_TAIL : ADDR_TEX_REL_TAIL + len(rel_tail)] = rel_tail
     data[ADDR_TEX_REL : ADDR_TEX_REL + 4] = rel_hook
     data[field_at : field_at + len(field)] = field
     data[ADDR_FIELD : ADDR_FIELD + 4] = field_hook
@@ -1863,7 +1919,10 @@ def apply_patch(data: bytearray) -> None:
     data[ADDR_NODE_BYTE_CAVE : ADDR_NODE_BYTE_CAVE + len(node)] = node
     data[ADDR_NODE_BYTE : ADDR_NODE_BYTE + 4] = node_hook
     data[ADDR_PANE_FLAG_CAVE : ADDR_PANE_FLAG_CAVE + len(pane)] = pane
+    if DIAG_TRAP:
+        data[ADDR_DIAG_UDF : ADDR_DIAG_UDF + 4] = _u32(0xE7F000F0)
     data[ADDR_PANE_FLAG_BR : ADDR_PANE_FLAG_BR + 4] = pane_hook
+    data[ADDR_BIND_THIS : ADDR_BIND_THIS + 4] = BIND_THIS_CMP
     print(
         f"[chunk-walk] deref @{ADDR_DEREF:#x} / advance @{ADDR_ADVANCE:#x} "
         f"-> @{ADDR_CHUNK_WALK_CAVE:#x} ({len(blob):#x}); "
@@ -1886,6 +1945,7 @@ def apply_patch(data: bytearray) -> None:
         f"idx load @{ADDR_IDX_LOAD:#x} -> @{ADDR_IDX_LOAD_CAVE:#x} ({len(idx):#x}); "
         f"node byte @{ADDR_NODE_BYTE:#x} -> @{ADDR_NODE_BYTE_CAVE:#x} ({len(node):#x}); "
         f"pane flag @{ADDR_PANE_FLAG_BR:#x} -> @{ADDR_PANE_FLAG_CAVE:#x}; "
+        f"bind this @{ADDR_BIND_THIS:#x}; "
         f"heap/pak {'on' if APPLY_HEAP_AND_PAK else 'vanilla (boot)'} "
         f"walk @{ADDR_HEAP_WALK:#x} link @{ADDR_HEAP_LINK:#x} "
         f"pak @{ADDR_PAK_INIT:#x}"

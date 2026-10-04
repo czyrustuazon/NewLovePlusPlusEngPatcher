@@ -624,11 +624,16 @@ def test_fs_open_resumes_the_layout_constructor():
 
 
 def test_tex_release_skips_null_list():
-    """Luma 2026-10-01 02:57: ``ldr r5, [r0, #8]`` with r0 = 0 (FAR 8)."""
+    """Luma 2026-10-01 02:57: ``ldr r5, [r0, #8]`` with r0 = 0 (FAR 8).
+
+    Luma 2026-10-03 03:48: same load with r0 = 0x3F800000 (a float).
+    """
     from patch_chunk_walk_guard import (
         ADDR_TEX_REL_FAIL,
         ADDR_TEX_REL_RESUME,
+        ADDR_TEX_REL_TAIL,
         build_tex_release_cave,
+        build_tex_release_tail,
         tex_release_cave_addr,
     )
 
@@ -638,15 +643,32 @@ def test_tex_release_skips_null_list():
     assert ret == ("leave", ADDR_TEX_REL_FAIL)
     assert reads == []
 
+    ret, reads = _run_cave(blob, base, base, {0: 0x3F800000, 7: 0}, {})
+    assert ret == ("leave", ADDR_TEX_REL_FAIL)
+    assert reads == []
+
     obj = 0x08001250
     ret, reads = _run_cave(blob, base, base, {0: obj, 7: 0}, {obj + 8: 0})
-    assert ret == ("leave", ADDR_TEX_REL_FAIL)
+    assert ret == ("leave", ADDR_TEX_REL_TAIL)
     assert reads == [obj + 8]
 
-    inner = 0x08002000
-    ret, reads = _run_cave(blob, base, base, {0: obj, 7: 0}, {obj + 8: inner})
+    tail = build_tex_release_tail()
+    ret, _ = _run_cave(tail, ADDR_TEX_REL_TAIL, ADDR_TEX_REL_TAIL, {5: 0, "z": 1}, {})
+    assert ret == ("leave", ADDR_TEX_REL_FAIL)
+    ret, _ = _run_cave(tail, ADDR_TEX_REL_TAIL, ADDR_TEX_REL_TAIL, {5: 0x08002000, "z": 0}, {})
     assert ret == ("leave", ADDR_TEX_REL_RESUME)
-    assert reads == [obj + 8]
+
+
+def test_oct3_0348_dump_is_float_in_texture_release():
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261003_0348.dmp").read_bytes()
+    )
+    regs = dump["regs"]
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    assert regs[15] == 0x00290340  # inside the old texture release cave
+    assert regs[0] == 0x3F800000
+    assert regs[19] == 0x3F800008
+    assert _u32(dump["code"], len(dump["code"]) - 4) == 0xE5905008  # ldr r5, [r0, #8]
 
 
 def test_field_getter_skips_null_object():
@@ -1351,3 +1373,28 @@ def test_pane_flag_cave_exits_when_the_pane_is_null():
     ret, reads = _run_cave(blob, base, base, {6: 0x08690250, "z": 0}, {})
     assert ret == ("leave", ADDR_PANE_FLAG_LOAD)
     assert reads == []
+
+
+def test_oct3_luma13_dump_is_null_this_in_bind_loop():
+    """``ldr r2, [r6, #0xb2c]`` with a null ``this``. The guard turns the NOP before ``beq``
+    into ``cmpne r6, #0`` so a null object skips the iteration."""
+    from patch_chunk_walk_guard import (
+        ADDR_BIND_THIS,
+        BIND_THIS_CMP,
+        BIND_THIS_SKIP,
+        build_cave,  # noqa: F401  (module imports cleanly)
+    )
+
+    dump = parse_luma_arm11(
+        (ROOT / "tests" / "fixtures" / "luma_arm11_20261003_0345.dmp").read_bytes()
+    )
+    assert (dump["processor"], dump["core"], dump["type"]) == (11, 0, 3)
+    regs = dump["regs"]
+    assert regs[15] == 0x006C60C4
+    assert regs[6] == 0
+    assert regs[19] == 0xB2C
+    assert _u32(dump["code"], len(dump["code"]) - 4) == 0xE5962B2C  # ldr r2, [r6, #0xb2c]
+    # cmp r0, #0 ; <patched> ; beq +3 (skip to the loop increment)
+    assert BIND_THIS_SKIP == bytes.fromhex("00f020e3")
+    assert BIND_THIS_CMP == bytes.fromhex("00005613")
+    assert ADDR_BIND_THIS == 0x006C60BC - 0x100000
