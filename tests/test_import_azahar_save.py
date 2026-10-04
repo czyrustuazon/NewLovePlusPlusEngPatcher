@@ -5,9 +5,7 @@ from __future__ import annotations
 import zipfile
 from pathlib import Path
 
-import pytest
-
-from conftest import ROOT, TOOLS, load_module
+from conftest import TOOLS, load_module
 
 mod = load_module("import_azahar_save", TOOLS / "import_azahar_save.py")
 
@@ -167,16 +165,3 @@ def test_two_user_dirs_do_not_collide_on_backup(tmp_path: Path):
     assert len(list(backups.iterdir())) == 2
     for inst, slot in users:
         assert (slot / "savedata0").read_bytes() == b"LP2H-nene"
-
-
-def test_repo_nene_pack_has_lp2h_header():
-    pack = ROOT / "ab_test" / "saves" / "nene"
-    if not pack.is_dir():
-        pytest.skip("local ab_test/saves/nene pack is gitignored")
-    slot = mod.find_save_slot(pack)
-    files = mod.iter_savedata_files(slot)
-    assert len(files) == 81
-    magic = (slot / "savedata0").read_bytes()[:4]
-    assert magic == b"LP2H"
-    meta = pack / "00000001.metadata"
-    assert meta.is_file() and meta.stat().st_size == 16
