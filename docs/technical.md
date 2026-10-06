@@ -559,7 +559,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 ### 11.1 Hard bans (never)
 
 - Full-rebuild `img.bin` with `Image.write()` or `pack_images --full-repack` → black-screen boot.
-- Redeploy `EngPatcher/src/patch_clock_text.py` global MakeStr hook as-is → crash or blank all text. Restore from `code.bin.bak_clocktext` if needed.
+- Bring back a global MakeStr hook (the removed `src/patch_clock_text.py`) → crash or blank all text.
 - BCLIM size/format changes — if encode differs from original length, keep the archive entry.
 - Broad image packs without `--only` that skip-fail half of NCommonIcon; scope keys and only replace intended PNGs.
 - Shipping Azahar custom-texture packs as the real localization fix.
@@ -1107,9 +1107,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`logo_white` 240×320 companion) |
 | `src/patch_code.py` | code.bin patches (incl. CesaLogo skip 400×400 stub quad @ `0x0016ED80`) |
 | `src/patch_message_speed.py` | Options 18/12/6/0 → **14/8/2/0**, TalkWindow 40/70/90/110/220 → **10/18/22/28/55**, tick `min` vs table @ `0x0013B718` |
-| `src/patch_drawtext_titles.py` | DrawTextToPane remap (help/other titles; **not** Options/clock chrome) |
-| `src/patch_ui_titles.py` | Older FUN_0024842c-only remapper (superseded) |
-| `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 | `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1120,7 +1117,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_softkey_defaults_en.py` | Restore Default `初期設定` ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (last-writer after Quit) |
 | `tools/deploy_title_engpatch_en.py` | Hub rows + Eng Patch badge + gray `Title_menu_word` @ **5261** (bake last-writer). Labels-only `deploy_title_main_menu_en.py` is leftover — do not put it back on the bake list |
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
-| `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 | `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold`, plus `name_input_code.bin` when that Release has it (`--best-effort` for Drop CIA fallback) |
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/NewLovePlusPlus-EN.cia`). LayeredFS only with `--layeredfs-out` (white-screens on hardware, see README) |
@@ -1145,8 +1141,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_card_name_labels_en.py` | Save-card **Name** / **Girlfriend's Name** @ **4152** (§12.4.5); after flist |
 | `tools/build_spotpass_inject.py` | SpotPass boss `info.dat` → `out/spotpass_*` (+ optional Azahar SDMC) |
 | `tools/spotpass/` | Archived BOSS dump (`info.dat`, `.boss`, decrypted container) |
-| `tools/restore_img_pre_msel5245.ps1` | Restore LayeredFS `img.bin` from pre-5245 bak |
-| `tools/gdb_drawtext_capture.py` | GDB capture of DrawTextToPane `[r3+4]` + LR |
 | `src/patch_names.py` | Heroine names in `.dbin2`, resident TRB, `img.bin` table (NLPTextTool XOR reimplemented) |
 | `src/script_inject.py` | Layered `.dbin2` inject used by `patch_cia` (`rebuild_dbin2` → optional NLPPATCH → ROM) |
 | `src/deploy_nlppatch_scripts.py` | Optional deploy of community (ex-NLPPATCH) `.dbin2` from rebuild_dbin2 / assets/nlppatch |
@@ -1200,13 +1194,13 @@ Full fan-facing credits: root [`README.md` Credits](README.md#credits). Summary 
 | MakeStr object | `r3` on entry |
 | C-string | `[r3+4]` — DrawText re-`MakeStr`s from this pointer (`ldr r1,[r3,#4]` @ `0054b8a4`) |
 | Encoding | Match UTF-8, NLP codebook, and Shift-JIS of known titles (string absent from rom) |
-| GDB tool | `tools/gdb_drawtext_capture.py` (JIT off; customs off) |
+| GDB capture | Break on DrawTextToPane, log `[r3+4]` + LR (JIT off; customs off) |
 
 **Why not `FUN_0024842c` alone:** infinite-loop patch on that entry did **not** freeze opening clock confirm → header is not always on that drawer. `OptionClockPopSetup` *can* call `FUN_0024842c(..., 5, ClockSet+0x3c)` when flag `+0x38` is set, and `HeaderRelated_24a7d4` also calls `DrawTextToPane` directly. Shared choke point is **DrawTextToPane**.
 
 ### 14.2 Narrow patch
 
-- Script: `src/patch_drawtext_titles.py`
+- Script: `src/patch_drawtext_titles.py` (never on the bake; removed in 9e7c6cb)
 - Hook: branch at `0054b880` → cave `0x68F7FC` (~1096 B table-driven exact-match remap)
 - String pointers in the cave use **runtime VA** (`file + 0x100000`); file offsets alone miss guest RAM.
 - Remaps only listed titles (clock / Options / Gallery set); other DrawText untouched
@@ -1873,7 +1867,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
-`src/patch_input_candmode_reset.py` **must not be deployed.** Bisect (vanilla → add one patch at a time):
+The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) **must not be deployed.** Bisect (vanilla → add one patch at a time):
 
 - pane nullguard → taps OK  
 - \+ candidate nullguard → taps OK  
@@ -1908,7 +1902,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 **Candidate packs:** runtime pack table for candidates is `0x7008`–`0x7033` (not keyboard-label pack `0x7002`). Cell metadata at `nameInputObj + cellIdx*0x10 + 0x180` (string / flags / pack / slot).
 
-**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
+**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`; never committed to this repo).
 
 **LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `ab_test/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 

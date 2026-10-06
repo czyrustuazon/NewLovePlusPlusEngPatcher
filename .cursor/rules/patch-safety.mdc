@@ -8,7 +8,7 @@ alwaysApply: true
 ## Never
 
 - Full-rebuild `img.bin` with `Image.write()` or `pack_images --full-repack` (black-screen boot).
-- Redeploy `EngPatcher/src/patch_clock_text.py` global MakeStr hook as-is (crashes or blanks all text). Prefer `code.bin.bak_clocktext` restore if that lands again.
+- Bring back a global MakeStr hook (the removed `src/patch_clock_text.py`) — crashes or blanks all text.
 - Same-size BCLIM violations — if encode changes length/format, keep the original entry.
 - Broad `--only`-less image packs that skip-fail half of NCommonIcon; scope keys (`--only ncommonicon`) and only replace intended PNGs.
 - Shipping Azahar **custom texture** packs (`use_new_hash`) as the real fix — OK for RE, unstable in play.
