@@ -414,11 +414,14 @@ def bx_lr(cond: int = 0xE) -> bytes:
 # UDF word. The Luma dump's LR then names the first guard that fires on
 # hardware (the slot is the idle heap-walk cave). Never ship.
 DIAG_TRAP = os.environ.get("NLPP_DIAG_TRAP") == "1"
+# NLPP_DIAG_ALL=1 also traps the null-object exits (texture release, field, pane flag).
+DIAG_ALL = os.environ.get("NLPP_DIAG_ALL") == "1"
 ADDR_DIAG_UDF = 0x005D1944  # zero pad after the speed-test string
 
 
-def fail_b(cond: int, here: int, target: int, trap: bool = True) -> bytes:
-    if DIAG_TRAP and trap:
+def fail_b(cond: int, here: int, target: int, trap: bool | None = True) -> bytes:
+    """trap=False: skipped unless NLPP_DIAG_ALL. trap=None: never trapped (benign)."""
+    if DIAG_TRAP and (trap or (DIAG_ALL and trap is not None)):
         return _u32(
             (cond << 28) | 0x0B000000 | (((ADDR_DIAG_UDF - here - 8) >> 2) & 0xFFFFFF)
         )
@@ -842,7 +845,7 @@ def build_tex_release_cave(base: int | None = None) -> bytes:
     body += VANILLA_TEX_REL
     body += b_ins(base + len(body), ADDR_TEX_REL_TAIL)
     body[bhs_obj : bhs_obj + 4] = fail_b(
-        2, base + bhs_obj, ADDR_TEX_REL_FAIL, trap=False
+        2, base + bhs_obj, ADDR_TEX_REL_FAIL, trap=None
     )
     blob = bytes(body)
     if base < fs_open_cave_addr() + len(build_fs_open_cave()):
@@ -858,7 +861,7 @@ def build_tex_release_tail(base: int = ADDR_TEX_REL_TAIL) -> bytes:
     """Skip the release when the loaded inner pointer is null."""
     body = bytearray()
     body += cmp_imm(5, 0)
-    body += fail_b(0, base + len(body), ADDR_TEX_REL_FAIL, trap=False)
+    body += fail_b(0, base + len(body), ADDR_TEX_REL_FAIL, trap=None)
     body += b_ins(base + len(body), ADDR_TEX_REL_RESUME)
     blob = bytes(body)
     if len(blob) != ADDR_TEX_REL_TAIL_LEN:
@@ -1700,7 +1703,7 @@ def apply_patch(data: bytearray) -> None:
     tail_slot = bytes(data[ADDR_TEX_REL_TAIL : ADDR_TEX_REL_TAIL + len(rel_tail)])
     # Vanilla still holds the deref helper here. The NOP fill below clears it.
     deref_van = bytes.fromhex("000050e3000090151eff2fe1")
-    if tail_slot not in (rel_tail, nop() * (len(rel_tail) // 4), deref_van):
+    if not DIAG_ALL and tail_slot not in (rel_tail, nop() * (len(rel_tail) // 4), deref_van):
         raise ValueError(f"texture release tail is not padding: {tail_slot.hex()}")
     field_at = field_cave_addr()
     field = build_field_cave(field_at)
@@ -1803,7 +1806,7 @@ def apply_patch(data: bytearray) -> None:
     if link_slot != link_body and link_slot != link_van:
         raise ValueError(f"heap link body is not vanilla: {link_slot.hex()}")
     pad_slot = bytes(data[ADDR_HEAP_LINK_PAD : ADDR_HEAP_LINK_PAD + len(link_pad)])
-    if pad_slot not in (link_pad, pane, b"\x00" * len(link_pad)):
+    if not DIAG_ALL and pad_slot not in (link_pad, pane, b"\x00" * len(link_pad)):
         raise ValueError(f"heap link pad is not empty: {pad_slot.hex()}")
     heap_bin = build_heap_bin()
     heap_tail = build_heap_tail()
