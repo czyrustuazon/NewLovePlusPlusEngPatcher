@@ -9,19 +9,35 @@ $AbTest = $PSScriptRoot
 $EngPatcher = Split-Path -Parent $AbTest
 $Parent = Split-Path -Parent $EngPatcher
 
-# --- paths (override in ab_test/paths.local.ps1) ---
+# --- paths ---
+# Empty entries are filled in below. Override with NLPP_AZAHAR_SRC /
+# NLPP_AZAHAR_EXE / NLPP_MSYS_BIN / NLPP_ROM / NLPP_PYTHON, or in
+# ab_test/paths.local.ps1 (copy paths.local.ps1.example).
 $Paths = @{
-    AzaharSrc    = "C:\Users\Zepse\Documents\azahar"
-    AzaharBuild  = "C:\Users\Zepse\Documents\azahar\build"
-    AzaharExe    = "C:\Users\Zepse\Documents\azahar\build\bin\Release\azahar.exe"
-    VanillaDump  = Join-Path $Parent "New Love Plus Plus\extracted"
-    RomPath      = ""
+    AzaharSrc    = $env:NLPP_AZAHAR_SRC
+    AzaharBuild  = ""
+    AzaharExe    = $env:NLPP_AZAHAR_EXE
+    MsysBin      = $env:NLPP_MSYS_BIN
+    VanillaDump  = Join-Path $EngPatcher "cache\vanilla_from_rom"
+    RomPath      = $env:NLPP_ROM
+    PythonExe    = $env:NLPP_PYTHON
     Instances    = Join-Path $AbTest "azahar_instances"
     TitleId      = "00040000000F4E00"
 }
 
 $LocalPaths = Join-Path $AbTest "paths.local.ps1"
 if (Test-Path $LocalPaths) { . $LocalPaths }
+
+# Default: an Azahar checkout next to this repo (..\azahar), built in build\.
+if (-not $Paths.AzaharSrc) { $Paths.AzaharSrc = Join-Path $Parent "azahar" }
+if (-not $Paths.AzaharBuild) { $Paths.AzaharBuild = Join-Path $Paths.AzaharSrc "build" }
+if (-not $Paths.AzaharExe) {
+    $Paths.AzaharExe = Join-Path $Paths.AzaharBuild "bin\Release\azahar.exe"
+    $flat = Join-Path $Paths.AzaharBuild "bin\azahar.exe"
+    if (-not (Test-Path $Paths.AzaharExe) -and (Test-Path $flat)) { $Paths.AzaharExe = $flat }
+}
+# MSYS2's default install location; set MsysBin if yours lives elsewhere.
+if (-not $Paths.MsysBin) { $Paths.MsysBin = "C:\msys64\clang64\bin" }
 
 function Get-InstanceUser([string]$Id) {
     Join-Path $Paths.Instances "$Id\user"
@@ -58,6 +74,7 @@ function Show-Paths {
     Write-Host "EngPatcher:  $EngPatcher"
     Write-Host "Azahar src:  $($Paths.AzaharSrc)"
     Write-Host "Azahar exe:  $($Paths.AzaharExe)"
+    Write-Host "MSYS2 bin:   $($Paths.MsysBin)"
     Write-Host "Vanilla dump:$($Paths.VanillaDump)"
     Write-Host "Test ROM:    $($Paths.RomPath)"
     Write-Host "Instances:   $($Paths.Instances)"
@@ -92,11 +109,14 @@ function Copy-AzaharRuntimeDlls([string]$DestDir) {
     # ICU was always copied next to the exe. Qt6Multimedia is also a hard
     # load at startup; without it, double-clicking azahar.exe (or a PATH
     # that lacks msys64\clang64\bin) shows "Qt6Multimedia.dll was not found".
-    $msysBin = "C:\msys64\clang64\bin"
-    $dlls = @(
-        "libicudt78.dll", "libicuin78.dll", "libicuuc78.dll",
-        "Qt6Multimedia.dll", "Qt6MultimediaWidgets.dll", "Qt6MultimediaQuick.dll"
-    )
+    $msysBin = $Paths.MsysBin
+    if (-not (Test-Path $msysBin)) {
+        Write-Warning "MSYS2 bin not found at $msysBin - set MsysBin in paths.local.ps1 or NLPP_MSYS_BIN"
+        return
+    }
+    # ICU's major version follows the MSYS2 package, so match any libicu*.
+    $icu = @(Get-ChildItem -Path $msysBin -Filter "libicu*.dll" | ForEach-Object { $_.Name })
+    $dlls = $icu + @("Qt6Multimedia.dll", "Qt6MultimediaWidgets.dll", "Qt6MultimediaQuick.dll")
     foreach ($dll in $dlls) {
         $src = Join-Path $msysBin $dll
         if (Test-Path $src) {
@@ -121,8 +141,10 @@ function Build-Azahar {
     $build = $Paths.AzaharBuild
     if (-not (Test-Path $build)) { throw "Azahar build dir missing: $build" }
     Ensure-AzaharOpenLinkFile
-    $msysBin = "C:\msys64\clang64\bin"
-    $env:PATH = "$msysBin;C:\msys64\usr\bin;" + $env:PATH
+    $msysBin = $Paths.MsysBin
+    # clang64\bin -> msys64 root -> usr\bin (make, sh, ...).
+    $msysUsr = Join-Path (Split-Path -Parent (Split-Path -Parent $msysBin)) "usr\bin"
+    $env:PATH = "$msysBin;$msysUsr;" + $env:PATH
     Push-Location $build
     try {
         cmake .
@@ -139,11 +161,13 @@ function Build-Azahar {
 }
 
 function Setup-Instances {
-    & powershell -NoProfile -ExecutionPolicy Bypass -File `
-        (Join-Path $AbTest "setup_azahar_instances.ps1") `
-        -AzaharExe $Paths.AzaharExe `
-        -OutRoot $Paths.Instances `
-        -RomPath $Paths.RomPath
+    $setupArgs = @{
+        AzaharExe = $Paths.AzaharExe
+        OutRoot   = $Paths.Instances
+        MsysBin   = $Paths.MsysBin
+    }
+    if ($Paths.RomPath) { $setupArgs.RomPath = $Paths.RomPath }
+    & (Join-Path $AbTest "setup_azahar_instances.ps1") @setupArgs
 }
 
 function Require-PostBake {

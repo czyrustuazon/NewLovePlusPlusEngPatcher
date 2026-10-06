@@ -117,6 +117,9 @@ paths.local.*
 ab_test/*
 !ab_test/make.ps1
 !ab_test/README.md
+!ab_test/Makefile
+!ab_test/setup_azahar_instances.ps1
+!ab_test/paths.local.ps1.example
 !ab_test/patches/
 !ab_test/patches/azahar-openlinkfile.patch
 ab_test/azahar_instances/

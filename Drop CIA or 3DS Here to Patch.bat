@@ -519,7 +519,7 @@ echo     python tools\restore_azahar_extdata.py backup
 echo     python tools\restore_azahar_extdata.py restore
 echo.
 echo [+] out\ cleaned ^(scratch removed; kept the CIA folder + log.txt + extdata_backup^).
-echo     SpotPass ^(optional^): python tools\build_spotpass_inject.py
+echo     SpotPass: Watcher #28 is built into the CIA ^(nothing to install^).
 echo.
 
 REM Soft-update companion site script-text progress bar (optional .env /

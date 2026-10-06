@@ -1992,7 +1992,7 @@ def _cmd_patch_body_impl(
             emit_spotpass_inject(args)
         else:
             cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
-            print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
+            print("  SpotPass: Watcher #28 is built into code.bin (nothing to install).")
         _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=None)
         finish_bound()
         timer.finish("CIA patcher OK (LayeredFS only)")
@@ -2067,7 +2067,7 @@ def _cmd_patch_body_impl(
             "  - out/ cleaned (kept the CIA, "
             f"{OUT_LOG_NAME}, extdata_backup/)."
         )
-        print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
+        print("  - SpotPass: Watcher #28 is built into code.bin (nothing to install).")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
     finish_bound()
     timer.finish("CIA patcher OK")
