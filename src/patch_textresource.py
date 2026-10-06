@@ -238,11 +238,6 @@ def fit_wrap(
     return "\n".join(_soft_wrap_words(words, width))
 
 
-def wrap_like_original(english: str, original: str, width: int = 22) -> str:
-    """Back-compat: soft-wrap using a fixed width (legacy callers)."""
-    return fit_wrap(english, original, force_width=width)
-
-
 def rebuild_trb(
     data: bytes,
     translations: dict[str, str],

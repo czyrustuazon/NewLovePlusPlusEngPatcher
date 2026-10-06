@@ -334,11 +334,6 @@ def patch_cesa_package_inplace_tex(pkg_raw: bytes, tex: bytes) -> bytes:
     return bytes(out)
 
 
-def patch_cesa_package_inplace(pkg_raw: bytes, png: Path) -> bytes:
-    """Replace CESA TEX from a 240x400 PNG."""
-    return patch_cesa_package_inplace_tex(pkg_raw, encode_cesa_tex(Image.open(png)))
-
-
 def _align_pack(n: int) -> int:
     return (n + PACK_ALIGN - 1) & ~(PACK_ALIGN - 1)
 
@@ -637,18 +632,6 @@ def read_named_tex_from_pkg(pkg_raw: bytes, name: str) -> bytes:
             raise RuntimeError(f"{name} decompressed {len(tex)} != {dec_len}")
         return tex
     raise RuntimeError(f"{name} TEX not found")
-
-
-def patch_cesa_package_with_companion(
-    pkg_raw: bytes,
-    cesa_png: Path,
-    companion_png: Path,
-) -> bytes:
-    return rebuild_pkg90_with_companion(
-        pkg_raw,
-        encode_cesa_tex(Image.open(cesa_png)),
-        encode_cesa_companion_tex(Image.open(companion_png)),
-    )
 
 
 def patch_img_bin_tex(

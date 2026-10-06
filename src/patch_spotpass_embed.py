@@ -268,7 +268,6 @@ ADDR_SLOT_SUM = 0x00195FE0  # add r8, r1, r7
 VANILLA_SLOT_SUM = bytes.fromhex("078081e0")
 ADDR_SLOT_RESUME = 0x00195FE4
 ADDR_ISSUE_DRAW = 0x00255764  # FUN_00255764(window, cstring) → pane +0x60
-ISSUE_TITLE = b"Towano Watcher #28\x00\x00"  # 20 bytes, keeps the cave 4-aligned
 VANILLA_ISSUE_BODY = bytes.fromhex(
     "43df4de24400d0e50270a0e10350a0e1000050e30000a0e3"
     "1000000a0100a0e16d0400eb0060a0e1011ca0e308008de2"
@@ -358,7 +357,6 @@ ADDR_MENU_DRAW = 0x001040D8  # magazine vtable+0x10
 VANILLA_BOOK_CTOR = bytes.fromhex("75d803eb")  # bl 0x4dcf30
 VANILLA_MENU_CAVE = bytes.fromhex("e832fbeba6b90eeb0040a0e1c4b90eeb")
 VANILLA_MENU_DRAW = bytes.fromhex("30402de90040a0e1")
-PATCHED_MENU_DRAW = bytes.fromhex("0100a0e31eff2fe1")  # mov r0,#1; bx lr
 # Factory at 0x249C2C allocates 0xA60 (2656). Forcing +0x5e=0xC and
 # skipping the fatal bl showed StreetPass, then FUN_005fe718 jumped
 # [worker+0x4c vtable+0x24]. State 0 is the untried entry: it calls
@@ -682,7 +680,6 @@ ADDR_DATA_KICK = 0x0014F018  # bl FUN_0059a788 from FUN_0014ed0c state 22
 VANILLA_DATA_KICK = bytes.fromhex("da2d11eb")  # bl FUN_0059a788
 
 FUN_SAVE_READY = 0x004E122C  # FUN_004e122c
-FUN_APPLIED_HDR = 0x004E1C68  # unused; leftover from the header latch
 
 VANILLA_FUN = bytes.fromhex(
     "38402de90040a0e10050a0e30500a0e1c64efceb00008de5080094e50d20a0e1"
@@ -1634,45 +1631,6 @@ def build_list_blob() -> bytes:
     return bytes(blob)
 
 
-def build_list_cave(cave: int = ADDR_LIST_CAVE) -> bytes:
-    """Replace r7 with the contents blob and continue the record fill."""
-    code = bytearray()
-    code += _ldr_pc(cave, cave + 8, 7)  # ldr r7, [pc, #0]
-    code += _b(cave + len(code), ADDR_LIST_RESUME)
-    code += _u32(ADDR_LIST_BLOB + 0x100000)
-    if len(code) != len(VANILLA_LIST_CAVE):
-        raise ValueError(f"list cave {len(code)} != {len(VANILLA_LIST_CAVE)}")
-    if cave + len(code) > 0x0014ECF4:
-        raise ValueError(f"list cave ends @{cave + len(code):#x}")
-    return bytes(code)
-
-
-def list_beq() -> bytes:
-    return _b_cond(0, ADDR_EMPTY_LIST_BEQ, ADDR_LIST_CAVE)
-
-
-def apply_list_menu(data: bytearray) -> None:
-    blob = build_list_blob()
-    cave = build_list_cave()
-    data[ADDR_LIST_BLOB : ADDR_LIST_BLOB + len(blob)] = blob
-    data[ADDR_LIST_CAVE : ADDR_LIST_CAVE + len(cave)] = cave
-    data[ADDR_EMPTY_LIST_BEQ : ADDR_EMPTY_LIST_BEQ + 4] = list_beq()
-
-
-def build_menu_cave(cave: int = ADDR_MENU_CAVE) -> bytes:
-    """Construct the magazine list and start in MagList."""
-    code = bytearray()
-    code += _bl(cave + len(code), ADDR_MENU_CTOR)
-    code += _u32(0xE3A0100C)  # mov r1, #0xc
-    code += _u32(0xE5C0105E)  # strb r1, [r0, #0x5e]
-    code += _b(cave + len(code), ADDR_BOOK_CTOR_RESUME)
-    if len(code) != len(VANILLA_MENU_CAVE):
-        raise ValueError(f"menu cave {len(code)} != {len(VANILLA_MENU_CAVE)}")
-    if cave + len(code) > 0x0014EBC4:
-        raise ValueError(f"menu cave ends @{cave + len(code):#x}")
-    return bytes(code)
-
-
 def build_worker_cave(cave: int = ADDR_WORKER_CAVE) -> bytes:
     """Allocate the worker, build the operator, then attach child id 0x37."""
     code = bytearray()
@@ -1756,41 +1714,6 @@ def apply_worker_host(data: bytearray) -> None:
     )
 
 
-def apply_menu_select(data: bytearray) -> None:
-    cave = build_menu_cave()
-    data[ADDR_MENU_CAVE : ADDR_MENU_CAVE + len(cave)] = cave
-    data[ADDR_BOOK_CTOR : ADDR_BOOK_CTOR + 4] = _b(ADDR_BOOK_CTOR, ADDR_MENU_CAVE)
-    data[ADDR_MENU_DRAW : ADDR_MENU_DRAW + len(PATCHED_MENU_DRAW)] = PATCHED_MENU_DRAW
-
-
-def _one_row(cave: int, count_off: int, row_off: int, resume: int, prelude: bytes = b"") -> bytes:
-    """Point the current stack row at pack 0x1901 slot 356 and continue."""
-    code = bytearray(prelude)
-    code += _u32(0xE3A00001)  # mov r0, #1
-    code += _u32(0xE5800000 | (13 << 16) | count_off)  # str r0, [sp, #count]
-    code += _u32(0xE2800000 | (13 << 16) | row_off)  # add r0, sp, #row
-    code += _u32(0xE3A01C19)  # mov r1, #0x1900
-    code += _u32(0xE2811001)  # add r1, r1, #1
-    code += _u32(0xE1C010B8)  # strh r1, [r0, #8]
-    code += _u32(0xE3A01F59)  # mov r1, #0x164
-    code += _u32(0xE1C010BA)  # strh r1, [r0, #0xa]
-    code += _b(cave + len(code), resume)
-    return bytes(code)
-
-
-def build_row_caves(cave: int = ADDR_ISSUE_CAVE) -> bytes:
-    first = _one_row(cave, 0x184, 0x24, ADDR_ROW_RESUME)
-    second_at = cave + len(first)
-    # The second fill only sets the row base on the taken path.
-    prelude = _u32(0xE28D8004) + _u32(0xE3A09001)  # add r8, sp, #4; mov r9, #1
-    second = _one_row(second_at, 0x164, 0x4, ADDR_ROW2_RESUME, prelude)
-    blob = first + second
-    end = cave + len(blob)
-    if end > 0x00609330:
-        raise ValueError(f"row cave ends @{end:#x}")
-    return blob
-
-
 def build_slot_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
     """Redo the slot add, then restore the flags the following beq needs."""
     code = bytearray()
@@ -1800,53 +1723,6 @@ def build_slot_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
     if cave + len(code) > 0x00609330:
         raise ValueError(f"slot cave ends @{cave + len(code):#x}")
     return bytes(code)
-
-
-def build_msg3_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
-    """Return from the message dialog when r2 is message id 3.
-
-    Id 3 is pack 0x1001 slot 23, the STRI on the ERROR card. Other ids
-    run the stolen prologue and continue at the next instruction.
-    """
-    code = bytearray()
-    code += _u32(0xE3520003)  # cmp r2, #3
-    code += _u32(0x012FFF1E)  # bxeq lr
-    code += bytes.fromhex("f04f2de9")  # stmdb sp!, {r4-r11,lr}
-    code += _b(cave + 12, ADDR_MSG3_ENTRY + 4)
-    if len(code) != 16:
-        raise ValueError(f"msg3 cave {len(code)} != 16")
-    return bytes(code)
-
-
-def build_issue_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
-    """Draw ISSUE_TITLE into window+0x60 when that pane is a heap object.
-
-    r4 is the watcher operator. ``[r4+0x98]`` is the hit-test window. A pane
-    pointer lives in FCRAM (``>= 0x08000000``). A null or a small field skips
-    the draw and still returns to the click epilogue, so the empty layout
-    never opens and BOSS is not called.
-    """
-    code = bytearray()
-    code += _u32(0xE5940098)  # ldr r0, [r4, #0x98]
-    code += _u32(0xE3500408)  # cmp r0, #0x08000000
-    code += _b_cond(0x3, cave + 8, ADDR_PILL_EPILOGUE)
-    code += _u32(0xE5902060)  # ldr r2, [r0, #0x60]
-    code += _u32(0xE3520408)  # cmp r2, #0x08000000
-    code += _b_cond(0x3, cave + 20, ADDR_PILL_EPILOGUE)
-    code += _u32(0xE28F1004)  # add r1, pc, #4 → title
-    code += _bl(cave + 28, ADDR_ISSUE_DRAW)
-    code += _b(cave + 32, ADDR_PILL_EPILOGUE)
-    if len(code) != 36:
-        raise ValueError(f"issue cave code {len(code)} != 36")
-    blob = bytes(code) + ISSUE_TITLE
-    end = cave + len(blob)
-    if end > 0x00609338:
-        raise ValueError(f"issue cave ends @{end:#x}, past the info.dat literal")
-    if len(blob) != len(VANILLA_ISSUE_BODY):
-        raise ValueError(
-            f"issue cave {len(blob)} != vanilla body {len(VANILLA_ISSUE_BODY)}"
-        )
-    return blob
 
 
 # Do not draw on +0x60. That call clears Lyt_Bg. Both pills return.

@@ -53,7 +53,6 @@ from patch_input_candidate_nullguard import (  # noqa: E402
     CAVE1 as CAND_CAVE1,
     CAVE2 as CAND_CAVE2,
     SITE1 as CAND_SITE1,
-    SITE2 as CAND_SITE2,
     apply_patch as apply_cand_nullguard,
     build_site_cave,
 )

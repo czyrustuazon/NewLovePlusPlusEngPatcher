@@ -31,8 +31,6 @@ tools/*
 !tools/README.md
 !tools/deploy_*.py
 !tools/render_cesa_en.py
-!tools/ab_cesa_bake.py
-!tools/ab_talk_speed.py
 !tools/ab_mcp_server.py
 !tools/import_*.py
 !tools/deploy_common.py
@@ -48,7 +46,6 @@ tools/*
 !tools/spotpass/**
 !tools/restore_*.ps1
 !tools/restore_*.py
-!tools/nuclear_jp_to_x.py
 !tools/mdcutil.py
 !tools/translate_sms_en.py
 !tools/export_progress_metrics.py
