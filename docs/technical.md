@@ -2018,10 +2018,6 @@ See **§10.2**. Same `0x33373338` smash as Communications, but the clone patch i
 
 ---
 
-*Last updated 2026-09-23 — §5.4 BCLIM load path (`FUN_00542c30` / `FUN_00542828`) and why LayeredFS needs this repo’s `code.bin`; §17.8 Called list leftover `づ`; §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
-
----
-
 ## 19. Patch composition reset + progress metrics (2026-09-01 session)
 
 Session goal: ship a **known-good stack** — community NLPPPATCH baseline + full Manaka + EN UI bake + working nicknames — and document **measurable progress** for a fansite.
