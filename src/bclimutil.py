@@ -743,12 +743,6 @@ def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
 
         return _decode_tiled(pix, w, h, 4, read_rgba8)
     if fmt == 0xD:
-
-        def read_a4(buf: bytes, i: int) -> tuple[int, int, int, int]:
-            v = buf[i // 2]
-            n = v & 0xF if i % 2 == 0 else v >> 4
-            return (255, 255, 255, n * 17)
-
         # A4 uses Tile_Order, not Morton-linear; skip if we only need intros.
         return None
     return None

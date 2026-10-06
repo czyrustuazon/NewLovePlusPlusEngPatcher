@@ -77,7 +77,6 @@ DEFAULT_DBIN = ROOT / "rebuild_dbin2"
 DEFAULT_EXTRACTED = ROOT.parent / "New Love Plus Plus" / "extracted"
 # Optional RomFS template (sibling dump). Copied by patch_cia — never mutated in-place.
 DEFAULT_ROMFS = DEFAULT_EXTRACTED / "romfs"
-DEFAULT_MAIN_CXI = DEFAULT_EXTRACTED / "main.cxi"
 DEFAULT_IMG_BIN = DEFAULT_EXTRACTED / "romfs" / "img.bin"
 DEFAULT_IMAGES = ROOT / "assets" / "images"
 # Optional PNG-pack intermediate (not gold).
@@ -1028,25 +1027,6 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     if not getattr(args, "keep_work", False):
         remove_scratch(img_work, label="img_work")
     return out_img
-
-
-def _layeredfs_img_fallback(args: argparse.Namespace) -> Path | None:
-    """Existing bake/packed img when live UI packing failed."""
-    try:
-        candidate = resolve_inject_img(args)
-        if candidate.is_file():
-            return candidate
-    except (OSError, PatchError):
-        pass
-    if args.packed_img:
-        explicit = Path(args.packed_img).resolve()
-        if explicit.is_file():
-            return explicit
-    if args.name_img:
-        img_src = Path(args.img_bin).resolve()
-        if img_src.is_file():
-            return img_src
-    return None
 
 
 def _layeredfs_title_dir(out_dir: Path) -> Path:
@@ -2012,7 +1992,7 @@ def _cmd_patch_body_impl(
             emit_spotpass_inject(args)
         else:
             cleanup_out_dir(out_cia=out_cia, extra_keep=_log_keep_paths(log_path))
-            print("  SpotPass: python tools/build_spotpass_inject.py  (optional)")
+            print("  SpotPass: Watcher #28 is built into code.bin (nothing to install).")
         _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=None)
         finish_bound()
         timer.finish("CIA patcher OK (LayeredFS only)")
@@ -2087,7 +2067,7 @@ def _cmd_patch_body_impl(
             "  - out/ cleaned (kept the CIA, "
             f"{OUT_LOG_NAME}, extdata_backup/)."
         )
-        print("  - SpotPass (optional): python tools/build_spotpass_inject.py")
+        print("  - SpotPass: Watcher #28 is built into code.bin (nothing to install).")
     _emit_patch_log(log_path, summary, rom_in=rom_in, out_cia=out_cia)
     finish_bound()
     timer.finish("CIA patcher OK")

@@ -14,10 +14,9 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 2. Skim Cursor rules: `read-docs-first`, `patch-safety`, `ghidra-mcp`, `ui-localization-method`, `nlpp-repo-workflow`, `clock-confirm-ui-localization`, `azahar-test-workflow`.
 3. For LayeredFS iteration: **`ab_test/README.md`**.
 4. Reuse EngPatcher work products before regenerating them:
-   - `out/clock_recheck/` — scans, header/date viz, pkg 5238 extract
-   - `release/textresource/` — durable TRB dumps / `translations.json` (not under wipeable `out/`)
+   - `assets/textresource/translations.json` — TRB translation source (tracked; Drop CIA wipes `out/`, `release/`, and `cache/`, so nothing under those survives a Drop)
    - `assets/images/*.check/` — decoded UI masters (prefer over guessing filenames)
-5. For volunteer HTML kits / Discord ingest: **§20** (and EngPatcher `tools/localization_workbench/`).
+5. For volunteer HTML kits / Discord ingest: **§20** (kits: https://github.com/czyrustuazon/nlpp-localization-workbench).
 
 **Already settled (do not rediscover):**
 
@@ -195,7 +194,7 @@ Example known IDs (from earlier RE):
 
 ### 3.4 Translation quirks
 
-- EngPatcher translations: `release/textresource/translations.json`.
+- EngPatcher translations: `assets/textresource/translations.json` (`nlpp_paths.TRANSLATIONS_JSON`).
 - Many UI strings are already EN in the Azahar LayeredFS TRB overlay; if a screen stays JP, **do not assume missing TRB** — check textures / DrawText source.
 - Closest TRB string to the clock header: `ＤＳ本体の時計と同じ` (different wording; not the confirm title).
 - `３ＤＳ本体時計` was **not** found as UTF-8, UTF-16LE, Shift-JIS, or NLP codebook index sequence in `code.bin`, `img.bin`, main TRB, resident TRB, or BCLYT files.
@@ -354,7 +353,7 @@ The format byte indexes a 20-byte row at file `0x006E9964`. Word 1 is the GX int
 
 **Layout that places the texture.** `FUN_00548A84` (`0x00548A84`) builds a BCLYT (`CLYT`, version `0x02020000`) and walks sections named from the pool at `0x00548D0C`: `txl1` (texture list), `usd1` (user data), `pic1` (picture panes). Picture panes reach the upload via `0x00543C7C`. `FUN_00542D64` (`0x00542D64`) loads BCLAN animation (`CLAN`, sections `pai1` and `pat1`).
 
-**What the patched ExeFS adds on top of this loader** (ships in `release/name_input_code.bin`, copied beside LayeredFS `romfs/`):
+**What the patched ExeFS adds on top of this loader** (ships in `release/name_input_code.bin`; the CIA injects it, and a hand-built `--layeredfs-out` folder needs it beside `romfs/`):
 
 | Hook | Why a retail `code.bin` is not enough for this overlay |
 |------|--------------------------------------------------------|
@@ -560,7 +559,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 ### 11.1 Hard bans (never)
 
 - Full-rebuild `img.bin` with `Image.write()` or `pack_images --full-repack` → black-screen boot.
-- Redeploy `EngPatcher/src/patch_clock_text.py` global MakeStr hook as-is → crash or blank all text. Restore from `code.bin.bak_clocktext` if needed.
+- Bring back a global MakeStr hook (the removed `src/patch_clock_text.py`) → crash or blank all text.
 - BCLIM size/format changes — if encode differs from original length, keep the archive entry.
 - Broad image packs without `--only` that skip-fail half of NCommonIcon; scope keys and only replace intended PNGs.
 - Shipping Azahar custom-texture packs as the real localization fix.
@@ -982,7 +981,8 @@ Warm `cache/img_pack/` still turns re-packs into minutes. Cold time depends on h
 |---------|--------------------------------------------------|
 | Typical hardware (`--pkg-workers` default) | Roughly **40 minutes to 2 hours**, depending on the machine |
 | Low-core / `--pkg-workers 1` | Longer — can still approach historical ~16h if every tight ARC hits zopfli |
-| Warm `cache/img_pack/` + bake present | **Minutes** (Drop CIA reuses bake) |
+| Warm `cache/img_pack/` (manual `rebuild_bake_img.py` only — Drop CIA deletes `cache/` first) | **Minutes** |
+| Drop CIA with the published gold Release | **Minutes** (downloads the bake; no local pack) |
 
 ### 12.6 To-Do list titles (TRB, not BCLIM)
 
@@ -995,7 +995,7 @@ Numbered To-Do rows (e.g. 021–024) draw titles via `FUN_005c0e7c(..., pack=0x0
 | 023 | 22 | 2837 | カノジョ専属カメラマン | Girlfriend's Personal Photographer (**overflows** capsule) |
 | 024 | 23 | 2838 | 全スポットを解禁 | Unlock All Spots |
 
-Also reused at pack `0x0601` slot 22. Source: `release/textresource/translations.json` → rebuild TRB with `patch_textresource.py`.
+Also reused at pack `0x0601` slot 22. Source: `assets/textresource/translations.json` → rebuild TRB with `patch_textresource.py`.
 
 **Overflow fix:** shorten EN string — font size is **pane-global**, not per-line. Prefer e.g. `Personal Photographer` over shrinking every list row.
 
@@ -1107,9 +1107,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`logo_white` 240×320 companion) |
 | `src/patch_code.py` | code.bin patches (incl. CesaLogo skip 400×400 stub quad @ `0x0016ED80`) |
 | `src/patch_message_speed.py` | Options 18/12/6/0 → **14/8/2/0**, TalkWindow 40/70/90/110/220 → **10/18/22/28/55**, tick `min` vs table @ `0x0013B718` |
-| `src/patch_drawtext_titles.py` | DrawTextToPane remap (help/other titles; **not** Options/clock chrome) |
-| `src/patch_ui_titles.py` | Older FUN_0024842c-only remapper (superseded) |
-| `src/patch_clock_text.py` | **Abandoned** global MakeStr experiment |
 | `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1120,7 +1117,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_softkey_defaults_en.py` | Restore Default `初期設定` ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (last-writer after Quit) |
 | `tools/deploy_title_engpatch_en.py` | Hub rows + Eng Patch badge + gray `Title_menu_word` @ **5261** (bake last-writer). Labels-only `deploy_title_main_menu_en.py` is leftover — do not put it back on the bake list |
 | `tools/deploy_cesa_en.py` | Re-render CESA + companion then splice rebuilt pkg **90** |
-| `tools/ab_cesa_bake.py` | Gold-bake A/B: A = CESA + `logo_white` + native-size skip; B = CESA EN only |
 | `tools/rebuild_bake_img.py` | Gold bake: PNG pack → TRB → ordered deploys → SMS → `release/bake_img.bin` + `name_input_code.bin` |
 | `tools/fetch_release_bake.py` | Optional: download `bake_img.bin` + `romfs_overlay.zip` from **nlpp-gold-maker** GitHub Release tag `gold`, plus `name_input_code.bin` when that Release has it (`--best-effort` for Drop CIA fallback) |
 | `src/patch_cia.py` | Decrypted CIA/3DS in → inject scripts + gold bake + TRB overlay + name patches → CIA out (`out/NewLovePlusPlus-EN.cia`). LayeredFS only with `--layeredfs-out` (white-screens on hardware, see README) |
@@ -1145,8 +1141,6 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_card_name_labels_en.py` | Save-card **Name** / **Girlfriend's Name** @ **4152** (§12.4.5); after flist |
 | `tools/build_spotpass_inject.py` | SpotPass boss `info.dat` → `out/spotpass_*` (+ optional Azahar SDMC) |
 | `tools/spotpass/` | Archived BOSS dump (`info.dat`, `.boss`, decrypted container) |
-| `tools/restore_img_pre_msel5245.ps1` | Restore LayeredFS `img.bin` from pre-5245 bak |
-| `tools/gdb_drawtext_capture.py` | GDB capture of DrawTextToPane `[r3+4]` + LR |
 | `src/patch_names.py` | Heroine names in `.dbin2`, resident TRB, `img.bin` table (NLPTextTool XOR reimplemented) |
 | `src/script_inject.py` | Layered `.dbin2` inject used by `patch_cia` (`rebuild_dbin2` → optional NLPPATCH → ROM) |
 | `src/deploy_nlppatch_scripts.py` | Optional deploy of community (ex-NLPPATCH) `.dbin2` from rebuild_dbin2 / assets/nlppatch |
@@ -1181,7 +1175,7 @@ Full fan-facing credits: root [`README.md` Credits](README.md#credits). Summary 
 | Tier | Components |
 |------|------------|
 | **Vendored + invoked** | kiwiz **nlpp-tools** (`ie`, `pe`, `png2bclim`, `img`); deaknaew **Trb2xlsx** → `lookup.txt` only; optional **NLPPATCH** snapshot; EngPatcher **darcutil** / **bclimutil** |
-| **Auto-fetched CIA** | 3dstool, ctrtool, makerom, seeddb.bin |
+| **Vendored CIA tools** | 3dstool, ctrtool, makerom, seeddb.bin under `tools/cia/` (`setup_tools.py` downloads only a missing bin) |
 | **Format / lineage only** | gdkchan / LovePlusProject **NLPTextTool** (DBIN2 XML + XOR); **NLPUnpacker** superseded by `ie`/`pe` |
 | **Bundled, unused on gold path** | yellows8 **darctool** ELF, deaknaew **png2texi** exe (inside nlpp-tools tree) |
 | **Optional dev** | LovePlusProject **NLPPCTR** import (`import_nlppctr_textures.py`) |
@@ -1200,13 +1194,13 @@ Full fan-facing credits: root [`README.md` Credits](README.md#credits). Summary 
 | MakeStr object | `r3` on entry |
 | C-string | `[r3+4]` — DrawText re-`MakeStr`s from this pointer (`ldr r1,[r3,#4]` @ `0054b8a4`) |
 | Encoding | Match UTF-8, NLP codebook, and Shift-JIS of known titles (string absent from rom) |
-| GDB tool | `tools/gdb_drawtext_capture.py` (JIT off; customs off) |
+| GDB capture | Break on DrawTextToPane, log `[r3+4]` + LR (JIT off; customs off) |
 
 **Why not `FUN_0024842c` alone:** infinite-loop patch on that entry did **not** freeze opening clock confirm → header is not always on that drawer. `OptionClockPopSetup` *can* call `FUN_0024842c(..., 5, ClockSet+0x3c)` when flag `+0x38` is set, and `HeaderRelated_24a7d4` also calls `DrawTextToPane` directly. Shared choke point is **DrawTextToPane**.
 
 ### 14.2 Narrow patch
 
-- Script: `src/patch_drawtext_titles.py`
+- Script: `src/patch_drawtext_titles.py` (never on the bake; removed in 9e7c6cb)
 - Hook: branch at `0054b880` → cave `0x68F7FC` (~1096 B table-driven exact-match remap)
 - String pointers in the cave use **runtime VA** (`file + 0x100000`); file offsets alone miss guest RAM.
 - Remaps only listed titles (clock / Options / Gallery set); other DrawText untouched
@@ -1302,7 +1296,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 | Practice | Why it worked |
 |----------|----------------|
-| `release/bake_img.bin` as gold; `cache/` scratch | Drop-bat reuses bake in minutes; rebuild is the long path |
+| `release/bake_img.bin` as gold; `cache/` scratch | One file to inject; Drop fetches the published bake in minutes, and a local rebuild is the long fallback |
 | `tools/rebuild_bake_img.py --rom <cia\|3ds>` + `extract_vanilla_from_rom.py` | Clone can seed vanilla from the dropped ROM → `cache/vanilla_from_rom/` |
 | `--skip-pack` after PNG pack finished | Resume deploys/TRB/SMS without another long pack |
 | Shared `src/exact_zlib.py` for deploys | Gap-tune, empty-block, near-miss; **zlib/empty-block before zopfli** (§12.5.3) |
@@ -1326,7 +1320,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 3. **Drop downloads the published gold bake, then packs locally only if that fails.** It deletes `out/`, `release/`, and the entire `cache/` folder, polls GitHub Release tag `gold`, and uses that bake when the download succeeds. A missing Release or no internet falls through to `rebuild_bake_img.py --rom`, which extracts a full RomFS (`Plus/` included) from the dropped cart. A slim `cache/vanilla_from_rom` (no `Plus/`) is refused. `NLPP_USE_PACK_CACHE` does not keep `cache/img_pack` across that wipe. `NLPP_SKIP_GOLD_FETCH=1` skips the poll. See **§15.5**.
 4. First **local** gold rebuild: PNG pack is the long step (historically ~16h when every ARC ran zopfli sequentially). Empty-block-first + `--pkg-workers` + zopfli undershoot pad → typically **about 40 minutes to 2 hours**, depending on hardware (§12.5.3); leave the window open. The bottom line leads with the run name and elapsed time, then the percent bar and the package being packed.
    From-scratch does not reuse ``cache/img_pack/``. `--skip-pack` resumes deploys and leaves `cache/` in place.
-5. After bake exists: drop again → **minutes** (reuse bake; no rebuild).
+5. Every Drop starts from an empty `release/`, so a second Drop does not reuse the first one's bake. It is **minutes** only when the gold Release downloads; otherwise it packs again.
 6. Resume mid-deploy only: `python tools/rebuild_bake_img.py --skip-pack` from **repo root**.
 7. Testing in Azahar: fully quit the emulator; confirm LayeredFS `img.bin` was spliced (or re-drop CIA). Don’t assume bake alone updated mods.
 
@@ -1386,6 +1380,8 @@ decrypted .cia / .3ds / .cci dropped
         (deletes cache/, then full RomFS extract into cache/vanilla_from_rom/)
   → if still no bake:
         HARD STOP — do not patch (prevents half-EN CIA)
+  → if release/name_input_code.bin is missing or Title pkg 5261 has no Eng Patch:
+        rebuild_bake_img.py --rom <dropped ROM> --skip-pack   (NEED_FINISH; deploys only, ~37 min)
   → patch_cia.py:
         inject rebuild_dbin2 + gold bake img.bin + romfs_overlay
         + apply_name_patches + name_input_code.bin when present
@@ -1403,7 +1399,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
 | `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (default `czyrustuazon/nlpp-gold-maker`) |
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
-| `NLPP_WITH_IMAGES=0` | Scripts-only CIA — **no** menu chrome (explicit opt-out) |
+| `NLPP_WITH_IMAGES=0` | **Refused by Drop CIA** (no incomplete patches). For a scripts-only test CIA run `patch_cia.py --no-images` by hand |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
 | `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
 | `NLPP_NO_LOG=1` | Skip appending the PATCH SUMMARY to `out/log.txt` |
@@ -1501,7 +1497,7 @@ Likely constructor failure: extra `pic1` **`Pic_EngPatch`** in `Pts_Copyright` (
 
 Vendored sources: EngPatcher `tools/spotpass/` (`info.dat`, `info.dat.boss`, `info.dat.boss.decrypted`). Builder: `tools/build_spotpass_inject.py` (default mode **`real3ds`**). These paths are tracked in git (see `.gitignore` exceptions) so a **GitHub clone can rebuild injects** with `python tools/build_spotpass_inject.py` after the SpotPass commit lands — no separate download.
 
-`src/patch_cia.py` (and the drop bat) call this automatically after a successful patch → `out/spotpass_real3ds/`. Flags: `--skip-spotpass`, `--spotpass-mode {real3ds,azahar,azahar_exact}`, `--spotpass-install-azahar`.
+The English CIA does not need these files: Watcher #28 is embedded in `code.bin` (**§16.7–§16.8**). `src/patch_cia.py` builds `out/spotpass_real3ds/` after a patch only with `--keep-work`; a normal run cleans `out/` instead. Flags: `--skip-spotpass`, `--spotpass-mode {real3ds,azahar,azahar_exact}`, `--spotpass-install-azahar`.
 
 ### 16.2 How the inject file is made (shareable summary)
 
@@ -1827,9 +1823,11 @@ Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji i
 **Isolation (how name-input was proven):** Azahar **a/b** + **vanilla** `img.bin` / `code.bin.bak` — **not** bake alone. Full EN TRB maps gojūon `あ→A` and blanks those cells.
 
 ```bash
-.\ab_test\make.ps1 deploy-a      # name-input + name-kanji TRB on vanilla img
+.\ab_test\make.ps1 deploy-a      # post-bake stack: bake img.bin + name_input_code.bin + overlay TRBs + .dbin2
 .\ab_test\make.ps1 launch-a
 ```
+
+`deploy-a` used to install name-input + name-kanji TRB on a vanilla `img.bin` (how the stack was first isolated). It now copies the finished `release/` files and stops if a bake is missing.
 
 **Combine with gold bake UI** (EN chrome + working Profile keyboard):
 
@@ -1869,7 +1867,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
-`src/patch_input_candmode_reset.py` **must not be deployed.** Bisect (vanilla → add one patch at a time):
+The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) **must not be deployed.** Bisect (vanilla → add one patch at a time):
 
 - pane nullguard → taps OK  
 - \+ candidate nullguard → taps OK  
@@ -1904,7 +1902,7 @@ Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCL
 
 **Candidate packs:** runtime pack table for candidates is `0x7008`–`0x7033` (not keyboard-label pack `0x7002`). Cell metadata at `nameInputObj + cellIdx*0x10 + 0x180` (string / flags / pack / slot).
 
-**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`).
+**gdb_probe gotcha:** `break` with `max-hits N` **detaches on the last hit without `continue`**, aborting the function. Attaching mid pane-warmup (e.g. 5/60 attaches) leaves a half-built, unclickable grid until a clean re-entry. Prefer post-fill tail breaks (`0x1faa20`, `0x1fb724`) or read-only `gdb_probe.py read`. Tool: `tools/gdb_probe.py` (Azahar gdbstub port `24689`; never committed to this repo).
 
 **LayeredFS:** “vanilla ROM” still loads `mods\00040000000F4E00\exefs\code.bin` if present under the **active** Azahar user dir — use a/b instances or rename that folder to test true vanilla. Prefer `NLPP_AZAHAR_USER_DIR` → `ab_test/azahar_instances/{a,b}/user` over roaming AppData while iterating.
 
@@ -1999,8 +1997,8 @@ Scripts: `ab_test/` (`.\ab_test\make.ps1`, or `make -C ab_test`). Guide: **`ab_t
 | Instance user dirs | `ab_test/azahar_instances/{a,b}/user` (outside `out/`; a CIA wipe does not delete them) |
 | Env override | `NLPP_AZAHAR_USER_DIR` / `AZAHAR_USER_DIR` |
 | Machine paths | `ab_test/paths.local.ps1` (from `.example`; gitignored) |
-| Default `deploy-a` | Name-input stack (§17) — swap scripts for other experiments |
-| Shared Nene save | `ab_test/saves/nene/` via `.\ab_test\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data. The pack is gitignored; CI skips `test_repo_nene_pack_has_lp2h_header` when it is absent |
+| Default `deploy-a` | Post-bake stack from `release/` (bake `img.bin`, `name_input_code.bin`, overlay TRBs, `.dbin2`); stops if a bake is missing |
+| Shared Nene save | `ab_test/saves/nene/` via `.\ab_test\make.ps1 save-nene` (`tools/import_azahar_save.py`) — SD title save `sdmc/.../000f4e00/data/00000001`, not extra data. The pack is gitignored and stays on this machine; no test reads it |
 
 Do **not** tell the user to quit Azahar between deploys (standing preference).
 
@@ -2017,10 +2015,6 @@ See **§10.1**. `.\ab_test\make.ps1 build-azahar` applies `ab_test/patches/azaha
 ### 18.4 Game Start hang — parent extra-data OpenLinkFile (2026-09-18)
 
 See **§10.2**. Same `0x33373338` smash as Communications, but the clone patch is already in instance A and the source handle is the full extra-data backend (`subfile=false`, `size=0x65a13720`). Reset unsticks it. Does **not** extend to a real 3DS. Do not restore extra data or patch `code.bin` for this.
-
----
-
-*Last updated 2026-09-23 — §5.4 BCLIM load path (`FUN_00542c30` / `FUN_00542828`) and why LayeredFS needs this repo’s `code.bin`; §17.8 Called list leftover `づ`; §10.2 Game Start parent extra-data hang (not hardware); §12.4.4 Profile Call/atlas chroma AA (not 1-bit); §12.4.3 hometown chips; §12.4.2 Profile header Heisei strip; §15.1.1 hub header RGB dump (`Title_menu_word`); §17.7 ABC fullwidth→ASCII; §12.4.1 Heart to Heart MultiWin bar; §15.7 title hub loop NX abort (`patch_lyt_null_pane.py`); §10.1 OpenLinkFile patch + `build-azahar`; §21 gold `name_input_code.bin` Message Speed; keep main §§16–18; NLPP-005 §19 / §20 volunteer workbench; §13.3 third-party stack.*
 
 ---
 
@@ -2061,7 +2055,7 @@ Community EN menu art was merged into the normal `img.bin` pipeline (not Citra h
 |--------|------|------|
 | [NLPPCTR](https://github.com/LovePlusProject/NLPPCTR) texture pack | `tools/import_nlppctr_textures.py` | `assets/images/*.check/timg/` → `pack_images` / `release/bake_img.bin` |
 | NLPP English UI Buttons zip | `tools/import_ui_buttons_bundle.py` | pkgs **5190** / **5259** / **5380** / **4149** via `deploy_ui_buttons_en.py` |
-| A/B compare baseline vs NLPPCTR winners | `ab_test/make.ps1` (`nlppctr-ab`) | Isolated Azahar instances |
+| A/B compare baseline vs NLPPCTR winners | Isolated Azahar instances (`deploy-a` / `deploy-b`; the old `nlppctr-ab` target is gone) | Isolated Azahar instances |
 
 Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` edits.
 
@@ -2107,7 +2101,7 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 
 ## 20. Volunteer localization workbench (2026-09-03)
 
-Browser HTML kits for community translators (no Python). Maintainer Python lives in a sibling folder; HTML **templates** live in this EngPatcher tree.
+Browser HTML kits for community translators (no Python). The maintainer side that works with the workbench's saved JSON (HTML templates in `tools/localization_workbench/` + the parser's ingest scripts) is **planned, not built yet** — there have been no contributors so far.
 
 ### 20.1 Three trees
 
@@ -2115,9 +2109,9 @@ Browser HTML kits for community translators (no Python). Maintainer Python lives
 |------|------|
 | `…/nlpp-localization-workbench/` | **Volunteer share** — `index.html` hub + `kit/` (built Scripts / Strings / Images) |
 | `…/nlpp-localization-workbench-parser/` | **Maintainer** — `export_*.py`, `ingest_*.py`, `common.py`, `paths.py`, `sync_hub.py` only |
-| `EngPatcher/tools/localization_workbench/` | **Templates** — `workbench.html`, `strings_workbench.html`, `images_workbench.html`, hub `index.html` |
+| `EngPatcher/tools/localization_workbench/` | **Templates** — `workbench.html`, `strings_workbench.html`, `images_workbench.html`, hub `index.html`. **Planned, not built yet.** |
 
-GitHub (volunteer): `git@github.com:czyrustuazon/nlpp-localization-workbench.git`.
+GitHub (volunteer): https://github.com/czyrustuazon/nlpp-localization-workbench.
 
 Configure parser `paths.local.json` (gitignored; see `.example`):
 
@@ -2204,6 +2198,8 @@ Ingest: `ingest_images.py --apply` writes replacements back under `assets/images
 
 ### 20.3 Maintainer export / ingest
 
+**Planned, not built yet.** This is the intended flow for applying contributor JSON once there are contributors.
+
 ```bash
 cd nlpp-localization-workbench-parser
 python export_workkit.py
@@ -2241,6 +2237,7 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 ### 20.5 What not to confuse
 
 - Volunteer **built** kits ≠ EngPatcher **templates** — only templates are edited for UI changes.
+- `tools/localization_workbench/` and the ingest side are not built yet; they get written once contributors start sending JSON.
 - Parser repo must stay **Python-only** (HTML removed 2026-09-03).
 - `contrib/` in EngPatcher is a pointer README only (old in-tree workbench moved out).
 - Workbench kits are for **leftover** JP / UI audit — finished shipping assets remain under EngPatcher `assets/` + `rebuild_dbin2/`.
@@ -2404,7 +2401,7 @@ Ship path: `apply_patch` from `tools/deploy_name_input_en.py` → `release/name_
 python tools/deploy_name_input_en.py --src extracted/exefs/code.bin.bak --out release/name_input_code.bin
 ```
 
-LayeredFS: copy that file to instance `exefs/code.bin` (and mod-root `code.bin`), or `--deploy-azahar` / `.\ab_test\make.ps1 talk-speed-ab` (**A** = table + cap, **B** = table only / vanilla heroine). Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
+LayeredFS: copy that file to instance `exefs/code.bin` (and mod-root `code.bin`), or `--deploy-azahar`. (The `talk-speed-ab` target and `tools/ab_talk_speed.py` that compared **A** = table + cap vs **B** = table only were removed in 9e7c6cb.) Tests: `tests/test_patch_message_speed.py`, cave overlap in `tests/test_name_input_caves.py`.
 
 Verified 2026-09-17: heroine date line on **A** matches player speed; **B** still crawls.
 
@@ -2447,5 +2444,5 @@ Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa
 
 ---
 
-*Last updated 2026-09-29 — title badge stamped `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2; gold fetch repo `nlpp-gold-maker`.*
+*Last updated 2026-10-05 — audited against main: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
 

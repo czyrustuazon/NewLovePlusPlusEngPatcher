@@ -519,7 +519,6 @@ def main() -> None:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("deployed exact-zopfli Options EN ->", MOD_IMG)
-    print("Rollback: tools/restore_img_pre_msel5245.ps1")
 
 
 if __name__ == "__main__":

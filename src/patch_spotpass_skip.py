@@ -156,7 +156,6 @@ FUN_APPLY_WAIT_OV = 0x00443E18
 PATCHED_BX_LR = bytes.fromhex("1eff2fe1")  # bx lr
 VANILLA_SHOW_FN = bytes.fromhex("70402de9")  # stmdb {r4-r6, lr}
 VANILLA_WAIT_OV_FN = bytes.fromhex("70402de90040a0e1")  # stmdb; mov r4, r0
-PATCHED_WAIT_OV_FN = bytes.fromhex("0100a0e31eff2fe1")  # mov r0, #1; bx lr
 WAIT_APPLY_HEAD_LEN = 20
 VANILLA_WAIT_APPLY_HEAD = bytes.fromhex(
     "480090e5000050e30500000a18009fe5000090e5"
@@ -473,25 +472,8 @@ def build_title_hide_cave() -> bytes:
 
 
 PATCHED_TITLE_HIDE_CAVE = build_title_hide_cave()
-PATCHED_TITLE_ST8_HEAD = _bl(ADDR_TITLE_ST8_HEAD, ADDR_TITLE_HIDE_CAVE)
 
 
-def build_wait_apply_stub() -> bytes:
-    """Hide the overlay in r0, then return 0 so callers do not DrawText."""
-    here = FUN_APPLY_WAIT
-    blob = (
-        bytes.fromhex("00402de9")  # stmdb sp!, {lr}
-        + _bl(here + 4, FUN_APPLY_HIDE)
-        + bytes.fromhex("0040bde8")  # ldmia sp!, {lr}
-        + bytes.fromhex("0000a0e3")  # mov r0, #0
-        + PATCHED_BX_LR
-    )
-    if len(blob) != WAIT_APPLY_HEAD_LEN:
-        raise ValueError(f"wait-apply stub {len(blob)} != {WAIT_APPLY_HEAD_LEN}")
-    return blob
-
-
-PATCHED_WAIT_APPLY_HEAD = build_wait_apply_stub()
 
 
 def _bl_to_dialog(here: int) -> bytes:
@@ -516,10 +498,6 @@ def _bl_to_wait(here: int) -> bytes:
 
 def _bl_to_apply_show(here: int) -> bytes:
     return _bl(here, FUN_APPLY_SHOW)
-
-
-def _bl_to_apply_hide(here: int) -> bytes:
-    return _bl(here, FUN_APPLY_HIDE)
 
 
 def _b_to_apply_show(here: int) -> bytes:

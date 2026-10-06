@@ -1,0 +1,12 @@
+# Copy to paths.local.ps1 in this folder (ab_test/) and uncomment what you need.
+# Everything is optional. Without this file make.ps1 looks for an Azahar
+# checkout next to this repo (..\azahar, built in build\) and MSYS2 at
+# C:\msys64. The same values can come from NLPP_AZAHAR_SRC, NLPP_AZAHAR_EXE,
+# NLPP_MSYS_BIN, NLPP_ROM, and NLPP_PYTHON.
+
+# $Paths.AzaharSrc   = "D:\src\azahar"
+# $Paths.AzaharBuild = "$($Paths.AzaharSrc)\build"
+# $Paths.AzaharExe   = "$($Paths.AzaharBuild)\bin\Release\azahar.exe"
+# $Paths.MsysBin     = "C:\msys64\clang64\bin"
+# $Paths.RomPath     = "D:\roms\00040000000F4E00_v00.3ds"   # launchers load this ROM
+# $Paths.PythonExe   = "C:\Python312\python.exe"

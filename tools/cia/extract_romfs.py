@@ -66,52 +66,6 @@ def walk_dirs(
         break
 
 
-def extract_files(
-    data: bytes,
-    base: int,
-    file_tab: int,
-    file_tab_size: int,
-    data_off: int,
-    out_root: Path,
-    dirs: dict[int, tuple[int, Path]],
-) -> int:
-    # Rebuild parent dir offset -> Path from directory table walk result stored differently
-    # dirs maps dir_offset -> relative Path
-    count = 0
-    offset = 0
-    end = file_tab_size
-    while offset < end:
-        entry = base + file_tab + offset
-        parent = read_u32(data, entry)
-        sibling = read_u32(data, entry + 4)
-        file_offset = read_u64(data, entry + 8)
-        size = read_u64(data, entry + 16)
-        name_len = read_u32(data, entry + 28)
-        name, next_off = parse_name(data, entry + 32, name_len)
-        # entry size from start
-        entry_size = next_off - entry
-
-        parent_path = dirs.get(parent, Path("."))
-        dest = out_root / parent_path / name
-        dest.parent.mkdir(parents=True, exist_ok=True)
-
-        src = base + data_off + file_offset
-        if size == 0:
-            dest.write_bytes(b"")
-        else:
-            dest.write_bytes(data[src : src + size])
-        count += 1
-
-        # Advance by scanning: next entry starts after this one.
-        # Sibling chain is within same directory; table is not strictly sequential by sibling.
-        # Walk table linearly by entry sizes.
-        offset += entry_size
-        # Align: entry_size already includes padding via parse_name
-        if offset % 4:
-            offset += 4 - (offset % 4)
-    return count
-
-
 def build_dir_map(data: bytes, base: int, dir_tab: int, dir_tab_size: int) -> dict[int, Path]:
     dirs: dict[int, Path] = {0: Path(".")}
 

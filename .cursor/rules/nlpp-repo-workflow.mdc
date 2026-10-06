@@ -22,7 +22,7 @@ Title ID: `00040000000F4E00`. Prefer editing/patching via EngPatcher; treat the 
 - Thumb/ARM mix; prefer decompile + xrefs over guessing BL targets.
 - Softkey Pos strings live around `0x006c3d88` / `0x0073a76e` (file). Layout names near `0x0073d8ac` (`Lyt_ClockPop_01`, etc.).
 - String APIs: `FUN_005c0e7c` (TextResource by pack+slot), `FUN_0056ed00` (hierarchy resolve), `FUN_005a1ec8` (MakeStr), `FUN_0054b880` (DrawTextToPane), `FUN_0024842c` (header-pane drawer).
-- Do **not** deploy global MakeStr hooks (`patch_clock_text.py`); restore from `exefs/code.bin.bak_clocktext` if needed.
+- Do **not** deploy global MakeStr hooks (the removed `patch_clock_text.py` approach).
 
 ## img.bin packages (textures / layouts)
 
@@ -99,7 +99,7 @@ Keep these in mind; promote into `docs/technical.md` only after we verify or rec
 ## Hard don’ts
 
 - Full `img.bin` rebuild via `Image.write()`.
-- Redeploy abandoned global MakeStr cave (`patch_clock_text.py` as-is).
+- Bring back the abandoned global MakeStr cave (removed `patch_clock_text.py`).
 - Assume OptionClock / SysPopup / MyroomHeader `optn_tex_optionmenu_05` fix every “Japanese chrome” screen. Hub Options/clock titles are **5245**; the in-room overlay *does* use `optn_tex_*` (`deploy_myroom_options_en.py`).
 - Commit secrets, huge `img.bin` copies, or texture dump folders unless the user asks.
 

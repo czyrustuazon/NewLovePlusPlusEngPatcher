@@ -11,8 +11,11 @@ From the repo root:
 
 ## One-time setup
 
-1. Copy `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and set
-   `AzaharExe`, `VanillaDump`, and optional `RomPath` for this machine.
+1. Paths are found automatically when Azahar is checked out next to this repo
+   (`..\azahar`, built in `build\`) and MSYS2 is at `C:\msys64`. Otherwise copy
+   `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and uncomment what
+   differs, or set `NLPP_AZAHAR_SRC` / `NLPP_AZAHAR_EXE` / `NLPP_MSYS_BIN` /
+   `NLPP_ROM` / `NLPP_PYTHON`. `.\ab_test\make.ps1 paths` shows what it resolved.
 2. Build Azahar if needed: `.\ab_test\make.ps1 build-azahar`
    That applies `ab_test/patches/azahar-openlinkfile.patch` when `file.cpp` still stubs `OpenLinkFile` (log line `clone offset=`), rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
 3. Create instances + launch bats:

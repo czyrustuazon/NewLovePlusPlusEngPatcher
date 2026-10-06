@@ -4,7 +4,7 @@ Title ID `00040000000F4E00`, BOSS extdata ID **`0x321`**, NsDataId **`1`**, payl
 
 **Dump credit: Cetaceaqua** — thank you for providing the SpotPass archive (「とわのウォッチャー」第28号).
 
-Long-form RE + Azahar HLE notes: EngPatcher root [`docs/technical.md` §16](../../docs/technical.md). User-facing summary: root [`README.md`](../../README.md#spotpass-とわのウォッチャー--boot-check).
+Long-form RE + Azahar HLE notes: EngPatcher root [`docs/technical.md` §16](../../docs/technical.md). User-facing summary: root [`README.md`](../../README.md#spotpass-とわのウォッチャー).
 
 **English CIA does not need this inject.** `src/patch_spotpass_embed.py` copies `info.dat` into `code.bin` and spoofs BOSS NewFlag/ReadNsData after save load (`docs/technical.md` §16.7–§16.8). Keep this builder for a real `00000321/boss/` paste (hardware BOSS DBs / Azahar HLE).
 
