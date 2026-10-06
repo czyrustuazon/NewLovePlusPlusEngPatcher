@@ -2448,5 +2448,5 @@ Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa
 
 ---
 
-*Last updated 2026-09-29 — title badge stamped `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome (`export_progress_metrics.py`); volunteer kit sizes in §20.2; gold fetch repo `nlpp-gold-maker`.*
+*Last updated 2026-10-05 — audited against main: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
 
