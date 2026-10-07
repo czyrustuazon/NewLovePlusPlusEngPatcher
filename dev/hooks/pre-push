@@ -14,8 +14,20 @@ echo "[pre-push] ruff (hard errors)"
     exit 1
 }
 
-echo "[pre-push] pytest"
-"$PY" -m pytest tests/ -q -x -rs -p no:cacheprovider || {
+echo "[pre-push] pytest (with coverage)"
+"$PY" -m coverage run -m pytest tests/ -q -x -rs -p no:cacheprovider -m "not local_data" || {
+    echo "[pre-push] tests failed; push aborted (pip install -r dev/requirements-dev.txt)"
+    exit 1
+}
+
+echo "[pre-push] pytest (local data: vanilla code.bin, fonts, Azahar fork)"
+"$PY" -m pytest tests/ -q -x -rs -p no:cacheprovider -m local_data || {
     echo "[pre-push] tests failed; push aborted"
+    exit 1
+}
+
+echo "[pre-push] coverage ratchet"
+"$PY" dev/check_coverage.py || {
+    echo "[pre-push] coverage dropped; push aborted"
     exit 1
 }

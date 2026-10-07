@@ -42,6 +42,7 @@ def test_deploy_name_input_includes_name_panes():
     assert "password_uribo_already" in text
 
 
+@pytest.mark.local_data
 def test_apply_name_pane_patches_on_vanilla():
     src = find_vanilla_code()
     if src is None:

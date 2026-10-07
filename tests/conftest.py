@@ -17,6 +17,14 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "local_data: needs vanilla dumps, fonts or the Azahar fork; CI skips it. "
+        'Coverage runs with -m "not local_data" so local and CI numbers match.',
+    )
+
+
 def load_module(name: str, path: Path):
     """Import a module by file path (for tools/ outside pythonpath)."""
     spec = importlib.util.spec_from_file_location(name, path)

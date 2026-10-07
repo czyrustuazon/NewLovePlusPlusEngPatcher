@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 import patch_textresource as trb
 from conftest import ROOT
 
@@ -36,6 +38,7 @@ def test_yamanashi_keys_are_full_prefecture_strings():
     assert "アイ・ラブ・山" not in mapping
 
 
+@pytest.mark.local_data
 def test_vanilla_prefecture_220_is_yamanashi():
     if not trb.DEFAULT_TRB.is_file():
         import pytest

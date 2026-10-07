@@ -37,6 +37,7 @@ def _slot_stri(indx: bytes, slot: int) -> int:
     return struct.unpack_from("<H", indx, sub_off + 4 + slot * 2)[0]
 
 
+@pytest.mark.local_data
 @pytest.mark.skipif(not VANILLA.is_file(), reason="vanilla TRB not in sibling dump")
 def test_apply_fills_nashi_holes_and_is_idempotent():
     lookup = load_lookup(LOOKUP_PATH)

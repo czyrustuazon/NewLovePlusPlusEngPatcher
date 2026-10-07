@@ -39,6 +39,9 @@ from conftest import ROOT, SRC, load_module
 cave_map = load_module("patch_input_cave_map", SRC / "patch_input_cave_map.py")
 from nlpp_paths import find_vanilla_code  # noqa: E402
 
+# Needs local data; excluded from coverage (see dev/check_coverage.py).
+pytestmark = pytest.mark.local_data
+
 TEXT_END = cave_map.TEXT_PAGE_END
 SNAPSHOT = ROOT / "tests" / "snapshots" / "code_patch_map.json"
 

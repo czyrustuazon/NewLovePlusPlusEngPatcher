@@ -54,7 +54,8 @@ step better than anything worth rewriting here.
 ```
 pip install -r dev/requirements-dev.txt
 python dev/install_hooks.py      # one time: runs the checks below on every push
-python -m pytest tests/
+python -m coverage run -m pytest tests/ -m "not local_data"
+python dev/check_coverage.py     # coverage ratchet (CI runs it too)
 ```
 
 - **Fixing a bug? Add a test that fails without your fix.** Put the specific cause in it
@@ -62,6 +63,14 @@ python -m pytest tests/
   coming back.
 - **New `src/patch_*.py` or `tools/deploy_*.py`?** It needs a test that names it.
   `tests/test_every_module_tested.py` fails otherwise.
+- **Coverage only goes up (goal: 100%).** `dev/check_coverage.py` fails if a file drops
+  below its floor in `tests/snapshots/coverage_floor.json`, or if a new file is under
+  100%. After adding tests, run `python dev/check_coverage.py --update` and commit the
+  raised floors. See what is missing with `python -m coverage report -m --include=<file>`
+  (or `python -m coverage html`, then open `htmlcov/index.html`).
+- **Tests that need vanilla dumps, fonts or the Azahar fork** get
+  `@pytest.mark.local_data`. They still run locally, but coverage leaves them out,
+  since CI cannot run them. Code they cover still needs a test that runs without that data.
 - **Changed what a patch writes?** The snapshot tests will fail on purpose. If the change
   is intended, refresh and commit the snapshots with your change, so reviewers see
   which caves and addresses moved:

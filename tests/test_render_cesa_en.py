@@ -10,6 +10,7 @@ from conftest import TOOLS, load_module
 render = load_module("render_cesa_en", TOOLS / "render_cesa_en.py")
 
 
+@pytest.mark.local_data
 @pytest.mark.skipif(
     not render.TITLE_TTC.is_file() or not render.BODY_TTC.is_file(),
     reason="NLPPPATCH reference fonts not present",
@@ -48,6 +49,7 @@ def test_render_cesa_en_matches_tex_canvas():
     assert compressed <= 13667, compressed
 
 
+@pytest.mark.local_data
 @pytest.mark.skipif(
     not render.TITLE_TTC.is_file() or not render.BODY_TTC.is_file(),
     reason="NLPPPATCH reference fonts not present",

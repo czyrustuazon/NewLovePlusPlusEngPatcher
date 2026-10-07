@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from conftest import TOOLS, load_module
 
 deploy_common = load_module("deploy_common", TOOLS / "deploy_common.py")
@@ -268,6 +270,7 @@ def test_ui_font_missing_exits(tmp_path: Path, monkeypatch):
         assert "missing UI font" in str(exc)
 
 
+@pytest.mark.local_data
 def test_profile_header_glyph_height_matches_heart_to_heart():
     import numpy as np
     import pytest
