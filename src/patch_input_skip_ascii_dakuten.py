@@ -51,10 +51,14 @@ def apply_patch(data: bytearray) -> None:
             f"unexpected bytes at site {SITE:#x}: {site.hex()} "
             f"(expected {EXPECT_SITE.hex()}, cave hook, or {PATCHED_SITE.hex()})"
         )
-    data[SITE : SITE + 4] = PATCHED_SITE
     conv = bytes(data[SITE_CONVERT : SITE_CONVERT + 4])
-    if conv in (EXPECT_CONVERT, PATCHED_CONVERT):
-        data[SITE_CONVERT : SITE_CONVERT + 4] = PATCHED_CONVERT
+    if conv not in (EXPECT_CONVERT, PATCHED_CONVERT):
+        raise ValueError(
+            f"unexpected bytes at convert {SITE_CONVERT:#x}: {conv.hex()} "
+            f"(expected {EXPECT_CONVERT.hex()} or {PATCHED_CONVERT.hex()})"
+        )
+    data[SITE : SITE + 4] = PATCHED_SITE
+    data[SITE_CONVERT : SITE_CONVERT + 4] = PATCHED_CONVERT
     data[OLD_CAVE : OLD_CAVE + OLD_CAVE_LEN] = b"\x00" * OLD_CAVE_LEN
     print(f"[skip-ascii-dakuten] @{SITE:#x} bne strcat -> b strcat (no cave)")
 

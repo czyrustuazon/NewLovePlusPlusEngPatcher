@@ -49,5 +49,12 @@ jobs:
       - name: Install dev dependencies
         run: python3 -m pip install -r dev/requirements-dev.txt
 
+      # Hard errors only: syntax errors, undefined names, bad comparisons.
+      # Catches crashes in scripts that have no test of their own.
+      - name: Lint (ruff hard errors)
+        run: python3 -m ruff check --select E9,F63,F7,F82 src tools tests
+
+      # -rs lists skips: vanilla-backed checks (test_code_patch_map) skip here
+      # and run locally / in the pre-push hook instead.
       - name: Run unit tests
-        run: python3 -m pytest tests/ -v
+        run: python3 -m pytest tests/ -v -rs

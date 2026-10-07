@@ -249,6 +249,8 @@ def apply_patch(data: bytearray) -> bool:
         raise ValueError(f"unexpected Call01 prologue at {SITE_CALL01:#x}")
     if bytes(data[SITE_CALL02 : SITE_CALL02 + 8]) != ORIG_PROLOGUE:
         raise ValueError(f"unexpected Call02 prologue at {SITE_CALL02:#x}")
+    if any(data[base:end]):
+        raise ValueError(f"call-romaji cave {base:#x}..{end:#x} is not empty pad")
 
     data[base:end] = blob
     data[SITE_INDEX_MUL3 : SITE_INDEX_MUL3 + 4] = bl(SITE_INDEX_MUL3, labs["utf8_off"])

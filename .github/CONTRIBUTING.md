@@ -49,6 +49,27 @@ Then the workflow: **fork** this repo to your account → **clone** it locally �
 own [beginner docs](https://docs.github.com/en/get-started) cover the mechanics of each
 step better than anything worth rewriting here.
 
+## Before you open a pull request (patcher code)
+
+```
+pip install -r dev/requirements-dev.txt
+python dev/install_hooks.py      # one time: runs the checks below on every push
+python -m pytest tests/
+```
+
+- **Fixing a bug? Add a test that fails without your fix.** Put the specific cause in it
+  (the address, byte pattern, or call order). A comment explains a crash; a test stops it
+  coming back.
+- **New `src/patch_*.py` or `tools/deploy_*.py`?** It needs a test that names it.
+  `tests/test_every_module_tested.py` fails otherwise.
+- **Changed what a patch writes?** The snapshot tests will fail on purpose. If the change
+  is intended, refresh and commit the snapshots with your change, so reviewers see
+  which caves and addresses moved:
+  `NLPP_UPDATE_SNAPSHOTS=1 python -m pytest tests/test_patch_blob_snapshots.py tests/test_code_patch_map.py`
+- `tests/test_code_patch_map.py` needs a vanilla `code.bin`
+  (`cache/vanilla_from_rom/exefs/code.bin` or `NLPP_VANILLA_CODE`). CI has none and
+  skips it, so run it locally before pushing code.bin changes.
+
 ## Recommended tools — optional, not required
 
 **[Ghidra](https://ghidra-sre.org/)** — free, open-source, the standard tool for digging

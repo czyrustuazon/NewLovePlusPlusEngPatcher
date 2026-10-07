@@ -306,7 +306,7 @@ def contain_no_upscale(
     size: tuple[int, int],
     *,
     max_scale: float = 1.0,
-) -> "Image.Image":
+) -> "Image.Image":  # noqa: F821 — PIL is imported lazily below
     """Scale ``png`` to fit ``size`` without cropping glyphs or upscaling.
 
     Used for Girlfriend Communication: the plate PNG is a 192×16 strip, but
