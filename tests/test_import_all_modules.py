@@ -14,6 +14,13 @@ import sys
 
 from conftest import ROOT, SRC, TOOLS
 
+# Third-party packages that only some dev tools need and CI does not install
+# (dev/requirements-dev.txt). A missing one is fine; anything else missing is
+# a real break.
+OPTIONAL_DEPS = {
+    "mcp",  # tools/ab_mcp_server.py (A/B Azahar MCP server)
+}
+
 PROBE = r"""
 import importlib, json, sys, traceback
 sys.path[:0] = [sys.argv[1], sys.argv[2]]
@@ -21,8 +28,12 @@ failed = {}
 for name in sys.argv[3:]:
     try:
         importlib.import_module(name)
+    except ModuleNotFoundError as exc:
+        failed[name] = {"missing": (exc.name or "").split(".")[0],
+                        "error": f"ModuleNotFoundError: {exc}"}
     except BaseException:
-        failed[name] = traceback.format_exc(limit=3).strip().splitlines()[-1]
+        failed[name] = {"missing": "",
+                        "error": traceback.format_exc(limit=3).strip().splitlines()[-1]}
 print(json.dumps(failed))
 """
 
@@ -41,4 +52,5 @@ def test_all_modules_import():
     )
     assert proc.returncode == 0, proc.stderr[-2000:]
     failed = json.loads(proc.stdout.strip().splitlines()[-1])
-    assert not failed, "\n".join(f"{k}: {v}" for k, v in failed.items())
+    broken = {k: v["error"] for k, v in failed.items() if v["missing"] not in OPTIONAL_DEPS}
+    assert not broken, "\n".join(f"{k}: {v}" for k, v in broken.items())
