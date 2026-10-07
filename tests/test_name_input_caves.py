@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from conftest import SRC, load_module
 
 cave_map = load_module("patch_input_cave_map", SRC / "patch_input_cave_map.py")
@@ -159,14 +161,13 @@ def test_romaji_cave_converts_fullwidth_utf8():
 
 def test_skip_ascii_dakuten_is_inplace_strcat_branch():
     assert ascii_dakuten.PATCHED_SITE != ascii_dakuten.EXPECT_SITE
-    from nlpp_paths import find_vanilla_code
 
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+
+@pytest.mark.local_data
+def test_skip_ascii_dakuten_on_vanilla(vanilla_code):
+    data = bytearray(vanilla_code)
     if data[ascii_dakuten.SITE : ascii_dakuten.SITE + 4] != ascii_dakuten.EXPECT_SITE:
-        return
+        pytest.skip("code.bin dakuten site is not vanilla")
     ascii_dakuten.apply_patch(data)
     assert ascii_dakuten.is_patched(data)
     assert data[ascii_dakuten.SITE_CONVERT : ascii_dakuten.SITE_CONVERT + 4] == (
@@ -181,17 +182,6 @@ def test_strcat_raw_replaces_makestr_join():
     cave = strcat_raw.cave_addr()
     blob = strcat_raw.build_blob(base=cave)
     assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
-    from nlpp_paths import find_vanilla_code
-
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
-    if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] != strcat_raw.VANILLA_HEAD:
-        return
-    strcat_raw.apply_patch(data)
-    assert strcat_raw.is_patched(data)
-    assert bytes(data[cave : cave + len(blob)]) == blob
     # FUN_00000b1c is Thumb — ARM BL would crash on first tap.
     blx_offs = [
         off
@@ -207,6 +197,18 @@ def test_strcat_raw_replaces_makestr_join():
         if blob[off + 3] == 0x8A  # bhi
     ]
     assert hi, "strcat cave must bhi-skip when dest+pending > 8 glyphs"
+
+
+@pytest.mark.local_data
+def test_strcat_raw_on_vanilla(vanilla_code):
+    cave = strcat_raw.cave_addr()
+    blob = strcat_raw.build_blob(base=cave)
+    data = bytearray(vanilla_code)
+    if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] != strcat_raw.VANILLA_HEAD:
+        pytest.skip("code.bin strcat site is not vanilla")
+    strcat_raw.apply_patch(data)
+    assert strcat_raw.is_patched(data)
+    assert bytes(data[cave : cave + len(blob)]) == blob
 
 
 def test_call_romaji_caves_assemble_and_hook_vanilla():
@@ -227,16 +229,17 @@ def test_call_romaji_caves_assemble_and_hook_vanilla():
     assert bytes.fromhex("0190a0e3") in blob  # mov r9, #1 before ASCII DrawText jump
     bls = _arm_bl_targets(blob, cave)
     assert any(tgt == call_romaji.ADDR_UTF8_LEN for _, tgt in bls)
-    from nlpp_paths import find_vanilla_code
 
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+
+@pytest.mark.local_data
+def test_call_romaji_hooks_vanilla(vanilla_code):
+    cave = call_romaji.cave_addr()
+    blob, _labs = call_romaji.build_blob(base=cave)
+    data = bytearray(vanilla_code)
     if data[call_romaji.SITE_INDEX_MUL3 : call_romaji.SITE_INDEX_MUL3 + 4] != (
         call_romaji.ORIG_INDEX_MUL3
     ):
-        return
+        pytest.skip("code.bin call-list site is not vanilla")
     if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] == strcat_raw.VANILLA_HEAD:
         strcat_raw.apply_patch(data)
     call_romaji.apply_patch(data)
@@ -251,16 +254,17 @@ def test_lyt_null_pane_caves_assemble_and_hook_vanilla():
     assert len(find) == lyt_null.FIND_CAVE_LEN
     assert attach[4:8] == bytes.fromhex("1eff2f01")  # bxeq lr
     assert bytes.fromhex("33ff2fe1") in find  # BLX r3
-    from nlpp_paths import find_vanilla_code
 
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+
+@pytest.mark.local_data
+def test_lyt_null_pane_hooks_vanilla(vanilla_code):
+    attach = lyt_null.build_attach_cave()
+    find = lyt_null.build_find_cave()
+    data = bytearray(vanilla_code)
     if data[lyt_null.ATTACH_SITE : lyt_null.ATTACH_SITE + 4] != lyt_null.ATTACH_EXPECT:
-        return
+        pytest.skip("code.bin LYT attach site is not vanilla")
     if data[lyt_null.FIND_SITE : lyt_null.FIND_SITE + 4] != lyt_null.FIND_EXPECT:
-        return
+        pytest.skip("code.bin LYT find site is not vanilla")
     lyt_null.apply_patch(data)
     assert lyt_null.is_patched(data)
     assert bytes(data[lyt_null.ATTACH_CAVE : lyt_null.ATTACH_CAVE + len(attach)]) == attach
