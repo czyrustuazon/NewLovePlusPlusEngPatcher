@@ -1,9 +1,11 @@
 NLPP_EMU_* hardware-crash replays + FAR/DFSR in the exception report.
-Base: azahar 7fbe541c0 (apply after azahar-openlinkfile.patch).
+Apply after azahar-openlinkfile.patch.
 Used by ab_test launches and tools/smoke_boot_azahar.py --inject.
+Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ e00581f)
+Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
 
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index cc35fefdf..835415451 100644
+index cc35fefdf1f8067f8645d875052181abb1bad25f..8354154516477f662c63ab07b03576998bacf837 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
 @@ -548,6 +548,9 @@ if ("x86_64" IN_LIST ARCHITECTURE OR "arm64" IN_LIST ARCHITECTURE)
@@ -17,7 +19,7 @@ index cc35fefdf..835415451 100644
  
  # FastInterp's dispatch loop requires GCC/Clang computed goto; MSVC builds
 diff --git a/src/core/arm/dynarmic/arm_dynarmic.cpp b/src/core/arm/dynarmic/arm_dynarmic.cpp
-index 7453326cf..e0f592c56 100644
+index 7453326cfbb161fe1f355bdc4de959ddd7bf982c..e0f592c56c56f22f3593850a25b2149ecaf6ca34 100644
 --- a/src/core/arm/dynarmic/arm_dynarmic.cpp
 +++ b/src/core/arm/dynarmic/arm_dynarmic.cpp
 @@ -3,10 +3,15 @@
@@ -350,7 +352,7 @@ index 7453326cf..e0f592c56 100644
      // Multi-process state
      config.processor_id = GetID();
 diff --git a/src/core/arm/dynarmic/arm_dynarmic.h b/src/core/arm/dynarmic/arm_dynarmic.h
-index d24002a57..3e2a489b9 100644
+index d24002a5770172bb3e0152a69da58b75de7f04be..3e2a489b9b86c166240b11cf6cf3cb3632a9bee6 100644
 --- a/src/core/arm/dynarmic/arm_dynarmic.h
 +++ b/src/core/arm/dynarmic/arm_dynarmic.h
 @@ -6,6 +6,7 @@
@@ -380,7 +382,7 @@ index d24002a57..3e2a489b9 100644
      std::map<std::shared_ptr<Memory::PageTable>, std::unique_ptr<Dynarmic::A32::Jit>> jits;
  };
 diff --git a/src/core/arm/exception_handler.cpp b/src/core/arm/exception_handler.cpp
-index 10b7c48a7..50953015b 100644
+index 10b7c48a7b54a2e997d0dc03c4173bcb4ebfaea8..50953015b1b9e0e8679d75fd4ddd65fca2584545 100644
 --- a/src/core/arm/exception_handler.cpp
 +++ b/src/core/arm/exception_handler.cpp
 @@ -105,7 +105,7 @@ static const char* ExceptionTypeToString(ExceptionType type) {
@@ -409,7 +411,7 @@ index 10b7c48a7..50953015b 100644
      report += "Registers:\n\n";
      report += DumpRegisters(core);
 diff --git a/src/core/arm/exception_handler.h b/src/core/arm/exception_handler.h
-index c45c21169..41f7ab42e 100644
+index c45c21169c440c1f868fb23a8259905e82e4ce98..41f7ab42e53443ecfc0ce309613e3d3771c90a4a 100644
 --- a/src/core/arm/exception_handler.h
 +++ b/src/core/arm/exception_handler.h
 @@ -4,6 +4,7 @@

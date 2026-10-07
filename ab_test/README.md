@@ -11,13 +11,19 @@ From the repo root:
 
 ## One-time setup
 
-1. Paths are found automatically when Azahar is checked out next to this repo
-   (`..\azahar`, built in `build\`) and MSYS2 is at `C:\msys64`. Otherwise copy
+1. Paths are found automatically when
+   [azahar-3ds-accurate](https://github.com/czyrustuazon/azahar-3ds-accurate) is
+   checked out next to this repo (`..\azahar-3ds-accurate`, built in `build\`) and
+   MSYS2 is at `C:\msys64`. Otherwise copy
    `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and uncomment what
    differs, or set `NLPP_AZAHAR_SRC` / `NLPP_AZAHAR_EXE` / `NLPP_MSYS_BIN` /
    `NLPP_ROM` / `NLPP_PYTHON`. `.\ab_test\make.ps1 paths` shows what it resolved.
 2. Build Azahar if needed: `.\ab_test\make.ps1 build-azahar`
-   That applies `ab_test/patches/azahar-openlinkfile.patch` when `file.cpp` still stubs `OpenLinkFile` (log line `clone offset=`), rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
+   That configures `build\` on the first run (MSYS2 clang64 + Ninja), builds
+   `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
+   The fork already has the NLPP changes (OpenLinkFile clone, `NLPP_EMU_*`
+   replays). Pointed at a plain upstream Azahar instead, it applies
+   `ab_test/patches/azahar-*.patch` first.
 3. Create instances + launch bats:
 
 ```powershell
@@ -48,11 +54,16 @@ argument.
 
 ## Smoke boot (automated crash check)
 
-`tools/smoke_boot_azahar.py` boots `release/` in a throwaway copy of an instance
+Double-click **`ab_test\Run Safety Checks.bat`** for a menu: code.bin checks,
+smoke boot, or the full test suite (`make.ps1 checks` / `smoke` / `test`).
+
+`tools/smoke_boot_azahar.py` boots `release/` in a throwaway copy of instance A
 and fails on a data abort. `--inject` turns on the NLPP_EMU_* hardware-crash
-replays (they need `ab_test/patches/azahar-nlpp-emu.patch`, which is the local
-Azahar's uncommitted fault-injection code saved as a patch). A guarded build
-passes; restoring a vanilla instruction at a guarded site fails within seconds.
+replays from [azahar-3ds-accurate](https://github.com/czyrustuazon/azahar-3ds-accurate)
+(`..\azahar-3ds-accurate`, branch `main`; exported here as `ab_test/patches/azahar-*.patch`
+by `tools/export_azahar_patches.py`). A guarded build passes; restoring a vanilla
+instruction at a guarded site fails within seconds. Changes to the emulator go
+to the fork first: see `CLAUDE.md`.
 
 ```powershell
 python tools\smoke_boot_azahar.py --azahar ab_test\azahar_instances\a\azahar.exe `

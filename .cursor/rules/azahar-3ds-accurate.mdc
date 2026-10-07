@@ -1,0 +1,32 @@
+---
+description: HARD REQUIREMENT. Hardware-accurate Azahar changes go to the azahar-3ds-accurate fork first, then are exported to ab_test/patches.
+alwaysApply: true
+---
+
+# Hardware-accurate Azahar lives in azahar-3ds-accurate
+
+**Hard requirement.** Any change that makes Azahar behave more like real 3DS
+hardware (NLPP_EMU_* crash replays, exception/abort behavior, FS/service
+differences such as OpenLinkFile, anything in `ab_test/patches/azahar-*.patch`)
+must land in the fork **azahar-3ds-accurate**:
+
+- folder `../azahar-3ds-accurate` (next to this repo)
+- branch `main` = NLPP changes; branch `upstream` = pristine upstream Azahar
+- `origin` = `git@github.com:czyrustuazon/azahar-3ds-accurate.git`
+
+Not done until:
+
+1. **Committed** on `main` in `../azahar-3ds-accurate`.
+2. **Not pushed.** Never `git push` the fork; the owner pushes. Give them:
+   `git -C "../azahar-3ds-accurate" push -u origin main upstream`
+3. `python tools/export_azahar_patches.py` run here, and the changed
+   `ab_test/patches/*.patch` committed with the EngPatcher change.
+4. Fork `NLPP.md` table updated for a new replay or behavior.
+5. Owner told to rebuild after pushing: `sudo bash scripts/setup-smoke-runner.sh`
+   on the gold runner, `.\ab_test\make.ps1 build-azahar` locally.
+
+Never hand-edit `ab_test/patches/azahar-*.patch`
+(`tests/test_export_azahar_patches.py` catches drift). Never commit to the
+fork's `upstream` branch except a pristine import. Never open PRs or issues on
+azahar-emu/azahar (their AI-POLICY.md). `../azahar` is the old checkout; do not
+commit NLPP changes there. Full text: `CLAUDE.md`.

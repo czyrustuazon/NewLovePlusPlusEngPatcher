@@ -43,6 +43,7 @@ tools/*
 !tools/make_code_ips.py
 !tools/smoke_boot_azahar.py
 !tools/verify_name_input_code.py
+!tools/export_azahar_patches.py
 !tools/build_spotpass_inject.py
 !tools/scan_nl_spotpass_zip.py
 !tools/spotpass/
@@ -126,6 +127,7 @@ ab_test/*
 !ab_test/Run Safety Checks.bat
 !ab_test/patches/
 !ab_test/patches/azahar-openlinkfile.patch
+!ab_test/patches/azahar-nlpp-emu.patch
 ab_test/azahar_instances/
 ab_test/paths.local.ps1
 ab_test/saves/

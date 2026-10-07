@@ -28,8 +28,12 @@ $Paths = @{
 $LocalPaths = Join-Path $AbTest "paths.local.ps1"
 if (Test-Path $LocalPaths) { . $LocalPaths }
 
-# Default: an Azahar checkout next to this repo (..\azahar), built in build\.
-if (-not $Paths.AzaharSrc) { $Paths.AzaharSrc = Join-Path $Parent "azahar" }
+# Default: the azahar-3ds-accurate fork next to this repo (CLAUDE.md), else a
+# plain Azahar checkout (..\azahar) that build-azahar patches. Built in build\.
+if (-not $Paths.AzaharSrc) {
+    $fork = Join-Path $Parent "azahar-3ds-accurate"
+    $Paths.AzaharSrc = if (Test-Path (Join-Path $fork "NLPP.md")) { $fork } else { Join-Path $Parent "azahar" }
+}
 if (-not $Paths.AzaharBuild) { $Paths.AzaharBuild = Join-Path $Paths.AzaharSrc "build" }
 if (-not $Paths.AzaharExe) {
     $Paths.AzaharExe = Join-Path $Paths.AzaharBuild "bin\Release\azahar.exe"
@@ -83,26 +87,49 @@ function Show-Paths {
     Write-Host "Roaming mod: $env:APPDATA\Azahar\load\mods\$($Paths.TitleId)"
 }
 
-function Ensure-AzaharOpenLinkFile {
-    $src = Join-Path $Paths.AzaharSrc "src\core\hle\service\fs\file.cpp"
-    $patch = Join-Path $AbTest "patches\azahar-openlinkfile.patch"
-    if (-not (Test-Path $src)) { throw "Azahar source missing: $src" }
-    if (-not (Test-Path $patch)) { throw "missing $patch" }
-    $text = Get-Content -LiteralPath $src -Raw
-    $stubbed = $text -match '\(STUBBED\) File command OpenLinkFile'
-    $cloned = ($text -match 'clone offset=') -or ($text -match 'slot->size = original_file->size')
-    if ($cloned -and -not $stubbed) {
-        Write-Host "OpenLinkFile already clones the handle ($src)"
+function Test-AzaharFork {
+    Test-Path (Join-Path $Paths.AzaharSrc "NLPP.md")
+}
+
+# The fork already has the NLPP changes as commits. A plain upstream checkout
+# gets ab_test\patches\azahar-*.patch (exports of the fork) applied once.
+function Ensure-AzaharNlppChanges {
+    if (-not (Test-Path (Join-Path $Paths.AzaharSrc "src\core"))) {
+        throw "Azahar source missing: $($Paths.AzaharSrc)"
+    }
+    if (Test-AzaharFork) {
+        Write-Host "azahar-3ds-accurate checkout ($($Paths.AzaharSrc)); NLPP changes are commits, nothing to patch"
         return
     }
+    Write-Warning "$($Paths.AzaharSrc) is not azahar-3ds-accurate; applying the exported patches"
     Push-Location $Paths.AzaharSrc
     try {
-        git apply $patch
-        if ($LASTEXITCODE -ne 0) { throw "git apply failed: $patch" }
-        Write-Host "Applied OpenLinkFile clone patch -> $src"
+        foreach ($name in @("azahar-openlinkfile.patch", "azahar-nlpp-emu.patch")) {
+            $patch = Join-Path $AbTest "patches\$name"
+            git apply --reverse --check $patch 2>$null
+            if ($LASTEXITCODE -eq 0) { Write-Host "already applied: $name"; continue }
+            git apply $patch
+            if ($LASTEXITCODE -ne 0) { throw "git apply failed: $patch" }
+            Write-Host "applied: $name"
+        }
     } finally {
         Pop-Location
     }
+}
+
+# Same options as the original ..\azahar\build (MSYS2 clang64 + Ninja).
+function Initialize-AzaharBuild([string]$Build) {
+    $gen = Join-Path $Paths.MsysBin "ninja.exe"
+    if (-not (Test-Path $gen)) { throw "ninja not found in $($Paths.MsysBin) (pacman -S mingw-w64-clang-x86_64-ninja)" }
+    git -C $Paths.AzaharSrc submodule update --init --recursive
+    if ($LASTEXITCODE -ne 0) { throw "submodule update failed" }
+    cmake -S $Paths.AzaharSrc -B $Build -G Ninja `
+        -DCMAKE_BUILD_TYPE=Release `
+        "-DCMAKE_C_COMPILER=$($Paths.MsysBin)/cc.exe" `
+        "-DCMAKE_CXX_COMPILER=$($Paths.MsysBin)/c++.exe" `
+        -DENABLE_QT_UPDATE_CHECKER=OFF -DENABLE_DISCORD_RPC=OFF -DENABLE_VULKAN=OFF `
+        -DENABLE_LTO=ON -DENABLE_TESTS=ON
+    if ($LASTEXITCODE -ne 0) { throw "cmake configure failed" }
 }
 
 function Copy-AzaharRuntimeDlls([string]$DestDir) {
@@ -139,12 +166,15 @@ function Copy-AzaharToInstances {
 
 function Build-Azahar {
     $build = $Paths.AzaharBuild
-    if (-not (Test-Path $build)) { throw "Azahar build dir missing: $build" }
-    Ensure-AzaharOpenLinkFile
+    Ensure-AzaharNlppChanges
     $msysBin = $Paths.MsysBin
     # clang64\bin -> msys64 root -> usr\bin (make, sh, ...).
     $msysUsr = Join-Path (Split-Path -Parent (Split-Path -Parent $msysBin)) "usr\bin"
     $env:PATH = "$msysBin;$msysUsr;" + $env:PATH
+    if (-not (Test-Path (Join-Path $build "CMakeCache.txt"))) {
+        Write-Host "Configuring a new build in $build (first build of this checkout is slow)"
+        Initialize-AzaharBuild $build
+    }
     Push-Location $build
     try {
         cmake .
@@ -335,6 +365,35 @@ function Launch-Instance([string]$Id) {
     }
 }
 
+function Invoke-CodeChecks {
+    # Same gate the gold runner uses: no vanilla = fail, not skip.
+    $env:NLPP_REQUIRE_CODE_CHECKS = "1"
+    $vanilla = Join-Path $Paths.VanillaDump "exefs\code.bin"
+    if (Test-Path $vanilla) { $env:NLPP_VANILLA_CODE = $vanilla }
+    Invoke-Python @("-m", "pytest", "tests/test_code_patch_map.py",
+        "tests/test_patch_blob_snapshots.py", "-q", "-rs", "-p", "no:cacheprovider")
+    $code = Join-Path $EngPatcher "release\name_input_code.bin"
+    if (Test-Path $code) {
+        Write-Host "Checking release\name_input_code.bin against the snapshot (stale after a patch change until you rebake)"
+        Invoke-Python @("tools\verify_name_input_code.py")
+    }
+}
+
+function Invoke-Smoke([string]$Inject) {
+    $exe = Join-Path $Paths.Instances "a\azahar.exe"
+    if (-not (Test-Path $exe)) {
+        throw "Missing $exe. Run '.\ab_test\make.ps1 build-azahar' and 'instances' first."
+    }
+    if (-not $Paths.RomPath -or -not (Test-Path $Paths.RomPath)) {
+        throw "ROM not found. Set `$Paths.RomPath in ab_test\paths.local.ps1 or NLPP_ROM."
+    }
+    Require-PostBake
+    $argv = @("tools\smoke_boot_azahar.py", "--azahar", $exe, "--dll-dir", $Paths.MsysBin,
+        "--rom", $Paths.RomPath, "--seed-user", (Get-InstanceUser "a"))
+    if ($Inject) { $argv += @("--inject", $Inject) }
+    Invoke-Python $argv
+}
+
 $handlers = @{
     "help" = {
         @"
@@ -342,7 +401,8 @@ NLPP a/b Azahar workflow (.\ab_test\make.ps1 [target])
 See ab_test\README.md
 
   paths          Show resolved folder paths
-  build-azahar   Apply azahar-openlinkfile.patch if file.cpp is still stubbed, then cmake + ninja citra_meta, then copy azahar.exe into instances
+  build-azahar   Build azahar-3ds-accurate (..\azahar-3ds-accurate; configures build\ on first run), then copy azahar.exe into instances.
+                 A plain upstream checkout gets ab_test\patches\azahar-*.patch applied first
   instances      Create dual test instances + Launch-a/b.bat
   seed-a / seed-b  Copy post-bake LayeredFS + EN dialog into instance mod
   deploy-a/b     Same post-bake copy + EN .dbin2 -> instance A/B
@@ -355,6 +415,12 @@ See ab_test\README.md
 
   save-nene-a/b  Install the local Nene title-save pack -> instance A/B
   save-nene      Same pack -> A and B (shared a/b slot; pack is gitignored)
+
+  checks         code.bin checks vs vanilla + release\name_input_code.bin vs snapshot
+  smoke          Boot release\ in a copy of instance A with the hardware-crash replays
+  smoke-plain    Same boot without the replays
+  test           Full pytest suite
+  (Double-click ab_test\Run Safety Checks.bat for a menu.)
 
   launch-a/b     Start Azahar instance A or B (moves LayeredFS *.bak* out of romfs/)
   all-a / all-b  instances + install post-bake LayeredFS
@@ -388,6 +454,10 @@ Override paths: copy ab_test\paths.local.ps1.example -> ab_test\paths.local.ps1
     "all-b" = { Setup-Instances; Install-PostBake "b" }
     "progress" = { Invoke-Python @("src\report_progress.py") }
     "progress-dry" = { Invoke-Python @("src\report_progress.py", "--dry-run") }
+    "checks" = { Invoke-CodeChecks }
+    "smoke" = { Invoke-Smoke "name-walk,pane-flag,menu-vt" }
+    "smoke-plain" = { Invoke-Smoke "" }
+    "test" = { Invoke-Python @("-m", "pytest", "tests/", "-q", "-rs", "-p", "no:cacheprovider") }
 }
 
 if (-not $handlers.ContainsKey($Target)) {
