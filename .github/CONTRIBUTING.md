@@ -68,7 +68,7 @@ python dev/check_coverage.py     # coverage ratchet (CI runs it too)
   100%. After adding tests, run `python dev/check_coverage.py --update` and commit the
   raised floors. See what is missing with `python -m coverage report -m --include=<file>`
   (or `python -m coverage html`, then open `htmlcov/index.html`).
-- **Tests that need vanilla dumps, fonts or the Azahar fork** get
+- **Tests that need vanilla game dumps or the Azahar fork** get
   `@pytest.mark.local_data`. They still run locally, but coverage leaves them out,
   since CI cannot run them. Code they cover still needs a test that runs without that data.
 - **Changed what a patch writes?** The snapshot tests will fail on purpose. If the change

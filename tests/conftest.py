@@ -9,6 +9,9 @@ from pathlib import Path
 
 # CI has no release/bake_img.bin. Importing deploy_* modules must not exit.
 os.environ.setdefault("NLPP_ALLOW_MISSING_DEPLOY_IMG", "1")
+# Never mirror deploys into a real Azahar LayeredFS from a test. Tests of the
+# mirror itself set or delete this with monkeypatch.
+os.environ["NLPP_ALSO_AZAHAR"] = "0"
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
@@ -20,7 +23,7 @@ if str(SRC) not in sys.path:
 def pytest_configure(config):
     config.addinivalue_line(
         "markers",
-        "local_data: needs vanilla dumps, fonts or the Azahar fork; CI skips it. "
+        "local_data: needs vanilla game dumps or the Azahar fork; CI skips it. "
         'Coverage runs with -m "not local_data" so local and CI numbers match.',
     )
 

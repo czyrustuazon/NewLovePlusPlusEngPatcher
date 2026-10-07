@@ -13,7 +13,7 @@ for every file that was under 100% when the ratchet started, plus "_total".
 - --update only raises floors and removes entries; it never lowers or adds one.
 
 Coverage is measured with -m "not local_data", so it counts only tests that
-also run in CI (no vanilla dumps, fonts or Azahar fork). Cover new code with
+also run in CI (no vanilla game dumps or Azahar fork). Cover new code with
 tests like that. Local (Windows) and CI (Linux) numbers then differ only on
 platform branches; SLACK keeps floors for those files a few points lower.
 """

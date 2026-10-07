@@ -246,11 +246,11 @@ def resolve_resident_trb() -> Path:
     ):
         if c.is_file():
             # Prefer a writable release copy; seed durable if we only have overlay.
+            # (durable is checked first, so here it does not exist yet.)
             if c.resolve() != durable.resolve():
                 TEXTRESOURCE.mkdir(parents=True, exist_ok=True)
-                if not durable.is_file():
-                    shutil.copy2(c, durable)
-                    print(f"[trb] seeded resident -> {durable}", flush=True)
+                shutil.copy2(c, durable)
+                print(f"[trb] seeded resident -> {durable}", flush=True)
                 return durable.resolve()
             return c.resolve()
 

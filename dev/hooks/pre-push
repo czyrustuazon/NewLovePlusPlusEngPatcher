@@ -20,7 +20,7 @@ echo "[pre-push] pytest (with coverage)"
     exit 1
 }
 
-echo "[pre-push] pytest (local data: vanilla code.bin, fonts, Azahar fork)"
+echo "[pre-push] pytest (local data: vanilla game dumps, Azahar fork)"
 "$PY" -m pytest tests/ -q -x -rs -p no:cacheprovider -m local_data || {
     echo "[pre-push] tests failed; push aborted"
     exit 1
