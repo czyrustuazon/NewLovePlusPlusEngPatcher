@@ -46,6 +46,24 @@ Azahar treats the sibling `user/` folder as its portable user root. When
 `RomPath` is set, each launcher passes that ROM as Azahar's final positional
 argument.
 
+## Smoke boot (automated crash check)
+
+`tools/smoke_boot_azahar.py` boots `release/` in a throwaway copy of an instance
+and fails on a data abort. `--inject` turns on the NLPP_EMU_* hardware-crash
+replays (they need `ab_test/patches/azahar-nlpp-emu.patch`, which is the local
+Azahar's uncommitted fault-injection code saved as a patch). A guarded build
+passes; restoring a vanilla instruction at a guarded site fails within seconds.
+
+```powershell
+python tools\smoke_boot_azahar.py --azahar ab_test\azahar_instances\a\azahar.exe `
+  --dll-dir C:\msys64\clang64\bin --rom $env:NLPP_ROM `
+  --seed-user ab_test\azahar_instances\a\user --inject name-walk,pane-flag,menu-vt
+```
+
+`--seed-user` copies that instance's title save; without one the game waits on
+its create-save prompt and never reaches the crash sites. The gold-maker runner
+runs the same check after each published bake (nlpp-gold-maker `smoke.yml`).
+
 ## Everyday loop
 
 | Goal | Command |
