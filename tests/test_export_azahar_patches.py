@@ -12,6 +12,9 @@ import pytest
 
 from conftest import TOOLS, load_module
 
+# Needs local data; excluded from coverage (see dev/check_coverage.py).
+pytestmark = pytest.mark.local_data
+
 export = load_module("export_azahar_patches", TOOLS / "export_azahar_patches.py")
 
 

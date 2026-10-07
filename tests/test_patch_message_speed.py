@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from conftest import SRC, load_module
 
 ms = load_module("patch_message_speed", SRC / "patch_message_speed.py")
@@ -85,20 +87,13 @@ def test_talk_table_revert_restores_vanilla():
     assert ms.revert_patch(data) is False
 
 
-def test_message_speed_vanilla_dump_applies():
-    import sys
-
-    sys.path.insert(0, str(SRC))
-    from nlpp_paths import find_vanilla_code
-
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+@pytest.mark.local_data
+def test_message_speed_vanilla_dump_applies(vanilla_code):
+    data = bytearray(vanilla_code)
     assert data[ms.ADDR_FN : ms.ADDR_FN + 4] == ms.VANILLA_HEAD
     assert ms.is_talk_vanilla(data)
     if ms.is_fully_patched(data):
-        return
+        pytest.skip("code.bin already has message speed patched")
     assert ms.is_vanilla(data)
     assert ms.apply_patch(data) is True
     assert ms.is_patched(data)

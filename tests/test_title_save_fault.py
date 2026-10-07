@@ -10,7 +10,8 @@ this window. This is not the CESA malloc smash at ``0x0010DE4C`` (FAR 3).
 from __future__ import annotations
 
 import struct
-from pathlib import Path
+
+import pytest
 
 from conftest import ROOT
 
@@ -99,14 +100,10 @@ def test_preexisting_save_boot_dump_is_idx_pointer_abort():
     assert sp == 0x085E5D10
 
 
-def test_fault_helper_matches_vanilla_code():
+@pytest.mark.local_data
+def test_fault_helper_matches_vanilla_code(vanilla_code):
     """The dump's faulting ``ldrne`` is the vanilla helper. The caller still BL's it."""
-    from nlpp_paths import find_vanilla_code
-
-    vanilla_path = find_vanilla_code()
-    if vanilla_path is None:
-        return
-    vanilla = vanilla_path.read_bytes()
+    vanilla = vanilla_code
     dump = parse_luma_arm11(FIXTURE.read_bytes())
     regs = dump["regs"]
     window_off = _code_window_file_off(regs[15], dump["code"], regs[16])
@@ -310,18 +307,12 @@ def _run_cave(blob: bytes, base: int, entry: int, regs: dict[int, int], mem: dic
 def test_chunk_walk_guard_stops_on_pupu_and_keeps_idx():
     """A ``PUPU`` size ends the walk. A heap node still returns its tag and advances."""
     from patch_chunk_walk_guard import (
-        ADDR_ADVANCE,
-        ADDR_DEREF,
         HEAP_LO,
-        apply_patch,
         build_cave,
-        is_patched,
     )
     from patch_input_cave_map import ADDR_CHUNK_WALK_CAVE, ADDR_CHUNK_WALK_LIMIT, TEXT_PAGE_END
     from patch_input_strcat_raw import ADDR as STRCAT_ADDR
     from patch_input_strcat_raw import SIZE as STRCAT_SIZE
-    from patch_input_strcat_raw import apply_patch as apply_strcat
-    from nlpp_paths import find_vanilla_code
 
     blob, labs = build_cave()
     assert ADDR_CHUNK_WALK_CAVE + len(blob) <= ADDR_CHUNK_WALK_LIMIT
@@ -368,19 +359,21 @@ def test_chunk_walk_guard_stops_on_pupu_and_keeps_idx():
     assert mem_pupu[pair + 4] == node
     assert all(addr != node + 8 + R2_PUPU for addr in reads)
 
-    vanilla_path = find_vanilla_code()
-    if vanilla_path is None:
-        return
-    from patch_code import apply_name_pane_patches
 
-    data = bytearray(vanilla_path.read_bytes())
+@pytest.mark.local_data
+def test_chunk_walk_guard_applies_on_vanilla(vanilla_code):
+    from patch_chunk_walk_guard import ADDR_DEREF, apply_patch, is_patched
+    from patch_code import apply_name_pane_patches
+    from patch_input_strcat_raw import apply_patch as apply_strcat
+
+    data = bytearray(vanilla_code)
     apply_name_pane_patches(data)
     apply_strcat(data)
     apply_patch(data)
     assert is_patched(data)
     assert data[ADDR_DEREF + 8 : ADDR_DEREF + 12] != bytes.fromhex("00009015")
     assert data[IDX_FILE : IDX_FILE + 4] == IDX_TAG
-    assert data[CALLER_BL_FILE : CALLER_BL_FILE + 4] == vanilla_path.read_bytes()[
+    assert data[CALLER_BL_FILE : CALLER_BL_FILE + 4] == vanilla_code[
         CALLER_BL_FILE : CALLER_BL_FILE + 4
     ]
 
@@ -1255,13 +1248,10 @@ def test_pak_table_skips_a_null_base():
 def test_pak_alloc_pops_when_malloc_returns_null():
     """``strb r1, [r0]`` faults when the PACK allocation returns 0."""
     from patch_chunk_walk_guard import (
-        ADDR_FILLCAND_TAIL,
-        ADDR_PAK_ALLOC,
         ADDR_PAK_FLAG_CAVE,
         ADDR_PAK_POP,
         build_pak_alloc_cave,
     )
-    from patch_input_candidate_nullguard import POST1
 
     cave = build_pak_alloc_cave()
     assert cave.hex() == "002801d17df5eee6002d00d068607047"
@@ -1315,15 +1305,21 @@ def test_pak_alloc_pops_when_malloc_returns_null():
     assert ret == ("leave", 0xD3DC)
     assert writes == []
 
-    from nlpp_paths import find_vanilla_code
 
-    vanilla_path = find_vanilla_code()
-    if vanilla_path is None:
-        return
-    from patch_chunk_walk_guard import apply_pak_flag
-    from patch_input_candidate_nullguard import CAVE1, apply_patch as apply_cand
+@pytest.mark.local_data
+def test_pak_alloc_cave_hooks_vanilla(vanilla_code):
+    from patch_chunk_walk_guard import (
+        ADDR_FILLCAND_TAIL,
+        ADDR_PAK_ALLOC,
+        ADDR_PAK_FLAG_CAVE,
+        apply_pak_flag,
+        build_pak_alloc_cave,
+    )
+    from patch_input_candidate_nullguard import CAVE1, POST1
+    from patch_input_candidate_nullguard import apply_patch as apply_cand
 
-    data = bytearray(vanilla_path.read_bytes())
+    cave = build_pak_alloc_cave()
+    data = bytearray(vanilla_code)
     apply_cand(data)
     apply_pak_flag(data)
     apply_pak_flag(data)

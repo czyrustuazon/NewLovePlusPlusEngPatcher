@@ -1,4 +1,5 @@
 # Dev / CI (install: pip install -r dev/requirements-dev.txt)
 -r requirements.txt
 pytest>=8.0.0
+coverage[toml]>=7.10
 ruff>=0.14.0

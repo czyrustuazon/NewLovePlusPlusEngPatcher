@@ -15,6 +15,10 @@ __pycache__/
 venv/
 *.egg-info/
 .pytest_cache/
+.coverage
+.coverage.*
+coverage.json
+htmlcov/
 .mypy_cache/
 
 # Patcher build / work products (CIAs, RomFS trees, LayeredFS, reports)

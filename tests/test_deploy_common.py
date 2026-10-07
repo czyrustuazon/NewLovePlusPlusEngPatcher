@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from conftest import TOOLS, load_module
 
 deploy_common = load_module("deploy_common", TOOLS / "deploy_common.py")
@@ -68,6 +70,11 @@ def test_iter_deploy_targets_includes_primary_and_bake(tmp_path: Path, monkeypat
     targets = deploy_common.iter_deploy_targets(primary)
     assert primary.resolve() in targets
     assert bake.resolve() in targets
+
+    # Mirror on, but no Azahar install at all.
+    monkeypatch.setenv("NLPP_ALSO_AZAHAR", "1")
+    monkeypatch.setattr(deploy_common, "AZAHAR_INSTANCES", tmp_path / "no_instances")
+    assert deploy_common.iter_deploy_targets(primary) == [primary.resolve(), bake.resolve()]
 
 
 def test_iter_deploy_targets_skips_ab_instances_when_disabled(tmp_path: Path, monkeypatch):
@@ -325,3 +332,129 @@ def test_maybe_backup_img_copies_layeredfs(tmp_path: Path, monkeypatch):
     bak = deploy_common.maybe_backup_img(img, "confirm_btn")
     assert bak.is_file()
     assert bak.read_bytes() == b"layeredfs"
+
+
+def test_ui_font_and_chrome_font_load(monkeypatch, tmp_path: Path):
+    assert deploy_common.ui_font(12).size == 12
+    assert deploy_common.chrome_font(12).size == 12  # Heisei W5 (tracked)
+    monkeypatch.setattr(deploy_common, "HEISEI_W5", tmp_path / "missing.ttc")
+    assert deploy_common.chrome_font(12).path == str(deploy_common.UI_FONT)
+
+
+def test_render_header_aa_blank_text_and_too_long():
+    blank = deploy_common.render_header_aa(64, 16, " ")
+    assert blank.getchannel("A").getbbox() is None
+    with pytest.raises(RuntimeError, match="cannot fit header"):
+        deploy_common.render_header_aa(16, 16, "Far too long for this bar", max_size=10)
+
+
+def test_resolve_img_paths_env_missing_exits(tmp_path: Path, monkeypatch):
+    monkeypatch.setenv("NLPP_DEPLOY_IMG", str(tmp_path / "nope.bin"))
+    with pytest.raises(SystemExit, match="NLPP_DEPLOY_IMG not found"):
+        deploy_common.resolve_img_paths()
+
+
+def test_resolve_img_paths_azahar_and_backup_sidecar(tmp_path: Path, monkeypatch):
+    az = tmp_path / "img.bin"
+    az.write_bytes(b"az")
+    sidecar = tmp_path / "img.bin.bak_pre_msel5245"
+    monkeypatch.setenv("NLPP_DEPLOY_IMG", "")
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "bake.bin")
+    monkeypatch.setattr(deploy_common, "AZAHAR_MOD_IMG", az)
+    monkeypatch.setattr(deploy_common, "find_vanilla_img", lambda: None)
+    assert deploy_common.resolve_img_paths() == (az.resolve(), az.resolve())
+    sidecar.write_bytes(b"vanilla")
+    assert deploy_common.resolve_img_paths() == (az.resolve(), sidecar.resolve())
+
+
+def test_skip_full_img_backup_survives_resolve_error(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+
+    class Broken(type(tmp_path)):
+        def resolve(self, strict=False):
+            raise OSError("boom")
+
+    assert deploy_common.skip_full_img_backup(Broken(tmp_path / "x.bin")) is False
+
+
+def test_maybe_backup_img_keeps_existing_and_needs_img(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_NO_IMG_BACKUP", raising=False)
+    monkeypatch.setattr(deploy_common, "BAKE_IMG", tmp_path / "bake.bin")
+    img = tmp_path / "img.bin"
+    with pytest.raises(SystemExit, match="missing"):
+        deploy_common.maybe_backup_img(img, "t")
+    img.write_bytes(b"new")
+    bak = deploy_common.img_backup_path(img, "t")
+    bak.write_bytes(b"old")
+    assert deploy_common.maybe_backup_img(img, "t") == bak
+    assert bak.read_bytes() == b"old"
+
+
+def _trb_paths(tmp_path: Path, monkeypatch):
+    paths = {
+        "TEXTRESOURCE": tmp_path / "release" / "textresource",
+        "OVERLAY_TRB_DIR": tmp_path / "overlay",
+        "AZAHAR_MOD_TRB_DIR": tmp_path / "azahar",
+    }
+    for k, v in paths.items():
+        monkeypatch.setattr(deploy_common, k, v)
+    monkeypatch.delenv("NLPP_RESIDENT_TRB", raising=False)
+    monkeypatch.setattr(deploy_common, "find_vanilla_resident_trb", lambda: None)
+    return {k: v / "textresource_resident_jpn.trb" for k, v in paths.items()}
+
+
+def test_resolve_resident_trb_env(tmp_path: Path, monkeypatch):
+    trb = tmp_path / "r.trb"
+    monkeypatch.setenv("NLPP_RESIDENT_TRB", str(trb))
+    with pytest.raises(SystemExit, match="NLPP_RESIDENT_TRB not found"):
+        deploy_common.resolve_resident_trb()
+    trb.write_bytes(b"t")
+    assert deploy_common.resolve_resident_trb() == trb.resolve()
+
+
+def test_resolve_resident_trb_prefers_durable_then_seeds_it(tmp_path: Path, monkeypatch):
+    p = _trb_paths(tmp_path, monkeypatch)
+    with pytest.raises(SystemExit, match="resident TRB not found"):
+        deploy_common.resolve_resident_trb()
+
+    p["AZAHAR_MOD_TRB_DIR"].parent.mkdir(parents=True)
+    p["AZAHAR_MOD_TRB_DIR"].write_bytes(b"azahar")
+    durable = p["TEXTRESOURCE"]
+    assert deploy_common.resolve_resident_trb() == durable.resolve()
+    assert durable.read_bytes() == b"azahar"
+    # Durable exists now: returned as-is, not re-seeded.
+    durable.write_bytes(b"edited")
+    assert deploy_common.resolve_resident_trb() == durable.resolve()
+    assert durable.read_bytes() == b"edited"
+
+
+def test_resolve_resident_trb_seeds_from_vanilla(tmp_path: Path, monkeypatch):
+    p = _trb_paths(tmp_path, monkeypatch)
+    vanilla = tmp_path / "vanilla.trb"
+    vanilla.write_bytes(b"vanilla")
+    monkeypatch.setattr(deploy_common, "find_vanilla_resident_trb", lambda: vanilla)
+    assert deploy_common.resolve_resident_trb() == p["TEXTRESOURCE"].resolve()
+    assert p["TEXTRESOURCE"].read_bytes() == b"vanilla"
+
+
+def test_find_ui_png_edge_cases(tmp_path: Path, monkeypatch):
+    from PIL import Image
+
+    monkeypatch.setattr(deploy_common, "ROOT", tmp_path)
+    folder = tmp_path / "assets" / "images" / "X.check"
+    folder.mkdir(parents=True)
+    # Missing folder is skipped; no size returns the first match.
+    clear = folder / "Clear.png"
+    Image.new("RGBA", (8, 8), (0, 0, 0, 0)).save(clear)
+    assert deploy_common.find_ui_png(("Missing.check", "X.check"), "Clear") == clear
+    # Fully transparent master: bbox is the full frame.
+    assert deploy_common._glyph_bbox(Image.open(clear).convert("RGBA")) == (0, 0, 8, 8)
+    # Unreadable PNG is skipped.
+    (folder / "Bad.png").write_bytes(b"not a png")
+    assert deploy_common.find_ui_png(("X.check",), "Bad", (16, 16)) is None
+    # Fit failure is skipped.
+    def boom(*_a, **_k):
+        raise OSError("disk")
+
+    monkeypatch.setattr(deploy_common, "fit_png_to_canvas", boom)
+    assert deploy_common.find_ui_png(("X.check",), "Clear", (16, 16)) is None

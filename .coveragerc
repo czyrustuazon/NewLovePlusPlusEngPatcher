@@ -1,0 +1,20 @@
+# Line + branch coverage for src/ and tools/. Goal: 100%.
+# Run:   python -m coverage run -m pytest tests/ && python dev/check_coverage.py
+# The ratchet (floor + files allowed under 100%) lives in dev/check_coverage.py.
+
+[run]
+branch = True
+source =
+    src
+    tools
+omit =
+    # Vendored upstream (kiwiz/nlpp-tools), not ours to test.
+    tools/nlpp-tools/*
+
+[report]
+skip_empty = True
+exclude_also =
+    if __name__ == .__main__.:
+
+[json]
+output = coverage.json

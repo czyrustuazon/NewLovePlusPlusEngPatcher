@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from conftest import SRC, load_module
 
 pc = load_module("patch_code", SRC / "patch_code.py")
@@ -59,16 +61,9 @@ def test_nintendo_logo_rejects_unknown_id():
         raise AssertionError("expected ValueError")
 
 
-def test_nintendo_logo_vanilla_dump_applies():
-    import sys
-
-    sys.path.insert(0, str(SRC))
-    from nlpp_paths import find_vanilla_code
-
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+@pytest.mark.local_data
+def test_nintendo_logo_vanilla_dump_applies(vanilla_code):
+    data = bytearray(vanilla_code)
     assert (
         data[pc.ADDR_NINTENDO_LOGO_TEX_ID : pc.ADDR_NINTENDO_LOGO_TEX_ID + 4]
         == pc.ORIG_NINTENDO_LOGO_TEX_ID
@@ -78,16 +73,9 @@ def test_nintendo_logo_vanilla_dump_applies():
     assert data[0x16F3C4 : 0x16F3C8] == pc.ORIG_NINTENDO_LOGO_TEX_ID
 
 
-def test_logo_white_native_size_vanilla_dump_applies():
-    import sys
-
-    sys.path.insert(0, str(SRC))
-    from nlpp_paths import find_vanilla_code
-
-    src = find_vanilla_code()
-    if src is None:
-        return
-    data = bytearray(src.read_bytes())
+@pytest.mark.local_data
+def test_logo_white_native_size_vanilla_dump_applies(vanilla_code):
+    data = bytearray(vanilla_code)
     assert (
         data[pc.ADDR_CESA_LOGO_WHITE_BNE : pc.ADDR_CESA_LOGO_WHITE_BNE + 4]
         == pc.ORIG_CESA_LOGO_WHITE_BNE

@@ -54,7 +54,19 @@ jobs:
       - name: Lint (ruff hard errors)
         run: python3 -m ruff check --select E9,F63,F7,F82 src tools tests
 
+      # Coverage counts only tests that run everywhere (not local_data), so the
+      # floors in tests/snapshots/coverage_floor.json mean the same here and locally.
+      - name: Run unit tests (with coverage)
+        run: python3 -m coverage run -m pytest tests/ -v -rs -m "not local_data"
+
       # -rs lists skips: vanilla-backed checks (test_code_patch_map) skip here
       # and run locally / in the pre-push hook instead.
-      - name: Run unit tests
-        run: python3 -m pytest tests/ -v -rs
+      - name: Run local-data tests (skip without vanilla dumps)
+        run: python3 -m pytest tests/ -v -rs -m local_data
+
+      - name: Coverage report
+        run: python3 -m coverage report --skip-covered --sort=cover
+
+      # Ratchet toward 100%: no file may drop below its floor; new files need 100%.
+      - name: Coverage ratchet
+        run: python3 dev/check_coverage.py

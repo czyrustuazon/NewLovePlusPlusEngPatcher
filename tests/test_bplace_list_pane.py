@@ -25,6 +25,7 @@ def test_deploy_name_input_includes_bplace_pane():
     assert "apply_bplace_list_pane" in text
 
 
+@pytest.mark.local_data
 def test_apply_bplace_pane_on_vanilla():
     src = find_vanilla_code()
     if src is None:
@@ -37,6 +38,7 @@ def test_apply_bplace_pane_on_vanilla():
     assert bplace.apply_patch(data) is False
 
 
+@pytest.mark.local_data
 def test_upgrades_failed_96px_experiment():
     src = find_vanilla_code()
     if src is None:
