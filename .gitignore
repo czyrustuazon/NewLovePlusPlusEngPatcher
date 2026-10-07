@@ -5,6 +5,7 @@
 
 # Drop CIA stamp: last synced EngPatcher main commit (no git)
 .nlpp_main_sha
+.nlpp_main_files
 
 # Python
 __pycache__/

@@ -223,6 +223,22 @@ if "!HASH_ERR!"=="0" (
   set "SKIP_HASH=--skip-hash"
 )
 
+REM Git checkout: the published gold bake is built from main, so local edits to
+REM baked inputs (name-input patches, UI PNGs, TRB) would not reach the CIA.
+REM Ask before the wipe so the long build runs unattended. Any preset
+REM NLPP_SKIP_GOLD_FETCH (0 or 1) or NLPP_REPACK_IMAGES=1 skips the question.
+if exist "%~dp0.git" if not defined NLPP_SKIP_GOLD_FETCH if /i not "%NLPP_REPACK_IMAGES%"=="1" (
+  echo.
+  echo Git checkout detected. The GitHub gold bake is built from main and
+  echo leaves out your local edits to name-input / message-speed patches,
+  echo UI PNGs, and TRB text. Building locally includes them ^(~45 min^).
+  set "GOLD_ANS="
+  set /p "GOLD_ANS=Skip the gold download and build from this checkout? [y/N]: "
+  if /i "!GOLD_ANS!"=="y" set "NLPP_SKIP_GOLD_FETCH=1"
+  if /i "!GOLD_ANS!"=="yes" set "NLPP_SKIP_GOLD_FETCH=1"
+  set "GOLD_ANS="
+)
+
 echo.
 echo Wiping out\, release\, and cache\ before this from-scratch build...
 echo Previous CIA, patch log, gold bake, TRB overlay, name-input code.bin,
@@ -269,6 +285,8 @@ REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
 REM After the wipe, poll GitHub Release tag gold.
 REM   success → use that bake (no local PNG pack)
 REM   missing Release or no internet → rebuild_bake_img.py --rom
+REM   Release baked from another EngPatcher commit than .nlpp_main_sha
+REM     → also a local rebuild (NLPP_GOLD_ANY_SHA=1 accepts it)
 REM   NLPP_SKIP_GOLD_FETCH=1  skip the poll and pack locally
 REM   NLPP_REUSE_BAKE=1  skip the stamp check on a leftover local bake
 if not exist "%~dp0cache" mkdir "%~dp0cache"

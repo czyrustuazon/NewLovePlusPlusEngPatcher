@@ -6,6 +6,11 @@ EngPatcher remote). The default is ``czyrustuazon/nlpp-gold-maker``. Override
 with ``--repo`` or ``NLPP_GITHUB_REPO``. The rolling bake from EngPatcher
 ``main`` is Release tag ``gold``.
 
+The Release body records ``engpatcher_sha:``. When this tree was synced from
+``main`` (``.nlpp_main_sha``), a gold bake from any other commit is refused so
+Drop builds locally instead of pairing new scripts with an older bake. A git
+checkout has no stamp and skips the check.
+
 Examples:
   python tools/fetch_release_bake.py --tag gold
   python tools/fetch_release_bake.py --repo czyrustuazon/nlpp-gold-maker --tag latest
@@ -16,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import urllib.error
 import urllib.request
@@ -24,6 +30,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "release"
+# Written by tools/fetch_main_tree.py after a zipball sync.
+MAIN_SHA_STAMP = ROOT / ".nlpp_main_sha"
+_ENGPATCHER_SHA_RE = re.compile(r"^engpatcher_sha:\s*([0-9a-fA-F]{7,40})\s*$", re.M)
 # Public gold-bake Releases. A zip of EngPatcher has no git remote, so Drop
 # cannot infer this from origin. Env / --repo still override it.
 DEFAULT_GOLD_REPO = "czyrustuazon/nlpp-gold-maker"
@@ -40,6 +49,23 @@ def _default_gold_repo() -> str:
         if val:
             return val
     return DEFAULT_GOLD_REPO
+
+
+def _local_engpatcher_sha() -> str | None:
+    if not MAIN_SHA_STAMP.is_file():
+        return None
+    text = MAIN_SHA_STAMP.read_text(encoding="utf-8", errors="replace").strip()
+    return text or None
+
+
+def _release_engpatcher_sha(body: str | None) -> str | None:
+    m = _ENGPATCHER_SHA_RE.search(body or "")
+    return m.group(1).lower() if m else None
+
+
+def _same_commit(a: str, b: str) -> bool:
+    a, b = a.lower(), b.lower()
+    return a.startswith(b) or b.startswith(a)
 
 
 def github_reachable(timeout: float = 5.0) -> bool:
@@ -77,7 +103,7 @@ def _download(url: str, dest: Path, token: str | None, *, dry_run: bool) -> None
     print(f"[fetch] wrote {dest.stat().st_size:,} bytes", flush=True)
 
 
-def _github_asset_urls(repo: str, tag: str, token: str | None) -> dict[str, str]:
+def _github_release(repo: str, tag: str, token: str | None) -> dict:
     if tag == "latest":
         api = f"https://api.github.com/repos/{repo}/releases/latest"
     else:
@@ -86,6 +112,10 @@ def _github_asset_urls(repo: str, tag: str, token: str | None) -> dict[str, str]
     meta = json.loads(raw.decode("utf-8"))
     if meta.get("message") and not meta.get("assets"):
         raise LookupError(meta["message"])
+    return meta
+
+
+def _asset_urls(meta: dict, repo: str, tag: str) -> dict[str, str]:
     by_name = {a["name"]: a["browser_download_url"] for a in meta.get("assets", [])}
     need = ("bake_img.bin", "romfs_overlay.zip")
     optional = ("name_input_code.bin",)
@@ -102,6 +132,10 @@ def _github_asset_urls(repo: str, tag: str, token: str | None) -> dict[str, str]
     return found
 
 
+def _github_asset_urls(repo: str, tag: str, token: str | None) -> dict[str, str]:
+    return _asset_urls(_github_release(repo, tag, token), repo, tag)
+
+
 def try_fetch_gold(
     *,
     repo: str | None,
@@ -110,8 +144,13 @@ def try_fetch_gold(
     out_dir: Path,
     force: bool = False,
     dry_run: bool = False,
+    expected_sha: str | None = None,
 ) -> tuple[bool, str]:
-    """Return (ok, message). ok=True when bake+overlay are ready under out_dir."""
+    """Return (ok, message). ok=True when bake+overlay are ready under out_dir.
+
+    ``expected_sha``: EngPatcher commit this tree runs. A Release built from a
+    different commit (or one that does not say) is refused before download.
+    """
     out = out_dir.resolve()
     bake = out / "bake_img.bin"
     overlay_dir = out / "romfs_overlay"
@@ -127,7 +166,22 @@ def try_fetch_gold(
 
     print(f"[fetch] polling GitHub Release {repo} @ {tag!r}", flush=True)
     try:
-        urls = _github_asset_urls(repo, tag, token)
+        meta = _github_release(repo, tag, token)
+        if expected_sha:
+            built = _release_engpatcher_sha(meta.get("body"))
+            if not built:
+                return False, (
+                    f"Release {tag!r} does not record engpatcher_sha; "
+                    f"cannot confirm it matches this tree ({expected_sha[:12]})"
+                )
+            if not _same_commit(built, expected_sha):
+                return False, (
+                    f"Release {tag!r} was baked from EngPatcher {built[:12]}, "
+                    f"but this tree is {expected_sha[:12]} "
+                    "(gold not rebuilt for the latest main yet)"
+                )
+            print(f"[fetch] gold matches EngPatcher {built[:12]}", flush=True)
+        urls = _asset_urls(meta, repo, tag)
         overlay_zip = out / "romfs_overlay.zip"
         code = out / "name_input_code.bin"
         _download(urls["bake_img.bin"], bake, token, dry_run=dry_run)
@@ -202,12 +256,23 @@ def main(argv: list[str] | None = None) -> int:
         help="Redownload even if bake_img.bin already exists",
     )
     ap.add_argument(
+        "--any-sha",
+        action="store_true",
+        help="Accept the Release even if its engpatcher_sha differs from "
+        ".nlpp_main_sha (or NLPP_GOLD_ANY_SHA=1)",
+    )
+    ap.add_argument(
         "--best-effort",
         action="store_true",
         help="For Drop CIA: exit 0 on success, exit 1 quietly when CI bake absent "
         "(caller falls back to local rebuild)",
     )
     args = ap.parse_args(argv)
+    any_sha = args.any_sha or os.environ.get("NLPP_GOLD_ANY_SHA", "").strip() in (
+        "1",
+        "true",
+        "yes",
+    )
 
     ok, msg = try_fetch_gold(
         repo=args.repo,
@@ -216,6 +281,7 @@ def main(argv: list[str] | None = None) -> int:
         out_dir=args.out_dir,
         force=args.force,
         dry_run=args.dry_run,
+        expected_sha=None if any_sha else _local_engpatcher_sha(),
     )
     if ok:
         print(f"[fetch] {msg}", flush=True)

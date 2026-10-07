@@ -232,3 +232,74 @@ def test_main_best_effort_exit_codes(patcher_root: Path, monkeypatch):
             ["--best-effort", "--force", "--root", str(patcher_root), "--repo", "owner/repo"]
         )
     assert rc == 0
+
+
+def _sync(patcher_root: Path, files: dict[str, bytes], sha: str):
+    zip_bytes = _make_zipball(files)
+
+    def fake_read(url: str, _token):
+        return json.dumps({"sha": sha}).encode()
+
+    def fake_download(url, dest, token, *, dry_run):
+        dest.write_bytes(zip_bytes)
+
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_read_url", fake_read),
+        patch.object(fetch_mod, "_download_file", fake_download),
+    ):
+        return fetch_mod.try_fetch_main_tree(
+            repo="owner/repo", ref="main", token=None, root=patcher_root
+        )
+
+
+def test_prunes_files_removed_from_main(patcher_root: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_SKIP_SOURCE_FETCH", raising=False)
+    bat = b"@echo off\n"
+    status, _ = _sync(
+        patcher_root,
+        {
+            "Drop CIA or 3DS Here to Patch.bat": bat,
+            "src/keep.py": b"# keep\n",
+            "assets/scripts/old/t999.xml": b"<old/>",
+        },
+        "aaaa000000000001",
+    )
+    assert status == "updated"
+    (patcher_root / "src" / "mine.py").write_text("# user file\n", encoding="utf-8")
+
+    status, msg = _sync(
+        patcher_root,
+        {"Drop CIA or 3DS Here to Patch.bat": bat, "src/keep.py": b"# keep 2\n"},
+        "aaaa000000000002",
+    )
+    assert status == "updated"
+    assert "removed 1" in msg
+    assert not (patcher_root / "assets" / "scripts" / "old").exists()
+    assert not (patcher_root / "assets").exists()
+    assert (patcher_root / "src" / "keep.py").read_text(encoding="utf-8") == "# keep 2\n"
+    assert (patcher_root / "src" / "mine.py").is_file()
+    manifest = fetch_mod._read_manifest(patcher_root)
+    assert manifest == {"Drop CIA or 3DS Here to Patch.bat", "src/keep.py"}
+
+
+def test_first_sync_without_manifest_prunes_nothing(patcher_root: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_SKIP_SOURCE_FETCH", raising=False)
+    status, msg = _sync(
+        patcher_root,
+        {"Drop CIA or 3DS Here to Patch.bat": b"@echo off\n"},
+        "bbbb000000000001",
+    )
+    assert status == "updated"
+    assert "removed" not in msg
+    assert (patcher_root / "src" / "drop_zone.ps1").is_file()
+
+
+def test_prune_never_touches_protected_paths(patcher_root: Path):
+    (patcher_root / "release").mkdir()
+    (patcher_root / "release" / "bake_img.bin").write_bytes(b"BAKE")
+    removed = fetch_mod.prune_removed(
+        patcher_root, {"release/bake_img.bin", "../outside.txt"}, set()
+    )
+    assert removed == []
+    assert (patcher_root / "release" / "bake_img.bin").is_file()

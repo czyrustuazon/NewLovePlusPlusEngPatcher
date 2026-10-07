@@ -268,3 +268,87 @@ def test_main_without_best_effort_raises_on_missing(release_dir: Path):
                     "owner/nlpp-gold",
                 ]
             )
+
+
+def _gold_urlopen(body: str | None):
+    overlay_payload = io.BytesIO()
+    with zipfile.ZipFile(overlay_payload, "w") as zf:
+        zf.writestr("romfs_overlay/marker.txt", b"ok")
+    overlay_bytes = overlay_payload.getvalue()
+    urls = {
+        "bake_img.bin": "https://example.test/bake_img.bin",
+        "romfs_overlay.zip": "https://example.test/romfs_overlay.zip",
+    }
+
+    def fake_urlopen(url, _token):
+        if "releases" in url:
+            assets = [{"name": k, "browser_download_url": v} for k, v in urls.items()]
+            return json.dumps({"assets": assets, "body": body}).encode()
+        if url.endswith("bake_img.bin"):
+            return b"GOLD_BAKE"
+        if url.endswith("romfs_overlay.zip"):
+            return overlay_bytes
+        raise AssertionError(f"unexpected url: {url}")
+
+    return fake_urlopen
+
+
+GOLD_BODY = (
+    "Rolling gold bake from EngPatcher.\r\n"
+    "engpatcher_sha: 6993c00fedd7c49131516cf64ede698ca7f40bc3\r\n"
+    "pack: full"
+)
+
+
+def _fetch(release_dir: Path, body: str | None, expected_sha: str | None):
+    with (
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", _gold_urlopen(body)),
+    ):
+        return fetch_mod.try_fetch_gold(
+            repo="owner/nlpp-gold",
+            tag="gold",
+            token=None,
+            out_dir=release_dir,
+            force=True,
+            expected_sha=expected_sha,
+        )
+
+
+def test_gold_accepted_when_engpatcher_sha_matches(release_dir: Path):
+    ok, msg = _fetch(release_dir, GOLD_BODY, "6993c00fedd7c49131516cf64ede698ca7f40bc3")
+    assert ok is True
+    assert (release_dir / "bake_img.bin").read_bytes() == b"GOLD_BAKE"
+
+
+def test_gold_refused_when_engpatcher_sha_differs(release_dir: Path):
+    ok, msg = _fetch(release_dir, GOLD_BODY, "1f288df0000000000000000000000000000000aa")
+    assert ok is False
+    assert "6993c00fedd7" in msg and "1f288df00000" in msg
+    assert not (release_dir / "bake_img.bin").exists()
+
+
+def test_gold_refused_when_release_has_no_sha(release_dir: Path):
+    ok, msg = _fetch(release_dir, "no sha here", "6993c00fedd7c49131516cf64ede698ca7f40bc3")
+    assert ok is False
+    assert "does not record engpatcher_sha" in msg
+    assert not (release_dir / "bake_img.bin").exists()
+
+
+def test_gold_unchecked_without_local_stamp(release_dir: Path):
+    ok, _ = _fetch(release_dir, None, None)
+    assert ok is True
+
+
+def test_main_reads_stamp_and_any_sha_overrides(release_dir: Path, tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_GOLD_ANY_SHA", raising=False)
+    stamp = tmp_path / ".nlpp_main_sha"
+    stamp.write_text("1f288df0000000000000000000000000000000aa\n", encoding="utf-8")
+    args = ["--best-effort", "--force", "--out-dir", str(release_dir), "--repo", "owner/nlpp-gold"]
+    with (
+        patch.object(fetch_mod, "MAIN_SHA_STAMP", stamp),
+        patch.object(fetch_mod, "github_reachable", return_value=True),
+        patch.object(fetch_mod, "_urlopen", _gold_urlopen(GOLD_BODY)),
+    ):
+        assert fetch_mod.main(args) == 1
+        assert fetch_mod.main(args + ["--any-sha"]) == 0
