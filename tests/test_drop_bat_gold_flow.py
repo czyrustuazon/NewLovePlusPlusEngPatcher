@@ -170,3 +170,15 @@ def test_bat_drop_timer_avoids_for_f_python_quoting():
     assert "import time; print(int(time.time()))" not in text
     assert "for /f %%T in" not in text
     assert 'for /f "delims=" %%E in' not in text
+
+
+def test_git_checkout_asks_to_skip_gold_before_wipe():
+    """A git checkout is asked whether to build gold locally (its edits are not in
+    the published bake). Asked before the wipe, and skipped when preset."""
+    text = _bat_text()
+    ask_idx = text.index("Skip the gold download and build from this checkout?")
+    guard = 'if exist "%~dp0.git" if not defined NLPP_SKIP_GOLD_FETCH'
+    assert guard in text
+    assert text.index(guard) < ask_idx < text.index("--wipe-cia-build")
+    assert ask_idx < text.index("fetch_release_bake.py")
+    assert 'if /i "!GOLD_ANS!"=="y" set "NLPP_SKIP_GOLD_FETCH=1"' in text

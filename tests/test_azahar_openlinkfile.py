@@ -17,9 +17,12 @@ def test_openlinkfile_patch_clones_session_slot():
     assert "slot->size = backend->GetSize()" in text
 
 
-def test_build_azahar_applies_openlinkfile_patch():
+def test_build_azahar_uses_fork_or_applies_both_patches():
     make = (ROOT / "ab_test" / "make.ps1").read_text(encoding="utf-8")
-    assert "Ensure-AzaharOpenLinkFile" in make
+    # Defaults to the azahar-3ds-accurate fork (CLAUDE.md hard requirement).
+    assert '"azahar-3ds-accurate"' in make
+    assert "Ensure-AzaharNlppChanges" in make
+    # A plain upstream checkout still gets the OpenLinkFile + NLPP_EMU exports.
     assert "azahar-openlinkfile.patch" in make
+    assert "azahar-nlpp-emu.patch" in make
     assert "Copy-AzaharToInstances" in make
-    assert "clone offset=" in make

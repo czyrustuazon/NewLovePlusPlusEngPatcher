@@ -201,8 +201,12 @@ def apply_patch(data: bytearray) -> None:
             f"strcat cave {end:#x} overlaps commu header {ADDR_COMMU_HEADER_CAVE:#x}"
         )
     head = bytes(data[ADDR : ADDR + 8])
-    if head != VANILLA_HEAD and not is_patched(data):
+    already = is_patched(data)
+    if head != VANILLA_HEAD and not already:
         raise ValueError(f"unexpected FUN_002573ac head {head.hex()}")
+    # A re-deploy refreshes our own cave. Otherwise it must still be empty pad.
+    if not already and any(data[cave:end]):
+        raise ValueError(f"strcat cave {cave:#x}..{end:#x} is not empty pad")
     data[cave : end] = blob
     data[ADDR : ADDR + 4] = b_ins(ADDR, cave)
     # The tail is the chunk-walk guard. Do not NOP it.

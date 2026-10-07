@@ -25,6 +25,13 @@ def test_ci_workflow_checks_out_with_plain_git():
     )
 
 
+def test_ci_runs_ruff_hard_error_lint():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "ruff check --select E9,F63,F7,F82" in text
+    reqs = (ROOT / "dev" / "requirements-dev.txt").read_text(encoding="utf-8")
+    assert "ruff" in reqs
+
+
 def test_gold_dispatch_defaults_to_nlpp_gold_maker():
     """Pings the real bake repo, not the old <owner>/nlpp-gold 404 slug."""
     text = GOLD_WORKFLOW.read_text(encoding="utf-8")

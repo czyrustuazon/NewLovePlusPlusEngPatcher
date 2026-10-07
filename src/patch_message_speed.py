@@ -285,6 +285,8 @@ def _apply_talk_cap(data: bytearray) -> bool:
             f"unexpected talk-cap hook @{TALK_HOOK_OFF:#x}: {hook.hex()} "
             f"(want {TALK_HOOK_VANILLA.hex()})"
         )
+    if any(data[ADDR_TALK_CAP_CAVE : ADDR_TALK_CAP_CAVE + TALK_CAP_CAVE_LEN]):
+        raise ValueError(f"talk-cap cave @{ADDR_TALK_CAP_CAVE:#x} is not empty pad")
     data[TALK_HOOK_OFF : TALK_HOOK_OFF + 4] = TALK_HOOK_PATCHED
     data[ADDR_TALK_CAP_CAVE : ADDR_TALK_CAP_CAVE + TALK_CAP_CAVE_LEN] = TALK_CAP_CAVE_BYTES
     print(

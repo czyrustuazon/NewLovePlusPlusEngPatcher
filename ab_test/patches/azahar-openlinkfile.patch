@@ -1,5 +1,9 @@
+File::OpenLinkFile clones the source session (NLPP extra-data hang).
+Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ e00581f)
+Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
+
 diff --git a/src/core/hle/service/fs/file.cpp b/src/core/hle/service/fs/file.cpp
-index 6ba8f2b77..ec7c220a6 100644
+index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da67865a8fbb7a 100644
 --- a/src/core/hle/service/fs/file.cpp
 +++ b/src/core/hle/service/fs/file.cpp
 @@ -61,8 +61,10 @@ void File::Read(Kernel::HLERequestContext& ctx) {
@@ -101,7 +105,7 @@ index 6ba8f2b77..ec7c220a6 100644
          return;
      }
 diff --git a/src/core/hle/service/fs/file.h b/src/core/hle/service/fs/file.h
-index 92d610214..fb4bed7e3 100644
+index 3604e0e2d8b25f777074cc70e7b2ee1166cca17f..8df8ae0c7723567173b7fce978517068989d6277 100644
 --- a/src/core/hle/service/fs/file.h
 +++ b/src/core/hle/service/fs/file.h
 @@ -17,10 +17,10 @@ class System;

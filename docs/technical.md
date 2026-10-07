@@ -1311,6 +1311,8 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Soft-skip redundant `opt_plates` when exact zlib fails | Options deploy already wrote those plates; don’t fail the whole rebuild |
 | Drop CIA polls CI then rebuild; hard-stop without bake | Prevents silent “scripts-only” CIAs that look partially EN (§15.5) |
 | `fetch_release_bake.py --best-effort` + `try_fetch_gold()` | 404 / missing Release → exit 1 quietly; bat falls back to local rebuild |
+| `try_fetch_gold(expected_sha=…)` | Release body `engpatcher_sha:` must match `.nlpp_main_sha` (zip-synced trees only; git checkouts skip). Mismatch or missing → exit 1 → local rebuild. `--any-sha` / `NLPP_GOLD_ANY_SHA=1` accepts it |
+| `fetch_main_tree.py` prune | Deletes files listed in the previous `.nlpp_main_files` manifest that the new `main` zipball no longer has. User-added files and protected dirs are never touched; the first sync (no manifest) prunes nothing |
 | `pytest` suite under `tests/` (§15.6) | Guards gold-bake resolution, fetch fallback, bat workflow strings |
 
 ### 15.3 Clone / first-drop checklist
@@ -1397,6 +1399,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | Variable | Effect |
 |----------|--------|
 | `NLPP_SKIP_GOLD_FETCH=1` | Skip GitHub Release poll; go straight to local rebuild (offline) |
+| _(git checkout, unset)_ | Drop asks before the wipe: `Skip the gold download and build from this checkout? [y/N]`. **y** sets `NLPP_SKIP_GOLD_FETCH=1` so local edits to baked inputs reach the CIA; Enter keeps the gold download. Setting the variable (0 or 1) or `NLPP_REPACK_IMAGES=1` skips the question |
 | `NLPP_GITHUB_REPO` / `NLPP_GOLD_REPO` | Override gold bake repo (default `czyrustuazon/nlpp-gold-maker`) |
 | `NLPP_GOLD_TAG` | Release tag (default `gold`) |
 | `NLPP_WITH_IMAGES=0` | **Refused by Drop CIA** (no incomplete patches). For a scripts-only test CIA run `patch_cia.py --no-images` by hand |
@@ -1428,7 +1431,7 @@ python -m pytest tests/ -v
 |-------------|--------|
 | `test_drop_bat_gold_flow.py` | Bat: CI poll before rebuild, `PACKED_IMG` → release bake, hard-stop without bake |
 | `test_patch_summary.py` | PATCH SUMMARY rows + `out/log.txt` append / `--no-log` / cleanup keeps `log.txt` |
-| `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback |
+| `test_fetch_release_bake.py` | `try_fetch_gold()`, `--best-effort` exit codes, 404 → fallback, `engpatcher_sha` match / mismatch |
 | `test_patch_cia_gold_bake.py` | Gold bake preferred over PNG cache in inject path |
 | `test_rebuild_bake_img.py` | `DEPLOY_SCRIPTS` includes menu chrome + ordering |
 | `test_scratch_cleanup.py` | Incremental scratch delete (pack/extract/CIA intermediates) |

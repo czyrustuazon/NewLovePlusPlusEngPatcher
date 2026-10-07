@@ -1,0 +1,21 @@
+#!/bin/sh
+# Run the CI checks before a push. Locally this also runs the vanilla-backed
+# code.bin checks (tests/test_code_patch_map.py) that CI has to skip.
+# Install: python dev/install_hooks.py   Bypass once: git push --no-verify
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+PY=python
+command -v "$PY" >/dev/null 2>&1 || PY=python3
+
+echo "[pre-push] ruff (hard errors)"
+"$PY" -m ruff check --select E9,F63,F7,F82 src tools tests || {
+    echo "[pre-push] ruff failed (pip install -r dev/requirements-dev.txt)"
+    exit 1
+}
+
+echo "[pre-push] pytest"
+"$PY" -m pytest tests/ -q -x -rs -p no:cacheprovider || {
+    echo "[pre-push] tests failed; push aborted"
+    exit 1
+}

@@ -11,13 +11,19 @@ From the repo root:
 
 ## One-time setup
 
-1. Paths are found automatically when Azahar is checked out next to this repo
-   (`..\azahar`, built in `build\`) and MSYS2 is at `C:\msys64`. Otherwise copy
+1. Paths are found automatically when
+   [azahar-3ds-accurate](https://github.com/czyrustuazon/azahar-3ds-accurate) is
+   checked out next to this repo (`..\azahar-3ds-accurate`, built in `build\`) and
+   MSYS2 is at `C:\msys64`. Otherwise copy
    `ab_test/paths.local.ps1.example` → `ab_test/paths.local.ps1` and uncomment what
    differs, or set `NLPP_AZAHAR_SRC` / `NLPP_AZAHAR_EXE` / `NLPP_MSYS_BIN` /
    `NLPP_ROM` / `NLPP_PYTHON`. `.\ab_test\make.ps1 paths` shows what it resolved.
 2. Build Azahar if needed: `.\ab_test\make.ps1 build-azahar`
-   That applies `ab_test/patches/azahar-openlinkfile.patch` when `file.cpp` still stubs `OpenLinkFile` (log line `clone offset=`), rebuilds `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
+   That configures `build\` on the first run (MSYS2 clang64 + Ninja), builds
+   `citra_meta`, and copies `azahar.exe` into `ab_test/azahar_instances/{a,b}/`.
+   The fork already has the NLPP changes (OpenLinkFile clone, `NLPP_EMU_*`
+   replays). Pointed at a plain upstream Azahar instead, it applies
+   `ab_test/patches/azahar-*.patch` first.
 3. Create instances + launch bats:
 
 ```powershell
@@ -45,6 +51,29 @@ Each has its own `load/mods/00040000000F4E00/` LayeredFS tree and
 Azahar treats the sibling `user/` folder as its portable user root. When
 `RomPath` is set, each launcher passes that ROM as Azahar's final positional
 argument.
+
+## Smoke boot (automated crash check)
+
+Double-click **`ab_test\Run Safety Checks.bat`** for a menu: code.bin checks,
+smoke boot, or the full test suite (`make.ps1 checks` / `smoke` / `test`).
+
+`tools/smoke_boot_azahar.py` boots `release/` in a throwaway copy of instance A
+and fails on a data abort. `--inject` turns on the NLPP_EMU_* hardware-crash
+replays from [azahar-3ds-accurate](https://github.com/czyrustuazon/azahar-3ds-accurate)
+(`..\azahar-3ds-accurate`, branch `main`; exported here as `ab_test/patches/azahar-*.patch`
+by `tools/export_azahar_patches.py`). A guarded build passes; restoring a vanilla
+instruction at a guarded site fails within seconds. Changes to the emulator go
+to the fork first: see `CLAUDE.md`.
+
+```powershell
+python tools\smoke_boot_azahar.py --azahar ab_test\azahar_instances\a\azahar.exe `
+  --dll-dir C:\msys64\clang64\bin --rom $env:NLPP_ROM `
+  --seed-user ab_test\azahar_instances\a\user --inject name-walk,pane-flag,menu-vt
+```
+
+`--seed-user` copies that instance's title save; without one the game waits on
+its create-save prompt and never reaches the crash sites. The gold-maker runner
+runs the same check after each published bake (nlpp-gold-maker `smoke.yml`).
 
 ## Everyday loop
 

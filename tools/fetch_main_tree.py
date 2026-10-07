@@ -10,6 +10,10 @@ Never touches ``out/``, ``release/``, ``cache/``, ``.env``, local a/b paths,
 or a ``.git`` checkout (contributors keep using git). Offline / 404 / errors
 are soft under ``--best-effort``.
 
+Files a previous sync wrote (``.nlpp_main_files``) that are gone from the new
+zipball are deleted, so a script removed on ``main`` does not linger. Files
+the user added, and anything from before the first manifest, are left alone.
+
 Examples:
   python tools/fetch_main_tree.py --best-effort
   python tools/fetch_main_tree.py --force
@@ -29,6 +33,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STAMP_NAME = ".nlpp_main_sha"
+MANIFEST_NAME = ".nlpp_main_files"
 DEFAULT_SOURCE_REPO = "czyrustuazon/NewLovePlusPlusEngPatcher"
 DEFAULT_REF = "main"
 
@@ -43,6 +48,7 @@ PROTECTED_TOP = frozenset(
         "venv",
         ".env",
         STAMP_NAME,
+        MANIFEST_NAME,
         ".mcp.json",
         "ghidra_nlpp",
         "__pycache__",
@@ -128,6 +134,19 @@ def _write_stamp(root: Path, sha: str) -> None:
     (root / STAMP_NAME).write_text(sha + "\n", encoding="utf-8")
 
 
+def _read_manifest(root: Path) -> set[str] | None:
+    path = root / MANIFEST_NAME
+    if not path.is_file():
+        return None
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return {ln.strip() for ln in text.splitlines() if ln.strip()}
+
+
+def _write_manifest(root: Path, rels: list[str]) -> None:
+    body = "".join(f"{rel}\n" for rel in sorted(rels))
+    (root / MANIFEST_NAME).write_text(body, encoding="utf-8")
+
+
 def _is_protected(rel_posix: str) -> bool:
     if not rel_posix or rel_posix in (".",):
         return True
@@ -155,23 +174,45 @@ def _zip_inner_root(extract_dir: Path) -> Path:
     return extract_dir
 
 
-def overlay_tree(src_root: Path, dst_root: Path, *, dry_run: bool) -> int:
-    """Copy files from extracted zip root onto dst. Returns files written."""
-    written = 0
+def overlay_tree(src_root: Path, dst_root: Path, *, dry_run: bool) -> list[str]:
+    """Copy files from extracted zip root onto dst. Returns rel paths written."""
+    written: list[str] = []
     for path in src_root.rglob("*"):
         if not path.is_file():
             continue
         rel = path.relative_to(src_root).as_posix()
         if _is_protected(rel):
             continue
-        dest = dst_root / Path(*rel.split("/"))
+        written.append(rel)
         if dry_run:
-            written += 1
             continue
+        dest = dst_root / Path(*rel.split("/"))
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, dest)
-        written += 1
     return written
+
+
+def prune_removed(root: Path, previous: set[str], current: set[str]) -> list[str]:
+    """Delete files an earlier sync wrote that ``main`` no longer ships.
+
+    Only paths listed in the previous manifest are candidates, so files the
+    user added are never touched. Emptied parent folders are removed too.
+    """
+    root = root.resolve()
+    removed: list[str] = []
+    for rel in sorted(previous - current):
+        if _is_protected(rel) or ".." in rel.split("/"):
+            continue
+        path = root / Path(*rel.split("/"))
+        if not path.is_file():
+            continue
+        path.unlink()
+        removed.append(rel)
+        parent = path.parent
+        while parent != root and parent.is_dir() and not any(parent.iterdir()):
+            parent.rmdir()
+            parent = parent.parent
+    return removed
 
 
 def try_fetch_main_tree(
@@ -244,9 +285,20 @@ def try_fetch_main_tree(
                 inner / "src"
             ).is_dir():
                 return "unavailable", f"zipball missing EngPatcher root under {inner}"
-            n = overlay_tree(inner, root, dry_run=False)
+            previous = _read_manifest(root)
+            written = overlay_tree(inner, root, dry_run=False)
+            removed: list[str] = []
+            if previous is not None:
+                removed = prune_removed(root, previous, set(written))
+                for rel in removed:
+                    print(f"[fetch] removed (gone from {ref}): {rel}", flush=True)
+            _write_manifest(root, written)
             _write_stamp(root, sha)
-            return "updated", f"synced {n} files from {repo}@{ref} ({sha[:12]})"
+            note = f", removed {len(removed)}" if removed else ""
+            return (
+                "updated",
+                f"synced {len(written)} files{note} from {repo}@{ref} ({sha[:12]})",
+            )
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
             return "unavailable", f"zipball 404 for {repo}@{ref}"
