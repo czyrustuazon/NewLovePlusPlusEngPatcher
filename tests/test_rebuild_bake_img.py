@@ -327,6 +327,9 @@ def test_profile_call01_labels_use_heisei_chroma_aa():
     text = (TOOLS / "deploy_profile_en.py").read_text(encoding="utf-8")
     assert '(1, 14, 48, 192, "Last Name")' in text
     assert '(77, 89, 48, 192, "First Name")' in text
+    # Profile list follows the fields: top row is 姓, second row is 名.
+    assert '(10, 24, 48, 192, "Last Name")' in text
+    assert '(49, 63, 48, 192, "First Name")' in text
     assert "CALL_LABEL_SIZE = HEADER_CORE_PX" in text
     assert "ATLAS_LABEL_SIZE = HEADER_CORE_PX" in text
     assert "CALL_PALETTE" in text

@@ -33,6 +33,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Girlfriend Comm. white header** (`カノジョ通信`) is MultiWin **5237** 192×16 ETC1A4, not the MSel plate. Full “Girlfriend Communication” fries that bar; shipped copy is **Heart to Heart** (**§12.4.1**).
 - **Profile white header** (`プロフィール`) is A8 `Plate_Text01_00_00` @ **5246** 144×28. Ship Heisei W5 on a 16px strip (same as Heart to Heart), not MPLUS and not Zhoumaru paint — **§12.4.2**.
 - **Profile Call / atlas labels** (`Last Name` / `Written` / `Called`) are RGB565 chroma @ **5252**. Use JP yellow/green/cyan **ramps** (2× Heisei), not 1-bit crush — **§12.4.4**.
+- **Profile name rows** stay family-name first. `Profile_Info_Profile_t` top row is 姓 (**Last Name**), second row is 名 (**First Name**). Call01 matches. Do not paint Western order onto those boxes — the panes still edit 姓 then 名. Verified in Azahar A, 2026-10-10. **§12.4.4**.
 - **Profile hometown region chips** (`全国` / `北海道東北` / …) are RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252**, not DrawText. Zhoumaru two-line EN overflowed the rounded pills — contain-fit to the 6px inset (**§12.4.3**).
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\ab_test\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
@@ -651,7 +652,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Select Save Data **表面 / 裏面** toggle | ETC1A4 `B_Card_b_btn_lite` @ **5238** (highlight `B_Card_b_btn_on`, pill `B_Card_b_btn_base` stay) | **Front Side / Back Side** — Zhoumaru `NCommonIcon.check`. Last-writer on **5238** after Restore Default so the softkey chain cannot drop it. `tools/deploy_card_side_btn_en.py` |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
 | Save-card field labels `名前` / `カノジョの名前` | RGBA4444 `B_Card04_txt01` / `txt06` @ Card **4152**, **128×28** | **Name** / **Girlfriend's Name** on the card field list. The two-bar pink screen is a different draw — see **§12.4.5**. A blank folder from the main menu is `FUN_0014ed0c` — **§12.4.6**. |
-| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (First Name / Last Name / Birthday / M·D / Blood / Hometown) — **§12.4.4**, `tools/deploy_profile_en.py` |
+| Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (Last Name / First Name / Birthday / M·D / Blood / Hometown). Order is the JP fields (姓 then 名), not Western — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
@@ -817,13 +818,18 @@ Yellow key `(255,226,0)` (most of the atlas). Plate `(49,129,0)` plus G steps `1
 
 `render_hard_label` in `tools/deploy_profile_en.py`: Heisei W5 size 15, **2× bilinear** (same as the header), lerp **plate→ink** (JP green halo), quantize to `CALL_PALETTE`. Box fill stays yellow key or green plate. Field atlas uses the same path. Deployed unique colors went **3 → 9** (subset of the JP ramps).
 
-Redeploy: `python tools/deploy_profile_en.py` (bake + instance A).
+Redeploy: `python tools/deploy_profile_en.py` (bake + instance A). Then `.\ab_test\make.ps1 deploy-a` copies that bake into instance A.
+
+**Field order (2026-10-10)**
+
+The atlas boxes are the JP fields. Top box `(10, 24)` is 姓 → **Last Name**. Next box `(49, 63)` is 名 → **First Name**. Call01 is the same pair: `(1, 14)` Last Name, `(77, 89)` First Name. An earlier EN pass painted First Name on the 姓 row, so the label and the save field disagreed. `ATLAS_LABELS` in `tools/deploy_profile_en.py` follows the fields. `test_profile_call01_labels_use_heisei_chroma_aa` locks both pairs. Verified on the Profile list in Azahar A.
 
 **Do not**
 
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”
 2. Blame overflowing English — **Last Name** / **Written** / **Called** all fit size 15.
 3. `find_ui_png` the Zhoumaru Call01 mock for this BCLIM.
+4. Put **First Name** above **Last Name**. Those boxes are 姓 then 名. Western label order writes the given name into the family-name field.
 
 #### 12.4.5 Save-card name labels vs the two-bar plate (2026-09-22)
 
