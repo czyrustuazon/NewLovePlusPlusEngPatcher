@@ -135,6 +135,18 @@ def _blob(moveq: bytes, jt: bytes | None = None, nops: bool | None = None) -> by
     data[sp.ADDR_TITLE_ST18_STAY : sp.ADDR_TITLE_ST18_STAY + 4] = sp.VANILLA_TITLE_ST18_STAY
     data[sp.ADDR_TITLE_ST8_TAIL : sp.ADDR_TITLE_ST8_TAIL + 4] = sp.VANILLA_TITLE_ST8_TAIL
     data[sp.ADDR_TITLE_ST8_TAIL2 : sp.ADDR_TITLE_ST8_TAIL2 + 4] = sp.VANILLA_TITLE_ST8_TAIL2
+    data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] = (
+        sp.PATCHED_TITLE_ST8_LOCK if nops else sp.VANILLA_TITLE_ST8_LOCK
+    )
+    data[sp.ADDR_TITLE_ST8_SLEEP : sp.ADDR_TITLE_ST8_SLEEP + 4] = (
+        sp.NOP if nops else sp.VANILLA_TITLE_ST8_SLEEP
+    )
+    data[
+        sp.ADDR_TITLE_LOCK_RELEASE : sp.ADDR_TITLE_LOCK_RELEASE
+        + sp.TITLE_LOCK_RELEASE_LEN
+    ] = (
+        sp.PATCHED_TITLE_LOCK_RELEASE if nops else sp.VANILLA_TITLE_LOCK_RELEASE
+    )
     data[sp.ADDR_TITLE_HIDE_CAVE : sp.ADDR_TITLE_HIDE_CAVE + sp.HIDE_CAVE_LEN] = (
         sp.PATCHED_TITLE_HIDE_CAVE if nops else sp.VANILLA_TITLE_HIDE_CAVE
     )
@@ -359,6 +371,7 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     data[sp.ADDR_TITLE_ST18_STAY : sp.ADDR_TITLE_ST18_STAY + 4] = sp.VANILLA_TITLE_ST18_STAY
     data[sp.ADDR_TITLE_ST8_TAIL : sp.ADDR_TITLE_ST8_TAIL + 4] = sp.VANILLA_TITLE_ST8_TAIL
     data[sp.ADDR_TITLE_ST8_TAIL2 : sp.ADDR_TITLE_ST8_TAIL2 + 4] = sp.VANILLA_TITLE_ST8_TAIL2
+    data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] = sp.VANILLA_TITLE_ST8_LOCK
     data[sp.ADDR_TITLE_HIDE_CAVE : sp.ADDR_TITLE_HIDE_CAVE + sp.HIDE_CAVE_LEN] = (
         sp.VANILLA_TITLE_HIDE_CAVE
     )
@@ -407,8 +420,53 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     assert data[sp.ADDR_TITLE_ST1_SHOW : sp.ADDR_TITLE_ST1_SHOW + 4] == sp.VANILLA_TITLE_ST1_SHOW
     assert data[sp.FUN_APPLY_SHOW : sp.FUN_APPLY_SHOW + 4] == sp.VANILLA_SHOW_FN
     assert data[sp.ADDR_TITLE_STUB : sp.ADDR_TITLE_STUB + sp.TITLE_STUB_LEN] == sp.PATCHED_TITLE_STUB
+    assert data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] == (
+        sp.PATCHED_TITLE_ST8_LOCK
+    )
+    assert data[sp.ADDR_TITLE_ST8_SLEEP : sp.ADDR_TITLE_ST8_SLEEP + 4] == sp.NOP
     assert data[sp.SHOW_APPLY_TAILS[0] : sp.SHOW_APPLY_TAILS[0] + 4] == sp.PATCHED_BX_LR
     assert sp.is_patched(data)
+
+
+def test_spotpass_skip_drops_title_home_lock():
+    """State 1's show holds the home lock once state 8 skips its poll."""
+    data = _blob(sp.PATCHED_MOVEQ)
+    assert data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] == (
+        sp.PATCHED_TITLE_ST8_LOCK
+    )
+    data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] = sp.VANILLA_TITLE_ST8_LOCK
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] == (
+        sp.PATCHED_TITLE_ST8_LOCK
+    )
+    assert data[sp.ADDR_TITLE_ST8_SLEEP : sp.ADDR_TITLE_ST8_SLEEP + 4] == sp.NOP
+    assert sp.is_patched(data)
+    assert sp.apply_patch(data) is False
+
+    # The shipped NOP left the show's increment in place.
+    data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] = sp.NOP
+    data[sp.ADDR_TITLE_ST8_SLEEP : sp.ADDR_TITLE_ST8_SLEEP + 4] = (
+        sp.VANILLA_TITLE_ST8_SLEEP
+    )
+    data[
+        sp.ADDR_TITLE_LOCK_RELEASE : sp.ADDR_TITLE_LOCK_RELEASE
+        + sp.TITLE_LOCK_RELEASE_LEN
+    ] = sp.VANILLA_TITLE_LOCK_RELEASE
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] == (
+        sp.PATCHED_TITLE_ST8_LOCK
+    )
+    assert data[sp.ADDR_TITLE_ST8_SLEEP : sp.ADDR_TITLE_ST8_SLEEP + 4] == sp.NOP
+    assert (
+        data[
+            sp.ADDR_TITLE_LOCK_RELEASE : sp.ADDR_TITLE_LOCK_RELEASE
+            + sp.TITLE_LOCK_RELEASE_LEN
+        ]
+        == sp.PATCHED_TITLE_LOCK_RELEASE
+    )
+    assert sp.apply_patch(data) is False
 
 
 def test_spotpass_skip_rejects_unknown_bytes():
