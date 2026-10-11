@@ -6,7 +6,10 @@ state machine (``FUN_006094c0`` / ``FUN_006088c8``) writes the blob into save:
 
   * ``FUN_00609ab0`` GetNsDataNewFlag → **1** so the tick can enter apply
     after boot skip has already hidden the nag. Confirm ``+0x48`` is forced
-    to 1 so apply does not wait on a BOSS UI latch.
+    to 1 so apply does not wait on a BOSS UI latch. ``bl FUN_0059a7c4`` @
+    ``0x00609764`` and ``bl FUN_0059a824`` @ ``0x0060978C`` are NOP: state 2
+    puts the task back in state 1, so the forced confirm would hold the
+    home-jump lock (``0x008ab420+0xc``) for the whole session.
     * ``FUN_00609ef4`` ReadNsData BLs still memcpy into dest ``r1`` when the
     wrapper has a buffer. Null dest stores the payload VA at ``wrapper+0x48``
     (``.rodata`` is read-only on hardware — no self-copy) and returns
@@ -687,10 +690,17 @@ VANILLA_FUN = bytes.fromhex(
     "2c009fe50020a0e30316a0e3434ffceb00008de5080094e50d20a0e10310a0e3"
     "beadffeb000050e30150a0130500a0e13880bde8"
 )
-# State 1: ldrb +0x48 / cmp #0 / beq / cmp #1 / bne  (then vanilla bl FUN_0059a7c4)
+# State 1: ldrb +0x48 / cmp #0 / beq / cmp #1 / bne, then bl FUN_0059a7c4.
 VANILLA_CONFIRM = bytes.fromhex("4800d4e5000050e30e00000a010050e30c00001a")
 # Force +0x48 == 1 so tick state 1 enters apply (NewFlag already 1).
 PATCHED_CONFIRM = bytes.fromhex("0100a0e3") + VANILLA_CONFIRM[4:]
+# That bl takes the home-jump lock. State 2 releases it only after apply
+# returns, then stores state 1. The forced confirm takes the lock again
+# on the next tick (or leaves the first take held if apply never finishes).
+ADDR_CONFIRM_INC = 0x00609764  # bl FUN_0059a7c4
+VANILLA_CONFIRM_INC = bytes.fromhex("1644feeb")
+ADDR_CONFIRM_DEC = 0x0060978C  # bl FUN_0059a824
+VANILLA_CONFIRM_DEC = bytes.fromhex("2444feeb")
 VANILLA_READ_BL1 = bytes.fromhex("eb52fceb")  # bl FUN_0051eb8c
 VANILLA_READ_BL2 = bytes.fromhex("db52fceb")
 VANILLA_MERGE = bytes.fromhex("026c80e2")  # add r6, r0, #0x200
@@ -1992,6 +2002,8 @@ def is_vanilla(data: bytes) -> bool:
     return (
         data[ADDR_NEWFLAG : ADDR_NEWFLAG + NEWFLAG_LEN] == VANILLA_FUN
         and data[ADDR_CONFIRM : ADDR_CONFIRM + len(VANILLA_CONFIRM)] == VANILLA_CONFIRM
+        and data[ADDR_CONFIRM_INC : ADDR_CONFIRM_INC + 4] == VANILLA_CONFIRM_INC
+        and data[ADDR_CONFIRM_DEC : ADDR_CONFIRM_DEC + 4] == VANILLA_CONFIRM_DEC
         and data[ADDR_READ_BL1 : ADDR_READ_BL1 + 4] == VANILLA_READ_BL1
         and data[ADDR_READ_BL2 : ADDR_READ_BL2 + 4] == VANILLA_READ_BL2
         and data[ADDR_MERGE_ENTRY : ADDR_MERGE_ENTRY + 8] == VANILLA_MERGE_ENTRY
@@ -2049,6 +2061,8 @@ def is_patched(data: bytes) -> bool:
     return (
         data[ADDR_NEWFLAG : ADDR_NEWFLAG + NEWFLAG_LEN] == stub
         and data[ADDR_CONFIRM : ADDR_CONFIRM + len(PATCHED_CONFIRM)] == PATCHED_CONFIRM
+        and data[ADDR_CONFIRM_INC : ADDR_CONFIRM_INC + 4] == ARM_NOP
+        and data[ADDR_CONFIRM_DEC : ADDR_CONFIRM_DEC + 4] == ARM_NOP
         and _bl_target(data, ADDR_READ_BL1) == memcpy
         and _bl_target(data, ADDR_READ_BL2) == memcpy
         and _bl_target(data, ADDR_DATA_KICK) == kick
@@ -2148,6 +2162,8 @@ def apply_patch(data: bytearray) -> bool:
     kick = data_kick_addr()
     data[ADDR_NEWFLAG : ADDR_NEWFLAG + NEWFLAG_LEN] = stub
     data[ADDR_CONFIRM : ADDR_CONFIRM + len(PATCHED_CONFIRM)] = PATCHED_CONFIRM
+    data[ADDR_CONFIRM_INC : ADDR_CONFIRM_INC + 4] = ARM_NOP
+    data[ADDR_CONFIRM_DEC : ADDR_CONFIRM_DEC + 4] = ARM_NOP
     data[ADDR_READ_BL1 : ADDR_READ_BL1 + 4] = _bl(ADDR_READ_BL1, memcpy)
     data[ADDR_READ_BL2 : ADDR_READ_BL2 + 4] = _bl(ADDR_READ_BL2, memcpy)
     data[ADDR_DATA_KICK : ADDR_DATA_KICK + 4] = _bl(ADDR_DATA_KICK, kick)
@@ -2202,7 +2218,8 @@ def apply_patch(data: bytearray) -> bool:
     print(
         f"[spotpass-embed] NewFlag=1 @{ADDR_NEWFLAG:#x}, "
         f"ReadNsData memcpy @{memcpy:#x} dest r1 or payload VA, "
-        f"confirm +0x48=1, DATA kick @{ADDR_DATA_KICK:#x} -> {kick:#x}, "
+        f"confirm +0x48=1, home lock nop @{ADDR_CONFIRM_INC:#x}/"
+        f"{ADDR_CONFIRM_DEC:#x}, DATA kick @{ADDR_DATA_KICK:#x} -> {kick:#x}, "
         f"merge ret1 @{ADDR_MERGE_ENTRY:#x} (no parse / ac:u), "
         f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} then state 6, "
         f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
@@ -2254,6 +2271,8 @@ def revert_patch(data: bytearray) -> bool:
     _undo_map_comments(data)
     data[ADDR_NEWFLAG : ADDR_NEWFLAG + NEWFLAG_LEN] = VANILLA_FUN
     data[ADDR_CONFIRM : ADDR_CONFIRM + len(VANILLA_CONFIRM)] = VANILLA_CONFIRM
+    data[ADDR_CONFIRM_INC : ADDR_CONFIRM_INC + 4] = VANILLA_CONFIRM_INC
+    data[ADDR_CONFIRM_DEC : ADDR_CONFIRM_DEC + 4] = VANILLA_CONFIRM_DEC
     data[ADDR_READ_BL1 : ADDR_READ_BL1 + 4] = VANILLA_READ_BL1
     data[ADDR_READ_BL2 : ADDR_READ_BL2 + 4] = VANILLA_READ_BL2
     data[ADDR_DATA_KICK : ADDR_DATA_KICK + 4] = VANILLA_DATA_KICK
@@ -2388,6 +2407,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"merge ac:u @{ADDR_MERGE_AC:#x} still skip (dead after ret1)")
         print(f"merge parse @{ADDR_MERGE_BEQ:#x}/@{ADDR_MERGE_PARSE:#x} vanilla")
         print(f"confirm @{ADDR_CONFIRM:#x} mov r0,#1 (enter apply)")
+        print(
+            f"home lock nop @{ADDR_CONFIRM_INC:#x} / @{ADDR_CONFIRM_DEC:#x} "
+            "(forced re-entry must not hold 0x008ab420+0xc)"
+        )
         print(f"DATA kick @{ADDR_DATA_KICK:#x} -> {data_kick_addr():#x}")
         print(
             f"Watcher ret1 @{ADDR_UNPACK_READY:#x}/"

@@ -24,6 +24,12 @@ Patch:
     ``0xd201`` ERROR DrawText is skipped (Communication Settings DATA).
     Title init state 8 leaves ``+0x90`` up, skips the apply-done wait and
     ``FUN_00196b7c`` busy stay, then creates layout 49 (title attract).
+    State 1's show of ``+0x90`` already took the home-jump lock
+    (``0x008ab420+0xc``) and the paired sleep count. The poll that
+    released both is the wait this skip jumps over, and state 15 never
+    runs. State 8 calls ``0x2C6CE0`` to release them when overlay
+    ``+0x4c`` is set. NOP'ing only ``FUN_0059a7c4`` left the show's lock
+    held, so the system kept drawing the crossed-out HOME icon.
     ``FUN_0014ed0c`` state 1 with ``+0x85==0`` still enters the Name Card
     setup at ``0x14EEC8``. The following ``mov`` goes to state 2 (the
     right-hand bars) instead of state 22. Apply states 22+ stay idle.
@@ -312,6 +318,14 @@ PATCHED_14ED_JT_APPLY = _14ed_jt_va(ADDR_14ED_STAY)
 # State 8 waits FUN_00443e18 then FUN_00196b7c; apply-done never arrives.
 # State 1 still shows +0x90 (cafe). FUN_0014ed0c DATA apply idles after
 # the type-0xf kick (22→21) so 14F080 / state 41 DrawText never runs.
+# State 1 shows +0x90. That show increments the home-jump lock at
+# 0x008ab420+0xc and the +0x10 sleep count, and sets overlay +0x4c.
+# State 8's FUN_00443e18 poll is what released both. The skip jumps over
+# that poll, and state 15 (FUN_0059a824 @ 0x2C7188) never runs. NOP'ing
+# only state 8's own FUN_0059a7c4 left the show's lock held: the pump
+# then cancels the HOME jump and the system draws the crossed-out icon.
+# 0x2C6CE0 releases both when +0x4c is set. The bl FUN_0059a938 beside
+# the old increment must not run, or it takes the sleep count again.
 ADDR_TITLE_CMP_MAX = 0x002C629C
 VANILLA_TITLE_CMP_MAX = bytes.fromhex("200050e3")  # cmp r0, #0x20
 ADDR_TITLE_OOR = 0x002C62A4
@@ -346,6 +360,22 @@ ADDR_TITLE_ST8_TAIL = 0x002C6678
 VANILLA_TITLE_ST8_TAIL = bytes.fromhex("1200a0e3")  # mov r0, #0x12
 ADDR_TITLE_ST8_TAIL2 = 0x002C667C
 VANILLA_TITLE_ST8_TAIL2 = bytes.fromhex("00f020e3")  # nop
+# bl FUN_0059a7c4 — state 8's own home-lock increment. Replaced by a call
+# to the release below. The show() at state 1 is the increment that remains.
+ADDR_TITLE_ST8_LOCK = 0x002C6540
+VANILLA_TITLE_ST8_LOCK = bytes.fromhex("9f500beb")  # bl FUN_0059a7c4
+# bl FUN_0059a938 — arms the +0x10 sleep count. The release drains it.
+ADDR_TITLE_ST8_SLEEP = 0x002C654C
+VANILLA_TITLE_ST8_SLEEP = bytes.fromhex("f9500beb")  # bl FUN_0059a938
+FUN_HOME_LOCK_DEC = 0x0059A824  # subgt [0x008ab420+0xc]
+FUN_SLEEP_COUNT_DRAIN = 0x00599D3C  # dec [0x008ab420+0x10]; allow sleep at 0
+# Dead tail of state 7. Jump table slot 7 goes to the dismiss stub, the
+# hide cave returns, and nothing outside this tail branches into it.
+ADDR_TITLE_LOCK_RELEASE = 0x002C6CE0
+TITLE_LOCK_RELEASE_LEN = 36
+VANILLA_TITLE_LOCK_RELEASE = bytes.fromhex(
+    "840096e5c510d0e5000051e30900000a8d10d6e5000051e30f00000a000050e30200000a"
+)
 ADDR_TITLE_HIDE_CAVE = 0x002C6CB8  # unused state-7 body (jt 7 → stub)
 HIDE_CAVE_LEN = 40
 VANILLA_TITLE_HIDE_CAVE = bytes.fromhex(
@@ -474,6 +504,37 @@ def build_title_hide_cave() -> bytes:
 PATCHED_TITLE_HIDE_CAVE = build_title_hide_cave()
 
 
+def build_title_lock_release() -> bytes:
+    """Drop the show() home lock and its sleep count. No apply-wait.
+
+    State 1's ``FUN_00443cd8`` increments both and sets overlay ``+0x4c``
+    when the layout table owes a release. State 8 used to wait in
+    ``FUN_00443e18``, which decremented them. ``r6`` is the title operator.
+    ``r4`` stays 0 for the layout call that follows the return.
+    """
+    here = ADDR_TITLE_LOCK_RELEASE
+    blob = (
+        bytes.fromhex("900096e5")  # ldr r0, [r6, #0x90]
+        + bytes.fromhex("000050e3")  # cmp r0, #0
+        + bytes.fromhex("4c10d015")  # ldrneb r1, [r0, #0x4c]
+        + bytes.fromhex("00005113")  # cmpne r1, #0
+        + bytes.fromhex("1eff2f01")  # bxeq lr
+        + bytes.fromhex("0010a0e3")  # mov r1, #0
+        + bytes.fromhex("4c10c0e5")  # strb r1, [r0, #0x4c]
+        + _bl(here + 0x1C, FUN_SLEEP_COUNT_DRAIN)
+        + _b(here + 0x20, FUN_HOME_LOCK_DEC)
+    )
+    if len(blob) != TITLE_LOCK_RELEASE_LEN:
+        raise ValueError(
+            f"title lock release {len(blob)} != {TITLE_LOCK_RELEASE_LEN}"
+        )
+    return blob
+
+
+PATCHED_TITLE_LOCK_RELEASE = build_title_lock_release()
+PATCHED_TITLE_ST8_LOCK = _bl(ADDR_TITLE_ST8_LOCK, ADDR_TITLE_LOCK_RELEASE)
+
+
 
 
 def _bl_to_dialog(here: int) -> bytes:
@@ -591,6 +652,15 @@ def _title_vanilla(data: bytes) -> bool:
         return False
     if data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] != VANILLA_TITLE_ST8_TAIL2:
         return False
+    if data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] != VANILLA_TITLE_ST8_LOCK:
+        return False
+    if data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] != VANILLA_TITLE_ST8_SLEEP:
+        return False
+    if (
+        data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN]
+        != VANILLA_TITLE_LOCK_RELEASE
+    ):
+        return False
     if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != VANILLA_TITLE_HIDE_CAVE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
@@ -638,6 +708,15 @@ def _title_patched(data: bytes) -> bool:
         return False
     if data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] != VANILLA_TITLE_ST8_TAIL2:
         return False
+    if data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] != PATCHED_TITLE_ST8_LOCK:
+        return False
+    if data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] != NOP:
+        return False
+    if (
+        data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN]
+        != PATCHED_TITLE_LOCK_RELEASE
+    ):
+        return False
     if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != PATCHED_TITLE_HIDE_CAVE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
@@ -669,6 +748,7 @@ def _apply_title(data: bytearray) -> None:
     data[ADDR_TITLE_ST18_STAY : ADDR_TITLE_ST18_STAY + 4] = VANILLA_TITLE_ST18_STAY
     data[ADDR_TITLE_ST8_TAIL : ADDR_TITLE_ST8_TAIL + 4] = VANILLA_TITLE_ST8_TAIL
     data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] = VANILLA_TITLE_ST8_TAIL2
+    _write_title_lock_release(data)
     data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = PATCHED_TITLE_HIDE_CAVE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
@@ -695,6 +775,11 @@ def _revert_title(data: bytearray) -> None:
     data[ADDR_TITLE_ST18_STAY : ADDR_TITLE_ST18_STAY + 4] = VANILLA_TITLE_ST18_STAY
     data[ADDR_TITLE_ST8_TAIL : ADDR_TITLE_ST8_TAIL + 4] = VANILLA_TITLE_ST8_TAIL
     data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] = VANILLA_TITLE_ST8_TAIL2
+    data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] = VANILLA_TITLE_ST8_LOCK
+    data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] = VANILLA_TITLE_ST8_SLEEP
+    data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN] = (
+        VANILLA_TITLE_LOCK_RELEASE
+    )
     data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = VANILLA_TITLE_HIDE_CAVE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
@@ -1057,11 +1142,45 @@ def _upgrade_namecard_bars(data: bytearray) -> bool:
     return True
 
 
+def _write_title_lock_release(data: bytearray) -> None:
+    data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] = PATCHED_TITLE_ST8_LOCK
+    data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] = NOP
+    data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN] = (
+        PATCHED_TITLE_LOCK_RELEASE
+    )
+
+
+def _upgrade_title_home_lock(data: bytearray) -> bool:
+    """Release the lock state 1's show took.
+
+    The first attempt NOP'd state 8's own increment. The show at state 1
+    still increments ``0x008ab420+0xc``, and the poll that decremented it
+    is skipped, so the crossed-out HOME icon stayed up.
+    """
+    lock = data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4]
+    if lock == PATCHED_TITLE_ST8_LOCK:
+        return False
+    if lock not in (VANILLA_TITLE_ST8_LOCK, NOP):
+        return False
+    trial = bytearray(data)
+    _write_title_lock_release(trial)
+    if not is_patched(trial):
+        return False
+    _write_title_lock_release(data)
+    print(
+        f"[spotpass-skip] title state 8 releases the home-jump lock "
+        f"@{ADDR_TITLE_ST8_LOCK:#x} -> @{ADDR_TITLE_LOCK_RELEASE:#x}"
+    )
+    return True
+
+
 def apply_patch(data: bytearray) -> bool:
     """Quiet missing NsData. Returns True if bytes changed."""
     if _restore_namecard_setup(data):
         return True
     if _upgrade_namecard_bars(data):
+        return True
+    if _upgrade_title_home_lock(data):
         return True
     if is_patched(data):
         print(

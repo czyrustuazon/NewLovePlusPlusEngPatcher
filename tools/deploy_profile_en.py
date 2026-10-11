@@ -61,10 +61,10 @@ HEADER_LABELS = [
 ]
 
 # (y0, y1, x0, x1, text) — wide centered boxes so EN stays one size.
-# JP order was 姓/名; EN uses First Name then Last Name.
+# Top row is the 姓 field, second row is 名. Labels follow those fields.
 ATLAS_LABELS: list[tuple[int, int, int, int, str]] = [
-    (10, 24, 48, 192, "First Name"),
-    (49, 63, 48, 192, "Last Name"),
+    (10, 24, 48, 192, "Last Name"),
+    (49, 63, 48, 192, "First Name"),
     (90, 103, 48, 192, "Birthday"),
     (129, 143, 48, 192, "Blood"),
     (169, 183, 48, 192, "Hometown"),

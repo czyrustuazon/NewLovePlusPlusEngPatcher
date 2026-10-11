@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "42d866e7fa8b74ac7c15b1207d577ab139eea6170562b426ff8feb8069f8150b",
+ "final_sha256": "515b86433e0a98a6d73dff23216a3dc6c82b3c577b7b277a47df356a444a33af",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -179,7 +179,7 @@
   },
   {
    "name": "apply_spotpass_skip",
-   "written_sha256": "7fca9a57f5ef17d45a92e87b05f346bb36daca97b6ce92a574828bb40fc47456",
+   "written_sha256": "99b295927a957913a6b84c71c4846d13c939ac9020813fd6dfe0ac6e7bec8f42",
    "ranges": [
     "0x05fdd0-0x05fdd4",
     "0x05fddc-0x05fde0",
@@ -262,9 +262,11 @@
     "0x2c63a8-0x2c63ac",
     "0x2c64ec-0x2c64f0",
     "0x2c6518-0x2c651c",
+    "0x2c6540-0x2c6544",
+    "0x2c654c-0x2c6550",
     "0x2c6c30-0x2c6c40",
     "0x2c6c84-0x2c6c88",
-    "0x2c6cb8-0x2c6ce0",
+    "0x2c6cb8-0x2c6d04",
     "0x2c6e18-0x2c6e20",
     "0x2c718c-0x2c7190",
     "0x4b2634-0x4b2638",
@@ -283,7 +285,7 @@
   },
   {
    "name": "apply_spotpass_embed",
-   "written_sha256": "206313a094cac2cf0ae00b008f5df0801421a6f4c1e14fc268cf0e7506e3f675",
+   "written_sha256": "2eb946b24c1dd2beea310ce5f4d3adee0403ee4701ac24d3d9f4538f05c90b08",
    "ranges": [
     "0x04fc20-0x04fc24",
     "0x04fc58-0x04fc5c",
@@ -344,6 +346,8 @@
     "0x609600-0x609608",
     "0x60960c-0x6096d8",
     "0x609750-0x609754",
+    "0x609764-0x609768",
+    "0x60978c-0x609790",
     "0x609ab0-0x609b24",
     "0x609fd8-0x609fdc",
     "0x60a018-0x60a01c",

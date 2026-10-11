@@ -11,6 +11,8 @@ def _vanilla_blob() -> bytearray:
     data = bytearray(sp.ADDR_LIST_BLOB + sp.LIST_BLOB_LEN)
     data[sp.ADDR_NEWFLAG : sp.ADDR_NEWFLAG + sp.NEWFLAG_LEN] = sp.VANILLA_FUN
     data[sp.ADDR_CONFIRM : sp.ADDR_CONFIRM + len(sp.VANILLA_CONFIRM)] = sp.VANILLA_CONFIRM
+    data[sp.ADDR_CONFIRM_INC : sp.ADDR_CONFIRM_INC + 4] = sp.VANILLA_CONFIRM_INC
+    data[sp.ADDR_CONFIRM_DEC : sp.ADDR_CONFIRM_DEC + 4] = sp.VANILLA_CONFIRM_DEC
     data[sp.ADDR_READ_BL1 : sp.ADDR_READ_BL1 + 4] = sp.VANILLA_READ_BL1
     data[sp.ADDR_READ_BL2 : sp.ADDR_READ_BL2 + 4] = sp.VANILLA_READ_BL2
     data[sp.ADDR_MERGE_ENTRY : sp.ADDR_MERGE_ENTRY + 8] = sp.VANILLA_MERGE_ENTRY
@@ -141,6 +143,45 @@ def test_restore_readnsdata_keeps_merge_stub():
 def test_confirm_forces_apply():
     assert sp.PATCHED_CONFIRM != sp.VANILLA_CONFIRM
     assert sp.PATCHED_CONFIRM[0:4] == sp._u32(0xE3A00001)
+    assert sp.VANILLA_CONFIRM_INC == sp._bl(sp.ADDR_CONFIRM_INC, 0x0059A7C4)
+    assert sp.VANILLA_CONFIRM_DEC == sp._bl(sp.ADDR_CONFIRM_DEC, 0x0059A824)
+
+
+def test_forced_confirm_does_not_hold_home_lock():
+    """Forced +0x48 makes SpotPass state 1 run again after state 2.
+
+    State 1's ``bl FUN_0059a7c4`` increments ``0x008ab420+0xc``. State 2's
+    ``bl FUN_0059a824`` decrements it and stores state 1, so the count stays
+    up for the session and HOME draws the crossed icon. Both calls are NOP.
+    Restoring either call is not a patched embed, and apply puts both back.
+    The destructor pair at ``0x006097E8`` / ``0x0060987C`` is left alone.
+    """
+    dtor_inc = 0x006097E8
+    dtor_dec = 0x0060987C
+    data = _vanilla_blob()
+    data[dtor_inc : dtor_inc + 4] = sp._bl(dtor_inc, 0x0059A7C4)
+    data[dtor_dec : dtor_dec + 4] = sp._bl(dtor_dec, 0x0059A824)
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_CONFIRM : sp.ADDR_CONFIRM + 4] == sp._u32(0xE3A00001)
+    assert data[sp.ADDR_CONFIRM_INC : sp.ADDR_CONFIRM_INC + 4] == sp.ARM_NOP
+    assert data[sp.ADDR_CONFIRM_DEC : sp.ADDR_CONFIRM_DEC + 4] == sp.ARM_NOP
+    assert data[dtor_inc : dtor_inc + 4] == sp._bl(dtor_inc, 0x0059A7C4)
+    assert data[dtor_dec : dtor_dec + 4] == sp._bl(dtor_dec, 0x0059A824)
+
+    for site, vanilla in (
+        (sp.ADDR_CONFIRM_INC, sp.VANILLA_CONFIRM_INC),
+        (sp.ADDR_CONFIRM_DEC, sp.VANILLA_CONFIRM_DEC),
+    ):
+        broken = bytearray(data)
+        broken[site : site + 4] = vanilla
+        assert not sp.is_patched(broken)
+        assert sp.apply_patch(broken) is True
+        assert broken[sp.ADDR_CONFIRM_INC : sp.ADDR_CONFIRM_INC + 4] == sp.ARM_NOP
+        assert broken[sp.ADDR_CONFIRM_DEC : sp.ADDR_CONFIRM_DEC + 4] == sp.ARM_NOP
+        assert broken[dtor_inc : dtor_inc + 4] == sp._bl(dtor_inc, 0x0059A7C4)
+        assert broken[dtor_dec : dtor_dec + 4] == sp._bl(dtor_dec, 0x0059A824)
+        assert sp.is_patched(broken)
+        assert sp.apply_patch(broken) is False
 
 
 def test_embed_applies_idempotent_and_reverts():
@@ -150,6 +191,8 @@ def test_embed_applies_idempotent_and_reverts():
     assert sp.apply_patch(data) is True
     assert sp.is_patched(data)
     assert data[sp.ADDR_CONFIRM : sp.ADDR_CONFIRM + len(sp.PATCHED_CONFIRM)] == sp.PATCHED_CONFIRM
+    assert data[sp.ADDR_CONFIRM_INC : sp.ADDR_CONFIRM_INC + 4] == sp.ARM_NOP
+    assert data[sp.ADDR_CONFIRM_DEC : sp.ADDR_CONFIRM_DEC + 4] == sp.ARM_NOP
     memcpy = sp.memcpy_addr()
     assert sp._bl_target(data, sp.ADDR_READ_BL1) == memcpy
     assert sp._bl_target(data, sp.ADDR_READ_BL2) == memcpy

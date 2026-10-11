@@ -3,6 +3,8 @@ setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 
 REM Drag a New Love Plus+ .cia / .3ds / .cci onto this file, or double-click for a drop window.
+REM Echoed text stays ASCII. cmd reads this file in the OEM code page, so a
+REM UTF-8 em dash is printed as garbage in Windows Terminal.
 title New Love Plus+ - Drop ROM to Patch
 set "SRC=%~dp0src"
 
@@ -40,7 +42,7 @@ REM stay current. Offline / 404 keeps the local tree. .git checkouts skip.
 REM   NLPP_SKIP_SOURCE_FETCH=1   skip
 REM   NLPP_FORCE_SOURCE_FETCH=1  sync even with .git
 REM   NLPP_SOURCE_REPO=owner/repo
-REM Exit 2 = tree updated — re-exec once so the new bat/scripts run.
+REM Exit 2 = tree updated - re-exec once so the new bat/scripts run.
 if /i "%NLPP_SOURCE_SYNCED%"=="1" goto :source_sync_done
 if /i "%NLPP_SKIP_SOURCE_FETCH%"=="1" goto :source_sync_done
 if not exist "%~dp0tools\fetch_main_tree.py" goto :source_sync_done
@@ -50,7 +52,7 @@ echo Checking EngPatcher sources against GitHub main...
 set "NLPP_SOURCE_RC=!ERRORLEVEL!"
 if "!NLPP_SOURCE_RC!"=="2" (
   echo.
-  echo [fetch] Sources updated from main — restarting Drop CIA once...
+  echo [fetch] Sources updated from main - restarting Drop CIA once...
   echo.
   set "NLPP_SOURCE_SYNCED=1"
   set "NLPP_PY_DEPS="
@@ -100,7 +102,7 @@ exit /b 0
 REM Stage dump path via PowerShell first. Names with Japanese glyphs or parentheses
 REM (e.g. piratelegit "NEWラブプラス＋ (CTR-P-BLPJ) (v0.2.0)...") break cmd parsing
 REM if we expand %~1 / %~nx1 inside IF blocks.
-REM Read the result from a temp file — never for /f over powershell stdout
+REM Read the result from a temp file - never for /f over powershell stdout
 REM (error text like "Copy-Item" can leak into the captured path).
 set "NLPP_ROM=%~1"
 set "NLPP_DROP_PATH_FILE=%TEMP%\nlpp_drop_path.txt"
@@ -149,7 +151,7 @@ echo  Using:
 echo    %PYTHON%
 echo.
 
-REM Do not use FOR /F around '"%PYTHON%" -c "import ...' — cmd treats
+REM Do not use FOR /F around '"%PYTHON%" -c "import ...' - cmd treats
 REM 'C:\...\python.exe" -c "import' as the executable name (quote pairing).
 REM Write the unix stamp to a temp file instead (same pattern as SHA-1).
 set "NLPP_T0="
@@ -192,7 +194,7 @@ if exist "%TEMP%\nlpp_sha1.txt" (
 )
 
 if "!HASH_ERR!"=="0" (
-  echo [hash] OK — known dump
+  echo [hash] OK - known dump
   echo         !GOT_SHA1!
   REM Already verified here; skip the second full-file hash inside patch_cia.py.
   set "SKIP_HASH=--skip-hash"
@@ -276,10 +278,10 @@ set "EXTRA_ROMFS="
 set "CACHE_ROMFS=%~dp0cache\vanilla_from_rom\romfs"
 
 REM UI ON by default. out\ and release\ were wiped above; this run fills them again.
-REM   release\bake_img.bin     — gold bake (built locally; gitignored)
-REM   release\romfs_overlay\   — TRB overlays (auto-applied when present)
+REM   release\bake_img.bin     - gold bake (built locally; gitignored)
+REM   release\romfs_overlay\   - TRB overlays (auto-applied when present)
 REM Optional PNG scratch:
-REM   cache\new_img.bin        — PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
+REM   cache\new_img.bin        - PNG pack only (incomplete vs gold; NLPP_REPACK_IMAGES=1)
 REM Opt out: set NLPP_WITH_IMAGES=0
 REM Force PNG scratch rebuild: set NLPP_REPACK_IMAGES=1
 REM After the wipe, poll GitHub Release tag gold.
@@ -317,14 +319,14 @@ if exist "%~dp0release\name_input_code.bin" (
 )
 if /i "%NLPP_WITH_IMAGES%"=="0" (
   echo.
-  echo [!] NLPP_WITH_IMAGES=0 is not allowed — incomplete patches are disabled.
+  echo [!] NLPP_WITH_IMAGES=0 is not allowed - incomplete patches are disabled.
   echo     Drop always builds a full CIA ^(UI gold bake + Eng Patch + name-input^).
   echo.
   pause
   exit /b 1
 )
 if /i "%NLPP_REPACK_IMAGES%"=="1" (
-  echo UI packing — rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
+  echo UI packing - rebuilding cache\new_img.bin from assets\images ^(not gold bake^)
   if not defined INJECT_CODE (
     echo [!] release\name_input_code.bin required. Run rebuild_bake_img.py --rom first.
     pause
@@ -346,7 +348,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     echo.
     "%PYTHON%" "%~dp0tools\fetch_release_bake.py" --best-effort
     if errorlevel 1 (
-      "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "[fetch] GitHub gold bake unavailable — building locally from the dropped ROM."
+      "%PYTHON%" -c "import sys; sys.path.insert(0, sys.argv[1]); from live_status import enable_vt, paint; enable_vt(); print(paint(sys.argv[2], '1;95'), flush=True)" "%SRC%" "[fetch] GitHub gold bake unavailable - building locally from the dropped ROM."
     ) else (
       set "FETCHED_GOLD=1"
       set "NLPP_GITHUB_BAKE=1"
@@ -362,7 +364,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   )
   if defined BAKE_STALE (
     echo.
-    echo RC: bake stamp missing, other release, or UI PNGs changed — packing from this tree.
+    echo RC: bake stamp missing, other release, or UI PNGs changed - packing from this tree.
     echo Leftover release\bake_img.bin will be overwritten ^(from scratch^).
     echo Set NLPP_REUSE_BAKE=1 to inject the existing bake anyway.
     echo.
@@ -376,7 +378,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
   if defined NEED_REBUILD (
     if not exist "%~dp0release\bake_img.bin" if not exist "%~dp0cache\bake_img.bin" (
       echo.
-      echo No gold bake at release\bake_img.bin — running tools\rebuild_bake_img.py
+      echo No gold bake at release\bake_img.bin - running tools\rebuild_bake_img.py
       echo This builds bake + textresource TRBs from assets\ ^(PNG pack + deploy chrome^).
       echo Vanilla RomFS is re-extracted from the dropped ROM ^(full tree, including Plus\^).
       echo cache\ was deleted, so this pack is cold. Leave this window open.
@@ -385,7 +387,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       set "NLPP_OVERALL_HI=80"
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
-        echo [!] rebuild_bake_img.py failed — see traceback above.
+        echo [!] rebuild_bake_img.py failed - see traceback above.
         echo     Common fixes:
         echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
@@ -396,14 +398,14 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       set "NLPP_REBUILD_RAN=1"
     ) else if defined BAKE_STALE (
       echo.
-      echo Overwriting leftover gold bake — running tools\rebuild_bake_img.py
+      echo Overwriting leftover gold bake - running tools\rebuild_bake_img.py
       echo cache\ was deleted, so this pack is cold. Leave this window open.
       echo.
       set "NLPP_OVERALL_LO=0"
       set "NLPP_OVERALL_HI=80"
       "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" !PACK_CACHE!
       if errorlevel 1 (
-        echo [!] rebuild_bake_img.py failed — see traceback above.
+        echo [!] rebuild_bake_img.py failed - see traceback above.
         echo     Common fixes:
         echo       py -3 -m pip install -r requirements.txt
         echo       ^(needs Pillow numpy zopfli etcpak PyYAML^)
@@ -417,7 +419,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo.
       echo [!] No gold bake available. English menus need release\bake_img.bin.
       echo     Run: python tools\rebuild_bake_img.py --rom your.cia
-      echo     ^(must finish — first run is often ~16 hours^)
+      echo     ^(must finish - first run is often ~16 hours^)
       echo     Or scripts-only: set NLPP_WITH_IMAGES=0
       pause
       exit /b 1
@@ -435,7 +437,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     exit /b 1
   )
   REM Incomplete gold artifacts: finish rebuild (keeps PNG pack) until Eng_Patch
-  REM and name_input_code.bin both exist — never inject a partial CIA.
+  REM and name_input_code.bin both exist - never inject a partial CIA.
   set "NEED_FINISH="
   "%PYTHON%" -c "import sys; from pathlib import Path; sys.path.insert(0, sys.argv[1]); from patch_cia import _title_pkg_has_eng_patch; raise SystemExit(0 if _title_pkg_has_eng_patch(Path(sys.argv[2])) else 2)" "%SRC%" "!PACKED_IMG!" >nul 2>&1
   if errorlevel 2 set "NEED_FINISH=1"
@@ -449,7 +451,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     set "NLPP_OVERALL_HI=80"
     "%PYTHON%" "%~dp0tools\rebuild_bake_img.py" --rom "%CIA%" --skip-pack
     if errorlevel 1 (
-      echo [!] rebuild_bake_img.py --skip-pack failed — see traceback above.
+      echo [!] rebuild_bake_img.py --skip-pack failed - see traceback above.
       echo     Re-run Drop after fixing the error; incomplete CIAs are not emitted.
       pause
       exit /b 1
@@ -460,7 +462,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
     )
   )
   if not exist "%~dp0release\name_input_code.bin" (
-    echo [!] release\name_input_code.bin still missing after rebuild — aborting.
+    echo [!] release\name_input_code.bin still missing after rebuild - aborting.
     pause
     exit /b 1
   )
@@ -524,7 +526,7 @@ if defined NLPP_T0 (
     echo.
   )
 )
-echo [+] Scroll up for PATCH SUMMARY ^([OK] lines — incomplete patches abort^).
+echo [+] Scroll up for PATCH SUMMARY ^([OK] lines - incomplete patches abort^).
 echo [+] Patch log:
 echo     %~dp0out\log.txt
 echo.
@@ -556,7 +558,7 @@ exit /b 0
 
 :find_python
 set "PYTHON="
-REM 1) python on PATH — skip the zero-byte Microsoft Store alias stub
+REM 1) python on PATH - skip the zero-byte Microsoft Store alias stub
 where python >nul 2>&1
 if not errorlevel 1 (
   for /f "delims=" %%P in ('where python 2^>nul') do (
