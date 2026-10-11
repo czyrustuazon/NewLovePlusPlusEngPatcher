@@ -2065,6 +2065,7 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 | `▲高嶺＊＊▲` expanded to plain `Takane` in `.dbin2` | `patch_names.py` default keeps dialog tokens; `--strip-dialog-tokens` legacy |
 | Stale `rebuild_dbin2` without tokens | Rebuild from XML (`tools/rebuild_dbin2_from_xml.py` when present); `tools/restore_nickname_tokens.py` (Makein ref in `cache/makein_compare/`) |
 | Resident TRB sourced from EN-pre-patched sibling dump → 0 `patch_names` replacements | `patch_cia._resolve_resident_trb()` prefers `release/romfs_overlay/.../textresource_resident_jpn.trb` first |
+| Family slot still the Japanese surname while the script marker used different bytes | Exact C-string slots, 2026-10-11 — **§23** |
 
 ### 19.3 UI / menu images (NLPPCTR migration)
 
@@ -2107,10 +2108,10 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 
 | Item | Status |
 |------|--------|
-| In-game verify nicknames after resident TRB fix | **Test** — Manaka pet name, `▲主人公＊▲`, NLPPPATCH Rinko/Nene chunks |
+| In-game verify nicknames after resident TRB fix | Family slots shipped 2026-10-11 (**§23**). `▲主人公＊▲` and the player marks `▲苗字▲` / `▲名前▲` are still open |
 | Re-enable EN SMS after placeholder audit | WIP — `assets/sms_en/`; use `--include-sms` |
 | Full Rinko / Nene routes | **JP** except NLPPPATCH early ~28% per route |
-| `img.bin` name table — 0 replacements on last deploy | Investigate if nicknames still fail in UI labels |
+| `img.bin` name table — 0 replacements on last deploy | Exact C-string slots via `deploy_day_counter_en.py` (**§23**). Leave `patch_name_table_bytes` off the live blob |
 | Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |
 | Commit / push session tooling | `script_inject.py`, `export_progress_metrics.py`, `restore_*.py`, etc. — whitelisted in `.gitignore` |
@@ -2463,5 +2464,97 @@ Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa
 
 ---
 
-*Last updated 2026-10-05 — audited against main: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
+## 23. Heroine family slots and the player-name marks (2026-10-11)
+
+Live name data is `img.bin` package **5508** (223280 bytes at file `0x298FF000`), a raw copy of the resident TOP blob. Loose RomFS `textresource_resident_jpn.trb` is unused at runtime (§0). `tools/deploy_day_counter_en.py` patches the resident, splices that whole blob into pkg 5508 on the bake and both Azahar imgs, and leaves the day suffix at `0x674` as ` Day  ` (6 bytes). `DURABLE_TRBS` writes `release/textresource/` and `release/romfs_overlay/` only; the Azahar loose resident copies were updated to match. `release/**`, `img.bin`, and `ab_test/azahar_instances/` are gitignored, so the commit carries the slot tables, the script rewriter, `rebuild_dbin2`, the XML, and the JSON values. No CIA was rebuilt. A 3DS that already has a CIA keeps the previous package until the next Drop.
+
+### 23.1 Exact C-string surname slots
+
+`replace_exact_cstring` rewrites a string only when the byte before it is NUL (or it is the start of the blob) and the byte after it is NUL. Shorter English is NUL-padded inside the original span. A longer English string is rejected. A hit inside a longer C string is left alone. Longer rows are listed before the bare surname.
+
+Deploy calls `patch_nene_surname_bytes`, `patch_rinko_surname_bytes`, and `patch_manaka_surname_bytes` only. `patch_name_table_bytes` runs those three and then `replace_all` over `NAME_REPLACEMENTS`. `replace_all` plants a NUL in the middle of any longer string that merely contains the key, and it raises when the English is longer (`小早川 凛子` is 16 bytes, `Kobayakawa Rinko` is 17). `patch_img_name_table` also limits itself to `IMG_NAME_REGION` (`0x298FF000`–`0x29908000`, the first 36864 bytes). Leave the live package on the three exact-slot functions.
+
+Each heroine nickname marker is an 18-byte C string: `▲` (3) + a 12-byte inner field + `▲` (3). The inner field is the family-name bytes padded with `＊` (U+FF0A, 3 bytes) out to 12. From resident `0x11f4` those tokens sit on a 20-byte stride (18-byte token + NUL + pad). The assumption used for the three slots below, and not confirmed by naming the ARM function, is that the substituter builds the search key from the live family-name C string (`strlen`, stop at NUL) padded with `＊`. A family name whose byte length is not a multiple of 3 cannot pad to 12 with `＊` and still fit that 18-byte slot.
+
+| Heroine | Family slot | Marker |
+|---------|-------------|--------|
+| Manaka | `高嶺` (6) → `Takane` (6) at `0x118c` | `▲高嶺＊＊▲` → `▲Takane＊＊▲` (18 exact) at `0x121c` |
+| Rinko | `小早川` (9) → `Kobayaka` (8 + NUL) at `0x1194` | `▲小早川＊▲` → `▲Kobayaka＊▲` (17 + NUL) at `0x1230` |
+| Nene | `姉ヶ崎` (9) → `Anegasaki` (9) at `0x11a0` | `▲姉ヶ崎＊▲` → `▲Anegasaki＊▲` (18 exact) at `0x1244` |
+
+Fit limits, from `MANAKA_SURNAME_SLOTS` / `RINKO_SURNAME_SLOTS` / `NENE_SURNAME_SLOTS`:
+
+- `高嶺様` is 9 bytes and `Takane-sama` is 11, so that slot and `高嶺選手` are the bare word `Takane`. The JSON values stay `Takane-sama` and `Team-player`. Cast brackets that already have a space are `［Takane Manaka］`. The 15-byte `TOP高嶺愛花` slot is `TOPTakaneManaka` with no space. Given-name slots here are Manaka. The JSON word Aika stays out of the resident.
+- `Kobayakawa` is 11 bytes. It fits the youth-page title (`"A Page of Youth: Kobayakawa Rinko"`) and does not fit the family slot, the 18-byte marker, or `［Kobayakawa Hyosuke］` (25 vs 22). `小早川氏` is `Kobayaka`. `▲Kobayaka＊＊▲` is 20 bytes and needs a 21st for the NUL, so it does not fit the 20-byte stride. The spelling Kobayaka is the one that was accepted.
+- `姉ヶ崎先輩` is 15 bytes and `Anegasaki-senpai` is 16, so that slot is `Nene-senpai`.
+
+The same-length `Takane` write at `0x118c` does not shift `0x1194`. Short keys `高嶺` / `小早川` / `愛花` / `凛子` / `寧々` stay in `EXACT_NAME_REPLACEMENTS` (whole C string only). A substring swap of `寧々` (6) → `Nene` (4) inside `姉ヶ崎寧々` plants a NUL and truncates the longer name. `小早川` (9) → `Kobayaka` (8) does the same inside `▲小早川＊▲`. `高嶺` and `Takane` are both 6 bytes, so a substring swap would turn the marker into `▲Takane＊＊▲` and would also rewrite `高嶺` inside every longer string. The exact-slot pass is what leaves a Japanese sentence alone.
+
+`code.bin` still has the eight circles at file `0x74291d` and the Japanese surnames at `0x742936` / `0x742940` / `0x74294a`. The only pointers are the VA words at file `0x6e321c`–`0x6e3228`. No word `0x7E321C` and no `MOVW #0x321C` takes that table's address. Leave `code.bin` alone.
+
+Dialogue and the other copies:
+
+- A dialog whose whole text is `高嶺` or `小早川` becomes `Takane` or `Kobayaka` on every stem (`rewrite_manaka_surname_speakers`, `rewrite_rinko_surname_speakers`). A dialog whose whole text is `姉ヶ崎` becomes `Anegasaki` only on `a*` stems (`rewrite_nene_surname_speakers`). Other stems get Nene's marker with the nameplate left as `姉ヶ崎`. `k050` still has four of those plates.
+- A Japanese sentence that merely contains the kanji is left alone.
+- `src/script_inject.py` runs the rewriters on `rebuild_dbin2`. `apply_nene_marker_to_romfs` (name kept) also rewrites Japanese base-ROM scripts that are not already in the English overlay, and it does not replace an existing English file with the vanilla script. Common tokens that stay Japanese: `▲彼女＊＊▲`, `▲主人公＊▲`, `▲苗字▲`, `▲名前▲`, and the place / choice tokens.
+- The four local main TRBs (release, overlay, Azahar A, Azahar B) were rewritten with `rewrite_manaka_marker_in_trb` / `rewrite_rinko_marker_in_trb` and the earlier Nene pass. File size stayed **1115112**. `textresource_config.trb` SIZE stays **1115648**. The rewriter writes the new UTF-8 + NUL at the start of a slot that already fits and leaves the tail. `restore_control_tokens_in_trb` is the wrong tool here: its keep path writes raw + NUL with the original bytelength and can desync flag-0 gaps.
+- `assets/textresource/translations.json` keys stay the Japanese source strings. Only values changed, by a surgical replace that kept CRLF. Writing a dump through `Path.write_text(..., newline='\n')` rewrites every line. `CONTROL_TOKEN_RESTORES` maps the old English and Japanese heroine markers onto the live English markers, and maps `▲Last Name▲` / `▲Last name▲` → `▲苗字▲` and `▲First Name▲` / `▲Name▲` → `▲名前▲`. The live English markers are values, not restore keys.
+- `--strip-dialog-tokens` still expands markers to plain English and breaks nicknames. Leave it off this path.
+
+A save that already stored the nickname as `高嶺`, `小早川`, or `姉ヶ崎` is not rewritten by the ROM patch. Whether an English sentence now substitutes `▲Takane＊＊▲` / `▲Kobayaka＊▲` / `▲Anegasaki＊▲` was not re-screenshotted. The earlier failure was a key mismatch: `a001` drew `▲姉ヶ崎＊▲` while the family slot was already `Anegasaki`.
+
+Tests: `tests/test_patch_names.py`, `tests/test_patch_textresource.py`, `tests/test_script_inject_layeredfs.py`, `tests/test_deploy_day_counter_en.py`.
+
+### 23.2 Player marks `▲苗字▲` and `▲名前▲` still draw themselves
+
+Nene's diner intro is `script/a000.dbin2`, entry 2, dialog 12:
+
+```text
+Um, I'm
+▲苗字▲ ▲名前▲.
+My pleasure to meet you.
+```
+
+The space between the marks is ASCII `U+0020`. The vanilla Japanese line uses an ideographic space `U+3000` (`えっと、▲苗字▲　▲名前▲です。よろしくお願いします。`). Dialog 0 of that entry is `○○○○○○○○`. On a hardware photo of this scene the speaker plate showed the saved speaker name (`KUSU`) and the body still showed both marks. The `姉ヶ崎` on the uniform is painted on the portrait.
+
+These two marks are the player's family name and given name. `translations.json` keeps the key and the value as the Japanese mark, including the joined `▲苗字▲ ▲名前▲`. Putting the English words "Last name" and "First name" in those values would print those words. `CONTROL_TOKEN_RESTORES` exists to put such English words back to these keys.
+
+Resident layout after the surname pass (223280 bytes; same key offsets on `release`, Azahar A, and the vanilla cache):
+
+| Offset | String |
+|--------|--------|
+| `0x11b1` | `TOP` + eight `○` (speaker-plate placeholder; `0x11b0` is the preceding NUL) |
+| `0x11d0` | `▲名前▲` (12 bytes) |
+| `0x11e0` | `▲苗字▲` (12 bytes) |
+| `0x11f0` | `●` |
+| `0x11f4` | `▲主人公＊▲` (18); first of the 20-byte `＊` stride |
+| `0x121c` / `0x1230` / `0x1244` | `▲Takane＊＊▲` / `▲Kobayaka＊▲` / `▲Anegasaki＊▲` |
+| `0x789c` | `▲苗字▲ ▲名前▲` (25 bytes: 12 + ASCII space + 12). A read at `0x7890` returns `ROUP` because that offset is inside `GROUP`. |
+
+`▲苗字▲` and `▲名前▲` have no `＊` pad. They sit on a 16-byte stride (`0x11d0`, `0x11e0`, then `●` at `0x11f0`), separate from the heroine markers. Each key occurs twice in the resident, and the joined ASCII-space string occurs once. The surname pass did not move them.
+
+Three strings, and two of them already show the typed name:
+
+1. The speaker plate is dialog 0's eight circles. On the photo it filled.
+2. Select Data's words "Full Name" are the painted label on FileSelect pkg **5152** (`Vis_Dsel_Data`). The value beside that label is a different widget, `Lyt_Com_DataPlate` @ pkg **5237**, drawn by `FUN_002240f8` (**§12.4.5**). The `push` is at file `0x22410c`; `0x2240f8` is three addressing adds in front of it. Callers are `0x14dca0` and `0x14dd54`. Name path: pack `0x9d02` slot 0, format `"%s %s"`. The two `%s` come from the save object `FUN_001980e4` returns, plus 8, at `+0x0a` and `+0x2c`, when halfword `+8` bit 0 is set. When that bit is clear the formatter uses the single string at `+0x4e`. Empty path: pack `0x9d00` slot 3 `NO DATA`. The same field pair is sprintf'd again at `0x1e6014`, `0x1e6c94`, and `0x1a4ec0`. A full name on Select Data means those save bytes are nonempty. This draw does not read the `▲` marks, and the two `%s` were not traced onto `▲苗字▲` / `▲名前▲`. Profile rows stay 姓 above 名 (**§12.4.4**).
+3. The diner sentence still contains both marks when MakeStr copies it. The copy that should replace them with the saved family name and given name did not run on this line.
+
+`MakeStr` (`FUN_005a1ec8`, file `0x5A1EC8`, ARM) measures and copies. It calls the UTF-8 classifier at `0x5A1C98` and does not expand marks. `FUN_005a1dcc` (the prep §21.1 stores on the message widget at `+0x0C`) is `strlen` (`0x200e60`), `memcpy` (`0x317dc`), and that same classifier. A global MakeStr hook stays banned (**§11.1**, **§11.3**): a cave outside `.text` crashed, and a cave in `.text` blanked all text.
+
+Checked for this line, and not the filler:
+
+- `0x256a40` (parent `0x2567a8`, `patch_input_skip_ascii_dakuten.py`) returns 0 unless the first character is 3 bytes, then checks fullwidth `EF BC` / `EF BD`. That is the profile dakuten/sokuon skip.
+- Typewriter `FUN_002d544c` is a timer and `DrawText` (**§21**).
+- Thumb `0xB40` (`strstr`) has 26 ARM `BLX` callers in this scan. None replaces a dialog `▲` mark. `0x5cf8f4` sanitizes the binary needle table at `0x7be23c`. `0x23ec04` walks pack `0x7000` slot 8 (kana readings).
+- `code.bin` has no UTF-8 of `▲苗字▲` or `▲名前▲`, no `DBN2`, and no aligned package id `5508` (`0x1584`). The `SDL2` bytes at file `0xdd5cc` are an ARM instruction. ARM `cmp rn, #0xE2` is absent. Inside `.text` (below `0x690000`) no Thumb `cmp` of `#0xE2` sits within 48 bytes of both a `#0x96` and a `#0xB2` compare, so the triangles are not hardcoded immediates. The keys are loaded from the resident blob.
+- The Called-list `*3` walk (`FUN_00147808`, `GetUtf8CharByteLength` at `0x005BF4E8`) is the `づ` bug in **§17.8**.
+- The circle/surname pointer table at file `0x6e321c` is not the body-token source.
+
+A stride-3 scan does not explain the photo by itself. `"Um, I'm\n"` is 8 bytes, so a scan of the whole line misses `▲苗字▲` and can hit `▲名前▲`. A scan that restarts on the second line does the opposite. Both marks are on screen. Halfwidth ABC names (**§17.7**) already reach the speaker plate and Select Data, which is evidence of two paths and not a located cause.
+
+The function that should copy the saved names onto these two keys was not found. Leave the keys in Japanese. Leave `code.bin` unpatched. Leave the MakeStr hook retired.
+
+---
+
+*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
 
