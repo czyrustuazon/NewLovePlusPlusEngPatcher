@@ -24,6 +24,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   13. patch_commu_settings_header           # Communication Settings white-bar DrawText
   14. patch_weather_day_text               # weekly day names captured at 64×28
   15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
+  16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -133,6 +134,10 @@ from patch_weather_day_text import (  # noqa: E402
 from patch_profile_birthday import (  # noqa: E402
     apply_patch as apply_profile_birthday,
     is_patched as profile_birthday_already,
+)
+from patch_web_event_date import (  # noqa: E402
+    apply_patch as apply_web_event_date,
+    is_patched as web_event_date_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -293,6 +298,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] profile_birthday already applied")
     else:
         apply_profile_birthday(data)
+        steps += 1
+
+    if web_event_date_already(data):
+        print("[skip] web_event_date already applied")
+    else:
+        apply_web_event_date(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

@@ -105,6 +105,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
     "deploy_web_weather_en.py",  # 5316 Weekly title + day panes
+    "deploy_web_event_date_en.py",  # 5316 event-card date is MM/DD plus a smaller Update
     "deploy_cesa_en.py",
 ]
 

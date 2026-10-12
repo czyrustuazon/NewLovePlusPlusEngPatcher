@@ -55,5 +55,6 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Anywhere Date empty list | TRB STRI **25183** DrawText (`Lyt_De0200` Opt_Win) | EN — full JP key; truncated `…デートを作` never matched |
 | Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
 | In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
+| Web event-card date (`09月20日更新`) | **5316** LA4 `Web_Txt_Date` + `Web_Num12` digits | `MM/DD` plus a smaller `Update` after the day. Digits stay at vanilla 34/40/58/64 so the Spot HOT badge is clear (`deploy_web_event_date_en.py`). |
 
 Details: `docs/technical.md` §12.4–12.6.
