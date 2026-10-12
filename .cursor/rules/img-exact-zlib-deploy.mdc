@@ -46,6 +46,7 @@ Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 | `deploy_optionpassword_en.py` | **5251** Password window `Pass_Win01` |
 | `deploy_myroom_main_en.py` / `deploy_mydata_en.py` | **5380** |
 | `deploy_myroom_options_en.py` | **5380** + **5575** in-room Options `optn_tex_*` (live; after shared-ARC writers) |
+| `deploy_map_hub_en.py` | **5380** + **5575** Map hub `map_text_*` / `map_toptex_01` (live; after myroom options) |
 | `deploy_schedule_header_en.py` / profile/todo/mail/… | **5575** + others |
 
 Rollback: `img.bin.bak_pre_<feature>` next to LayeredFS `romfs/img.bin`. Fully quit Azahar after deploy.

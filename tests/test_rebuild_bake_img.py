@@ -21,6 +21,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_display_settings_en.py",
         "deploy_optionpassword_en.py",
         "deploy_myroom_options_en.py",
+        "deploy_map_hub_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -264,6 +265,25 @@ def test_myroom_options_after_shared_arc_writers():
     assert "MOD_IMG.read_bytes" in text
     assert "_zero_all_darc_pads" in text
     assert "unsalted pads" in text
+
+
+def test_map_hub_after_myroom_options():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    map_hub = scripts.index("deploy_map_hub_en.py")
+    assert map_hub > scripts.index("deploy_myroom_options_en.py")
+    assert map_hub > scripts.index("deploy_schedule_header_en.py")
+    text = (TOOLS / "deploy_map_hub_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "map_text_townviewer_RGBA4",
+        "map_text_townvoice_RGBA4",
+        "map_text_title_RGBA4",
+        "map_toptex_01",
+    ):
+        assert stem in text
+    assert "City Viewer" in text
+    assert "City Voice Settings" in text
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
 
 
 def test_msel_options_omits_quit_azahar_prompt():

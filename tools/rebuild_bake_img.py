@@ -100,6 +100,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
     "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
+    "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
