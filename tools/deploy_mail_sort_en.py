@@ -9,13 +9,16 @@
 | ``Mail_PopTxt05`` | ETC1A4 104×96 | Timestamp / Sender / Lock |
 | ``C_Com_Win01_Btn02_Cancel_{Off,Press}`` | RGBA4444 98×42 | Cancel |
 
-Self-rendered Heisei (no Zhoumaru). Live Mail.arc first so Inbox / New Mail
-from ``deploy_mail_home_en.py`` stays. Bake after mail_home.
+Self-rendered Heisei (no Zhoumaru). Live Mail.arc first so Inbox / New Mail /
+Play from ``deploy_mail_home_en.py`` stays. Never fall back to vanilla if live
+already has those EN stems (vanilla fallback would wipe them). Bake after
+mail_home.
 
   python tools/deploy_mail_sort_en.py
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import struct
 import sys
@@ -75,6 +78,19 @@ CANCEL_PATHS = [
     "timg/C_Com_Win01_Btn02_Cancel_Off.bclim",
     "timg/C_Com_Win01_Btn02_Cancel_Press.bclim",
 ]
+# Stems written by deploy_mail_home_en — sort must not regress them to vanilla.
+PRESERVE_HOME_PATHS = [
+    "timg/mail_tex_jyusin_RGBA4.bclim",
+    "timg/mail_tex_shinki_RGBA4.bclim",
+    "timg/mail_tex_chak_RGBA4.bclim",
+    "timg/C_Btn_Play_Off.bclim",
+    "timg/C_Btn_Play_On.bclim",
+    "timg/Sel_Tex_ma02_01.bclim",
+    "timg/Sel_Tex_ma02_02.bclim",
+    "timg/Sel_Tex_ma02_03.bclim",
+    "timg/Sel_Tex_ma02_04.bclim",
+    "timg/Sel_Tex_ma02_05.bclim",
+]
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -117,38 +133,62 @@ def render_pop05(w: int, h: int) -> Image.Image:
     return im
 
 
+def _dilate(mask: np.ndarray, r: int = 1) -> np.ndarray:
+    """Cheap binary dilate so glyph AA fringe is cleared with the face."""
+    out = mask.copy()
+    for dy in range(-r, r + 1):
+        for dx in range(-r, r + 1):
+            if dx == 0 and dy == 0:
+                continue
+            shifted = np.zeros_like(mask)
+            y0, y1 = max(0, dy), mask.shape[0] + min(0, dy)
+            x0, x1 = max(0, dx), mask.shape[1] + min(0, dx)
+            shifted[y0:y1, x0:x1] = mask[y0 - dy : y1 - dy, x0 - dx : x1 - dx]
+            out |= shifted
+    return out
+
+
 def reletter_cancel(raw: bytes, text: str = "Cancel") -> Image.Image:
-    """Keep Mail light-pill chrome; wipe JP glyph bbox then draw EN."""
+    """Keep Mail light-pill chrome + face alpha (~170); only swap JP glyphs.
+
+    Vanilla face is see-through (alpha ≈ 170) so the dotted popup shows
+    through. Filling a glyph bbox with opaque alpha=255 made Cancel a slab.
+    """
     im = decode_bclim_to_image(raw).convert("RGBA")
     arr = np.array(im)
     rgb = arr[:, :, :3].astype(np.int16)
     a = arr[:, :, 3]
     lum = rgb.mean(axis=2)
-    # Dark glyph + AA fringe on light button (vanilla キャンセル).
-    ink = (lum < 200) & (a > 180)
+    h0, w0 = a.shape
+    # Interior only — border ring is also high-alpha.
+    interior = np.zeros_like(a, dtype=bool)
+    interior[6 : h0 - 6, 12 : w0 - 12] = True
+    # Vanilla キャンセル = white opaque fill + dark outline on alpha≈170 face.
+    # Clearing only the dark outline left white slabs (looked opaque in-game).
+    dark = (lum < 200) & (a > 160)
+    white_glyph = interior & (lum > 230) & (a > 230)
+    ink = dark | white_glyph
     if not ink.any():
         raise RuntimeError("Cancel glyph mask empty")
-    ys, xs = np.where(ink)
-    # Pad the glyph box so outline fringe is wiped with chrome fill.
-    y0 = max(0, int(ys.min()) - 2)
-    y1 = min(arr.shape[0], int(ys.max()) + 3)
-    x0 = max(0, int(xs.min()) - 2)
-    x1 = min(arr.shape[1], int(xs.max()) + 3)
-    border = np.ones(arr.shape[:2], dtype=bool)
-    border[2:-2, 2:-2] = False
-    chrome = (a > 180) & ~ink & ~border
-    if chrome.any():
-        fill_rgb = tuple(int(x) for x in arr[:, :, :3][chrome].mean(axis=0))
+    # Face sample: light, mid-alpha (not the opaque border ring).
+    face = interior & (lum > 200) & (a >= 160) & (a <= 220) & ~ink
+    if face.any():
+        fill_rgb = tuple(int(x) for x in arr[:, :, :3][face].mean(axis=0))
+        fill_a = int(np.median(a[face]))
     else:
-        fill_rgb = (236, 236, 236)
-    arr[y0:y1, x0:x1, 0] = fill_rgb[0]
-    arr[y0:y1, x0:x1, 1] = fill_rgb[1]
-    arr[y0:y1, x0:x1, 2] = fill_rgb[2]
-    arr[y0:y1, x0:x1, 3] = 255
+        fill_rgb = (250, 250, 250)
+        fill_a = 170
+    clear = _dilate(ink, 1)
+    arr[clear, 0] = fill_rgb[0]
+    arr[clear, 1] = fill_rgb[1]
+    arr[clear, 2] = fill_rgb[2]
+    arr[clear, 3] = fill_a
     cleared = Image.fromarray(arr, "RGBA")
-    dr = ImageDraw.Draw(cleared)
+    # Draw EN into an alpha mask, then composite dark ink at full alpha.
     w, h = cleared.size
     for size in range(14, 8, -1):
+        mask = Image.new("L", (w, h), 0)
+        dr = ImageDraw.Draw(mask)
         f = font(size)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
@@ -156,8 +196,23 @@ def reletter_cancel(raw: bytes, text: str = "Cancel") -> Image.Image:
             continue
         x = (w - tw) // 2 - b[0]
         y = (h - th) // 2 - b[1] - 1
-        dr.text((x, y), text, font=f, fill=INK + (255,))
-        return cleared
+        dr.text((x, y), text, font=f, fill=255)
+        m = np.array(mask)
+        out = arr.copy()
+        on = m >= 128
+        out[on, 0] = INK[0]
+        out[on, 1] = INK[1]
+        out[on, 2] = INK[2]
+        out[on, 3] = 255
+        # Soft AA fringe: blend toward ink, keep face alpha under soft edges.
+        soft = (m > 0) & (m < 128)
+        if soft.any():
+            t = (m[soft].astype(np.float32) / 255.0)[:, None]
+            base = out[soft, :3].astype(np.float32)
+            ink_rgb = np.array(INK, dtype=np.float32)
+            out[soft, :3] = (base * (1.0 - t) + ink_rgb * t).astype(np.uint8)
+            out[soft, 3] = np.maximum(out[soft, 3], (170 + 85 * t[:, 0]).astype(np.uint8))
+        return Image.fromarray(out, "RGBA")
     raise RuntimeError(f"cannot fit Cancel {text!r}")
 
 
@@ -172,6 +227,51 @@ def _extract_pkg(img_path: Path, pkg_dir: Path) -> tuple[Path, Package, ARC]:
     pkg.parse(False)
     arc = next(e for e in pkg.entries if isinstance(e, ARC))
     return src_pkg, pkg, arc
+
+
+def _bclim_sha(arc_bytes: bytes, path: str) -> str | None:
+    darc = DarcArchive(bytearray(arc_bytes))
+    entry = darc.find(path) or darc.find(Path(path).name)
+    if entry is None:
+        return None
+    return hashlib.sha1(darc.extract_file(entry)).hexdigest()
+
+
+def _home_shas(arc_bytes: bytes) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for path in PRESERVE_HOME_PATHS:
+        sha = _bclim_sha(arc_bytes, path)
+        if sha is not None:
+            out[path] = sha
+    return out
+
+
+def _assert_home_preserved(before: dict[str, str], after_arc: bytes) -> None:
+    after = _home_shas(after_arc)
+    for path, sha in before.items():
+        got = after.get(path)
+        if got != sha:
+            raise SystemExit(
+                f"mail_sort wiped home chrome {path}: "
+                f"before={sha[:12]} after={(got or 'missing')[:12]}"
+            )
+
+
+def _vanilla_arc_bytes() -> bytes | None:
+    """Vanilla Mail.arc — Cancel must be relettered from JP face alpha, not a prior opaque EN."""
+    if not VANILLA.is_file():
+        return None
+    raw = VANILLA.read_bytes()
+    img = ImgBin(str(VANILLA))
+    img.parse(False)
+    res = img.entries[PKG]
+    src = OUT / "_vanilla_5207"
+    OUT.mkdir(parents=True, exist_ok=True)
+    src.write_bytes(raw[res.fw.base_offset : res.fw.base_offset + res.fw.len()])
+    pkg = Package(FileWindow(str(src)), 0)
+    pkg.parse(False)
+    arc = next(e for e in pkg.entries if isinstance(e, ARC))
+    return arc.parsed()
 
 
 def _patch_arc(arc_bytes: bytes, tmp: Path) -> bytes:
@@ -198,11 +298,18 @@ def _patch_arc(arc_bytes: bytes, tmp: Path) -> bytes:
         darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
         print(f"OK {path} -> {label!r}", flush=True)
 
+    van_arc = _vanilla_arc_bytes()
+    van_darc = DarcArchive(bytearray(van_arc)) if van_arc is not None else None
+
     for path in CANCEL_PATHS:
         entry = darc.find(path) or darc.find(Path(path).name)
         if entry is None:
             raise SystemExit(f"missing {path}")
-        raw = darc.extract_file(entry)
+        if van_darc is not None:
+            v_ent = van_darc.find(path) or van_darc.find(Path(path).name)
+            raw = van_darc.extract_file(v_ent) if v_ent else darc.extract_file(entry)
+        else:
+            raw = darc.extract_file(entry)
         _pix, w, h, fmt, _ft = parse_bclim(raw)
         if fmt != 8:
             raise SystemExit(f"{path} fmt {fmt} not RGBA4444")
@@ -213,7 +320,7 @@ def _patch_arc(arc_bytes: bytes, tmp: Path) -> bytes:
         rgba.save(OUT / f"{Path(path).stem}_en.png")
         orig.write_bytes(raw)
         darc.replace_same_size(entry, png_to_bclim_rgba4444_same_size(png, orig))
-        print(f"OK {path} -> 'Cancel'", flush=True)
+        print(f"OK {path} -> 'Cancel' (face alpha preserved)", flush=True)
 
     return bytes(darc.data)
 
@@ -364,6 +471,37 @@ def main() -> None:
                 splice_packages_into_img(_dest, pkg_dir, [PKG], _dest)
         except PackError as exc:
             raise SystemExit(f"splice failed: {exc}") from exc
+
+        # Prove the splice stuck (earlier runs logged OK but left vanilla JP).
+        import hashlib
+
+        check = MOD_IMG.read_bytes()
+        cimg = ImgBin(str(MOD_IMG))
+        cimg.parse(False)
+        cres = cimg.entries[PKG]
+        cpkg = OUT / "_verify_5207"
+        cpkg.write_bytes(
+            check[cres.fw.base_offset : cres.fw.base_offset + cres.fw.len()]
+        )
+        cp = Package(FileWindow(str(cpkg)), 0)
+        cp.parse(False)
+        carc = next(e for e in cp.entries if isinstance(e, ARC))
+        cdarc = DarcArchive(bytearray(carc.parsed()))
+        want = hashlib.sha1(
+            cdarc.extract_file(cdarc.find("timg/Mail_PopTxt04.bclim"))
+        ).hexdigest()
+        expect = hashlib.sha1(
+            DarcArchive(bytearray(tuned))
+            .extract_file(
+                DarcArchive(bytearray(tuned)).find("timg/Mail_PopTxt04.bclim")
+            )
+        ).hexdigest()
+        if want != expect:
+            raise SystemExit(
+                f"post-splice verify failed: img PopTxt04={want[:12]} "
+                f"expected={expect[:12]}"
+            )
+        print(f"post-splice verify OK PopTxt04={want[:12]}", flush=True)
 
         print("deployed Mail sort popup EN ->", MOD_IMG, flush=True)
         print("Rollback:", bak, flush=True)

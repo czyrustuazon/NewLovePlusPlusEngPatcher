@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """EN Mail home: header (MyroomHeader 5575) + Mail buttons (Mail 5207).
 
-Buttons: Inbox / New Mail / Ringtone Settings (着信音設定). Ringtone uses
-Zhoumaru ``Mail.check/timg/mail_tex_chak_RGBA4.png`` when present.
+Buttons: Inbox / New Mail / Ringtone Settings (着信音設定) / Play (再生).
+Ringtone uses Zhoumaru ``Mail.check/timg/mail_tex_chak_RGBA4.png`` when present.
+Play uses Zhoumaru ``Mail.check/timg/C_Btn_Play_{Off,On}.png``.
 
 Inbox category rows ``Sel_Tex_ma02_01..05`` (カノジョのメール … 謎メール) are
 font-rendered here — Zhoumaru left 01 in JP and mistranslated 05.
@@ -60,6 +61,8 @@ BUTTON_LABELS = [
     ("timg/mail_tex_jyusin_RGBA4.bclim", "Inbox"),
     ("timg/mail_tex_shinki_RGBA4.bclim", "New Mail"),
     ("timg/mail_tex_chak_RGBA4.bclim", "Ringtone Settings"),
+    ("timg/C_Btn_Play_Off.bclim", "Play"),  # 再生
+    ("timg/C_Btn_Play_On.bclim", "Play"),
 ]
 # Inbox categories — always render (do not pack Zhoumaru ma02 masters).
 CATEGORY_LABELS = [
@@ -69,8 +72,10 @@ CATEGORY_LABELS = [
     ("timg/Sel_Tex_ma02_04.bclim", "Info Mail"),  # 情報メール
     ("timg/Sel_Tex_ma02_05.bclim", "Mystery Mail"),  # 謎メール
 ]
-# Prefer Zhoumaru masters for these stems (chak is the Ringtone Settings bar).
-ZHOUMARU_BUTTONS = frozenset({"mail_tex_chak_RGBA4"})
+# Prefer Zhoumaru masters for these stems (chak / Play pill chrome).
+ZHOUMARU_BUTTONS = frozenset(
+    {"mail_tex_chak_RGBA4", "C_Btn_Play_Off", "C_Btn_Play_On"}
+)
 
 
 def font(size: int, face: Path = FONT) -> ImageFont.FreeTypeFont:
@@ -315,8 +320,20 @@ def patch_package(
             raise SystemExit(f"pkg {pkg_id} DMST changed")
     print("  DMST OK", flush=True)
 
+    expect = new_pkg.read_bytes()
     for _dest in iter_deploy_targets(MOD_IMG):
         splice_packages_into_img(_dest, pkg_dir, [pkg_id], _dest)
+        vimg = ImgBin(str(_dest))
+        vimg.parse(False)
+        slot = vimg.entries[pkg_id]
+        got = _dest.read_bytes()[
+            slot.fw.base_offset : slot.fw.base_offset + slot.fw.len()
+        ]
+        if got != expect:
+            raise SystemExit(
+                f"post-splice mismatch pkg {pkg_id} on {_dest} "
+                f"(img still has old package — is Azahar locking img.bin?)"
+            )
 
 
 def main() -> None:

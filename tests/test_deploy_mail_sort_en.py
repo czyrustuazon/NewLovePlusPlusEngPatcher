@@ -41,21 +41,18 @@ def test_render_pop05_three_bands():
         assert int((band > 20).sum()) > 20
 
 
-def test_reletter_cancel_wipes_jp_and_draws_en():
-    # Synthetic light pill with dark JP-sized blob, then reletter via real BCLIM path
-    # by building a fake RGBA4444-looking decode: exercise the mask fill on a PNG roundtrip.
-    chrome = Image.new("RGBA", (98, 42), (236, 236, 236, 255))
-    # Dark fake glyphs in the center
+def test_reletter_cancel_keeps_face_alpha():
+    # Translucent face + white JP fill + dark outline (vanilla キャンセル shape).
+    chrome = Image.new("RGBA", (98, 42), (250, 250, 250, 170))
+    for x in range(22, 76):
+        for y in range(15, 27):
+            chrome.putpixel((x, y), (254, 254, 254, 255))  # white glyph body
     for x in range(20, 78):
-        for y in range(14, 28):
-            chrome.putpixel((x, y), (51, 51, 51, 255))
-    # Encode through a temporary BCLIM is heavy; call the array logic via a stub raw
-    # by monkeypatching decode — instead exercise compress + render helpers only.
-    # Directly test the public reletter by injecting decode_bclim_to_image.
-    raw_holder = {"img": chrome}
+        chrome.putpixel((x, 14), (51, 51, 51, 255))
+        chrome.putpixel((x, 27), (51, 51, 51, 255))
 
     def _fake_decode(_raw: bytes):
-        return raw_holder["img"].copy()
+        return chrome.copy()
 
     orig = deploy.decode_bclim_to_image
     deploy.decode_bclim_to_image = _fake_decode  # type: ignore[assignment]
@@ -64,10 +61,15 @@ def test_reletter_cancel_wipes_jp_and_draws_en():
     finally:
         deploy.decode_bclim_to_image = orig  # type: ignore[assignment]
     arr = np.array(out)
-    # Center should contain dark ink again (EN), not a full dark slab.
-    center = arr[14:28, 30:68, :3].mean(axis=2)
-    assert (center < 140).any()
-    assert (center > 180).any()  # chrome gaps between letters
+    center = arr[14:28, 30:68]
+    center_a = center[:, :, 3]
+    center_lum = center[:, :, :3].mean(axis=2)
+    assert (center_lum < 140).any()  # EN ink
+    face_gaps = center_a[center_lum > 200]
+    assert face_gaps.size and float(face_gaps.mean()) < 200
+    # No leftover opaque white JP body in the face.
+    white_left = ((center_lum > 230) & (center_a > 230)).sum()
+    assert int(white_left) < 30
 
 
 def test_compress_exact_empty_blocks_roundtrip():
