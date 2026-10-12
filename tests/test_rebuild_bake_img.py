@@ -362,6 +362,14 @@ def test_profile_call01_labels_use_heisei_chroma_aa():
     call_fn = text.split("def render_call_label")[1].split("def make_call_en")[0]
     assert "render_hard_label" in call_fn
     assert "Resampling.NEAREST" not in call_fn
+    assert '(8, 21, 14, 88, "Last Name:")' in text
+    assert '(47, 61, 14, 88, "First Name:")' in text
+    assert '(27, 41, 14, 88, "Called As:")' in text
+    assert "Profile_Info_Check03" in text
+    assert "CHECK_PALETTE" in text
+    assert "Profile_Info_Check02" in text
+    assert "CHECK02_PALETTE" in text
+    assert '(5, 17, 4, 71, "Username:")' in text
     from PIL import Image, ImageDraw, ImageFont
 
     hei = TOOLS.parent / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
@@ -376,6 +384,21 @@ def test_profile_call01_labels_use_heisei_chroma_aa():
     ):
         b = dr.textbbox((0, 0), label, font=font)
         assert b[2] - b[0] <= width - 1, f"{label} {b[2]-b[0]}px > {width}px box"
+    font13 = ImageFont.truetype(str(hei), 13, index=1)
+    for label in (
+        "Last Name:",
+        "Called As:",
+        "First Name:",
+        "Username:",
+        "Birthday:",
+        "Blood Type:",
+        "Hometown:",
+    ):
+        b = dr.textbbox((0, 0), label, font=font13)
+        assert b[2] - b[0] <= 74, f"{label} {b[2]-b[0]}px > 75px Check03 box"
+    # Check02 cursor chip is 68px wide (x 4..71). Size 13 must fit that too.
+    b = dr.textbbox((0, 0), "Username:", font=font13)
+    assert b[2] - b[0] <= 66, f"Username: {b[2]-b[0]}px > 68px Check02 box"
 
 
 def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):

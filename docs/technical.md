@@ -654,6 +654,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Save-card field labels `名前` / `カノジョの名前` | RGBA4444 `B_Card04_txt01` / `txt06` @ Card **4152**, **128×28** | **Name** / **Girlfriend's Name** on the card field list. The two-bar pink screen is a different draw — see **§12.4.5**. A blank folder from the main menu is `FUN_0014ed0c` — **§12.4.6**. |
 | Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (Last Name / First Name / Birthday / M·D / Blood / Hometown). Order is the JP fields (姓 then 名), not Western — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
+| Profile confirm list `苗字` / `呼ばれ方` / `名前` / `HN` / `誕生日` / `血液型` / `出身地` | RGB565 `Profile_Info_Check03` @ **5252**, **240×168**, plus cursor chip RGBA4444 `Profile_Info_Check02` 76×24 | **Last Name / Called As / First Name / Called As / Username / Birthday / Blood Type / Hometown**. Check03 is the sheet. `Pts_Prf_Info_Check_Tag_Act00` fades `Pic_Check02` (`H N :`) over the Username row once the cursor starts. Heisei W5 size 13 on both. Zhoumaru Check02/Check03 PNGs are gray mocks. `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `main_tex_love_RGBA4` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Love Plus` / `Back`) — `tools/deploy_myroom_main_en.py` (Love Plus is rendered gray on the heart pill; pink NEW badge is separate) |
 | In-room Options overlay `オプションメニュー` | ETC1A4 `optn_tex_optionmenu_RGBA4` + `optn_tex_option{hyouji,sound,jikan,real,skip,kabegami}_RGBA4` @ **5380** + header `optn_tex_optionmenu_{RGBA4,01..05}` @ **5575** | **EN** (`Options Menu` / Display / Sound / …) — Zhoumaru; `tools/deploy_myroom_options_en.py`. Not hub Options **5245**. `optionkabegami` dump is a black slab — re-render Wallpaper. Shared-ARC writers from vanilla wiped these until this last-writer. |
@@ -824,12 +825,23 @@ Redeploy: `python tools/deploy_profile_en.py` (bake + instance A). Then `.\ab_te
 
 The atlas boxes are the JP fields. Top box `(10, 24)` is 姓 → **Last Name**. Next box `(49, 63)` is 名 → **First Name**. Call01 is the same pair: `(1, 14)` Last Name, `(77, 89)` First Name. An earlier EN pass painted First Name on the 姓 row, so the label and the save field disagreed. `ATLAS_LABELS` in `tools/deploy_profile_en.py` follows the fields. `test_profile_call01_labels_use_heisei_chroma_aa` locks both pairs. Verified on the Profile list in Azahar A.
 
+**Confirm sheet (2026-10-12)**
+
+`Profile_Info_Check03` @ **5252** is the 8-row list (苗字, 呼ばれ方, 名前, 呼ばれ方, HN, 誕生日, 血液型, 出身地), RGB565 fmt 3, 240×168. Magenta `(213,28,255)` is the gray cell, cyan `(49,157,255)` is the ink, yellow is the gap, white is the value cell. Zhoumaru `Profile_Info_Check03.png` is a gray mock of the same words. `make_check03_en` repaints Heisei W5 size 13 onto the magenta plate (`CHECK_PALETTE`). Order stays family name first. The value column (KOKEKO, the date, blood, hometown) is DrawText and stays.
+
+`Pts_Prf_Info_Check_Tag_Act00` then shows `Pic_Check02` (`Profile_Info_Check02`, RGBA4444 76×24) on top of the HN row. That chip is still vanilla `H N :` until `make_check02_en` paints **Username:** on plate `(119,255,255)` → ink `(51,51,51)`. Zhoumaru `Profile_Info_Check02.png` is a gray mock. Do not pack it.
+
+The birthday value is the DrawText at file `0x00350254` (pane index 5). Vanilla sprintf's the month byte, strcat's TRB slot `0x3f` (`月` → `Month`), then the day byte and slot `0x3e` (`日` → ` Day(s)`), so June 23 reads `6Month23 Day(s)`. `patch_profile_birthday.py` overwrites that stretch and writes `June 23` into the same 24-byte buffer. The shared `月` / `日` tokens stay. The year-month-day sprintfs at `0x0021620c` and `0x00228910` stay.
+
 **Do not**
 
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”
 2. Blame overflowing English — **Last Name** / **Written** / **Called** all fit size 15.
 3. `find_ui_png` the Zhoumaru Call01 mock for this BCLIM.
 4. Put **First Name** above **Last Name**. Those boxes are 姓 then 名. Western label order writes the given name into the family-name field.
+5. Pack Zhoumaru `Profile_Info_Check03.png` onto the confirm sheet. It is gray paint. The live BCLIM is magenta/cyan chroma.
+6. Pack Zhoumaru `Profile_Info_Check02.png` onto the cursor chip. It is the same gray mock. The live BCLIM is the `(119,255,255)` pill that covers the HN row when the cursor starts.
+7. Retarget TRB `月` / `日` to fix this one cell. Those tokens are the duration units (`3 Day(s)`, month counts). The confirm sheet has its own formatter.
 
 #### 12.4.5 Save-card name labels vs the two-bar plate (2026-09-22)
 

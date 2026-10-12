@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 from bclimutil import (  # noqa: E402
     canvas_for_pixel_bytes,
     d2xy,
+    decode_bclim_to_image,
     gcm,
     parse_bclim,
     png_to_bclim_a8_same_size,
@@ -121,6 +122,76 @@ CALL02_LABELS: list[tuple[int, int, int, int, str]] = [
     (2, 17, 50, 190, "Your nickname"),
     (58, 72, 60, 180, "Her nickname"),
 ]
+
+# Profile confirm sheet (苗字 / 呼ばれ方 / 名前 / 呼ばれ方 / HN / 誕生日 / 血液型 / 出身地).
+# RGB565 chroma like Call01: magenta plate (213,28,255) keys to the gray cell,
+# cyan ink keys to dark text, yellow is the gap. Zhoumaru Check03 is a gray
+# mock of this BCLIM — do not pack it. Cell is ~75×14, so size 13 (not 15).
+CHECK_PLATE = (213, 28, 255)
+CHECK_INK = INK
+CHECK_LABEL_SIZE = 13
+CHECK_PALETTE = np.array(
+    [
+        [213, 28, 255],
+        [205, 60, 255],
+        [197, 60, 255],
+        [189, 60, 255],
+        [180, 60, 255],
+        [172, 60, 255],
+        [164, 60, 255],
+        [156, 28, 255],
+        [139, 255, 255],
+        [139, 125, 255],
+        [131, 222, 255],
+        [123, 157, 255],
+        [123, 28, 255],
+        [115, 93, 255],
+        [98, 255, 255],
+        [90, 157, 255],
+        [82, 28, 255],
+        [65, 93, 255],
+        [49, 157, 255],
+        [246, 157, 255],
+        [156, 255, 255],
+    ],
+    dtype=np.uint8,
+)
+# (y0, y1, x0, x1, text). Order follows the JP rows. Colon stays in the label.
+CHECK03_LABELS: list[tuple[int, int, int, int, str]] = [
+    (8, 21, 14, 88, "Last Name:"),
+    (27, 41, 14, 88, "Called As:"),
+    (47, 61, 14, 88, "First Name:"),
+    (68, 82, 14, 88, "Called As:"),
+    (88, 100, 14, 88, "Username:"),
+    (108, 121, 14, 88, "Birthday:"),
+    (128, 141, 14, 88, "Blood Type:"),
+    (148, 161, 14, 88, "Hometown:"),
+]
+# Cursor anim Pts_Prf_Info_Check_Tag_Act00 shows Pic_Check02 over the HN row.
+# RGBA4444 76×24. Plate (119,255,255) is the pill; ink ramps to (51,51,51).
+# Zhoumaru Check02 is a gray "Username :" mock — do not pack it.
+CHECK02_PLATE = (119, 255, 255)
+CHECK02_INK = (51, 51, 51)
+CHECK02_PALETTE = np.array(
+    [
+        [119, 255, 255],
+        [102, 255, 255],
+        [102, 238, 238],
+        [102, 221, 221],
+        [102, 204, 204],
+        [85, 187, 187],
+        [85, 153, 153],
+        [68, 136, 136],
+        [68, 119, 119],
+        [68, 102, 102],
+        [51, 85, 85],
+        [51, 68, 68],
+        [51, 51, 51],
+    ],
+    dtype=np.uint8,
+)
+# Inclusive box inside the pill (rows 5–17 are fully opaque).
+CHECK02_BOX = (5, 17, 4, 71, "Username:")
 
 # Hometown region dropdown (▼全国 / 北海道東北 / …) — Zhoumaru RGBA4444 64×24.
 # Text01 collapsed Nation, Text02 expanded Nation, Text03–08 the six regions.
@@ -238,12 +309,15 @@ def patch_header_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byt
 # ---- RGB565 atlas (hard ink, no soft outline) --------------------------------
 
 
-def _quantize_chroma(rgb: np.ndarray) -> np.ndarray:
-    """Snap RGB to vanilla Call/atlas RGB565 chroma ramps."""
-    pal = CALL_PALETTE.astype(np.int16)
+def _quantize_chroma(
+    rgb: np.ndarray, palette: np.ndarray | None = None
+) -> np.ndarray:
+    """Snap RGB to a vanilla RGB565 chroma ramp."""
+    pal_u8 = CALL_PALETTE if palette is None else palette
+    pal = pal_u8.astype(np.int16)
     diff = rgb.astype(np.int16)[..., None, :] - pal.reshape((1, 1, -1, 3))
     idx = np.abs(diff).sum(axis=3).argmin(axis=2)
-    return CALL_PALETTE[idx]
+    return pal_u8[idx]
 
 
 def render_hard_label(
@@ -254,6 +328,8 @@ def render_hard_label(
     prefer_size: int | None = None,
     bg: tuple[int, int, int] = BG,
     ink: tuple[int, int, int] = INK,
+    plate: tuple[int, int, int] | None = None,
+    palette: np.ndarray | None = None,
 ) -> Image.Image:
     """2× Heisei AA, quantized to vanilla yellow/green/cyan ramps.
 
@@ -265,7 +341,8 @@ def render_hard_label(
         sizes = list(range(prefer_size, 7, -1))
     else:
         sizes = list(range(min(13, h), 7, -1))
-    plate = np.array(CALL_GREEN, dtype=np.float32)
+    plate_rgb = CALL_GREEN if plate is None else plate
+    plate = np.array(plate_rgb, dtype=np.float32)
     ink_a = np.array(ink, dtype=np.float32)
     bg_a = np.array(bg, dtype=np.float32)
     for size in sizes:
@@ -289,7 +366,7 @@ def render_hard_label(
         # Glyphs lerp plate→ink (JP AA). Box fill stays yellow key or green.
         glyph = plate + (ink_a - plate) * alpha[..., None]
         rgb = np.where(alpha[..., None] > 0.06, glyph, bg_a)
-        return Image.fromarray(_quantize_chroma(rgb), "RGB")
+        return Image.fromarray(_quantize_chroma(rgb, palette), "RGB")
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
 
 
@@ -403,6 +480,62 @@ def make_call_en(
     img.save(OUT / f"{stem}_en.png")
     orig.write_bytes(raw)
     return png_to_bclim_rgb565_same_size(png, orig)
+
+
+def make_check03_en(raw: bytes, tmp: Path) -> bytes:
+    """EN for the 8-row confirm sheet. Keep white value cells and yellow gaps."""
+    img, w, h = decode_rgb565(raw)
+    if (w, h) != (240, 168):
+        raise SystemExit(f"Check03 size {w}x{h}")
+    draw = ImageDraw.Draw(img)
+    for y0, y1, x0, x1, text in CHECK03_LABELS:
+        draw.rectangle((x0, y0, x1, y1), fill=CHECK_PLATE)
+        label = render_hard_label(
+            x1 - x0 + 1,
+            y1 - y0 + 1,
+            text,
+            prefer_size=CHECK_LABEL_SIZE,
+            bg=CHECK_PLATE,
+            ink=CHECK_INK,
+            plate=CHECK_PLATE,
+            palette=CHECK_PALETTE,
+        )
+        img.paste(label, (x0, y0))
+    png = tmp / "Profile_Info_Check03.png"
+    orig = tmp / "Profile_Info_Check03_o.bclim"
+    img.save(png)
+    img.save(OUT / "Profile_Info_Check03_en.png")
+    orig.write_bytes(raw)
+    return png_to_bclim_rgb565_same_size(png, orig)
+
+
+def make_check02_en(raw: bytes, tmp: Path) -> bytes:
+    """EN for the cursor chip that covers the HN row once the cursor starts."""
+    img = decode_bclim_to_image(raw)
+    if img is None or img.size != (76, 24):
+        raise SystemExit(f"Check02 decode {None if img is None else img.size}")
+    img = img.convert("RGBA")
+    y0, y1, x0, x1, text = CHECK02_BOX
+    arr = np.array(img)
+    arr[y0 : y1 + 1, x0 : x1 + 1, :3] = CHECK02_PLATE
+    label = render_hard_label(
+        x1 - x0 + 1,
+        y1 - y0 + 1,
+        text,
+        prefer_size=CHECK_LABEL_SIZE,
+        bg=CHECK02_PLATE,
+        ink=CHECK02_INK,
+        plate=CHECK02_PLATE,
+        palette=CHECK02_PALETTE,
+    )
+    arr[y0 : y1 + 1, x0 : x1 + 1, :3] = np.array(label)
+    out = Image.fromarray(arr, "RGBA")
+    png = tmp / "Profile_Info_Check02.png"
+    orig = tmp / "Profile_Info_Check02_o.bclim"
+    out.save(png)
+    out.save(OUT / "Profile_Info_Check02_en.png")
+    orig.write_bytes(raw)
+    return png_to_bclim_rgba4444_same_size(png, orig)
 
 
 def fit_region_png(png: Path, size: tuple[int, int], dest: Path) -> Path:
@@ -687,6 +820,17 @@ def patch_atlas_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byte
         ),
     )
     print("OK Profile_Info_Call02_t", flush=True)
+
+    check03 = darc.find("timg/Profile_Info_Check03.bclim")
+    if check03 is None:
+        raise SystemExit("missing Profile_Info_Check03")
+    darc.replace_same_size(check03, make_check03_en(darc.extract_file(check03), tmp))
+    print("OK Profile_Info_Check03", flush=True)
+    check02 = darc.find("timg/Profile_Info_Check02.bclim")
+    if check02 is None:
+        raise SystemExit("missing Profile_Info_Check02")
+    darc.replace_same_size(check02, make_check02_en(darc.extract_file(check02), tmp))
+    print("OK Profile_Info_Check02", flush=True)
     patch_region_buttons(darc, tmp)
     return bytes(darc.data)
 
