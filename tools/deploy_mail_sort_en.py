@@ -420,94 +420,95 @@ def main() -> None:
     tmp = OUT / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
 
-    bases: list[tuple[str, Path]] = [("live", MOD_IMG)]
-    if VANILLA.is_file() and VANILLA.resolve() != MOD_IMG.resolve():
-        bases.append(("vanilla", VANILLA))
-
-    last_err: Exception | None = None
-    for base_name, base_path in bases:
-        src_pkg, pkg, arc = _extract_pkg(base_path, pkg_dir)
-        cmp_len = arc.fw.len()
-        print(
-            f"Mail.arc base={base_name} dec={len(arc.parsed())} slot={cmp_len}",
-            flush=True,
+    # Live only. Vanilla fallback wipes Inbox/Play EN from mail_home.
+    src_pkg, pkg, arc = _extract_pkg(MOD_IMG, pkg_dir)
+    cmp_len = arc.fw.len()
+    live_arc = arc.parsed()
+    home_before = _home_shas(live_arc)
+    print(
+        f"Mail.arc base=live dec={len(live_arc)} slot={cmp_len} "
+        f"home_stems={len(home_before)}",
+        flush=True,
+    )
+    patched = _patch_arc(live_arc, tmp)
+    _assert_home_preserved(home_before, patched)
+    fitted = _fit_slot(patched, cmp_len)
+    if fitted is None:
+        raise SystemExit(
+            "Mail sort EN could not fit live slot — refuse vanilla fallback "
+            "(would wipe mail_home Inbox/Play EN). Re-run deploy_mail_home_en.py "
+            "then retry, or widen the exact-zlib playbook."
         )
-        patched = _patch_arc(arc.parsed(), tmp)
-        fitted = _fit_slot(patched, cmp_len)
-        if fitted is None:
-            last_err = SystemExit(f"{base_name}: could not fit exact zlib")
-            print(f"  {base_name} zlib miss", flush=True)
-            continue
-        tuned, slot = fitted
-        do = zlib.decompressobj()
-        got = do.decompress(slot)
-        if got != tuned or do.unused_data or not do.eof:
-            raise SystemExit("exact zlib verify failed")
-        print(f"  ARC exact zlib {len(slot)} unused_data=0", flush=True)
+    tuned, slot = fitted
+    _assert_home_preserved(home_before, tuned)
+    do = zlib.decompressobj()
+    got = do.decompress(slot)
+    if got != tuned or do.unused_data or not do.eof:
+        raise SystemExit("exact zlib verify failed")
+    print(f"  ARC exact zlib {len(slot)} unused_data=0", flush=True)
 
-        blob = bytearray(src_pkg.read_bytes())
-        entry_off = Package.ENTRY_SIZE
-        _typ, dec_len, _do, _fl, is_cmp, slot_len, cmp_off = Package.parse_entry(
-            bytes(blob[entry_off : entry_off + Package.ENTRY_SIZE])
+    blob = bytearray(src_pkg.read_bytes())
+    entry_off = Package.ENTRY_SIZE
+    _typ, dec_len, _do, _fl, is_cmp, slot_len, cmp_off = Package.parse_entry(
+        bytes(blob[entry_off : entry_off + Package.ENTRY_SIZE])
+    )
+    if not is_cmp or slot_len != cmp_len or len(tuned) != dec_len:
+        raise SystemExit("ARC entry mismatch")
+    blob[cmp_off : cmp_off + cmp_len] = slot
+    new_pkg = pkg_dir / f"new_{PKG:04d}"
+    new_pkg.write_bytes(blob)
+
+    pkg2 = Package(FileWindow(str(new_pkg)), 0)
+    pkg2.parse(False)
+    for a, b in zip(pkg.entries, pkg2.entries):
+        if isinstance(a, ARC):
+            if b.parsed() != tuned:
+                raise SystemExit("ARC mismatch")
+        elif a.parsed() != b.parsed():
+            raise SystemExit(f"DMST changed {a.fn}")
+    print("DMST unchanged OK", flush=True)
+
+    try:
+        for _dest in iter_deploy_targets(MOD_IMG):
+            splice_packages_into_img(_dest, pkg_dir, [PKG], _dest)
+    except PackError as exc:
+        raise SystemExit(f"splice failed: {exc}") from exc
+
+    # Prove the splice stuck (earlier runs logged OK but left vanilla JP).
+    check = MOD_IMG.read_bytes()
+    cimg = ImgBin(str(MOD_IMG))
+    cimg.parse(False)
+    cres = cimg.entries[PKG]
+    cpkg = OUT / "_verify_5207"
+    cpkg.write_bytes(
+        check[cres.fw.base_offset : cres.fw.base_offset + cres.fw.len()]
+    )
+    cp = Package(FileWindow(str(cpkg)), 0)
+    cp.parse(False)
+    carc = next(e for e in cp.entries if isinstance(e, ARC))
+    cdarc = DarcArchive(bytearray(carc.parsed()))
+    want = hashlib.sha1(
+        cdarc.extract_file(cdarc.find("timg/Mail_PopTxt04.bclim"))
+    ).hexdigest()
+    expect = hashlib.sha1(
+        DarcArchive(bytearray(tuned))
+        .extract_file(
+            DarcArchive(bytearray(tuned)).find("timg/Mail_PopTxt04.bclim")
         )
-        if not is_cmp or slot_len != cmp_len or len(tuned) != dec_len:
-            raise SystemExit("ARC entry mismatch")
-        blob[cmp_off : cmp_off + cmp_len] = slot
-        new_pkg = pkg_dir / f"new_{PKG:04d}"
-        new_pkg.write_bytes(blob)
-
-        pkg2 = Package(FileWindow(str(new_pkg)), 0)
-        pkg2.parse(False)
-        for a, b in zip(pkg.entries, pkg2.entries):
-            if isinstance(a, ARC):
-                if b.parsed() != tuned:
-                    raise SystemExit("ARC mismatch")
-            elif a.parsed() != b.parsed():
-                raise SystemExit(f"DMST changed {a.fn}")
-        print("DMST unchanged OK", flush=True)
-
-        try:
-            for _dest in iter_deploy_targets(MOD_IMG):
-                splice_packages_into_img(_dest, pkg_dir, [PKG], _dest)
-        except PackError as exc:
-            raise SystemExit(f"splice failed: {exc}") from exc
-
-        # Prove the splice stuck (earlier runs logged OK but left vanilla JP).
-        import hashlib
-
-        check = MOD_IMG.read_bytes()
-        cimg = ImgBin(str(MOD_IMG))
-        cimg.parse(False)
-        cres = cimg.entries[PKG]
-        cpkg = OUT / "_verify_5207"
-        cpkg.write_bytes(
-            check[cres.fw.base_offset : cres.fw.base_offset + cres.fw.len()]
+    ).hexdigest()
+    if want != expect:
+        raise SystemExit(
+            f"post-splice verify failed: img PopTxt04={want[:12]} "
+            f"expected={expect[:12]}"
         )
-        cp = Package(FileWindow(str(cpkg)), 0)
-        cp.parse(False)
-        carc = next(e for e in cp.entries if isinstance(e, ARC))
-        cdarc = DarcArchive(bytearray(carc.parsed()))
-        want = hashlib.sha1(
-            cdarc.extract_file(cdarc.find("timg/Mail_PopTxt04.bclim"))
-        ).hexdigest()
-        expect = hashlib.sha1(
-            DarcArchive(bytearray(tuned))
-            .extract_file(
-                DarcArchive(bytearray(tuned)).find("timg/Mail_PopTxt04.bclim")
-            )
-        ).hexdigest()
-        if want != expect:
-            raise SystemExit(
-                f"post-splice verify failed: img PopTxt04={want[:12]} "
-                f"expected={expect[:12]}"
-            )
-        print(f"post-splice verify OK PopTxt04={want[:12]}", flush=True)
+    print(f"post-splice verify OK PopTxt04={want[:12]}", flush=True)
+    _assert_home_preserved(home_before, bytes(carc.parsed()))
+    play = _bclim_sha(bytes(carc.parsed()), "timg/C_Btn_Play_Off.bclim")
+    if play:
+        print(f"post-splice home OK Play={play[:12]}", flush=True)
 
-        print("deployed Mail sort popup EN ->", MOD_IMG, flush=True)
-        print("Rollback:", bak, flush=True)
-        return
-
-    raise SystemExit(f"Mail sort EN could not fit slot: {last_err}")
+    print("deployed Mail sort popup EN ->", MOD_IMG, flush=True)
+    print("Rollback:", bak, flush=True)
 
 
 if __name__ == "__main__":

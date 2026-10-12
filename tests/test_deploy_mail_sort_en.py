@@ -22,6 +22,19 @@ def test_mail_sort_constants():
         "Lock",
     ]
     assert "Cancel" in deploy.CANCEL_PATHS[0]
+    assert "timg/C_Btn_Play_Off.bclim" in deploy.PRESERVE_HOME_PATHS
+    assert "timg/mail_tex_jyusin_RGBA4.bclim" in deploy.PRESERVE_HOME_PATHS
+
+
+def test_assert_home_preserved_detects_wipe(monkeypatch):
+    before = {"timg/C_Btn_Play_Off.bclim": "a" * 40}
+    monkeypatch.setattr(deploy, "_home_shas", lambda _arc: {"timg/C_Btn_Play_Off.bclim": "b" * 40})
+    try:
+        deploy._assert_home_preserved(before, b"unused")
+    except SystemExit as exc:
+        assert "wiped home chrome" in str(exc)
+    else:
+        raise AssertionError("expected SystemExit on wipe")
 
 
 def test_render_sort_method_fits_canvas():
