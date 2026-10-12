@@ -171,7 +171,9 @@ def test_dsel_data_visible_hooked():
     text = (TOOLS / "deploy_dsel_data_visible.py").read_text(encoding="utf-8")
     assert "Vis_Dsel_Data" in text
     assert "Pts_Dsel_Data" in text
-    assert '("Pic_Dsel_data",)' in text
+    # Vanilla: hide static data03 Vis; keep Pts Pic so Act00 can show NO DATA.
+    assert '(), ("Vis_Dsel_Data",)' in text
+    assert '("Pic_Dsel_data",), ()' in text
     assert "5152" in text
 
 

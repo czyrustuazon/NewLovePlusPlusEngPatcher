@@ -835,7 +835,15 @@ The atlas boxes are the JP fields. Top box `(10, 24)` is 姓 → **Last Name**. 
 
 `B_Card04_txt01` / `txt06` @ Card **4152** are the card field list (名前 / カノジョの名前, 128×28 RGBA4444). Heisei **Name** / **Girlfriend's Name** is spliced there (`tools/deploy_card_name_labels_en.py`). The field row itself is `Lyt_B_Card04_btn`: `Vis_White_Base` and `Vis_com_btn_m_00`–`_08` are stored with pane flag bit 0 clear. That flag is set by the card deploy, and it is not the folder page.
 
-FileSelect **5152** `Vis_Dsel_Data` is the 256×512 field sheet `D_Select_data03` on the save card. `Pts_Dsel_Data` in that same archive has a second `Pic_Dsel_data`, stored visible, 9px to the left. Both showing the English sheet doubles every row (Please Select Data, Full Name, …). `tools/deploy_dsel_data_visible.py` keeps `Vis_Dsel_Data` on and hides the parts picture. Those visibility flips, and the ones on `Lyt_C_Com_folder` @ pkg **5208**, do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
+FileSelect **5152** has two `Pic_Dsel_data` panes. `Pts_Dsel_Data` is the live one: `MenuDSelData.dmst` plays `Pts_Dsel_Data_Tag_Act00..02` and swaps the BCLIM:
+
+| Sheet | When | Labels |
+|------|------|--------|
+| `D_Select_data01` | empty slot | **NO DATA** |
+| `D_Select_data02` | save, pre–post-game | profile rows through Elapsed Days — **no Title** |
+| `D_Select_data03` | save, post-game | adds **D-Duration** + **Title** |
+
+`Lyt_Dsel_data.Vis_Dsel_Data` holds a second picture locked to `data03`; vanilla stores that Vis **off**. Forcing Vis on and hiding the Pts picture (an older EN double-draw fix) left every slot on the static Full Name / Last Saved / Title sheet. `tools/deploy_dsel_data_visible.py` restores vanilla: Vis off, Pts Pic on — empty → NO DATA, Title only after post-game. Folder-tab flips on `Lyt_C_Com_folder` @ pkg **5208** stay in the same script. Those visibility flips do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
 
 The pink two-bar screen is a **folder tab**: a short upper-left tab holds the blue label, and the wider cream body holds the save value (`(・_・)` / Anegasaki). On the crop, one bar is about 177×38 and the tab is about 60% of that width. The same shape is the magazine NOTICE window `Mag_Enq_Notice_Win01` (184×40 RGBA4444, TownGuide **5265**), which bakes its tab word into the texture.
 
