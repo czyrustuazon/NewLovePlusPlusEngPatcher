@@ -1,7 +1,8 @@
 # Agent rules for NewLovePlusPlusEngPatcher
 
 Project rules also live in `.cursor/rules/*.mdc`; the `alwaysApply` ones apply
-to every agent, not only Cursor. Short cross-tool notes: `AGENTS.md`.
+to every agent, not only Cursor. Short cross-tool notes: `AGENTS.md`
+(commit message style + deploy-a → launch-a).
 
 ## HARD REQUIREMENT: after deploy-a, launch Azahar A
 

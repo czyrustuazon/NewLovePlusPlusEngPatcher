@@ -3,6 +3,21 @@
 Project rules also live in `CLAUDE.md` and `.cursor/rules/*.mdc` (`alwaysApply`
 ones apply every session).
 
+## Commit messages (established style)
+
+Match recent `git log` on the branch. Only commit when the user asks (or asks
+to preserve WIP instead of stash — see `.cursor/rules/no-git-stash.mdc`).
+
+- **Subject:** imperative, sentence case, ends with a period. One line that
+  states the outcome for the game/patcher (not a file list).
+  Example: `Restore Select Data NO DATA and post-game Title sheets in the bake.`
+- **Body:** 1–3 short sentences on *why* / what was wrong. Concrete UI or
+  package names are fine (`Vis_Dsel_Data`, pkg **5152**, HOME lock).
+- **Not:** Conventional-Commit prefixes (`fix:`, `feat:`), issue-number-only
+  subjects, or “WIP update” without substance (WIP is OK when parking work).
+- Prefer PowerShell-safe commit text (here-string or `-m` twice); bash heredoc
+  is not available in this shell.
+
 ## Deploy A → launch A (required)
 
 When you **deploy / seed / combine into Azahar instance A** (`deploy-a`, or any
