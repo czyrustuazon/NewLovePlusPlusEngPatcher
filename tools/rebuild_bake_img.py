@@ -104,6 +104,7 @@ DEPLOY_SCRIPTS: list[str] = [
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
+    "deploy_web_weather_en.py",  # 5316 Weekly title + day panes
     "deploy_cesa_en.py",
 ]
 
