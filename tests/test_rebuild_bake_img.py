@@ -23,6 +23,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_myroom_options_en.py",
         "deploy_map_hub_en.py",
         "deploy_web_hub_en.py",
+        "deploy_minigame_hub_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -153,6 +154,23 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "password_uribo_already" in deploy
 
 
+def test_mail_sort_after_mail_home():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_mail_sort_en.py") > scripts.index(
+        "deploy_mail_home_en.py"
+    )
+    text = (TOOLS / "deploy_mail_sort_en.py").read_text(encoding="utf-8")
+    assert "Mail_PopTxt04" in text
+    assert "Mail_PopTxt05" in text
+    assert "Sort Method" in text
+    assert "Timestamp" in text
+    assert "Sender" in text
+    assert "C_Com_Win01_Btn02_Cancel" in text
+    assert "5207" in text
+    assert "Self-rendered" in text
+    assert "find_ui_png" not in text
+
+
 def test_card_name_labels_after_flist():
     scripts = rebuild.DEPLOY_SCRIPTS
     assert scripts.index("deploy_card_name_labels_en.py") > scripts.index(
@@ -209,6 +227,18 @@ def test_multiwin_after_datadelete():
     assert scripts.index("deploy_multiwin_headers_en.py") > scripts.index(
         "deploy_datadelete_en.py"
     )
+
+
+def test_datadelete_patches_save_sheets():
+    """Delete Save Data summary rows are RGBA4444 DD_data02..05, not DrawText."""
+    text = (TOOLS / "deploy_datadelete_en.py").read_text(encoding="utf-8")
+    assert "SHEET_STEMS" in text
+    assert "DD_data02" in text
+    assert "DD_data05" in text
+    assert "png_to_bclim_rgba4444_same_size" in text
+    assert "DataDelete.check" in text
+    assert "Last Saved" in text
+    assert "Elapsed Days" in text
 
 
 def test_multiwin_bake_runs_full_then_extras():
@@ -297,6 +327,29 @@ def test_web_hub_after_map_hub():
         assert stem in text
     assert "TOWANO.NET" in text
     assert "Towano Watcher" in text
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+
+
+def test_minigame_hub_after_web_hub():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    mini = scripts.index("deploy_minigame_hub_en.py")
+    assert mini > scripts.index("deploy_web_hub_en.py")
+    assert mini > scripts.index("deploy_schedule_header_en.py")
+    text = (TOOLS / "deploy_minigame_hub_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "game_text_title_RGBA4",
+        "game_text_puzzle_RGBA4",
+        "game_text_twinbe_RGBA4",
+        "game_text_kanfu_RGBA4",
+    ):
+        assert stem in text
+    assert "Mini-Game" in text
+    assert "Puzzle-dama" in text
+    assert "TwinBee+" in text
+    assert "Yie Ar Kung-Fu+" in text
+    skip_block = text.split("SKIP_UI_PNG", 1)[1].split("JOBS", 1)[0]
+    assert "game_text_puzzle_RGBA4" in skip_block
     assert "MOD_IMG.read_bytes" in text
     assert "_zero_all_darc_pads" in text
 

@@ -57,5 +57,7 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
 | Web event-card date (`09月20日更新`) | **5316** LA4 `Web_Txt_Date` + `Web_Num12` digits | `MM/DD` plus a smaller `Update` after the day. Digits stay at vanilla 34/40/58/64 so the Spot HOT badge is clear (`deploy_web_event_date_en.py`). |
 | In-room WEB hub `TOWANO.NET` / `とわのウォッチャー` | **5380** ETC1A4 `web_tex_{net,watcher}_RGBA4` | EN (`TOWANO.NET` / `Towano Watcher`) — Zhoumaru; `deploy_web_hub_en.py` (after map hub). |
+| Mail sort popup `並べ替え方法` | **5207** ETC1A4 `Mail_PopTxt04`/`05` + Cancel | EN (`Sort Method` / Timestamp·Sender·Lock / Cancel) — Heisei self-render; `deploy_mail_sort_en.py` (after mail_home). |
+| In-room Mini-game hub `ミニゲーム` / `ぱずるだま` / … | **5380** + **5575** ETC1A4 `game_text_{title,puzzle,twinbe,kanfu}_RGBA4` | EN (`Mini-Game` / `Puzzle-dama` / `TwinBee+` / `Yie Ar Kung-Fu+`) — Zhoumaru except puzzle (`Subarudama` dump → re-render); `deploy_minigame_hub_en.py` (after web hub). |
 
 Details: `docs/technical.md` §12.4–12.6.

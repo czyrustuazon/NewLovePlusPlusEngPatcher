@@ -88,6 +88,7 @@ DEPLOY_SCRIPTS: list[str] = [
     # NLPP English UI Buttons bundle (keyboard 5190, SysPopup, scoped Back, Album delete).
     "deploy_ui_buttons_en.py",
     "deploy_mail_home_en.py",
+    "deploy_mail_sort_en.py",  # 5207 after mail_home (Sort Method popup + Cancel)
     "deploy_mydata_en.py",
     "deploy_todo_en.py",
     "deploy_todo_hist_en.py",
@@ -102,6 +103,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
     "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
     "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
+    "deploy_minigame_hub_en.py",  # 5380+5575 Mini-Game / Puzzle-dama / TwinBee+ / Yie Ar Kung-Fu+
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only

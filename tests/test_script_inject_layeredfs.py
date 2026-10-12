@@ -125,7 +125,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     _, _, copied = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "a050.dbin2").read_bytes()
     )
-    assert copied[0].sdl2.dialogs == ["姉ヶ崎", "まだ▲Anegasaki＊▲"]
+    assert copied[0].sdl2.dialogs == ["Anegasaki", "まだ▲Anegasaki＊▲"]
     _, _, pack = names.parse_dbin2(
         (romfs / "script" / "bin" / "NLP_01" / "a050.dbin2").read_bytes()
     )
