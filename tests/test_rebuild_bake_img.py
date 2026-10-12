@@ -22,6 +22,7 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_optionpassword_en.py",
         "deploy_myroom_options_en.py",
         "deploy_map_hub_en.py",
+        "deploy_web_hub_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -282,6 +283,20 @@ def test_map_hub_after_myroom_options():
         assert stem in text
     assert "City Viewer" in text
     assert "City Voice Settings" in text
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+
+
+def test_web_hub_after_map_hub():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    web_hub = scripts.index("deploy_web_hub_en.py")
+    assert web_hub > scripts.index("deploy_map_hub_en.py")
+    assert web_hub > scripts.index("deploy_myroom_options_en.py")
+    text = (TOOLS / "deploy_web_hub_en.py").read_text(encoding="utf-8")
+    for stem in ("web_tex_net_RGBA4", "web_tex_watcher_RGBA4"):
+        assert stem in text
+    assert "TOWANO.NET" in text
+    assert "Towano Watcher" in text
     assert "MOD_IMG.read_bytes" in text
     assert "_zero_all_darc_pads" in text
 

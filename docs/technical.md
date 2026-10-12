@@ -658,6 +658,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
 | Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `main_tex_love_RGBA4` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Love Plus` / `Back`) — `tools/deploy_myroom_main_en.py` (Love Plus is rendered gray on the heart pill; pink NEW badge is separate) |
 | In-room Options overlay `オプションメニュー` | ETC1A4 `optn_tex_optionmenu_RGBA4` + `optn_tex_option{hyouji,sound,jikan,real,skip,kabegami}_RGBA4` @ **5380** + header `optn_tex_optionmenu_{RGBA4,01..05}` @ **5575** | **EN** (`Options Menu` / Display / Sound / …) — Zhoumaru; `tools/deploy_myroom_options_en.py`. Not hub Options **5245**. `optionkabegami` dump is a black slab — re-render Wallpaper. Shared-ARC writers from vanilla wiped these until this last-writer. |
+| In-room WEB hub `TOWANO.NET` / `とわのウォッチャー` | ETC1A4 `web_tex_{net,watcher}_RGBA4` @ **5380** | **EN** (`TOWANO.NET` / `Towano Watcher`) — Zhoumaru; `tools/deploy_web_hub_en.py` (after map hub). |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
 | My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status,item,camera}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status` / `Item List` / `My Camera`). Item List and My Camera are Zhoumaru `Myroom.check` masters — `tools/deploy_mydata_en.py` |
@@ -1154,6 +1155,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
 | `tools/deploy_myroom_main_en.py` | Myroom buttons + Love Plus badge + Back @ **5380** (live splice) |
 | `tools/deploy_myroom_options_en.py` | In-room Options overlay `optn_tex_*` @ **5380** + **5575** (Zhoumaru; after shared-ARC writers) |
+| `tools/deploy_web_hub_en.py` | In-room WEB hub `web_tex_{net,watcher}` @ **5380** (Zhoumaru; after map hub) |
 | `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status/Item List/My Camera **5380** (zero-gaps → empty-block; item/camera from Zhoumaru) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
 | `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + Call/atlas chroma AA **5252** (§12.4.4) + hometown chips (§12.4.3) |

@@ -101,6 +101,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
     "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
     "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
+    "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only

@@ -56,5 +56,6 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
 | In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
 | Web event-card date (`09月20日更新`) | **5316** LA4 `Web_Txt_Date` + `Web_Num12` digits | `MM/DD` plus a smaller `Update` after the day. Digits stay at vanilla 34/40/58/64 so the Spot HOT badge is clear (`deploy_web_event_date_en.py`). |
+| In-room WEB hub `TOWANO.NET` / `とわのウォッチャー` | **5380** ETC1A4 `web_tex_{net,watcher}_RGBA4` | EN (`TOWANO.NET` / `Towano Watcher`) — Zhoumaru; `deploy_web_hub_en.py` (after map hub). |
 
 Details: `docs/technical.md` §12.4–12.6.
