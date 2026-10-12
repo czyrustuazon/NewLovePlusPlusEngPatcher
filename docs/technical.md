@@ -655,11 +655,11 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (Last Name / First Name / Birthday / M·D / Blood / Hometown). Order is the JP fields (姓 then 名), not Western — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
-| Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
+| Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `main_tex_love_RGBA4` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Love Plus` / `Back`) — `tools/deploy_myroom_main_en.py` (Love Plus is rendered gray on the heart pill; pink NEW badge is separate) |
 | In-room Options overlay `オプションメニュー` | ETC1A4 `optn_tex_optionmenu_RGBA4` + `optn_tex_option{hyouji,sound,jikan,real,skip,kabegami}_RGBA4` @ **5380** + header `optn_tex_optionmenu_{RGBA4,01..05}` @ **5575** | **EN** (`Options Menu` / Display / Sound / …) — Zhoumaru; `tools/deploy_myroom_options_en.py`. Not hub Options **5245**. `optionkabegami` dump is a black slab — re-render Wallpaper. Shared-ARC writers from vanilla wiped these until this last-writer. |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
-| My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status`) — `tools/deploy_mydata_en.py` |
+| My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status,item,camera}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status` / `Item List` / `My Camera`). Item List and My Camera are Zhoumaru `Myroom.check` masters — `tools/deploy_mydata_en.py` |
 | Status / boyfriend-power stats | ETC1A4 `stat_tex_{undo,chisiki,kanse,miryoku}` @ **5501** + `Scd_Status_Tit_{M,K,S,C}` @ **5255** | Deployed (`Fitness` / `Intel`* / `Sense` / `Charm`; schedule titles use full `Knowledge`) — `tools/deploy_status_stats_en.py` |
 | To-Do submenu | ETC1A4 `mydata_toptex_01..06` @ **5575** + RGBA4444 `Que_Txt01{b,d}` @ Quest **5253** | Deployed (headers + `To-Do List` / `History`) — `tools/deploy_todo_en.py` |
 | To-Do History points | RGBA4444 `Que_Txt01c` @ Quest **5253** | Deployed (`Earned ToDo Points:`) — `tools/deploy_todo_hist_en.py` (rebuilds Quest from vanilla with 01b/01c/01d) |
@@ -1140,9 +1140,9 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/overall_progress.py` | Overall percent on that same row. Drop maps rebuild to 0–80 and the CIA step to 80–100 |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
-| `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
+| `tools/deploy_myroom_main_en.py` | Myroom buttons + Love Plus badge + Back @ **5380** (live splice) |
 | `tools/deploy_myroom_options_en.py` | In-room Options overlay `optn_tex_*` @ **5380** + **5575** (Zhoumaru; after shared-ARC writers) |
-| `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
+| `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status/Item List/My Camera **5380** (zero-gaps → empty-block; item/camera from Zhoumaru) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
 | `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + Call/atlas chroma AA **5252** (§12.4.4) + hometown chips (§12.4.3) |
 | `tools/deploy_status_stats_en.py` | Fitness / Intel / Sense / Charm |

@@ -18,8 +18,6 @@ UNTESTED = {
     "deploy_gallery_common_en",
     "deploy_input_keyboard_en",
     "deploy_mail_home_en",
-    "deploy_mydata_en",
-    "deploy_myroom_main_en",
     "deploy_sms_maildic_en",
     "deploy_sound_settings_en",
     "deploy_status_stats_en",

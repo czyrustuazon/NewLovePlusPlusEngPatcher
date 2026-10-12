@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EN Myroom main menu labels + Back tab — ETC1A4 pkg 5380."""
+"""EN Myroom main menu labels + Back tab + Love Plus badge — ETC1A4 pkg 5380."""
 from __future__ import annotations
 
 import os
@@ -21,6 +21,7 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    HEADER_INK,
     UI_FONT,
     maybe_backup_img,
     iter_deploy_targets,
@@ -33,13 +34,16 @@ OUT = ROOT / "out" / "myroom_en"
 PKG = 5380
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 # Screenshot: dark-blue ink on white button chrome (icons are separate).
+# Love Plus badge is dark gray on the white heart pill (not button blue).
 LABELS = [
     ("timg/main_tex_yotei_RGBA4_NEW.bclim", "Schedule"),
     ("timg/main_tex_sleep_RGBA4_NEW.bclim", "Sleep"),
     ("timg/main_tex_mail_RGBA4_NEW.bclim", "Mail"),
     ("timg/main_tex_tel_RGBA4_NEW.bclim", "Phone"),
+    ("timg/main_tex_love_RGBA4.bclim", "Love Plus"),  # ラブプラス heart pill
     ("timg/common_modoru_RGBA4.bclim", "Back"),  # もどる tab
 ]
+LOVE_STEM = "main_tex_love_RGBA4"
 # Full-chrome EN master (tab shape + outline); fall back to rendered text.
 MODORU_PNG = ROOT / "assets" / "images" / "Myroom" / "common_modoru_RGBA4.png"
 INK = (70, 110, 160)
@@ -49,9 +53,11 @@ def font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONT), size=size)
 
 
-def render_label(w: int, h: int, text: str) -> Image.Image:
-    """Transparent RGBA label matching myroom button ink."""
-    for size in range(min(16, h + 2), 8, -1):
+def render_label(
+    w: int, h: int, text: str, *, ink: tuple[int, int, int] = INK
+) -> Image.Image:
+    """Transparent RGBA label matching myroom button / badge ink."""
+    for size in range(min(16, h + 2), 7, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
         dr = ImageDraw.Draw(big)
@@ -62,7 +68,7 @@ def render_label(w: int, h: int, text: str) -> Image.Image:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=INK + (255,))
+        dr.text((x, y), text, font=f, fill=ink + (255,))
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r}")
 
@@ -144,8 +150,21 @@ def compress_exact_with_gap_tune(data: bytes, exact_len: int) -> tuple[bytes, by
     raise SystemExit("could not build exact zlib stream")
 
 
+def zero_all_darc_pads(data: bytes) -> bytes:
+    """Zero every DARC inter-file pad, including prior urandom gap-salt."""
+    darc = DarcArchive(data)
+    spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
+    t = bytearray(data)
+    for (_a0, a1), (b0, _b1) in zip(spans, spans[1:]):
+        if b0 > a1:
+            t[a1:b0] = b"\x00" * (b0 - a1)
+    if spans and spans[-1][1] < len(data):
+        t[spans[-1][1] :] = b"\x00" * (len(data) - spans[-1][1])
+    return bytes(t)
+
+
 def main() -> None:
-    vanilla = VANILLA if VANILLA.is_file() else MOD_IMG
+    # Patch *live* so My Data / Options / softkey EN already on 5380 stays.
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
     bak = maybe_backup_img(MOD_IMG, "myroom_back")
@@ -156,18 +175,18 @@ def main() -> None:
     tmp = OUT / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
 
-    vraw = vanilla.read_bytes()
-    vimg = ImgBin(str(vanilla))
-    vimg.parse(False)
-    res = vimg.entries[PKG]
+    raw_img = MOD_IMG.read_bytes()
+    limg = ImgBin(str(MOD_IMG))
+    limg.parse(False)
+    res = limg.entries[PKG]
     src_pkg = pkg_dir / f"{PKG:04d}"
-    src_pkg.write_bytes(vraw[res.fw.base_offset : res.fw.base_offset + res.fw.len()])
+    src_pkg.write_bytes(raw_img[res.fw.base_offset : res.fw.base_offset + res.fw.len()])
 
     pkg = Package(FileWindow(str(src_pkg)), 0)
     pkg.parse(False)
     arc_elem = next(e for e in pkg.entries if isinstance(e, ARC))
     cmp_len = arc_elem.fw.len()
-    print(f"Myroom.arc dec={len(arc_elem.parsed())} slot={cmp_len}", flush=True)
+    print(f"Myroom.arc live dec={len(arc_elem.parsed())} slot={cmp_len}", flush=True)
 
     darc = DarcArchive(bytearray(arc_elem.parsed()))
     for path, en in LABELS:
@@ -180,23 +199,31 @@ def main() -> None:
             raise SystemExit(f"{path} fmt {fmt} not ETC1A4")
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
+        stem = Path(path).stem
         if path.endswith("common_modoru_RGBA4.bclim") and MODORU_PNG.is_file():
             src = Image.open(MODORU_PNG).convert("RGBA")
             if src.size != (w, h):
                 src = src.resize((w, h), Image.Resampling.NEAREST)
             src.save(png)
-            src.save(OUT / f"{Path(path).stem}_en.png")
+            src.save(OUT / f"{stem}_en.png")
             print(f"OK {path} -> {en!r} (master PNG)", flush=True)
         else:
-            rgba = render_label(w, h, en)
+            ink = HEADER_INK if stem == LOVE_STEM else INK
+            rgba = render_label(w, h, en, ink=ink)
             rgba.save(png)
-            rgba.save(OUT / f"{Path(path).stem}_en.png")
+            rgba.save(OUT / f"{stem}_en.png")
             print(f"OK {path} -> {en!r}", flush=True)
         orig.write_bytes(raw)
         new = png_to_bclim_etc1a4_same_size(png, orig)
         darc.replace_same_size(entry, new)
 
-    tuned, slot = compress_exact_with_gap_tune(bytes(darc.data), cmp_len)
+    patched = zero_all_darc_pads(bytes(darc.data))
+    slot = compress_exact_empty_blocks(patched, cmp_len)
+    if slot is not None:
+        print("  zlib empty-block", flush=True)
+        tuned = patched
+    else:
+        tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)
     do = zlib.decompressobj()
     got = do.decompress(slot)
     if got != tuned or do.unused_data or not do.eof:
