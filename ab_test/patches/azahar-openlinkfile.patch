@@ -1,9 +1,64 @@
-File::OpenLinkFile clones the source session (NLPP extra-data hang).
-Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ e00581f)
+FS accuracy for NLPP: OpenLinkFile session clone + SaveData ControlArchive COMMIT (Delete Save Data mid-fade softlock).
+Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ 78b196d)
 Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
 
+diff --git a/src/core/file_sys/savedata_archive.cpp b/src/core/file_sys/savedata_archive.cpp
+index 4a6b7e9e4252af4fbb4f7af04c12d97deffdabe3..f413d5ffdfda088a92ef985f9be5ade05e43fb93 100644
+--- a/src/core/file_sys/savedata_archive.cpp
++++ b/src/core/file_sys/savedata_archive.cpp
+@@ -2,8 +2,10 @@
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
++#include <cstring>
+ #include "common/archives.h"
+ #include "common/file_util.h"
++#include "common/logging/log.h"
+ #include "core/file_sys/disk_archive.h"
+ #include "core/file_sys/errors.h"
+ #include "core/file_sys/path_parser.h"
+@@ -354,6 +356,26 @@ u64 SaveDataArchive::GetFreeBytes() const {
+     return 1024 * 1024 * 32;
+ }
+ 
++Result SaveDataArchive::Control(u32 action, u8* input, size_t input_size, u8* output,
++                                size_t output_size) {
++    // ARCHIVE_ACTION_COMMIT_SAVE_DATA -- host IO is already durable; still treat
++    // this as a real commit so callers (NLPP Delete Save Data) see success on
++    // the guest thread after FS_USER unmaps the IPC buffers.
++    if (action == 0) {
++        LOG_INFO(Service_FS, "COMMIT_SAVE_DATA archive={} in={} out={}", GetName(), input_size,
++                 output_size);
++        if (output_size != 0 && output != nullptr) {
++            std::memset(output, 0, output_size);
++        }
++        return ResultSuccess;
++    }
++
++    LOG_WARNING(Service_FS,
++                "(STUBBED) Control archive={} action={:08X} input_size={:08X} output_size={:08X}",
++                GetName(), action, input_size, output_size);
++    return ResultSuccess;
++}
++
+ } // namespace FileSys
+ 
+ SERIALIZE_EXPORT_IMPL(FileSys::SaveDataArchive)
+diff --git a/src/core/file_sys/savedata_archive.h b/src/core/file_sys/savedata_archive.h
+index bfe8ed9985070cd2934edafa2cbb8d8a7fc44c51..3c65ee40603d0a2d67485155f689b41771a0571a 100644
+--- a/src/core/file_sys/savedata_archive.h
++++ b/src/core/file_sys/savedata_archive.h
+@@ -33,6 +33,8 @@ public:
+     Result RenameDirectory(const Path& src_path, const Path& dest_path) const override;
+     ResultVal<std::unique_ptr<DirectoryBackend>> OpenDirectory(const Path& path) override;
+     u64 GetFreeBytes() const override;
++    Result Control(u32 action, u8* input, size_t input_size, u8* output,
++                   size_t output_size) override;
+ 
+ protected:
+     std::string mount_point;
 diff --git a/src/core/hle/service/fs/file.cpp b/src/core/hle/service/fs/file.cpp
-index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da67865a8fbb7a 100644
+index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..a4d6647e26809a3443ba5ae7f2889f5cf79941f4 100644
 --- a/src/core/hle/service/fs/file.cpp
 +++ b/src/core/hle/service/fs/file.cpp
 @@ -61,8 +61,10 @@ void File::Read(Kernel::HLERequestContext& ctx) {
@@ -40,7 +95,15 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
  
      if (!backend->AllowsCachedReads() && !Settings::values.async_fs_operations) {
          backend->Close();
-@@ -379,7 +387,20 @@ void File::GetPriority(Kernel::HLERequestContext& ctx) {
+@@ -345,6 +353,7 @@ void File::Flush(Kernel::HLERequestContext& ctx) {
+         IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+         backend->Flush();
+         rb.Push(ResultSuccess);
++        return;
+     }
+ 
+     ctx.RunAsync(
+@@ -379,7 +388,20 @@ void File::GetPriority(Kernel::HLERequestContext& ctx) {
  }
  
  void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
@@ -62,7 +125,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
      using Kernel::ClientSession;
      using Kernel::ServerSession;
      IPC::RequestParser rp(ctx);
-@@ -388,12 +409,10 @@ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
+@@ -388,12 +410,10 @@ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
      ClientConnected(server);
  
      FileSessionSlot* slot = GetSessionData(std::move(server));
@@ -79,7 +142,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
  
      rb.Push(ResultSuccess);
      rb.PushMoveObjects(client);
-@@ -410,11 +429,14 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+@@ -410,11 +430,14 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
  
      if (original_file->subfile) {
          // OpenSubFile can not be called on a file which is already as subfile
@@ -94,7 +157,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
          rb.Push(FileSys::ResultWriteBeyondEnd);
          return;
      }
-@@ -424,6 +446,9 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+@@ -424,6 +447,9 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
      // TODO(Subv): Check for overflow and return ResultWriteBeyondEnd
  
      if (end > original_file->size) {
@@ -123,3 +186,98 @@ index 3604e0e2d8b25f777074cc70e7b2ee1166cca17f..8df8ae0c7723567173b7fce978517068
  
  private:
      template <class Archive>
+diff --git a/src/core/hle/service/fs/fs_user.cpp b/src/core/hle/service/fs/fs_user.cpp
+index 4f538400de9608ac92c212dc0eb8fc19c241e573..2fdf613050d0af61a36012ae6ae2dfb0592dbf7b 100644
+--- a/src/core/hle/service/fs/fs_user.cpp
++++ b/src/core/hle/service/fs/fs_user.cpp
+@@ -737,12 +737,23 @@ void FS_USER::ControlArchive(Kernel::HLERequestContext& ctx) {
+     const auto action = rp.Pop<u32>();
+     const auto input_size = rp.Pop<u32>();
+     const auto output_size = rp.Pop<u32>();
+-
+-    if (!archives.ArchiveIsSlow(archive_handle) && !Settings::values.async_fs_operations) {
+-        auto input = rp.PopMappedBuffer();
+-        auto output = rp.PopMappedBuffer();
++    auto& input = rp.PopMappedBuffer();
++    auto& output = rp.PopMappedBuffer();
++
++    // COMMIT_SAVE_DATA (action 0) must finish on the guest thread: NLPP Delete
++    // Save Data fades while this returns, and an async reply that omits the
++    // mapped-buffer unmap leaves the next SendSyncRequest with InvalidHandle.
++    // Always reply with both buffers (libctru header 0x80D0144 = 4 translate).
++    constexpr u32 ARCHIVE_ACTION_COMMIT_SAVE_DATA = 0;
++    const bool force_sync = action == ARCHIVE_ACTION_COMMIT_SAVE_DATA ||
++                            (!archives.ArchiveIsSlow(archive_handle) &&
++                             !Settings::values.async_fs_operations);
++
++    if (force_sync) {
+         std::vector<u8> in_data(input_size);
+-        input.Read(in_data.data(), 0, in_data.size());
++        if (input_size != 0) {
++            input.Read(in_data.data(), 0, in_data.size());
++        }
+         std::vector<u8> out_data(output_size);
+ 
+         const Result res =
+@@ -752,8 +763,10 @@ void FS_USER::ControlArchive(Kernel::HLERequestContext& ctx) {
+         if (res.IsSuccess() && output_size != 0) {
+             output.Write(out_data.data(), 0, out_data.size());
+         }
+-        IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
++        IPC::RequestBuilder rb = rp.MakeBuilder(1, 4);
+         rb.Push(res);
++        rb.PushMappedBuffer(input);
++        rb.PushMappedBuffer(output);
+         return;
+     }
+ 
+@@ -774,14 +787,16 @@ void FS_USER::ControlArchive(Kernel::HLERequestContext& ctx) {
+     async_data->action = action;
+     async_data->in_size = input_size;
+     async_data->out_size = output_size;
+-    async_data->in_buffer = &rp.PopMappedBuffer();
+-    async_data->out_buffer = &rp.PopMappedBuffer();
++    async_data->in_buffer = &input;
++    async_data->out_buffer = &output;
+ 
+     ctx.RunOnThreadWorker(
+         fs_async_worker,
+         [this, async_data](Kernel::HLERequestContext& ctx) {
+             std::vector<u8> in_data(async_data->in_size);
+-            async_data->in_buffer->Read(in_data.data(), 0, in_data.size());
++            if (async_data->in_size != 0) {
++                async_data->in_buffer->Read(in_data.data(), 0, in_data.size());
++            }
+             async_data->out_data.resize(async_data->out_size);
+ 
+             async_data->res = archives.ControlArchive(
+@@ -790,12 +805,14 @@ void FS_USER::ControlArchive(Kernel::HLERequestContext& ctx) {
+             return 0;
+         },
+         [async_data](Kernel::HLERequestContext& ctx) {
+-            IPC::RequestBuilder rb(ctx, 1, 0);
+             if (async_data->res.IsSuccess() && async_data->out_size != 0) {
+                 async_data->out_buffer->Write(async_data->out_data.data(), 0,
+                                               async_data->out_data.size());
+             }
++            IPC::RequestBuilder rb(ctx, 1, 4);
+             rb.Push(async_data->res);
++            rb.PushMappedBuffer(*async_data->in_buffer);
++            rb.PushMappedBuffer(*async_data->out_buffer);
+         },
+         true);
+ }
+@@ -906,10 +923,11 @@ void FS_USER::FormatThisUserSaveData(Kernel::HLERequestContext& ctx) {
+ 
+     IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+     ClientSlot* slot = GetSessionData(ctx.Session());
++    LOG_WARNING(Service_FS,
++                "FormatThisUserSaveData program={:016X} blocks={} dirs={} files={}",
++                slot->program_id, block_size, number_directories, number_files);
+     rb.Push(archives.FormatArchive(ArchiveIdCode::SaveData, format_info, FileSys::Path(),
+                                    slot->program_id, directory_buckets, file_buckets));
+-
+-    LOG_TRACE(Service_FS, "called");
+ }
+ 
+ void FS_USER::GetFreeBytes(Kernel::HLERequestContext& ctx) {
