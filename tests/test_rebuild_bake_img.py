@@ -385,7 +385,7 @@ def test_multiwin_girlfriend_comm_self_renders():
     assert "df-heiseigothic-w5.ttc" in common
     assert "Confession Memories" in text
     assert "Trip Memories" in text
-    assert "Youthful Page" in text
+    assert "Drama Gallery" in text
     assert "Com_MultiWin_W01_Text03_05_00" in text
     assert "Password Input" in text
 
