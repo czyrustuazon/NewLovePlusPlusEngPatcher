@@ -96,14 +96,20 @@ def _blob(moveq: bytes, jt: bytes | None = None, nops: bool | None = None) -> by
     data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] = (
         sp.PATCHED_14ED_ST1_DATA if nops else sp.VANILLA_14ED_ST1_DATA
     )
+    data[sp.ADDR_14ED_SETUP_HEAD : sp.ADDR_14ED_SETUP_HEAD + 12] = (
+        sp.PATCHED_14ED_SETUP_HEAD if nops else sp.VANILLA_14ED_SETUP_HEAD
+    )
+    data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] = (
+        sp.PATCHED_14ED_ST20 if nops else sp.VANILLA_14ED_ST20
+    )
     data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] = (
-        sp.NOP if nops else sp.VANILLA_14B890_MULTIWIN
+        sp.VANILLA_14B890_MULTIWIN
     )
     data[sp.ADDR_14E648_ERROR : sp.ADDR_14E648_ERROR + 4] = (
         sp.PATCHED_14E648_ERROR if nops else sp.VANILLA_14E648_ERROR
     )
     data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] = (
-        sp.NOP if nops else sp.VANILLA_14ED_ST3_MULTIWIN
+        sp.VANILLA_14ED_ST3_MULTIWIN
     )
     data[sp.ADDR_COMMOPT_D201 : sp.ADDR_COMMOPT_D201 + 4] = (
         sp.PATCHED_COMMOPT_D201 if nops else sp.VANILLA_COMMOPT_D201
@@ -206,13 +212,25 @@ def test_spotpass_skip_rewrites_error_imm():
     assert data[sp.ADDR_14ED_TO_APPLY[0] : sp.ADDR_14ED_TO_APPLY[0] + 4] == (
         sp.PATCHED_14ED_NAMECARD
     )
+    for site in sp.ADDR_14ED_BACK:
+        assert data[site : site + 4] == sp.PATCHED_14ED_BACK
     assert data[sp._14ed_jt_off(24) : sp._14ed_jt_off(24) + 4] == sp.PATCHED_14ED_JT_APPLY
     assert data[sp.ADDR_14ED_WAIT_STAY[0] : sp.ADDR_14ED_WAIT_STAY[0] + 4] == sp.NOP
     assert data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] == sp.PATCHED_14ED_ERROR
     assert data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] == sp.PATCHED_14ED_ST1_DATA
-    assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == sp.NOP
+    assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == (
+        sp.VANILLA_14B890_MULTIWIN
+    )
     assert data[sp.ADDR_14E648_ERROR : sp.ADDR_14E648_ERROR + 4] == sp.PATCHED_14E648_ERROR
-    assert data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] == sp.NOP
+    assert data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] == (
+        sp.VANILLA_14ED_ST3_MULTIWIN
+    )
+    assert data[sp.ADDR_14ED_SETUP_HEAD : sp.ADDR_14ED_SETUP_HEAD + 12] == (
+        sp.PATCHED_14ED_SETUP_HEAD
+    )
+    assert data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] == (
+        sp.PATCHED_14ED_ST20
+    )
     assert data[sp.ADDR_COMMOPT_D201 : sp.ADDR_COMMOPT_D201 + 4] == sp.PATCHED_COMMOPT_D201
     assert data[sp.ADDR_COMMOPT_D201_FAIL : sp.ADDR_COMMOPT_D201_FAIL + 4] == (
         sp.PATCHED_COMMOPT_D201_FAIL
@@ -232,6 +250,38 @@ def test_spotpass_skip_restores_namecard_setup():
     assert not sp.is_patched(data)
     assert sp.apply_patch(data) is True
     assert data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] == sp.VANILLA_14ED_ST1_DATA
+    assert sp.is_patched(data)
+
+
+def test_spotpass_skip_upgrades_namecard_back_to_exit():
+    """Old Back→21 / stock state-20 / +0xb1 NOP gate / MultiWin NOPs upgrade."""
+    data = _blob(sp.PATCHED_MOVEQ)
+    for site in sp.ADDR_14ED_BACK:
+        data[site : site + 4] = sp.PATCHED_14ED_TO_APPLY
+    data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] = (
+        sp.VANILLA_14ED_ST20
+    )
+    data[sp.ADDR_14ED_SETUP_HEAD : sp.ADDR_14ED_SETUP_HEAD + 12] = (
+        sp.OLD_14ED_SETUP_HEAD_NOP_GATE
+    )
+    data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] = sp.NOP
+    data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] = sp.NOP
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    for site in sp.ADDR_14ED_BACK:
+        assert data[site : site + 4] == sp.PATCHED_14ED_BACK
+    assert data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] == (
+        sp.PATCHED_14ED_ST20
+    )
+    assert data[sp.ADDR_14ED_SETUP_HEAD : sp.ADDR_14ED_SETUP_HEAD + 12] == (
+        sp.PATCHED_14ED_SETUP_HEAD
+    )
+    assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == (
+        sp.VANILLA_14B890_MULTIWIN
+    )
+    assert data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] == (
+        sp.VANILLA_14ED_ST3_MULTIWIN
+    )
     assert sp.is_patched(data)
 
 
@@ -410,9 +460,19 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     assert data[sp.ADDR_14ED_WAIT_STAY[-1] : sp.ADDR_14ED_WAIT_STAY[-1] + 4] == sp.NOP
     assert data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] == sp.PATCHED_14ED_ERROR
     assert data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] == sp.PATCHED_14ED_ST1_DATA
-    assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == sp.NOP
+    assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == (
+        sp.VANILLA_14B890_MULTIWIN
+    )
     assert data[sp.ADDR_14E648_ERROR : sp.ADDR_14E648_ERROR + 4] == sp.PATCHED_14E648_ERROR
-    assert data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] == sp.NOP
+    assert data[sp.ADDR_14ED_ST3_MULTIWIN : sp.ADDR_14ED_ST3_MULTIWIN + 4] == (
+        sp.VANILLA_14ED_ST3_MULTIWIN
+    )
+    assert data[sp.ADDR_14ED_SETUP_HEAD : sp.ADDR_14ED_SETUP_HEAD + 12] == (
+        sp.PATCHED_14ED_SETUP_HEAD
+    )
+    assert data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] == (
+        sp.PATCHED_14ED_ST20
+    )
     assert data[sp.ADDR_COMMOPT_D201 : sp.ADDR_COMMOPT_D201 + 4] == sp.PATCHED_COMMOPT_D201
     assert data[sp.ADDR_COMMOPT_D201_FAIL : sp.ADDR_COMMOPT_D201_FAIL + 4] == (
         sp.PATCHED_COMMOPT_D201_FAIL

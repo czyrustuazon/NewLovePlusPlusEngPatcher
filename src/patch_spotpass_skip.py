@@ -33,6 +33,14 @@ Patch:
     ``FUN_0014ed0c`` state 1 with ``+0x85==0`` still enters the Name Card
     setup at ``0x14EEC8``. The following ``mov`` goes to state 2 (the
     right-hand bars) instead of state 22. Apply states 22+ stay idle.
+    Softkey Back (vanilla → state 26) goes to state 20 with a light
+    vtable-7 exit so CardUI pops back to Communication without blanking
+    the parent. Setup ignores a clear +0xb1 so the card panes appear.
+    State 20's body skips the stock setter teardown (that blanked the
+    parent) and only parks idle + vtable method 7. Setup's +0xb1 idle
+    gate is replaced by ``FUN_00197ffc`` on ``0x8C78E0`` so the card
+    slot objects exist — vanilla allocated them in apply state 22 via
+    ``FUN_0059a788``, which this skip no longer reaches.
   * Overlay show/wait helpers stay vanilla (function-level stubs blanked
     title attract). Boot UI still NOPs its own ``FUN_00443cd8`` call sites.
   * NOP ``bl FUN_00319320`` @ ``0x000EED44`` (keep ``strb [obj,#0x5a]=1``).
@@ -214,13 +222,36 @@ SHOW_APPLY_TAILS = (
 # State 1 with +0x85==0 beqs to 0x14EEC8, which fades in the card panes
 # (group 1 slots 1–3) and the pack 0x9d00 slot 0xc help. Sending that beq
 # to 0x150658 left the main-menu Name Card as an empty folder. Keep the
-# beq. The mov at 0x14EFE8 goes to state 2 (FUN_0014d584 draws the
-# right-hand bars). Apply states 22+ stay at 21. Overlay 24–31 / 41–42
-# idle-stay.
+# beq. Setup also requires +0xb1!=0 (set by FUN_0014b730); Communication
+# entry can leave it clear, so the +0xb1 idle gate is dropped and the
+# head of setup calls FUN_00197ffc on DAT_008c78e0 (card slot alloc).
+# Vanilla did that alloc in apply state 22 via FUN_0059a788; retargeting
+# 0x14EFE8 to state 2 skipped it and state 3's FUN_0014da1c then data-
+# aborted on a null +0x10 (PC 0x198108). The mov at 0x14EFE8 goes to
+# state 2 (FUN_0014d584 draws the right-hand bars). Apply advances
+# (22→23→…) stay at 21. Softkey Back sites used to go to apply state 26;
+# parking those on idle 21 soft-locked. They go to state 20, whose body
+# is rewritten to park idle + vtable method 7 only — the stock state-20
+# setter teardown wiped the parent Communication UI (blank screen).
+# MultiWin binds at state 2 / state 3 stay vanilla (Name Card / Business
+# Card headers). Overlay JT 24–31 / 41–42 idle-stay.
 ADDR_14ED_ST1_DATA = 0x0014EE3C  # beq 0x14EEC8 Name Card setup
 VANILLA_14ED_ST1_DATA = bytes.fromhex("2100000a")
 PATCHED_14ED_ST1_DATA = VANILLA_14ED_ST1_DATA
 OLD_14ED_ST1_SKIP = bytes.fromhex("0506000a")  # beq 0x150658, hid the card
+FUN_CARD_SLOT_ALLOC = 0x00197FFC  # FUN_00197ffc — fills DAT_008c78e0 +0x10..
+ADDR_14ED_SETUP_HEAD = 0x0014EEC8  # was ldrb +0xb1 / cmp / beq stay
+ADDR_14ED_B1_GATE = 0x0014EED0  # third word of setup head
+VANILLA_14ED_B1_GATE = bytes.fromhex("e005000a")  # beq 0x150658
+VANILLA_14ED_SETUP_HEAD = bytes.fromhex(
+    "b100d4e5000050e3e005000a"
+)  # ldrb +0xb1; cmp #0; beq stay
+# ldr r0, [pc, #0x394] → lit 0x8c78e0 @ 0x14F264; bl FUN_00197ffc @ 0x14EECC; nop
+# BL imm = (0x197FFC - 0x14EECC - 8) >> 2 = 0x1244A
+PATCHED_14ED_SETUP_HEAD = bytes.fromhex("94039fe54a2401eb") + NOP
+OLD_14ED_SETUP_HEAD_NOP_GATE = (
+    bytes.fromhex("b100d4e5000050e3") + NOP
+)  # prior: keep ldrb/cmp, NOP the beq
 ADDR_14B890_MULTIWIN = 0x0014B94C  # beq 0x14B988 MultiWin
 VANILLA_14B890_MULTIWIN = bytes.fromhex("0d00000a")
 ADDR_14E648_ERROR = 0x0014E7B0  # beq 0x14E808 DrawText ERROR
@@ -228,15 +259,30 @@ VANILLA_14E648_ERROR = bytes.fromhex("1400000a")
 PATCHED_14E648_ERROR = bytes.fromhex("5400000a")  # beq 0x14E908 epilogue
 ADDR_14ED_ST3_MULTIWIN = 0x0014FC04  # blne FUN_00255a18 idx 0x16
 VANILLA_14ED_ST3_MULTIWIN = bytes.fromhex("8317041b")
+ADDR_14ED_ST20 = 0x0014FA90  # CardUI exit state
+ADDR_14ED_ST20_LEN = 0x30
+VANILLA_14ED_ST20 = bytes.fromhex(
+    "0120a0e31510a0e30400a0e1f10200eb000094e50030a0e30320a0e10710a0e3"
+    "4cc090e50400a0e13cff2fe1e50200ea"
+)
+# Park +0x84=21 then vtable method 7. No FUN_00150668 — that teardown
+# from state 20 destroyed the parent Communication layouts.
+PATCHED_14ED_ST20 = bytes.fromhex(
+    "1500a0e38400c4e5000094e50030a0e30020a0e30710a0e34cc090e50400a0e1"
+    "3cff2fe100f020e300f020e3e50200ea"
+)
+ADDR_14ED_BACK = (
+    0x0014FB14,  # state 2 softkey Back (was → 26 apply)
+    0x0014FDA0,  # state 4 Back
+    0x0014FDC4,  # state 4 Back (alt)
+    0x001500A8,  # state 12 Back
+)
 ADDR_14ED_TO_APPLY = (
     0x0014EFE8,  # 1 → 22
     0x0014F020,  # 22 → 23
     0x0014F068,  # 23 → 24
     0x0014F0E4,  # 14F080 → 41
-    0x0014FB14,  # → 26
-    0x0014FDA0,
-    0x0014FDC4,
-    0x001500A8,
+    *ADDR_14ED_BACK,
 )
 VANILLA_14ED_TO_APPLY = {
     0x0014EFE8: bytes.fromhex("1610a0e3"),  # mov r1, #22
@@ -250,12 +296,15 @@ VANILLA_14ED_TO_APPLY = {
 }
 PATCHED_14ED_TO_APPLY = bytes.fromhex("1510a0e3")  # mov r1, #21 idle stay
 PATCHED_14ED_NAMECARD = bytes.fromhex("0210a0e3")  # mov r1, #2  Name Card bars
+PATCHED_14ED_BACK = bytes.fromhex("1410a0e3")  # mov r1, #20  CardUI exit
 
 
 def patched_14ed_mov(site: int) -> bytes:
-    """Name Card setup asks for state 2. Later apply slots stay idle."""
+    """Name Card setup → state 2; Back → exit 20; apply advances stay idle."""
     if site == 0x0014EFE8:
         return PATCHED_14ED_NAMECARD
+    if site in ADDR_14ED_BACK:
+        return PATCHED_14ED_BACK
     return PATCHED_14ED_TO_APPLY
 
 
@@ -902,6 +951,10 @@ def _revert_overlay_fn(data: bytearray) -> None:
 def _14ed_vanilla(data: bytes) -> bool:
     if data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] != VANILLA_14ED_ST1_DATA:
         return False
+    if data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] != VANILLA_14ED_SETUP_HEAD:
+        return False
+    if data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] != VANILLA_14ED_ST20:
+        return False
     if not all(
         data[site : site + 4] == VANILLA_14ED_TO_APPLY[site]
         for site in ADDR_14ED_TO_APPLY
@@ -933,6 +986,10 @@ def _14ed_vanilla(data: bytes) -> bool:
 def _14ed_patched(data: bytes) -> bool:
     if data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] != PATCHED_14ED_ST1_DATA:
         return False
+    if data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] != PATCHED_14ED_SETUP_HEAD:
+        return False
+    if data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] != PATCHED_14ED_ST20:
+        return False
     if not all(
         data[site : site + 4] == patched_14ed_mov(site)
         for site in ADDR_14ED_TO_APPLY
@@ -945,9 +1002,11 @@ def _14ed_patched(data: bytes) -> bool:
         return False
     return all(data[site : site + 4] == NOP for site in ADDR_14ED_WAIT_STAY) and (
         data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] == PATCHED_14ED_ERROR
-        and data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] == NOP
+        and data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4]
+        == VANILLA_14B890_MULTIWIN
         and data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] == PATCHED_14E648_ERROR
-        and data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] == NOP
+        and data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4]
+        == VANILLA_14ED_ST3_MULTIWIN
         and data[ADDR_COMMOPT_D201 : ADDR_COMMOPT_D201 + 4] == PATCHED_COMMOPT_D201
         and data[ADDR_COMMOPT_D201_FAIL : ADDR_COMMOPT_D201_FAIL + 4]
         == PATCHED_COMMOPT_D201_FAIL
@@ -956,6 +1015,8 @@ def _14ed_patched(data: bytes) -> bool:
 
 def _apply_14ed(data: bytearray) -> None:
     data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] = PATCHED_14ED_ST1_DATA
+    data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = PATCHED_14ED_SETUP_HEAD
+    data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = PATCHED_14ED_ST20
     for site in ADDR_14ED_TO_APPLY:
         data[site : site + 4] = patched_14ed_mov(site)
     for slot in _14ED_APPLY_SLOTS:
@@ -964,9 +1025,11 @@ def _apply_14ed(data: bytearray) -> None:
     for site in ADDR_14ED_WAIT_STAY:
         data[site : site + 4] = NOP
     data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] = PATCHED_14ED_ERROR
-    data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = NOP
+    data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = VANILLA_14B890_MULTIWIN
     data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] = PATCHED_14E648_ERROR
-    data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = NOP
+    data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = (
+        VANILLA_14ED_ST3_MULTIWIN
+    )
     data[ADDR_COMMOPT_D201 : ADDR_COMMOPT_D201 + 4] = PATCHED_COMMOPT_D201
     data[ADDR_COMMOPT_D201_FAIL : ADDR_COMMOPT_D201_FAIL + 4] = (
         PATCHED_COMMOPT_D201_FAIL
@@ -975,6 +1038,8 @@ def _apply_14ed(data: bytearray) -> None:
 
 def _revert_14ed(data: bytearray) -> None:
     data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] = VANILLA_14ED_ST1_DATA
+    data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = VANILLA_14ED_SETUP_HEAD
+    data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = VANILLA_14ED_ST20
     for site in ADDR_14ED_TO_APPLY:
         data[site : site + 4] = VANILLA_14ED_TO_APPLY[site]
     for slot in _14ED_APPLY_SLOTS:
@@ -1142,6 +1207,43 @@ def _upgrade_namecard_bars(data: bytearray) -> bool:
     return True
 
 
+def _upgrade_namecard_back(data: bytearray) -> bool:
+    """Fix Back soft-lock / blank parent / empty folder / card-slot crash."""
+    trial = bytearray(data)
+    changed = False
+    for site in ADDR_14ED_BACK:
+        if trial[site : site + 4] == PATCHED_14ED_TO_APPLY:
+            trial[site : site + 4] = PATCHED_14ED_BACK
+            changed = True
+    if trial[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] == VANILLA_14ED_ST20:
+        trial[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = PATCHED_14ED_ST20
+        changed = True
+    head = trial[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12]
+    if head in (VANILLA_14ED_SETUP_HEAD, OLD_14ED_SETUP_HEAD_NOP_GATE):
+        trial[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = (
+            PATCHED_14ED_SETUP_HEAD
+        )
+        changed = True
+    if trial[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] == NOP:
+        trial[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = (
+            VANILLA_14B890_MULTIWIN
+        )
+        changed = True
+    if trial[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] == NOP:
+        trial[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = (
+            VANILLA_14ED_ST3_MULTIWIN
+        )
+        changed = True
+    if not changed or not is_patched(trial):
+        return False
+    data[:] = trial
+    print(
+        "[spotpass-skip] Name Card: Back->exit-20 (light), card-slot alloc, "
+        "MultiWin binds restored"
+    )
+    return True
+
+
 def _write_title_lock_release(data: bytearray) -> None:
     data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] = PATCHED_TITLE_ST8_LOCK
     data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] = NOP
@@ -1179,6 +1281,8 @@ def apply_patch(data: bytearray) -> bool:
     if _restore_namecard_setup(data):
         return True
     if _upgrade_namecard_bars(data):
+        return True
+    if _upgrade_namecard_back(data):
         return True
     if _upgrade_title_home_lock(data):
         return True
