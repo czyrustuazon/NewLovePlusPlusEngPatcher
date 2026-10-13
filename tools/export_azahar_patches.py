@@ -27,13 +27,9 @@ UPSTREAM = "upstream"  # pristine azahar-emu/azahar snapshots (origin/upstream i
 # patch file -> (header, fork paths it covers)
 EXPORTS = {
     "azahar-openlinkfile.patch": (
-        "FS accuracy for NLPP: OpenLinkFile session clone + SaveData ControlArchive "
-        "COMMIT (Delete Save Data mid-fade softlock).",
-        [
-            "src/core/hle/service/fs/",
-            "src/core/file_sys/savedata_archive.cpp",
-            "src/core/file_sys/savedata_archive.h",
-        ],
+        "FS accuracy for NLPP: OpenLinkFile session clone (extra-data hang) "
+        "+ File::Flush sync return.",
+        ["src/core/hle/service/fs/"],
     ),
     "azahar-nlpp-emu.patch": (
         "NLPP_EMU_* hardware-crash replays + FAR/DFSR in the exception report.\n"

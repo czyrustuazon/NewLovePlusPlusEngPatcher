@@ -1,7 +1,7 @@
 NLPP_EMU_* hardware-crash replays + FAR/DFSR in the exception report.
 Apply after azahar-openlinkfile.patch.
 Used by ab_test launches and tools/smoke_boot_azahar.py --inject.
-Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ 78b196d)
+Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ 8296c4f)
 Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
 
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
