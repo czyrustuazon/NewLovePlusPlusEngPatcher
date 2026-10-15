@@ -306,3 +306,17 @@ def find_vanilla_resident_trb() -> Path | None:
             return c.resolve()
     return None
 
+
+def find_vanilla_script_dir() -> Path | None:
+    """Directory of Japanese .dbin2 scripts (prefer CIA cache over EN-patched dump)."""
+    env = os.environ.get("NLPP_VANILLA_SCRIPT")
+    if env:
+        p = Path(env)
+        if p.is_dir():
+            return p.resolve()
+    # Cache from extract_vanilla_from_rom first — sibling extracted/ is often EN-overwritten.
+    for c in (CACHE_VANILLA_SCRIPT, DEFAULT_VANILLA_SCRIPT):
+        if c.is_dir() and any(c.glob("*.dbin2")):
+            return c.resolve()
+    return None
+
