@@ -182,3 +182,16 @@ def test_git_checkout_asks_to_skip_gold_before_wipe():
     assert text.index(guard) < ask_idx < text.index("--wipe-cia-build")
     assert ask_idx < text.index("fetch_release_bake.py")
     assert 'if /i "!GOLD_ANS!"=="y" set "NLPP_SKIP_GOLD_FETCH=1"' in text
+
+
+def test_bat_asks_gemini_nene_after_gold_before_wipe():
+    """Optional Gemini Nene is asked after the gold-bake question, before wipe."""
+    text = _bat_text()
+    gold_idx = text.index("Skip the gold download and build from this checkout?")
+    nene_idx = text.index("Include Gemini Nene dialogue?")
+    wipe_idx = text.index("--wipe-cia-build")
+    assert gold_idx < nene_idx < wipe_idx
+    assert "NLPP_INCLUDE_GEMINI_NENE" in text
+    assert 'if /i "!NENE_ANS!"=="y" set "NLPP_INCLUDE_GEMINI_NENE=1"' in text
+    assert "if not defined NLPP_INCLUDE_GEMINI_NENE" in text
+    assert "assets\\gemini_heroines" in text or "gemini_heroines" in text
