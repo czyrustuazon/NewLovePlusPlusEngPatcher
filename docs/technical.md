@@ -638,7 +638,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | 年 / 月 / 日 | Option06 A4 @ 5248 + date-format bytes | EN `Y`/`M`/`D` verified |
 | Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
 | Event Gallery rows | A8 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
-| Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Youthful Page** (MultiWin `01_01` PNG is Friend's Memory — do not use) |
+| Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Drama Gallery** (aligned with row btn `ドラマギャラリー`; MultiWin `01_01` PNG is Friend's Memory — do not use) |
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
@@ -651,21 +651,26 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Select Save Data / StreetPass / Friends headers | plates @ **5240** | Deployed |
 | Select Save Data **表面 / 裏面** toggle | ETC1A4 `B_Card_b_btn_lite` @ **5238** (highlight `B_Card_b_btn_on`, pill `B_Card_b_btn_base` stay) | **Front Side / Back Side** — Zhoumaru `NCommonIcon.check`. Last-writer on **5238** after Restore Default so the softkey chain cannot drop it. `tools/deploy_card_side_btn_en.py` |
 | Friends list sort `受信日時` | RGB565 `Flist_Txt03` @ Card **4152** | Deployed (`Received Date`; Heisei W5 hard cyan ~200px — Zhoumaru fill was 4× vanilla ink and remapped as a slab) |
+| Mail sort popup `並べ替え方法` | ETC1A4 `Mail_PopTxt04` / `05` + RGBA4444 Cancel @ Mail **5207** | Deployed (`Sort Method` / Timestamp·Sender·Lock / `Cancel`; Heisei self-render — `deploy_mail_sort_en.py`; not Zhoumaru) |
 | Save-card field labels `名前` / `カノジョの名前` | RGBA4444 `B_Card04_txt01` / `txt06` @ Card **4152**, **128×28** | **Name** / **Girlfriend's Name** on the card field list. The two-bar pink screen is a different draw — see **§12.4.5**. A blank folder from the main menu is `FUN_0014ed0c` — **§12.4.6**. |
 | Profile header + field labels | A8 `Com_M_Sel_Plate_Text01_00_00` @ **5246** + RGB565 atlas `Profile_Info_Profile_t` @ **5252** | Header **Profile** — see **§12.4.2**. Field labels Heisei W5 size 15 2× AA + vanilla chroma ramps (Last Name / First Name / Birthday / M·D / Blood / Hometown). Order is the JP fields (姓 then 名), not Western — **§12.4.4**, `tools/deploy_profile_en.py` |
 | Profile Written/Called names | RGB565 `Profile_Info_Call01_t` @ **5252** | Deployed (`Last Name` / `First Name` / `Written` / `Called`; chroma AA, not 1-bit) — **§12.4.4**, `tools/deploy_profile_en.py` |
+| Profile confirm list `苗字` / `呼ばれ方` / `名前` / `HN` / `誕生日` / `血液型` / `出身地` | RGB565 `Profile_Info_Check03` @ **5252**, **240×168**, plus cursor chip RGBA4444 `Profile_Info_Check02` 76×24 | **Last Name / Called As / First Name / Called As / Username / Birthday / Blood Type / Hometown**. Check03 is the sheet. `Pts_Prf_Info_Check_Tag_Act00` fades `Pic_Check02` (`H N :`) over the Username row once the cursor starts. Heisei W5 size 13 on both. Zhoumaru Check02/Check03 PNGs are gray mocks. `tools/deploy_profile_en.py` |
 | Profile hometown region chips `全国` / `北海道東北` / … | RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252** | Deployed (Zhoumaru: Nation / Hokkaido Tohoku / Kanto / Chubu / Kinki / Chugoku Shikoku / Kyushu Okinawa). Two-line EN is contain-fit to a **6px** side inset so it stays inside the rounded pill — **§12.4.3**. |
-| Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Back`) — `tools/deploy_myroom_main_en.py` |
+| Myroom main buttons | ETC1A4 `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW` + `main_tex_love_RGBA4` + `common_modoru_RGBA4` @ **5380** | Deployed (`Schedule` / `Sleep` / `Mail` / `Phone` / `Love Plus` / `Back`) — `tools/deploy_myroom_main_en.py` (Love Plus is rendered gray on the heart pill; pink NEW badge is separate) |
 | In-room Options overlay `オプションメニュー` | ETC1A4 `optn_tex_optionmenu_RGBA4` + `optn_tex_option{hyouji,sound,jikan,real,skip,kabegami}_RGBA4` @ **5380** + header `optn_tex_optionmenu_{RGBA4,01..05}` @ **5575** | **EN** (`Options Menu` / Display / Sound / …) — Zhoumaru; `tools/deploy_myroom_options_en.py`. Not hub Options **5245**. `optionkabegami` dump is a black slab — re-render Wallpaper. Shared-ARC writers from vanilla wiped these until this last-writer. |
+| In-room WEB hub `TOWANO.NET` / `とわのウォッチャー` | ETC1A4 `web_tex_{net,watcher}_RGBA4` @ **5380** | **EN** (`TOWANO.NET` / `Towano Watcher`) — Zhoumaru; `tools/deploy_web_hub_en.py` (after map hub). |
+| In-room Mini-game hub `ミニゲーム` / `ぱずるだま` / `ツインビー+` / `イーアルカンフー+` | ETC1A4 `game_text_{title,puzzle,twinbe,kanfu}_RGBA4` @ **5575** + **5380** | **EN** (`Mini-Game` / `Puzzle-dama` / `TwinBee+` / `Yie Ar Kung-Fu+`) — Zhoumaru title/TwinBee/Kung-Fu; puzzle dump is wrong `Subarudama` → re-render `Puzzle-dama`. `tools/deploy_minigame_hub_en.py` (after web hub). |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
-| Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki}` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail`) — `tools/deploy_mail_home_en.py` |
-| My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status`) — `tools/deploy_mydata_en.py` |
+| Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki,chak}` + `C_Btn_Play_{Off,On}` + `Sel_Tex_ma02_01..05` @ **5207** | Deployed (`Mail` / `Inbox` / `New Mail` / **Ringtone Settings** / **Play** / Girlfriend·Friend·Contact·Info·**Mystery** Mail) — `tools/deploy_mail_home_en.py`. `chak` + Play are Zhoumaru; inbox categories are Heisei-rendered (Zhoumaru left 01 JP and called 05 Apology). |
+| My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status,item,camera}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status` / `Item List` / `My Camera`). Item List and My Camera are Zhoumaru `Myroom.check` masters — `tools/deploy_mydata_en.py` |
 | Status / boyfriend-power stats | ETC1A4 `stat_tex_{undo,chisiki,kanse,miryoku}` @ **5501** + `Scd_Status_Tit_{M,K,S,C}` @ **5255** | Deployed (`Fitness` / `Intel`* / `Sense` / `Charm`; schedule titles use full `Knowledge`) — `tools/deploy_status_stats_en.py` |
 | To-Do submenu | ETC1A4 `mydata_toptex_01..06` @ **5575** + RGBA4444 `Que_Txt01{b,d}` @ Quest **5253** | Deployed (headers + `To-Do List` / `History`) — `tools/deploy_todo_en.py` |
 | To-Do History points | RGBA4444 `Que_Txt01c` @ Quest **5253** | Deployed (`Earned ToDo Points:`) — `tools/deploy_todo_hist_en.py` (rebuilds Quest from vanilla with 01b/01c/01d) |
 | Play-day counter `N日目(曜)` | TOP `日目` + weekday `(月)`… inside **img.bin pkg 5508** (loose RomFS resident TRB is unused leftover) | Deployed (`N Day  (Mon)`) — `tools/deploy_day_counter_en.py` (**5508** is what matters; release resident file is only a convenient edit source) |
 | Girl SMS / mail bodies | MDC `maildic_{m,n,r}.mdc` @ img.bin pkg **92** (UTF-8 records; **not** `dictionary/all2_u.bin`) | Deployed EN — `tools/translate_sms_en.py` → `tools/deploy_sms_maildic_en.py` (FF-pad to slot) |
 | Data Management home | A8 Text05 @ **5242** | Deployed (`Data Management` / Delete / Export Save Data) |
+| Delete Save Data summary sheet `データ更新` / `名前` / … / `経過日数` | RGBA4444 `DD_data02..05` @ DataDelete **4187**, **256×256** | **Last Saved / Full Name / Called As / Username / Birthday / Blood Type / Hometown / Elapsed Days** — Zhoumaru; values are DrawText. Buttons + MultiWin header already in the same deploy. `tools/deploy_datadelete_en.py` (must patch sheets here — this script rebuilds **4187** from vanilla and would wipe a pack_images-only EN sheet). |
 | Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
 | CESA companion blurb | RGB TEX `logo_white.texi` @ pkg **90** (CesaLogo `0x5A0008`; **240×320** portrait; vanilla 16×16 stub) | **EN** (verified 2026-09-15) — teal gothic; PACK rebuild **+ idx `dec_len` 1576192** + skip 400×400 stub quad; **§12.7** |
 
@@ -824,18 +829,37 @@ Redeploy: `python tools/deploy_profile_en.py` (bake + instance A). Then `.\ab_te
 
 The atlas boxes are the JP fields. Top box `(10, 24)` is 姓 → **Last Name**. Next box `(49, 63)` is 名 → **First Name**. Call01 is the same pair: `(1, 14)` Last Name, `(77, 89)` First Name. An earlier EN pass painted First Name on the 姓 row, so the label and the save field disagreed. `ATLAS_LABELS` in `tools/deploy_profile_en.py` follows the fields. `test_profile_call01_labels_use_heisei_chroma_aa` locks both pairs. Verified on the Profile list in Azahar A.
 
+**Confirm sheet (2026-10-12)**
+
+`Profile_Info_Check03` @ **5252** is the 8-row list (苗字, 呼ばれ方, 名前, 呼ばれ方, HN, 誕生日, 血液型, 出身地), RGB565 fmt 3, 240×168. Magenta `(213,28,255)` is the gray cell, cyan `(49,157,255)` is the ink, yellow is the gap, white is the value cell. Zhoumaru `Profile_Info_Check03.png` is a gray mock of the same words. `make_check03_en` repaints Heisei W5 size 13 onto the magenta plate (`CHECK_PALETTE`). Order stays family name first. The value column (KOKEKO, the date, blood, hometown) is DrawText and stays.
+
+`Pts_Prf_Info_Check_Tag_Act00` then shows `Pic_Check02` (`Profile_Info_Check02`, RGBA4444 76×24) on top of the HN row. That chip is still vanilla `H N :` until `make_check02_en` paints **Username:** on plate `(119,255,255)` → ink `(51,51,51)`. Zhoumaru `Profile_Info_Check02.png` is a gray mock. Do not pack it.
+
+The birthday value is the DrawText at file `0x00350254` (pane index 5). Vanilla sprintf's the month byte, strcat's TRB slot `0x3f` (`月` → `Month`), then the day byte and slot `0x3e` (`日` → ` Day(s)`), so June 23 reads `6Month23 Day(s)`. `patch_profile_birthday.py` overwrites that stretch and writes `June 23` into the same 24-byte buffer. The shared `月` / `日` tokens stay. The year-month-day sprintfs at `0x0021620c` and `0x00228910` stay.
+
 **Do not**
 
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”
 2. Blame overflowing English — **Last Name** / **Written** / **Called** all fit size 15.
 3. `find_ui_png` the Zhoumaru Call01 mock for this BCLIM.
 4. Put **First Name** above **Last Name**. Those boxes are 姓 then 名. Western label order writes the given name into the family-name field.
+5. Pack Zhoumaru `Profile_Info_Check03.png` onto the confirm sheet. It is gray paint. The live BCLIM is magenta/cyan chroma.
+6. Pack Zhoumaru `Profile_Info_Check02.png` onto the cursor chip. It is the same gray mock. The live BCLIM is the `(119,255,255)` pill that covers the HN row when the cursor starts.
+7. Retarget TRB `月` / `日` to fix this one cell. Those tokens are the duration units (`3 Day(s)`, month counts). The confirm sheet has its own formatter.
 
 #### 12.4.5 Save-card name labels vs the two-bar plate (2026-09-22)
 
 `B_Card04_txt01` / `txt06` @ Card **4152** are the card field list (名前 / カノジョの名前, 128×28 RGBA4444). Heisei **Name** / **Girlfriend's Name** is spliced there (`tools/deploy_card_name_labels_en.py`). The field row itself is `Lyt_B_Card04_btn`: `Vis_White_Base` and `Vis_com_btn_m_00`–`_08` are stored with pane flag bit 0 clear. That flag is set by the card deploy, and it is not the folder page.
 
-FileSelect **5152** `Vis_Dsel_Data` is the 256×512 field sheet `D_Select_data03` on the save card. `Pts_Dsel_Data` in that same archive has a second `Pic_Dsel_data`, stored visible, 9px to the left. Both showing the English sheet doubles every row (Please Select Data, Full Name, …). `tools/deploy_dsel_data_visible.py` keeps `Vis_Dsel_Data` on and hides the parts picture. Those visibility flips, and the ones on `Lyt_C_Com_folder` @ pkg **5208**, do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
+FileSelect **5152** has two `Pic_Dsel_data` panes. `Pts_Dsel_Data` is the live one: `MenuDSelData.dmst` plays `Pts_Dsel_Data_Tag_Act00..02` and swaps the BCLIM:
+
+| Sheet | When | Labels |
+|------|------|--------|
+| `D_Select_data01` | empty slot | **NO DATA** |
+| `D_Select_data02` | save, pre–post-game | profile rows through Elapsed Days — **no Title** |
+| `D_Select_data03` | save, post-game | adds **Dating** + **Title** (was Zhoumaru `D-Duration`; Heisei re-render — `deploy_fileselect_dating_en.py`) |
+
+`Lyt_Dsel_data.Vis_Dsel_Data` holds a second picture locked to `data03`; vanilla stores that Vis **off**. Forcing Vis on and hiding the Pts picture (an older EN double-draw fix) left every slot on the static Full Name / Last Saved / Title sheet. `tools/deploy_dsel_data_visible.py` restores vanilla: Vis off, Pts Pic on — empty → NO DATA, Title only after post-game. Folder-tab flips on `Lyt_C_Com_folder` @ pkg **5208** stay in the same script. Those visibility flips do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
 
 The pink two-bar screen is a **folder tab**: a short upper-left tab holds the blue label, and the wider cream body holds the save value (`(・_・)` / Anegasaki). On the crop, one bar is about 177×38 and the tab is about 60% of that width. The same shape is the magazine NOTICE window `Mag_Enq_Notice_Win01` (184×40 RGBA4444, TownGuide **5265**), which bakes its tab word into the texture.
 
@@ -889,13 +913,14 @@ beq  0x14EEC8          ; vanilla 21 00 00 0a
 
 `src/patch_spotpass_skip.py` had retargeted that `beq` to `0x150658` (`05 06 00 0a`, `OLD_14ED_ST1_SKIP`). Every tick returned immediately, so the folder paper stayed up and the selection panes never faded in. The 1×1 GPU rejection (`Texture size (1x1) is not multiple of 4`) is logged on boots where the bars were visible too. It is not this bug.
 
-The DATA apply chain (states 22+) stays idle, including jump-table slots 24–31 / 41–42 at `0x150658`. After the help line, `0x14EFE8` is `mov r1, #2` so state 2 (`0x14FAC0`, `FUN_0014d584`) draws the two right-hand bars. `apply_patch` upgrades a `code.bin` that still has the old skip or the state-21 handoff. Ships in `release/name_input_code.bin` and the Azahar instance `exefs/code.bin`.
+The DATA apply chain (states 22+) stays idle, including jump-table slots 24–31 / 41–42 at `0x150658`. After the help line, `0x14EFE8` is `mov r1, #2` so state 2 (`0x14FAC0`, `FUN_0014d584`) draws the two right-hand bars. Setup’s head at `0x14EEC8` no longer idles on a clear `+0xb1` — it loads `DAT_008c78e0` and calls `FUN_00197ffc` (card slot alloc) then continues. Vanilla allocated those slots in apply state 22 via `FUN_0059a788`; skipping that state left `+0x10` null and state 3’s `FUN_0014da1c` data-aborted at `0x198108` (`ldr` from null, FAR `0x18`). Softkey Back (bit `0x20000` from `FUN_0014b890`) is vanilla: each site stores its return state in `+0xb8` and goes to state **26**. **States 26–30 are the card exit, not SpotPass (2026-10-15).** 26 takes the sleep/HOME lock (`+0x8a8`) and reads the card manager `DAT_008c78e0` (`[0]` = job state, `+4 & 0xf` = dirty). When dirty, 27–29 save through card job `0xf` (`0x198714` / poll `0x198748`) under layout `0xCA`. Then 30 releases the lock and goes to `+0xb8`. The return values are `0x13` (leave CardUI from the bars: message 2, then state 19), `0xD` or `3` from state 4, and `2` from the friend’s card in state 12. The 2026-09-24 skip idled JT 26–31 and NOP’d state 28’s waits (`0x14F30C` / `0x14F31C`). The 2026-10-12 build then pointed Back at a stub state 20 that parked on 21 and sent vtable message 7. That stub ignored `+0xb8`, so Back on a friend’s name card did nothing. Back, JT 26–30, those waits and state 20 are vanilla again. State 30’s pack `0x9d01` slot 9 dialog (state 31) is still skipped, now at its gate (`beq` → `b 0x14F4FC` @ `0x14F4AC`). The old `mov r1,#3` @ `0x14F4C0` ran 31’s lock retake (`0x14F4CC`), which left the HOME lock held. MultiWin binds at state 2 / state 3 stay vanilla. `apply_patch` upgrades older skips (including a prior NOP-only `+0xb1` gate). Ships in `release/name_input_code.bin` and the Azahar instance `exefs/code.bin`.
 
 State 11 of the same setter (`0x150CB4`) is the exchange-card cluster, group 0: slot 1 `Lyt_LP2_Ex_Card_KiraBase`, slot 2 `Lyt_LP2_Ex_Card`, slot 3 `Lyt_LP2_Ex_Card_Efect`, slot 4 `Lyt_B_Card07`. Those layouts live in pkg **4202** (`Pts_LP2_Ex_Card_Base`, `Lyt_LP2_Ex_Card_KiraBase`, `Lyt_LP2_Ex_Card_Efect`; `Lyt_B_Card07` is Card **4152**). `Vis_Ex_Card_Base` in the KiraBase layout is stored hidden. Do not force it on to “fill” the folder.
 
 **Do not**
 
 1. Retarget `0x14EE3C` to `0x150658` again. That is the empty Name Card.
+1. Idle JT 26–30 or retarget Back away from 26. Those states are the card save/exit and return to `+0xb8`.
 2. Treat pkg **5208** `Lyt_C_Com_folder`, FileSelect `Vis_Dsel_Data`, or Card field `Vis_com_btn_m_*` as this page.
 3. Repack pkg **4202** to fix the blank folder. It already matches vanilla.
 
@@ -1033,6 +1058,8 @@ Vanilla `logo_white` is a **16×16 stub**. Cannot grow the 15-byte stub zlib in 
 
 **Idx table (hardware crash 2026-09-14):** growing the inner PACK header `dec_len` 1182976 → 1576192 is not enough. img.bin's index table (`0x800 + 90*0x14`, `=4s4x2I2xBB`) still stored **1182976**. The game mallocs **that** arena, then writes the companion TEX at `dec_off=1182976` (one byte past the end) → heap smash → ARM11 data abort in malloc `FUN_0000de04` @ runtime `0x0010DE4C` (FAR=3, `ldr r2,[r0,#4]` with `r0=0xFFFFFFFF`). `patch_img_bin_with_companion` now writes the matching idx `dec_len`. Do not grow PACK `dec_len` without the idx field.
 
+**Idx table, Title pkg 5261 (Azahar crash 2026-10-15):** the same overflow, on any spliced package. `deploy_title_engpatch_en.py` grows the Title ARC for the Eng Patch badge (PACK `dec_len` 408496 → 417584), but the idx entry stayed at 408496. Pressing Back on Select Data reloads Title, the 9088-byte overflow smashes the next heap header, and malloc data-aborts at runtime `0x10DE4C` (`ldr r2,[r0,#4]`, `r0` = `PUPU` `0x55505550`, FAR `0x55505554`). `pack_images.splice_packages_into_img` now writes each spliced PACK's `dec_len` into its idx entry, so every deploy script gets this, not only pkg 90. `patch_cia._require_img_idx_sync` hard-fails a gold bake, packed img or injected img.bin when any PAK's idx `dec_len` differs from its PACK header (`pack_images.img_idx_mismatches`). Vanilla has no mismatches.
+
 Vanilla JP (decode with `src/patch_cesa.py --decode`): white field, `#FF0000` gothic title with ruby, **two** title lines each with a 2px red underline, black body, one red legal line, black closing. Ink occupies roughly **y=73–322**.
 
 #### English master (how it is drawn)
@@ -1132,9 +1159,11 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/overall_progress.py` | Overall percent on that same row. Drop maps rebuild to 0–80 and the CIA step to 80–100 |
 | `tools/deploy_display_settings_en.py` | Display + Sound panel labels @ **5247** |
 | `tools/deploy_sound_settings_en.py` | Sound-only subset of **5247** (HelpBtn note: not Defaults) |
-| `tools/deploy_myroom_main_en.py` | Myroom buttons + Back @ **5380** |
+| `tools/deploy_myroom_main_en.py` | Myroom buttons + Love Plus badge + Back @ **5380** (live splice) |
 | `tools/deploy_myroom_options_en.py` | In-room Options overlay `optn_tex_*` @ **5380** + **5575** (Zhoumaru; after shared-ARC writers) |
-| `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status **5380** (zero-gaps → empty-block) |
+| `tools/deploy_web_hub_en.py` | In-room WEB hub `web_tex_{net,watcher}` @ **5380** (Zhoumaru; after map hub) |
+| `tools/deploy_minigame_hub_en.py` | In-room Mini-game hub `game_text_*` @ **5380** + **5575** (Zhoumaru; after web hub) |
+| `tools/deploy_mydata_en.py` | My Data header **5575** + To-Do/Status/Item List/My Camera **5380** (zero-gaps → empty-block; item/camera from Zhoumaru) |
 | `tools/deploy_schedule_header_en.py` | Schedule header @ **5575** (rebuild shared toptex set) |
 | `tools/deploy_profile_en.py` | Profile Heisei header **5246** (§12.4.2) + Call/atlas chroma AA **5252** (§12.4.4) + hometown chips (§12.4.3) |
 | `tools/deploy_status_stats_en.py` | Fitness / Intel / Sense / Charm |
@@ -1350,6 +1379,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Password entry window | **5251** | `deploy_optionpassword_en.py` (`Pass_Win01`) |
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
 | In-room Options overlay | **5380** / **5575** | `deploy_myroom_options_en.py` (`optn_tex_*`; after shared-ARC writers) |
+| In-room Mini-game hub | **5380** / **5575** | `deploy_minigame_hub_en.py` (`game_text_*`; after web hub) |
 | Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options −4 frames + TalkWindow ÷4 + voice cap, §21) |
 | “Main Menu” title string | **5261** `Title_menu_word` (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode (same path as hub rows); Zhoumaru dump RGB was swizzled |
 
@@ -1605,6 +1635,12 @@ Boot nag is **not** Enoshima. The string is TRB STRI **4808**, pack **`0x1901`**
 
 `src/patch_spotpass_skip.py` hides `FUN_000ea254` ctor layout `+0xa8` then dismisses to state 7 (`0x001EA6C4`) so the empty warning window does not stay up, NOPs `bl FUN_004b17b0` (message id `0x2b61` → slot `0x1e7`) and the `bl FUN_004b119c` pane binds, turns state 4’s tail `b FUN_004b17b0` @ `0x000EA628` into `bx lr` (BL NOPs miss this; `FUN_000ebe0c` still jumped here after `FUN_000ea964` returned), retargets `FUN_000ebe0c` away from applying-wait (`NOP bl FUN_000eb3bc`, `mov r1,#1/#3/#4` → `#7`), skips TitleUIOperator’s `+0x8c` fail flag and pack `0xd201` DrawText (`“Failed to apply SpotPass data.”`), NOPs `bl FUN_00319320` @ `0x000EED44` (keeps `strb [obj,#0x5a]=1`) then **does not** enter applying-wait state 6 (`mov r1,#6` → `#7`, jt6 → hide/dismiss), NOPs boot-UI applying-layout *call sites* of `FUN_00443cd8` (the helper itself stays vanilla), then **hides `+0xd0` and always returns** from `FUN_0062fa8c` wait *sites* (`r0!=0` used to fall through to pack `0x1901` “Applying SpotPass…” DrawText — forcing done as 1 *caused* the spinner), turns TitleUIOperator apply states 6/7 / 0xA–0xC / 0xF into hide `+0x90` then `+0x5c=0` (state 1 still shows `+0x90`; title-init state 8 skips `FUN_00443e18` / `FUN_00196b7c`, releases the home-jump lock that state 1's show already took (`0x2C6CE0` drains `+0x10` and calls `FUN_0059a824` when overlay `+0x4c` is set; the `FUN_00443e18` poll that used to do this is skipped, and state 15 no longer runs), and runs `FUN_00195fa4`; `FUN_0014ed0c` DATA kick then idle-stays so state 41 pack `0x9d01` slot `0x10` DrawText never runs), skips FUN_004b2574 type-2 SysPopup slot `0x1e5` (`beq` @ `0x4B2634` → epilogue, not the 0x4B2660 join that still popped), turns the type-2 `beq` @ `0x0011021C` into `b`, still NOPs leftover `bl FUN_0059a010` in NetDlTaskManager, retargets the NetDl state-0 jump table (`0x00709708` → `0x00709734`), and changes the imm to `#0` so a missing CDN stays idle. Ships in `deploy_name_input_en.py` / `release/name_input_code.bin` **and** `--deploy-azahar`. **Verified 2026-09-22 Azahar A:** cafe title attract returns; applying/no-data may flash once from leftover TitleUI, then in-game reset stays clean. State 1 still shows `+0x90`. That show takes the home-jump lock (`0x008ab420+0xc`) and the paired sleep count (`+0x10`) and sets overlay `+0x4c`. Vanilla state 8 waited in `FUN_00443e18`, which released both; state 15's `FUN_0059a824` @ `0x2C7188` released state 8's own extra increment. The wait is skipped and state 15 never runs. NOP'ing only `FUN_0059a7c4` @ `0x2C6540` left the show's lock held, so a HOME press was cancelled and the system drew the crossed-out icon. State 8 now branches to `0x2C6CE0`, which drains `+0x10` and decrements `+0xc` when `+0x4c` is set, and the following `bl FUN_0059a938` is a NOP so the sleep count is not taken again. That release covers the title overlay. The crossed icon stayed on every screen until **§16.8.1**. Watcher / city / meal tables are applied by **§16.8** (embedded NsData), not by this skip. Enoshima is already on-cart (script `t146`) and uses extra data `00000f4e`, not boss `00000321`.
 
+#### 16.7.1 Delete Save Data softlock (2026-10-14)
+
+**Cause: §16.8's "WEB Watcher" sites were in the SaveErase scene.** `0x5A564..0x5C1A8` is the SaveErase scene (scene table entry `0x2E` at `0x00690200` → factory `0x5AB58`, vtable `0x80502C`; Data Management → Delete Save Data). Nothing in the room creates it. Its message-0x17 handler `0x5B61C` maps menu item 9 (`0x5B6DC`) to "save slot picked" (`+0x64 = slot`, state `0xD` delete confirm) and item 10 (`0x5B724`) to back. The embed patch branched both to the epilogue as "Watcher pills", so picking a save did nothing. The scene stayed in state 7, `+0x64 = -1`, and the DataDelete UI waited forever for message 2/3. This reproduced on Azahar A as well as hardware. All seven sites in that range (`0x5B0F0`, `0x5B544`, `0x5B570`, `0x5B6DC`, `0x5B724`, `0x5BC58`, `0x5BC70`) are vanilla again.
+
+**Also fixed: title exit leaked the save manager.** Any button on the title (states 18–31, `0x2C6748`) goes to state 10. Vanilla 10 → 11 → 12 → 15 is the title exit, and state 15 destroys the BuiltIn SaveLoad Manager that state 3 created (`+0x84`, owned when `+0x8d`; global `0x8BFAFC`) at `0x2C712C`. With those states on the §16.7 stub, that manager outlived the title, and Data Management (`0x00055494`) built a second one. The stub now calls `0x2C6CB8` (the dead state-7 body). It clears `+0x84`/`+0x8d` and tail-calls the node destroy `0x00016030` when the title owns the manager, as state 15 did.
+
 ### 16.8 Bake Watcher #28 without a BOSS inject (2026-09-20)
 
 CIA install cannot write `extdata/00000321/boss/`. LayeredFS cannot overlay it. `src/patch_spotpass_embed.py` impersonates the two BOSS results so the stock apply path runs on the vendored payload:
@@ -1615,7 +1651,7 @@ CIA install cannot write `extdata/00000321/boss/`. LayeredFS cannot overlay it. 
 | GetNsDataNewFlag | `FUN_00609ab0` @ `0x00609AB0` | Always **1** so tick can enter apply after §16.7 hides the nag. |
 | Confirm | `0x00609750` | `mov r0,#1` (do not wait on tick `+0x48`). `bl FUN_0059a7c4` @ `0x00609764` and `bl FUN_0059a824` @ `0x0060978C` are NOP so the forced re-entry cannot hold `0x008ab420+0xc` (**§16.8.1**). |
 | ReadNsData | BLs @ `0x00609FD8` / `0x0060A018` | `bl` memcpy into dest `r1`, or store payload VA at wrapper `+0x48` when dest is 0. Do **not** write wrapper `+0x200`. |
-| Watcher magazine | `0x006092C8` / `0x00609164` / `0x00609600` / `0x006093F4` / `0x006090B0` | `mov r0,#1; bx lr`. **Not** `FUN_005fe9d8` (has-rows must poll). MagList always command **9**, then **state 6** until rows bind; keep layout `+0x7c`. Parent skips MagList-equal gate and after MagList goes **0x17** (dismiss), not Watcher. NOP MagList pump / has-rows / bind `+0x45/+0x46` and parent state 0 so `FUN_005fe5d0` inits. Watcher extra `bne` restored. WEB **とわのウォッチャー** is Myroom layout **0xC** (`FUN_0005b49c` @ `0x0005B49C`), not TownGuide MagOp layout `0x31`. Extra-data `FUN_004e7d34==0` or article `+0x70==0` set `+0x5e=9` (empty viewer → ERROR “No data.”). NOP the extra `beq` @ `0x0005B570`; `+0x70` miss and empty `FUN_00444cd8` count (`0x0005B600` / `0x0005BC74` / `0x0005AC04`) go hub state **7**. State 9 entry `0x0005BA44` `b 0x5ba20`. Watcher pill buttons 9 and 10 (`0x0005B6DC`, `0x0005B724`) branch to the click epilogue, so neither builds the empty viewer. `0x0005B574` also goes to hub state 7. Empty count @ `0x0005BC70` dismisses the page. `FUN_0005b49c` stays vanilla. Myroom 0x84 ERROR `0x0004FC20`/`0x0004FC58` and leftover pack `0x9d01` slot 8 `0x0014E110` are NOP. MagOp: extra-missing left Watcher `0x31` empty (pack `0xB200`). State 0 goes **5** (no layout), extra cmp `mov r0,#1`, parent after Watcher **0xC** MagList (cart `Mag_Tit`). `FUN_0014eb9c` returns `(extra & ~bit0x20 & has-rows) ^ 1` and binds pack `0x9d01` when extra is **missing** (slot `0x60`) or extra+no bit+no rows (slot `0xf`). Stub the entry `mov r0,#0; bx lr` @ `0x0014EB9C`. Caller leftover `+0xb4 != -1` still opened the 0x84 ERROR window; `0x0014E16C` `beq` → `b 0x14e2a4`. Inner `bl FUN_005fe9d8` stays vanilla. |
+| Watcher magazine | `0x006092C8` / `0x00609164` / `0x00609600` / `0x006093F4` / `0x006090B0` | `mov r0,#1; bx lr`. **Not** `FUN_005fe9d8` (has-rows must poll). MagList always command **9**, then **state 6** until rows bind; keep layout `+0x7c`. Parent skips MagList-equal gate and after MagList goes **0x17** (dismiss), not Watcher. NOP MagList pump / has-rows / bind `+0x45/+0x46` and parent state 0 so `FUN_005fe5d0` inits. Watcher extra `bne` restored. WEB **とわのウォッチャー** is Myroom layout **0xC** (`FUN_0005b49c` @ `0x0005B49C`), not TownGuide MagOp layout `0x31`. **Correction (2026-10-14, §16.7.1):** `0x5A564..0x5C1A8` is the SaveErase scene, not the room WEB. The `0x5B…`/`0x5AC04` edits below broke Delete Save Data and are vanilla again. Extra-data `FUN_004e7d34==0` or article `+0x70==0` set `+0x5e=9` (empty viewer → ERROR “No data.”). NOP the extra `beq` @ `0x0005B570`; `+0x70` miss and empty `FUN_00444cd8` count (`0x0005B600` / `0x0005BC74` / `0x0005AC04`) go hub state **7**. State 9 entry `0x0005BA44` `b 0x5ba20`. Watcher pill buttons 9 and 10 (`0x0005B6DC`, `0x0005B724`) branch to the click epilogue, so neither builds the empty viewer. `0x0005B574` also goes to hub state 7. Empty count @ `0x0005BC70` dismisses the page. `FUN_0005b49c` stays vanilla. Myroom 0x84 ERROR `0x0004FC20`/`0x0004FC58` and leftover pack `0x9d01` slot 8 `0x0014E110` are NOP. MagOp: extra-missing left Watcher `0x31` empty (pack `0xB200`). State 0 goes **5** (no layout), extra cmp `mov r0,#1`, parent after Watcher **0xC** MagList (cart `Mag_Tit`). `FUN_0014eb9c` returns `(extra & ~bit0x20 & has-rows) ^ 1` and binds pack `0x9d01` when extra is **missing** (slot `0x60`) or extra+no bit+no rows (slot `0xf`). Stub the entry `mov r0,#0; bx lr` @ `0x0014EB9C`. Caller leftover `+0xb4 != -1` still opened the 0x84 ERROR window; `0x0014E16C` `beq` → `b 0x14e2a4`. Inner `bl FUN_005fe9d8` stays vanilla. |
 | Merge | `FUN_006088c8` | **`mov r0,#1; bx lr`** — do not parse. Skip-ac:u still let WaitSync set `+0x250=1` with a bad handle; next tick `bl FUN_004e19b0` @ `0x00608984` smashed (`LR` `0x00708988`, `PC` garbage). MagList always worker command **9** (`0x0010441C` → `0x104454`); Watcher extra-data `bne` @ `0x0010472C` NOP. |
 | DATA kick | `0x0014F018` | After `FUN_0059a788`, mark type-`0xf` job idle (`+0=0`, `+1=0`, `+4=0`). `+1=1` opened state 24 (layout `0xCA` blank ERROR). |
 
@@ -2065,6 +2101,7 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 | `▲高嶺＊＊▲` expanded to plain `Takane` in `.dbin2` | `patch_names.py` default keeps dialog tokens; `--strip-dialog-tokens` legacy |
 | Stale `rebuild_dbin2` without tokens | Rebuild from XML (`tools/rebuild_dbin2_from_xml.py` when present); `tools/restore_nickname_tokens.py` (Makein ref in `cache/makein_compare/`) |
 | Resident TRB sourced from EN-pre-patched sibling dump → 0 `patch_names` replacements | `patch_cia._resolve_resident_trb()` prefers `release/romfs_overlay/.../textresource_resident_jpn.trb` first |
+| Family slot still the Japanese surname while the script marker used different bytes | Exact C-string slots, 2026-10-11 — **§23** |
 
 ### 19.3 UI / menu images (NLPPCTR migration)
 
@@ -2107,10 +2144,10 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 
 | Item | Status |
 |------|--------|
-| In-game verify nicknames after resident TRB fix | **Test** — Manaka pet name, `▲主人公＊▲`, NLPPPATCH Rinko/Nene chunks |
+| In-game verify nicknames after resident TRB fix | Family slots shipped 2026-10-11 (**§23**). `▲主人公＊▲` and the player marks `▲苗字▲` / `▲名前▲` are still open |
 | Re-enable EN SMS after placeholder audit | WIP — `assets/sms_en/`; use `--include-sms` |
 | Full Rinko / Nene routes | **JP** except NLPPPATCH early ~28% per route |
-| `img.bin` name table — 0 replacements on last deploy | Investigate if nicknames still fail in UI labels |
+| `img.bin` name table — 0 replacements on last deploy | Exact C-string slots via `deploy_day_counter_en.py` (**§23**). Leave `patch_name_table_bytes` off the live blob |
 | Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |
 | Commit / push session tooling | `script_inject.py`, `export_progress_metrics.py`, `restore_*.py`, etc. — whitelisted in `.gitignore` |
@@ -2463,5 +2500,97 @@ Vanilla ウリボー is PAK-only (no `0xb000` slot). EngPatcher lands `UriboKasa
 
 ---
 
-*Last updated 2026-10-05 — audited against main: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
+## 23. Heroine family slots and the player-name marks (2026-10-11)
+
+Live name data is `img.bin` package **5508** (223280 bytes at file `0x298FF000`), a raw copy of the resident TOP blob. Loose RomFS `textresource_resident_jpn.trb` is unused at runtime (§0). `tools/deploy_day_counter_en.py` patches the resident, splices that whole blob into pkg 5508 on the bake and both Azahar imgs, and leaves the day suffix at `0x674` as ` Day  ` (6 bytes). `DURABLE_TRBS` writes `release/textresource/` and `release/romfs_overlay/` only; the Azahar loose resident copies were updated to match. `release/**`, `img.bin`, and `ab_test/azahar_instances/` are gitignored, so the commit carries the slot tables, the script rewriter, `rebuild_dbin2`, the XML, and the JSON values. No CIA was rebuilt. A 3DS that already has a CIA keeps the previous package until the next Drop.
+
+### 23.1 Exact C-string surname slots
+
+`replace_exact_cstring` rewrites a string only when the byte before it is NUL (or it is the start of the blob) and the byte after it is NUL. Shorter English is NUL-padded inside the original span. A longer English string is rejected. A hit inside a longer C string is left alone. Longer rows are listed before the bare surname.
+
+Deploy calls `patch_nene_surname_bytes`, `patch_rinko_surname_bytes`, and `patch_manaka_surname_bytes` only. `patch_name_table_bytes` runs those three and then `replace_all` over `NAME_REPLACEMENTS`. `replace_all` plants a NUL in the middle of any longer string that merely contains the key, and it raises when the English is longer (`小早川 凛子` is 16 bytes, `Kobayakawa Rinko` is 17). `patch_img_name_table` also limits itself to `IMG_NAME_REGION` (`0x298FF000`–`0x29908000`, the first 36864 bytes). Leave the live package on the three exact-slot functions.
+
+Each heroine nickname marker is an 18-byte C string: `▲` (3) + a 12-byte inner field + `▲` (3). The inner field is the family-name bytes padded with `＊` (U+FF0A, 3 bytes) out to 12. From resident `0x11f4` those tokens sit on a 20-byte stride (18-byte token + NUL + pad). The assumption used for the three slots below, and not confirmed by naming the ARM function, is that the substituter builds the search key from the live family-name C string (`strlen`, stop at NUL) padded with `＊`. A family name whose byte length is not a multiple of 3 cannot pad to 12 with `＊` and still fit that 18-byte slot.
+
+| Heroine | Family slot | Marker |
+|---------|-------------|--------|
+| Manaka | `高嶺` (6) → `Takane` (6) at `0x118c` | `▲高嶺＊＊▲` → `▲Takane＊＊▲` (18 exact) at `0x121c` |
+| Rinko | `小早川` (9) → `Kobayaka` (8 + NUL) at `0x1194` | `▲小早川＊▲` → `▲Kobayaka＊▲` (17 + NUL) at `0x1230` |
+| Nene | `姉ヶ崎` (9) → `Anegasaki` (9) at `0x11a0` | `▲姉ヶ崎＊▲` → `▲Anegasaki＊▲` (18 exact) at `0x1244` |
+
+Fit limits, from `MANAKA_SURNAME_SLOTS` / `RINKO_SURNAME_SLOTS` / `NENE_SURNAME_SLOTS`:
+
+- `高嶺様` is 9 bytes and `Takane-sama` is 11, so that slot and `高嶺選手` are the bare word `Takane`. The JSON values stay `Takane-sama` and `Team-player`. Cast brackets that already have a space are `［Takane Manaka］`. The 15-byte `TOP高嶺愛花` slot is `TOPTakaneManaka` with no space. Given-name slots here are Manaka. The JSON word Aika stays out of the resident.
+- `Kobayakawa` is 11 bytes. It fits the youth-page title (`"A Page of Youth: Kobayakawa Rinko"`) and does not fit the family slot, the 18-byte marker, or `［Kobayakawa Hyosuke］` (25 vs 22). `小早川氏` is `Kobayaka`. `▲Kobayaka＊＊▲` is 20 bytes and needs a 21st for the NUL, so it does not fit the 20-byte stride. The spelling Kobayaka is the one that was accepted.
+- `姉ヶ崎先輩` is 15 bytes and `Anegasaki-senpai` is 16, so that slot is `Nene-senpai`.
+
+The same-length `Takane` write at `0x118c` does not shift `0x1194`. Short keys `高嶺` / `小早川` / `愛花` / `凛子` / `寧々` stay in `EXACT_NAME_REPLACEMENTS` (whole C string only). A substring swap of `寧々` (6) → `Nene` (4) inside `姉ヶ崎寧々` plants a NUL and truncates the longer name. `小早川` (9) → `Kobayaka` (8) does the same inside `▲小早川＊▲`. `高嶺` and `Takane` are both 6 bytes, so a substring swap would turn the marker into `▲Takane＊＊▲` and would also rewrite `高嶺` inside every longer string. The exact-slot pass is what leaves a Japanese sentence alone.
+
+`code.bin` still has the eight circles at file `0x74291d` and the Japanese surnames at `0x742936` / `0x742940` / `0x74294a`. The only pointers are the VA words at file `0x6e321c`–`0x6e3228`. No word `0x7E321C` and no `MOVW #0x321C` takes that table's address. Leave `code.bin` alone.
+
+Dialogue and the other copies:
+
+- A dialog whose whole text is `高嶺` or `小早川` becomes `Takane` or `Kobayaka` on every stem (`rewrite_manaka_surname_speakers`, `rewrite_rinko_surname_speakers`). A dialog whose whole text is `姉ヶ崎` becomes `Anegasaki` only on `a*` stems (`rewrite_nene_surname_speakers`) — both English copies and Japanese base-ROM overlays. Other stems get Nene's marker with the nameplate left as `姉ヶ崎`. `k050` still has four of those plates.
+- A Japanese sentence that merely contains the kanji is left alone.
+- `src/script_inject.py` runs the rewriters on `rebuild_dbin2`. `apply_nene_marker_to_romfs` (name kept) also rewrites Japanese base-ROM scripts that are not already in the English overlay (including exact `姉ヶ崎` nameplates on `a*`), and it does not replace an existing English file with the vanilla script. Common tokens that stay Japanese: `▲彼女＊＊▲`, `▲主人公＊▲`, `▲苗字▲`, `▲名前▲`, and the place / choice tokens.
+- The four local main TRBs (release, overlay, Azahar A, Azahar B) were rewritten with `rewrite_manaka_marker_in_trb` / `rewrite_rinko_marker_in_trb` and the earlier Nene pass. File size stayed **1115112**. `textresource_config.trb` SIZE stays **1115648**. The rewriter writes the new UTF-8 + NUL at the start of a slot that already fits and leaves the tail. `restore_control_tokens_in_trb` is the wrong tool here: its keep path writes raw + NUL with the original bytelength and can desync flag-0 gaps.
+- `assets/textresource/translations.json` keys stay the Japanese source strings. Only values changed, by a surgical replace that kept CRLF. Writing a dump through `Path.write_text(..., newline='\n')` rewrites every line. `CONTROL_TOKEN_RESTORES` maps the old English and Japanese heroine markers onto the live English markers, and maps `▲Last Name▲` / `▲Last name▲` → `▲苗字▲` and `▲First Name▲` / `▲Name▲` → `▲名前▲`. The live English markers are values, not restore keys.
+- `--strip-dialog-tokens` still expands markers to plain English and breaks nicknames. Leave it off this path.
+
+A save that already stored the nickname as `高嶺`, `小早川`, or `姉ヶ崎` is not rewritten by the ROM patch. Whether an English sentence now substitutes `▲Takane＊＊▲` / `▲Kobayaka＊▲` / `▲Anegasaki＊▲` was not re-screenshotted. The earlier failure was a key mismatch: `a001` drew `▲姉ヶ崎＊▲` while the family slot was already `Anegasaki`.
+
+Tests: `tests/test_patch_names.py`, `tests/test_patch_textresource.py`, `tests/test_script_inject_layeredfs.py`, `tests/test_deploy_day_counter_en.py`.
+
+### 23.2 Player marks `▲苗字▲` and `▲名前▲` still draw themselves
+
+Nene's diner intro is `script/a000.dbin2`, entry 2, dialog 12:
+
+```text
+Um, I'm
+▲苗字▲ ▲名前▲.
+My pleasure to meet you.
+```
+
+The space between the marks is ASCII `U+0020`. The vanilla Japanese line uses an ideographic space `U+3000` (`えっと、▲苗字▲　▲名前▲です。よろしくお願いします。`). Dialog 0 of that entry is `○○○○○○○○`. On a hardware photo of this scene the speaker plate showed the saved speaker name (`KUSU`) and the body still showed both marks. The `姉ヶ崎` on the uniform is painted on the portrait.
+
+These two marks are the player's family name and given name. `translations.json` keeps the key and the value as the Japanese mark, including the joined `▲苗字▲ ▲名前▲`. Putting the English words "Last name" and "First name" in those values would print those words. `CONTROL_TOKEN_RESTORES` exists to put such English words back to these keys.
+
+Resident layout after the surname pass (223280 bytes; same key offsets on `release`, Azahar A, and the vanilla cache):
+
+| Offset | String |
+|--------|--------|
+| `0x11b1` | `TOP` + eight `○` (speaker-plate placeholder; `0x11b0` is the preceding NUL) |
+| `0x11d0` | `▲名前▲` (12 bytes) |
+| `0x11e0` | `▲苗字▲` (12 bytes) |
+| `0x11f0` | `●` |
+| `0x11f4` | `▲主人公＊▲` (18); first of the 20-byte `＊` stride |
+| `0x121c` / `0x1230` / `0x1244` | `▲Takane＊＊▲` / `▲Kobayaka＊▲` / `▲Anegasaki＊▲` |
+| `0x789c` | `▲苗字▲ ▲名前▲` (25 bytes: 12 + ASCII space + 12). A read at `0x7890` returns `ROUP` because that offset is inside `GROUP`. |
+
+`▲苗字▲` and `▲名前▲` have no `＊` pad. They sit on a 16-byte stride (`0x11d0`, `0x11e0`, then `●` at `0x11f0`), separate from the heroine markers. Each key occurs twice in the resident, and the joined ASCII-space string occurs once. The surname pass did not move them.
+
+Three strings, and two of them already show the typed name:
+
+1. The speaker plate is dialog 0's eight circles. On the photo it filled.
+2. Select Data's words "Full Name" are the painted label on FileSelect pkg **5152** (`Vis_Dsel_Data`). The value beside that label is a different widget, `Lyt_Com_DataPlate` @ pkg **5237**, drawn by `FUN_002240f8` (**§12.4.5**). The `push` is at file `0x22410c`; `0x2240f8` is three addressing adds in front of it. Callers are `0x14dca0` and `0x14dd54`. Name path: pack `0x9d02` slot 0, format `"%s %s"`. The two `%s` come from the save object `FUN_001980e4` returns, plus 8, at `+0x0a` and `+0x2c`, when halfword `+8` bit 0 is set. When that bit is clear the formatter uses the single string at `+0x4e`. Empty path: pack `0x9d00` slot 3 `NO DATA`. The same field pair is sprintf'd again at `0x1e6014`, `0x1e6c94`, and `0x1a4ec0`. A full name on Select Data means those save bytes are nonempty. This draw does not read the `▲` marks, and the two `%s` were not traced onto `▲苗字▲` / `▲名前▲`. Profile rows stay 姓 above 名 (**§12.4.4**).
+3. The diner sentence still contains both marks when MakeStr copies it. The copy that should replace them with the saved family name and given name did not run on this line.
+
+`MakeStr` (`FUN_005a1ec8`, file `0x5A1EC8`, ARM) measures and copies. It calls the UTF-8 classifier at `0x5A1C98` and does not expand marks. `FUN_005a1dcc` (the prep §21.1 stores on the message widget at `+0x0C`) is `strlen` (`0x200e60`), `memcpy` (`0x317dc`), and that same classifier. A global MakeStr hook stays banned (**§11.1**, **§11.3**): a cave outside `.text` crashed, and a cave in `.text` blanked all text.
+
+Checked for this line, and not the filler:
+
+- `0x256a40` (parent `0x2567a8`, `patch_input_skip_ascii_dakuten.py`) returns 0 unless the first character is 3 bytes, then checks fullwidth `EF BC` / `EF BD`. That is the profile dakuten/sokuon skip.
+- Typewriter `FUN_002d544c` is a timer and `DrawText` (**§21**).
+- Thumb `0xB40` (`strstr`) has 26 ARM `BLX` callers in this scan. None replaces a dialog `▲` mark. `0x5cf8f4` sanitizes the binary needle table at `0x7be23c`. `0x23ec04` walks pack `0x7000` slot 8 (kana readings).
+- `code.bin` has no UTF-8 of `▲苗字▲` or `▲名前▲`, no `DBN2`, and no aligned package id `5508` (`0x1584`). The `SDL2` bytes at file `0xdd5cc` are an ARM instruction. ARM `cmp rn, #0xE2` is absent. Inside `.text` (below `0x690000`) no Thumb `cmp` of `#0xE2` sits within 48 bytes of both a `#0x96` and a `#0xB2` compare, so the triangles are not hardcoded immediates. The keys are loaded from the resident blob.
+- The Called-list `*3` walk (`FUN_00147808`, `GetUtf8CharByteLength` at `0x005BF4E8`) is the `づ` bug in **§17.8**.
+- The circle/surname pointer table at file `0x6e321c` is not the body-token source.
+
+A stride-3 scan does not explain the photo by itself. `"Um, I'm\n"` is 8 bytes, so a scan of the whole line misses `▲苗字▲` and can hit `▲名前▲`. A scan that restarts on the second line does the opposite. Both marks are on screen. Halfwidth ABC names (**§17.7**) already reach the speaker plate and Select Data, which is evidence of two paths and not a located cause.
+
+The function that should copy the saved names onto these two keys was not found. Leave the keys in Japanese. Leave `code.bin` unpatched. Leave the MakeStr hook retired.
+
+---
+
+*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
 

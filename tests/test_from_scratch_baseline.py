@@ -433,3 +433,24 @@ def test_cia_failure_deletes_layeredfs_with_code_bin(
     err = capsys.readouterr().out
     assert "LayeredFS removed" in err
     assert "incomplete CIA" in err
+
+
+def test_baseline_require_img_idx_sync_rejects_stale_pak(tmp_path: Path):
+    import struct
+
+    import fake_img as fi
+    import pack_images
+
+    path = tmp_path / "img.bin"
+    path.write_bytes(fi.img({3: fi.package([("note.txt", b"plain", b"TXT ", False)])}))
+    patch_cia._require_img_idx_sync(path, context="gold bake")
+    raw = bytearray(path.read_bytes())
+    off = (
+        pack_images.IMG_IDX_TABLE_ADDR
+        + 3 * pack_images.IMG_IDX_ENTRY_SIZE
+        + pack_images.IMG_IDX_DEC_LEN_OFF
+    )
+    struct.pack_into("<I", raw, off, 1)
+    path.write_bytes(bytes(raw))
+    with pytest.raises(patch_cia.PatchError, match="pkg 3: idx 1 != PACK"):
+        patch_cia._require_img_idx_sync(path, context="gold bake")

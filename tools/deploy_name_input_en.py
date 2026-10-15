@@ -22,6 +22,9 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   11. patch_spotpass_embed                  # bake Watcher #28; spoof NewFlag/ReadNsData after save load
   12. patch_password_uribo                  # UriboKasa* slots 33–35 grant ウリボー傘, not 内部
   13. patch_commu_settings_header           # Communication Settings white-bar DrawText
+  14. patch_weather_day_text               # weekly day names captured at 64×28
+  15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
+  16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -123,6 +126,18 @@ from patch_password_uribo import (  # noqa: E402
 from patch_commu_settings_header import (  # noqa: E402
     apply_patch as apply_commu_header,
     is_patched as commu_header_already,
+)
+from patch_weather_day_text import (  # noqa: E402
+    apply_patch as apply_weather_day_text,
+    is_patched as weather_day_already,
+)
+from patch_profile_birthday import (  # noqa: E402
+    apply_patch as apply_profile_birthday,
+    is_patched as profile_birthday_already,
+)
+from patch_web_event_date import (  # noqa: E402
+    apply_patch as apply_web_event_date,
+    is_patched as web_event_date_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -271,6 +286,24 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] commu_settings_header already applied")
     else:
         apply_commu_header(data)
+        steps += 1
+
+    if weather_day_already(data):
+        print("[skip] weather_day_text already applied")
+    else:
+        apply_weather_day_text(data)
+        steps += 1
+
+    if profile_birthday_already(data):
+        print("[skip] profile_birthday already applied")
+    else:
+        apply_profile_birthday(data)
+        steps += 1
+
+    if web_event_date_already(data):
+        print("[skip] web_event_date already applied")
+    else:
+        apply_web_event_date(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

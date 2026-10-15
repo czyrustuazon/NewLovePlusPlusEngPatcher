@@ -59,3 +59,45 @@ def test_ie_pe_unpack_repack_and_splice(tmp_path: Path):
 
     got = DarcArchive(fi.read_element(fi.read_package(path, 3), "Foo.arc", tmp_path))
     assert got.extract_file(got.find("A.bclim")) == new
+
+
+def test_splice_syncs_idx_dec_len_to_grown_pack(tmp_path: Path):
+    # The game allocates a PAK from the img.bin idx dec_len. Title pkg 5261
+    # grew its ARC and kept the vanilla idx size; the overflow smashed a
+    # heap header (malloc abort at 0x10DE4C leaving Select Data).
+    import struct
+
+    path = _sample(tmp_path)
+    idx_off = pack_images.IMG_IDX_TABLE_ADDR + 3 * pack_images.IMG_IDX_ENTRY_SIZE
+    before = path.read_bytes()[idx_off : idx_off + pack_images.IMG_IDX_ENTRY_SIZE]
+    pkg = bytearray(fi.read_package(path, 3))
+    old = struct.unpack_from("<I", pkg, pack_images.PACK_HDR_DEC_LEN_OFF)[0]
+    assert struct.unpack_from("<I", before, pack_images.IMG_IDX_DEC_LEN_OFF)[0] == old
+    struct.pack_into("<I", pkg, pack_images.PACK_HDR_DEC_LEN_OFF, old + 0x80)
+    data = tmp_path / "img_data"
+    data.mkdir()
+    (data / "new_0003").write_bytes(bytes(pkg))
+
+    pack_images.splice_packages_into_img(path, data, [3], path)
+
+    after = path.read_bytes()[idx_off : idx_off + pack_images.IMG_IDX_ENTRY_SIZE]
+    assert struct.unpack_from("<I", after, pack_images.IMG_IDX_DEC_LEN_OFF)[0] == old + 0x80
+    dl = pack_images.IMG_IDX_DEC_LEN_OFF
+    assert after[:dl] + after[dl + 4 :] == before[:dl] + before[dl + 4 :]
+
+
+def test_img_idx_mismatches_flags_stale_pak_size(tmp_path: Path):
+    import struct
+
+    path = _sample(tmp_path)
+    assert pack_images.img_idx_mismatches(path) == []
+    raw = bytearray(path.read_bytes())
+    off = (
+        pack_images.IMG_IDX_TABLE_ADDR
+        + 3 * pack_images.IMG_IDX_ENTRY_SIZE
+        + pack_images.IMG_IDX_DEC_LEN_OFF
+    )
+    (good,) = struct.unpack_from("<I", raw, off)
+    struct.pack_into("<I", raw, off, good - 0x10)
+    path.write_bytes(bytes(raw))
+    assert pack_images.img_idx_mismatches(path) == [(3, good - 0x10, good)]

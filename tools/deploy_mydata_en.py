@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""EN My Data home: header (5575) + ToDo/Status buttons (5380).
+"""EN My Data home: header (5575) + menu buttons (5380).
 
-Patches live LayeredFS packages so prior Mail/Myroom EN stays intact.
+To-Do List / Status are rendered. Item List / My Camera use the Zhoumaru
+masters ``Myroom.check/timg/mcmn_tex_{item,camera}_RGBA4.png`` (flat gray
+ink, same canvas as the BCLIM). Patches live packages so prior Mail/Myroom
+EN stays intact.
 """
 from __future__ import annotations
 
@@ -26,6 +29,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -36,6 +40,8 @@ MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "mydata_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 INK = (70, 110, 160)
+# Zhoumaru Myroom.check masters (flat gray ink). To-Do / Status stay rendered.
+ZHOUMARU_BUTTONS = frozenset({"mcmn_tex_item_RGBA4", "mcmn_tex_camera_RGBA4"})
 
 JOBS: list[tuple[int, list[tuple[str, str]], str]] = [
     # (pkg, labels, source)  source: "live" | "vanilla"
@@ -50,10 +56,14 @@ JOBS: list[tuple[int, list[tuple[str, str]], str]] = [
             # Patch live so prior Myroom EN softkeys stay intact.
             ("timg/mcmn_tex_todo_RGBA4.bclim", "To-Do List"),
             ("timg/mcmn_tex_status_RGBA4.bclim", "Status"),
+            ("timg/mcmn_tex_item_RGBA4.bclim", "Item List"),
+            ("timg/mcmn_tex_camera_RGBA4.bclim", "My Camera"),
         ],
         "live",
     ),
 ]
+
+
 def font(size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(FONT), size=size)
 
@@ -112,14 +122,28 @@ def patch_labels_into_darc(
         _pix, w, h, fmt, _ft = parse_bclim(raw_b)
         if fmt != 0xB:
             raise SystemExit(f"{path} fmt {fmt} not ETC1A4")
-        rgba = render_label(w, h, en, hard=hard, max_size=max_size)
+        stem = Path(path).stem
+        master = (
+            find_ui_png(("Myroom.check",), stem, (w, h))
+            if stem in ZHOUMARU_BUTTONS
+            else None
+        )
+        if master is not None:
+            with Image.open(master) as im:
+                rgba = im.convert("RGBA")
+            if rgba.size != (w, h):
+                rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
+            src = master.name
+        else:
+            rgba = render_label(w, h, en, hard=hard, max_size=max_size)
+            src = f"render hard={hard} max_size={max_size}"
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
         rgba.save(png)
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
         darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
-        print(f"OK {path} -> {en!r} (hard={hard} max_size={max_size})", flush=True)
+        print(f"OK {path} -> {en!r} ({src})", flush=True)
 
 
 def fit_and_patch_arc(

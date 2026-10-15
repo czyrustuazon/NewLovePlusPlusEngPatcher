@@ -7,7 +7,12 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
 3. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
    stems listed in ``assets/nlppatch/stems.json``) from the historical NLPPATCH
    layer, now shipped inside EngPatcher (no ``vendor/NLPPATCH`` required).
-4. **Japanese** — everything else left to the base ROM/CIA.
+4. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
+   script tree is supplied, nickname markers on those Japanese files are
+   still swapped: Manaka's to ▲Takane＊＊▲ (including an exact 高嶺
+   nameplate), Nene's marker to ▲Anegasaki＊▲ (and exact 姉ヶ崎 nameplates
+   on ``a*`` stems only), and Rinko's to ▲Kobayaka＊▲ (including an exact
+   小早川 nameplate).
 
 Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply there.
 """
@@ -18,6 +23,8 @@ import json
 import shutil
 import sys
 from pathlib import Path
+
+import patch_names
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ENG_DBIN = ROOT / "rebuild_dbin2"
@@ -82,6 +89,78 @@ def script_prefix(stem: str) -> str:
     return stem[0].lower() if stem else ""
 
 
+def _rewrite_base_script(data: bytes, *, stem: str = "") -> bytes:
+    """Point a base script at the live surname slots.
+
+    Exact 姉ヶ崎 nameplates become Anegasaki on ``a*`` stems only. Exact 高嶺
+    and 小早川 nameplates become Takane and Kobayaka on every route.
+    """
+    if script_prefix(stem) == "a":
+        data = patch_names.rewrite_nene_surname_speakers(data)
+    else:
+        data = patch_names.rewrite_nene_nickname_tokens(data)
+    data = patch_names.rewrite_rinko_surname_speakers(data)
+    return patch_names.rewrite_manaka_surname_speakers(data)
+
+
+def _copy_script(src: Path, dest: Path) -> None:
+    """Copy one script. Nickname markers track the live surname slots.
+
+    a* nameplates that are exactly 姉ヶ崎 become Anegasaki. Other routes keep
+    Nene's nameplate. Exact 高嶺 and 小早川 nameplates become Takane and
+    Kobayaka on every route.
+    """
+    raw = src.read_bytes()
+    if script_prefix(src.stem) == "a":
+        patched = patch_names.rewrite_nene_surname_speakers(raw)
+    else:
+        patched = patch_names.rewrite_nene_nickname_tokens(raw)
+    patched = patch_names.rewrite_rinko_surname_speakers(patched)
+    patched = patch_names.rewrite_manaka_surname_speakers(patched)
+    if patched == raw:
+        shutil.copy2(src, dest)
+        return
+    dest.write_bytes(patched)
+
+
+def apply_nene_marker_to_romfs(
+    romfs_dir: Path,
+    vanilla_bin: Path | None = None,
+) -> int:
+    """Point loaded scripts at the live Manaka, Nene, and Rinko surname slots.
+
+    Files already under ``romfs_dir/script/bin`` are rewritten in place.
+    When ``vanilla_bin`` is a ``script/bin`` tree, a Japanese file that is
+    not already overlaid is copied in with those nickname edits. Exact
+    姉ヶ崎 nameplates on ``a*`` stems become Anegasaki. Exact 高嶺 and
+    小早川 nameplates become Takane and Kobayaka on every stem. An existing
+    English overlay is not replaced.
+    """
+    changed = 0
+    dest_root = romfs_dir / "script" / "bin"
+    if dest_root.is_dir():
+        for path in sorted(dest_root.rglob("*.dbin2")):
+            raw = path.read_bytes()
+            patched = _rewrite_base_script(raw, stem=path.stem)
+            if patched != raw:
+                path.write_bytes(patched)
+                changed += 1
+    if vanilla_bin is None or not vanilla_bin.is_dir():
+        return changed
+    for src in sorted(vanilla_bin.rglob("*.dbin2")):
+        dest = dest_root / src.relative_to(vanilla_bin)
+        if dest.is_file():
+            continue
+        raw = src.read_bytes()
+        patched = _rewrite_base_script(raw, stem=src.stem)
+        if patched == raw:
+            continue
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(patched)
+        changed += 1
+    return changed
+
+
 class ScriptInjectError(Exception):
     """English dialog inject could not run (missing pack or destination)."""
 
@@ -91,13 +170,18 @@ def inject_scripts(
     eng_root: Path | None = None,
     *,
     create_dirs: bool = False,
+    vanilla_bin: Path | None = None,
 ) -> int:
     """Copy the same EN ``.dbin2`` set the CIA gets into ``romfs_dir``.
 
     ``create_dirs=False`` matches a full extracted RomFS (CIA rebuild): each
     ``script/bin/<pack>`` folder must already exist. ``create_dirs=True`` is
     for Azahar LayeredFS, which only needs the English files overlaid on the
-    vanilla ROM. Stems that stay Japanese are not written.
+    vanilla ROM. Stems that stay Japanese are not replaced with a translation.
+    ``vanilla_bin`` (a ``script/bin`` tree) overlays those Japanese files with
+    Manaka's marker pointed at Takane (and exact 高嶺 plates), Nene's at
+    Anegasaki (exact 姉ヶ崎 plates on ``a*`` only), and Rinko's at Kobayaka
+    (and exact 小早川 plates).
     """
     eng_root = eng_root or DEFAULT_ENG_DBIN
     total = 0
@@ -122,7 +206,7 @@ def inject_scripts(
             if chosen is None:
                 skipped += 1
                 continue
-            shutil.copy2(chosen, dest_dir / src.name)
+            _copy_script(chosen, dest_dir / src.name)
             total += 1
             injected += 1
             if tag in layers:
@@ -139,6 +223,9 @@ def inject_scripts(
     )
     if skipped:
         print(f"[inject] {skipped} script slot(s) left Japanese")
+    markers = apply_nene_marker_to_romfs(romfs_dir, vanilla_bin)
+    if markers:
+        print(f"[inject] nickname markers updated in {markers} script(s)")
     return total
 
 
@@ -231,8 +318,14 @@ def main(argv: list[str] | None = None) -> int:
         help="English .dbin2 root (default: rebuild_dbin2)",
     )
     args = ap.parse_args(argv)
+    vanilla_bin = ROOT / "cache" / "vanilla_from_rom" / "romfs" / "script" / "bin"
     try:
-        count = inject_scripts(args.layeredfs, args.dbin, create_dirs=True)
+        count = inject_scripts(
+            args.layeredfs,
+            args.dbin,
+            create_dirs=True,
+            vanilla_bin=vanilla_bin if vanilla_bin.is_dir() else None,
+        )
     except ScriptInjectError as exc:
         print(f"[inject] {exc}", file=sys.stderr)
         return 1

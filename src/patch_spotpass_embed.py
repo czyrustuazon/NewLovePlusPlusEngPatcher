@@ -194,8 +194,17 @@ PATCHED_WATCHER_EXTRA_CMP = bytes.fromhex("0100a0e3")  # mov r0, #1 treat extra 
 ADDR_PARENT_AFTER_WATCHER = 0x00105DD4  # mov r0, #0xe
 VANILLA_PARENT_AFTER_WATCHER = bytes.fromhex("0e00a0e3")
 PATCHED_PARENT_AFTER_WATCHER = bytes.fromhex("0c00a0e3")  # mov r0, #0xc MagList
+# The "WEB_*" sites in 0x5A564..0x5C1A8 are not the in-room WEB Watcher.
+# That range is the SaveErase scene (scene table 0x690200 → 0x5AB58, vtable
+# 0x80502C), i.e. Data Management → Delete Save Data. Message 0x17 item 9 at
+# 0x5B6DC is "save slot picked" (+0x64 = slot, state 0xD confirm); item 10
+# at 0x5B724 is back. Branching them to the epilogue made picking a save do
+# nothing (softlock on hardware and Azahar). Every site in this range now
+# stays vanilla: PATCHED_* == VANILLA_* so apply_patch also repairs older
+# images.
 ADDR_WEB_WATCHER_EXTRA_BEQ = 0x0005B570  # beq 0x5b600 when FUN_004e7d34==0
 VANILLA_WEB_WATCHER_EXTRA_BEQ = bytes.fromhex("2200000a")
+PATCHED_WEB_WATCHER_EXTRA_BEQ = VANILLA_WEB_WATCHER_EXTRA_BEQ  # SaveErase
 ADDR_WEB_WATCHER_FAIL_ST = 0x0005B600  # mov r0, #9 empty Watcher viewer
 VANILLA_WEB_WATCHER_FAIL_ST = bytes.fromhex("0900a0e3")
 PATCHED_WEB_WATCHER_FAIL_ST = bytes.fromhex("0900a0e3")  # mov r0, #9 open the viewer
@@ -203,14 +212,10 @@ ADDR_WEB_WATCHER_ST9_FROM_E = 0x0005BC74  # state 0xE empty count → 9
 VANILLA_WEB_WATCHER_ST9_FROM_E = bytes.fromhex("0900a0e3")
 ADDR_WEB_WATCHER_EMPTY_BL = 0x0005BC70  # bl FUN_004450f4; page stays up
 VANILLA_WEB_WATCHER_EMPTY_BL = bytes.fromhex("1fa50feb")
-# Next insn is mov r0,#7; b 0x5B92C (store state, return). Do not branch to
-# 0x5BC98: that sets +0xa4 and opens the empty layout (“No data.”).
-PATCHED_WEB_WATCHER_EMPTY_BL = bytes.fromhex("020000ea")  # b 0x5BC80 show the row
-# FUN_0005b0c0 (state 0xC) hides the list and, when +0xc5==0, opens the
-# staying empty page (state 0x12). Always return so layout 0xC stays up.
+PATCHED_WEB_WATCHER_EMPTY_BL = VANILLA_WEB_WATCHER_EMPTY_BL  # SaveErase
 ADDR_WEB_LIST_HOLD = 0x0005B0F0  # bne 0x5B1EC
 VANILLA_WEB_LIST_HOLD = bytes.fromhex("3d00001a")
-PATCHED_WEB_LIST_HOLD = bytes.fromhex("3d0000ea")  # b 0x5B1EC
+PATCHED_WEB_LIST_HOLD = VANILLA_WEB_LIST_HOLD  # SaveErase
 # Layout 12 is created here and the function returns. Drawing on the
 # returned handle's +0x60 treats the room backdrop as a text pane and
 # clears it. Leave the bind vanilla. WebUI button 0 (0x149694) stays
@@ -247,8 +252,8 @@ VANILLA_WEB_WATCHER_ST9_ENTRY = bytes.fromhex("641094e5")  # ldr r1, [r4, #0x64]
 PATCHED_WEB_WATCHER_ST9_ENTRY = VANILLA_WEB_WATCHER_ST9_ENTRY
 ADDR_WEB_WATCHER_CLICK = 0x0005B49C  # FUN_0005b49c Watcher tick (keep vanilla)
 VANILLA_WEB_WATCHER_CLICK = bytes.fromhex("f0402de90040a0e1")  # stmdb {r4-r7,lr}; cpy r4,r0
-# Button id 9 @ 0x5B6DC: do not enter state 0xD (that tick builds the viewer).
-# Branch to the issue-draw cave (filled in after the branch helper).
+# SaveErase message 0x17 item 9 @ 0x5B6DC: store the picked slot and enter
+# delete-confirm state 0xD. Must stay vanilla (see the SaveErase note above).
 ADDR_WEB_PILL_LAYOUT = 0x0005B6DC
 VANILLA_WEB_PILL_LAYOUT = bytes.fromhex("0d50a0e3")  # mov r5, #0xd
 ADDR_PILL_EPILOGUE = 0x0005B780
@@ -276,16 +281,16 @@ VANILLA_ISSUE_BODY = bytes.fromhex(
     "1000000a0100a0e16d0400eb0060a0e1011ca0e308008de2"
     "b4d2efeb2c109fe5"
 )
-# Button id 10 @ 0x5B724: same click. Builds the empty pack 0xB200 page.
+# SaveErase item 10 @ 0x5B724: back (state 0x10). Must stay vanilla.
 ADDR_WEB_PILL_OTHER = 0x0005B724
 VANILLA_WEB_PILL_OTHER = bytes.fromhex("0050e0e3")  # mvn r5, #0
-PATCHED_WEB_PILL_OTHER = bytes.fromhex("150000ea")  # b 0x5B780 epilogue
+PATCHED_WEB_PILL_OTHER = VANILLA_WEB_PILL_OTHER  # SaveErase back
 # Older builds rewrote 0x5B6E8..0x5B6F3 and still entered state 0xD.
 ADDR_WEB_PILL_BODY = 0x0005B6E8
 VANILLA_WEB_PILL_BODY = bytes.fromhex("003091e50c508de208308de5")
 ADDR_WEB_NO_LIST = 0x0005B544  # strb state 7 when the list object is missing
 VANILLA_WEB_NO_LIST = bytes.fromhex("5e70c4e5")
-PATCHED_WEB_NO_LIST = bytes.fromhex("2d0000ea")  # b 0x5B600 enter the viewer
+PATCHED_WEB_NO_LIST = VANILLA_WEB_NO_LIST  # SaveErase
 ADDR_WEB_NO_ARTICLE = 0x0005B560  # beq state 9 when the article is missing
 VANILLA_WEB_NO_ARTICLE = bytes.fromhex("2600000a")
 PATCHED_WEB_NO_ARTICLE = VANILLA_WEB_NO_ARTICLE
@@ -587,7 +592,7 @@ _LIST_OPEN = "ニューオープン".encode("utf-8") + b"\x00"
 _LIST_HOLY = "恋愛の聖地".encode("utf-8") + b"\x00"
 ADDR_WEB_ST14_NO_ARTICLE = 0x0005BC58  # beq hub when state 0xE has no article
 VANILLA_WEB_ST14_NO_ARTICLE = bytes.fromhex("70ffff0a")
-PATCHED_WEB_ST14_NO_ARTICLE = bytes.fromhex("0e00000a")  # beq 0x5BC98 stay
+PATCHED_WEB_ST14_NO_ARTICLE = VANILLA_WEB_ST14_NO_ARTICLE  # SaveErase
 ADDR_WEB_WATCHER_OPEN = 0x0005B574  # success path after extra-data check
 VANILLA_WEB_WATCHER_OPEN = bytes.fromhex("700094e5")  # ldr r0, [r4, #0x70]
 PATCHED_WEB_WATCHER_OPEN = VANILLA_WEB_WATCHER_OPEN  # open state 0xE, layout 12
@@ -649,7 +654,7 @@ MAGLIST_WORD_SITES = (
     (ADDR_WATCHER_ST0_MOV, VANILLA_WATCHER_ST0_MOV, PATCHED_WATCHER_ST0_MOV),
     (ADDR_WATCHER_EXTRA_CMP, VANILLA_WATCHER_EXTRA_CMP, PATCHED_WATCHER_EXTRA_CMP),
     (ADDR_PARENT_AFTER_WATCHER, VANILLA_PARENT_AFTER_WATCHER, PATCHED_PARENT_AFTER_WATCHER),
-    (ADDR_WEB_WATCHER_EXTRA_BEQ, VANILLA_WEB_WATCHER_EXTRA_BEQ, ARM_NOP),
+    (ADDR_WEB_WATCHER_EXTRA_BEQ, VANILLA_WEB_WATCHER_EXTRA_BEQ, PATCHED_WEB_WATCHER_EXTRA_BEQ),
     (ADDR_WEB_WATCHER_FAIL_ST, VANILLA_WEB_WATCHER_FAIL_ST, PATCHED_WEB_WATCHER_FAIL_ST),
     (ADDR_WEB_WATCHER_ST9_FROM_E, VANILLA_WEB_WATCHER_ST9_FROM_E, PATCHED_WEB_WATCHER_FAIL_ST),
     (ADDR_WEB_WATCHER_ST9_DUP, VANILLA_WEB_WATCHER_ST9_DUP, PATCHED_WEB_WATCHER_FAIL_ST),
@@ -1735,8 +1740,7 @@ def build_slot_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
     return bytes(code)
 
 
-# Do not draw on +0x60. That call clears Lyt_Bg. Both pills return.
-PATCHED_WEB_PILL_LAYOUT = _b(ADDR_WEB_PILL_LAYOUT, ADDR_PILL_EPILOGUE)
+PATCHED_WEB_PILL_LAYOUT = VANILLA_WEB_PILL_LAYOUT  # SaveErase slot picked
 
 
 def _voice_comments() -> list[tuple[int, bytes]]:
@@ -2225,10 +2229,7 @@ def apply_patch(data: bytearray) -> bool:
         f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
         f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} extra @{ADDR_WATCHER_EXTRA_CMP:#x} "
         f"then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
-        f"WEB Watcher extra nop @{ADDR_WEB_WATCHER_EXTRA_BEQ:#x} "
-        f"fail hub @{ADDR_WEB_WATCHER_FAIL_ST:#x}/"
-        f"{ADDR_WEB_WATCHER_ST9_FROM_E:#x}/{ADDR_WEB_WATCHER_ST9_DUP:#x} "
-        f"st9 @{ADDR_WEB_WATCHER_ST9_ENTRY:#x}, "
+        f"SaveErase 0x5a564..0x5c1a8 vanilla, "
         f"gate ret0 @{ADDR_GATE_ENTRY:#x}, "
         f"skip leftover overlay @{ADDR_GATE_OVERLAY_BEQ:#x}, "
         f"Watcher ret1 @{ADDR_UNPACK_READY:#x}/"
@@ -2238,9 +2239,6 @@ def apply_patch(data: bytearray) -> bool:
         f"nop MagList pump @{ADDR_MAGLIST_PUMP_BEQ:#x} "
         f"has-rows/bind flags + parent MagList skip/st0, "
         f"payload {len(payload)} B @ {ADDR_SPOTPASS_PAYLOAD:#x}, "
-        f"pills return @{ADDR_WEB_PILL_LAYOUT:#x}/{ADDR_WEB_PILL_OTHER:#x} "
-        f"(no +0x60 draw), "
-        f"list hold @{ADDR_WEB_LIST_HOLD:#x}, "
         f"open layout @{ADDR_WEB_OPEN_LAYOUT:#x} vanilla (room backdrop), "
         f"msg80 slot @{ADDR_NODATA_MSG80:#x} -> 178, "
         f"skip empty notify @{ADDR_WEB_EMPTY_NOTIFY:#x}/{ADDR_WEB_EMPTY_NOTIFY2:#x}, "
@@ -2421,13 +2419,8 @@ def main(argv: list[str] | None = None) -> int:
             f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} -> state 6, "
             f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
             f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
-            f"WEB Watcher extra nop @{ADDR_WEB_WATCHER_EXTRA_BEQ:#x} "
-            f"fail hub @{ADDR_WEB_WATCHER_FAIL_ST:#x}/"
-            f"{ADDR_WEB_WATCHER_ST9_FROM_E:#x}/{ADDR_WEB_WATCHER_ST9_DUP:#x} "
-            f"st9 @{ADDR_WEB_WATCHER_ST9_ENTRY:#x}, "
+            f"SaveErase 0x5a564..0x5c1a8 vanilla, "
             f"gate ret0 @{ADDR_GATE_ENTRY:#x}, "
-            f"WEB pills return @{ADDR_WEB_PILL_LAYOUT:#x}/{ADDR_WEB_PILL_OTHER:#x} "
-            f"(no +0x60 draw), "
             f"skip leftover overlay @{ADDR_GATE_OVERLAY_BEQ:#x}, "
             f"nop MagList pump @{ADDR_MAGLIST_PUMP_BEQ:#x}"
         )

@@ -904,8 +904,8 @@ def _title_pkg_has_eng_patch(img_path: Path, *, pkg_idx: int = 5261) -> bool:
     # Local imports: nlpp-tools + darcutil are heavy; only needed for this check.
     sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
     sys.path.insert(0, str(ROOT / "src"))
-    from darcutil import DarcArchive  # noqa: WPS433
-    from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: WPS433
+    from darcutil import DarcArchive
+    from img import ARC, FileWindow, Image as ImgBin, Package
 
     raw = img_path.read_bytes()
     im = ImgBin(str(img_path))
@@ -929,6 +929,25 @@ def _title_pkg_has_eng_patch(img_path: Path, *, pkg_idx: int = 5261) -> bool:
             tmp.unlink()
         except OSError:
             pass
+
+
+def _require_img_idx_sync(img_path: Path, *, context: str) -> None:
+    """Every PAK's img.bin idx dec_len must equal its PACK header dec_len.
+
+    The game allocates from the idx size and decompresses the PACK size; a
+    stale idx smashes the next heap header (malloc abort at 0x10DE4C).
+    """
+    from pack_images import img_idx_mismatches
+
+    bad = img_idx_mismatches(img_path)
+    if not bad:
+        return
+    rows = "\n".join(f"    pkg {i}: idx {a} != PACK {b}" for i, a, b in bad)
+    raise PatchError(
+        f"{context} has stale img.bin idx sizes (heap overflow on load): {img_path}\n"
+        f"{rows}\n"
+        "  Fix: re-splice the package with pack_images.splice_packages_into_img."
+    )
 
 
 def _require_eng_patch(img_path: Path, *, context: str) -> None:
@@ -977,6 +996,7 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
         print(f"[images] using gold bake: {out_img}")
         print("         (rebuild with: python tools/rebuild_bake_img.py)")
         _require_eng_patch(out_img, context="gold bake")
+        _require_img_idx_sync(out_img, context="gold bake")
         return out_img
 
     # Default: reuse PNG cache when present. --repack-images forces a rebuild.
@@ -993,6 +1013,7 @@ def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
         # Explicit --packed-img (rebuild_test_cia / luma / Azahar) must still
         # carry the Eng Patch badge — stale Aug LayeredFS imgs omit it.
         _require_eng_patch(out_img, context=f"packed img {out_img}")
+        _require_img_idx_sync(out_img, context=f"packed img {out_img}")
         return out_img
 
     src_img = _resolve_source_img_bin(args)
@@ -1208,6 +1229,7 @@ def rebuild_patched_cia(
         print(f"[inject] img.bin -> {dest_img}")
         shutil.copy2(packed_img, dest_img)
         _require_eng_patch(dest_img, context="injected img.bin")
+        _require_img_idx_sync(dest_img, context="injected img.bin")
 
     if romfs_overlay is not None:
         apply_romfs_overlay(romfs_dir, romfs_overlay)

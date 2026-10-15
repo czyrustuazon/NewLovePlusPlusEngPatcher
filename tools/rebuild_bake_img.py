@@ -82,12 +82,14 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_profile_en.py",
     "deploy_card_flist_en.py",
     "deploy_card_name_labels_en.py",  # 4152 after flist (keeps Received Date)
-    "deploy_dsel_data_visible.py",  # 5152 Vis_Dsel_Data label sheet
+    "deploy_dsel_data_visible.py",  # 5152 Pts NO DATA / profile sheet (Vis off)
+    "deploy_fileselect_dating_en.py",  # 5152 data03 D-Duration → Dating
     "deploy_status_stats_en.py",
     "deploy_myroom_main_en.py",
     # NLPP English UI Buttons bundle (keyboard 5190, SysPopup, scoped Back, Album delete).
     "deploy_ui_buttons_en.py",
     "deploy_mail_home_en.py",
+    "deploy_mail_sort_en.py",  # 5207 after mail_home (Sort Method popup + Cancel)
     "deploy_mydata_en.py",
     "deploy_todo_en.py",
     "deploy_todo_hist_en.py",
@@ -100,9 +102,14 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_ui_buttons_en.py",  # 5190/5259/5380/4149 after myroom/mydata
     "deploy_input_keyboard_en.py",  # 5190 mode tabs (last-writer vs ui_buttons)
     "deploy_myroom_options_en.py",  # 5380+5575 in-room Options overlay (after shared-ARC writers)
+    "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
+    "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
+    "deploy_minigame_hub_en.py",  # 5380+5575 Mini-Game / Puzzle-dama / TwinBee+ / Yie Ar Kung-Fu+
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
+    "deploy_web_weather_en.py",  # 5316 Weekly title + day panes
+    "deploy_web_event_date_en.py",  # 5316 event-card date is MM/DD plus a smaller Update
     "deploy_cesa_en.py",
 ]
 

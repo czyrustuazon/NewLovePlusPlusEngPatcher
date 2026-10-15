@@ -21,6 +21,9 @@ def test_deploy_scripts_include_menu_chrome():
         "deploy_display_settings_en.py",
         "deploy_optionpassword_en.py",
         "deploy_myroom_options_en.py",
+        "deploy_map_hub_en.py",
+        "deploy_web_hub_en.py",
+        "deploy_minigame_hub_en.py",
     ]
     for name in required:
         assert name in scripts, f"missing deploy script: {name}"
@@ -151,6 +154,23 @@ def test_rebuild_name_input_is_required_not_optional():
     assert "password_uribo_already" in deploy
 
 
+def test_mail_sort_after_mail_home():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    assert scripts.index("deploy_mail_sort_en.py") > scripts.index(
+        "deploy_mail_home_en.py"
+    )
+    text = (TOOLS / "deploy_mail_sort_en.py").read_text(encoding="utf-8")
+    assert "Mail_PopTxt04" in text
+    assert "Mail_PopTxt05" in text
+    assert "Sort Method" in text
+    assert "Timestamp" in text
+    assert "Sender" in text
+    assert "C_Com_Win01_Btn02_Cancel" in text
+    assert "5207" in text
+    assert "Self-rendered" in text
+    assert "find_ui_png" not in text
+
+
 def test_card_name_labels_after_flist():
     scripts = rebuild.DEPLOY_SCRIPTS
     assert scripts.index("deploy_card_name_labels_en.py") > scripts.index(
@@ -171,8 +191,22 @@ def test_dsel_data_visible_hooked():
     text = (TOOLS / "deploy_dsel_data_visible.py").read_text(encoding="utf-8")
     assert "Vis_Dsel_Data" in text
     assert "Pts_Dsel_Data" in text
-    assert '("Pic_Dsel_data",)' in text
+    # Vanilla: hide static data03 Vis; keep Pts Pic so Act00 can show NO DATA.
+    assert '(), ("Vis_Dsel_Data",)' in text
+    assert '("Pic_Dsel_data",), ()' in text
     assert "5152" in text
+
+
+def test_fileselect_dating_after_dsel_visible():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    vis = scripts.index("deploy_dsel_data_visible.py")
+    dating = scripts.index("deploy_fileselect_dating_en.py")
+    assert dating > vis
+    text = (TOOLS / "deploy_fileselect_dating_en.py").read_text(encoding="utf-8")
+    assert "D_Select_data03" in text
+    assert "5152" in text
+    master = TOOLS.parent / "assets" / "images" / "FileSelect.check" / "timg" / "D_Select_data03.png"
+    assert master.is_file()
 
 
 def test_softkey_deploy_after_confirm():
@@ -205,6 +239,18 @@ def test_multiwin_after_datadelete():
     assert scripts.index("deploy_multiwin_headers_en.py") > scripts.index(
         "deploy_datadelete_en.py"
     )
+
+
+def test_datadelete_patches_save_sheets():
+    """Delete Save Data summary rows are RGBA4444 DD_data02..05, not DrawText."""
+    text = (TOOLS / "deploy_datadelete_en.py").read_text(encoding="utf-8")
+    assert "SHEET_STEMS" in text
+    assert "DD_data02" in text
+    assert "DD_data05" in text
+    assert "png_to_bclim_rgba4444_same_size" in text
+    assert "DataDelete.check" in text
+    assert "Last Saved" in text
+    assert "Elapsed Days" in text
 
 
 def test_multiwin_bake_runs_full_then_extras():
@@ -264,6 +310,62 @@ def test_myroom_options_after_shared_arc_writers():
     assert "unsalted pads" in text
 
 
+def test_map_hub_after_myroom_options():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    map_hub = scripts.index("deploy_map_hub_en.py")
+    assert map_hub > scripts.index("deploy_myroom_options_en.py")
+    assert map_hub > scripts.index("deploy_schedule_header_en.py")
+    text = (TOOLS / "deploy_map_hub_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "map_text_townviewer_RGBA4",
+        "map_text_townvoice_RGBA4",
+        "map_text_title_RGBA4",
+        "map_toptex_01",
+    ):
+        assert stem in text
+    assert "City Viewer" in text
+    assert "City Voice Settings" in text
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+
+
+def test_web_hub_after_map_hub():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    web_hub = scripts.index("deploy_web_hub_en.py")
+    assert web_hub > scripts.index("deploy_map_hub_en.py")
+    assert web_hub > scripts.index("deploy_myroom_options_en.py")
+    text = (TOOLS / "deploy_web_hub_en.py").read_text(encoding="utf-8")
+    for stem in ("web_tex_net_RGBA4", "web_tex_watcher_RGBA4"):
+        assert stem in text
+    assert "TOWANO.NET" in text
+    assert "Towano Watcher" in text
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+
+
+def test_minigame_hub_after_web_hub():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    mini = scripts.index("deploy_minigame_hub_en.py")
+    assert mini > scripts.index("deploy_web_hub_en.py")
+    assert mini > scripts.index("deploy_schedule_header_en.py")
+    text = (TOOLS / "deploy_minigame_hub_en.py").read_text(encoding="utf-8")
+    for stem in (
+        "game_text_title_RGBA4",
+        "game_text_puzzle_RGBA4",
+        "game_text_twinbe_RGBA4",
+        "game_text_kanfu_RGBA4",
+    ):
+        assert stem in text
+    assert "Mini-Game" in text
+    assert "Puzzle-dama" in text
+    assert "TwinBee+" in text
+    assert "Yie Ar Kung-Fu+" in text
+    skip_block = text.split("SKIP_UI_PNG", 1)[1].split("JOBS", 1)[0]
+    assert "game_text_puzzle_RGBA4" in skip_block
+    assert "MOD_IMG.read_bytes" in text
+    assert "_zero_all_darc_pads" in text
+
+
 def test_msel_options_omits_quit_azahar_prompt():
     text = (TOOLS / "deploy_msel_options_en.py").read_text(encoding="utf-8")
     assert "Fully quit Azahar" not in text
@@ -295,7 +397,7 @@ def test_multiwin_girlfriend_comm_self_renders():
     assert "df-heiseigothic-w5.ttc" in common
     assert "Confession Memories" in text
     assert "Trip Memories" in text
-    assert "Youthful Page" in text
+    assert "Drama Gallery" in text
     assert "Com_MultiWin_W01_Text03_05_00" in text
     assert "Password Input" in text
 
@@ -340,6 +442,14 @@ def test_profile_call01_labels_use_heisei_chroma_aa():
     call_fn = text.split("def render_call_label")[1].split("def make_call_en")[0]
     assert "render_hard_label" in call_fn
     assert "Resampling.NEAREST" not in call_fn
+    assert '(8, 21, 14, 88, "Last Name:")' in text
+    assert '(47, 61, 14, 88, "First Name:")' in text
+    assert '(27, 41, 14, 88, "Called As:")' in text
+    assert "Profile_Info_Check03" in text
+    assert "CHECK_PALETTE" in text
+    assert "Profile_Info_Check02" in text
+    assert "CHECK02_PALETTE" in text
+    assert '(5, 17, 4, 71, "Username:")' in text
     from PIL import Image, ImageDraw, ImageFont
 
     hei = TOOLS.parent / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
@@ -354,6 +464,21 @@ def test_profile_call01_labels_use_heisei_chroma_aa():
     ):
         b = dr.textbbox((0, 0), label, font=font)
         assert b[2] - b[0] <= width - 1, f"{label} {b[2]-b[0]}px > {width}px box"
+    font13 = ImageFont.truetype(str(hei), 13, index=1)
+    for label in (
+        "Last Name:",
+        "Called As:",
+        "First Name:",
+        "Username:",
+        "Birthday:",
+        "Blood Type:",
+        "Hometown:",
+    ):
+        b = dr.textbbox((0, 0), label, font=font13)
+        assert b[2] - b[0] <= 74, f"{label} {b[2]-b[0]}px > 75px Check03 box"
+    # Check02 cursor chip is 68px wide (x 4..71). Size 13 must fit that too.
+    b = dr.textbbox((0, 0), "Username:", font=font13)
+    assert b[2] - b[0] <= 66, f"Username: {b[2]-b[0]}px > 68px Check02 box"
 
 
 def test_rebuild_ok_lines_include_elapsed(tmp_path: Path):

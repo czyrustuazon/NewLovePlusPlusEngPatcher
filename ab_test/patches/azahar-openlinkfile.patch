@@ -1,4 +1,4 @@
-File::OpenLinkFile clones the source session (NLPP extra-data hang).
+FS accuracy for NLPP: OpenLinkFile session clone (extra-data hang) + File::Flush sync return.
 Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ 8296c4f)
 Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
 

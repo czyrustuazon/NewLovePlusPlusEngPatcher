@@ -30,9 +30,23 @@ Patch:
     runs. State 8 calls ``0x2C6CE0`` to release them when overlay
     ``+0x4c`` is set. NOP'ing only ``FUN_0059a7c4`` left the show's lock
     held, so the system kept drawing the crossed-out HOME icon.
+    The dismiss stub also replaces the title exit (10/11/12/15), so it
+    calls ``0x2C6CB8`` to destroy the BuiltIn SaveLoad Manager that
+    state 3 made (``+0x84`` when ``+0x8d``), as state 15 did. A leaked
+    one sat beside Data Management's own and softlocked Delete Save
+    Data on hardware.
     ``FUN_0014ed0c`` state 1 with ``+0x85==0`` still enters the Name Card
     setup at ``0x14EEC8``. The following ``mov`` goes to state 2 (the
-    right-hand bars) instead of state 22. Apply states 22+ stay idle.
+    right-hand bars) instead of state 22. Load states 22–25 stay idle.
+    Softkey Back stays vanilla: store the return state in ``+0xb8``,
+    then state 26 saves dirty card data (26–29) and state 30 goes to
+    ``+0xb8``. A stub at state 20 ignored ``+0xb8``, so Back on a
+    friend's card did nothing. State 30's pack ``0x9d01`` slot 9 dialog
+    (state 31) is skipped by branching to the ``+0xb8`` return.
+    Setup's +0xb1 idle gate is replaced by ``FUN_00197ffc`` on
+    ``0x8C78E0`` so the card slot objects exist — vanilla allocated them
+    in load state 22 via ``FUN_0059a788``, which this skip no longer
+    reaches.
   * Overlay show/wait helpers stay vanilla (function-level stubs blanked
     title attract). Boot UI still NOPs its own ``FUN_00443cd8`` call sites.
   * NOP ``bl FUN_00319320`` @ ``0x000EED44`` (keep ``strb [obj,#0x5a]=1``).
@@ -214,13 +228,43 @@ SHOW_APPLY_TAILS = (
 # State 1 with +0x85==0 beqs to 0x14EEC8, which fades in the card panes
 # (group 1 slots 1–3) and the pack 0x9d00 slot 0xc help. Sending that beq
 # to 0x150658 left the main-menu Name Card as an empty folder. Keep the
-# beq. The mov at 0x14EFE8 goes to state 2 (FUN_0014d584 draws the
-# right-hand bars). Apply states 22+ stay at 21. Overlay 24–31 / 41–42
+# beq. Setup also requires +0xb1!=0 (set by FUN_0014b730); Communication
+# entry can leave it clear, so the +0xb1 idle gate is dropped and the
+# head of setup calls FUN_00197ffc on DAT_008c78e0 (card slot alloc).
+# Vanilla did that alloc in apply state 22 via FUN_0059a788; retargeting
+# 0x14EFE8 to state 2 skipped it and state 3's FUN_0014da1c then data-
+# aborted on a null +0x10 (PC 0x198108). The mov at 0x14EFE8 goes to
+# state 2 (FUN_0014d584 draws the right-hand bars). Load advances
+# (22→23→24, 41) stay at 21. MultiWin binds at state 2 / state 3 stay
+# vanilla (Name Card / Business Card headers). Overlay JT 24/25/31/41/42
 # idle-stay.
+#
+# States 26–30 are not SpotPass. They are the card exit: each softkey
+# Back site stores its return state in +0xb8 (0x13 = leave CardUI from the
+# bars, 0xD / 3 from state 4, 2 from the friend's card in state 12) and
+# goes to 26. State 26 takes the sleep/HOME lock and checks the card
+# manager DAT_008c78e0 (+4 & 0xf = dirty). 27–29 save through card job
+# 0xf with layout 0xCA; 30 releases the lock and goes to +0xb8. Idling
+# 26–30 and pointing Back at a stub state 20 (park + vtable message 7)
+# dropped +0xb8, so Back on a friend's card did nothing. All of that is
+# vanilla again.
 ADDR_14ED_ST1_DATA = 0x0014EE3C  # beq 0x14EEC8 Name Card setup
 VANILLA_14ED_ST1_DATA = bytes.fromhex("2100000a")
 PATCHED_14ED_ST1_DATA = VANILLA_14ED_ST1_DATA
 OLD_14ED_ST1_SKIP = bytes.fromhex("0506000a")  # beq 0x150658, hid the card
+FUN_CARD_SLOT_ALLOC = 0x00197FFC  # FUN_00197ffc — fills DAT_008c78e0 +0x10..
+ADDR_14ED_SETUP_HEAD = 0x0014EEC8  # was ldrb +0xb1 / cmp / beq stay
+ADDR_14ED_B1_GATE = 0x0014EED0  # third word of setup head
+VANILLA_14ED_B1_GATE = bytes.fromhex("e005000a")  # beq 0x150658
+VANILLA_14ED_SETUP_HEAD = bytes.fromhex(
+    "b100d4e5000050e3e005000a"
+)  # ldrb +0xb1; cmp #0; beq stay
+# ldr r0, [pc, #0x394] → lit 0x8c78e0 @ 0x14F264; bl FUN_00197ffc @ 0x14EECC; nop
+# BL imm = (0x197FFC - 0x14EECC - 8) >> 2 = 0x1244A
+PATCHED_14ED_SETUP_HEAD = bytes.fromhex("94039fe54a2401eb") + NOP
+OLD_14ED_SETUP_HEAD_NOP_GATE = (
+    bytes.fromhex("b100d4e5000050e3") + NOP
+)  # prior: keep ldrb/cmp, NOP the beq
 ADDR_14B890_MULTIWIN = 0x0014B94C  # beq 0x14B988 MultiWin
 VANILLA_14B890_MULTIWIN = bytes.fromhex("0d00000a")
 ADDR_14E648_ERROR = 0x0014E7B0  # beq 0x14E808 DrawText ERROR
@@ -228,15 +272,31 @@ VANILLA_14E648_ERROR = bytes.fromhex("1400000a")
 PATCHED_14E648_ERROR = bytes.fromhex("5400000a")  # beq 0x14E908 epilogue
 ADDR_14ED_ST3_MULTIWIN = 0x0014FC04  # blne FUN_00255a18 idx 0x16
 VANILLA_14ED_ST3_MULTIWIN = bytes.fromhex("8317041b")
+ADDR_14ED_ST20 = 0x0014FA90  # CardUI exit state
+ADDR_14ED_ST20_LEN = 0x30
+VANILLA_14ED_ST20 = bytes.fromhex(
+    "0120a0e31510a0e30400a0e1f10200eb000094e50030a0e30320a0e10710a0e3"
+    "4cc090e50400a0e13cff2fe1e50200ea"
+)
+# Shipped 2026-10-12: park +0x84=21 then vtable method 7, with Back
+# retargeted here. It ignored +0xb8, so Back did nothing on a friend's card.
+OLD_14ED_ST20_PARK = bytes.fromhex(
+    "1500a0e38400c4e5000094e50030a0e30020a0e30710a0e34cc090e50400a0e1"
+    "3cff2fe100f020e300f020e3e50200ea"
+)
+PATCHED_14ED_ST20 = VANILLA_14ED_ST20
+ADDR_14ED_BACK = (
+    0x0014FB14,  # state 2 softkey Back (was → 26 apply)
+    0x0014FDA0,  # state 4 Back
+    0x0014FDC4,  # state 4 Back (alt)
+    0x001500A8,  # state 12 Back
+)
 ADDR_14ED_TO_APPLY = (
     0x0014EFE8,  # 1 → 22
     0x0014F020,  # 22 → 23
     0x0014F068,  # 23 → 24
     0x0014F0E4,  # 14F080 → 41
-    0x0014FB14,  # → 26
-    0x0014FDA0,
-    0x0014FDC4,
-    0x001500A8,
+    *ADDR_14ED_BACK,
 )
 VANILLA_14ED_TO_APPLY = {
     0x0014EFE8: bytes.fromhex("1610a0e3"),  # mov r1, #22
@@ -250,16 +310,21 @@ VANILLA_14ED_TO_APPLY = {
 }
 PATCHED_14ED_TO_APPLY = bytes.fromhex("1510a0e3")  # mov r1, #21 idle stay
 PATCHED_14ED_NAMECARD = bytes.fromhex("0210a0e3")  # mov r1, #2  Name Card bars
+OLD_14ED_BACK = bytes.fromhex("1410a0e3")  # mov r1, #20  stub exit
+PATCHED_14ED_BACK = bytes.fromhex("1a10a0e3")  # mov r1, #26  vanilla card exit
 
 
 def patched_14ed_mov(site: int) -> bytes:
-    """Name Card setup asks for state 2. Later apply slots stay idle."""
+    """Name Card setup → state 2; Back → exit 26; load advances stay idle."""
     if site == 0x0014EFE8:
         return PATCHED_14ED_NAMECARD
+    if site in ADDR_14ED_BACK:
+        return PATCHED_14ED_BACK
     return PATCHED_14ED_TO_APPLY
 
 
 ADDR_14ED_JT = 0x0014ED2C
+_14ED_EXIT_SLOTS = tuple(range(26, 31))  # card save + exit (vanilla)
 _14ED_APPLY_SLOTS = tuple(range(24, 32)) + (41, 42)
 VANILLA_14ED_JT_APPLY_FILE = {
     24: 0x0014F0FC,
@@ -279,9 +344,10 @@ ADDR_14ED_WAIT_STAY = (
     0x0014F060,  # ST23 +1==0 beq 0x14F080 (FUN_0014c68c → state 41)
     0x0014F168,  # ST24 show fail beq stay
     0x0014F198,  # ST25 overlay-wait beq stay
-    0x0014F30C,  # WAIT_APPLY beq stay
-    0x0014F31C,  # WAIT_APPLY bne stay
+    0x0014F30C,  # ST28 save layout wait beq stay (vanilla)
+    0x0014F31C,  # ST28 card job busy bne stay (vanilla)
 )
+_14ED_EXIT_WAITS = (0x0014F30C, 0x0014F31C)
 VANILLA_14ED_WAIT_STAY = {
     0x0014F060: bytes.fromhex("0600000a"),
     0x0014F168: bytes.fromhex("3a05000a"),
@@ -291,7 +357,14 @@ VANILLA_14ED_WAIT_STAY = {
 }
 ADDR_14ED_ERROR = 0x0014F4C0  # mov r1, #31  blank ERROR
 VANILLA_14ED_ERROR = bytes.fromhex("1f10a0e3")  # mov r1, #0x1f
-PATCHED_14ED_ERROR = bytes.fromhex("0310a0e3")  # mov r1, #3  back to menu
+# The 31 path then retakes the sleep/HOME lock state 30 just released
+# (0x14F4CC), so going to 3 from here left the lock held. Skip at the
+# gate instead and take state 30's +0xb8 return.
+OLD_14ED_ERROR = bytes.fromhex("0310a0e3")  # mov r1, #3
+PATCHED_14ED_ERROR = VANILLA_14ED_ERROR
+ADDR_14ED_DLG_GATE = 0x0014F4AC  # beq 0x14F4FC (+0xb8 return)
+VANILLA_14ED_DLG_GATE = bytes.fromhex("1200000a")
+PATCHED_14ED_DLG_GATE = bytes.fromhex("120000ea")  # b 0x14F4FC
 # CommunicationOptionUIOperator @ 0x10EF5C state 3: pack 0xd201 DrawText
 # r1=#2 (ERROR chrome). Slot 0/1 body is blanked TRB — empty ERROR.
 ADDR_COMMOPT_D201 = 0x0010F20C  # beq 0x10F234 (no dialog obj)
@@ -311,6 +384,18 @@ def _14ed_jt_va(file_off: int) -> bytes:
 
 
 PATCHED_14ED_JT_APPLY = _14ed_jt_va(ADDR_14ED_STAY)
+
+
+def patched_14ed_jt(slot: int) -> bytes:
+    if slot in _14ED_EXIT_SLOTS:
+        return _14ed_jt_va(VANILLA_14ED_JT_APPLY_FILE[slot])
+    return PATCHED_14ED_JT_APPLY
+
+
+def patched_14ed_wait(site: int) -> bytes:
+    if site in _14ED_EXIT_WAITS:
+        return VANILLA_14ED_WAIT_STAY[site]
+    return NOP
 
 
 # TitleUIOperator @ 0x2C6284: states 1–5 overlay / loading spinner; 8 is
@@ -370,15 +455,28 @@ VANILLA_TITLE_ST8_SLEEP = bytes.fromhex("f9500beb")  # bl FUN_0059a938
 FUN_HOME_LOCK_DEC = 0x0059A824  # subgt [0x008ab420+0xc]
 FUN_SLEEP_COUNT_DRAIN = 0x00599D3C  # dec [0x008ab420+0x10]; allow sleep at 0
 # Dead tail of state 7. Jump table slot 7 goes to the dismiss stub, the
-# hide cave returns, and nothing outside this tail branches into it.
+# manager release returns, and nothing outside this tail branches into it.
 ADDR_TITLE_LOCK_RELEASE = 0x002C6CE0
 TITLE_LOCK_RELEASE_LEN = 36
 VANILLA_TITLE_LOCK_RELEASE = bytes.fromhex(
     "840096e5c510d0e5000051e30900000a8d10d6e5000051e30f00000a000050e30200000a"
 )
-ADDR_TITLE_HIDE_CAVE = 0x002C6CB8  # unused state-7 body (jt 7 → stub)
-HIDE_CAVE_LEN = 40
-VANILLA_TITLE_HIDE_CAVE = bytes.fromhex(
+# A button on the title goes to state 10. Vanilla 10 → 11 → 12 → 15 is the
+# title exit, and state 15 (0x2C712C) destroys the BuiltIn SaveLoad Manager
+# that state 3 created (+0x84, owned when +0x8d). The dismiss stub replaces
+# 10/11/12/15, so without this the manager outlives the title. Data
+# Management then builds a second one over the same save, and Delete Save
+# Data softlocks on hardware (Azahar still deletes).
+FUN_NODE_DESTROY = 0x00016030  # engine node destroy; runs the virtual dtor
+ADDR_TITLE_MGR_RELEASE = 0x002C6CB8  # unused state-7 body (jt 7 → stub)
+MGR_RELEASE_LEN = 40
+# Shipped before the release: the stub only hid +0x90, and this cave was an
+# uncalled hide helper.
+OLD_TITLE_STUB = bytes.fromhex("900096e5000050e30000000adbf305eb0000a0e3850100ea")
+OLD_TITLE_HIDE_CAVE = bytes.fromhex(
+    "10402de9904096e5000054e30400000a0400a0e1b5f305eb0010a0e3481084e5901086e51080bde8"
+)
+VANILLA_TITLE_MGR_RELEASE = bytes.fromhex(
     "840096e5001090e5781091e531ff2fe1000050e37801001a0020a0e3840096e50210a0e1ad290deb"
 )
 ADDR_TITLE_STUB = 0x002C6C28
@@ -464,12 +562,12 @@ PATCHED_STATE0 = build_state0_hide()
 
 
 def build_title_dismiss_stub() -> bytes:
-    """Hide TitleUI +0x90 applying layout and force +0x5c idle."""
+    """Hide TitleUI +0x90, release the save manager, force +0x5c idle."""
     blob = (
         bytes.fromhex("900096e5")  # ldr r0, [r6, #0x90]
         + bytes.fromhex("000050e3")  # cmp r0, #0
-        + bytes.fromhex("0000000a")  # beq skip bl (pc+8)
-        + _bl(ADDR_TITLE_STUB + 0xC, FUN_APPLY_HIDE)
+        + _blne(ADDR_TITLE_STUB + 0x8, FUN_APPLY_HIDE)
+        + _bl(ADDR_TITLE_STUB + 0xC, ADDR_TITLE_MGR_RELEASE)
         + bytes.fromhex("0000a0e3")  # mov r0, #0
         + _b(ADDR_TITLE_STUB + 0x14, ADDR_TITLE_SET_STATE)
     )
@@ -482,26 +580,30 @@ PATCHED_TITLE_STUB = build_title_dismiss_stub()
 PATCHED_TYPE2_1E5 = _beq(ADDR_TYPE2_1E5, ADDR_TYPE2_EPILOGUE)
 
 
-def build_title_hide_cave() -> bytes:
-    """Hide TitleUI +0x90, clear layout ptr, drop the overlay slot."""
+def build_title_mgr_release() -> bytes:
+    """State 15's save-manager teardown: free +0x84 when +0x8d owns it.
+
+    Clears both fields first, then tail-calls the node destroy so it
+    returns straight to the dismiss stub.
+    """
     blob = (
-        bytes.fromhex("10402de9")  # stmdb sp!, {r4, lr}
-        + bytes.fromhex("904096e5")  # ldr r4, [r6, #0x90]
-        + bytes.fromhex("000054e3")  # cmp r4, #0
-        + bytes.fromhex("0400000a")  # beq pop
-        + bytes.fromhex("0400a0e1")  # mov r0, r4
-        + _bl(ADDR_TITLE_HIDE_CAVE + 0x14, FUN_APPLY_HIDE)
+        bytes.fromhex("8d10d6e5")  # ldrb r1, [r6, #0x8d]
+        + bytes.fromhex("840096e5")  # ldr r0, [r6, #0x84]
+        + bytes.fromhex("000051e3")  # cmp r1, #0
+        + bytes.fromhex("1eff2f01")  # bxeq lr
         + bytes.fromhex("0010a0e3")  # mov r1, #0
-        + bytes.fromhex("481084e5")  # str r1, [r4, #0x48]
-        + bytes.fromhex("901086e5")  # str r1, [r6, #0x90]
-        + bytes.fromhex("1080bde8")  # ldmia sp!, {r4, pc}
+        + bytes.fromhex("8d10c6e5")  # strb r1, [r6, #0x8d]
+        + bytes.fromhex("841086e5")  # str r1, [r6, #0x84]
+        + bytes.fromhex("000050e3")  # cmp r0, #0
+        + bytes.fromhex("1eff2f01")  # bxeq lr
+        + _b(ADDR_TITLE_MGR_RELEASE + 0x24, FUN_NODE_DESTROY)
     )
-    if len(blob) != HIDE_CAVE_LEN:
-        raise ValueError(f"title hide cave {len(blob)} != {HIDE_CAVE_LEN}")
+    if len(blob) != MGR_RELEASE_LEN:
+        raise ValueError(f"title manager release {len(blob)} != {MGR_RELEASE_LEN}")
     return blob
 
 
-PATCHED_TITLE_HIDE_CAVE = build_title_hide_cave()
+PATCHED_TITLE_MGR_RELEASE = build_title_mgr_release()
 
 
 def build_title_lock_release() -> bytes:
@@ -661,7 +763,7 @@ def _title_vanilla(data: bytes) -> bool:
         != VANILLA_TITLE_LOCK_RELEASE
     ):
         return False
-    if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != VANILLA_TITLE_HIDE_CAVE:
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != VANILLA_TITLE_MGR_RELEASE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
         return False
@@ -717,7 +819,7 @@ def _title_patched(data: bytes) -> bool:
         != PATCHED_TITLE_LOCK_RELEASE
     ):
         return False
-    if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != PATCHED_TITLE_HIDE_CAVE:
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != PATCHED_TITLE_MGR_RELEASE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
         return False
@@ -749,7 +851,7 @@ def _apply_title(data: bytearray) -> None:
     data[ADDR_TITLE_ST8_TAIL : ADDR_TITLE_ST8_TAIL + 4] = VANILLA_TITLE_ST8_TAIL
     data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] = VANILLA_TITLE_ST8_TAIL2
     _write_title_lock_release(data)
-    data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = PATCHED_TITLE_HIDE_CAVE
+    data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = PATCHED_TITLE_MGR_RELEASE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
     data[ADDR_TYPE2_1E5 : ADDR_TYPE2_1E5 + 4] = PATCHED_TYPE2_1E5
@@ -780,7 +882,7 @@ def _revert_title(data: bytearray) -> None:
     data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN] = (
         VANILLA_TITLE_LOCK_RELEASE
     )
-    data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = VANILLA_TITLE_HIDE_CAVE
+    data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = VANILLA_TITLE_MGR_RELEASE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
     data[ADDR_TYPE2_1E5 : ADDR_TYPE2_1E5 + 4] = VANILLA_TYPE2_1E5
@@ -902,6 +1004,10 @@ def _revert_overlay_fn(data: bytearray) -> None:
 def _14ed_vanilla(data: bytes) -> bool:
     if data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] != VANILLA_14ED_ST1_DATA:
         return False
+    if data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] != VANILLA_14ED_SETUP_HEAD:
+        return False
+    if data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] != VANILLA_14ED_ST20:
+        return False
     if not all(
         data[site : site + 4] == VANILLA_14ED_TO_APPLY[site]
         for site in ADDR_14ED_TO_APPLY
@@ -919,6 +1025,7 @@ def _14ed_vanilla(data: bytes) -> bool:
             for site in ADDR_14ED_WAIT_STAY
         )
         and data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] == VANILLA_14ED_ERROR
+        and data[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] == VANILLA_14ED_DLG_GATE
         and data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4]
         == VANILLA_14B890_MULTIWIN
         and data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] == VANILLA_14E648_ERROR
@@ -933,21 +1040,30 @@ def _14ed_vanilla(data: bytes) -> bool:
 def _14ed_patched(data: bytes) -> bool:
     if data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] != PATCHED_14ED_ST1_DATA:
         return False
+    if data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] != PATCHED_14ED_SETUP_HEAD:
+        return False
+    if data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] != PATCHED_14ED_ST20:
+        return False
     if not all(
         data[site : site + 4] == patched_14ed_mov(site)
         for site in ADDR_14ED_TO_APPLY
     ):
         return False
     if not all(
-        data[_14ed_jt_off(slot) : _14ed_jt_off(slot) + 4] == PATCHED_14ED_JT_APPLY
+        data[_14ed_jt_off(slot) : _14ed_jt_off(slot) + 4] == patched_14ed_jt(slot)
         for slot in _14ED_APPLY_SLOTS
     ):
         return False
-    return all(data[site : site + 4] == NOP for site in ADDR_14ED_WAIT_STAY) and (
+    return all(
+        data[site : site + 4] == patched_14ed_wait(site) for site in ADDR_14ED_WAIT_STAY
+    ) and (
         data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] == PATCHED_14ED_ERROR
-        and data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] == NOP
+        and data[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] == PATCHED_14ED_DLG_GATE
+        and data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4]
+        == VANILLA_14B890_MULTIWIN
         and data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] == PATCHED_14E648_ERROR
-        and data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] == NOP
+        and data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4]
+        == VANILLA_14ED_ST3_MULTIWIN
         and data[ADDR_COMMOPT_D201 : ADDR_COMMOPT_D201 + 4] == PATCHED_COMMOPT_D201
         and data[ADDR_COMMOPT_D201_FAIL : ADDR_COMMOPT_D201_FAIL + 4]
         == PATCHED_COMMOPT_D201_FAIL
@@ -956,17 +1072,22 @@ def _14ed_patched(data: bytes) -> bool:
 
 def _apply_14ed(data: bytearray) -> None:
     data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] = PATCHED_14ED_ST1_DATA
+    data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = PATCHED_14ED_SETUP_HEAD
+    data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = PATCHED_14ED_ST20
     for site in ADDR_14ED_TO_APPLY:
         data[site : site + 4] = patched_14ed_mov(site)
     for slot in _14ED_APPLY_SLOTS:
         off = _14ed_jt_off(slot)
-        data[off : off + 4] = PATCHED_14ED_JT_APPLY
+        data[off : off + 4] = patched_14ed_jt(slot)
     for site in ADDR_14ED_WAIT_STAY:
-        data[site : site + 4] = NOP
+        data[site : site + 4] = patched_14ed_wait(site)
     data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] = PATCHED_14ED_ERROR
-    data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = NOP
+    data[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] = PATCHED_14ED_DLG_GATE
+    data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = VANILLA_14B890_MULTIWIN
     data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] = PATCHED_14E648_ERROR
-    data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = NOP
+    data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = (
+        VANILLA_14ED_ST3_MULTIWIN
+    )
     data[ADDR_COMMOPT_D201 : ADDR_COMMOPT_D201 + 4] = PATCHED_COMMOPT_D201
     data[ADDR_COMMOPT_D201_FAIL : ADDR_COMMOPT_D201_FAIL + 4] = (
         PATCHED_COMMOPT_D201_FAIL
@@ -975,6 +1096,8 @@ def _apply_14ed(data: bytearray) -> None:
 
 def _revert_14ed(data: bytearray) -> None:
     data[ADDR_14ED_ST1_DATA : ADDR_14ED_ST1_DATA + 4] = VANILLA_14ED_ST1_DATA
+    data[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = VANILLA_14ED_SETUP_HEAD
+    data[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = VANILLA_14ED_ST20
     for site in ADDR_14ED_TO_APPLY:
         data[site : site + 4] = VANILLA_14ED_TO_APPLY[site]
     for slot in _14ED_APPLY_SLOTS:
@@ -983,6 +1106,7 @@ def _revert_14ed(data: bytearray) -> None:
     for site in ADDR_14ED_WAIT_STAY:
         data[site : site + 4] = VANILLA_14ED_WAIT_STAY[site]
     data[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] = VANILLA_14ED_ERROR
+    data[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] = VANILLA_14ED_DLG_GATE
     data[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = VANILLA_14B890_MULTIWIN
     data[ADDR_14E648_ERROR : ADDR_14E648_ERROR + 4] = VANILLA_14E648_ERROR
     data[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = (
@@ -1142,6 +1266,58 @@ def _upgrade_namecard_bars(data: bytearray) -> bool:
     return True
 
 
+def _upgrade_namecard_back(data: bytearray) -> bool:
+    """Fix Back soft-lock / blank parent / empty folder / card-slot crash."""
+    trial = bytearray(data)
+    changed = False
+    for site in ADDR_14ED_BACK:
+        if trial[site : site + 4] in (PATCHED_14ED_TO_APPLY, OLD_14ED_BACK):
+            trial[site : site + 4] = PATCHED_14ED_BACK
+            changed = True
+    if trial[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] == OLD_14ED_ST20_PARK:
+        trial[ADDR_14ED_ST20 : ADDR_14ED_ST20 + ADDR_14ED_ST20_LEN] = PATCHED_14ED_ST20
+        changed = True
+    for slot in _14ED_EXIT_SLOTS:
+        off = _14ed_jt_off(slot)
+        if trial[off : off + 4] == PATCHED_14ED_JT_APPLY:
+            trial[off : off + 4] = patched_14ed_jt(slot)
+            changed = True
+    for site in _14ED_EXIT_WAITS:
+        if trial[site : site + 4] == NOP:
+            trial[site : site + 4] = patched_14ed_wait(site)
+            changed = True
+    if trial[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] == OLD_14ED_ERROR:
+        trial[ADDR_14ED_ERROR : ADDR_14ED_ERROR + 4] = PATCHED_14ED_ERROR
+        changed = True
+    if trial[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] == VANILLA_14ED_DLG_GATE:
+        trial[ADDR_14ED_DLG_GATE : ADDR_14ED_DLG_GATE + 4] = PATCHED_14ED_DLG_GATE
+        changed = True
+    head = trial[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12]
+    if head in (VANILLA_14ED_SETUP_HEAD, OLD_14ED_SETUP_HEAD_NOP_GATE):
+        trial[ADDR_14ED_SETUP_HEAD : ADDR_14ED_SETUP_HEAD + 12] = (
+            PATCHED_14ED_SETUP_HEAD
+        )
+        changed = True
+    if trial[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] == NOP:
+        trial[ADDR_14B890_MULTIWIN : ADDR_14B890_MULTIWIN + 4] = (
+            VANILLA_14B890_MULTIWIN
+        )
+        changed = True
+    if trial[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] == NOP:
+        trial[ADDR_14ED_ST3_MULTIWIN : ADDR_14ED_ST3_MULTIWIN + 4] = (
+            VANILLA_14ED_ST3_MULTIWIN
+        )
+        changed = True
+    if not changed or not is_patched(trial):
+        return False
+    data[:] = trial
+    print(
+        "[spotpass-skip] Name Card: Back->vanilla exit 26 (+0xb8 return), "
+        "card-slot alloc, MultiWin binds restored"
+    )
+    return True
+
+
 def _write_title_lock_release(data: bytearray) -> None:
     data[ADDR_TITLE_ST8_LOCK : ADDR_TITLE_ST8_LOCK + 4] = PATCHED_TITLE_ST8_LOCK
     data[ADDR_TITLE_ST8_SLEEP : ADDR_TITLE_ST8_SLEEP + 4] = NOP
@@ -1174,11 +1350,42 @@ def _upgrade_title_home_lock(data: bytearray) -> bool:
     return True
 
 
+def _upgrade_title_mgr_release(data: bytearray) -> bool:
+    """Free the title's save manager when the dismiss stub exits the title.
+
+    The older stub only hid ``+0x90``. It stood in for state 15, so the
+    BuiltIn SaveLoad Manager from state 3 was never destroyed.
+    """
+    if data[ADDR_TITLE_STUB : ADDR_TITLE_STUB + TITLE_STUB_LEN] != OLD_TITLE_STUB:
+        return False
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != (
+        OLD_TITLE_HIDE_CAVE
+    ):
+        return False
+    trial = bytearray(data)
+    trial[ADDR_TITLE_STUB : ADDR_TITLE_STUB + TITLE_STUB_LEN] = PATCHED_TITLE_STUB
+    trial[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = (
+        PATCHED_TITLE_MGR_RELEASE
+    )
+    if not is_patched(trial) and not _upgrade_title_home_lock(trial):
+        return False
+    data[:] = trial
+    print(
+        f"[spotpass-skip] title dismiss stub @{ADDR_TITLE_STUB:#x} frees the "
+        f"save manager via @{ADDR_TITLE_MGR_RELEASE:#x}"
+    )
+    return True
+
+
 def apply_patch(data: bytearray) -> bool:
     """Quiet missing NsData. Returns True if bytes changed."""
     if _restore_namecard_setup(data):
         return True
     if _upgrade_namecard_bars(data):
+        return True
+    if _upgrade_namecard_back(data):
+        return True
+    if _upgrade_title_mgr_release(data):
         return True
     if _upgrade_title_home_lock(data):
         return True

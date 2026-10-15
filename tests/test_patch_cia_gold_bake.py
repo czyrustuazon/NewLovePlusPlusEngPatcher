@@ -20,6 +20,8 @@ def paths(tmp_path: Path, monkeypatch):
     cache.parent.mkdir(parents=True)
     monkeypatch.setattr(patch_cia, "DEFAULT_BAKE_IMG", bake)
     monkeypatch.setattr(patch_cia, "DEFAULT_PACKED_IMG", cache)
+    # These imgs are placeholder bytes; the idx gate has its own test.
+    monkeypatch.setattr(patch_cia, "_require_img_idx_sync", lambda *_a, **_k: None)
     return bake, cache
 
 

@@ -357,12 +357,26 @@ function Launch-Instance([string]$Id) {
     if ($env:NLPP_EMU_PANE_FLAG -eq "1") {
         Write-Host "NLPP_EMU_PANE_FLAG=1 (menu update gets one null pane in r6, the 2026-10-03 00:50 dump)"
     }
-    $bat = Join-Path $Paths.Instances "$Id\Launch-$Id.bat"
-    if (Test-Path $bat) {
-        Start-Process $bat
-    } else {
-        throw "Run '.\ab_test\make.ps1 instances' first. Missing $bat"
+    # Start the instance exe by full path. Launch-<id>.bat used a bare
+    # "azahar.exe", which Windows App Paths resolved to the installed Azahar
+    # (roaming user dir, none of this instance's LayeredFS).
+    $dir = Join-Path $Paths.Instances $Id
+    $exe = Join-Path $dir "azahar.exe"
+    if (-not (Test-Path $exe)) {
+        throw "Run '.\ab_test\make.ps1 instances' first. Missing $exe"
     }
+    if (Test-Path $Paths.MsysBin) { $env:PATH = "$($Paths.MsysBin);$env:PATH" }
+    $start = @{ FilePath = $exe; WorkingDirectory = $dir; PassThru = $true }
+    if ($Paths.RomPath -and (Test-Path $Paths.RomPath)) {
+        $start.ArgumentList = "`"$($Paths.RomPath)`""
+    }
+    $proc = Start-Process @start
+    Start-Sleep -Seconds 3
+    $running = Get-Process -Id $proc.Id -ErrorAction SilentlyContinue
+    if (-not $running -or $running.Path -ne $exe) {
+        throw "Azahar $Id did not stay up from $exe"
+    }
+    Write-Host "Azahar $Id running (pid $($proc.Id)): $exe"
 }
 
 function Invoke-CodeChecks {

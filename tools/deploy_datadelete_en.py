@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""EN DataDelete menu — button labels + header.
+"""EN DataDelete menu — button labels, save sheet, + header.
 
 Screen: Data Management → Delete Save Data
-  pkg 4187 RGB565:
-    DD_Data_Txt_Big01 — プレイデータ削除
-    DD_Data_Txt_Big02 — ギャラリーデータ全削除
+  pkg 4187:
+    RGB565 DD_Data_Txt_Big01/02 — Delete Play / Gallery Data
+    RGBA4444 DD_data02..05 — save summary sheet
+      (データ更新 / 名前 / 呼ばれ方 / HN / 誕生日 / 血液型 / 出身地 / 経過日数
+       → Last Saved / Full Name / Called As / Username / Birthday /
+         Blood Type / Hometown / Elapsed Days). Zhoumaru masters.
   pkg 5237 ETC1A4 MultiWin header (FUN_00255a18 idx 0x1a):
     Com_MultiWin_W01_Text05_01_00 — セーブデータ削除
 """
@@ -27,6 +30,7 @@ from bclimutil import (  # noqa: E402
     parse_bclim,
     png_to_bclim_etc1a4_same_size,
     png_to_bclim_rgb565_same_size,
+    png_to_bclim_rgba4444_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
@@ -34,6 +38,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -60,6 +65,9 @@ BUTTON_LABELS = [
 HEADER_LABELS = [
     ("timg/Com_MultiWin_W01_Text05_01_00.bclim", "Delete Save Data"),
 ]
+# Pts_DD_Data swaps these per slot / heroine; all four share the same EN labels.
+SHEET_STEMS = ("DD_data02", "DD_data03", "DD_data04", "DD_data05")
+SHEET_FOLDERS = ("DataDelete.check", "DataDelete")
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -278,6 +286,31 @@ def patch_pkg(
             print(f"  OK {path} -> {en!r}", flush=True)
         darc.replace_same_size(entry, new)
 
+    if kind == "buttons":
+        for stem in SHEET_STEMS:
+            path = f"timg/{stem}.bclim"
+            entry = darc.find(path) or darc.find(f"{stem}.bclim")
+            if entry is None:
+                raise SystemExit(f"missing {path}")
+            raw = darc.extract_file(entry)
+            _pix, w, h, fmt, _ft = parse_bclim(raw)
+            if fmt != 8:
+                raise SystemExit(f"{path} fmt {fmt} not RGBA4444")
+            master = find_ui_png(SHEET_FOLDERS, stem, (w, h))
+            if master is None:
+                raise SystemExit(
+                    f"missing Zhoumaru master {stem}.png under DataDelete.check "
+                    f"(need {w}x{h})"
+                )
+            png = tmp / f"{pkg_id}_{stem}.png"
+            orig = tmp / f"{pkg_id}_{stem}.bclim"
+            Image.open(master).convert("RGBA").save(png)
+            orig.write_bytes(raw)
+            new = png_to_bclim_rgba4444_same_size(png, orig)
+            darc.replace_same_size(entry, new)
+            Image.open(png).save(OUT / f"{stem}_en.png")
+            print(f"  OK {path} <- {master.relative_to(ROOT)}", flush=True)
+
     patched = bytes(darc.data)
     tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)
     do = zlib.decompressobj()
@@ -352,6 +385,7 @@ def main() -> None:
         raise SystemExit(f"splice failed: {exc}") from exc
 
     print("\ndeployed DataDelete EN pkgs", pkgs, "->", MOD_IMG, flush=True)
+    print("Sheets:", ", ".join(SHEET_STEMS), flush=True)
     print("Rollback:", bak, flush=True)
     print("Fully quit Azahar and re-open Delete Save Data.", flush=True)
 

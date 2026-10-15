@@ -79,7 +79,7 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Plate_Text02_01_01.bclim", "Confession Memories"),
         ("Com_M_Sel_Plate_Text02_01_02.bclim", "After the Dream"),
         ("Com_M_Sel_Plate_Text02_01_03.bclim", "Trip Memories"),
-        ("Com_M_Sel_Plate_Text02_01_04.bclim", "Youthful Page"),
+        ("Com_M_Sel_Plate_Text02_01_04.bclim", "Drama Gallery"),
         ("Com_M_Sel_Plate_Text02_01_05.bclim", "Gallery Options"),
         ("Com_M_Sel_Plate_Text02_02_00.bclim", "Illustration Gallery"),
         ("Com_M_Sel_Btn_Text02_02_01.bclim", "Dream Gallery"),

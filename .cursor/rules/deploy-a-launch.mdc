@@ -1,0 +1,18 @@
+---
+description: After deploy-a (or any instance-A LayeredFS apply), always launch Azahar A
+alwaysApply: true
+---
+
+# Deploy A → launch A
+
+When the user asks to **deploy A**, **deploy-a**, seed/combine into instance A, or otherwise refresh Azahar A LayeredFS:
+
+1. Run the deploy (`.\ab_test\make.ps1 deploy-a` or the feature script that targets A).
+2. **Immediately** launch Azahar A: `.\ab_test\make.ps1 launch-a`.
+3. Confirm `azahar.exe` from `ab_test\azahar_instances\a\` is running.
+
+Do **not** stop after deploy and tell them to open Azahar themselves. Same for “run it” / “open it” after a deploy — launch, don’t only copy files.
+
+If Azahar A is already running, still run `launch-a` unless a second copy would be harmful; prefer quitting the old process then launching fresh when `img.bin` / `code.bin` just changed (LayeredFS needs a full quit).
+
+`deploy-b` → `launch-b` the same way when they ask for B.

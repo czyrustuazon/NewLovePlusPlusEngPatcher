@@ -47,7 +47,12 @@ SNAPSHOT = ROOT / "tests" / "snapshots" / "code_patch_map.json"
 
 # Steps allowed to write past .text. These write data only (delay tables,
 # password table, SpotPass payload/strings); nothing may branch there.
-DATA_WRITERS = {"apply_message_speed", "apply_spotpass_embed", "apply_password_uribo"}
+DATA_WRITERS = {
+    "apply_message_speed",
+    "apply_spotpass_embed",
+    "apply_password_uribo",
+    "apply_profile_birthday",
+}
 
 # Written ranges a step does not check before overwriting. These are dead
 # bodies behind an entry hook that *is* checked. Ratchet: counts may only go
