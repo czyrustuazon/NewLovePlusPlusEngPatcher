@@ -37,8 +37,12 @@ jobs:
             git checkout --force -B ci "refs/remotes/origin/sha"
           fi
           test -f dev/requirements-dev.txt
+          test -f dev/requirements.txt
+          test -d tests
           echo "Checked out $(git rev-parse --short HEAD)"
-          ls -la dev/requirements-dev.txt dev/requirements.txt tests | head -n 40
+          # Do not pipe ls|head under pipefail: head closing early makes ls exit 2
+          # (EPIPE) and fails the job before pytest runs.
+          ls -la dev/requirements-dev.txt dev/requirements.txt tests
 
       - name: Verify Python
         run: |
