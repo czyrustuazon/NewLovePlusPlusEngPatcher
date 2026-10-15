@@ -57,23 +57,17 @@ foreach ($id in @("a", "b")) {
     Copy-Item -Path (Join-Path $exeDir "*") -Destination $inst -Recurse -Force
     Copy-IcuRuntimeDlls -DestDir $inst -ExeDir $exeDir
 
-    $commonArgs = @(
-        "--user-dir", "`"$user`"",
-        "--load-last",
-        "--default-title", $TitleId,
-        "--no-update-check",
-        "--localization-studio",
-        "--reload-mods-on-start",
-        "--text-speed", "300"
-    )
-    if ($RomPath -and (Test-Path $RomPath)) {
-        $commonArgs = @("--user-dir", "`"$user`"", "--load", "`"$RomPath`"", "--no-update-check", "--localization-studio", "--reload-mods-on-start")
-    }
+    # Azahar runs portable from the user\ folder beside the exe. Always name
+    # the exe by full path: a bare "azahar.exe" goes through Windows App
+    # Paths and starts the installed Azahar with the roaming user dir.
+    $romArg = ""
+    if ($RomPath -and (Test-Path $RomPath)) { $romArg = " `"$RomPath`"" }
 
     $launch = @"
 @echo off
 set "PATH=$MsysBin;%PATH%"
-start "Azahar $id" "$inst\azahar.exe" $($commonArgs -join ' ')
+cd /d "%~dp0"
+start "Azahar $id" "%~dp0azahar.exe"$romArg
 "@
     Set-Content -Path (Join-Path $inst "Launch-$id.bat") -Value $launch -Encoding ASCII
     Write-Host "Instance $id -> $user"
