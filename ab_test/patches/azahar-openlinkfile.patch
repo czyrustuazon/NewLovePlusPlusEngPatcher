@@ -1,9 +1,9 @@
 File::OpenLinkFile clones the source session (NLPP extra-data hang).
-Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ e00581f)
+Source: https://github.com/czyrustuazon/azahar-3ds-accurate (main @ 8296c4f)
 Base: fork branch upstream @ 75662cccb (pristine upstream Azahar)
 
 diff --git a/src/core/hle/service/fs/file.cpp b/src/core/hle/service/fs/file.cpp
-index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da67865a8fbb7a 100644
+index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..a4d6647e26809a3443ba5ae7f2889f5cf79941f4 100644
 --- a/src/core/hle/service/fs/file.cpp
 +++ b/src/core/hle/service/fs/file.cpp
 @@ -61,8 +61,10 @@ void File::Read(Kernel::HLERequestContext& ctx) {
@@ -40,7 +40,15 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
  
      if (!backend->AllowsCachedReads() && !Settings::values.async_fs_operations) {
          backend->Close();
-@@ -379,7 +387,20 @@ void File::GetPriority(Kernel::HLERequestContext& ctx) {
+@@ -345,6 +353,7 @@ void File::Flush(Kernel::HLERequestContext& ctx) {
+         IPC::RequestBuilder rb = rp.MakeBuilder(1, 0);
+         backend->Flush();
+         rb.Push(ResultSuccess);
++        return;
+     }
+ 
+     ctx.RunAsync(
+@@ -379,7 +388,20 @@ void File::GetPriority(Kernel::HLERequestContext& ctx) {
  }
  
  void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
@@ -62,7 +70,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
      using Kernel::ClientSession;
      using Kernel::ServerSession;
      IPC::RequestParser rp(ctx);
-@@ -388,12 +409,10 @@ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
+@@ -388,12 +410,10 @@ void File::OpenLinkFile(Kernel::HLERequestContext& ctx) {
      ClientConnected(server);
  
      FileSessionSlot* slot = GetSessionData(std::move(server));
@@ -79,7 +87,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
  
      rb.Push(ResultSuccess);
      rb.PushMoveObjects(client);
-@@ -410,11 +429,14 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+@@ -410,11 +430,14 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
  
      if (original_file->subfile) {
          // OpenSubFile can not be called on a file which is already as subfile
@@ -94,7 +102,7 @@ index b37c19dd04c2473a6a7ee54519c29fbfea04aa62..93428db75c60edb72599c294c3da6786
          rb.Push(FileSys::ResultWriteBeyondEnd);
          return;
      }
-@@ -424,6 +446,9 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
+@@ -424,6 +447,9 @@ void File::OpenSubFile(Kernel::HLERequestContext& ctx) {
      // TODO(Subv): Check for overflow and return ResultWriteBeyondEnd
  
      if (end > original_file->size) {
