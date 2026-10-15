@@ -440,7 +440,7 @@ if /i "%NLPP_REPACK_IMAGES%"=="1" (
       echo [!] No gold bake available. English menus need release\bake_img.bin.
       echo     Run: python tools\rebuild_bake_img.py --rom your.cia
       echo     ^(must finish - first run is often ~16 hours^)
-      echo     Or scripts-only: set NLPP_WITH_IMAGES=0
+      echo     NLPP_WITH_IMAGES=0 is not allowed - incomplete patches are disabled.
       pause
       exit /b 1
     )

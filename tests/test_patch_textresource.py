@@ -2,10 +2,33 @@
 
 from __future__ import annotations
 
+import struct
+
 import pytest
 
 import patch_textresource as trb
-from conftest import ROOT
+
+
+def _chunk(name: str, body: bytes) -> bytes:
+    return name.encode("ascii") + struct.pack("<I", len(body)) + body
+
+
+def _mini_utf8_trb(text: str) -> bytes:
+    """One flag=1 UTF-8 STRI/STRB entry (Anywhere Date empty-list class)."""
+    payload = text.encode("utf-8")
+    strb = payload + b"\x00"
+    pad = (4 - (len(strb) % 4)) % 4
+    strb += b"\xc9" * pad
+    stri = struct.pack("<IHH", 0, len(payload), 1)
+    return _chunk("STRI", stri) + _chunk("STRB", strb)
+
+
+# Full Anywhere Date empty-list JP (STRI 25183). Truncated keys never match.
+_ANYWHERE_DATE_JP = (
+    "デートデータが◙ありません。◙「デートの編集」から◙デートを作成してください。"
+)
+_ANYWHERE_DATE_TRUNC = "デートデータが◙ありません。◙「デートの編集」から◙デートを作"
+_ANYWHERE_DATE_EN = "No date data\navailable.\nCreate a date from\n\"Edit Date\"."
 
 
 def test_nlp_payload_keeps_interior_nul_lo_byte():
@@ -58,13 +81,38 @@ def test_translation_values_keep_japanese_control_tokens():
     assert mapping["▲高嶺＊＊▲"] == "▲Takane＊＊▲"
 
 
-def test_restore_control_tokens_in_trb_rewrites_only_placeholders():
-    import struct
-
+def test_rebuild_trb_keeps_when_key_is_truncated():
+    """A mid-phrase JSON key never matches — rebuild leaves JP (silent keep)."""
     lookup = trb.load_lookup(trb.LOOKUP_PATH)
+    data = _mini_utf8_trb(_ANYWHERE_DATE_JP)
+    out, stats = trb.rebuild_trb(
+        data, {_ANYWHERE_DATE_TRUNC: _ANYWHERE_DATE_EN}, lookup
+    )
+    assert stats == {"total": 1, "translated": 0, "kept": 1, "empty": 0}
+    assert trb.dump_entries(out, lookup)[0]["text"] == _ANYWHERE_DATE_JP
 
-    def chunk(name: str, body: bytes) -> bytes:
-        return name.encode("ascii") + struct.pack("<I", len(body)) + body
+
+def test_rebuild_trb_translates_full_key():
+    lookup = trb.load_lookup(trb.LOOKUP_PATH)
+    data = _mini_utf8_trb(_ANYWHERE_DATE_JP)
+    out, stats = trb.rebuild_trb(
+        data, {_ANYWHERE_DATE_JP: _ANYWHERE_DATE_EN}, lookup
+    )
+    assert stats == {"total": 1, "translated": 1, "kept": 0, "empty": 0}
+    got = trb.dump_entries(out, lookup)[0]["text"]
+    assert got != _ANYWHERE_DATE_JP
+    assert "Edit Date" in got
+    assert "No date data" in got
+
+
+def test_anywhere_date_key_is_full_sentence_in_translations():
+    mapping = trb.load_translations(trb.DEFAULT_TRANSLATIONS)
+    assert _ANYWHERE_DATE_TRUNC not in mapping
+    assert mapping[_ANYWHERE_DATE_JP]
+
+
+def test_restore_control_tokens_in_trb_rewrites_only_placeholders():
+    lookup = trb.load_lookup(trb.LOOKUP_PATH)
 
     rows = ["Hello ▲Protagonist＊▲", "▲彼女＊＊▲", "plain"]
     strb = bytearray()
@@ -75,7 +123,7 @@ def test_restore_control_tokens_in_trb_rewrites_only_placeholders():
         strb += payload + b"\x00"
     pad = (4 - (len(strb) % 4)) % 4
     strb += b"\xc9" * pad
-    data = chunk("STRI", bytes(stri)) + chunk("STRB", bytes(strb))
+    data = _chunk("STRI", bytes(stri)) + _chunk("STRB", bytes(strb))
 
     out, stats = trb.restore_control_tokens_in_trb(data, lookup)
     assert stats["restored"] == 1
@@ -87,12 +135,7 @@ def test_restore_control_tokens_in_trb_rewrites_only_placeholders():
 
 
 def test_rewrite_rinko_marker_keeps_the_following_slot():
-    import struct
-
     lookup = trb.load_lookup(trb.LOOKUP_PATH)
-
-    def chunk(name: str, body: bytes) -> bytes:
-        return name.encode("ascii") + struct.pack("<I", len(body)) + body
 
     marker = "▲小早川＊▲".encode("utf-8")
     stay = "▲高嶺＊＊▲".encode("utf-8")
@@ -104,7 +147,7 @@ def test_rewrite_rinko_marker_keeps_the_following_slot():
     strb += stay + b"\x00"
     pad = (4 - (len(strb) % 4)) % 4
     strb += b"\xc9" * pad
-    data = chunk("STRI", bytes(stri)) + chunk("STRB", bytes(strb))
+    data = _chunk("STRI", bytes(stri)) + _chunk("STRB", bytes(strb))
 
     out, count = trb.rewrite_rinko_marker_in_trb(data, lookup)
     assert count == 1
@@ -123,12 +166,7 @@ def test_rewrite_rinko_marker_keeps_the_following_slot():
 
 
 def test_rewrite_manaka_marker_keeps_the_following_slot():
-    import struct
-
     lookup = trb.load_lookup(trb.LOOKUP_PATH)
-
-    def chunk(name: str, body: bytes) -> bytes:
-        return name.encode("ascii") + struct.pack("<I", len(body)) + body
 
     marker = "▲高嶺＊＊▲".encode("utf-8")
     stay = "▲Kobayaka＊▲".encode("utf-8")
@@ -140,7 +178,7 @@ def test_rewrite_manaka_marker_keeps_the_following_slot():
     strb += stay + b"\x00"
     pad = (4 - (len(strb) % 4)) % 4
     strb += b"\xc9" * pad
-    data = chunk("STRI", bytes(stri)) + chunk("STRB", bytes(strb))
+    data = _chunk("STRI", bytes(stri)) + _chunk("STRB", bytes(strb))
 
     out, count = trb.rewrite_manaka_marker_in_trb(data, lookup)
     assert count == 1

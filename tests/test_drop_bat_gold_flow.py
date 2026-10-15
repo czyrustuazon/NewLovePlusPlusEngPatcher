@@ -82,6 +82,33 @@ def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
     assert stale_idx < inject_idx
 
 
+def test_bat_stale_stamp_forces_need_rebuild():
+    text = _bat_text()
+    assert 'if defined BAKE_STALE set "NEED_REBUILD=1"' in text
+    assert 'if defined FETCHED_GOLD set "NEED_REBUILD="' in text
+    # Stale leftover bake is overwritten (not inject-only).
+    assert "if defined BAKE_STALE" in text
+    assert "Overwriting leftover gold bake" in text
+    assert "running tools\\rebuild_bake_img.py" in text
+
+
+def test_bat_fetched_gold_skips_stale_rebuild():
+    """A just-downloaded GitHub bake clears NEED_REBUILD even if stamp looks stale."""
+    text = _bat_text()
+    assert 'set "FETCHED_GOLD=1"' in text
+    # Stamp check is skipped when FETCHED_GOLD is set.
+    assert "if not defined FETCHED_GOLD if /i not" in text
+    assert 'if defined FETCHED_GOLD set "NEED_REBUILD="' in text
+
+
+def test_bat_abort_does_not_suggest_with_images_off():
+    text = _bat_text()
+    abort = text[text.index("No gold bake available") : text.index("Gold bake path missing")]
+    assert "Or scripts-only" not in abort
+    assert "set NLPP_WITH_IMAGES=0" not in abort
+    assert "NLPP_WITH_IMAGES=0 is not allowed" in abort
+
+
 def test_bat_fetch_is_automatic_not_opt_in():
     text = _bat_text()
     assert "NLPP_FETCH_GOLD" not in text
