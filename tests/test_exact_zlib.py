@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import zlib
 
+import pytest
+
 from exact_zlib import (
+    _verify_exact_slot,
     _zlib_progress,
     apply_gap_pad,
     compress_exact_empty_blocks,
@@ -135,6 +138,20 @@ def test_pad_closed_zlib_stream_large_payload_56():
     payload = bytes(range(256)) * (279848 // 256)
     stream = zlib.compress(payload, 9)
     _assert_pad(stream, 56, payload)
+
+
+def test_verify_exact_slot_rejects_nul_padded_short_stream():
+    """Short zlib + trailing NUL fills the slot but leaves unused_data (Options freeze)."""
+    payload = b"Options ARC body that must round-trip with unused_data==0."
+    short = zlib.compress(payload, 9)
+    assert len(short) < 80
+    slot = short + b"\x00" * (80 - len(short))
+    assert len(slot) == 80
+    d = zlib.decompressobj()
+    assert d.decompress(slot) == payload
+    assert d.unused_data  # trailing NULs — game freeze class
+    with pytest.raises(RuntimeError, match="exact zlib verify failed"):
+        _verify_exact_slot(payload, slot, len(slot))
 
 
 def test_zlib_progress_survives_cp1252_stdout(monkeypatch):

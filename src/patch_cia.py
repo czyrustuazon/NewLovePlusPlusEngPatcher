@@ -350,7 +350,8 @@ def ensure_romfs_dir(romfs_bin: Path, romfs_dir: Path, reuse: Path | None) -> Pa
     return romfs_dir
 
 
-# Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% (see script_inject.py).
+# Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% + optional Gemini Nene
+# (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE).
 from script_inject import resolve_script_source  # noqa: E402
 
 
@@ -1509,6 +1510,24 @@ def build_patch_summary(
     ]
 
     lines.append(_summary_line("OK", "Dialog scripts (.dbin2)", "injected"))
+    if _env_flag("NLPP_INCLUDE_GEMINI_NENE") or getattr(
+        args, "include_gemini_nene", False
+    ):
+        lines.append(
+            _summary_line(
+                "OK",
+                "Gemini Nene dialogue",
+                "machine pass, unreviewed (assets/gemini_heroines)",
+            )
+        )
+    else:
+        lines.append(
+            _summary_line(
+                "SKIPPED",
+                "Gemini Nene dialogue",
+                "community Nene/Rinko layer only",
+            )
+        )
 
     if layeredfs_only:
         lines.append(
@@ -1858,6 +1877,9 @@ def print_patch_summary(
 def cmd_patch(args: argparse.Namespace) -> int:
     _require_tools()
 
+    if getattr(args, "include_gemini_nene", False):
+        os.environ["NLPP_INCLUDE_GEMINI_NENE"] = "1"
+
     rom_in = Path(args.cia).resolve()
     if not rom_in.is_file():
         raise PatchError(f"ROM not found: {rom_in}")
@@ -1875,6 +1897,8 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"dbin:   {dbin_root}")
     print(f"work:   {work}")
     print(f"output: {out_cia}")
+    if _env_flag("NLPP_INCLUDE_GEMINI_NENE"):
+        print("gemini: Nene machine pass ON (assets/gemini_heroines/dbin2)")
     print()
 
     try:
@@ -2462,6 +2486,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--skip-name-patches",
         action="store_true",
         help="Skip English heroine-name patches (▲高嶺＊＊▲ → Takane, resident/img tables)",
+    )
+    p.add_argument(
+        "--include-gemini-nene",
+        action="store_true",
+        help="Inject optional Gemini machine-pass Nene a* from "
+        "assets/gemini_heroines/dbin2 (or set NLPP_INCLUDE_GEMINI_NENE=1)",
     )
     p.add_argument(
         "--name-img",

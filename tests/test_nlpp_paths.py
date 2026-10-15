@@ -130,3 +130,24 @@ def test_require_vanilla_code_mentions_cache(tmp_path: Path, monkeypatch):
         assert "vanilla exefs/code.bin" in msg
         assert "cache/vanilla_from_rom" in msg
         assert str(cache) in msg
+
+
+def test_find_vanilla_script_dir_prefers_cache(tmp_path: Path, monkeypatch):
+    monkeypatch.delenv("NLPP_VANILLA_SCRIPT", raising=False)
+    cache = tmp_path / "cache" / "script"
+    cache.mkdir(parents=True)
+    (cache / "a000.dbin2").write_bytes(b"jp")
+    sibling = tmp_path / "sibling" / "script"
+    sibling.mkdir(parents=True)
+    (sibling / "a000.dbin2").write_bytes(b"en")
+    monkeypatch.setattr(paths, "CACHE_VANILLA_SCRIPT", cache)
+    monkeypatch.setattr(paths, "DEFAULT_VANILLA_SCRIPT", sibling)
+    assert paths.find_vanilla_script_dir() == cache.resolve()
+
+
+def test_find_vanilla_script_dir_env(tmp_path: Path, monkeypatch):
+    script = tmp_path / "scripts"
+    script.mkdir()
+    (script / "t001.dbin2").write_bytes(b"jp")
+    monkeypatch.setenv("NLPP_VANILLA_SCRIPT", str(script))
+    assert paths.find_vanilla_script_dir() == script.resolve()

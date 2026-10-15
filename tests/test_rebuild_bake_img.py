@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -220,6 +221,73 @@ def test_softkey_deploy_after_confirm():
     assert quit_sk > softkey
     assert defaults > quit_sk
     assert sides > defaults
+
+
+def test_cesa_is_last_deploy_script():
+    assert rebuild.DEPLOY_SCRIPTS[-1] == "deploy_cesa_en.py"
+    assert rebuild.DEPLOY_SCRIPTS.index("deploy_web_event_date_en.py") < len(
+        rebuild.DEPLOY_SCRIPTS
+    ) - 1
+
+
+def test_card_side_is_last_writer_on_pkg_5238():
+    """No later bake script may splice NCommonIcon pkg 5238 after card_side."""
+    scripts = rebuild.DEPLOY_SCRIPTS
+    sides = scripts.index("deploy_card_side_btn_en.py")
+    # Comments may mention 5238 softkeys; only flag a real PKG / splice target.
+    pkg_re = re.compile(
+        r"^\s*(PKG|pkg_id|PACKAGE)\s*=\s*5238\b|splice_packages_into_img\([^)]*\b5238\b",
+        re.MULTILINE,
+    )
+    for name in scripts[sides + 1 :]:
+        text = (TOOLS / name).read_text(encoding="utf-8")
+        assert not pkg_re.search(text), f"{name} still targets pkg 5238 after card_side"
+
+
+def test_input_keyboard_after_ui_buttons():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    ui_idxs = [i for i, n in enumerate(scripts) if n == "deploy_ui_buttons_en.py"]
+    assert ui_idxs
+    keyboard = scripts.index("deploy_input_keyboard_en.py")
+    assert keyboard > ui_idxs[-1]
+
+
+def test_rebuild_sets_deploy_img_to_bake():
+    text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
+    assert 'env["NLPP_DEPLOY_IMG"] = str(BAKE_IMG)' in text
+
+
+def test_deploy_scripts_splice_into_dest_not_bak():
+    """splice_packages_into_img(src, …, dst) must use the same live dest twice.
+
+    Passing bak as src copies the whole bak over live and wipes later EN pkgs.
+    """
+    import ast
+
+    bad = []
+    for name in rebuild.DEPLOY_SCRIPTS:
+        path = TOOLS / name
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=name)
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            func = node.func
+            call_name = (
+                func.id
+                if isinstance(func, ast.Name)
+                else func.attr
+                if isinstance(func, ast.Attribute)
+                else None
+            )
+            if call_name != "splice_packages_into_img" or len(node.args) < 4:
+                continue
+            src, dst = node.args[0], node.args[3]
+            src_s, dst_s = ast.unparse(src), ast.unparse(dst)
+            if src_s != dst_s:
+                bad.append(f"{name}: src={src_s!r} dst={dst_s!r}")
+            if "bak" in src_s.lower():
+                bad.append(f"{name}: bak-like src {src_s!r}")
+    assert not bad, "\n".join(bad)
 
 
 def test_commu_settings_header_after_menus():

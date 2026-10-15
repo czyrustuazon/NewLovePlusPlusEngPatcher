@@ -101,3 +101,55 @@ def test_img_idx_mismatches_flags_stale_pak_size(tmp_path: Path):
     struct.pack_into("<I", raw, off, good - 0x10)
     path.write_bytes(bytes(raw))
     assert pack_images.img_idx_mismatches(path) == [(3, good - 0x10, good)]
+
+
+def _two_pkg_img(tmp_path: Path) -> tuple[Path, bytes, bytes]:
+    """Bak with pkgs 3 and 5; returns (path, pkg3_bytes, pkg5_bytes)."""
+    pkg3 = fi.package([("Foo.arc", fi.darc({"timg/A.bclim": fi.bclim(8, 8)}))])
+    pkg5 = fi.package([("Bar.arc", fi.darc({"timg/B.bclim": fi.bclim(8, 8)}))])
+    path = tmp_path / "bak_img.bin"
+    path.write_bytes(fi.img({3: pkg3, 5: pkg5}))
+    return path, pkg3, pkg5
+
+
+def test_splice_from_bak_over_live_wipes_other_packages(tmp_path: Path):
+    """Hard ban: splice_packages_into_img(bak, …, live) copies bak over live first."""
+    bak, pkg3, pkg5_vanilla = _two_pkg_img(tmp_path)
+    live = tmp_path / "live_img.bin"
+    live.write_bytes(bak.read_bytes())
+
+    # Live pkg 5 holds EN bytes that bak does not.
+    en5 = fi.package(
+        [("Bar.arc", fi.darc({"timg/B.bclim": fi.bclim(8, 8, pixels=b"\xee" * 128)}))]
+    )
+    data = tmp_path / "img_data"
+    data.mkdir()
+    (data / "new_0005").write_bytes(en5)
+    pack_images.splice_packages_into_img(live, data, [5], live)
+    assert fi.read_package(live, 5) == en5
+    assert fi.read_package(live, 3) == pkg3
+
+    # Splice only pkg 3 from bak into live — copies entire bak first.
+    (data / "new_0003").write_bytes(pkg3)
+    pack_images.splice_packages_into_img(bak, data, [3], live)
+    assert fi.read_package(live, 3) == pkg3
+    assert fi.read_package(live, 5) == pkg5_vanilla  # EN wiped
+
+
+def test_same_path_splice_preserves_other_packages(tmp_path: Path):
+    bak, pkg3, _pkg5 = _two_pkg_img(tmp_path)
+    live = tmp_path / "live_img.bin"
+    live.write_bytes(bak.read_bytes())
+
+    en5 = fi.package(
+        [("Bar.arc", fi.darc({"timg/B.bclim": fi.bclim(8, 8, pixels=b"\xee" * 128)}))]
+    )
+    data = tmp_path / "img_data"
+    data.mkdir()
+    (data / "new_0005").write_bytes(en5)
+    pack_images.splice_packages_into_img(live, data, [5], live)
+
+    (data / "new_0003").write_bytes(pkg3)
+    pack_images.splice_packages_into_img(live, data, [3], live)
+    assert fi.read_package(live, 5) == en5
+    assert fi.read_package(live, 3) == pkg3

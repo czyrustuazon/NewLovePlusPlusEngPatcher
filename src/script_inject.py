@@ -4,22 +4,28 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
 
 1. **Manaka 100%** — ``rebuild_dbin2`` for every ``t*`` (all packs).
 2. **EngPatcher common** — ``rebuild_dbin2`` for ``p*`` when present.
-3. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
+3. **Optional Gemini Nene** — ``assets/gemini_heroines/dbin2`` ``a*`` in every
+   pack when ``NLPP_INCLUDE_GEMINI_NENE=1`` / ``--include-gemini-nene`` (machine
+   pass, unreviewed; see ``assets/gemini_heroines/README.md``).
+4. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
    stems listed in ``assets/nlppatch/stems.json``) from the historical NLPPATCH
    layer, now shipped inside EngPatcher (no ``vendor/NLPPATCH`` required).
-4. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
+   Skipped for ``a*`` stems already taken by (3).
+5. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
    script tree is supplied, nickname markers on those Japanese files are
    still swapped: Manaka's to ▲Takane＊＊▲ (including an exact 高嶺
    nameplate), Nene's marker to ▲Anegasaki＊▲ (and exact 姉ヶ崎 nameplates
    on ``a*`` stems only), and Rinko's to ▲Kobayaka＊▲ (including an exact
    小早川 nameplate).
 
-Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply there.
+Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply
+there unless Gemini Nene is opted in.
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -29,6 +35,9 @@ import patch_names
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ENG_DBIN = ROOT / "rebuild_dbin2"
 COMMUNITY_MANIFEST = ROOT / "assets" / "nlppatch" / "stems.json"
+GEMINI_NENE_ROOT = ROOT / "assets" / "gemini_heroines"
+GEMINI_NENE_DBIN = GEMINI_NENE_ROOT / "dbin2"
+GEMINI_NENE_MANIFEST = GEMINI_NENE_ROOT / "stems.json"
 # Legacy offline mirror (optional). Prefer rebuild_dbin2 + stems.json.
 LEGACY_NLPPATCH_SCRIPT = (
     ROOT
@@ -50,6 +59,36 @@ COMMUNITY_PREFIXES = frozenset({"a", "k"})
 SCRIPT_PACK_TOTAL = 578
 
 _community_stems: set[str] | None = None
+_gemini_nene_stems: set[str] | None = None
+
+
+def include_gemini_nene() -> bool:
+    """True when Drop / patch_cia opted into the Gemini Nene machine pass."""
+    return str(os.environ.get("NLPP_INCLUDE_GEMINI_NENE", "")).strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
+def gemini_nene_stems() -> set[str]:
+    """Allowlisted Gemini Nene ``a*`` stems (empty when the archive is missing)."""
+    global _gemini_nene_stems
+    if _gemini_nene_stems is not None:
+        return _gemini_nene_stems
+
+    stems: set[str] = set()
+    if GEMINI_NENE_MANIFEST.is_file():
+        try:
+            data = json.loads(GEMINI_NENE_MANIFEST.read_text(encoding="utf-8"))
+            stems = {str(s) for s in data.get("stems", [])}
+        except (OSError, json.JSONDecodeError, TypeError):
+            stems = set()
+    if not stems and (GEMINI_NENE_DBIN / "script").is_dir():
+        stems = {p.stem for p in (GEMINI_NENE_DBIN / "script").glob("a*.dbin2")}
+    _gemini_nene_stems = stems
+    return _gemini_nene_stems
 
 
 def community_stems() -> set[str]:
@@ -185,8 +224,20 @@ def inject_scripts(
     """
     eng_root = eng_root or DEFAULT_ENG_DBIN
     total = 0
-    layers: dict[str, int] = {"manaka": 0, "eng_p": 0, "nlppatch": 0}
+    layers: dict[str, int] = {
+        "manaka": 0,
+        "eng_p": 0,
+        "gemini_nene": 0,
+        "nlppatch": 0,
+    }
     skipped = 0
+    gemini_on = include_gemini_nene()
+    if gemini_on:
+        print(
+            "[inject] Gemini Nene machine pass enabled "
+            f"({len(gemini_nene_stems())} a* stems)",
+            flush=True,
+        )
     for pack in PACKS:
         src_dir = eng_root / pack
         if not src_dir.is_dir():
@@ -196,17 +247,21 @@ def inject_scripts(
             if not create_dirs:
                 raise ScriptInjectError(f"RomFS missing script pack folder: {dest_dir}")
             dest_dir.mkdir(parents=True, exist_ok=True)
-        files = sorted(src_dir.glob("*.dbin2"))
-        if not files:
+        stems = {p.stem for p in src_dir.glob("*.dbin2")}
+        if not stems:
             raise ScriptInjectError(f"no .dbin2 files in {src_dir}")
+        if gemini_on:
+            gem_dir = GEMINI_NENE_DBIN / pack
+            if gem_dir.is_dir():
+                stems |= {p.stem for p in gem_dir.glob("a*.dbin2")}
         injected = 0
         pack_layers: dict[str, int] = {}
-        for src in files:
-            chosen, tag = resolve_script_source(pack, src.stem, eng_root)
+        for stem in sorted(stems):
+            chosen, tag = resolve_script_source(pack, stem, eng_root)
             if chosen is None:
                 skipped += 1
                 continue
-            _copy_script(chosen, dest_dir / src.name)
+            _copy_script(chosen, dest_dir / f"{stem}.dbin2")
             total += 1
             injected += 1
             if tag in layers:
@@ -215,11 +270,12 @@ def inject_scripts(
         layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
         print(
             f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"
-            f" — {len(files) - injected} JP (base ROM)"
+            f" — {len(stems) - injected} JP (base ROM)"
         )
     print(
         f"[inject] total EN: {total} "
-        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, nlppatch={layers['nlppatch']})"
+        f"(manaka={layers['manaka']}, p*={layers['eng_p']}, "
+        f"gemini_nene={layers['gemini_nene']}, nlppatch={layers['nlppatch']})"
     )
     if skipped:
         print(f"[inject] {skipped} script slot(s) left Japanese")
@@ -237,6 +293,13 @@ def resolve_script_source(
     """Return (source path, layer tag) or (None, 'jp')."""
     eng = eng_root / pack / f"{stem}.dbin2"
     pref = script_prefix(stem)
+
+    # Optional Gemini Nene (all packs). Wins over community a* for the same stem.
+    if include_gemini_nene() and pref == "a":
+        allow_g = gemini_nene_stems()
+        gem = GEMINI_NENE_DBIN / pack / f"{stem}.dbin2"
+        if gem.is_file() and (not allow_g or stem in allow_g):
+            return gem, "gemini_nene"
 
     if pack != "script":
         if pref in ENG_PREFIXES and eng.is_file():
@@ -278,10 +341,13 @@ def coverage_summary(eng_root: Path | None = None) -> dict[str, int | bool]:
         present = {p.stem for p in script_dir.glob("*.dbin2")}
     # Include allowlisted community stems even if a file is temporarily missing.
     present |= community_stems()
+    if include_gemini_nene():
+        present |= gemini_nene_stems()
 
     layers: dict[str, int | bool | float] = {
         "manaka": 0,
         "eng_p": 0,
+        "gemini_nene": 0,
         "nlppatch": 0,
         "jp": 0,
     }
@@ -291,12 +357,19 @@ def coverage_summary(eng_root: Path | None = None) -> dict[str, int | bool]:
             continue
         layers[tag] = int(layers.get(tag, 0)) + 1
 
-    en = int(layers["manaka"]) + int(layers["eng_p"]) + int(layers["nlppatch"])
+    en = (
+        int(layers["manaka"])
+        + int(layers["eng_p"])
+        + int(layers["gemini_nene"])
+        + int(layers["nlppatch"])
+    )
     layers["total_stems"] = SCRIPT_PACK_TOTAL
     layers["jp"] = max(0, SCRIPT_PACK_TOTAL - en)
     layers["nlppatch_available"] = len(community_stems())
     layers["nlppatch_vendor"] = nlppatch_script_dir() is not None
     layers["community_manifest"] = COMMUNITY_MANIFEST.is_file()
+    layers["gemini_nene_available"] = len(gemini_nene_stems())
+    layers["gemini_nene_enabled"] = include_gemini_nene()
     layers["english_stems"] = en
     layers["english_pct"] = round(100.0 * en / SCRIPT_PACK_TOTAL, 1)
     return layers
@@ -317,7 +390,14 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_ENG_DBIN,
         help="English .dbin2 root (default: rebuild_dbin2)",
     )
+    ap.add_argument(
+        "--include-gemini-nene",
+        action="store_true",
+        help="Also inject assets/gemini_heroines/dbin2 a* (or set NLPP_INCLUDE_GEMINI_NENE=1)",
+    )
     args = ap.parse_args(argv)
+    if args.include_gemini_nene:
+        os.environ["NLPP_INCLUDE_GEMINI_NENE"] = "1"
     vanilla_bin = ROOT / "cache" / "vanilla_from_rom" / "romfs" / "script" / "bin"
     try:
         count = inject_scripts(
