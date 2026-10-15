@@ -1058,6 +1058,8 @@ Vanilla `logo_white` is a **16×16 stub**. Cannot grow the 15-byte stub zlib in 
 
 **Idx table (hardware crash 2026-09-14):** growing the inner PACK header `dec_len` 1182976 → 1576192 is not enough. img.bin's index table (`0x800 + 90*0x14`, `=4s4x2I2xBB`) still stored **1182976**. The game mallocs **that** arena, then writes the companion TEX at `dec_off=1182976` (one byte past the end) → heap smash → ARM11 data abort in malloc `FUN_0000de04` @ runtime `0x0010DE4C` (FAR=3, `ldr r2,[r0,#4]` with `r0=0xFFFFFFFF`). `patch_img_bin_with_companion` now writes the matching idx `dec_len`. Do not grow PACK `dec_len` without the idx field.
 
+**Idx table, Title pkg 5261 (Azahar crash 2026-10-15):** the same overflow, on any spliced package. `deploy_title_engpatch_en.py` grows the Title ARC for the Eng Patch badge (PACK `dec_len` 408496 → 417584), but the idx entry stayed at 408496. Pressing Back on Select Data reloads Title, the 9088-byte overflow smashes the next heap header, and malloc data-aborts at runtime `0x10DE4C` (`ldr r2,[r0,#4]`, `r0` = `PUPU` `0x55505550`, FAR `0x55505554`). `pack_images.splice_packages_into_img` now writes each spliced PACK's `dec_len` into its idx entry, so every deploy script gets this, not only pkg 90. `patch_cia._require_img_idx_sync` hard-fails a gold bake, packed img or injected img.bin when any PAK's idx `dec_len` differs from its PACK header (`pack_images.img_idx_mismatches`). Vanilla has no mismatches.
+
 Vanilla JP (decode with `src/patch_cesa.py --decode`): white field, `#FF0000` gothic title with ruby, **two** title lines each with a 2px red underline, black body, one red legal line, black closing. Ink occupies roughly **y=73–322**.
 
 #### English master (how it is drawn)

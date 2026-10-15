@@ -153,7 +153,9 @@ def img(packages: dict[int, bytes], count: int | None = None, raw: dict[int, byt
     idx = bytearray()
     for i in range(count):
         typ, data = used.get(i, (b"\0\0\0\0", b""))
-        idx += struct.pack("<4s4x2I2xBB", typ, len(data), 0, 0, 0x30 if typ == b"PAK " else 0x8)
+        # A PAK's idx size is its PACK dec_len (what the game allocates).
+        size = struct.unpack_from("<I", data, 20)[0] if typ == b"PAK " else len(data)
+        idx += struct.pack("<4s4x2I2xBB", typ, size, 0, 0, 0x30 if typ == b"PAK " else 0x8)
     off_table = len(idx)
     offs = bytearray(struct.pack("<4x2I", len(used), 0x1C4B4))
     blobs = bytearray()
