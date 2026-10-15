@@ -43,6 +43,8 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Gallery / Comm / Data MSel | 5244/5241/5242 | EN (GF Comm./Intro/Date rows `Btn_Text04_01_04..10` @ **5241**) |
 | Girlfriend Comm. white header `カノジョ通信` | **5237** ETC1A4 192×16 | **Heart to Heart** (`deploy_multiwin_headers_en.py`; skip Zhoumaru 8px strip). Full “Girlfriend Communication” fries this bar — **§12.4.1**. |
 | Myroom / My Data / Schedule hdr | **5380** / **5575** | EN |
+| Myroom heart pill `ラブプラス` | **5380** ETC1A4 `main_tex_love_RGBA4` | EN (`Love Plus`) — rendered gray; `deploy_myroom_main_en.py` (pink NEW is separate) |
+| My Data home `アイテム一覧` / `マイカメラ` | **5380** ETC1A4 `mcmn_tex_{item,camera}_RGBA4` | EN (`Item List` / `My Camera`) — Zhoumaru `Myroom.check`; `deploy_mydata_en.py` with To-Do/Status |
 | Profile labels | 5246 + **5252** | EN header **Profile** is Heisei W5 16px strip like Heart to Heart (`deploy_profile_en.py`, **§12.4.2**). Call01/atlas labels are Heisei size 15 **2× AA** quantized to vanilla RGB565 chroma ramps (not 1-bit) — **§12.4.4**. Atlas order is 姓 then 名: **Last Name** above **First Name** (do not westernize). Hometown chips `Profile_Btn_Com02_Text01..08` stay Zhoumaru, contain-fit to a 6px pill inset (**§12.4.3**). |
 | Profile Called list (`Win_Call01/02`) | `code.bin` | Leftover `づ` was pack **0x7000** slot `0x40` after a `*3` kana walk past ASCII NUL — not a label to translate. ASCII Called names draw the typed string (`patch_input_call_romaji.py`, **§17.8**). |
 | Status stats | **5501** / **5255** | EN |
@@ -53,5 +55,10 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Anywhere Date empty list | TRB STRI **25183** DrawText (`Lyt_De0200` Opt_Win) | EN — full JP key; truncated `…デートを作` never matched |
 | Main Menu **header** `メインメニュー` | **5261** `Title_menu_word` RGBA4444 (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode; Zhoumaru RGB dump garbled first hub show (**§15.1.1**) |
 | In-room Options overlay `オプションメニュー` | **5380** + **5575** ETC1A4 `optn_tex_*` | EN (`deploy_myroom_options_en.py`, Zhoumaru). Distinct from hub Options **5245**. |
+| Web event-card date (`09月20日更新`) | **5316** LA4 `Web_Txt_Date` + `Web_Num12` digits | `MM/DD` plus a smaller `Update` after the day. Digits stay at vanilla 34/40/58/64 so the Spot HOT badge is clear (`deploy_web_event_date_en.py`). |
+| In-room WEB hub `TOWANO.NET` / `とわのウォッチャー` | **5380** ETC1A4 `web_tex_{net,watcher}_RGBA4` | EN (`TOWANO.NET` / `Towano Watcher`) — Zhoumaru; `deploy_web_hub_en.py` (after map hub). |
+| Mail Play chip `再生` | **5207** RGBA4444 `C_Btn_Play_{Off,On}` | EN (`Play`) — Zhoumaru; `deploy_mail_home_en.py`. |
+| Mail sort popup `並べ替え方法` | **5207** ETC1A4 `Mail_PopTxt04`/`05` + Cancel | EN (`Sort Method` / Timestamp·Sender·Lock / Cancel) — Heisei self-render; `deploy_mail_sort_en.py` (after mail_home). |
+| In-room Mini-game hub `ミニゲーム` / `ぱずるだま` / … | **5380** + **5575** ETC1A4 `game_text_{title,puzzle,twinbe,kanfu}_RGBA4` | EN (`Mini-Game` / `Puzzle-dama` / `TwinBee+` / `Yie Ar Kung-Fu+`) — Zhoumaru except puzzle (`Subarudama` dump → re-render); `deploy_minigame_hub_en.py` (after web hub). |
 
 Details: `docs/technical.md` §12.4–12.6.

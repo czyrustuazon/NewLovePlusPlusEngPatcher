@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""EN Mail home: header (MyroomHeader 5575) + Inbox/New Mail buttons (Mail 5207)."""
+"""EN Mail home: header (MyroomHeader 5575) + Mail buttons (Mail 5207).
+
+Buttons: Inbox / New Mail / Ringtone Settings (着信音設定) / Play (再生).
+Ringtone uses Zhoumaru ``Mail.check/timg/mail_tex_chak_RGBA4.png`` when present.
+Play uses Zhoumaru ``Mail.check/timg/C_Btn_Play_{Off,On}.png``.
+
+Inbox category rows ``Sel_Tex_ma02_01..05`` (カノジョのメール … 謎メール) are
+font-rendered here — Zhoumaru left 01 in JP and mistranslated 05.
+"""
 from __future__ import annotations
 
 import os
@@ -26,7 +34,9 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
+    HEISEI_W5,
     UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -38,6 +48,8 @@ OUT = ROOT / "out" / "mail_home_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 # Dark-blue ink on transparent (white button / patterned header behind).
 INK = (70, 110, 160)
+# Vanilla Sel_Tex_ma02 rows are flat gray (85) RGBA4444 on transparent.
+CATEGORY_INK = (85, 85, 85)
 
 HEADER_PKG = 5575
 HEADER_LABELS = [
@@ -48,26 +60,50 @@ BUTTON_PKG = 5207
 BUTTON_LABELS = [
     ("timg/mail_tex_jyusin_RGBA4.bclim", "Inbox"),
     ("timg/mail_tex_shinki_RGBA4.bclim", "New Mail"),
+    ("timg/mail_tex_chak_RGBA4.bclim", "Ringtone Settings"),
+    ("timg/C_Btn_Play_Off.bclim", "Play"),  # 再生
+    ("timg/C_Btn_Play_On.bclim", "Play"),
 ]
+# Inbox categories — always render (do not pack Zhoumaru ma02 masters).
+CATEGORY_LABELS = [
+    ("timg/Sel_Tex_ma02_01.bclim", "Girlfriend Mail"),  # カノジョのメール
+    ("timg/Sel_Tex_ma02_02.bclim", "Friend Mail"),  # 友達のメール
+    ("timg/Sel_Tex_ma02_03.bclim", "Contact Mail"),  # 連絡メール
+    ("timg/Sel_Tex_ma02_04.bclim", "Info Mail"),  # 情報メール
+    ("timg/Sel_Tex_ma02_05.bclim", "Mystery Mail"),  # 謎メール
+]
+# Prefer Zhoumaru masters for these stems (chak / Play pill chrome).
+ZHOUMARU_BUTTONS = frozenset(
+    {"mail_tex_chak_RGBA4", "C_Btn_Play_Off", "C_Btn_Play_On"}
+)
 
 
-def font(size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(str(FONT), size=size)
+def font(size: int, face: Path = FONT) -> ImageFont.FreeTypeFont:
+    # Heisei W5 is a TTC — P-face at index 1 (same as MultiWin bars).
+    idx = 1 if face == HEISEI_W5 else 0
+    return ImageFont.truetype(str(face), size=size, index=idx)
 
 
-def render_label(w: int, h: int, text: str) -> Image.Image:
+def render_label(
+    w: int,
+    h: int,
+    text: str,
+    *,
+    ink: tuple[int, int, int] = INK,
+    face: Path = FONT,
+) -> Image.Image:
     for size in range(min(16, h + 2), 8, -1):
         scale = 2
         big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
         dr = ImageDraw.Draw(big)
-        f = font(size * scale)
+        f = font(size * scale, face)
         b = dr.textbbox((0, 0), text, font=f)
         tw, th = b[2] - b[0], b[3] - b[1]
         if tw > w * scale - 4:
             continue
         x = (w * scale - tw) // 2 - b[0]
         y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=INK + (255,))
+        dr.text((x, y), text, font=f, fill=ink + (255,))
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
 
@@ -188,18 +224,37 @@ def replace_labels(
         _pix, w, h, got, _ft = parse_bclim(raw)
         if got != fmt:
             raise SystemExit(f"{path} fmt {got} != {fmt}")
-        rgba = render_label(w, h, en)
+        stem = Path(path).stem
+        master = (
+            find_ui_png(("Mail.check", "Mail"), stem, (w, h))
+            if stem in ZHOUMARU_BUTTONS
+            else None
+        )
+        if master is not None:
+            with Image.open(master) as im:
+                rgba = im.convert("RGBA")
+            if rgba.size != (w, h):
+                rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
+            src = master.name
+        elif stem.startswith("Sel_Tex_ma02_"):
+            rgba = render_label(
+                w, h, en, ink=CATEGORY_INK, face=HEISEI_W5
+            )
+            src = "render Heisei"
+        else:
+            rgba = render_label(w, h, en)
+            src = "render"
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
         rgba.save(png)
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw)
         if fmt == 0xB:
             new = png_to_bclim_etc1a4_same_size(png, orig)
         else:
             new = png_to_bclim_rgba4444_same_size(png, orig)
         darc.replace_same_size(entry, new)
-        print(f"OK {path} -> {en!r}", flush=True)
+        print(f"OK {path} -> {en!r} ({src})", flush=True)
 
 
 def patch_package(
@@ -265,8 +320,20 @@ def patch_package(
             raise SystemExit(f"pkg {pkg_id} DMST changed")
     print("  DMST OK", flush=True)
 
+    expect = new_pkg.read_bytes()
     for _dest in iter_deploy_targets(MOD_IMG):
         splice_packages_into_img(_dest, pkg_dir, [pkg_id], _dest)
+        vimg = ImgBin(str(_dest))
+        vimg.parse(False)
+        slot = vimg.entries[pkg_id]
+        got = _dest.read_bytes()[
+            slot.fw.base_offset : slot.fw.base_offset + slot.fw.len()
+        ]
+        if got != expect:
+            raise SystemExit(
+                f"post-splice mismatch pkg {pkg_id} on {_dest} "
+                f"(img still has old package — is Azahar locking img.bin?)"
+            )
 
 
 def main() -> None:
@@ -276,7 +343,12 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
 
     patch_package(HEADER_PKG, HEADER_LABELS, fmt=0xB, use_zopfli=True)
-    patch_package(BUTTON_PKG, BUTTON_LABELS, fmt=8, use_zopfli=False)
+    patch_package(
+        BUTTON_PKG,
+        BUTTON_LABELS + CATEGORY_LABELS,
+        fmt=8,
+        use_zopfli=False,
+    )
     print("deployed Mail home EN ->", MOD_IMG, flush=True)
     print("Rollback:", bak, flush=True)
 

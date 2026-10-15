@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "515b86433e0a98a6d73dff23216a3dc6c82b3c577b7b277a47df356a444a33af",
+ "final_sha256": "0caab1e3855801aa9f3b6a99d8ca5877dbd6caf1d8da2e615ef98efc1325aeb3",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -179,7 +179,7 @@
   },
   {
    "name": "apply_spotpass_skip",
-   "written_sha256": "99b295927a957913a6b84c71c4846d13c939ac9020813fd6dfe0ac6e7bec8f42",
+   "written_sha256": "19093d938f92917ad3f1577633beb926d24704af5b5e6b5fb6bad4bd52bd4df6",
    "ranges": [
     "0x05fdd0-0x05fdd4",
     "0x05fddc-0x05fde0",
@@ -235,10 +235,11 @@
     "0x10f594-0x10f598",
     "0x11021c-0x110220",
     "0x110298-0x11029c",
-    "0x14b94c-0x14b950",
     "0x14e7b0-0x14e7b4",
-    "0x14ed8c-0x14edac",
+    "0x14ed8c-0x14ed94",
+    "0x14eda8-0x14edac",
     "0x14edd0-0x14edd8",
+    "0x14eec8-0x14eed4",
     "0x14efe8-0x14efec",
     "0x14f020-0x14f024",
     "0x14f060-0x14f064",
@@ -246,14 +247,7 @@
     "0x14f0e4-0x14f0e8",
     "0x14f168-0x14f16c",
     "0x14f198-0x14f19c",
-    "0x14f30c-0x14f310",
-    "0x14f31c-0x14f320",
-    "0x14f4c0-0x14f4c4",
-    "0x14fb14-0x14fb18",
-    "0x14fc04-0x14fc08",
-    "0x14fda0-0x14fda4",
-    "0x14fdc4-0x14fdc8",
-    "0x1500a8-0x1500ac",
+    "0x14f4ac-0x14f4b0",
     "0x17a7e0-0x17a7e4",
     "0x17a7ec-0x17a7f0",
     "0x2c62c4-0x2c62c8",
@@ -285,17 +279,10 @@
   },
   {
    "name": "apply_spotpass_embed",
-   "written_sha256": "2eb946b24c1dd2beea310ce5f4d3adee0403ee4701ac24d3d9f4538f05c90b08",
+   "written_sha256": "3de680c1cc11847c3ed9d16620dba68d262350cb5fe7beb3e4dd779e69aa367e",
    "ranges": [
     "0x04fc20-0x04fc24",
     "0x04fc58-0x04fc5c",
-    "0x05b0f0-0x05b0f4",
-    "0x05b544-0x05b548",
-    "0x05b570-0x05b574",
-    "0x05b6dc-0x05b6e0",
-    "0x05b724-0x05b728",
-    "0x05bc58-0x05bc5c",
-    "0x05bc70-0x05bc74",
     "0x1043fc-0x104400",
     "0x10441c-0x104420",
     "0x10446c-0x104470",
@@ -388,6 +375,32 @@
    "ranges": [
     "0x10f130-0x10f134",
     "0x68ffd4-0x690000"
+   ]
+  },
+  {
+   "name": "apply_weather_day_text",
+   "written_sha256": "1ff81b5784a52a3eed332ad00b7d7631587cbb1bcc1132aeaae81f1e96ad3176",
+   "ranges": [
+    "0x1ffdd0-0x1ffdd8",
+    "0x1ffddc-0x1ffde4"
+   ]
+  },
+  {
+   "name": "apply_profile_birthday",
+   "written_sha256": "3ca7deeabc390466d89e99540a8d7b61246d7adf4e4eb12374f816d649157850",
+   "ranges": [
+    "0x350254-0x3502d8",
+    "0x6fc41c-0x6fc424",
+    "0x6fc428-0x6fc430",
+    "0x6fc434-0x6fc43c",
+    "0x6fc440-0x6fc448",
+    "0x6fc44c-0x6fc450",
+    "0x6fc458-0x6fc45c",
+    "0x6fc464-0x6fc468",
+    "0x6fc470-0x6fc478",
+    "0x6fc47c-0x6fc490",
+    "0x6fc494-0x6fc49c",
+    "0x6fc4a0-0x6fc4a8"
    ]
   }
  ]

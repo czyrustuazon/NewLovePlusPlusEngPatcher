@@ -47,6 +47,67 @@ def test_patch_trb_bytes():
         day.patch_trb_bytes(bytearray(_trb(b"??????")))
 
 
+def test_main_translates_nene_surname_and_nickname_key(env):
+    raw = bytearray(_trb())
+    slot = "姉ヶ崎".encode("utf-8")
+    honor = "姉ヶ崎さん".encode("utf-8")
+    token = "▲姉ヶ崎＊▲".encode("utf-8")
+    live = "▲Anegasaki＊▲".encode("utf-8")
+    raw[0x1000 : 0x1000 + len(slot)] = slot
+    raw[0x1100 : 0x1100 + len(honor)] = honor
+    raw[0x1200 : 0x1200 + len(token)] = token
+    env["trb"].write_bytes(raw)
+
+    day.main()
+    out = env["trb"].read_bytes()
+    assert out[OFF : OFF + 6] == day.DAY_SUFFIX_EN
+    assert out[0x1000 : 0x1000 + 9] == b"Anegasaki"
+    assert out[0x1100 : 0x1100 + 13] == b"Anegasaki-san"
+    assert out[0x1100 + 13] == 0
+    assert out[0x1200 : 0x1200 + len(live)] == live
+    pkg = fi.read_package(env["img"], day.RESIDENT_PKG)
+    assert pkg[0x1000 : 0x1000 + 9] == b"Anegasaki"
+    assert live in pkg
+    assert token not in pkg
+
+    day.main()
+    assert env["trb"].read_bytes()[0x1000 : 0x1000 + 9] == b"Anegasaki"
+    assert live in env["trb"].read_bytes()
+
+
+def test_main_translates_rinko_surname_and_marker(env):
+    raw = bytearray(_trb())
+    family = "小早川".encode("utf-8")
+    token = "▲小早川＊▲".encode("utf-8")
+    live = "▲Kobayaka＊▲".encode("utf-8")
+    takane = "▲Takane＊＊▲".encode("utf-8")
+    takane_old = "▲高嶺＊＊▲".encode("utf-8")
+    sentence = "今日は小早川だ".encode("utf-8")
+    raw[0x1300 : 0x1300 + len(family)] = family
+    raw[0x1400 : 0x1400 + len(token)] = token
+    raw[0x1500 : 0x1500 + len(takane_old)] = takane_old
+    raw[0x1600 : 0x1600 + len(sentence)] = sentence
+    env["trb"].write_bytes(raw)
+
+    day.main()
+    out = env["trb"].read_bytes()
+    assert out[OFF : OFF + 6] == day.DAY_SUFFIX_EN
+    assert out[0x1300 : 0x1300 + 8] == b"Kobayaka"
+    assert out[0x1300 + 8] == 0
+    assert out[0x1400 : 0x1400 + len(live)] == live
+    assert out[0x1400 + len(live)] == 0
+    assert out[0x1500 : 0x1500 + len(takane)] == takane
+    assert takane_old not in out
+    assert out[0x1600 : 0x1600 + len(sentence)] == sentence
+    pkg = fi.read_package(env["img"], day.RESIDENT_PKG)
+    assert live in pkg
+    assert token not in pkg
+
+    day.main()
+    assert live in env["trb"].read_bytes()
+    assert token not in env["trb"].read_bytes()
+
+
 def test_main_patches_trb_copies_and_img(env):
     day.main()
     assert env["trb"].read_bytes()[OFF : OFF + 6] == day.DAY_SUFFIX_EN
@@ -58,6 +119,20 @@ def test_main_patches_trb_copies_and_img(env):
     # Second run: already patched, backup kept.
     day.main()
     assert env["trb"].with_suffix(".trb.bak_pre_day_suffix").read_bytes() == _trb()
+
+
+def test_main_patches_surname_when_day_already_en(env):
+    """Day suffix already EN; still rewrite Manaka / Takane slots (branch 87)."""
+    raw = bytearray(_trb(day.DAY_SUFFIX_EN))
+    takane = "高嶺".encode("utf-8")
+    raw[0x1700 : 0x1700 + len(takane)] = takane
+    env["trb"].write_bytes(raw)
+    env["img"].write_bytes(fi.img({}, raw={day.RESIDENT_PKG: bytes(raw)}))
+
+    day.main()
+    out = env["trb"].read_bytes()
+    assert out[OFF : OFF + 6] == day.DAY_SUFFIX_EN
+    assert out[0x1700 : 0x1700 + 6] == b"Takane"
 
 
 def test_main_needs_img(env, monkeypatch, tmp_path):

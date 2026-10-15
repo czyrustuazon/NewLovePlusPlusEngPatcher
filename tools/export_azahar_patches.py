@@ -27,7 +27,8 @@ UPSTREAM = "upstream"  # pristine azahar-emu/azahar snapshots (origin/upstream i
 # patch file -> (header, fork paths it covers)
 EXPORTS = {
     "azahar-openlinkfile.patch": (
-        "File::OpenLinkFile clones the source session (NLPP extra-data hang).",
+        "FS accuracy for NLPP: OpenLinkFile session clone (extra-data hang) "
+        "+ File::Flush sync return.",
         ["src/core/hle/service/fs/"],
     ),
     "azahar-nlpp-emu.patch": (

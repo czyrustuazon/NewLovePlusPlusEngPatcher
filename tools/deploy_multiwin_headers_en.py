@@ -50,7 +50,7 @@ HEADER_LABELS = [
     ("timg/Com_MultiWin_W01_Text02_01_01.bclim", "Confession Memories"),
     ("timg/Com_MultiWin_W01_Text02_01_02.bclim", "After the Dream"),
     ("timg/Com_MultiWin_W01_Text02_01_03.bclim", "Trip Memories"),
-    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Youthful Page"),
+    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Drama Gallery"),
     ("timg/Com_MultiWin_W01_Text02_02_00.bclim", "Illustration Gallery"),  # 0x7
     ("timg/Com_MultiWin_W01_Text02_02_01.bclim", "Dream Gallery"),  # 0x8
     ("timg/Com_MultiWin_W01_Text02_02_02.bclim", "Special Gallery"),  # 0x9
@@ -74,7 +74,7 @@ EXTRA_LABELS = [
     ("timg/Com_MultiWin_W01_Text02_01_01.bclim", "Confession Memories"),
     ("timg/Com_MultiWin_W01_Text02_01_02.bclim", "After the Dream"),
     ("timg/Com_MultiWin_W01_Text02_01_03.bclim", "Trip Memories"),
-    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Youthful Page"),
+    ("timg/Com_MultiWin_W01_Text02_01_04.bclim", "Drama Gallery"),
     ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),
     ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Heart to Heart"),
     ("timg/Com_MultiWin_W01_Text04_01_01.bclim", "Heart to Heart"),

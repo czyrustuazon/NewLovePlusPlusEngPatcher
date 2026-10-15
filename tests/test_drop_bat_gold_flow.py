@@ -82,6 +82,33 @@ def test_bat_rc_ignores_leftover_bake_without_matching_stamp():
     assert stale_idx < inject_idx
 
 
+def test_bat_stale_stamp_forces_need_rebuild():
+    text = _bat_text()
+    assert 'if defined BAKE_STALE set "NEED_REBUILD=1"' in text
+    assert 'if defined FETCHED_GOLD set "NEED_REBUILD="' in text
+    # Stale leftover bake is overwritten (not inject-only).
+    assert "if defined BAKE_STALE" in text
+    assert "Overwriting leftover gold bake" in text
+    assert "running tools\\rebuild_bake_img.py" in text
+
+
+def test_bat_fetched_gold_skips_stale_rebuild():
+    """A just-downloaded GitHub bake clears NEED_REBUILD even if stamp looks stale."""
+    text = _bat_text()
+    assert 'set "FETCHED_GOLD=1"' in text
+    # Stamp check is skipped when FETCHED_GOLD is set.
+    assert "if not defined FETCHED_GOLD if /i not" in text
+    assert 'if defined FETCHED_GOLD set "NEED_REBUILD="' in text
+
+
+def test_bat_abort_does_not_suggest_with_images_off():
+    text = _bat_text()
+    abort = text[text.index("No gold bake available") : text.index("Gold bake path missing")]
+    assert "Or scripts-only" not in abort
+    assert "set NLPP_WITH_IMAGES=0" not in abort
+    assert "NLPP_WITH_IMAGES=0 is not allowed" in abort
+
+
 def test_bat_fetch_is_automatic_not_opt_in():
     text = _bat_text()
     assert "NLPP_FETCH_GOLD" not in text
@@ -182,3 +209,16 @@ def test_git_checkout_asks_to_skip_gold_before_wipe():
     assert text.index(guard) < ask_idx < text.index("--wipe-cia-build")
     assert ask_idx < text.index("fetch_release_bake.py")
     assert 'if /i "!GOLD_ANS!"=="y" set "NLPP_SKIP_GOLD_FETCH=1"' in text
+
+
+def test_bat_asks_gemini_nene_after_gold_before_wipe():
+    """Optional Gemini Nene is asked after the gold-bake question, before wipe."""
+    text = _bat_text()
+    gold_idx = text.index("Skip the gold download and build from this checkout?")
+    nene_idx = text.index("Include Gemini Nene dialogue?")
+    wipe_idx = text.index("--wipe-cia-build")
+    assert gold_idx < nene_idx < wipe_idx
+    assert "NLPP_INCLUDE_GEMINI_NENE" in text
+    assert 'if /i "!NENE_ANS!"=="y" set "NLPP_INCLUDE_GEMINI_NENE=1"' in text
+    assert "if not defined NLPP_INCLUDE_GEMINI_NENE" in text
+    assert "assets\\gemini_heroines" in text or "gemini_heroines" in text

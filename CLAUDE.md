@@ -1,7 +1,15 @@
 # Agent rules for NewLovePlusPlusEngPatcher
 
 Project rules also live in `.cursor/rules/*.mdc`; the `alwaysApply` ones apply
-to every agent, not only Cursor.
+to every agent, not only Cursor. Short cross-tool notes: `AGENTS.md`
+(commit message style + deploy-a → launch-a).
+
+## HARD REQUIREMENT: after deploy-a, launch Azahar A
+
+Do not stop at LayeredFS copy. After `.\ab_test\make.ps1 deploy-a` (or any
+instance-A refresh), run `.\ab_test\make.ps1 launch-a` and confirm
+`ab_test\azahar_instances\a\azahar.exe` is running. Same for B → `launch-b`.
+Details: `AGENTS.md`, `.cursor/rules/deploy-a-launch.mdc`.
 
 ## HARD REQUIREMENT: hardware-accurate Azahar goes in azahar-3ds-accurate
 

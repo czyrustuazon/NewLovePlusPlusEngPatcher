@@ -69,17 +69,33 @@ def _vanilla_blob() -> bytearray:
     return data
 
 
-def test_pills_return_without_drawing_on_backdrop():
-    insn = int.from_bytes(sp.PATCHED_WEB_PILL_LAYOUT, "little")
-    imm = insn & 0xFFFFFF
-    if imm & 0x800000:
-        imm -= 0x1000000
-    assert sp.ADDR_WEB_PILL_LAYOUT + 8 + (imm << 2) == sp.ADDR_PILL_EPILOGUE
-    other = int.from_bytes(sp.PATCHED_WEB_PILL_OTHER, "little")
-    imm = other & 0xFFFFFF
-    if imm & 0x800000:
-        imm -= 0x1000000
-    assert sp.ADDR_WEB_PILL_OTHER + 8 + (imm << 2) == sp.ADDR_PILL_EPILOGUE
+# Old shipped bytes at the SaveErase (Delete Save Data) sites.
+OLD_SAVE_ERASE_BYTES = (
+    (0x0005B6DC, "270000ea"),  # item 9 slot picked -> epilogue
+    (0x0005B724, "150000ea"),  # item 10 back -> epilogue
+    (0x0005B570, "00f020e3"),
+    (0x0005B544, "2d0000ea"),
+    (0x0005BC58, "0e00000a"),
+    (0x0005BC70, "020000ea"),
+    (0x0005B0F0, "3d0000ea"),
+)
+
+
+def test_save_erase_sites_stay_vanilla():
+    """0x5A564..0x5C1A8 is SaveErase, not the WEB Watcher. Keep it vanilla."""
+    data = _vanilla_blob()
+    assert sp.apply_patch(data) is True
+    vanilla = _vanilla_blob()
+    assert data[0x5A564:0x5C1A8] == vanilla[0x5A564:0x5C1A8]
+    for addr, old in OLD_SAVE_ERASE_BYTES:
+        data[addr : addr + 4] = bytes.fromhex(old)
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    assert data[0x5A564:0x5C1A8] == vanilla[0x5A564:0x5C1A8]
+    assert sp.is_patched(data)
+
+
+def test_web_watcher_constants():
     assert sp.VANILLA_WEB_OPEN_LAYOUT == bytes.fromhex("6bea04eb")
     assert sp.VANILLA_NODATA_MSG80 == bytes.fromhex("590fa0e3")
     assert sp.VANILLA_NODATA_MSG3 == bytes.fromhex("1700a0e3")
@@ -236,7 +252,7 @@ def test_embed_applies_idempotent_and_reverts():
     )
     assert data[sp.ADDR_MYROOM_NODATA_BL : sp.ADDR_MYROOM_NODATA_BL + 4] == sp.ARM_NOP
     assert data[sp.ADDR_WEB_WATCHER_EXTRA_BEQ : sp.ADDR_WEB_WATCHER_EXTRA_BEQ + 4] == (
-        sp.ARM_NOP
+        sp.VANILLA_WEB_WATCHER_EXTRA_BEQ
     )
     assert data[sp.ADDR_WEB_WATCHER_FAIL_ST : sp.ADDR_WEB_WATCHER_FAIL_ST + 4] == (
         sp.PATCHED_WEB_WATCHER_FAIL_ST

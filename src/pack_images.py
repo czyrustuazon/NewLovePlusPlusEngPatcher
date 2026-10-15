@@ -10,6 +10,7 @@ import argparse
 import os
 import re
 import shutil
+import struct
 import subprocess
 import sys
 import threading
@@ -67,6 +68,15 @@ def _progress_bar(done: int, total: int, *, prefix: str = "", width: int = 28) -
     print(line, end="", flush=True)
     if done >= total:
         print(flush=True)
+
+
+# img.bin index table: the game allocates each PAK from this dec_len, not
+# from the PACK header (docs/technical.md, idx table crash 2026-09-14).
+IMG_IDX_TABLE_ADDR = 0x800
+IMG_IDX_ENTRY_SIZE = 0x14
+IMG_IDX_FMT = "=4s4x2I2xBB"
+IMG_IDX_DEC_LEN_OFF = 8
+PACK_HDR_DEC_LEN_OFF = 20
 
 
 class PackError(RuntimeError):
@@ -644,6 +654,7 @@ def splice_packages_into_img(
     # (~680MB) per chrome script truncates the file on interrupt (open "wb")
     # and made Drop CIA look hung at deploy_mail_home_en.py.
     writes: list[tuple[int, bytes]] = []
+    idx_writes: list[tuple[int, int]] = []
     for index in patched:
         new_pkg = img_data / f"new_{index:04d}"
         if not new_pkg.is_file():
@@ -670,6 +681,9 @@ def splice_packages_into_img(
             )
             blob = blob + b"\x00" * (pkg_len - len(blob))
         writes.append((base, blob))
+        if blob[:4] == b"PACK":
+            (dec_len,) = struct.unpack_from("<I", blob, PACK_HDR_DEC_LEN_OFF)
+            idx_writes.append((index, dec_len))
         print(
             f"[splice] package {index:04d} @ {base:#x} ({pkg_len} bytes)",
             flush=True,
@@ -685,6 +699,50 @@ def splice_packages_into_img(
                 raise PackError(
                     f"short splice write at {base:#x}: {n} != {len(blob)}"
                 )
+        # A grown ARC grows the PACK dec_len. A stale idx dec_len makes the
+        # game decompress past its block and smash the next heap header
+        # (malloc data abort at 0x10DE4C, FAR 0x55505554, leaving Select Data).
+        for index, dec_len in idx_writes:
+            off = IMG_IDX_TABLE_ADDR + index * IMG_IDX_ENTRY_SIZE
+            fh.seek(off)
+            typ, old, _dec_data, _unk, _kind = struct.unpack(
+                IMG_IDX_FMT, fh.read(IMG_IDX_ENTRY_SIZE)
+            )
+            if typ != b"PAK " or old == dec_len:
+                continue
+            fh.seek(off + IMG_IDX_DEC_LEN_OFF)
+            fh.write(struct.pack("<I", dec_len))
+            print(
+                f"[splice] package {index:04d} idx dec_len {old} -> {dec_len}",
+                flush=True,
+            )
+
+
+def img_idx_mismatches(img_bin: Path) -> list[tuple[int, int, int]]:
+    """``(index, idx dec_len, PACK dec_len)`` for every PAK whose sizes differ."""
+    if str(NLPP_TOOLS) not in sys.path:
+        sys.path.insert(0, str(NLPP_TOOLS))
+    from img import Image  # type: ignore
+
+    image = Image(str(Path(img_bin).resolve()))
+    try:
+        image.parse(False)
+        bad: list[tuple[int, int, int]] = []
+        for index, res in enumerate(image.entries):
+            if res is None or res.typ != b"PAK ":
+                continue
+            image.fh.seek(IMG_IDX_TABLE_ADDR + index * IMG_IDX_ENTRY_SIZE)
+            _typ, idx_len, _dd, _unk, _kind = struct.unpack(
+                IMG_IDX_FMT, image.fh.read(IMG_IDX_ENTRY_SIZE)
+            )
+            (pack_len,) = struct.unpack_from(
+                "<I", res.fw.read(PACK_HDR_DEC_LEN_OFF + 4), PACK_HDR_DEC_LEN_OFF
+            )
+            if idx_len != pack_len:
+                bad.append((index, idx_len, pack_len))
+        return bad
+    finally:
+        image.fh.close()
 
 
 def selective_ie_repack(img_bin: Path, img_data: Path, dst: Path, patched: list[int]) -> None:

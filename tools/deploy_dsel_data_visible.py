@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Data-card labels once, plus the folder-tab captions.
+"""Restore Select Data empty/filled sheet switching, plus folder-tab captions.
 
-The save card's field words are the 256x512 sheet on Lyt_Dsel_data
-Pic_Dsel_data (D_Select_data03). Pts_Dsel_Data.bclyt in the same archive
-has a second Pic_Dsel_data, stored visible, 9px to the left. With the
-English sheet on both, Please Select Data / Full Name and the other rows
-draw twice. The parts picture stays hidden. Vis_Dsel_Data stays visible
-so the card keeps the one aligned sheet.
+Pts_Dsel_Data.Pic_Dsel_data is the live sheet. MenuDSelData.dmst plays
+Pts_Dsel_Data_Tag_Act00..02 and swaps D_Select_data01 (NO DATA) /
+data02 (pre–post-game profile, no Title) / data03 (post-game, Title).
+Lyt_Dsel_data.Vis_Dsel_Data holds a second Pic_Dsel_data locked to
+data03; vanilla stores that Vis off so empty slots show NO DATA and
+Title only appears after post-game.
+
+An earlier pass forced Vis on and hid the Pts picture to stop EN
+double-draw. That left every slot on the static profile sheet. Restore
+vanilla flags: Vis_Dsel_Data off, Pts Pic_Dsel_data on.
 
 Folder tabs are separate: Lyt_C_Com_folder @ pkg 5208 stores
 Vis_folder_txt and Vis_folder_tx_00 hidden, and no animation names them.
@@ -35,10 +39,10 @@ from deploy_common import AZAHAR_INSTANCES, iter_deploy_targets, maybe_backup_im
 MOD_IMG, _VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "dsel_data_visible"
 # (pkg, layout, panes to show, panes to hide). Bit 0 is the visible flag.
-# One field sheet on the card. The parts layout's copy sits 9px left.
+# Pts picture = animated NO DATA / profile. Vis group = static data03 only.
 PATCHES = (
-    (5152, "blyt/Lyt_Dsel_data.bclyt", ("Vis_Dsel_Data",), ()),
-    (5152, "blyt/Pts_Dsel_Data.bclyt", (), ("Pic_Dsel_data",)),
+    (5152, "blyt/Lyt_Dsel_data.bclyt", (), ("Vis_Dsel_Data",)),
+    (5152, "blyt/Pts_Dsel_Data.bclyt", ("Pic_Dsel_data",), ()),
     # Common folder tab words. Body is Vis_C_Com_folder; the two tab
     # captions sit beside it and stay off with the file flag.
     (5208, "blyt/Lyt_C_Com_folder.bclyt", ("Vis_folder_txt", "Vis_folder_tx_00"), ()),

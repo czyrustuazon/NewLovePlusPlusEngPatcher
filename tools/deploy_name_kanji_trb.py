@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from nlpp_paths import find_vanilla_main_trb  # noqa: E402
 from patch_password_serials import apply_shared_serial_passwords  # noqa: E402
+from patch_weather_weekdays import apply_weather_weekdays  # noqa: E402
 from patch_textresource import (  # noqa: E402
     AZAHAR_DIR,
     DEFAULT_TRANSLATIONS,
@@ -86,6 +87,9 @@ def main(argv: list[str] | None = None) -> int:
     rebuilt, pw_logs = apply_shared_serial_passwords(rebuilt)
     for line in pw_logs:
         print(f"[name-kanji-trb] password {line}", flush=True)
+    rebuilt, day_logs = apply_weather_weekdays(rebuilt)
+    for line in day_logs:
+        print(f"[name-kanji-trb] weekday {line}", flush=True)
     out = ROOT / "out" / "textresource_jpn_namekanji.trb"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(rebuilt)

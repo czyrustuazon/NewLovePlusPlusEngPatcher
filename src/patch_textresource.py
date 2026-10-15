@@ -303,6 +303,129 @@ def rebuild_trb(
     return bytes(out), stats
 
 
+def restore_control_tokens_in_trb(data: bytes, lookup: list[str]) -> tuple[bytes, dict]:
+    """Rewrite English ▲…▲ placeholders back to the engine's Japanese tokens.
+
+    Unchanged entries keep their original codebook or UTF-8 bytes. A changed
+    entry is stored as UTF-8, same as other English strings.
+    """
+    from patch_names import restore_control_tokens
+
+    chunks = parse_chunks(data)
+    stri = chunks["STRI"]
+    strb = chunks["STRB"]
+    new_stri = bytearray()
+    new_strb = bytearray()
+    stats = {"total": 0, "restored": 0, "kept": 0, "empty": 0}
+
+    for _idx, _off, stringindex, bytelength, flag in iter_entries(stri):
+        stats["total"] += 1
+        if flag == 2:
+            new_stri += struct.pack("<IHH", len(new_strb), 0, 2)
+            stats["empty"] += 1
+            continue
+        text, raw = decode_entry(strb, stringindex, flag, lookup)
+        restored = restore_control_tokens(text)
+        if restored == text:
+            new_stri += struct.pack("<IHH", len(new_strb), bytelength, flag)
+            new_strb += (raw + b"\x00") if raw else b"\x00"
+            stats["kept"] += 1
+            continue
+        payload = to_game_newlines(restored).encode("utf-8")
+        new_stri += struct.pack("<IHH", len(new_strb), len(payload), 1)
+        new_strb += payload + b"\x00"
+        stats["restored"] += 1
+
+    pad = (4 - (len(new_strb) % 4)) % 4
+    if pad:
+        new_strb += b"\xc9" * pad
+
+    out = bytearray()
+    for name in chunks["_order"]:
+        if name == "STRI":
+            body = bytes(new_stri)
+        elif name == "STRB":
+            body = bytes(new_strb)
+        else:
+            body = chunks[name]
+        out += name.encode("ascii")
+        out += struct.pack("<I", len(body))
+        out += body
+    if "_tail" in chunks:
+        out += chunks["_tail"]
+    return bytes(out), stats
+
+
+def _rewrite_marker_slots(
+    data: bytes,
+    lookup: list[str],
+    rewrite,
+    label: str,
+) -> tuple[bytes, int]:
+    """Rewrite nickname markers inside existing STRB slots.
+
+    Bytes after the new NUL stay as they are. Entries that do not contain
+    the marker are not rebuilt.
+    """
+    chunks = parse_chunks(data)
+    stri = bytearray(chunks["STRI"])
+    strb = bytearray(chunks["STRB"])
+    plans: dict[int, bytes] = {}
+    updates: list[tuple[int, int]] = []
+    for _idx, entry_off, stringindex, _bytelength, flag in iter_entries(stri):
+        if flag == 2:
+            continue
+        text, _raw = decode_entry(strb, stringindex, flag, lookup)
+        new = rewrite(text)
+        if new == text:
+            continue
+        payload = to_game_newlines(new).encode("utf-8")
+        need = len(payload) + 1
+        room = slot_room(stri, len(strb), stringindex)
+        if need > room:
+            raise ValueError(
+                f"entry at 0x{stringindex:x}: {label} marker needs {need} bytes, "
+                f"slot only has {room}"
+            )
+        previous = plans.get(stringindex)
+        if previous is not None and previous != payload:
+            raise ValueError(f"shared string at 0x{stringindex:x} rewrites disagree")
+        plans[stringindex] = payload
+        updates.append((entry_off, len(payload)))
+    if not plans:
+        return data, 0
+    for stringindex, payload in plans.items():
+        need = len(payload) + 1
+        strb[stringindex : stringindex + need] = payload + b"\x00"
+    for entry_off, bytelength in updates:
+        stringindex = struct.unpack_from("<I", stri, entry_off)[0]
+        struct.pack_into("<IHH", stri, entry_off, stringindex, bytelength, 1)
+
+    out = bytearray()
+    for name in chunks["_order"]:
+        body = bytes(stri) if name == "STRI" else bytes(strb) if name == "STRB" else chunks[name]
+        out += name.encode("ascii")
+        out += struct.pack("<I", len(body))
+        out += body
+    if "_tail" in chunks:
+        out += chunks["_tail"]
+    return bytes(out), len(updates)
+
+
+def rewrite_rinko_marker_in_trb(data: bytes, lookup: list[str]) -> tuple[bytes, int]:
+    """Point TRB copies of ▲小早川＊▲ at the live ▲Kobayaka＊▲ slot."""
+    from patch_names import rewrite_rinko_token_text
+
+    return _rewrite_marker_slots(data, lookup, rewrite_rinko_token_text, "Rinko")
+
+
+def rewrite_manaka_marker_in_trb(data: bytes, lookup: list[str]) -> tuple[bytes, int]:
+    """Point TRB copies of ▲高嶺＊＊▲ at the live ▲Takane＊＊▲ slot."""
+    from patch_names import rewrite_manaka_token_text
+
+    return _rewrite_marker_slots(data, lookup, rewrite_manaka_token_text, "Manaka")
+
+
 def slot_room(stri: bytes, strb_size: int, stringindex: int) -> int:
     idxs = sorted({si for _, _, si, _, _ in iter_entries(stri)})
     i = idxs.index(stringindex)

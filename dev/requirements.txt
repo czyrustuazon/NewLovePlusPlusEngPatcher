@@ -7,3 +7,6 @@ PyYAML>=6.0
 
 # Optional: OpenAI MT for patch_textresource.py translate
 # openai>=1.0.0
+
+# Optional: Gemini MT for tools/translate_heroines_gemini.py
+# google-genai>=1.40.0

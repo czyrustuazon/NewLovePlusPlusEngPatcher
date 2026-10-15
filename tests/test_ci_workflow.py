@@ -23,6 +23,12 @@ def test_ci_workflow_checks_out_with_plain_git():
     assert text.index("test -f dev/requirements-dev.txt") < text.index(
         "Install dev dependencies"
     )
+    # Checkout runs under set -euo pipefail. ls|head exits 2 when head closes
+    # the pipe early (EPIPE) — that aborted PR #29 before pytest.
+    checkout = text.split("name: Checkout repository", 1)[1].split(
+        "name: Verify Python", 1
+    )[0]
+    assert "| head" not in checkout
 
 
 def test_ci_runs_ruff_hard_error_lint():

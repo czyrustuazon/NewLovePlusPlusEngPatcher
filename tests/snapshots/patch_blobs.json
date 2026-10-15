@@ -44,6 +44,8 @@
  "patch_lyt_null_pane.build_attach_cave": "426a7ffa360b7918b06c8bf8bd3c532545c5d58db0661c6e93338da79a45856f",
  "patch_lyt_null_pane.build_find_cave": "c517c3ada8a691cf1d37180633a58d455b85903fe0a90fd1913ae9248bc077f4",
  "patch_message_speed.build_talk_cap_cave": "a779a41dc55eb231574b68691f6bada599f92ceb2efddde454f9fbb73a5bfb3f",
+ "patch_profile_birthday.build_month_table": "805f6995a76ad2afeaaf8ef853c7edcc817e01ecd7356cbfa6da4caddc9b2b6f",
+ "patch_profile_birthday.build_window": "1178cfbee91f3788004938dce7dade47b23a9138c0e4570ff615f1205f24cbad",
  "patch_spotpass_embed.build_area_cave": "aebb68703fa5ba991497f955c5c17a56a4fbd0cc2b66ccef1f0352013bba9f3d",
  "patch_spotpass_embed.build_back_finish": "8aa5e10fa462c14c7676cd987bafa31e6902d675e95fe355106dc51ea0e9c27b",
  "patch_spotpass_embed.build_bind_marked": "9462a08582b69546f03f9651e856956d28006e716f1920b17f2d64f329693a90",
@@ -62,7 +64,7 @@
  "patch_spotpass_embed.build_slot_cave": "f220415052b1f6bdbdd42e1a3d251c3b6c46b7a762620585bd8e0579f05498af",
  "patch_spotpass_embed.build_worker_cave": "9766fe1a739898a06e843ff1e6fbbda0a1e9e18da2ddb2d3605f84d14d7c3f3a",
  "patch_spotpass_skip.build_state0_hide": "e5d2bd728f77a1586bed1935c9695bb84f7599c59a6afcfa646a7ff211273001",
- "patch_spotpass_skip.build_title_dismiss_stub": "f3e44133c80b80b072ad7280dd8eadb2caa20480ba48c9c223b24adb7f5b6912",
- "patch_spotpass_skip.build_title_hide_cave": "673ce0974f9375c16df0659e1b89927b9ab0fe71b38e1090c9388ff827cb83ee",
- "patch_spotpass_skip.build_title_lock_release": "7bb011d0cb9a5cab4d2dad6dad6d213e97f1e5d5523093f50932017223f5a9c7"
+ "patch_spotpass_skip.build_title_dismiss_stub": "9259837529bb682a38b3fd39166c2dc46010b5869349b787268d2f678081109d",
+ "patch_spotpass_skip.build_title_lock_release": "7bb011d0cb9a5cab4d2dad6dad6d213e97f1e5d5523093f50932017223f5a9c7",
+ "patch_spotpass_skip.build_title_mgr_release": "1da9898b7d75a099b514a64f7f8168aed38445d244ca82050a3faed463001d36"
 }

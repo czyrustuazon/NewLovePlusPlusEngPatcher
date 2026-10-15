@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-"""EN play-day counter suffix: 日目 → ' Day  ' in resident TRB + img.bin pkg 5508.
+"""EN play-day suffix and heroine surname slots in resident TRB + img.bin pkg 5508.
 
 HUD format is: {n} + 日目 + (weekday)  e.g. 18日目(月) → 18 Day  (Mon)
 
 Weekday slots ((Mon)/(Tue)/…) are already EN in the resident TRB;
 pkg 5508 is a raw duplicate of that TRB inside img.bin and must stay in sync.
+
+Manaka's family slot is Takane (same 6 bytes as 高嶺). Her nickname
+marker is ▲Takane＊＊▲. Nene's family name is Anegasaki and her marker
+is ▲Anegasaki＊▲. Rinko's family slot is Kobayaka (8 bytes, NUL-padded
+into the 9-byte 小早川 slot) and her marker is ▲Kobayaka＊▲.
 """
 from __future__ import annotations
 
@@ -19,6 +24,11 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 from img import Image as ImgBin  # noqa: E402
 from live_status import relax_stdio_errors  # noqa: E402
 from pack_images import splice_packages_into_img  # noqa: E402
+from patch_names import (  # noqa: E402
+    patch_manaka_surname_bytes,
+    patch_nene_surname_bytes,
+    patch_rinko_surname_bytes,
+)
 
 from deploy_common import (  # noqa: E402
     OVERLAY_TRB_DIR,
@@ -68,9 +78,20 @@ def main() -> None:
         print("created", bak_trb, flush=True)
 
     blob = bytearray(src_trb.read_bytes())
-    if patch_trb_bytes(blob):
+    day_changed = patch_trb_bytes(blob)
+    name_n = patch_nene_surname_bytes(blob)
+    name_r = patch_rinko_surname_bytes(blob)
+    name_m = patch_manaka_surname_bytes(blob)
+    if day_changed or name_n or name_r or name_m:
         src_trb.write_bytes(blob)
-        print(f"patched resident TRB day suffix -> ' Day  ' ({src_trb})", flush=True)
+        if day_changed:
+            print(f"patched resident TRB day suffix -> ' Day  ' ({src_trb})", flush=True)
+        if name_m:
+            print(f"patched resident Manaka surname slots: {name_m} ({src_trb})", flush=True)
+        if name_n:
+            print(f"patched resident Nene surname slots: {name_n} ({src_trb})", flush=True)
+        if name_r:
+            print(f"patched resident Rinko surname slots: {name_r} ({src_trb})", flush=True)
     else:
         print(f"resident TRB already has Day suffix ({src_trb})", flush=True)
 

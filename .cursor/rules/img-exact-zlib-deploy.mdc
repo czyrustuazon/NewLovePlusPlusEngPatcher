@@ -44,8 +44,13 @@ Never: short zlib + trailing NUL; shrink `cmp_len`; `pe` repack that grows PACK.
 | `deploy_softkey_defaults_en.py` | **5238** Restore Default `初期設定` `Com_btn_sy01` (live ARC; after Quit) |
 | `deploy_display_settings_en.py` | **5247** Help/Message/Sound labels |
 | `deploy_optionpassword_en.py` | **5251** Password window `Pass_Win01` |
+| `deploy_mail_home_en.py` | **5207** (+ **5575** header) |
+| `deploy_mail_sort_en.py` | **5207** Sort Method popup + Cancel (after mail_home) |
 | `deploy_myroom_main_en.py` / `deploy_mydata_en.py` | **5380** |
 | `deploy_myroom_options_en.py` | **5380** + **5575** in-room Options `optn_tex_*` (live; after shared-ARC writers) |
+| `deploy_map_hub_en.py` | **5380** + **5575** Map hub `map_text_*` / `map_toptex_01` (live; after myroom options) |
+| `deploy_web_hub_en.py` | **5380** WEB hub `web_tex_{net,watcher}` (live; after map hub) |
+| `deploy_minigame_hub_en.py` | **5380** + **5575** Mini-game hub `game_text_*` (live; after web hub) |
 | `deploy_schedule_header_en.py` / profile/todo/mail/… | **5575** + others |
 
 Rollback: `img.bin.bak_pre_<feature>` next to LayeredFS `romfs/img.bin`. Fully quit Azahar after deploy.
