@@ -1278,7 +1278,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc4`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc4.1`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1385,7 +1385,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc4`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **4**.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc4.1`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **4**.
 
 #### What git contains vs what a patched CIA needs
 
@@ -2592,5 +2592,5 @@ The function that should copy the saved names onto these two keys was not found.
 
 ---
 
-*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
+*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4.1` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
 
