@@ -197,6 +197,18 @@ def test_dsel_data_visible_hooked():
     assert "5152" in text
 
 
+def test_fileselect_dating_after_dsel_visible():
+    scripts = rebuild.DEPLOY_SCRIPTS
+    vis = scripts.index("deploy_dsel_data_visible.py")
+    dating = scripts.index("deploy_fileselect_dating_en.py")
+    assert dating > vis
+    text = (TOOLS / "deploy_fileselect_dating_en.py").read_text(encoding="utf-8")
+    assert "D_Select_data03" in text
+    assert "5152" in text
+    master = TOOLS.parent / "assets" / "images" / "FileSelect.check" / "timg" / "D_Select_data03.png"
+    assert master.is_file()
+
+
 def test_softkey_deploy_after_confirm():
     scripts = rebuild.DEPLOY_SCRIPTS
     confirm = scripts.index("deploy_confirm_btn_en.py")

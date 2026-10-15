@@ -857,7 +857,7 @@ FileSelect **5152** has two `Pic_Dsel_data` panes. `Pts_Dsel_Data` is the live o
 |------|------|--------|
 | `D_Select_data01` | empty slot | **NO DATA** |
 | `D_Select_data02` | save, pre–post-game | profile rows through Elapsed Days — **no Title** |
-| `D_Select_data03` | save, post-game | adds **D-Duration** + **Title** |
+| `D_Select_data03` | save, post-game | adds **Dating** + **Title** (was Zhoumaru `D-Duration`; Heisei re-render — `deploy_fileselect_dating_en.py`) |
 
 `Lyt_Dsel_data.Vis_Dsel_Data` holds a second picture locked to `data03`; vanilla stores that Vis **off**. Forcing Vis on and hiding the Pts picture (an older EN double-draw fix) left every slot on the static Full Name / Last Saved / Title sheet. `tools/deploy_dsel_data_visible.py` restores vanilla: Vis off, Pts Pic on — empty → NO DATA, Title only after post-game. Folder-tab flips on `Lyt_C_Com_folder` @ pkg **5208** stay in the same script. Those visibility flips do not restore the main-menu Name Card. That empty folder is `FUN_0014ed0c` state 1 never entering `0x14EEC8` — **§12.4.6**. The pink two-bar screen is a different draw — see below.
 

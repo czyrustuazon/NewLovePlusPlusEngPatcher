@@ -83,6 +83,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_card_flist_en.py",
     "deploy_card_name_labels_en.py",  # 4152 after flist (keeps Received Date)
     "deploy_dsel_data_visible.py",  # 5152 Pts NO DATA / profile sheet (Vis off)
+    "deploy_fileselect_dating_en.py",  # 5152 data03 D-Duration → Dating
     "deploy_status_stats_en.py",
     "deploy_myroom_main_en.py",
     # NLPP English UI Buttons bundle (keyboard 5190, SysPopup, scoped Back, Album delete).
