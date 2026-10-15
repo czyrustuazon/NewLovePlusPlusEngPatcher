@@ -31,6 +31,31 @@ def test_month_table_fits_the_spotpass_pad_tail():
     assert end <= pad_end
 
 
+def test_month_table_guards_bad_inputs(monkeypatch):
+    monkeypatch.setattr(bday, "MONTHS", ("Jan",))
+    try:
+        bday.build_month_table()
+    except ValueError as exc:
+        assert "months" in str(exc)
+    else:
+        raise AssertionError("short MONTHS was accepted")
+    monkeypatch.setattr(bday, "MONTHS", tuple(["X" * 20] * 12))
+    try:
+        bday.build_month_table()
+    except ValueError as exc:
+        assert "stride" in str(exc)
+    else:
+        raise AssertionError("oversized month was accepted")
+    monkeypatch.setattr(bday, "MONTHS", tuple(f"M{i}" for i in range(12)))
+    monkeypatch.setattr(bday, "SPOTPASS_PAYLOAD_MAX", 0x10)
+    try:
+        bday.build_month_table()
+    except ValueError as exc:
+        assert "past the SpotPass pad" in str(exc)
+    else:
+        raise AssertionError("table past pad was accepted")
+
+
 def test_window_replaces_the_unit_concat_and_draws():
     window = bday.build_window()
     assert len(window) == bday.WINDOW

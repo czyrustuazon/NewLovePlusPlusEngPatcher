@@ -226,6 +226,33 @@ def test_baseline_name_kanji_filter_keeps_ui_allowlist():
     assert "芽" not in out
 
 
+def test_baseline_name_kanji_dry_run_filters_without_rebuild(
+    tmp_path: Path, monkeypatch
+):
+    trb = tmp_path / "textresource_jpn.trb"
+    cfg = tmp_path / "textresource_config.trb"
+    trb.write_bytes(b"trb")
+    cfg.write_bytes(b"cfg")
+    monkeypatch.setattr(name_kanji, "find_vanilla_main_trb", lambda: trb)
+    monkeypatch.setattr(
+        name_kanji,
+        "load_translations",
+        lambda _p: {"冬": "Winter", "あ": "A", "芽": "Bud"},
+    )
+    assert name_kanji.main(["--dry-run"]) == 0
+
+
+def test_baseline_name_kanji_resolve_errors(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(name_kanji, "find_vanilla_main_trb", lambda: None)
+    with pytest.raises(SystemExit, match="missing vanilla textresource_jpn"):
+        name_kanji.resolve_vanilla_trb_and_cfg()
+    trb = tmp_path / "textresource_jpn.trb"
+    trb.write_bytes(b"trb")
+    monkeypatch.setattr(name_kanji, "find_vanilla_main_trb", lambda: trb)
+    with pytest.raises(SystemExit, match="missing vanilla textresource_config"):
+        name_kanji.resolve_vanilla_trb_and_cfg()
+
+
 # ---------------------------------------------------------------------------
 # Rebuild — Eng_Patch deploy + required name_input
 # ---------------------------------------------------------------------------

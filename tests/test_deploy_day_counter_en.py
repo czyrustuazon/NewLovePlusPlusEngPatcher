@@ -121,6 +121,20 @@ def test_main_patches_trb_copies_and_img(env):
     assert env["trb"].with_suffix(".trb.bak_pre_day_suffix").read_bytes() == _trb()
 
 
+def test_main_patches_surname_when_day_already_en(env):
+    """Day suffix already EN; still rewrite Manaka / Takane slots (branch 87)."""
+    raw = bytearray(_trb(day.DAY_SUFFIX_EN))
+    takane = "高嶺".encode("utf-8")
+    raw[0x1700 : 0x1700 + len(takane)] = takane
+    env["trb"].write_bytes(raw)
+    env["img"].write_bytes(fi.img({}, raw={day.RESIDENT_PKG: bytes(raw)}))
+
+    day.main()
+    out = env["trb"].read_bytes()
+    assert out[OFF : OFF + 6] == day.DAY_SUFFIX_EN
+    assert out[0x1700 : 0x1700 + 6] == b"Takane"
+
+
 def test_main_needs_img(env, monkeypatch, tmp_path):
     monkeypatch.setattr(day, "MOD_IMG", tmp_path / "none.bin")
     with pytest.raises(SystemExit, match="missing"):
