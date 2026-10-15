@@ -82,16 +82,19 @@ def _blob(moveq: bytes, jt: bytes | None = None, nops: bool | None = None) -> by
     for slot in sp._14ED_APPLY_SLOTS:
         off = sp._14ed_jt_off(slot)
         data[off : off + 4] = (
-            sp.PATCHED_14ED_JT_APPLY
+            sp.patched_14ed_jt(slot)
             if nops
             else sp._14ed_jt_va(sp.VANILLA_14ED_JT_APPLY_FILE[slot])
         )
     for site in sp.ADDR_14ED_WAIT_STAY:
         data[site : site + 4] = (
-            sp.NOP if nops else sp.VANILLA_14ED_WAIT_STAY[site]
+            sp.patched_14ed_wait(site) if nops else sp.VANILLA_14ED_WAIT_STAY[site]
         )
     data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] = (
         sp.PATCHED_14ED_ERROR if nops else sp.VANILLA_14ED_ERROR
+    )
+    data[sp.ADDR_14ED_DLG_GATE : sp.ADDR_14ED_DLG_GATE + 4] = (
+        sp.PATCHED_14ED_DLG_GATE if nops else sp.VANILLA_14ED_DLG_GATE
     )
     data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] = (
         sp.PATCHED_14ED_ST1_DATA if nops else sp.VANILLA_14ED_ST1_DATA
@@ -253,6 +256,41 @@ def test_spotpass_skip_restores_namecard_setup():
     assert sp.is_patched(data)
 
 
+def test_spotpass_skip_upgrades_namecard_back_stub_to_vanilla_exit():
+    """2026-10-12 build: Back→20 park stub, idle 26–30, ERROR→3."""
+    data = _blob(sp.PATCHED_MOVEQ)
+    for site in sp.ADDR_14ED_BACK:
+        data[site : site + 4] = sp.OLD_14ED_BACK
+    data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] = (
+        sp.OLD_14ED_ST20_PARK
+    )
+    for slot in sp._14ED_EXIT_SLOTS:
+        off = sp._14ed_jt_off(slot)
+        data[off : off + 4] = sp.PATCHED_14ED_JT_APPLY
+    for site in sp._14ED_EXIT_WAITS:
+        data[site : site + 4] = sp.NOP
+    data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] = sp.OLD_14ED_ERROR
+    data[sp.ADDR_14ED_DLG_GATE : sp.ADDR_14ED_DLG_GATE + 4] = sp.VANILLA_14ED_DLG_GATE
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    for site in sp.ADDR_14ED_BACK:
+        assert data[site : site + 4] == sp.VANILLA_14ED_TO_APPLY[site]
+    assert data[sp.ADDR_14ED_ST20 : sp.ADDR_14ED_ST20 + sp.ADDR_14ED_ST20_LEN] == (
+        sp.VANILLA_14ED_ST20
+    )
+    for slot in sp._14ED_EXIT_SLOTS:
+        assert data[sp._14ed_jt_off(slot) : sp._14ed_jt_off(slot) + 4] == (
+            sp._14ed_jt_va(sp.VANILLA_14ED_JT_APPLY_FILE[slot])
+        )
+    for site in sp._14ED_EXIT_WAITS:
+        assert data[site : site + 4] == sp.VANILLA_14ED_WAIT_STAY[site]
+    assert data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] == sp.VANILLA_14ED_ERROR
+    assert data[sp.ADDR_14ED_DLG_GATE : sp.ADDR_14ED_DLG_GATE + 4] == (
+        sp.PATCHED_14ED_DLG_GATE
+    )
+    assert sp.is_patched(data)
+
+
 def test_spotpass_skip_upgrades_namecard_back_to_exit():
     """Old Back→21 / stock state-20 / +0xb1 NOP gate / MultiWin NOPs upgrade."""
     data = _blob(sp.PATCHED_MOVEQ)
@@ -395,6 +433,7 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     for site in sp.ADDR_14ED_WAIT_STAY:
         data[site : site + 4] = sp.VANILLA_14ED_WAIT_STAY[site]
     data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] = sp.VANILLA_14ED_ERROR
+    data[sp.ADDR_14ED_DLG_GATE : sp.ADDR_14ED_DLG_GATE + 4] = sp.VANILLA_14ED_DLG_GATE
     data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] = sp.VANILLA_14ED_ST1_DATA
     data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] = (
         sp.VANILLA_14B890_MULTIWIN
@@ -457,7 +496,16 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     )
     assert data[sp._14ed_jt_off(24) : sp._14ed_jt_off(24) + 4] == sp.PATCHED_14ED_JT_APPLY
     assert data[sp._14ed_jt_off(31) : sp._14ed_jt_off(31) + 4] == sp.PATCHED_14ED_JT_APPLY
-    assert data[sp.ADDR_14ED_WAIT_STAY[-1] : sp.ADDR_14ED_WAIT_STAY[-1] + 4] == sp.NOP
+    assert data[sp.ADDR_14ED_WAIT_STAY[2] : sp.ADDR_14ED_WAIT_STAY[2] + 4] == sp.NOP
+    for site in sp._14ED_EXIT_WAITS:
+        assert data[site : site + 4] == sp.VANILLA_14ED_WAIT_STAY[site]
+    for slot in sp._14ED_EXIT_SLOTS:
+        assert data[sp._14ed_jt_off(slot) : sp._14ed_jt_off(slot) + 4] == (
+            sp._14ed_jt_va(sp.VANILLA_14ED_JT_APPLY_FILE[slot])
+        )
+    assert data[sp.ADDR_14ED_DLG_GATE : sp.ADDR_14ED_DLG_GATE + 4] == (
+        sp.PATCHED_14ED_DLG_GATE
+    )
     assert data[sp.ADDR_14ED_ERROR : sp.ADDR_14ED_ERROR + 4] == sp.PATCHED_14ED_ERROR
     assert data[sp.ADDR_14ED_ST1_DATA : sp.ADDR_14ED_ST1_DATA + 4] == sp.PATCHED_14ED_ST1_DATA
     assert data[sp.ADDR_14B890_MULTIWIN : sp.ADDR_14B890_MULTIWIN + 4] == (

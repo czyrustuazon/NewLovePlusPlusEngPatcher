@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "1afe35b7bd13667bf7e6644276f34d7ab03c8d47754d819e45ff886adeeb7fc1",
+ "final_sha256": "0caab1e3855801aa9f3b6a99d8ca5877dbd6caf1d8da2e615ef98efc1325aeb3",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -179,7 +179,7 @@
   },
   {
    "name": "apply_spotpass_skip",
-   "written_sha256": "35510b1c7af9a969f90a1696366149885b7e4df1a2a4f0e83eaf6ca722aa269d",
+   "written_sha256": "19093d938f92917ad3f1577633beb926d24704af5b5e6b5fb6bad4bd52bd4df6",
    "ranges": [
     "0x05fdd0-0x05fdd4",
     "0x05fddc-0x05fde0",
@@ -236,7 +236,8 @@
     "0x11021c-0x110220",
     "0x110298-0x11029c",
     "0x14e7b0-0x14e7b4",
-    "0x14ed8c-0x14edac",
+    "0x14ed8c-0x14ed94",
+    "0x14eda8-0x14edac",
     "0x14edd0-0x14edd8",
     "0x14eec8-0x14eed4",
     "0x14efe8-0x14efec",
@@ -246,14 +247,7 @@
     "0x14f0e4-0x14f0e8",
     "0x14f168-0x14f16c",
     "0x14f198-0x14f19c",
-    "0x14f30c-0x14f310",
-    "0x14f31c-0x14f320",
-    "0x14f4c0-0x14f4c4",
-    "0x14fa90-0x14fabc",
-    "0x14fb14-0x14fb18",
-    "0x14fda0-0x14fda4",
-    "0x14fdc4-0x14fdc8",
-    "0x1500a8-0x1500ac",
+    "0x14f4ac-0x14f4b0",
     "0x17a7e0-0x17a7e4",
     "0x17a7ec-0x17a7f0",
     "0x2c62c4-0x2c62c8",
