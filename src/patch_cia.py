@@ -904,8 +904,8 @@ def _title_pkg_has_eng_patch(img_path: Path, *, pkg_idx: int = 5261) -> bool:
     # Local imports: nlpp-tools + darcutil are heavy; only needed for this check.
     sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
     sys.path.insert(0, str(ROOT / "src"))
-    from darcutil import DarcArchive  # noqa: WPS433
-    from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: WPS433
+    from darcutil import DarcArchive
+    from img import ARC, FileWindow, Image as ImgBin, Package
 
     raw = img_path.read_bytes()
     im = ImgBin(str(img_path))
@@ -937,7 +937,7 @@ def _require_img_idx_sync(img_path: Path, *, context: str) -> None:
     The game allocates from the idx size and decompresses the PACK size; a
     stale idx smashes the next heap header (malloc abort at 0x10DE4C).
     """
-    from pack_images import img_idx_mismatches  # noqa: WPS433
+    from pack_images import img_idx_mismatches
 
     bad = img_idx_mismatches(img_path)
     if not bad:
