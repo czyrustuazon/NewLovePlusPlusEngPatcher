@@ -30,6 +30,11 @@ Patch:
     runs. State 8 calls ``0x2C6CE0`` to release them when overlay
     ``+0x4c`` is set. NOP'ing only ``FUN_0059a7c4`` left the show's lock
     held, so the system kept drawing the crossed-out HOME icon.
+    The dismiss stub also replaces the title exit (10/11/12/15), so it
+    calls ``0x2C6CB8`` to destroy the BuiltIn SaveLoad Manager that
+    state 3 made (``+0x84`` when ``+0x8d``), as state 15 did. A leaked
+    one sat beside Data Management's own and softlocked Delete Save
+    Data on hardware.
     ``FUN_0014ed0c`` state 1 with ``+0x85==0`` still enters the Name Card
     setup at ``0x14EEC8``. The following ``mov`` goes to state 2 (the
     right-hand bars) instead of state 22. Apply states 22+ stay idle.
@@ -419,15 +424,28 @@ VANILLA_TITLE_ST8_SLEEP = bytes.fromhex("f9500beb")  # bl FUN_0059a938
 FUN_HOME_LOCK_DEC = 0x0059A824  # subgt [0x008ab420+0xc]
 FUN_SLEEP_COUNT_DRAIN = 0x00599D3C  # dec [0x008ab420+0x10]; allow sleep at 0
 # Dead tail of state 7. Jump table slot 7 goes to the dismiss stub, the
-# hide cave returns, and nothing outside this tail branches into it.
+# manager release returns, and nothing outside this tail branches into it.
 ADDR_TITLE_LOCK_RELEASE = 0x002C6CE0
 TITLE_LOCK_RELEASE_LEN = 36
 VANILLA_TITLE_LOCK_RELEASE = bytes.fromhex(
     "840096e5c510d0e5000051e30900000a8d10d6e5000051e30f00000a000050e30200000a"
 )
-ADDR_TITLE_HIDE_CAVE = 0x002C6CB8  # unused state-7 body (jt 7 → stub)
-HIDE_CAVE_LEN = 40
-VANILLA_TITLE_HIDE_CAVE = bytes.fromhex(
+# A button on the title goes to state 10. Vanilla 10 → 11 → 12 → 15 is the
+# title exit, and state 15 (0x2C712C) destroys the BuiltIn SaveLoad Manager
+# that state 3 created (+0x84, owned when +0x8d). The dismiss stub replaces
+# 10/11/12/15, so without this the manager outlives the title. Data
+# Management then builds a second one over the same save, and Delete Save
+# Data softlocks on hardware (Azahar still deletes).
+FUN_NODE_DESTROY = 0x00016030  # engine node destroy; runs the virtual dtor
+ADDR_TITLE_MGR_RELEASE = 0x002C6CB8  # unused state-7 body (jt 7 → stub)
+MGR_RELEASE_LEN = 40
+# Shipped before the release: the stub only hid +0x90, and this cave was an
+# uncalled hide helper.
+OLD_TITLE_STUB = bytes.fromhex("900096e5000050e30000000adbf305eb0000a0e3850100ea")
+OLD_TITLE_HIDE_CAVE = bytes.fromhex(
+    "10402de9904096e5000054e30400000a0400a0e1b5f305eb0010a0e3481084e5901086e51080bde8"
+)
+VANILLA_TITLE_MGR_RELEASE = bytes.fromhex(
     "840096e5001090e5781091e531ff2fe1000050e37801001a0020a0e3840096e50210a0e1ad290deb"
 )
 ADDR_TITLE_STUB = 0x002C6C28
@@ -513,12 +531,12 @@ PATCHED_STATE0 = build_state0_hide()
 
 
 def build_title_dismiss_stub() -> bytes:
-    """Hide TitleUI +0x90 applying layout and force +0x5c idle."""
+    """Hide TitleUI +0x90, release the save manager, force +0x5c idle."""
     blob = (
         bytes.fromhex("900096e5")  # ldr r0, [r6, #0x90]
         + bytes.fromhex("000050e3")  # cmp r0, #0
-        + bytes.fromhex("0000000a")  # beq skip bl (pc+8)
-        + _bl(ADDR_TITLE_STUB + 0xC, FUN_APPLY_HIDE)
+        + _blne(ADDR_TITLE_STUB + 0x8, FUN_APPLY_HIDE)
+        + _bl(ADDR_TITLE_STUB + 0xC, ADDR_TITLE_MGR_RELEASE)
         + bytes.fromhex("0000a0e3")  # mov r0, #0
         + _b(ADDR_TITLE_STUB + 0x14, ADDR_TITLE_SET_STATE)
     )
@@ -531,26 +549,30 @@ PATCHED_TITLE_STUB = build_title_dismiss_stub()
 PATCHED_TYPE2_1E5 = _beq(ADDR_TYPE2_1E5, ADDR_TYPE2_EPILOGUE)
 
 
-def build_title_hide_cave() -> bytes:
-    """Hide TitleUI +0x90, clear layout ptr, drop the overlay slot."""
+def build_title_mgr_release() -> bytes:
+    """State 15's save-manager teardown: free +0x84 when +0x8d owns it.
+
+    Clears both fields first, then tail-calls the node destroy so it
+    returns straight to the dismiss stub.
+    """
     blob = (
-        bytes.fromhex("10402de9")  # stmdb sp!, {r4, lr}
-        + bytes.fromhex("904096e5")  # ldr r4, [r6, #0x90]
-        + bytes.fromhex("000054e3")  # cmp r4, #0
-        + bytes.fromhex("0400000a")  # beq pop
-        + bytes.fromhex("0400a0e1")  # mov r0, r4
-        + _bl(ADDR_TITLE_HIDE_CAVE + 0x14, FUN_APPLY_HIDE)
+        bytes.fromhex("8d10d6e5")  # ldrb r1, [r6, #0x8d]
+        + bytes.fromhex("840096e5")  # ldr r0, [r6, #0x84]
+        + bytes.fromhex("000051e3")  # cmp r1, #0
+        + bytes.fromhex("1eff2f01")  # bxeq lr
         + bytes.fromhex("0010a0e3")  # mov r1, #0
-        + bytes.fromhex("481084e5")  # str r1, [r4, #0x48]
-        + bytes.fromhex("901086e5")  # str r1, [r6, #0x90]
-        + bytes.fromhex("1080bde8")  # ldmia sp!, {r4, pc}
+        + bytes.fromhex("8d10c6e5")  # strb r1, [r6, #0x8d]
+        + bytes.fromhex("841086e5")  # str r1, [r6, #0x84]
+        + bytes.fromhex("000050e3")  # cmp r0, #0
+        + bytes.fromhex("1eff2f01")  # bxeq lr
+        + _b(ADDR_TITLE_MGR_RELEASE + 0x24, FUN_NODE_DESTROY)
     )
-    if len(blob) != HIDE_CAVE_LEN:
-        raise ValueError(f"title hide cave {len(blob)} != {HIDE_CAVE_LEN}")
+    if len(blob) != MGR_RELEASE_LEN:
+        raise ValueError(f"title manager release {len(blob)} != {MGR_RELEASE_LEN}")
     return blob
 
 
-PATCHED_TITLE_HIDE_CAVE = build_title_hide_cave()
+PATCHED_TITLE_MGR_RELEASE = build_title_mgr_release()
 
 
 def build_title_lock_release() -> bytes:
@@ -710,7 +732,7 @@ def _title_vanilla(data: bytes) -> bool:
         != VANILLA_TITLE_LOCK_RELEASE
     ):
         return False
-    if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != VANILLA_TITLE_HIDE_CAVE:
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != VANILLA_TITLE_MGR_RELEASE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
         return False
@@ -766,7 +788,7 @@ def _title_patched(data: bytes) -> bool:
         != PATCHED_TITLE_LOCK_RELEASE
     ):
         return False
-    if data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] != PATCHED_TITLE_HIDE_CAVE:
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != PATCHED_TITLE_MGR_RELEASE:
         return False
     if data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] != VANILLA_TITLE_CMP_MAX:
         return False
@@ -798,7 +820,7 @@ def _apply_title(data: bytearray) -> None:
     data[ADDR_TITLE_ST8_TAIL : ADDR_TITLE_ST8_TAIL + 4] = VANILLA_TITLE_ST8_TAIL
     data[ADDR_TITLE_ST8_TAIL2 : ADDR_TITLE_ST8_TAIL2 + 4] = VANILLA_TITLE_ST8_TAIL2
     _write_title_lock_release(data)
-    data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = PATCHED_TITLE_HIDE_CAVE
+    data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = PATCHED_TITLE_MGR_RELEASE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
     data[ADDR_TYPE2_1E5 : ADDR_TYPE2_1E5 + 4] = PATCHED_TYPE2_1E5
@@ -829,7 +851,7 @@ def _revert_title(data: bytearray) -> None:
     data[ADDR_TITLE_LOCK_RELEASE : ADDR_TITLE_LOCK_RELEASE + TITLE_LOCK_RELEASE_LEN] = (
         VANILLA_TITLE_LOCK_RELEASE
     )
-    data[ADDR_TITLE_HIDE_CAVE : ADDR_TITLE_HIDE_CAVE + HIDE_CAVE_LEN] = VANILLA_TITLE_HIDE_CAVE
+    data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = VANILLA_TITLE_MGR_RELEASE
     data[ADDR_TITLE_CMP_MAX : ADDR_TITLE_CMP_MAX + 4] = VANILLA_TITLE_CMP_MAX
     data[ADDR_TITLE_OOR : ADDR_TITLE_OOR + 4] = VANILLA_TITLE_OOR
     data[ADDR_TYPE2_1E5 : ADDR_TYPE2_1E5 + 4] = VANILLA_TYPE2_1E5
@@ -1276,6 +1298,33 @@ def _upgrade_title_home_lock(data: bytearray) -> bool:
     return True
 
 
+def _upgrade_title_mgr_release(data: bytearray) -> bool:
+    """Free the title's save manager when the dismiss stub exits the title.
+
+    The older stub only hid ``+0x90``. It stood in for state 15, so the
+    BuiltIn SaveLoad Manager from state 3 was never destroyed.
+    """
+    if data[ADDR_TITLE_STUB : ADDR_TITLE_STUB + TITLE_STUB_LEN] != OLD_TITLE_STUB:
+        return False
+    if data[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] != (
+        OLD_TITLE_HIDE_CAVE
+    ):
+        return False
+    trial = bytearray(data)
+    trial[ADDR_TITLE_STUB : ADDR_TITLE_STUB + TITLE_STUB_LEN] = PATCHED_TITLE_STUB
+    trial[ADDR_TITLE_MGR_RELEASE : ADDR_TITLE_MGR_RELEASE + MGR_RELEASE_LEN] = (
+        PATCHED_TITLE_MGR_RELEASE
+    )
+    if not is_patched(trial) and not _upgrade_title_home_lock(trial):
+        return False
+    data[:] = trial
+    print(
+        f"[spotpass-skip] title dismiss stub @{ADDR_TITLE_STUB:#x} frees the "
+        f"save manager via @{ADDR_TITLE_MGR_RELEASE:#x}"
+    )
+    return True
+
+
 def apply_patch(data: bytearray) -> bool:
     """Quiet missing NsData. Returns True if bytes changed."""
     if _restore_namecard_setup(data):
@@ -1283,6 +1332,8 @@ def apply_patch(data: bytearray) -> bool:
     if _upgrade_namecard_bars(data):
         return True
     if _upgrade_namecard_back(data):
+        return True
+    if _upgrade_title_mgr_release(data):
         return True
     if _upgrade_title_home_lock(data):
         return True

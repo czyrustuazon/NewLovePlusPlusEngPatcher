@@ -153,8 +153,8 @@ def _blob(moveq: bytes, jt: bytes | None = None, nops: bool | None = None) -> by
     ] = (
         sp.PATCHED_TITLE_LOCK_RELEASE if nops else sp.VANILLA_TITLE_LOCK_RELEASE
     )
-    data[sp.ADDR_TITLE_HIDE_CAVE : sp.ADDR_TITLE_HIDE_CAVE + sp.HIDE_CAVE_LEN] = (
-        sp.PATCHED_TITLE_HIDE_CAVE if nops else sp.VANILLA_TITLE_HIDE_CAVE
+    data[sp.ADDR_TITLE_MGR_RELEASE : sp.ADDR_TITLE_MGR_RELEASE + sp.MGR_RELEASE_LEN] = (
+        sp.PATCHED_TITLE_MGR_RELEASE if nops else sp.VANILLA_TITLE_MGR_RELEASE
     )
     data[sp.ADDR_TITLE_CMP_MAX : sp.ADDR_TITLE_CMP_MAX + 4] = sp.VANILLA_TITLE_CMP_MAX
     data[sp.ADDR_TITLE_OOR : sp.ADDR_TITLE_OOR + 4] = sp.VANILLA_TITLE_OOR
@@ -422,8 +422,8 @@ def test_spotpass_skip_upgrades_hide_without_ui2():
     data[sp.ADDR_TITLE_ST8_TAIL : sp.ADDR_TITLE_ST8_TAIL + 4] = sp.VANILLA_TITLE_ST8_TAIL
     data[sp.ADDR_TITLE_ST8_TAIL2 : sp.ADDR_TITLE_ST8_TAIL2 + 4] = sp.VANILLA_TITLE_ST8_TAIL2
     data[sp.ADDR_TITLE_ST8_LOCK : sp.ADDR_TITLE_ST8_LOCK + 4] = sp.VANILLA_TITLE_ST8_LOCK
-    data[sp.ADDR_TITLE_HIDE_CAVE : sp.ADDR_TITLE_HIDE_CAVE + sp.HIDE_CAVE_LEN] = (
-        sp.VANILLA_TITLE_HIDE_CAVE
+    data[sp.ADDR_TITLE_MGR_RELEASE : sp.ADDR_TITLE_MGR_RELEASE + sp.MGR_RELEASE_LEN] = (
+        sp.VANILLA_TITLE_MGR_RELEASE
     )
     data[sp.ADDR_TITLE_CMP_MAX : sp.ADDR_TITLE_CMP_MAX + 4] = sp.VANILLA_TITLE_CMP_MAX
     data[sp.ADDR_TITLE_OOR : sp.ADDR_TITLE_OOR + 4] = sp.VANILLA_TITLE_OOR
@@ -526,6 +526,33 @@ def test_spotpass_skip_drops_title_home_lock():
         ]
         == sp.PATCHED_TITLE_LOCK_RELEASE
     )
+    assert sp.apply_patch(data) is False
+
+
+def test_spotpass_skip_frees_title_save_manager():
+    """The dismiss stub replaces title exit state 15, so it frees +0x84."""
+    stub = sp.PATCHED_TITLE_STUB
+    assert stub[0xC:0x10] == sp._bl(sp.ADDR_TITLE_STUB + 0xC, sp.ADDR_TITLE_MGR_RELEASE)
+    release = sp.PATCHED_TITLE_MGR_RELEASE
+    assert release[0:4] == bytes.fromhex("8d10d6e5")  # ldrb r1, [r6, #0x8d]
+    assert release[-4:] == sp._b(
+        sp.ADDR_TITLE_MGR_RELEASE + sp.MGR_RELEASE_LEN - 4, sp.FUN_NODE_DESTROY
+    )
+
+    data = _blob(sp.PATCHED_MOVEQ)
+    assert sp.is_patched(data)
+    data[sp.ADDR_TITLE_STUB : sp.ADDR_TITLE_STUB + sp.TITLE_STUB_LEN] = sp.OLD_TITLE_STUB
+    data[sp.ADDR_TITLE_MGR_RELEASE : sp.ADDR_TITLE_MGR_RELEASE + sp.MGR_RELEASE_LEN] = (
+        sp.OLD_TITLE_HIDE_CAVE
+    )
+    assert not sp.is_patched(data)
+    assert sp.apply_patch(data) is True
+    assert data[sp.ADDR_TITLE_STUB : sp.ADDR_TITLE_STUB + sp.TITLE_STUB_LEN] == stub
+    assert (
+        data[sp.ADDR_TITLE_MGR_RELEASE : sp.ADDR_TITLE_MGR_RELEASE + sp.MGR_RELEASE_LEN]
+        == release
+    )
+    assert sp.is_patched(data)
     assert sp.apply_patch(data) is False
 
 
