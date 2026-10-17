@@ -671,6 +671,26 @@ def _decode_tiled(
     return im
 
 
+def blank_texels_left_of(raw: bytes, x_end: int) -> bytes:
+    """Fill texels with x < x_end with the (0, 0) texel. 16-bit formats only.
+
+    Used to erase one half of a two-icon sheet (Btn_Change pencil) without
+    re-encoding: the corner texel is the sheet's transparent background.
+    """
+    pix, w, h, fmt, footer = parse_bclim(raw)
+    if fmt not in (3, 5, 8):
+        raise ValueError(f"blank_texels_left_of: unsupported fmt {fmt:#x}")
+    pot_w, _pot_h = canvas_for_pixel_bytes(len(pix), w, h, 2)
+    tiles_x = max(1, gcm(pot_w, 8) // 8)
+    out = bytearray(pix)
+    bg = bytes(pix[0:2])
+    for i in range(len(pix) // 2):
+        mx, _my = d2xy(i % 64)
+        if mx + ((i // 64) % tiles_x) * 8 < x_end:
+            out[2 * i : 2 * i + 2] = bg
+    return bytes(out) + footer
+
+
 def decode_bclim_to_image(raw: bytes) -> Image.Image | None:
     """Best-effort RGBA decode for packing masters. None if format unknown."""
     pix, w, h, fmt, _ft = parse_bclim(raw)
