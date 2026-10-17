@@ -165,26 +165,71 @@ def test_skip_ascii_dakuten_is_inplace_strcat_branch():
 
 
 def test_force_ml_is_inplace_kit_open():
-    # Shared input kit open: store mode 1 (Win_ML) at kit+1, no cave.
+    # Shared input kit open: kit+8 = 4 (ABC), kit+1 = 1 (Win_ML), no cave.
     assert force_ml.SITE == 0x00255F40
-    assert len(force_ml.PATCHED) == len(force_ml.VANILLA) == 24
-    assert force_ml.PATCHED[:8] == bytes.fromhex("0100a0e30100c4e5")
+    assert len(force_ml.PATCHED) == len(force_ml.VANILLA) == 32
+    assert force_ml.PATCHED[:8] == bytes.fromhex("0400a0e3080084e5")
     # ldr r5,=mgr is pc-relative and stays at the same address.
     assert force_ml.PATCHED[8:12] == force_ml.VANILLA[8:12]
+    # Ends in an unconditional b to the same ML open the vanilla beq takes.
+    assert force_ml.PATCHED[-4:] == bytes.fromhex("210000ea")
+    assert force_ml.VANILLA[-4:] == bytes.fromhex("2100000a")
+
+
+def test_force_ml_sites():
+    by_label = {label: (site, van, pat) for site, van, pat, label in force_ml.SITES}
+    assert by_label["sync mode"][0] == 0x00257238
+    # Btn_ML jump table ids 0-3 (Kanji, Kana 1, Kana 2, S. Kana) -> exit.
+    for i in range(4):
+        site, van, pat = by_label[f"btn {i}"]
+        assert site == 0x001F8C9C + 4 * i
+        assert pat == bytes.fromhex("a88f2f00")
+    assert "btn 4" not in by_label  # ABC stays live
+    assert by_label["pencil +0x2c"][0] == 0x0022BFA4
+    assert by_label["pencil +0x28"][0] == 0x0022C1F8
+    sites = [s for s, _v, _p, _l in force_ml.SITES] + [force_ml.SITE]
+    assert len(sites) == len(set(sites))
+
+
+def _force_ml_vanilla_buf() -> bytearray:
+    data = bytearray(force_ml.SITE + 0x2000)
+    data[force_ml.SITE : force_ml.SITE + len(force_ml.VANILLA)] = force_ml.VANILLA
+    for site, van, _pat, _label in force_ml.SITES:
+        data[site : site + len(van)] = van
+    return data
 
 
 def test_force_ml_apply_on_synthetic_site():
     site = force_ml.SITE
-    data = bytearray(site + 0x40)
-    data[site : site + len(force_ml.VANILLA)] = force_ml.VANILLA
+    data = _force_ml_vanilla_buf()
     assert not force_ml.is_patched(data)
     force_ml.apply_patch(data)
     assert force_ml.is_patched(data)
     force_ml.apply_patch(data)  # idempotent
     assert data[site : site + len(force_ml.PATCHED)] == force_ml.PATCHED
+    for s, _van, pat, _label in force_ml.SITES:
+        assert data[s : s + len(pat)] == pat
 
-    bad = bytearray(site + 0x40)
+    # One site still vanilla: not done, re-apply fixes it.
+    s0, van0, _pat0, _l0 = force_ml.SITES[0]
+    data[s0 : s0 + len(van0)] = van0
+    assert not force_ml.is_patched(data)
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+
+    # Earlier grid-only kit-open revision upgrades in place.
+    old = _force_ml_vanilla_buf()
+    old[site : site + len(force_ml._OLD_PATCHED)] = force_ml._OLD_PATCHED
+    force_ml.apply_patch(old)
+    assert force_ml.is_patched(old)
+
+    bad = _force_ml_vanilla_buf()
+    bad[site : site + 4] = bytes(4)
     with pytest.raises(ValueError, match="unexpected kit open"):
+        force_ml.apply_patch(bad)
+    bad = _force_ml_vanilla_buf()
+    bad[s0 : s0 + 4] = bytes(4)
+    with pytest.raises(ValueError, match="unexpected sync mode"):
         force_ml.apply_patch(bad)
 
 

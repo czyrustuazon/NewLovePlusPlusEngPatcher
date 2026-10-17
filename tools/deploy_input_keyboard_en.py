@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""EN keyboard mode labels in InputC/InputNTexture (pkg 5190).
+"""EN keyboard mode labels in InputC/InputNTexture (pkg 5190); blank the pencil icon;
+hide the grid tab and Kanji/Kana 1/Kana 2/S. Kana buttons in Input.arc.
 
 Vanilla JP uses short dark-ink plates (漢字/かな/カナ/小文字/英数/記号/削除)
 on 48x24 RGBA4444. The prior EN set was light outlined ALL-CAPS
@@ -23,7 +24,11 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
-from bclimutil import parse_bclim, png_to_bclim_rgba4444_same_size  # noqa: E402
+from bclimutil import (  # noqa: E402
+    blank_texels_left_of,
+    parse_bclim,
+    png_to_bclim_rgba4444_same_size,
+)
 from darcutil import DarcArchive  # noqa: E402
 from exact_zlib import (  # noqa: E402
     _force_zero_gaps,
@@ -32,6 +37,7 @@ from exact_zlib import (  # noqa: E402
 )
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
+from deploy_dsel_data_visible import set_pane_visible  # noqa: E402
 
 
 from deploy_common import (  # noqa: E402
@@ -64,6 +70,21 @@ LABELS: list[tuple[str, str]] = [
     ("Profile_Btn_Com01_Text07", "Erase"),  # 削除
 ]
 CLEAR_STEMS = ("Profile_Btn_Clear_Off", "Profile_Btn_Clear_On")
+# Btn_Change icon sheet: pencil x<48, grid x>=48. Text entry is grid-only
+# (patch_input_force_ml ignores pencil taps), so erase the pencil.
+PENCIL_STEM = "Profile_Btn_Change_Obj"
+PENCIL_X_END = 48
+# Text entry is ABC/Symbols only (patch_input_force_ml ignores taps on Btn_ML
+# ids 0-3 and the pencil). Hide those buttons and the grid/pencil tab. No
+# animation drives these Pos_* panes (they animate Nul_/Bod_/Pic_ children).
+LAYOUT_ARC = "Input.arc"
+HIDE_PANES: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "blyt/Lyt_Prf_Btn_ML.bclyt",
+        ("Pos_Btn_C01_01", "Pos_Btn_C01_02", "Pos_Btn_C01_03", "Pos_Btn_C01_04"),
+    ),
+    ("blyt/Lyt_Prf_Btn_Change.bclyt", ("Pos_Btn_Change",)),
+)
 
 
 def font(size: int) -> ImageFont.FreeTypeFont:
@@ -176,7 +197,27 @@ def _patch_arc(arc_bytes: bytes, src_dir: Path, tmp: Path) -> bytes:
         darc.replace_same_size(entry, new)
         note = f" -> {text!r}" if text else " (asset)"
         print(f"  OK {stem} {w}x{h}{note}", flush=True)
+    blank_pencil(darc)
     return bytes(darc.data)
+
+
+def hide_input_panes(darc: DarcArchive) -> None:
+    for lyt, panes in HIDE_PANES:
+        entry = darc.find(lyt)
+        if entry is None:
+            raise SystemExit(f"missing {lyt}")
+        darc.replace_same_size(entry, set_pane_visible(darc.extract_file(entry), (), panes))
+        print(f"  OK {lyt} hide={', '.join(panes)}", flush=True)
+
+
+def blank_pencil(darc: DarcArchive) -> None:
+    entry = darc.find(f"timg/{PENCIL_STEM}.bclim")
+    if entry is None:
+        raise SystemExit(f"missing BCLIM timg/{PENCIL_STEM}.bclim")
+    darc.replace_same_size(
+        entry, blank_texels_left_of(darc.extract_file(entry), PENCIL_X_END)
+    )
+    print(f"  OK {PENCIL_STEM} pencil blanked (x<{PENCIL_X_END})", flush=True)
 
 
 def main() -> int:
@@ -213,7 +254,7 @@ def main() -> int:
     pkg.parse(False)
     blob = bytearray(src_pkg.read_bytes())
 
-    wanted = {n.lower() for n in ARCS}
+    wanted = {n.lower() for n in (*ARCS, LAYOUT_ARC)}
     patched_any = False
     for i, elem in enumerate(pkg.entries):
         if not isinstance(elem, ARC):
@@ -228,7 +269,12 @@ def main() -> int:
                 use_dir = ad
                 break
         print(f"ARC {elem.fn} slot={cmp_len} dec={len(elem.parsed())}", flush=True)
-        tuned = _patch_arc(bytes(elem.parsed()), use_dir, tmp)
+        if elem.fn.lower() == LAYOUT_ARC.lower():
+            darc = DarcArchive(bytearray(elem.parsed()))
+            hide_input_panes(darc)
+            tuned = bytes(darc.data)
+        else:
+            tuned = _patch_arc(bytes(elem.parsed()), use_dir, tmp)
         tuned = _force_zero_gaps(tuned)
         # InputN slot is tight — empty-block first (seconds) before zopfli search
         # (can hang for many minutes on near-miss binary search).
