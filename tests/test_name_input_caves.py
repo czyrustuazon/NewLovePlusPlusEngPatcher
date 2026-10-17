@@ -24,6 +24,7 @@ ascii_dakuten = load_module(
     "patch_input_skip_ascii_dakuten",
     SRC / "patch_input_skip_ascii_dakuten.py",
 )
+force_ml = load_module("patch_input_force_ml", SRC / "patch_input_force_ml.py")
 strcat_raw = load_module("patch_input_strcat_raw", SRC / "patch_input_strcat_raw.py")
 call_romaji = load_module("patch_input_call_romaji", SRC / "patch_input_call_romaji.py")
 
@@ -161,6 +162,48 @@ def test_romaji_cave_converts_fullwidth_utf8():
 
 def test_skip_ascii_dakuten_is_inplace_strcat_branch():
     assert ascii_dakuten.PATCHED_SITE != ascii_dakuten.EXPECT_SITE
+
+
+def test_force_ml_is_inplace_kit_open():
+    # Shared input kit open: store mode 1 (Win_ML) at kit+1, no cave.
+    assert force_ml.SITE == 0x00255F40
+    assert len(force_ml.PATCHED) == len(force_ml.VANILLA) == 24
+    assert force_ml.PATCHED[:8] == bytes.fromhex("0100a0e30100c4e5")
+    # ldr r5,=mgr is pc-relative and stays at the same address.
+    assert force_ml.PATCHED[8:12] == force_ml.VANILLA[8:12]
+
+
+def test_force_ml_apply_on_synthetic_site():
+    site = force_ml.SITE
+    data = bytearray(site + 0x40)
+    data[site : site + len(force_ml.VANILLA)] = force_ml.VANILLA
+    assert not force_ml.is_patched(data)
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+    force_ml.apply_patch(data)  # idempotent
+    assert data[site : site + len(force_ml.PATCHED)] == force_ml.PATCHED
+
+    bad = bytearray(site + 0x40)
+    with pytest.raises(ValueError, match="unexpected kit open"):
+        force_ml.apply_patch(bad)
+
+
+def test_force_ml_main(capsys):
+    assert force_ml.main(["--dry-run"]) == 0
+    assert "strb" in capsys.readouterr().out
+    with pytest.raises(SystemExit, match="deploy_name_input_en"):
+        force_ml.main([])
+
+
+@pytest.mark.local_data
+def test_force_ml_on_vanilla(vanilla_code):
+    data = bytearray(vanilla_code)
+    site = data[force_ml.SITE : force_ml.SITE + len(force_ml.VANILLA)]
+    if site != force_ml.VANILLA:
+        pytest.skip("code.bin kit-open site is not vanilla")
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+    force_ml.apply_patch(data)  # idempotent
 
 
 @pytest.mark.local_data
