@@ -459,7 +459,7 @@ Dump folder:
 
 `%AppData%\Azahar\dump\textures\00040000000F4E00\`
 
-**Option06 note:** in `Pts_Opt_Time_Win`, the `月`/`日` unit panes (`Pic_Opt_Win_tex3`/`tex4`) bind the weekday textures Week01/Week07 (Mon/Sun), so no glyph pair can serve both rows. `tools/deploy_clock_date_order_en.py` makes the row US `MM / DD / YYYY (Sa)`: it moves the code-attached `Pos_Opt_Num_*` / `Pos_Opt_Btn_{T,U}_*` anchors in `Lyt_Opt_Time` and the field frames, paints `Opt_Time_tex2` as `/`, rebinds `tex3` to it, and hides `tex4`. Weekday glyphs are untouched. The `( )` around the weekday are baked into `Opt_Time_Win1_img` (x≈61..86), so `Pos_Opt_week` stays at 74.
+**Option06 note:** in `Pts_Opt_Time_Win`, the `月`/`日` unit panes (`Pic_Opt_Win_tex3`/`tex4`) bind the weekday textures Week01/Week07 (Mon/Sun), so no glyph pair can serve both rows. `tools/deploy_clock_date_order_en.py` makes the rows US `MM / DD / YYYY (Sa)` and `HH : MM PM`: it moves the code-attached `Pos_Opt_Num_*` / `Pos_Opt_Btn_{T,U}_*` anchors in `Lyt_Opt_Time` and the field frames, paints `Opt_Time_tex2` as `/`, rebinds `tex3` to it, and hides `tex4`. AM/PM (`Pos_Opt_ampm`, `window_05`) moves after the minutes; hour, colon (`tex1`) and minutes shift left. Weekday glyphs are untouched. The `( )` around the weekday are baked into `Opt_Time_Win1_img` (x≈61..86), so `Pos_Opt_week` stays at 74.
 
 ---
 
@@ -2053,6 +2053,8 @@ A full list build is about 1.2M instructions for the exact lookup and 2M for the
 - **No reading**: ID `-1` and the row reads `Zack *`, so the player sees she won't say it. The name is cut to 29 bytes so the marker fits.
 
 Then count = 1 and the existing strncpy+DrawText tail (`0x23E4F4` / `0x1F1AD8`, after the TRB `add r1, sp, …`) draws `buf`. The tail falls through to the suggestion list. An empty name takes the vanilla skip.
+
+**Legend.** The top-screen name panel explains the marker: "* = She can't say this name" under the Last Name / First Name boxes (`src/patch_call_legend.py`, run by `deploy_profile_en.py`). Profile.arc (pkg 5252) must keep its decompressed size, so there is no new texture as for the Title "Eng Patch" line. The LA8 box art is stored at power-of-two size with unused rows below the image (`Profile_Info_Call01` 240×152 in 256×256, `Profile_Info_Call02` 240×104 in 256×128). The legend is painted into the first 16 of those rows, and `Pic_Call01` (`Pts_Prf_Info_Call01`) / `Pic_Call02` (`Pts_Prf_Info_Call02`, `Lyt_Prf_Info_Call02`) grow by 16 px with `ty` moved down 8 (centre origin `0x4`, so the boxes stay put) and the bottom UVs set to `(h + 16) / h`. The panel is up for the whole name step, so the line also shows while the Written name is typed.
 
 The row text is also what the tap handlers save: Call01 `0x23E73C` and Call02 `0x1F1D20` copy it into the Called name with `bl 0x317DC` (strncpy, `0x3F` / `0x1F`). Both now call `nlpp_call_pick`, the same copy that then drops a trailing ` *`. The saved name, the Profile row and dialogue show `Zack`. A name typed with a trailing ` *` on purpose loses it.
 
