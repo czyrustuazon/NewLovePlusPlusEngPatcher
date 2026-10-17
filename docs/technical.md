@@ -1911,7 +1911,7 @@ a/b guide: **`ab_test/README.md`**.
 | 5b | Force ML grid | `src/patch_input_force_ml.py` | Kit open `0x255f40` → `Win_ML` in ABC; Kanji/Kana/S. Kana buttons and pencil tap ignored (**§17.9**) |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
-| 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
+| 7b | Called list fallback | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed name as candidate 0 when the dictionary has no match (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 | 9b | Nintendo thank flash | `patch_nintendo_logo_skip_thank_flash` | zero `0x0016EA8C` so the boot beat does not bind `logo_white` on both screens |
@@ -1969,7 +1969,7 @@ The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) 
 | Pad | Contents |
 |-----|----------|
 | `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
-| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then ASCII Called fallback after it |
+| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then the Called no-match fallback after it |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
 
 Old pads `@0x006E6A38` / `@0x006FBB08` are **.rodata** (no-X). Azahar still runs them; a real 3DS prefetch-aborts (`Permission - Page`, PC `0x007E6A78` = old shared +0x40).
@@ -2008,7 +2008,7 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
 4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
 5. Optional: compact ABC grid empty slots 26–29 (Y/Z then four blanks before lowercase) — TRB pack `0x7004` leftover 6-col layout, not the spacing bug.
-6. **Romaji display, hiragana voice (2026-09-18):** gojūon keys stay Hepburn, but a tap must still bind the original hiragana so 呼ばれ方 can hit TRB **`0x7100`**. Today `insert=display` writes `akiko` and Siren never sees `あきこ`. Keep Latin on screen; store or reverse-map the kana reading for speech (and for the Called list, which currently skips the JP dictionary on pure ASCII). See `docs/sayable-names.md`.
+6. **Romaji display, hiragana voice (2026-09-18):** gojūon keys stay Hepburn, but a tap must still bind the original hiragana so 呼ばれ方 can hit TRB **`0x7100`**. Today `insert=display` writes `akiko` and Siren never sees `あきこ`. Keep Latin on screen; store or reverse-map the kana reading for speech (and for the Called list, where an ASCII name never matches the JP dictionary and falls back to the typed string). See `docs/sayable-names.md`.
 
 ### 17.7 ABC fullwidth Latin → ASCII (2026-09-18)
 
@@ -2038,9 +2038,11 @@ Romaji insert is 1-byte ASCII, so `*3` steps **past the NUL** into leftover kana
 `src/patch_input_call_romaji.py` (after strcat in `deploy_name_input_en.py`):
 
 1. `*3` / `+3` → `GetUtf8CharByteLength` (ASCII +1, stops before leftover). That helper writes `r1` (`mov r1, r0`) and `r2` on multibyte leads. The `*3` cave keeps the byte cursor in `r3` and the remaining count in saved `r4`, and reads `ldrb r0, [r6, r3]`. A pointer in `r1` data-aborts on hardware (ASCII `T` → FAR `0x55`, Luma PC `0x0078FEFC`).
-2. Non-empty ASCII Called name skips the JP dictionary and jumps into the existing strncpy+DrawText tail so the **typed string** is candidate 0
+2. **No-match fallback (2026-10-17).** Both builders leave through `add sp, sp, #0x16c` (`0x23E668` Call01, `0x1F1C58` Call02) with the candidate count in `r7` / `r6`. That exit branches to the cave. If the count is 0 and the saved name (`[sp, #0x168]`) is non-empty, the cave sets the count to 1 and jumps into the existing strncpy+DrawText tail (`0x23E4F4` / `0x1F1AD8`, after the TRB `add r1, sp, …`) with `r1` = the name, so the **typed string** is candidate 0. The tail reruns the ず/づ pass, finds nothing again, and returns through the same exit with count 1. Otherwise the cave runs the original `add sp` and returns to the next instruction.
 
-Japanese readings still resolve for hiragana saves. English nicknames are not in pack 0x7100 (voice); she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`).
+Vanilla `FUN_00147b3c` only accepts an exact hiragana match (same length, `FUN_00147a58` bytewise), plus the ず↔づ swap in `FUN_00147e04`. An empty list was the vanilla result for a hiragana name missing from **0x7100** / **0x7200**, and also for every ASCII name, since ASCII cannot equal a kana reading. One fallback covers both. This replaces the earlier ASCII-only check on the function prologues (`0x23E468` / `0x1F1A6C`), which skipped the dictionary for ASCII names. The prologues are vanilla again, and the cave shrank from `0xE8` to `0xB4`.
+
+Japanese readings still resolve for hiragana saves that are in the dictionary. A typed fallback carries no dictionary ID (the `+0x394` / `+0x234` store is skipped, as in the old ASCII path), so she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`, `test_call_romaji_no_match_shows_typed_name`).
 
 ### 17.9 Text entry: grid only, ABC default, no pencil or kana buttons (2026-10-17)
 
@@ -2082,7 +2084,7 @@ The glyph is blanked in the texture (`bclimutil.blank_texels_left_of`, x<48 → 
 
 **Hidden panes.** Both copies of the input layouts (`Input.arc` in pkg **5190**, `Profile.arc` in pkg **5252**) clear the visible bit on `Lyt_Prf_Btn_ML` `Pos_Btn_C01_01`–`_04` (Kanji, Kana 1, Kana 2, S. Kana) and `Lyt_Prf_Btn_Change` `Pos_Btn_Change` (the whole tab), via `hide_input_panes` in `deploy_input_keyboard_en.py` (also called by `deploy_profile_en.py`). The `Pts_Prf_Btn_C01` / `Btn_Change` animations only drive `Nul_`/`Bod_`/`Pic_` children, never the `Pos_*` parents, so the hide sticks. ABC, Symbols and Delete keep their vanilla positions (gap above them).
 
-Tests: `tests/test_name_input_caves.py` (`test_force_ml_is_inplace_kit_open`, `test_force_ml_on_vanilla`).
+Tests: `tests/test_name_input_caves.py` (`test_force_ml_is_inplace_kit_open`, `test_force_ml_on_vanilla`). `tests/test_input_panes_hidden.py` locks the hide list, checks that the hide writers are the last scripts to touch pkg 5190 / 5252 in the bake, and (local_data) checks that both copies in `release/bake_img.bin` are hidden and the pencil blanked. On 2026-10-17 a bake from before this change reached Azahar A through `deploy-a`, and both screens showed the buttons again.
 
 ---
 
