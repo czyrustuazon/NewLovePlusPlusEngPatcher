@@ -94,8 +94,10 @@ def test_msel_menus_include_event_gallery_rows():
         "Com_M_Sel_Btn_Text04_01_08",
         "Com_M_Sel_Btn_Text04_01_09",
         "Com_M_Sel_Btn_Text04_01_10",
+        "Com_M_Sel_Btn_Text04_03_00",
         "Com_M_Sel_Btn_Text04_03_01",
         "Com_M_Sel_Btn_Text04_03_02",
+        "Com_M_Sel_Plate_Text04_03_00",
     ):
         assert stem in text
     assert "Find Two-Person Chat" in text
@@ -107,6 +109,11 @@ def test_msel_menus_include_event_gallery_rows():
     assert "Join Double Date" in text
     assert "Find Battle Opponent" in text
     assert "Join Battle" in text
+    assert "Communication Battle" in text
+    assert '("Com_M_Sel_Btn_Text04_03_00.bclim", "Communication Battle")' in text
+    assert '("Com_M_Sel_Btn_Text04_03_01.bclim", "Find Battle Opponent")' in text
+    assert '("Com_M_Sel_Btn_Text04_03_02.bclim", "Join Battle")' in text
+    assert '("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle")' not in text
     assert "Heart to Heart" in text
     assert '("Com_M_Sel_Btn_Text04_01_01.bclim", "Heart to Heart")' in text
     assert "SKIP_UI_PNG" in text
@@ -472,6 +479,9 @@ def test_multiwin_girlfriend_comm_self_renders():
     assert "Drama Gallery" in text
     assert "Com_MultiWin_W01_Text03_05_00" in text
     assert "Password Input" in text
+    assert "Com_MultiWin_W01_Text04_03_00" in text
+    assert "Communication Battle" in text
+    assert '("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle")' not in text
 
 
 def test_profile_deploy_includes_hometown_regions():
