@@ -1911,7 +1911,7 @@ a/b guide: **`ab_test/README.md`**.
 | 5b | Force ML grid | `src/patch_input_force_ml.py` | Kit open `0x255f40` → `Win_ML` in ABC; Kanji/Kana/S. Kana buttons and pencil tap ignored (**§17.9**) |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
-| 7b | Called list fallback | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed name as candidate 0 when the dictionary has no match (**§17.8**) |
+| 7b | Called list romaji lookup | `src/patch_input_call_romaji.py` | Compiled romaji matcher in `FUN_00147b3c` / `FUN_00147e04` / `FUN_00148f44` (exact + fuzzy suggestions with reading IDs) + typed name as candidate 0 when there is no exact match (**§17.8**) |
 | 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 | 9b | Nintendo thank flash | `patch_nintendo_logo_skip_thank_flash` | zero `0x0016EA8C` so the boot beat does not bind `logo_white` on both screens |
@@ -1969,7 +1969,7 @@ The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) 
 | Pad | Contents |
 |-----|----------|
 | `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
-| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then the Called no-match fallback after it |
+| `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then the Called typed-name fallback after it |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
 
 Old pads `@0x006E6A38` / `@0x006FBB08` are **.rodata** (no-X). Azahar still runs them; a real 3DS prefetch-aborts (`Permission - Page`, PC `0x007E6A78` = old shared +0x40).
@@ -2008,7 +2008,7 @@ We tried custom candidate UI (B_Place SHOW `0x1E`, C3 `MList` stripes, C4 left-c
 3. Optional EN mode-tab BCLIM via `deploy_input_keyboard_en.py`.
 4. **Hardware NX:** name-input caves must stay in `.text` page padding (`src/patch_input_cave_map.py`). Rebuild `release/name_input_code.bin` from vanilla after moving caves, then re-Drop the CIA.
 5. Optional: compact ABC grid empty slots 26–29 (Y/Z then four blanks before lowercase) — TRB pack `0x7004` leftover 6-col layout, not the spacing bug.
-6. **Romaji display, hiragana voice (2026-09-18):** gojūon keys stay Hepburn, but a tap must still bind the original hiragana so 呼ばれ方 can hit TRB **`0x7100`**. Today `insert=display` writes `akiko` and Siren never sees `あきこ`. Keep Latin on screen; store or reverse-map the kana reading for speech (and for the Called list, where an ASCII name never matches the JP dictionary and falls back to the typed string). See `docs/sayable-names.md`.
+6. **Romaji display, hiragana voice (2026-09-18):** gojūon keys stay Hepburn, but a tap must still bind the original hiragana so 呼ばれ方 can hit TRB **`0x7100`**. Today `insert=display` writes `akiko` and Siren never sees `あきこ`. Keep Latin on screen; store or reverse-map the kana reading for speech. The Called list no longer needs this: it matches romaji against the romanized pack 0x7200 and stores the reading ID (**§17.8**). See `docs/sayable-names.md`.
 
 ### 17.7 ABC fullwidth Latin → ASCII (2026-09-18)
 
@@ -2025,24 +2025,42 @@ Tests: `tests/test_name_input_caves.py` (`test_fullwidth_latin_to_ascii_abc_pack
 | `NameInput_DrawCell` | `0x1fc304` |
 | Romaji cave | `0x0068F900` |
 
-### 17.8 Called list leftover `づ` (2026-09-18)
+### 17.8 Called list: romaji lookup, suggestions, typed fallback (2026-10-17)
 
-Profile **Called** (`呼ばれ方`) fills `Lyt_Prf_Win_Call01/02` via `FUN_0023e468` / `FUN_001f1a6c`. Lookup is hiragana-only:
+Profile **Called** (`呼ばれ方`) fills `Lyt_Prf_Win_Call01/02` via `FUN_0023e468` (Call01, Profile) / `FUN_001f1a6c` (Call02, first boot). Each builder calls the exact lookup `FUN_00147b3c(name, mode, out)` and draws its hit as candidate 0, then the list `FUN_00147e04(name, mode, 0, out)` and draws up to 10 rows in total. The list loop skips a row whose text `strcmp`s equal to the typed name.
 
-- `FUN_00147808` indexes each “character” as `ptr + i*3`
-- `FUN_00147e04` scans for ず/づ (pack **0x7000** slots `0x3b` / `0x40`) with `add r4, #3`
-- Hits TRB **0x7200** (surnames) / **0x7100+bucket** (given names)
+**Why vanilla can't work in the patched game.** Vanilla buckets the typed name by its first kana against pack **0x7000** (`FUN_00147808`, `ptr + i*3`), compares 3 bytes per character in **0x7100 / 0x712E / 0x715C + bucket** (`FUN_00147a58`), then maps the hit to a reading ID by an equal string in pack **0x7200** over seven ID ranges (VA `0x7A484E`). The shipped TRB romanizes 0x7100+ and 0x7200 (`Akiko` is ID 4780), but 0x7000 stays kana and the compare stays 3-byte. No name could match. Before the walk was fixed (2026-09-18), the `*3` walk also stepped past the NUL of an ASCII name into leftover kana, so slot `0x40` `づ` showed as the only candidate, and holding the cursor in `r1` data-aborted on hardware (ASCII `T` → FAR `0x55`, Luma PC `0x0078FEFC`).
 
-Romaji insert is 1-byte ASCII, so `*3` steps **past the NUL** into leftover kana in the name slot. Slot `0x40` is literally `づ`, which then appears as the only candidate no matter what Latin name you typed (`AKIKO`, …). `name-kanji` TRB also keeps single kana JP, so that glyph is never mapped to `du`.
+**Romaji matcher.** `src/call_romaji_match.c` replaces the bodies of `FUN_00147b3c` and `FUN_00147e04` with the same contracts. It is compiled by `tools/build_call_romaji_match.py` (clang + ld.lld, armv6k ARM, `-Oz`) into the committed `src/call_romaji_match_blob.py`; the deploy never compiles.
 
-`src/patch_input_call_romaji.py` (after strcat in `deploy_name_input_en.py`):
+| Region (file) | Was | Holds |
+|---|---|---|
+| `0x147B3C`–`0x147E03` | `FUN_00147b3c` | `nlpp_call_exact` at the entry, `normalize`, `same`, `distance` |
+| `0x147E04`–`0x1480A7` | `FUN_00147e04` | `nlpp_call_list` at the entry, `nlpp_call_typed`, `nlpp_call_pick` (`FUN_001480a8` after it stays live) |
+| `0x148F44`–`0x1493EF` | `FUN_00148f44` | `scan` (only `FUN_00147e04` called it; `FUN_00147808` is only reached from these two) |
 
-1. `*3` / `+3` → `GetUtf8CharByteLength` (ASCII +1, stops before leftover). That helper writes `r1` (`mov r1, r0`) and `r2` on multibyte leads. The `*3` cave keeps the byte cursor in `r3` and the remaining count in saved `r4`, and reads `ldrb r0, [r6, r3]`. A pointer in `r1` data-aborts on hardware (ASCII `T` → FAR `0x55`, Luma PC `0x0078FEFC`).
-2. **No-match fallback (2026-10-17).** Both builders leave through `add sp, sp, #0x16c` (`0x23E668` Call01, `0x1F1C58` Call02) with the candidate count in `r7` / `r6`. That exit branches to the cave. If the count is 0 and the saved name (`[sp, #0x168]`) is non-empty, the cave sets the count to 1 and jumps into the existing strncpy+DrawText tail (`0x23E4F4` / `0x1F1AD8`, after the TRB `add r1, sp, …`) with `r1` = the name, so the **typed string** is candidate 0. The tail reruns the ず/づ pass, finds nothing again, and returns through the same exit with count 1. Otherwise the cave runs the original `add sp` and returns to the next instruction.
+`patch_input_call_romaji.py` checks a SHA-256 of each vanilla body before writing. The blob scans pack 0x7200 over the vanilla ranges through `FUN_005c0d4c(0x7200, id, 1)` and compares lower-case letters only (`ō`/`é` fold to `o`/`e`; apostrophes, spaces and hyphens drop):
 
-Vanilla `FUN_00147b3c` only accepts an exact hiragana match (same length, `FUN_00147a58` bytewise), plus the ず↔づ swap in `FUN_00147e04`. An empty list was the vanilla result for a hiragana name missing from **0x7100** / **0x7200**, and also for every ASCII name, since ASCII cannot equal a kana reading. One fallback covers both. This replaces the earlier ASCII-only check on the function prologues (`0x23E468` / `0x1F1A6C`), which skipped the dictionary for ASCII names. The prologues are vanilla again, and the cave shrank from `0xE8` to `0xB4`.
+- `nlpp_call_exact`: first equal reading → `out = {1, id}`, return 1. Mode 1 (Call01) skips the 23 IDs vanilla rejects (VA `0x7A4986`); mode ≥ 3 never matches, as in vanilla.
+- `nlpp_call_list`, flag 0: fuzzy suggestions without the exact reading, best first, at most 10, one row per distinct reading (FNV-1a). Scoring follows media-kit `js/fuzzy.js` (the master-music-player search): prefix (`500 − extra letters`), then optimal-string-alignment typos (one slip for 4–7 letters, two for 8+; `400 − 50·d − length difference`), then readings the typed name starts with (`300 − …`). Subsequences and typos against a reading's beginning are left out: on short names they listed noise (`Taro` → Tanoe, Tamotsu, Tanokura). Flag ≠ 0 (the two-name compare at `0x2A601C`) returns exact matches only.
+- Non-ASCII names match nothing (the kana tabs are hidden, §17.9).
 
-Japanese readings still resolve for hiragana saves that are in the dictionary. A typed fallback carries no dictionary ID (the `+0x394` / `+0x234` store is skipped, as in the old ASCII path), so she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`, `test_call_romaji_no_match_shows_typed_name`).
+A full list build is about 1.2M instructions for the exact lookup and 2M for the suggestions, plus the TRB getter, once when the list opens.
+
+**Typed fallback.** `beq` on a failed exact lookup (`0x23E4BC` Call01, `0x1F1A9C` Call02) branches to the cave in the last `.text` RX pad after strcat (`0x68FEE4`). A non-empty saved name (`[sp, #0x168]`) becomes candidate 0. The cave calls `nlpp_call_typed(name, mode, buf)` with the mode vanilla passes the lookup (1 for Call01, `[obj+0x2c]` for Call02) and `buf` = the 0x20-byte TRB copy target the miss left unused (`sp+0x10C` / `sp+0x110`). It returns the row's reading ID and writes the row text to `buf`:
+
+- A **long-vowel match** (uu → u, ou / oo → o on both sides) lends its ID while the row keeps the typed text: `YUji` shows as typed and stores 550 (ゆうじ "Yuuji"), so she says it. Collapsing only applies here, after the literal lookup missed, because 40 readings differ only by a long vowel (`Ono` / `Oono`, `Sho` / `Shou`).
+- **No reading**: ID `-1` and the row reads `Zack *`, so the player sees she won't say it. The name is cut to 29 bytes so the marker fits.
+
+Then count = 1 and the existing strncpy+DrawText tail (`0x23E4F4` / `0x1F1AD8`, after the TRB `add r1, sp, …`) draws `buf`. The tail falls through to the suggestion list. An empty name takes the vanilla skip.
+
+The row text is also what the tap handlers save: Call01 `0x23E73C` and Call02 `0x1F1D20` copy it into the Called name with `bl 0x317DC` (strncpy, `0x3F` / `0x1F`). Both now call `nlpp_call_pick`, the same copy that then drops a trailing ` *`. The saved name, the Profile row and dialogue show `Zack`. A name typed with a trailing ` *` on purpose loses it.
+
+**Reading ID.** Tapping candidate *i* copies its text into the Called name and its reading ID next to it: Call01 `0x23E690` (`obj+0x394+i*4` → `obj+0x70`), Call02 `0x1F1CF0` (`obj+0x234+i*2` → `obj+0x248`). Profile saves the text with `0x5D2818` and the ID as a halfword at save `+0x20` with `0x5D282C`. The getter `0x5D27B4` returns `-1` for any ID `>= 0x1444` (5188, the size of pack 0x7200), and the talk setup at `0xE2B84` registers the voice reading (`0x2E556C(obj, 1, id)`) only when the ID is above `-1`. `0x147AF8` / `0x1480FC` show the ID indexes a fixed voice entry; no text is spoken, so only a dictionary reading can be said. A chosen suggestion or exact match stores its real ID (`Akiko` → 4780). The typed fallback stores `-1`; without it the slot kept the ctor's 0 (`0x23EA44`, pack 0x7200 slot 0 `あいざわ`) or a stale ID, so an `AKIKO` save registered "Aizawa" (the earlier ASCII path had the same bug).
+
+**Reading text.** `rebuild_trb` translates by Japanese text, so 254 short readings took the dialogue meaning of the same word (`うみ` "sea", `えび` "shrimp", `いま` "now"), and others were mis-cased or wrong (`OOTake`, `Kuni masa`, `HaruYuki`, `Shunsuke` for しんすけ, a Cyrillic `о` in `Mamikо`). `src/patch_called_readings.py` runs in `tools/deploy_name_kanji_trb.py` after the weekday pass and rewrites a 0x7200 reading with Hepburn from the vanilla kana when the text is not a clean Title-case name or does not spell that kana (447 entries). Curated readings that do stay (`Kato` for かとう, `Kudou` for くどう). Entries shared with packs outside 0x71xx / 0x72xx keep their text: quiz answers (`さくら` in 0xA000), forms of address (`ハニー` in 0x202) and the 0x70xx name-input packs.
+
+Tests: `tests/test_call_romaji_match.py` (the blob in unicorn with a fake getter and tables; source hash; rebuild with the same clang; local_data on the shipped dictionary), `tests/test_called_readings.py` (Hepburn, the fix rule; local_data: the pass is clean, idempotent and present in `release/`), `tests/test_name_input_caves.py` (`test_call_romaji_matcher_fits_dead_lookup_bodies`, `test_call_romaji_no_match_shows_typed_name`, `test_call_romaji_id_store_encodings`, `test_call_romaji_hooks_vanilla`).
 
 ### 17.9 Text entry: grid only, ABC default, no pencil or kana buttons (2026-10-17)
 

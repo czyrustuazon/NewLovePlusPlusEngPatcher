@@ -42,6 +42,7 @@ tools/*
 !tools/fit_ui_masters.py
 !tools/rebuild_bake_img.py
 !tools/rebuild_test_cia.py
+!tools/build_call_romaji_match.py
 !tools/fetch_release_bake.py
 !tools/fetch_main_tree.py
 !tools/make_code_ips.py
