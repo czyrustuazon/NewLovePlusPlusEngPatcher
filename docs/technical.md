@@ -450,16 +450,16 @@ OptionClock pkg **5249**: Cancel/Ok + date spinner assets; **not** the square Ba
 | Role | Dump pattern | Notes |
 |------|--------------|--------|
 | Header | `tex1_256x32_2EC64BAE152688B3_8_mip0.png` | Alpha-only lookalike; actual source = A8 BCLIM `Plate_Text03_06_*` @ **5245** — **EN verified** |
-| Year | `tex1_16x16_8B9E56BD535BF1C4_11_mip0.png` | = `Opt_Time_tex2` (Option06 A4) — EN `Y` **verified** |
-| Month | `tex1_16x16_6B2CD1FB667B8DF0_11_mip0.png` | = `Opt_Time_Week01` (also Mon) — EN `M` **verified** |
-| Day | `tex1_16x16_63A5BD96C326E5FF_11_mip0.png` | = `Opt_Time_Week07` (also Sun) — EN `D` **verified** |
+| Year unit 年 | `tex1_16x16_8B9E56BD535BF1C4_11_mip0.png` | = `Opt_Time_tex2` (Option06 A4) — now the `/` after the month |
+| Month unit 月 | `tex1_16x16_6B2CD1FB667B8DF0_11_mip0.png` | = `Opt_Time_Week01` (also Mon) — pane rebound to `Opt_Time_tex2` (`/` after the day) |
+| Day unit 日 | `tex1_16x16_63A5BD96C326E5FF_11_mip0.png` | = `Opt_Time_Week07` (also Sun) — pane hidden |
 | Back / Next | 64×64 dumps above | NCommonIcon — EN `Back`/`Next` **verified** |
 
 Dump folder:
 
 `%AppData%\Azahar\dump\textures\00040000000F4E00\`
 
-**Option06 note:** `月`/`日` textures are shared with weekday Mon/Sun. EN `M`/`D` is intentional for date units; weekday row inherits the same letters.
+**Option06 note:** in `Pts_Opt_Time_Win`, the `月`/`日` unit panes (`Pic_Opt_Win_tex3`/`tex4`) bind the weekday textures Week01/Week07 (Mon/Sun), so no glyph pair can serve both rows. `tools/deploy_clock_date_order_en.py` makes the row US `MM / DD / YYYY (Sa)`: it moves the code-attached `Pos_Opt_Num_*` / `Pos_Opt_Btn_{T,U}_*` anchors in `Lyt_Opt_Time` and the field frames, paints `Opt_Time_tex2` as `/`, rebinds `tex3` to it, and hides `tex4`. Weekday glyphs are untouched. The `( )` around the weekday are baked into `Opt_Time_Win1_img` (x≈61..86), so `Pos_Opt_week` stays at 74.
 
 ---
 
@@ -635,7 +635,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Extra-data recreate warning `作成には時間がかかるので…` | DrawText / TRB STRI **4429** (`Lyt_C_Com_Win01` `Tex_Sentence`; SysPopup). Not `Com_Win_Warning` BCLIM (that is empty chrome). | **EN** — `translations.json`. Sibling create/start strings STRI 4431–4434. |
 | Anywhere Date empty list `デートデータがありません。「デートの編集」から…` | DrawText / TRB STRI **25183** on `Lyt_De0200` Opt_Win (no body BCLIM; DateEdit `De_*_Txt` are short labels). | **EN** — full JP key in `translations.json`. A truncated key ending `デートを作` never matched, so LayeredFS kept JP. |
 | Options help line | DrawText / TRB | Already EN |
-| 年 / 月 / 日 | Option06 A4 @ 5248 + date-format bytes | EN `Y`/`M`/`D` verified |
+| 年 / 月 / 日 | Option06 A4 @ 5248 (`Lyt_Opt_Time` + `Pts_Opt_Time_Win`) | US `MM / DD / YYYY` — `tools/deploy_clock_date_order_en.py` |
 | Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
 | Event Gallery rows | A8 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
 | Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Drama Gallery** (aligned with row btn `ドラマギャラリー`; MultiWin `01_01` PNG is Friend's Memory — do not use) |

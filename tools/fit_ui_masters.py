@@ -266,11 +266,8 @@ def main() -> int:
             ASSETS / "Gallery_Common.check" / "timg" / "Gallery_txt07.png",
             (32, 16),
         ),
-        (
-            ASSETS / "Title.check" / "timg" / "Opt_Time_tex2.png",
-            ASSETS / "Option06.check" / "timg" / "Opt_Time_tex2.png",
-            (16, 16),
-        ),
+        # Option06 Opt_Time_tex2 is painted by deploy_clock_date_order_en.py
+        # (the date slash); the Title.check copy is a stray "P" glyph.
         (
             ASSETS / "Title.check" / "timg" / "album_top_tex.png",
             ASSETS / "MyroomHeader.check" / "timg" / "album_top_tex.png",
