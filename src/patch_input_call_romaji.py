@@ -8,8 +8,10 @@ what Latin name you typed.
 
 This patch:
   1. Walks UTF-8 character sizes instead of *3
-  2. For a non-empty ASCII Called name, skips the JP dictionary and draws
-     the typed string as candidate 0 (so AKIKO is selectable)
+  2. When the JP dictionary finds no candidate for a non-empty Called name,
+     draws the typed string as candidate 0. ASCII never matches a hiragana
+     reading, so AKIKO always lands here; so does a hiragana name that is
+     not in pack 0x7100 / 0x7200.
 
 ``GetUtf8CharByteLength`` (``0x005BF4E8``) always writes ``r1`` (``mov r1, r0``)
 and writes ``r2`` on multibyte leads. The ``*3`` walk must keep its cursor in
@@ -26,7 +28,6 @@ import struct
 
 from patch_input_cave_map import ADDR_COMMU_HEADER_CAVE, TEXT_PAGE_END
 from patch_input_romaji import (
-    add_imm,
     add_reg,
     b_ins,
     bl,
@@ -47,11 +48,15 @@ ORIG_INDEX_MUL3 = bytes.fromhex("8a008ae0")
 SITE_ZU_ADV = 0x00148098  # add r4, r4, #3
 ORIG_ZU_ADV = bytes.fromhex("034084e2")
 
-SITE_CALL01 = 0x0023E468
-SITE_CALL02 = 0x001F1A6C
-ORIG_PROLOGUE = bytes.fromhex("f34f2de959df4de2")  # stmdb …; sub sp, #0x164
-
-NOP = bytes.fromhex("00f020e3")
+# FUN_0023e468 (Call01) / FUN_001f1a6c (Call02) both leave through
+# `add sp, sp, #0x16c`. Candidate count is r7 (Call01) / r6 (Call02).
+SITE_EXIT01 = 0x0023E668
+SITE_EXIT02 = 0x001F1C58
+ORIG_EXIT = bytes.fromhex("5bdf8de2")  # add sp, sp, #0x16c
+# Candidate-0 strncpy+DrawText, entered with r1 = string to draw.
+CALL01_DRAW0 = 0x0023E4F4
+CALL02_DRAW0 = 0x001F1AD8
+LDR_NAME = bytes.fromhex("68119de5")  # ldr r1, [sp, #0x168] (saved name arg)
 
 
 def u32(x: int) -> bytes:
@@ -137,59 +142,29 @@ def _build_stream() -> list:
     OP(bytes.fromhex("0cf028e1"))  # msr cpsr_f, r12
     OP(pop(0x8003))
 
-    # r3 = 0 Call01 / 1 Call02. r0=obj, r1=name.
-    L("call01")
-    OP(mov_imm(3, 0))
-    B("ascii_chk")
-
-    L("call02")
-    OP(mov_imm(3, 1))
-
-    L("ascii_chk")
-    OP(cmp_imm(1, 0))
-    B("not_ascii", cond=0x0)
-    OP(push(0x1001))  # r0, r12
-    OP(ldrb_imm(0, 1, 0))
-    OP(cmp_imm(0, 0))
-    B("asc_fail", cond=0x0)
-    OP(mov_reg(12, 1))
-    L("asc_scan")
-    OP(ldrb_imm(0, 12, 0))
-    OP(add_imm(12, 12, 1))
-    OP(cmp_imm(0, 0))
-    B("asc_ok", cond=0x0)
-    OP(cmp_imm(0, 0x80))
-    B("asc_fail", cond=0x2)  # hs
-    B("asc_scan")
-    L("asc_fail")
-    OP(pop(0x1001))
-    B("not_ascii")
-    L("asc_ok")
-    OP(pop(0x1001))
-    # Vanilla frame, then jump into the existing strncpy+DrawText tail
-    # with r1 still the typed name (skip the TRB `add r1, sp, …`).
-    # r9 = 1 matches vanilla before FUN_00147e04 (str r9, [sp] extra-arg).
-    OP(ORIG_PROLOGUE[:4])
-    OP(ORIG_PROLOGUE[4:])
-    OP(mov_imm(9, 1))
-    OP(cmp_imm(3, 0))
-    B("asc02", cond=0x1)  # ne
-    OP(mov_reg(6, 0))
-    OP(mov_imm(7, 1))
-    BABS(0x0023E4F4)
-    L("asc02")
-    OP(mov_reg(7, 0))
-    OP(mov_imm(6, 1))
-    BABS(0x001F1AD8)
-
-    L("not_ascii")
-    OP(ORIG_PROLOGUE[:4])
-    OP(ORIG_PROLOGUE[4:])
-    OP(cmp_imm(3, 0))
-    B("van02", cond=0x1)
-    BABS(SITE_CALL01 + 8)
-    L("van02")
-    BABS(SITE_CALL02 + 8)
+    # No-match fallback. Count 0 and a non-empty name: count = 1, then draw
+    # the typed name through the candidate-0 tail (skips the TRB
+    # `add r1, sp, …`). That tail reruns the ず/づ pass, which finds nothing
+    # again, and comes back here with count 1. r9 is still 1 and obj is
+    # still r6 (Call01) / r7 (Call02), as the tail expects.
+    for n, count_reg, draw0, site in (
+        ("01", 7, CALL01_DRAW0, SITE_EXIT01),
+        ("02", 6, CALL02_DRAW0, SITE_EXIT02),
+    ):
+        L("nomatch" + n)
+        OP(cmp_imm(count_reg, 0))
+        B("done" + n, cond=0x1)  # ne
+        OP(LDR_NAME)
+        OP(cmp_imm(1, 0))
+        B("done" + n, cond=0x0)
+        OP(ldrb_imm(0, 1, 0))
+        OP(cmp_imm(0, 0))
+        B("done" + n, cond=0x0)
+        OP(mov_imm(count_reg, 1))
+        BABS(draw0)
+        L("done" + n)
+        OP(ORIG_EXIT)
+        BABS(site + 4)
     return stream
 
 
@@ -245,21 +220,18 @@ def apply_patch(data: bytearray) -> bool:
         raise ValueError(f"unexpected *3 at {SITE_INDEX_MUL3:#x}")
     if bytes(data[SITE_ZU_ADV : SITE_ZU_ADV + 4]) != ORIG_ZU_ADV:
         raise ValueError(f"unexpected +3 at {SITE_ZU_ADV:#x}")
-    if bytes(data[SITE_CALL01 : SITE_CALL01 + 8]) != ORIG_PROLOGUE:
-        raise ValueError(f"unexpected Call01 prologue at {SITE_CALL01:#x}")
-    if bytes(data[SITE_CALL02 : SITE_CALL02 + 8]) != ORIG_PROLOGUE:
-        raise ValueError(f"unexpected Call02 prologue at {SITE_CALL02:#x}")
+    for site in (SITE_EXIT01, SITE_EXIT02):
+        if bytes(data[site : site + 4]) != ORIG_EXIT:
+            raise ValueError(f"unexpected Called exit at {site:#x}")
     if any(data[base:end]):
         raise ValueError(f"call-romaji cave {base:#x}..{end:#x} is not empty pad")
 
     data[base:end] = blob
     data[SITE_INDEX_MUL3 : SITE_INDEX_MUL3 + 4] = bl(SITE_INDEX_MUL3, labs["utf8_off"])
     data[SITE_ZU_ADV : SITE_ZU_ADV + 4] = bl(SITE_ZU_ADV, labs["utf8_adv"])
-    data[SITE_CALL01 : SITE_CALL01 + 4] = b_ins(SITE_CALL01, labs["call01"])
-    data[SITE_CALL01 + 4 : SITE_CALL01 + 8] = NOP
-    data[SITE_CALL02 : SITE_CALL02 + 4] = b_ins(SITE_CALL02, labs["call02"])
-    data[SITE_CALL02 + 4 : SITE_CALL02 + 8] = NOP
-    print(f"[call-romaji] UTF-8 walk + ASCII Called fallback cave @{base:#x} ({len(blob):#x})")
+    data[SITE_EXIT01 : SITE_EXIT01 + 4] = b_ins(SITE_EXIT01, labs["nomatch01"])
+    data[SITE_EXIT02 : SITE_EXIT02 + 4] = b_ins(SITE_EXIT02, labs["nomatch02"])
+    print(f"[call-romaji] UTF-8 walk + no-match Called fallback cave @{base:#x} ({len(blob):#x})")
     return True
 
 

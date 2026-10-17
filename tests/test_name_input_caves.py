@@ -300,7 +300,7 @@ def test_strcat_raw_on_vanilla(vanilla_code):
 
 
 def test_call_romaji_caves_assemble_and_hook_vanilla():
-    """Called-list *3 walk + ASCII fallback stay in .text RX after strcat."""
+    """Called-list *3 walk + no-match fallback stay in .text RX after strcat."""
     cave = call_romaji.cave_addr()
     blob, labs = call_romaji.build_blob(base=cave)
     assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
@@ -311,12 +311,37 @@ def test_call_romaji_caves_assemble_and_hook_vanilla():
     walk = blob[off:adv]
     assert bytes.fromhex("0300d6e7") in walk  # ldrb r0, [r6, r3]
     assert bytes.fromhex("0610a0e1") not in walk  # mov r1, r6
-    assert "call01" in labs and "call02" in labs
     assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
     assert bytes.fromhex("0cf028e1") in blob  # msr cpsr_f, r12
-    assert bytes.fromhex("0190a0e3") in blob  # mov r9, #1 before ASCII DrawText jump
     bls = _arm_bl_targets(blob, cave)
     assert any(tgt == call_romaji.ADDR_UTF8_LEN for _, tgt in bls)
+
+
+def _b_target(word: bytes, here: int) -> int:
+    imm = int.from_bytes(word, "little") & 0xFFFFFF
+    if imm & 0x800000:
+        imm -= 0x1000000
+    return here + 8 + (imm << 2)
+
+
+def test_call_romaji_no_match_shows_typed_name():
+    """Count 0 + non-empty name → count 1, then the candidate-0 DrawText tail."""
+    cave = call_romaji.cave_addr()
+    blob, labs = call_romaji.build_blob(base=cave)
+    for n, count_reg, draw0, site in (
+        ("01", 7, call_romaji.CALL01_DRAW0, call_romaji.SITE_EXIT01),
+        ("02", 6, call_romaji.CALL02_DRAW0, call_romaji.SITE_EXIT02),
+    ):
+        start = labs["nomatch" + n] - cave
+        words = [blob[i : i + 4] for i in range(start, start + 12 * 4, 4)]
+        # cmp rN, #0 / bne done (count already > 0 keeps vanilla)
+        assert words[0] == (0xE3500000 | (count_reg << 16)).to_bytes(4, "little")
+        assert _b_target(words[1], cave + start + 4) == labs["done" + n]
+        assert words[2] == call_romaji.LDR_NAME
+        assert words[8] == (0xE3A00001 | (count_reg << 12)).to_bytes(4, "little")
+        assert _b_target(words[9], cave + start + 36) == draw0
+        assert words[10] == call_romaji.ORIG_EXIT
+        assert _b_target(words[11], cave + start + 44) == site + 4
 
 
 @pytest.mark.local_data
