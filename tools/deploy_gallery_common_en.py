@@ -6,7 +6,12 @@ Girl-select list chrome:
   Gallery_txt02 — Slideshow (ETC1A4)
   Gallery_txt03 — All (ETC1A4)
   Gallery_txt04/05/06 — heroine names on save/card rows (RGBA4444)
+  Gallery_txt08 — Playback Speed (ETC1A4; Gallery Options)
+  Gallery_txt09 — Called As: (ETC1A4; Gallery Options 呼ばれ方 — same copy as Profile)
   Gal_girl_select{M,N,R} — Dream Gallery girl buttons (RGBA4444)
+
+Gallery_txt07 is already Latin BGM in vanilla. Zhoumaru's 32×16 dump says
+Fitness (Status pack mis-paint) — leave the slot alone.
 """
 from __future__ import annotations
 
@@ -30,6 +35,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -40,6 +46,23 @@ MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "gallery_common_en"
 FONT = UI_FONT
 PKG = 5153
+FOLDERS = ("Gallery_Common.check", "Gallery_Common")
+# Prefer Zhoumaru paint when present (Called As / Playback Speed / Preview…).
+ZHOUMARU_STEMS = frozenset(
+    {
+        "Gallery_txt01",
+        "Gallery_txt02",
+        "Gallery_txt03",
+        "Gallery_txt04",
+        "Gallery_txt05",
+        "Gallery_txt06",
+        "Gallery_txt08",
+        "Gallery_txt09",
+        "Gal_girl_selectM",
+        "Gal_girl_selectR",
+        "Gal_girl_selectN",
+    }
+)
 
 LABELS = [
     ("timg/Gallery_txt01.bclim", "Preview"),
@@ -49,6 +72,9 @@ LABELS = [
     ("timg/Gallery_txt04.bclim", "Takane Manaka"),
     ("timg/Gallery_txt05.bclim", "Kobayakawa Rinko"),
     ("timg/Gallery_txt06.bclim", "Anegasaki Nene"),
+    # Gallery Options strips (再生スピード / 呼ばれ方) — Profile uses Called As:
+    ("timg/Gallery_txt08.bclim", "Playback Speed"),
+    ("timg/Gallery_txt09.bclim", "Called As:"),
     # Dream Gallery girl buttons (108×16; M/N/R = Manaka/Nene/Rinko)
     ("timg/Gal_girl_selectM.bclim", "Takane Manaka"),
     ("timg/Gal_girl_selectR.bclim", "Kobayakawa Rinko"),
@@ -235,15 +261,30 @@ def main() -> None:
         _pix, w, h, fmt, _ft = parse_bclim(raw)
         if fmt not in (0xB, 8):
             raise SystemExit(f"{path} fmt {fmt:#x} unsupported")
-        png = tmp / f"{Path(path).stem}.png"
-        orig = tmp / f"{Path(path).stem}.bclim"
+        stem = Path(path).stem
+        png = tmp / f"{stem}.png"
+        orig = tmp / f"{stem}.bclim"
         orig.write_bytes(raw)
-        rgba = render_label(w, h, en, fmt)
+        master = (
+            find_ui_png(FOLDERS, stem, (w, h)) if stem in ZHOUMARU_STEMS else None
+        )
+        if master is not None:
+            with Image.open(master) as im:
+                rgba = im.convert("RGBA")
+            if rgba.size != (w, h):
+                rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
+            src = master.name
+        else:
+            rgba = render_label(w, h, en, fmt)
+            src = "render"
         rgba.save(png)
         new = png_to_bclim_same_size(png, orig)
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        rgba.save(OUT / f"{stem}_en.png")
         darc.replace_same_size(entry, new)
-        print(f"  OK {path} -> {en!r} ({w}x{h} fmt={fmt})", flush=True)
+        print(
+            f"  OK {path} -> {en!r} ({w}x{h} fmt={fmt}; {src})",
+            flush=True,
+        )
 
     patched = bytes(darc.data)
     tuned, slot = compress_exact_with_gap_tune(patched, cmp_len)

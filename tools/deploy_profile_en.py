@@ -44,6 +44,7 @@ from deploy_common import (  # noqa: E402
     render_header_aa,
     resolve_img_paths,
 )
+from deploy_input_keyboard_en import blank_pencil, hide_input_panes  # noqa: E402
 
 MOD_IMG, VANILLA = resolve_img_paths()
 
@@ -832,6 +833,10 @@ def patch_atlas_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byte
     darc.replace_same_size(check02, make_check02_en(darc.extract_file(check02), tmp))
     print("OK Profile_Info_Check02", flush=True)
     patch_region_buttons(darc, tmp)
+    # Same Btn_Change sheet as InputC/N (LA8 here) and the same input
+    # layouts as Input.arc: pencil, grid tab and kana/kanji buttons are gone.
+    blank_pencil(darc)
+    hide_input_panes(darc)
     return bytes(darc.data)
 
 

@@ -4,9 +4,12 @@ from __future__ import annotations
 import struct
 from pathlib import Path
 
+import pytest
 from PIL import Image
 
 from bclimutil import (
+    blank_texels_left_of,
+    d2xy,
     decode_bclim_to_image,
     decode_etc1a4_pixels,
     encode_etc1a4_pixels,
@@ -179,3 +182,35 @@ def test_etc1a4_can_grow_logical_height(tmp_path: Path):
     assert len(out) > orig.stat().st_size
     _p, ow, oh, fmt, _ = parse_bclim(out)
     assert (ow, oh, fmt) == (w, 16, 0xB)
+
+
+def _texel_x(i: int, tiles_x: int) -> int:
+    return d2xy(i % 64)[0] + ((i // 64) % tiles_x) * 8
+
+
+def test_blank_texels_left_of_rgba4444():
+    # Btn_Change_Obj shape: 96x32 display, 128x32 buffer, transparent corner.
+    w, h, pot_w = 96, 32, 128
+    n = pot_w * h
+    bg = bytes.fromhex("f0ff")
+    pix = bytearray(bg * n)
+    for i in range(n):
+        if 10 <= _texel_x(i, pot_w // 8) < 90:
+            pix[2 * i : 2 * i + 2] = bytes.fromhex("1122")
+    raw = bytes(pix) + _footer(w, h, 8, len(pix))
+    out = blank_texels_left_of(raw, 48)
+    assert len(out) == len(raw)
+    assert out[len(pix) :] == raw[len(pix) :]
+    for i in range(n):
+        got = out[2 * i : 2 * i + 2]
+        x = _texel_x(i, pot_w // 8)
+        if x < 48:
+            assert got == bg
+        else:
+            assert got == raw[2 * i : 2 * i + 2]
+
+
+def test_blank_texels_left_of_rejects_8bit():
+    raw = bytes(64) + _footer(8, 8, 1, 64)
+    with pytest.raises(ValueError, match="unsupported fmt"):
+        blank_texels_left_of(raw, 4)

@@ -103,14 +103,18 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Btn_Text04_01_09.bclim", "Find Couple"),
         ("Com_M_Sel_Btn_Text04_01_10.bclim", "Join Double Date"),
         ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
-        ("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle"),
-        # Girlfriend Comm. / Wireless Battle submenu headers
+        # Zhoumaru NCommonMSel(7): Communication Battle (not "Wireless Battle")
+        ("Com_M_Sel_Btn_Text04_03_00.bclim", "Communication Battle"),
+        # Session rows (対戦相手を募集 / 対戦参加)
+        ("Com_M_Sel_Btn_Text04_03_01.bclim", "Find Battle Opponent"),
+        ("Com_M_Sel_Btn_Text04_03_02.bclim", "Join Battle"),
+        # Girlfriend Comm. / Communication Battle submenu headers
         # Zhoumaru Plate_Text04_01_00 is "Communication Menu"; カノジョ通信 is 01_01.
         ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Communication"),
         ("Com_M_Sel_Plate_Text04_01_01.bclim", "Heart to Heart"),
         ("Com_M_Sel_Plate_Text04_01_02.bclim", "Girlfriend Introduction"),
         ("Com_M_Sel_Plate_Text04_01_03.bclim", "Double Date"),
-        ("Com_M_Sel_Plate_Text04_03_00.bclim", "Wireless Battle"),
+        ("Com_M_Sel_Plate_Text04_03_00.bclim", "Communication Battle"),
     ],
     5242: [  # Data Management
         ("Com_M_Sel_Plate_Text05_00_00.bclim", "Data Management"),

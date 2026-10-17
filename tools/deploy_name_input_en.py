@@ -11,6 +11,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
+  5b. patch_input_force_ml                  # text entry opens on the gojūon grid
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
   7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
@@ -71,6 +72,10 @@ from patch_input_kana_direct_insert import (  # noqa: E402
     PATCHED as KANA_PATCHED,
     apply_patch as apply_kana_direct,
     restore_bind_sites,
+)
+from patch_input_force_ml import (  # noqa: E402
+    apply_patch as apply_force_ml,
+    is_patched as force_ml_already,
 )
 from patch_lyt_null_pane import (  # noqa: E402
     apply_patch as apply_lyt_null_pane,
@@ -221,6 +226,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] kana_direct_insert already applied")
     else:
         apply_kana_direct(data)
+        steps += 1
+
+    if force_ml_already(data):
+        print("[skip] force_ml already applied")
+    else:
+        apply_force_ml(data)
         steps += 1
 
     if ascii_dakuten_already(data):

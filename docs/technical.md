@@ -641,8 +641,10 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Drama Gallery** (aligned with row btn `ドラマギャラリー`; MultiWin `01_01` PNG is Friend's Memory — do not use) |
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
+| Gallery Options strips `再生スピード` / `呼ばれ方` | ETC1A4 `Gallery_txt08` / `Gallery_txt09` @ **5153** | Deployed (`Playback Speed` / `Called As:` — Profile confirm copy; Zhoumaru). `Gallery_txt07` stays vanilla `BGM` (Zhoumaru dump is wrong Fitness). Same deploy. |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
 | Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | A8 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
+| Wireless Battle session rows `対戦相手を募集` / `対戦参加` | A8 `Com_M_Sel_Btn_Text04_03_01..02` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Battle Opponent** / **Join Battle** — same deploy |
 | Girlfriend Introduction / Double Date rows | A8 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
 | Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Home-menu row `Btn_Text04_01_01` is the same wording. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
@@ -1869,7 +1871,7 @@ The cave sits in the dead merge body at `0x00608930` (the entry stub never reach
 
 ## 17. Profile name-input (gojūon romaji + direct insert) — 2026-08-31
 
-Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji into the name field. Kanji candidate list is suppressed.
+Screen: Profile → First Name. Gojūon grid shows Hepburn; tap inserts romaji into the name field. Kanji candidate list is suppressed. Text entry opens on the grid (`Lyt_Prf_Win_ML`) in ABC mode, not handwriting (`Lyt_Prf_Win_Write`); the pencil/grid tab and the Kanji / Kana 1 / Kana 2 / S. Kana buttons are removed (`patch_input_force_ml.py`, **§17.9**).
 
 **Outcome:** scrap the candidate-list caves (C3/C4/B_Place @ `0x006FC000` etc.) — ship nullguards + romaji DrawCell cave + one NOP so mode-0 uses the ABC insert path.
 
@@ -1906,6 +1908,7 @@ a/b guide: **`ab_test/README.md`**.
 | 3 | Fill-flag + mode clamp | `src/patch_input_candmode_fillflag_reset.py` | `+0x44=0`, clamp `+0x30` @ `0x1fa828` |
 | 4 | Romaji DrawCell | `src/patch_input_romaji.py` | Hepburn labels **and** insert buffer; ABC fullwidth→ASCII (**§17.7**); cave `@0x0068F900` |
 | 5 | Skip kanji list | `src/patch_input_kana_direct_insert.py` | NOP `@0x1fb070` — gojūon uses ABC insert path |
+| 5b | Force ML grid | `src/patch_input_force_ml.py` | Kit open `0x255f40` → `Win_ML` in ABC; Kanji/Kana/S. Kana buttons and pencil tap ignored (**§17.9**) |
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
 | 7b | ASCII Called list | `src/patch_input_call_romaji.py` | UTF-8 walk (not *3) + typed Latin name as candidate 0 (**§17.8**) |
@@ -1918,7 +1921,7 @@ a/b guide: **`ab_test/README.md`**.
 
 Umbrella rollback: `exefs/code.bin.bak_pre_name_input_en`. Optional mode-tab BCLIM: `tools/deploy_input_keyboard_en.py` (pkg **5190**).
 
-**Live checklist:** **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower insert **ASCII** (not fullwidth `Ａ`); name length still ≤8 chars; Called list shows the typed ASCII name (not leftover `づ`).
+**Live checklist:** first-boot Register Last name and Profile name edit open on the **grid** in **ABC** (not the CLEAR handwriting pad); only ABC, Symbols and Delete show in the button column; no pencil/grid tab, and tapping where the hidden buttons were does nothing. **Hiragana/Kata** show Hepburn romaji on the gojūon grid (not an empty checkerboard); tap → romaji in name field; **Kanji** tab has no candidate list (empty candidate chrome is OK — the gojūon keyboard itself must still show keys); ABC/Lower insert **ASCII** (not fullwidth `Ａ`); name length still ≤8 chars; Called list shows the typed ASCII name (not leftover `づ`).
 
 ### 17.2 Hard ban: `candmode_reset` (`+0x24 = 0`)
 
@@ -2038,6 +2041,48 @@ Romaji insert is 1-byte ASCII, so `*3` steps **past the NUL** into leftover kana
 2. Non-empty ASCII Called name skips the JP dictionary and jumps into the existing strncpy+DrawText tail so the **typed string** is candidate 0
 
 Japanese readings still resolve for hiragana saves. English nicknames are not in pack 0x7100 (voice); she can display `AKIKO` without saying it. Cave sits in the last `.text` RX pad after strcat (`0x68FEE4`). Tests: `tests/test_name_input_caves.py` (`test_call_romaji_caves_assemble_and_hook_vanilla`).
+
+### 17.9 Text entry: grid only, ABC default, no pencil or kana buttons (2026-10-17)
+
+Vanilla name entry opens **handwriting** (`Lyt_Prf_Win_Write`: CLEAR pad + pencil). Eng wants the gojūon board (`Lyt_Prf_Win_ML`) as the default.
+
+**Shared input kit.** Every text-entry operator embeds one kit struct. Its create `0x255ba4` registers `Win_Write` (`0x222204`), `Win_ML` (`0x1fb22c`), `Btn_Change` (`0x22c2ec`), `Btn_ML` (`0x1f8fbc`). Twelve operators use it: IntroductionInputUtil (first-boot "Register Last name"), Profile, DateEditName, InputUtil, OptionPassword, Card, Album, Quest, TownVoice, DateEdit Album/Evaluate, DataManage export.
+
+| Kit byte | Meaning |
+|----------|---------|
+| `+0` | colour variant (selects descriptor params) |
+| `+1` | **mode: 0 = Write, 1 = ML** |
+| `+2` / `+3` | ML / Write layout slot |
+| `+4` / `+5` | Btn_ML / Btn_Change layout slot |
+| `+8` (word) | keyboard mode = Btn_ML button index: 0 Kanji, 1 Kana 1, 2 Kana 2, 3 S. Kana, 4 ABC, 5 Symbols (Delete is id 6) |
+
+| Kit fn | Role |
+|--------|------|
+| `0x255f38` | open: Write or ML from `+1`, then Btn_ML + Btn_Change |
+| `0x2571d4` | sync after open/toggle: ML `+0x30`, Btn_Change icon (`0x22bf00`), Btn_ML `+0x34`, ML/Write init |
+| `0x25601c` | Write tick; Btn_Change press → `+1 = 1` |
+| `0x2567a8` | ML tick (also §17 dakuten site); Btn_Change press → `+1 = 0` |
+
+Operators set `+1 = 0` in create (Intro: `strb r6,[r4,#0x5d]` @ `0x133b5c`) and dispatch the Write/ML tick on it after open.
+
+`src/patch_input_force_ml.py` (in place, no cave):
+
+| Site | Vanilla | Patched |
+|------|---------|---------|
+| `0x255f40`–`0x255f5c` kit open | read `+1`, `beq` Write / ML | `+8 = 4` (ABC), `+1 = 1` (ML), keep `ldr r5` / `ldrb r1`, `mov r6,#0`, `b` ML open `0x255fe8` |
+| `0x257238` kit sync | ML `+0x30` = `+1` | ML `+0x30` = `+8` (board mode matches the highlighted button) |
+| `0x1f8c9c`–`0x1f8ca8` Btn_ML release jump table | ids 0–3 → select | ids 0–3 → handler exit `0x1f8fa8` |
+| `0x22bfa4`, `0x22c1f8` Btn_Change touch | `beq` pencil branch | NOP |
+
+**Btn_ML** (`Lyt_Prf_Btn_ML`, class vtable VA `0x80f3c0`): six mode buttons `Pos_Btn_C01_01`…`_06` plus `Pos_Btn_Del`. `+0x28` (`0x1f898c`) records the touched part; `+0x30` (`0x1f8c78`) jumps on its id (`[part+0x24]`) on release. In grid mode `0x1f9138(btn, sel)` selects one button (`+0x42+i`); the ML tick reads it back with `0x627238` and sets ML `+0x30`. Only the kit calls those, so the jump table is the one tap path.
+
+**Pencil removed.** `Lyt_Prf_Btn_Change` is one button: `Pic_Obj` draws `Profile_Btn_Change_Obj` (96×32, pencil x<48, grid x≥64), `Pic_Color` is the animated highlight, and two bound panes take touches — `Bod_Obj01` (pencil) and `Bod_Obj02` (grid). Its touch handlers (vtable `+0x2c` `0x22bf74`, `+0x28` `0x22c1c8`) `beq` to the pencil branch when `Bod_Obj01` is hit; `patch_input_force_ml.py` NOPs both (`0x22bfa4`, `0x22c1f8`) so a pencil tap falls through to the `Bod_Obj02` compare and exits. Btn_Change never raises `+0x30`, so the kit never switches to Write.
+
+The glyph is blanked in the texture (`bclimutil.blank_texels_left_of`, x<48 → corner texel = transparent): InputC/InputNTexture in pkg **5190** (RGBA4444) via `deploy_input_keyboard_en.py`, and `Profile.arc` in pkg **5252** (LA8) via `deploy_profile_en.py`.
+
+**Hidden panes.** Both copies of the input layouts (`Input.arc` in pkg **5190**, `Profile.arc` in pkg **5252**) clear the visible bit on `Lyt_Prf_Btn_ML` `Pos_Btn_C01_01`–`_04` (Kanji, Kana 1, Kana 2, S. Kana) and `Lyt_Prf_Btn_Change` `Pos_Btn_Change` (the whole tab), via `hide_input_panes` in `deploy_input_keyboard_en.py` (also called by `deploy_profile_en.py`). The `Pts_Prf_Btn_C01` / `Btn_Change` animations only drive `Nul_`/`Bod_`/`Pic_` children, never the `Pos_*` parents, so the hide sticks. ABC, Symbols and Delete keep their vanilla positions (gap above them).
+
+Tests: `tests/test_name_input_caves.py` (`test_force_ml_is_inplace_kit_open`, `test_force_ml_on_vanilla`).
 
 ---
 

@@ -61,7 +61,7 @@ HEADER_LABELS = [
     ("timg/Com_MultiWin_W01_Text04_00_00.bclim", "Communication"),  # 0x11
     ("timg/Com_MultiWin_W01_Text04_01_00.bclim", "Heart to Heart"),  # 0x12 カノジョ通信
     ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),  # 0x16
-    ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle"),  # 0x17
+    ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Communication Battle"),  # 0x17
     # Data Management
     ("timg/Com_MultiWin_W01_Text05_01_00.bclim", "Delete Save Data"),  # 0x1a
 ]
@@ -81,7 +81,7 @@ EXTRA_LABELS = [
     ("timg/Com_MultiWin_W01_Text04_01_02.bclim", "Introduction"),
     ("timg/Com_MultiWin_W01_Text04_01_03.bclim", "Double Date"),
     ("timg/Com_MultiWin_W01_Text04_02_00.bclim", "Business Card"),
-    ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Wireless Battle"),
+    ("timg/Com_MultiWin_W01_Text04_03_00.bclim", "Communication Battle"),
     ("timg/Com_MultiWin_W01_Text04_04_00.bclim", "Communication Settings"),
     ("timg/Com_MultiWin_W01_Text03_05_00.bclim", "Password Input"),
 ]
