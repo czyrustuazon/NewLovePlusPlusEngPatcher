@@ -644,6 +644,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Gallery Options strips `再生スピード` / `呼ばれ方` | ETC1A4 `Gallery_txt08` / `Gallery_txt09` @ **5153** | Deployed (`Playback Speed` / `Called As:` — Profile confirm copy; Zhoumaru). `Gallery_txt07` stays vanilla `BGM` (Zhoumaru dump is wrong Fitness). Same deploy. |
 | Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
 | Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | A8 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
+| Wireless Battle session rows `対戦相手を募集` / `対戦参加` | A8 `Com_M_Sel_Btn_Text04_03_01..02` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Battle Opponent** / **Join Battle** — same deploy |
 | Girlfriend Introduction / Double Date rows | A8 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
 | Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Home-menu row `Btn_Text04_01_01` is the same wording. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |

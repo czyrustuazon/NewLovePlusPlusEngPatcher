@@ -94,6 +94,8 @@ def test_msel_menus_include_event_gallery_rows():
         "Com_M_Sel_Btn_Text04_01_08",
         "Com_M_Sel_Btn_Text04_01_09",
         "Com_M_Sel_Btn_Text04_01_10",
+        "Com_M_Sel_Btn_Text04_03_01",
+        "Com_M_Sel_Btn_Text04_03_02",
     ):
         assert stem in text
     assert "Find Two-Person Chat" in text
@@ -103,6 +105,8 @@ def test_msel_menus_include_event_gallery_rows():
     assert "Get Introduced" in text
     assert "Find Couple" in text
     assert "Join Double Date" in text
+    assert "Find Battle Opponent" in text
+    assert "Join Battle" in text
     assert "Heart to Heart" in text
     assert '("Com_M_Sel_Btn_Text04_01_01.bclim", "Heart to Heart")' in text
     assert "SKIP_UI_PNG" in text
