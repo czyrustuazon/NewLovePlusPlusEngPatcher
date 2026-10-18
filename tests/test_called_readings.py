@@ -100,3 +100,56 @@ def test_release_trb_has_the_readings_pass():
     if vanilla is None or not trb.is_file():
         pytest.skip("no vanilla or release TRB")
     assert cr.plan(trb.read_bytes(), vanilla.read_bytes(), load_lookup(LOOKUP_PATH)) == {}
+
+
+def test_name_kanji_trb_applies_honorific_suffixes():
+    text = (ROOT / "tools" / "deploy_name_kanji_trb.py").read_text(encoding="utf-8")
+    assert "apply_honorific_suffixes(rebuilt, vanilla_trb.read_bytes(), lookup)" in text
+    assert [s for _slot, _kana, s in cr.SUFFIXES] == ["-kun", "-chan"]
+
+
+def _suffix_texts(data: bytes, lookup) -> list[str]:
+    import struct
+
+    from patch_password_serials import _sub_u16_off
+    from patch_textresource import decode_entry, iter_entries, parse_chunks
+
+    c = parse_chunks(data)
+    entries = list(iter_entries(c["STRI"]))
+    off, n = _sub_u16_off(c["INDX"], cr.SUFFIX_PACK >> 8, cr.SUFFIX_PACK & 0xFF)
+    out = []
+    for slot in range(n):
+        si = struct.unpack_from("<H", c["INDX"], off + 2 * slot)[0]
+        _i, _o, s, _b, f = entries[si]
+        out.append(decode_entry(c["STRB"], s, f, lookup)[0])
+    return out
+
+
+@pytest.mark.local_data
+def test_honorific_suffixes_get_their_own_entries():
+    """Naka + -kun, not NakaKun; the shared "Chan" Called readings stay."""
+    from nlpp_paths import find_vanilla_main_trb
+    from patch_textresource import LOOKUP_PATH, load_lookup
+
+    vanilla = find_vanilla_main_trb()
+    trb = ROOT / "release" / "textresource" / "textresource_jpn.trb"
+    if vanilla is None or not trb.is_file():
+        pytest.skip("no vanilla or release TRB")
+    lookup = load_lookup(LOOKUP_PATH)
+    van = vanilla.read_bytes()
+    out, logs = cr.apply_honorific_suffixes(trb.read_bytes(), van, lookup)
+    texts = _suffix_texts(out, lookup)
+    assert texts[:2] == ["-kun", "-chan"]
+    assert texts[2:] == _suffix_texts(trb.read_bytes(), lookup)[2:]
+    assert cr.apply_honorific_suffixes(out, van, lookup)[1] == []  # idempotent
+    assert cr.plan(out, van, lookup) == {}  # readings pass still clean
+
+
+@pytest.mark.local_data
+def test_release_trb_has_honorific_suffixes():
+    from patch_textresource import LOOKUP_PATH, load_lookup
+
+    trb = ROOT / "release" / "textresource" / "textresource_jpn.trb"
+    if not trb.is_file():
+        pytest.skip("no release TRB")
+    assert _suffix_texts(trb.read_bytes(), load_lookup(LOOKUP_PATH))[:2] == ["-kun", "-chan"]

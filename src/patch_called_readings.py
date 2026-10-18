@@ -19,11 +19,19 @@ from __future__ import annotations
 import re
 import struct
 
-from patch_password_serials import _pack_trb
+from patch_password_serials import _pack_trb, _strb_used, _sub_u16_off
 from patch_textresource import decode_entry, iter_entries, parse_chunks
 
 PACK = 0x7200
 OWN_CATS = (0x71, 0x72)
+
+# Pack 0x718a slots 0 / 1 are the honorifics the Gallery ("Called As:") and
+# the heroine's form of the Called name append to it: くん / ちゃん. Dialogue
+# translation made them "Kun" / "Chan", so "Naka" + "Kun" read "NakaKun".
+# ちゃん's string is shared with Called readings (0x7200 4880 / 4974, where
+# "Chan" is a name on its own), so the suffix slots get new entries instead.
+SUFFIX_PACK = 0x718A
+SUFFIXES = ((0, "くん", "-kun"), (1, "ちゃん", "-chan"))
 
 _BASE = {
     "あ": "a", "い": "i", "う": "u", "え": "e", "お": "o",
@@ -174,4 +182,43 @@ def apply_called_readings(data: bytes, vanilla: bytes, lookup: list[str]) -> tup
     new_strb += b"\xc9" * pad
     chunks["STRI"], chunks["STRB"] = bytes(new_stri), bytes(new_strb)
     logs = [f"{v[0]} {v[1]!r} -> {v[2]}" for v in fixes.values()]
+    return _pack_trb(chunks), logs
+
+
+def apply_honorific_suffixes(
+    data: bytes, vanilla: bytes, lookup: list[str]
+) -> tuple[bytes, list[str]]:
+    """Point pack 0x718a's honorific slots at their own "-kun" / "-chan"
+    entries. Idempotent; other entries and slots keep their bytes."""
+    chunks = parse_chunks(data)
+    vchunks = parse_chunks(vanilla)
+    stri, strb, indx = bytearray(chunks["STRI"]), bytearray(chunks["STRB"]), bytearray(chunks["INDX"])
+    entries = list(iter_entries(stri))
+    ventries = list(iter_entries(vchunks["STRI"]))
+    u16_off, count = _sub_u16_off(indx, SUFFIX_PACK >> 8, SUFFIX_PACK & 0xFF)
+    v_off, _v_count = _sub_u16_off(vchunks["INDX"], SUFFIX_PACK >> 8, SUFFIX_PACK & 0xFF)
+    strb = strb[: _strb_used(stri, strb)]
+    n = len(entries)
+    logs: list[str] = []
+    for slot, kana, text in SUFFIXES:
+        if slot >= count:
+            raise ValueError(f"pack {SUFFIX_PACK:#x} has no slot {slot}")
+        vsi = struct.unpack_from("<H", vchunks["INDX"], v_off + 2 * slot)[0]
+        _i, _o, vs, _vb, vf = ventries[vsi]
+        if decode_entry(vchunks["STRB"], vs, vf, lookup)[0] != kana:
+            raise ValueError(f"pack {SUFFIX_PACK:#x} slot {slot} is not {kana} in vanilla")
+        si = struct.unpack_from("<H", indx, u16_off + 2 * slot)[0]
+        _i, _o, cs, _cb, cf = entries[si]
+        if cf == 1 and decode_entry(strb, cs, cf, lookup)[0] == text:
+            continue
+        payload = text.encode("utf-8")
+        stri += struct.pack("<IHH", len(strb), len(payload), 1)
+        strb += payload + b"\x00"
+        struct.pack_into("<H", indx, u16_off + 2 * slot, n)
+        logs.append(f"{SUFFIX_PACK:#x}[{slot}] -> {text} stri={n}")  # ASCII: cp1252 consoles
+        n += 1
+    if not logs:
+        return data, logs
+    strb += b"\xc9" * ((4 - len(strb) % 4) % 4)
+    chunks["STRI"], chunks["STRB"], chunks["INDX"] = bytes(stri), bytes(strb), bytes(indx)
     return _pack_trb(chunks), logs
