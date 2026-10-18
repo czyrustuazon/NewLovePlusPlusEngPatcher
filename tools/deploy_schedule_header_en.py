@@ -55,6 +55,7 @@ LABELS = [
     ("timg/mydata_toptex_05.bclim", "Item List"),
     ("timg/mydata_toptex_06.bclim", "My Camera"),
     ("timg/album_top_tex.bclim", "Album"),
+    ("timg/web_toptex_RGBA4.bclim", "WEB"),  # vanilla letter-spaced "W E B"
 ]
 
 # Unusable Zhoumaru masters, rendered instead: My Data is letter-spaced

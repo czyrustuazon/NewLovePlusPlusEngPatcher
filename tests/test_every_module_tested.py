@@ -16,7 +16,6 @@ UNTESTED = {
     "deploy_commu_option_en",
     "deploy_sms_maildic_en",
     "deploy_sound_settings_en",
-    "deploy_status_stats_en",
     "deploy_todo_en",
     "deploy_todo_hist_en",
     "deploy_watcher_issue28_en",
