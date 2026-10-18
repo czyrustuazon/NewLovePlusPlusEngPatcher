@@ -458,6 +458,13 @@ def rewrite_nene_token_text(text: str) -> str:
     return text.replace("▲姉ヶ崎＊▲", "▲Anegasaki＊▲").replace("▲姉ヶ崎＊", "▲Anegasaki＊")
 
 
+# The vanilla nameplate is the heroine's family name in every route. A
+# dialog that is exactly her given name is the plate a translation spelled
+# that way (Manaka's t* scripts): every one lines up with a vanilla 高嶺 /
+# 小早川 / 姉ヶ崎 plate, so it takes the surname too.
+_NENE_OLD_PLATES = frozenset({"姉ヶ崎", "Nene"})
+
+
 def _rewrite_nene_dbin2(data: bytes, *, speakers: bool) -> bytes:
     if len(data) < 4 or data[:4] != b"DBN2":
         return data
@@ -467,7 +474,7 @@ def _rewrite_nene_dbin2(data: bytes, *, speakers: bool) -> bytes:
         dialogs = entry.sdl2.dialogs
         for i, text in enumerate(dialogs):
             new = rewrite_nene_token_text(text)
-            if speakers and new == "姉ヶ崎":
+            if speakers and new in _NENE_OLD_PLATES:
                 new = "Anegasaki"
             if new != text:
                 dialogs[i] = new
@@ -489,6 +496,9 @@ def rewrite_manaka_token_text(text: str) -> str:
     return text.replace("▲高嶺＊＊▲", "▲Takane＊＊▲").replace("▲高嶺＊＊", "▲Takane＊＊")
 
 
+_MANAKA_OLD_PLATES = frozenset({"高嶺", "Manaka"})
+
+
 def _rewrite_manaka_dbin2(data: bytes, *, speakers: bool) -> bytes:
     if len(data) < 4 or data[:4] != b"DBN2":
         return data
@@ -498,7 +508,7 @@ def _rewrite_manaka_dbin2(data: bytes, *, speakers: bool) -> bytes:
         dialogs = entry.sdl2.dialogs
         for i, text in enumerate(dialogs):
             new = rewrite_manaka_token_text(text)
-            if speakers and new == "高嶺":
+            if speakers and new in _MANAKA_OLD_PLATES:
                 new = "Takane"
             if new != text:
                 dialogs[i] = new
@@ -514,7 +524,7 @@ def rewrite_manaka_nickname_tokens(data: bytes) -> bytes:
 
 
 def rewrite_manaka_surname_speakers(data: bytes) -> bytes:
-    """Nameplate dialog that is exactly 高嶺 becomes Takane.
+    """Nameplate dialog that is exactly 高嶺 or Manaka becomes Takane.
 
     The nickname marker becomes ▲Takane＊＊▲. Anything that is not a DBN2
     script is returned unchanged.
@@ -534,7 +544,7 @@ def rewrite_rinko_token_text(text: str) -> str:
 # ▲Kobayaka＊▲ marker are held to the 9-byte 小早川 budget. Kobayaka is the
 # plate the 2026-10-11 pass committed into rebuild_dbin2.
 RINKO_SPEAKER_PLATE = "Kobayakawa"
-_RINKO_OLD_PLATES = frozenset({"小早川", "Kobayaka"})
+_RINKO_OLD_PLATES = frozenset({"小早川", "Kobayaka", "Rinko"})
 
 
 def _rewrite_rinko_dbin2(data: bytes, *, speakers: bool) -> bytes:
@@ -562,7 +572,7 @@ def rewrite_rinko_nickname_tokens(data: bytes) -> bytes:
 
 
 def rewrite_rinko_surname_speakers(data: bytes) -> bytes:
-    """Nameplate dialog that is exactly 小早川 or Kobayaka becomes Kobayakawa.
+    """Nameplate dialog that is exactly 小早川, Kobayaka, or Rinko becomes Kobayakawa.
 
     The nickname marker becomes ▲Kobayaka＊▲. Anything that is not a DBN2
     script is returned unchanged.
@@ -571,7 +581,7 @@ def rewrite_rinko_surname_speakers(data: bytes) -> bytes:
 
 
 def rewrite_nene_surname_speakers(data: bytes) -> bytes:
-    """Nameplate dialog that is exactly 姉ヶ崎 becomes Anegasaki.
+    """Nameplate dialog that is exactly 姉ヶ崎 or Nene becomes Anegasaki.
 
     The nickname marker becomes ▲Anegasaki＊▲ so it matches the live
     family-name slot. Anything that is not a DBN2 script is returned unchanged.

@@ -241,6 +241,28 @@ def test_rewrite_rinko_surname_speakers_widens_committed_plate():
     assert names.rewrite_rinko_nickname_tokens(blob) == blob
 
 
+def test_given_name_plates_take_the_vanilla_surname():
+    dialogs = ["Manaka", "Rinko", "Nene", "Manaka！", "Hi, Nene.", "▲Takane＊＊▲"]
+    blob = names.build_dbin2(
+        1,
+        0,
+        [names.DbinEntry(0, 0, names.SDL2Data(key=2, unknown=[], dialogs=list(dialogs)))],
+    )
+    patched = names.rewrite_manaka_surname_speakers(blob)
+    patched = names.rewrite_rinko_surname_speakers(patched)
+    patched = names.rewrite_nene_surname_speakers(patched)
+    _, _, entries = names.parse_dbin2(patched)
+    assert entries[0].sdl2.dialogs == [
+        "Takane",
+        "Kobayakawa",
+        "Anegasaki",
+        "Manaka！",
+        "Hi, Nene.",
+        "▲Takane＊＊▲",
+    ]
+    assert names.rewrite_manaka_nickname_tokens(blob) == blob
+
+
 def test_rewrite_nene_surname_speakers_updates_token():
     original = ["姉ヶ崎", "Hello ▲姉ヶ崎＊▲"]
     blob = names.build_dbin2(
