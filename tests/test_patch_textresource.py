@@ -55,7 +55,7 @@ def test_yamanashi_keys_are_full_prefecture_strings():
     assert mapping.get("山") != "Yamanashi"
     assert mapping["山梨県"] == "Yamanashi"
     assert mapping["山梨県民と名刺交換"] == (
-        "Exchange business cards with Yamanashi residents"
+        "Swap cards with\nYamanashi"
     )
     assert mapping["アイ・ラブ・山梨！"] == "I love Yamanashi!"
     assert "アイ・ラブ・山" not in mapping
