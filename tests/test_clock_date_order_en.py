@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import re
 import struct
+
+import pytest
 
 from conftest import TOOLS, load_module
 
@@ -141,3 +144,74 @@ def test_slash_matches_digit_rows():
     top_ink = [x for x in range(16) if px[x, top + 1][3] > 128]
     bot_ink = [x for x in range(16) if px[x, bottom - 2][3] > 128]
     assert top_ink and bot_ink and min(top_ink) > max(bot_ink) - 2
+
+
+def _option06_arc(img_path):
+    from img import ARC, FileWindow, Image as ImgBin, Package
+    from darcutil import DarcArchive
+
+    img = ImgBin(str(img_path))
+    img.parse(False)
+    res = img.entries[clock.PKG]
+    pkg = Package(FileWindow(str(img_path), res.fw.base_offset, res.fw.len()), 0)
+    pkg.parse(False)
+    arc = next(e for e in pkg.entries if isinstance(e, ARC))
+    return DarcArchive(bytearray(arc.parsed()))
+
+
+def test_bake_runs_clock_deploy():
+    rebuild = load_module("rebuild_bake_img", TOOLS / "rebuild_bake_img.py")
+    assert "deploy_clock_date_order_en.py" in rebuild.DEPLOY_SCRIPTS
+    # Unique package: no other bake script may splice 5248 after it.
+    for name in rebuild.DEPLOY_SCRIPTS:
+        if name == "deploy_clock_date_order_en.py":
+            continue
+        text = (TOOLS / name).read_text(encoding="utf-8")
+        assert not re.search(r"^\s*PKG\s*=\s*5248\b", text, re.MULTILINE), name
+
+
+def test_slash_master_is_committed():
+    from PIL import Image
+
+    with Image.open(TOOLS.parent / clock.PNG_REL) as im:
+        assert im.convert("RGBA").tobytes() == clock.paint_slash().tobytes()
+
+
+def test_fit_ui_masters_no_longer_relocates_year_glyph():
+    """Title.check's Opt_Time_tex2 is a stray "P"; it must not overwrite the slash."""
+    text = (TOOLS / "fit_ui_masters.py").read_text(encoding="utf-8")
+    assert '"Option06.check" / "timg" / "Opt_Time_tex2.png"' not in text
+
+
+@pytest.mark.local_data
+def test_vanilla_option06_layouts_patch():
+    from nlpp_paths import find_vanilla_img
+
+    vanilla = find_vanilla_img()
+    if vanilla is None:
+        pytest.skip("no vanilla img.bin")
+    darc = _option06_arc(vanilla)
+    anchor = darc.extract_file(darc.find(clock.ANCHOR_LYT))
+    win = darc.extract_file(darc.find(clock.WIN_LYT))
+    a2, moved = clock.patch_anchor_layout(anchor)
+    w2, changed = clock.patch_win_layout(win)
+    assert moved == len(clock.ANCHOR_X)
+    assert changed == len(clock.WIN_X) + 2  # + rebind + hide
+    assert len(a2) == len(anchor) and len(w2) == len(win)
+    # Weekday pane keeps Week01 (rebind raises if it points anywhere else).
+    week = {"Pic_week_txt": ("Opt_Time_Week01.bclim", "Opt_Time_Week01.bclim")}
+    assert clock.rebind_textures(a2, week)[0] == a2
+
+
+@pytest.mark.local_data
+def test_release_bake_has_us_clock():
+    """Stale-bake guard: deploy-a ships release/bake_img.bin."""
+    from nlpp_paths import BAKE_IMG
+
+    if not BAKE_IMG.is_file():
+        pytest.skip("no release/bake_img.bin")
+    darc = _option06_arc(BAKE_IMG)
+    anchor = darc.extract_file(darc.find(clock.ANCHOR_LYT))
+    win = darc.extract_file(darc.find(clock.WIN_LYT))
+    assert clock.patch_anchor_layout(anchor) == (anchor, 0)
+    assert clock.patch_win_layout(win) == (win, 0)
