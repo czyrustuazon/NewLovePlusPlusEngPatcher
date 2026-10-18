@@ -8,6 +8,7 @@ dictionary from release/.
 
 from __future__ import annotations
 
+import faulthandler
 import hashlib
 import shutil
 import struct
@@ -44,6 +45,22 @@ RETURN = 0x40000000
 REAL_RANGES = [(0, 957), (968, 1365), (1438, 2938), (2955, 3180), (4718, 4875), (4876, 4969), (5064, 5125)]
 
 
+def _first_map(uc, address: int, size: int) -> None:
+    """uc.mem_map with faulthandler paused.
+
+    On Windows, unicorn 2.x's first mem_map on a new Uc starts the engine, which
+    raises an access violation and catches it itself. faulthandler still dumps a
+    "Windows fatal exception" stack for it, even though the test passes.
+    """
+    was_on = faulthandler.is_enabled()
+    faulthandler.disable()
+    try:
+        uc.mem_map(address, size)
+    finally:
+        if was_on:
+            faulthandler.enable(file=sys.__stderr__)
+
+
 class Matcher:
     """The blob in unicorn, with pack 0x7200 = readings (id -> str)."""
 
@@ -52,7 +69,7 @@ class Matcher:
         assert len(ranges) == 7
         excl = list(excluded) + [0xFFFF] * (23 - len(excluded))
         self.uc = uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
-        uc.mem_map(0x147000 + VA, 0x3000)
+        _first_map(uc, 0x147000 + VA, 0x3000)
         for start, data in blob.PIECES:
             uc.mem_write(start + VA, data)
         uc.mem_map(0x7A4000, 0x1000)
