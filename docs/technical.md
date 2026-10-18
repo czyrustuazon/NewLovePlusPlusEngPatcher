@@ -2536,6 +2536,21 @@ Verified 2026-09-17: heroine date line on **A** matches player speed; **B** stil
 
 Patch: in-place EN `This is a text-speed test.` + NUL pad in the same 40-byte slot (`patch_message_speed.py` / gold `name_input_code.bin`). Do not grow the pool. Do not use a `.rodata` pad.
 
+### 21.8 Speaker name spacing (2026-10-18)
+
+A three-letter player name drew as `P P P` on the talk-window plate. The save and TalkWindow `+0x10e` both hold ASCII `PPP`. The gaps are added when the plate is drawn.
+
+`FUN_0013b9a0` counts the speaker's glyphs (`0x005BF428`, capped at 8) and indexes `.rodata` `0x006E3000` (VA `0x007E3000`): `{x offset, spacing}` halfword pairs. The x offset moves the name pane (`+0xc4`, `+0xec`). The spacing goes to the glyph-quad `+0x17c` and is added after every glyph.
+
+| Glyphs | 1 | 2 | 3 | 4 | 5–8 |
+|--------|---|---|---|---|-----|
+| Vanilla | 21, 0 | 6, 16 | −1, 8 | −3, 2 | 0, 0 |
+| Patched | 0, 0 | 0, 0 | 0, 0 | 0, 0 | 0, 0 |
+
+Vanilla spreads short kanji names across the plate. The rule depends on glyph count, not letter case: any Latin name of 2–4 letters spreads out, and short NPC names (`TAM`, `Nene`) use the same table. `src/patch_speaker_spacing.py` sets every entry to `0, 0`. `+0xdbc` (the same count) still positions the plate chevron for 5+ glyphs; that is left alone.
+
+Verified on Azahar A (2026-10-18): the `PPP` plate draws without gaps. Ships in the gold `name_input_code.bin` (step 17 of `tools/deploy_name_input_en.py`).
+
 ---
 
 ## 22. Shared password serials / ウリボー傘 grant

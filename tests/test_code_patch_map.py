@@ -52,6 +52,7 @@ DATA_WRITERS = {
     "apply_spotpass_embed",
     "apply_password_uribo",
     "apply_profile_birthday",
+    "apply_speaker_spacing",
 }
 
 # Written ranges a step does not check before overwriting. These are dead

@@ -26,6 +26,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   14. patch_weather_day_text               # weekly day names captured at 64×28
   15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
   16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
+  17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -143,6 +144,10 @@ from patch_profile_birthday import (  # noqa: E402
 from patch_web_event_date import (  # noqa: E402
     apply_patch as apply_web_event_date,
     is_patched as web_event_date_already,
+)
+from patch_speaker_spacing import (  # noqa: E402
+    apply_patch as apply_speaker_spacing,
+    is_patched as speaker_spacing_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -315,6 +320,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] web_event_date already applied")
     else:
         apply_web_event_date(data)
+        steps += 1
+
+    if speaker_spacing_already(data):
+        print("[skip] speaker_spacing already applied")
+    else:
+        apply_speaker_spacing(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
