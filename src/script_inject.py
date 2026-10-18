@@ -14,9 +14,9 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
 5. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
    script tree is supplied, nickname markers on those Japanese files are
    still swapped: Manaka's to ▲Takane＊＊▲ (including an exact 高嶺
-   nameplate), Nene's marker to ▲Anegasaki＊▲ (and exact 姉ヶ崎 nameplates
-   on ``a*`` stems only), and Rinko's to ▲Kobayaka＊▲ (including an exact
-   小早川 nameplate).
+   nameplate), Nene's to ▲Anegasaki＊▲ (including an exact 姉ヶ崎
+   nameplate), and Rinko's to ▲Kobayaka＊▲ (an exact 小早川 nameplate
+   becomes Kobayakawa).
 
 Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply
 there unless Gemini Nene is opted in.
@@ -131,13 +131,10 @@ def script_prefix(stem: str) -> str:
 def _rewrite_base_script(data: bytes, *, stem: str = "") -> bytes:
     """Point a base script at the live surname slots.
 
-    Exact 姉ヶ崎 nameplates become Anegasaki on ``a*`` stems only. Exact 高嶺
-    and 小早川 nameplates become Takane and Kobayaka on every route.
+    Exact 姉ヶ崎, 高嶺, and 小早川 nameplates become Anegasaki, Takane, and
+    Kobayakawa on every route. ``stem`` is kept for callers.
     """
-    if script_prefix(stem) == "a":
-        data = patch_names.rewrite_nene_surname_speakers(data)
-    else:
-        data = patch_names.rewrite_nene_nickname_tokens(data)
+    data = patch_names.rewrite_nene_surname_speakers(data)
     data = patch_names.rewrite_rinko_surname_speakers(data)
     return patch_names.rewrite_manaka_surname_speakers(data)
 
@@ -145,17 +142,11 @@ def _rewrite_base_script(data: bytes, *, stem: str = "") -> bytes:
 def _copy_script(src: Path, dest: Path) -> None:
     """Copy one script. Nickname markers track the live surname slots.
 
-    a* nameplates that are exactly 姉ヶ崎 become Anegasaki. Other routes keep
-    Nene's nameplate. Exact 高嶺 and 小早川 nameplates become Takane and
-    Kobayaka on every route.
+    Exact 姉ヶ崎, 高嶺, and 小早川 nameplates become Anegasaki, Takane, and
+    Kobayakawa on every route.
     """
     raw = src.read_bytes()
-    if script_prefix(src.stem) == "a":
-        patched = patch_names.rewrite_nene_surname_speakers(raw)
-    else:
-        patched = patch_names.rewrite_nene_nickname_tokens(raw)
-    patched = patch_names.rewrite_rinko_surname_speakers(patched)
-    patched = patch_names.rewrite_manaka_surname_speakers(patched)
+    patched = _rewrite_base_script(raw, stem=src.stem)
     if patched == raw:
         shutil.copy2(src, dest)
         return
@@ -171,9 +162,8 @@ def apply_nene_marker_to_romfs(
     Files already under ``romfs_dir/script/bin`` are rewritten in place.
     When ``vanilla_bin`` is a ``script/bin`` tree, a Japanese file that is
     not already overlaid is copied in with those nickname edits. Exact
-    姉ヶ崎 nameplates on ``a*`` stems become Anegasaki. Exact 高嶺 and
-    小早川 nameplates become Takane and Kobayaka on every stem. An existing
-    English overlay is not replaced.
+    姉ヶ崎, 高嶺, and 小早川 nameplates become Anegasaki, Takane, and
+    Kobayakawa on every stem. An existing English overlay is not replaced.
     """
     changed = 0
     dest_root = romfs_dir / "script" / "bin"
@@ -219,8 +209,8 @@ def inject_scripts(
     vanilla ROM. Stems that stay Japanese are not replaced with a translation.
     ``vanilla_bin`` (a ``script/bin`` tree) overlays those Japanese files with
     Manaka's marker pointed at Takane (and exact 高嶺 plates), Nene's at
-    Anegasaki (exact 姉ヶ崎 plates on ``a*`` only), and Rinko's at Kobayaka
-    (and exact 小早川 plates).
+    Anegasaki (and exact 姉ヶ崎 plates), and Rinko's at Kobayaka (exact
+    小早川 plates become Kobayakawa).
     """
     eng_root = eng_root or DEFAULT_ENG_DBIN
     total = 0

@@ -8,7 +8,8 @@ Two active layers:
    Manaka's family slot is ``Takane`` (same 6 bytes as 高嶺), so her marker
    is ``▲Takane＊＊▲``. Nene's marker is ``▲Anegasaki＊▲`` (9-byte surname
    plus one ＊). Rinko's family slot is ``Kobayaka`` (8 bytes plus a NUL),
-   so her marker is ``▲Kobayaka＊▲``. Other English words inside markers
+   so her marker is ``▲Kobayaka＊▲``. Her script nameplate has no byte
+   budget and is ``Kobayakawa``. Other English words inside markers
    (``▲Protagonist＊▲``) are not tokens.
 
 2. **`textresource_resident_jpn.trb`** + **`img.bin` name table** — Nene's
@@ -528,6 +529,14 @@ def rewrite_rinko_token_text(text: str) -> str:
     return text.replace("▲小早川＊▲", "▲Kobayaka＊▲").replace("▲小早川＊", "▲Kobayaka＊")
 
 
+# Script nameplates are length-prefixed dialog strings with no fixed slot,
+# so they spell the whole surname. Only the resident family slot and the
+# ▲Kobayaka＊▲ marker are held to the 9-byte 小早川 budget. Kobayaka is the
+# plate the 2026-10-11 pass committed into rebuild_dbin2.
+RINKO_SPEAKER_PLATE = "Kobayakawa"
+_RINKO_OLD_PLATES = frozenset({"小早川", "Kobayaka"})
+
+
 def _rewrite_rinko_dbin2(data: bytes, *, speakers: bool) -> bytes:
     if len(data) < 4 or data[:4] != b"DBN2":
         return data
@@ -537,8 +546,8 @@ def _rewrite_rinko_dbin2(data: bytes, *, speakers: bool) -> bytes:
         dialogs = entry.sdl2.dialogs
         for i, text in enumerate(dialogs):
             new = rewrite_rinko_token_text(text)
-            if speakers and new == "小早川":
-                new = "Kobayaka"
+            if speakers and new in _RINKO_OLD_PLATES:
+                new = RINKO_SPEAKER_PLATE
             if new != text:
                 dialogs[i] = new
                 changed = True
@@ -553,7 +562,7 @@ def rewrite_rinko_nickname_tokens(data: bytes) -> bytes:
 
 
 def rewrite_rinko_surname_speakers(data: bytes) -> bytes:
-    """Nameplate dialog that is exactly 小早川 becomes Kobayaka.
+    """Nameplate dialog that is exactly 小早川 or Kobayaka becomes Kobayakawa.
 
     The nickname marker becomes ▲Kobayaka＊▲. Anything that is not a DBN2
     script is returned unchanged.

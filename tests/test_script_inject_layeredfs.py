@@ -73,7 +73,7 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"community-k"
 
 
-def test_a_stem_speaker_becomes_anegasaki(tmp_path: Path, monkeypatch):
+def test_nene_speaker_becomes_anegasaki_on_every_stem(tmp_path: Path, monkeypatch):
     import patch_names as names
 
     def _script(dialogs: list[str]) -> bytes:
@@ -105,12 +105,12 @@ def test_a_stem_speaker_becomes_anegasaki(tmp_path: Path, monkeypatch):
     _, _, common = names.parse_dbin2(
         (romfs / "script/bin/script/p004.dbin2").read_bytes()
     )
-    assert common[0].sdl2.dialogs == ["姉ヶ崎", "See ▲Anegasaki＊▲"]
+    assert common[0].sdl2.dialogs == ["Anegasaki", "See ▲Anegasaki＊▲"]
     _, _, rinko = names.parse_dbin2(
         (romfs / "script/bin/script/p011.dbin2").read_bytes()
     )
     assert rinko[0].sdl2.dialogs == [
-        "Kobayaka",
+        "Kobayakawa",
         "Hi ▲Kobayaka＊▲",
         "▲Takane＊＊▲",
         "Takane",
@@ -157,7 +157,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     _, _, kept = names.parse_dbin2((eng / "a001.dbin2").read_bytes())
     assert kept[0].sdl2.dialogs == ["Anegasaki", "Hello ▲Anegasaki＊▲"]
     _, _, patched = names.parse_dbin2((eng / "k050.dbin2").read_bytes())
-    assert patched[0].sdl2.dialogs == ["姉ヶ崎", "See ▲Anegasaki＊▲"]
+    assert patched[0].sdl2.dialogs == ["Anegasaki", "See ▲Anegasaki＊▲"]
     _, _, copied = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "a050.dbin2").read_bytes()
     )
@@ -167,7 +167,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     )
     assert pack[0].sdl2.dialogs == ["▲Anegasaki＊▲"]
     _, _, rinko = names.parse_dbin2((eng / "p010.dbin2").read_bytes())
-    assert rinko[0].sdl2.dialogs == ["Kobayaka", "See ▲Kobayaka＊▲", "▲Takane＊＊▲"]
+    assert rinko[0].sdl2.dialogs == ["Kobayakawa", "See ▲Kobayaka＊▲", "▲Takane＊＊▲"]
     _, _, manaka = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "t010.dbin2").read_bytes()
     )
@@ -175,7 +175,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     _, _, copied_r = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "k010.dbin2").read_bytes()
     )
-    assert copied_r[0].sdl2.dialogs == ["Kobayaka", "▲Kobayaka＊▲"]
+    assert copied_r[0].sdl2.dialogs == ["Kobayakawa", "▲Kobayaka＊▲"]
     assert not (romfs / "script" / "bin" / "script" / "a099.dbin2").exists()
     assert not (romfs / "script" / "bin" / "script" / "k099.dbin2").exists()
 
