@@ -68,3 +68,11 @@ def test_myroom_headers_pack_gray_zhoumaru_masters():
         assert how == f"{stem}.png", (stem, how)
         opaque = {px[:3] for px in im.convert("RGBA").getdata() if px[3] > 128}
         assert opaque == {sched.ZHOUMARU_HEADER_INK}, stem
+
+
+def test_album_header_renders_instead_of_inbox_master():
+    sched = load_module(
+        "deploy_schedule_header_en", TOOLS / "deploy_schedule_header_en.py"
+    )
+    assert ("timg/album_top_tex.bclim", "Album") in sched.LABELS
+    assert "album_top_tex" in sched.SKIP_UI_PNG

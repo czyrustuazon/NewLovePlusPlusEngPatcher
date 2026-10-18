@@ -54,10 +54,12 @@ LABELS = [
     ("timg/mydata_toptex_04.bclim", "Status"),
     ("timg/mydata_toptex_05.bclim", "Item List"),
     ("timg/mydata_toptex_06.bclim", "My Camera"),
+    ("timg/album_top_tex.bclim", "Album"),
 ]
 
-# Zhoumaru's My Data master letter-spaces "M y D a t a"; render it instead.
-SKIP_UI_PNG = frozenset({"mydata_toptex_RGBA4"})
+# Unusable Zhoumaru masters, rendered instead: My Data is letter-spaced
+# "M y D a t a"; album_top_tex is a letter-spaced "i n b o x".
+SKIP_UI_PNG = frozenset({"mydata_toptex_RGBA4", "album_top_tex"})
 # Fit to the Zhoumaru "My Camera" master: ink, glyph size, total alpha and a
 # baseline 1px lower than render_header_aa centers it.
 ZHOUMARU_HEADER_INK = (52, 52, 52)

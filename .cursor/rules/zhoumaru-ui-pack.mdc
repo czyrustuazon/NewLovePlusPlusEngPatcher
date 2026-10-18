@@ -25,6 +25,8 @@ CESA is a separate EngPatcher boot-warning texture (not Zhoumaru paint). English
 
 ## When a screen is still JP
 
+A vanilla-sourced last-writer drops every `.check` master it does not list (Album **4149** in `deploy_ui_buttons_en.py`, MyroomHeader **5575** in `deploy_schedule_header_en.py`). Compare the bake BCLIM with vanilla before suspecting the pack.
+
 1. Look for a Zhoumaru `.check` PNG first.
 2. If missing, it is not “Zhoumaru forgot CESA-class extras” unless the asset is actually a mapped BCLIM folder.
 3. CESA questions → `patch_cesa.py` / `deploy_cesa_en.py`, not the Zhoumaru tree.
@@ -39,5 +41,6 @@ Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/gar
 | `Myroom.check/timg/optn_tex_optionkabegami_RGBA4.png` | **5380** Wallpaper row | Opaque RGB is all `(0,0,0)` (filled slab). Re-render **Wallpaper**; other in-room `optn_tex_*` gray masters are good. `deploy_myroom_options_en.py`. |
 | `Myroom.check/timg/game_text_puzzle_RGBA4.png` | **5380** Mini-game row | Painted **Subarudama** (すばる≠ぱずる). Re-render **Puzzle-dama**; title/TwinBee+/Kung-Fu+ masters are good. `deploy_minigame_hub_en.py`. |
 | `MyroomHeader.check/timg/mydata_toptex_RGBA4.png` (+ `Title.check` copy) | **5575** My Data header | Letter-spaced **M y D a t a**, unlike the other gray headers. Re-render in that gray (`render_gray_header`); the Schedule / Mail / Phone / `mydata_toptex_01..06` masters are good. `deploy_schedule_header_en.py`. |
+| `MyroomHeader.check/timg/album_top_tex.png` (+ `Title.check` copy) | **5575** Album header | Says letter-spaced **i n b o x**, not Album. Re-render **Album** in the header gray. `deploy_schedule_header_en.py`. |
 
 Before packing a `.check` A8/RGBA4444 text strip: split RGB vs alpha. If alpha looks like text and opaque RGB is noisy (high chroma, or only `(0,0,0)`/`(255,255,255)` while glyphs are not a designed 1-bit), re-render RGB from alpha (or skip the dump). Do not use `bak_pre_*` copied from packed MOD as a Title ARC source — `deploy_title_engpatch_en.py` extracts **vanilla** and RGBA4444-encodes `Title_menu_word`.

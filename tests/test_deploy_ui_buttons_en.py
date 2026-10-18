@@ -12,7 +12,7 @@ from PIL import Image
 
 import fake_img as fi
 from bclimutil import parse_bclim
-from conftest import TOOLS, load_module
+from conftest import ROOT, TOOLS, load_module
 from darcutil import DarcArchive
 
 ui = load_module("deploy_ui_buttons_en", TOOLS / "deploy_ui_buttons_en.py")
@@ -95,6 +95,18 @@ def test_main_reports_splice_failure(env, monkeypatch):
     monkeypatch.setattr(ui, "splice_packages_into_img", fail)
     with pytest.raises(SystemExit, match="splice failed: grew"):
         ui.main()
+
+
+def test_album_group_lists_every_zhoumaru_master():
+    """4149 is rebuilt from vanilla, so an unlisted master ships Japanese."""
+    group = next(g for g in ui.GROUPS if g["pkg"] == 4149)
+    assert group["from_live"] is False
+    masters = {
+        p.stem
+        for p in (ROOT / "assets" / "images" / "Album.check" / "timg").glob("*.png")
+        if not p.stem.startswith("new_")
+    }
+    assert masters == set(group["stems"])
 
 
 # --- single groups -------------------------------------------------------

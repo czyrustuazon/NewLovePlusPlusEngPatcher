@@ -8,7 +8,7 @@ Sources: desktop NLPP_English_UI_Buttons_only (staged under assets/images/*.chec
 | Keyboard labels | **5190** InputCTexture + InputNTexture | same 9 PNGs in both; RGBA4444 |
 | SysPopup | **5259** SysPopup.arc | Yes/No/Ok/Cancel/Next/Previous; fmt 8 + Release fmt 3 |
 | Myroom Back | **5380** Myroom.arc | common_modoru + C_Com_icon_m{,ON}; ETC1A4 |
-| Album Delete | **4149** Album.arc | Delete / Delete All; RGBA4444 |
+| Album | **4149** Album.arc | Delete / Search / Export / popups + every Zhoumaru Album.check master |
 
 Does not touch SysPopup node/file outside the listed button stems.
 """
@@ -123,11 +123,52 @@ GROUPS: list[dict] = [
         "arcs": ("Album.arc",),
         "asset_dirs": (ASSETS / "Album.check" / "timg",),
         "desktop": SRC_DESKTOP / "Album_Delete",
+        # Rebuilt from vanilla, so every Zhoumaru Album.check master must be
+        # listed here or the bake ships it Japanese (Search, Export, popups…).
+        # ``new_*`` PNGs duplicate listed masters and have no BCLIM.
         "stems": [
             "C_Btn_AllDelete_Off",
             "C_Btn_AllDelete_On",
             "C_Btn_Delete_Off",
             "C_Btn_Delete_On",
+            "C_Btn_Search_Off",
+            "C_Btn_Search_On",
+            "C_Btn_Search02_Off",
+            "C_Btn_Search02_On",
+            "C_Btn_Output_Off",
+            "C_Btn_Output_On",
+            "Alb_DataBtn02_OffT",
+            "Alb_DataBtn02_OnT",
+            "Alb_DataBtn03_Off",
+            "Alb_DataBtn03_On",
+            "Alb_DataBtn04_Off",
+            "Alb_DataBtn04_On",
+            "Alb_DataPnl01c",
+            "Alb_Mark05",
+            "Alb_Mark06",
+            "Alb_PopTxt03",
+            "Alb_Popup_o02",
+            "Alb_Search01b",
+            "Alb_Search01c",
+            "Alb_Search01d",
+            "C_Com_Win01_Btn02_Cancel_Off",
+            "C_Com_Win01_Btn02_Cancel_Press",
+            "C_Com_Win01_Btn02_Ok_Off",
+            "C_Com_Win01_Btn02_Ok_Press",
+            "C_Com_Win01_t02",
+            "Wall_Txt01a",
+            "Wall_Txt01b",
+            "Wall_Txt01c",
+            "Wall_Txt01d",
+            "Wall_Txt03",
+            "Wall_Type0_Off",
+            "Wall_Type0_On",
+            "Wall_Type1_Off",
+            "Wall_Type1_On",
+            "Wall_Type2_Off",
+            "Wall_Type2_On",
+            "Wall_Type3_Off",
+            "Wall_Type3_On",
         ],
         "from_live": False,
     },
