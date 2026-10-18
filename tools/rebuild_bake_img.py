@@ -78,6 +78,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_card_side_btn_en.py",  # 5238 last-writer: 表面/裏面 → Front Side / Back Side
     "deploy_display_settings_en.py",
     "deploy_clock_date_order_en.py",  # 5248 clock date MM / DD / YYYY
+    "deploy_header_clock_ampm_en.py",  # 5402 home header HH:MM AM/PM
     "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",

@@ -154,8 +154,13 @@ def _pane_name(data: bytes, off: int) -> str:
     return bytes(data[off + 12 : off + 28]).split(b"\x00", 1)[0].decode("ascii")
 
 
-def move_panes(layout: bytes, moves: dict[str, tuple[float, float]]) -> tuple[bytes, int]:
-    """Set each pane's x to its US value. Returns (layout, panes changed)."""
+def move_panes(
+    layout: bytes, moves: dict[str, tuple[float, float]], *, offset: int = X_OFF
+) -> tuple[bytes, int]:
+    """Set each pane's x (or the float at ``offset``) to its US value.
+
+    Returns (layout, panes changed).
+    """
     data = bytearray(layout)
     seen: set[str] = set()
     changed = 0
@@ -166,14 +171,14 @@ def move_panes(layout: bytes, moves: dict[str, tuple[float, float]]) -> tuple[by
         if name not in moves:
             continue
         vanilla, target = moves[name]
-        x = struct.unpack_from("<f", data, off + X_OFF)[0]
+        x = struct.unpack_from("<f", data, off + offset)[0]
         if abs(x - target) < 0.01:
             pass
         elif abs(x - vanilla) < 0.01:
-            struct.pack_into("<f", data, off + X_OFF, target)
+            struct.pack_into("<f", data, off + offset, target)
             changed += 1
         else:
-            raise ValueError(f"{name} x={x}, expected vanilla {vanilla} or {target}")
+            raise ValueError(f"{name} {x=}, expected vanilla {vanilla} or {target}")
         seen.add(name)
     missing = set(moves) - seen
     if missing:
