@@ -28,6 +28,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
   17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
   18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
+  19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -153,6 +154,10 @@ from patch_speaker_spacing import (  # noqa: E402
 from patch_eula_agreed import (  # noqa: E402
     apply_patch as apply_eula_agreed,
     is_patched as eula_agreed_already,
+)
+from patch_camera_restore_default import (  # noqa: E402
+    apply_patch as apply_camera_defaults,
+    is_patched as camera_defaults_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -337,6 +342,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] eula_agreed already applied")
     else:
         apply_eula_agreed(data)
+        steps += 1
+
+    if camera_defaults_already(data):
+        print("[skip] camera_restore_default already applied")
+    else:
+        apply_camera_defaults(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
