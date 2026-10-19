@@ -22,6 +22,8 @@ SIZES = {
     "AttentionStart_008.png": (512, 256),
     "AttentionEnd_005.png": (256, 32),
     "InstCard_Puzzle.png": (512, 256),
+    "InstCard_TwinBee.png": (512, 256),
+    "InstCard_KungFu.png": (512, 256),
     "PuzzleTitle_006.png": (64, 64),
     "PuzzleTitle_007.png": (64, 64),
     "PuzzleTitle_008.png": (64, 64),
@@ -35,6 +37,9 @@ SIZES = {
     "PuzzleSelect_122.png": (64, 32),
     "PuzzleSelect_123.png": (64, 32),
     **{f"PuzzleGame_{n}.png": (128, 64) for n in ("043", "044", "125", "126")},
+    "PuzzleResult_004.png": (256, 64),
+    "PuzzleBadge_easy.png": (32, 32),
+    "PuzzleBadge_hard.png": (32, 32),
 }
 
 

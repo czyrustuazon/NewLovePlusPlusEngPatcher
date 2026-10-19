@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Build the Puzzle-dama how-to-play card master from the EN mockups (needs scipy).
+"""Build the mini-game how-to-play card masters from the EN mockups (needs scipy).
 
-Offline tool. The bake only reads ``assets/images/minigame/InstCard_Puzzle.png``
+Offline tool. The bake only reads ``assets/images/minigame/InstCard_*.png``
 (``deploy_minigame_textures_en.py``).
 
-pkg 117 ``InstCard`` ``000.l2mgtex`` is one 512×256 RGBA8 texture holding the
-320×240 bottom-screen card at (96, 8): the left half (x 96–256) is the
-controls card, the right half (x 256–416) is the "secret balls" card. Each
-half has its own EN screenshot mockup.
+Each game's ``InstCard`` ``000.l2mgtex`` (pkg 117 Puzzle-dama, 135 TwinBee+,
+141 Yie Ar Kung-Fu+) is one 512×256 RGBA8 texture holding the 320×240
+bottom-screen card at (96, 8): the left half (x 96–256) is the controls card,
+the right half (x 256–416) is the game's tips card. Each EN half has its own
+screenshot mockup; a half without one stays JP.
 
 The mockups are softer than the game art, so only the pixels where the text
 changed are taken from them:
@@ -17,13 +18,13 @@ changed are taken from them:
    of each text-line-shaped region, feather 1 px.
 3. Quantize the EN pixels to a palette (no dither). Raw screenshot noise does
    not fit the 87894-byte zlib slot.
-4. Sync the small logo with the title screen (pkg 125, ``PuzzleTitle_*``):
+4. Puzzle-dama only: sync the small logo with the title screen (pkg 125, ``PuzzleTitle_*``):
    the mockup has もえろ bubbles and MOE! in the burst. Paste the EN M / O / E
    bubbles and the BATTLE burst at the card positions of the JP pieces, keep
    the card's PUZZLE-DAMA on top, remove the mockup's small green BATTLE label,
    and redraw the ``!`` bubble over it.
 
-  python tools/cut_minigame_instcard_en.py
+  python tools/cut_minigame_instcard_en.py [117|135|141 ...]
 """
 from __future__ import annotations
 
@@ -45,13 +46,28 @@ from img import Image as ImgBin  # noqa: E402
 from nlpp_paths import require_vanilla_img  # noqa: E402
 
 MASTERS = ROOT / "assets" / "images" / "minigame"
-OUT_PNG = MASTERS / "InstCard_Puzzle.png"
-PKG = 117
-# (mockup, card box x0 y0 x1 y1 in the texture)
-CARDS = (
-    (MASTERS / "source" / "instcard_puzzle_left_en_mockup.png", (96, 8, 256, 248)),
-    (MASTERS / "source" / "instcard_puzzle_right_en_mockup.png", (256, 8, 416, 248)),
-)
+LEFT = (96, 8, 256, 248)  # card box x0 y0 x1 y1 in the texture
+RIGHT = (256, 8, 416, 248)
+# pkg -> (master, [(mockup, card box)], Puzzle-dama logo sync, palette size)
+SETS = {
+    117: ("InstCard_Puzzle.png", (
+        (MASTERS / "source" / "instcard_puzzle_left_en_mockup.png", LEFT),
+        (MASTERS / "source" / "instcard_puzzle_right_en_mockup.png", RIGHT),
+    ), True, 256),
+    135: ("InstCard_TwinBee.png", (
+        (MASTERS / "source" / "instcard_twinbee_left_en_mockup.png", LEFT),
+        (MASTERS / "source" / "instcard_twinbee_right_en_mockup.png", RIGHT),
+    ), False, 64),  # both halves at 128+ colours overflow the 90897-byte slot
+    141: ("InstCard_KungFu.png", (
+        # The mockup's art is softer than the game's, so a diff mask flags
+        # every edge: replace explicit text regions (card px) at a fixed fit
+        # (scale x, scale y, offset x, offset y) instead.
+        (MASTERS / "source" / "instcard_kungfu_left_en_mockup.png", LEFT, {
+            "place": (0.23, 0.2295, 5, 0),
+            "regions": ((6, 3, 154, 21), (40, 112, 124, 129), (16, 137, 148, 224)),
+        }),
+    ), False, 256),
+}
 # Title pieces on the card (pkg 125 texture px -> card texture px): scale, x, y.
 # Found by masked template matching of the JP pieces on the vanilla card.
 CARD_LOGO = {
@@ -65,15 +81,16 @@ CARD_LOGO = {
 LABEL_BOX = (190, 82, 222, 98)  # mockup's small green BATTLE label, x0 y0 x1 y1
 DIFF_THR = 70
 LINE_MAX_H = 22
-COLORS = 256
 
 
-def vanilla_texture() -> bytes:
+def vanilla_texture(pkg: int) -> tuple[bytes, int]:
+    """``(l2mgtex bytes, zlib slot length)`` of a package's InstCard."""
     img = ImgBin(str(require_vanilla_img()))
     img.parse(False)
-    res = img.entries[PKG]
+    res = img.entries[pkg]
     res.parse(False)
-    return next(e for e in res.entries if e.fn == "000.l2mgtex").parsed()
+    e = next(e for e in res.entries if e.fn == "000.l2mgtex")
+    return e.parsed(), e.fw.len()
 
 
 def register(mock: Image.Image, card: np.ndarray) -> Image.Image:
@@ -100,12 +117,30 @@ def register(mock: Image.Image, card: np.ndarray) -> Image.Image:
     return out
 
 
+def place_fixed(mock: Image.Image, card: np.ndarray, sx: float, sy: float, ox: int, oy: int) -> Image.Image:
+    ch, cw = card.shape[:2]
+    out = Image.new("RGBA", (cw, ch))
+    size = (round(mock.width * sx), round(mock.height * sy))
+    out.paste(mock.convert("RGBA").resize(size, Image.Resampling.LANCZOS), (ox, oy))
+    return out
+
+
 def apply_card(jp: np.ndarray, mockup: Path, box: tuple[int, int, int, int],
-               colors: int) -> int:
+               colors: int, opts: dict | None = None) -> int:
     """Blend the changed pixels of one EN card into ``jp`` in place."""
+    opts = opts or {}
     x0, y0, x1, y1 = box
     card = jp[y0:y1, x0:x1].copy()
-    en = np.array(register(Image.open(mockup), card)).astype(np.float32)
+    if "place" in opts:
+        en = np.array(place_fixed(Image.open(mockup), card, *opts["place"])).astype(np.float32)
+    else:
+        en = np.array(register(Image.open(mockup), card)).astype(np.float32)
+
+    if "regions" in opts:
+        m = np.zeros(card.shape[:2], bool)
+        for rx0, ry0, rx1, ry1 in opts["regions"]:
+            m[ry0:ry1, rx0:rx1] = True
+        return _blend(jp, card, en, m, box, colors)
 
     m = np.abs(card - en)[..., :3].max(2) > DIFF_THR
     lab, n = ndi.label(m)
@@ -121,6 +156,12 @@ def apply_card(jp: np.ndarray, mockup: Path, box: tuple[int, int, int, int],
             m[sl[0], max(0, sl[1].start - 4) : sl[1].stop + 4] = True
     m = ndi.binary_closing(m, iterations=4)
     m = ndi.binary_fill_holes(m)
+    return _blend(jp, card, en, m, box, colors)
+
+
+def _blend(jp: np.ndarray, card: np.ndarray, en: np.ndarray, m: np.ndarray,
+           box: tuple[int, int, int, int], colors: int) -> int:
+    x0, y0, x1, y1 = box
     soft = np.clip(ndi.gaussian_filter(m.astype(np.float32), 0.8) * 1.5, 0, 1)[..., None]
 
     q = Image.fromarray(np.clip(en[..., :3], 0, 255).astype(np.uint8)).quantize(
@@ -180,20 +221,28 @@ def sync_logo(card: np.ndarray, vanilla: np.ndarray) -> None:
     over(*_warp_piece(jp["005"], *CARD_LOGO["005"]))
 
 
-def main() -> int:
+def build(pkg: int) -> None:
     import zlib
 
-    van = vanilla_texture()
+    name, cards, logo, colors = SETS[pkg]
+    van, slot = vanilla_texture(pkg)
     jp = np.array(l2mgtex.decode(van)).astype(np.float32)
     vanilla = jp.copy()
-    for mockup, box in CARDS:
-        n = apply_card(jp, mockup, box, COLORS)
+    for mockup, box, *opts in cards:
+        n = apply_card(jp, mockup, box, colors, *opts)
         print(f"{mockup.name}: EN px {n}")
-    sync_logo(jp, vanilla)
+    if logo:
+        sync_logo(jp, vanilla)
     im = Image.fromarray(np.clip(np.round(jp), 0, 255).astype(np.uint8), "RGBA")
-    im.save(OUT_PNG)
+    path = MASTERS / name
+    im.save(path)
     size = len(zlib.compress(l2mgtex.encode_like(van, im), 9))
-    print(f"wrote {OUT_PNG.relative_to(ROOT)} (zlib-9 {size}, slot 87894)")
+    print(f"wrote {path.relative_to(ROOT)} (zlib-9 {size}, slot {slot})")
+
+
+def main() -> int:
+    for pkg in [int(a) for a in sys.argv[1:]] or list(SETS):
+        build(pkg)
     return 0
 
 

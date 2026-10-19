@@ -12,6 +12,9 @@ Each package holds a ``*.l2rg`` layout and ``NNN.l2mgtex`` textures
   pkg 94  AttentionEnd    005  256×32  ETC1A4  A-button line under 楽しかったよ…
   pkg 117 InstCard        000  512×256 RGBA8   Puzzle-dama how-to-play card
                                                (controls + secret balls)
+  pkg 135 InstCard        000  512×256 RGBA8   TwinBee+ card (controls + items)
+  pkg 141 InstCard        000  512×256 RGBA8   Yie Ar Kung-Fu+ card (how-to half EN,
+                                               move list half JP)
   pkg 125 Title           006–011      RGBA4444 Puzzle-dama logo pieces: bubbles
                                                M / O / E, PUZZLE-DAMA, MORE heart,
                                                BATTLE burst
@@ -21,6 +24,9 @@ Each package holds a ``*.l2rg`` layout and ``NNN.l2mgtex`` textures
                           015          ETC1A4 Choose an attack pattern! prompt
                           122 / 123    ETC1A4 footer Ⓐ DECIDE / ✚ SELECT
   pkg 116 GameMain        043/044, 125/126  ETC1A4 LOSE / WIN stamps + shadows
+  pkg 119 Result          004  256×64  RGBA4444 NEW HIGH SCORE! banner
+                          000 / 001    ETC1A4 EASY / HARD badges
+  pkg 118 Ranking         181 / 182    ETC1A4 same EASY / HARD badges
 
 Masters in ``assets/images/minigame/`` were cut from EN mockups
 (``tools/cut_minigame_*.py``). Each texture is spliced into the vanilla
@@ -74,9 +80,21 @@ JOBS: dict[int, dict[str, str]] = {
     117: {
         "000.l2mgtex": "InstCard_Puzzle.png",
     },
+    135: {
+        "000.l2mgtex": "InstCard_TwinBee.png",
+    },
+    141: {
+        "000.l2mgtex": "InstCard_KungFu.png",
+    },
     125: {f"{n}.l2mgtex": f"PuzzleTitle_{n}.png" for n in ("006", "007", "008", "009", "010", "011")},
     120: {f"{n:03d}.l2mgtex": f"PuzzleSelect_{n:03d}.png" for n in (15, 70, 71, 122, 123, *range(137, 148), *range(149, 160))},
     116: {f"{n}.l2mgtex": f"PuzzleGame_{n}.png" for n in ("043", "044", "125", "126")},
+    119: {
+        "004.l2mgtex": "PuzzleResult_004.png",
+        "000.l2mgtex": "PuzzleBadge_easy.png",
+        "001.l2mgtex": "PuzzleBadge_hard.png",
+    },
+    118: {"181.l2mgtex": "PuzzleBadge_easy.png", "182.l2mgtex": "PuzzleBadge_hard.png"},
 }
 
 
