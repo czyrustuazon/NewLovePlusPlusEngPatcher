@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "14fab00a1df33f14da0b8a35d7216e950a8ad7f13ae6b9ade91cd706ee73bc4e",
+ "final_sha256": "f22b556cb7e06e73d640b63d006299ade192dab0db555144475857c22c8b69e5",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -295,7 +295,7 @@
   },
   {
    "name": "apply_spotpass_embed",
-   "written_sha256": "3de680c1cc11847c3ed9d16620dba68d262350cb5fe7beb3e4dd779e69aa367e",
+   "written_sha256": "8fce0fac5db91eb01261252c206c1ce215c6d3b5b2032dc07fbc37ba4b2a45c4",
    "ranges": [
     "0x04fc20-0x04fc24",
     "0x04fc58-0x04fc5c",
@@ -360,7 +360,8 @@
     "0x6e6ab8-0x6e6acc",
     "0x6e6bb8-0x6e6bcc",
     "0x6e6d38-0x6e6d54",
-    "0x6e6f40-0x6e72bc",
+    "0x6e6f40-0x6e70d0",
+    "0x6e7194-0x6e72bc",
     "0x6fbb08-0x6fbd7c",
     "0x6fbd80-0x6fbd94",
     "0x6fbd98-0x6fbde0",

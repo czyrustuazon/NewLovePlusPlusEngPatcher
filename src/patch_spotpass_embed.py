@@ -1854,6 +1854,9 @@ def apply_map_comments(data: bytearray) -> bool:
         raise ValueError(f"comment cave @{ADDR_COMMENT_CAVE:#x} is not the merge body")
     text = build_comment_text()
     span = ADDR_COMMENT_LIMIT - ADDR_COMMENT_TEXT
+    # First apply writes into vanilla zero pad. Once hooked, the table is ours.
+    if not already and any(data[ADDR_COMMENT_TEXT:ADDR_COMMENT_LIMIT]):
+        raise ValueError(f"comment text @{ADDR_COMMENT_TEXT:#x} is not empty")
     data[ADDR_COMMENT_CAVE : ADDR_COMMENT_CAVE + len(cave)] = cave
     data[ADDR_COMMENT_TEXT : ADDR_COMMENT_LIMIT] = b"\x00" * span
     data[ADDR_COMMENT_TEXT : ADDR_COMMENT_TEXT + len(text)] = text
