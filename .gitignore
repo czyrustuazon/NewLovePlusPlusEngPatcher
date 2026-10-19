@@ -37,6 +37,7 @@ tools/*
 !tools/deploy_*.py
 !tools/render_cesa_en.py
 !tools/render_card_seal_labels_en.py
+!tools/render_camset_alert_en.py
 !tools/cut_minigame_*.py
 !tools/ab_mcp_server.py
 !tools/import_*.py
