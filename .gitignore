@@ -36,6 +36,7 @@ tools/*
 !tools/README.md
 !tools/deploy_*.py
 !tools/render_cesa_en.py
+!tools/render_card_seal_labels_en.py
 !tools/ab_mcp_server.py
 !tools/import_*.py
 !tools/deploy_common.py

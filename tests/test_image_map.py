@@ -33,3 +33,8 @@ def test_image_map_community_pack_packages():
     assert resolve_folder("optionlock") == (5250, "OptionLock.arc")
     assert resolve_folder("camera_btn00") == (5322, "Camera_Btn00.arc")
     assert resolve_folder("haircatalog") == (5395, "HairCatalog.arc")
+
+
+def test_image_map_card_label_stickers():
+    for n in range(5):
+        assert resolve_folder(f"ExCardCommonT{n:03d}") == (4315 + n, f"ExCardCommonT{n:03d}.arc")
