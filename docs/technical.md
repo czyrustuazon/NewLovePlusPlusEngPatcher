@@ -631,6 +631,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Display Settings panel | RGBA4444 `Opt_TxtItem_{Help,Message}` + `Opt_HelpBtn_{A,B}_*` @ Option **5247** | **EN** (`Help Display` / `Message Speed` / `Every Time` / `Once`) — `tools/deploy_display_settings_en.py` |
 | Sound Settings panel | RGBA4444 `Opt_txtItem_{SE,VOICE,MIC}` @ Option **5247** | **EN** (`SE` / `Voice` / `Mic Sensitivity`) — same script (also `deploy_sound_settings_en.py`) |
 | Floating `初期設定` (Defaults) | ETC1A4 `Com_btn_sy01_{a,b}` @ **5238** (not pkg **5247**) | **EN** (`Restore Default`) — Zhoumaru `NCommonIcon.check`; `tools/deploy_softkey_defaults_en.py`. Twin BCLIM also in Common02Icon **4184** `C_Com_icon_Sy` (already in bake). |
+| My Camera right tab `設定` | ETC1A4 `C_Com_icon_Setting{,ON}` @ Common02Icon **4184** (part `Pts_C_Com_icon_s`, pane `C_Com_Setting_RG`, one fixed texture) | **EN** (`Select`). The `s` softkey slot (`0x7c1b80` table, no variants) is shown only by the camera UI (`FUN_001f5a9c(mgr, 4, 1)` @ `0x2d07c0` / `0x2d0d14`). It is shown on both the equipment list and the single-effect picker. On both screens it means "set/choose", so Zhoumaru's **Settings** read wrong in the picker. The `.check` masters are re-rendered: the text-free background is rebuilt from the Settings / Confirm / Reply / Send tabs, and "Select" is set in Arial 15.5 px at the Settings center and baseline, then packed by `pack_images`. |
 | My Camera **Restore Default** softkey (new) | Common02Icon **4184** slot 3 `Pos_C_icon_Sy` / `Pos_C_icon_hSy` (`C_Com_icon_Sy`, already EN). Softkey slots (name table `0x6c1af0` file, stride 0x24): 0 `t`, 1 `k`, 2 `m` Back, 3 `Sy`, 4 `s` Select | **Display only.** Vanilla camera never shows slot 3. `src/patch_camera_restore_default.py` points the equipment list's Back calls (`SetSoftkey` `FUN_001f5a9c` @ `0x2d0564` show / `0x2d08e0` hide, in `FUN_002d0438`) at a cave @ `0x68ff50` that repeats the call for slot 3. The drawn pane is `Pos_C_icon_Sy`, placed every frame at the slot's base (`slot+0xC`, set by the hold-angle setter `0x1f60a0` from the saved `Pos_C_icon_hSy` spot `slot+0x24` when held sideways) plus the slide offset (`0x1f5d3c`), so editing the layout pane at runtime does nothing. The cave writes (121, −85) to slot 3's `+0xC` and `+0x24` (`mgr+0x114` / `mgr+0x12C`) before showing it, and the vanilla (87, −97) back on hide (another screen also shows slot 3). Nothing handles a slot-3 press yet. |
 | Message speed sample `メッセージ速度テストです。` | UTF-8 in `code.bin` @ `0x005D1928` + typewriter `FUN_002d544c` | **EN** (`This is a text-speed test.`) — in-place pool rewrite in `patch_message_speed.py` §21.7 |
 | Extra-data recreate warning `作成には時間がかかるので…` | DrawText / TRB STRI **4429** (`Lyt_C_Com_Win01` `Tex_Sentence`; SysPopup). Not `Com_Win_Warning` BCLIM (that is empty chrome). | **EN** — `translations.json`. Sibling create/start strings STRI 4431–4434. |
@@ -1298,7 +1299,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc4.1`** on main); **white glyphs + thick black outline** (readable on Main Menu white column) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1406,7 +1407,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc4.1`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **4**.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **5**.
 
 #### What git contains vs what a patched CIA needs
 
@@ -2700,5 +2701,5 @@ The function that should copy the saved names onto these two keys was not found.
 
 ---
 
-*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc4.1` / CIA title version 4; UI PNG masters **1745** mapped / **562** chrome.*
+*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5; UI PNG masters **1745** mapped / **562** chrome.*
 

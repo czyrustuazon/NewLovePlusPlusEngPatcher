@@ -9,8 +9,9 @@ Separate ``timg/Eng_Patch.bclim`` + pic under ``Nul_Copyright``, taller Nul so
 the Eng strip is not clipped. Konami stays on vanilla ``Copyright.bclim``.
 Eng strip stays a separate BCLIM (not merged into Copyright): version line
 keeps the original 14px glyph height; the project URL sits underneath.
-Main Menu is a white column — soft white-on-white vanishes; use white glyphs
-+ strong black outline (Aug 2026 confirm) so it stays readable above Konami.
+Both Eng lines copy the Konami line's look (Heisei Gothic W5 half-width,
+dark gray ink, white halo) so the badge reads as part of the copyright block
+and stays legible on the white Main Menu column.
 
 Hub header ``Title_menu_word`` is rendered gray “Main Menu” and encoded with
 the same RGBA4444 path as the hub rows (magenta probe: that encoder is what
@@ -33,7 +34,7 @@ import zlib
 from pathlib import Path
 
 import zopfli.zlib as zopfli_zlib
-from PIL import Image, ImageChops, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -52,6 +53,7 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     AZAHAR_INSTANCES,
+    HEISEI_W5,
     UI_FONT,
     maybe_backup_img,
     find_ui_png,
@@ -128,78 +130,69 @@ def _etc1a4_alpha(a: int) -> int:
     return min(255, ((a + 8) // 17) * 17)
 
 
-_OUTLINE_XY = (
-    (-2, 0),
-    (2, 0),
-    (0, -2),
-    (0, 2),
-    (-1, 0),
-    (1, 0),
-    (0, -1),
-    (0, 1),
-    (-1, -1),
-    (-1, 1),
-    (1, -1),
-    (1, 1),
-    (-2, -1),
-    (-2, 1),
-    (2, -1),
-    (2, 1),
-    (-1, -2),
-    (1, -2),
-    (-1, 2),
-    (1, 2),
-)
+# Konami ``Copyright.bclim`` style: half-width Heisei Gothic W5 (TTC index 0,
+# 6px fixed pitch) at 12px, box-downsampled from 8x, dark gray ink on a solid
+# white halo that fades out ~2px from the glyph. Cap top sits on row 3 of the
+# 14px Konami row; same here so both lines read as one block.
+COPYRIGHT_FONT_PX = 12
+COPYRIGHT_SS = 8
+COPYRIGHT_INK = 104
+COPYRIGHT_CAP_TOP = 1  # pen y in the 14px row (Konami caps land on row 3)
+COPYRIGHT_ADVANCE = 6
+# Fixed pitch gives "." a whole 6px cell, so "v1.0.0" reads spaced out.
+# char -> (pen x shift, advance) in px: tuck the dot against the previous glyph.
+_TIGHT = {".": (-1, 3)}
+# (squared distance from glyph core, halo alpha), sampled from Copyright.bclim.
+_HALO = ((2, 255), (4, 143), (5, 68))
 
 
-def render_outlined_line(text: str, w: int, h: int) -> Image.Image:
-    """White fill + thick black outline (Main Menu readable on the white column)."""
-    fill_rgb = (255, 255, 255)
-    outline_rgb = (0, 0, 0)
-    for size in range(10, 6, -1):
-        font = ImageFont.truetype(str(UI_FONT), size)
-        probe = ImageDraw.Draw(Image.new("RGBA", (w, h)))
-        b = probe.textbbox((0, 0), text, font=font)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w - 4 or th > h - 2:
-            continue
-        x = (w - tw) // 2 - b[0]
-        y = (h - th) // 2 - b[1]
+def render_copyright_line(text: str, w: int, h: int, *, y0: int | None = None) -> Image.Image:
+    """Dark gray glyphs + white halo, matching the vanilla Konami copyright line."""
+    if not HEISEI_W5.is_file():
+        raise SystemExit(f"missing copyright font {HEISEI_W5}")
+    ss = COPYRIGHT_SS
+    font = ImageFont.truetype(str(HEISEI_W5), COPYRIGHT_FONT_PX * ss, index=0)
+    tw = sum(_TIGHT.get(ch, (0, COPYRIGHT_ADVANCE))[1] for ch in text)
+    if tw > w - 4:
+        raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+    x = (w - tw) // 2
+    y = COPYRIGHT_CAP_TOP + (h - ENG_LINE_H) // 2 if y0 is None else y0
+    big = Image.new("L", (w * ss, h * ss), 0)
+    draw = ImageDraw.Draw(big)
+    pen = x
+    for ch in text:
+        dx, adv = _TIGHT.get(ch, (0, COPYRIGHT_ADVANCE))
+        draw.text(((pen + dx) * ss, y * ss), ch, font=font, fill=255)
+        pen += adv
+    cov = big.resize((w, h), Image.Resampling.BOX).load()
 
-        omask = Image.new("L", (w, h), 0)
-        fmask = Image.new("L", (w, h), 0)
-        od = ImageDraw.Draw(omask)
-        fd = ImageDraw.Draw(fmask)
-        for ox, oy in _OUTLINE_XY:
-            od.text((x + ox, y + oy), text, font=font, fill=255)
-        fd.text((x, y), text, font=font, fill=255)
-        fbody = fmask.point(lambda p: 255 if p >= 64 else 0)
-        omask = ImageChops.subtract(omask, fbody)
+    core = [(xx, yy) for yy in range(h) for xx in range(w) if cov[xx, yy] > 76]
+    halo = Image.new("L", (w, h), 0)
+    hp = halo.load()
+    for cx, cy in core:
+        for dy in range(-2, 3):
+            for dx in range(-2, 3):
+                d2 = dx * dx + dy * dy
+                a = next((a for lim, a in _HALO if d2 <= lim), 0)
+                xx, yy = cx + dx, cy + dy
+                if a and 0 <= xx < w and 0 <= yy < h and a > hp[xx, yy]:
+                    hp[xx, yy] = a
 
-        im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        outline = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        op = outline.load()
-        om = omask.load()
-        for yy in range(h):
-            for xx in range(w):
-                a = _etc1a4_alpha(om[xx, yy])
-                if a:
-                    op[xx, yy] = (*outline_rgb, a)
-        im = Image.alpha_composite(im, outline)
-        im.paste(Image.new("RGBA", (w, h), (*fill_rgb, 255)), (0, 0), fbody)
-        px = im.load()
-        for yy in range(h):
-            for xx in range(w):
-                r, g, b, a = px[xx, yy]
-                a2 = _etc1a4_alpha(a)
-                px[xx, yy] = (0, 0, 0, 0) if a2 == 0 else (r, g, b, a2)
-        return im
-    raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    px = im.load()
+    for yy in range(h):
+        for xx in range(w):
+            c = cov[xx, yy]
+            a = _etc1a4_alpha(max(hp[xx, yy], c))
+            if a:
+                lum = 255 - (255 - COPYRIGHT_INK) * c // 255
+                px[xx, yy] = (lum, lum, lum, a)
+    return im
 
 
 def render_eng_strip(w: int, h: int = ENG_LINE_H) -> Image.Image:
     """Version line only (original 14px glyph height)."""
-    return render_outlined_line(ENG_PATCH_LINE, w, h)
+    return render_copyright_line(ENG_PATCH_LINE, w, h)
 
 
 def _solid_ink_span(im: Image.Image, *, min_n: int = 20) -> tuple[int, int]:
@@ -224,7 +217,7 @@ def compose_eng_patch(version: Image.Image, w: int) -> Image.Image:
     src = version.convert("RGBA")
     row = Image.new("RGBA", (w, ENG_LINE_H), (0, 0, 0, 0))
     row.paste(src.crop((0, 0, min(w, src.width), min(ENG_LINE_H, src.height))), (0, 0))
-    url = render_outlined_line(SITE_LINE, w, URL_H)
+    url = render_copyright_line(SITE_LINE, w, URL_H)
     _v0, v1 = _solid_ink_span(row)
     u0, _u1 = _solid_ink_span(url)
     url_y = max(0, v1 + 1 + LINE_GAP - u0)

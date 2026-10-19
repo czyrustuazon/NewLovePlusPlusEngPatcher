@@ -117,7 +117,7 @@ Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_to
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc4.1`** on main. `CIA_TITLE_VERSION` is **4**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc5`** on main. `CIA_TITLE_VERSION` is **5**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 
