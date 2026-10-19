@@ -107,6 +107,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
     "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
     "deploy_minigame_hub_en.py",  # 5380+5575 Mini-Game / Puzzle-dama / TwinBee+ / Yie Ar Kung-Fu+
+    "deploy_minigame_textures_en.py",  # l2mgtex mini-game screens: 95/94 hold-sideways, 117/125/120 Puzzle-dama card, logo, names
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
