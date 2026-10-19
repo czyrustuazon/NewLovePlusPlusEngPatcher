@@ -128,7 +128,7 @@ ARM_NOP = bytes.fromhex("00f020e3")  # nop
 # Holy-site names. Tex_Name / Tex_Place are DrawText'd from inline buffers
 # the stubbed merge never fills, and the pane pointers stay null while the
 # binder searches the empty-data group. The cave binds both panes, then
-# draws 「湖」 and the station in the game font. It sits in the dead body
+# draws Lake and the station in the game font. It sits in the dead body
 # of the ret0 gate, after the vanilla has-rows BL at 0x14EBC4.
 ADDR_AREA_DRAW = 0x004DCBCC  # add r1, r5, #0x84 ; mov r0, r8 ; bl drawer
 VANILLA_AREA_DRAW = bytes.fromhex("841085e20800a0e17ca7f5eb")
@@ -144,8 +144,8 @@ _AREA_GLOBAL_VA = 0x008BFA40
 _AREA_POS_VA = 0x003468E4  # "Pos_Spot_O01"
 _AREA_NAME_VA = 0x003468F4  # "Tex_Name"
 _AREA_PLACE_VA = 0x00346900  # "Tex_Place"
-_AREA_NAME = "奥十羽野駅".encode("utf-8") + b"\x00"
-_SPOT_NAME = "湖".encode("utf-8") + b"\x00"
+_AREA_NAME = "Oku-Towano Station".encode("utf-8") + b"\x00"
+_SPOT_NAME = "Lake".encode("utf-8") + b"\x00"
 # Dead instructions the cave replaces (gate body after the has-rows BL).
 VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "30a19fe530919fe530719fe5000054e30060a0e10080a0e30500000a"
@@ -428,7 +428,7 @@ VANILLA_MENU_OPEN_BODY = bytes.fromhex(
 # Prep and the sheet show/hide sit here. Stop before the next live function.
 ADDR_MENU_OPEN = 0x0060960C
 ADDR_MENU_OPEN_LIMIT = 0x006096D8
-# After the pad's pop. Draws 「湖」 / 奥十羽野駅, or the pool spot and a blank station.
+# After the pad's pop. Draws Lake / Oku-Towano Station, or the pool spot and a blank station.
 ADDR_PLACE_LABELS = ADDR_MENU_OPEN + 21 * 4
 # beq taken when the page mask has nowhere to turn. Both arrows land here.
 ADDR_ARROW_SKIP = 0x004DCCB4
@@ -514,30 +514,31 @@ ADDR_TITLE_BIND_FN = 0x00247018
 _SHEET_NAME = b"Pic_Page01_04\x00"
 _SHEET_PART = b"Pic_Page01_00\x00"
 _PANE_SHOW = 0x005E7D18  # finder in r0, r1 = 0 hides / 1 shows (pane+0xb7 bit 0)
+# English of issue 28's lake paragraph. One line per pink rule, eight rules.
 _LAKE_BODY = (
-    "第28号\n"
-    "今回の恋愛の聖地は\n"
-    "「湖」に決定しました！\n"
-    "湖面を伝わって流れる空気は\n"
-    "見た目も相まって清涼感抜群。\n"
-    "たまには趣を変え湖畔で\n"
-    "カノジョと過ごすのも\n"
-    "悪くないかもしれません。"
+    "Issue 28\n"
+    "This issue's sacred spot\n"
+    "for lovers is the Lake!\n"
+    "The breeze off the water\n"
+    "is as cool as it looks.\n"
+    "For a change of pace, why\n"
+    "not spend time with your\n"
+    "girlfriend by the lake?"
 ).encode("utf-8") + b"\x00"
-# Issue 28's heated-pool paragraph, with the same issue header as Holy Site.
-# Line breaks are the ones in info.dat.
+# English of issue 28's heated-pool paragraph, with the same issue header
+# as Holy Site. Seven lines, like the info.dat original.
 _FEVER_BODY = (
-    "第28号\n"
-    "一年を通して水着で楽しめる大型\n"
-    "温水プール施設です。流れるプー\n"
-    "ルやウォータースライダーなどの\n"
-    "遊具だけでなく、軽食も楽しむこ\n"
-    "とができ、ここもカップルに人気\n"
-    "の定番スポットとなっています。"
+    "Issue 28\n"
+    "A large heated pool where\n"
+    "you can swim year-round.\n"
+    "Besides a lazy river and\n"
+    "water slides, it serves\n"
+    "snacks, too. It's another\n"
+    "favorite spot for couples."
 ).encode("utf-8") + b"\x00"
-# The pool record names the facility and no station. 「湖」 / 奥十羽野駅 stay
+# The pool record names the facility and no station. Lake / the station stay
 # the lake pair. Five ideographic spaces clear the station line.
-_POOL_SPOT = "温水プール".encode("utf-8") + b"\x00"
+_POOL_SPOT = "Heated Pool".encode("utf-8") + b"\x00"
 _POOL_AREA = ("\u3000" * 5).encode("utf-8") + b"\x00"
 _PLACE_NAMES = _SPOT_NAME + _AREA_NAME + _POOL_SPOT + _POOL_AREA
 ADDR_LAKE_BODY = 0x006E6F42  # vanilla zero pad, after the menu strings
@@ -786,10 +787,10 @@ def _area_store(code: bytearray, cave: int, pool_off: int) -> None:
 
 
 def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
-    """Bind Tex_Name and Tex_Place, then draw 「湖」 and the station.
+    """Bind Tex_Name and Tex_Place, then draw Lake and the station.
 
     Entered in place of ``add r1, r5, #0x84``. r8 is the spot widget.
-    Both names use the game font, so 「湖」 matches the AREA line.
+    Both names use the game font, so the SPOT line matches the AREA line.
     Layout lookup tries the has-data group first, then the empty group.
     A miss leaves the pane null; the drawer returns without drawing.
     The store call increments the pane index, so Tex_Name is stored at 0
@@ -858,8 +859,9 @@ def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
     code += _u32(0xE28DD018)  # add sp, sp, #0x18
     code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
     pool = cave + len(code)
-    spot_at = pool + 24
-    station_at = spot_at + len(_SPOT_NAME)
+    # The English names do not fit the 20 bytes left here, so the pool
+    # points at the left-page labels apply_info_menu packs after the sentences.
+    spot_va, station_va, _pool_spot, _pool_area = _place_vas()
     code[bind_fix : bind_fix + 4] = _b_cond(0x0, cave + bind_fix, bind_at)
     code[draw_fix : draw_fix + 4] = _b_cond(0x1, cave + draw_fix, draw_at)
     code[have_fix : have_fix + 4] = _b_cond(0x1, cave + have_fix, have_at)
@@ -876,16 +878,14 @@ def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
     blob += _u32(_AREA_POS_VA)
     blob += _u32(_AREA_NAME_VA)
     blob += _u32(_AREA_PLACE_VA)
-    blob += _u32(spot_at + 0x100000)
-    blob += _u32(station_at + 0x100000)
-    blob += _SPOT_NAME
-    blob += _AREA_NAME
-    # Stop before the gate function's pop at 0x14ECF8.
-    if cave + len(blob) > 0x0014ECF8:
+    blob += _u32(spot_va)
+    blob += _u32(station_va)
+    # Revert restores exactly the vanilla body, so stay inside it.
+    if len(blob) > len(VANILLA_AREA_CAVE_BODY):
         raise ValueError(
-            f"area cave ends @{cave + len(blob):#x}, past the gate pop"
+            f"area cave ends @{cave + len(blob):#x}, past the dead gate body"
         )
-    return blob
+    return blob + b"\x00" * (len(VANILLA_AREA_CAVE_BODY) - len(blob))
 
 
 def _area_store_into(code: bytearray, cave: int, at: int, pool_addr: int) -> None:
@@ -1307,8 +1307,8 @@ def build_bind_marked() -> bytes:
 def build_place_labels() -> bytes:
     """Draw the left-page spot and station for the open row.
 
-    r0 is the left widget. r1 is the menu index. Index 3 draws 温水プール
-    and a blank station. Every other index draws 「湖」 and 奥十羽野駅.
+    r0 is the left widget. r1 is the menu index. Index 3 draws Heated Pool
+    and a blank station. Every other index draws Lake and the station.
     A null widget returns without drawing.
     """
     cave = ADDR_PLACE_LABELS
