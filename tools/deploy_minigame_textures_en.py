@@ -20,6 +20,7 @@ Each package holds a ``*.l2rg`` layout and ``NNN.l2mgtex`` textures
                           070 / 071    ETC1A4 BEGINNER / ADVANCED COURSE plates
                           015          ETC1A4 Choose an attack pattern! prompt
                           122 / 123    ETC1A4 footer Ⓐ DECIDE / ✚ SELECT
+  pkg 116 GameMain        043/044, 125/126  ETC1A4 LOSE / WIN stamps + shadows
 
 Masters in ``assets/images/minigame/`` were cut from EN mockups
 (``tools/cut_minigame_*.py``). Each texture is spliced into the vanilla
@@ -75,6 +76,7 @@ JOBS: dict[int, dict[str, str]] = {
     },
     125: {f"{n}.l2mgtex": f"PuzzleTitle_{n}.png" for n in ("006", "007", "008", "009", "010", "011")},
     120: {f"{n:03d}.l2mgtex": f"PuzzleSelect_{n:03d}.png" for n in (15, 70, 71, 122, 123, *range(137, 148), *range(149, 160))},
+    116: {f"{n}.l2mgtex": f"PuzzleGame_{n}.png" for n in ("043", "044", "125", "126")},
 }
 
 

@@ -1,4 +1,4 @@
-"""Mini-game l2mgtex screens (pkgs 94/95 hold-sideways, 117 Puzzle-dama card)."""
+"""Mini-game l2mgtex screens: hold-sideways (94/95) and Puzzle-dama (116/117/120/125)."""
 
 from __future__ import annotations
 
@@ -34,6 +34,7 @@ SIZES = {
     "PuzzleSelect_015.png": (256, 64),
     "PuzzleSelect_122.png": (64, 32),
     "PuzzleSelect_123.png": (64, 32),
+    **{f"PuzzleGame_{n}.png": (128, 64) for n in ("043", "044", "125", "126")},
 }
 
 
@@ -42,6 +43,23 @@ def test_masters_match_vanilla_texture_sizes():
     assert names == set(SIZES)
     for name, size in SIZES.items():
         assert Image.open(attention.MASTERS / name).size == size, name
+
+
+def test_winlose_shadows_are_flat_gray():
+    """Vanilla 044/126 are one RGB on every texel; that is what lets them fit ~470 bytes."""
+    for name in ("PuzzleGame_044.png", "PuzzleGame_126.png"):
+        px = np.array(Image.open(attention.MASTERS / name).convert("RGBA"))
+        rgb = px[px[..., 3] > 0, :3]
+        assert rgb.size, name
+        assert len(np.unique(rgb, axis=0)) == 1, name
+
+
+def test_winlose_text_keeps_a_vertical_gradient():
+    """LOSE / WIN keep the mockup gradient (no flat-colour fill to make the slots)."""
+    for name in ("PuzzleGame_043.png", "PuzzleGame_125.png"):
+        px = np.array(Image.open(attention.MASTERS / name).convert("RGBA"))
+        rgb = px[px[..., 3] > 80, :3]
+        assert len(np.unique(rgb, axis=0)) >= 8, name
 
 
 def test_l2mgtex_round_trip_keeps_header():

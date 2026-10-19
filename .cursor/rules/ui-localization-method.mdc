@@ -67,5 +67,6 @@ See rule `img-exact-zlib-deploy`. Never grow PACK / NUL-pad short zlib / splice 
 | Puzzle-dama course plates `初級コース` / `上級コース` | **120** `070` / `071` ETC1A4 | EN (`cut_minigame_select_course_en.py`: clean flat plate + keyed mockup lettering at 75% to fit the zlib slots). Never re-lay out an l2mgtex package to make room: same-length pkg 120 with shifted streams hung the game after the title. |
 | Puzzle-dama attack-pattern prompt `こうげきだまのパターン…` | **120** `015` ETC1A4 | EN (`cut_minigame_select_prompt_en.py`: keyed mockup lettering, alpha levels reduced to fit the slot). |
 | Puzzle-dama footer `✚選択` / `Ⓐ決定` | **120** `123` / `122` ETC1A4 64×32 | EN (`cut_minigame_select_footer_en.py`: vanilla icon + mockup word condensed into 40 px). |
+| Puzzle-dama `まけ` / `かち` stamps | **116** `043`/`044`, `125`/`126` ETC1A4 (word + shadow) | EN (`cut_minigame_result_en.py`: LOSE / WIN at 74%, shadows rebuilt flat (43,43,43) on every texel). |
 
 Details: `docs/technical.md` §12.4–12.6.
