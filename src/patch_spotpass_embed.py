@@ -160,11 +160,14 @@ VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "0f10a0e39d0c82e21ec811eb0030a0e10120a0e30310a0e30700a0e1"
     "f080cde1"
 )
-# MagList: extra-data version + no bit 0x20 → state 5. NOP of that beq
-# sent worker command 10 (empty SpotPass). Force command 9 (cart).
+# MagList: EULA agreed + no parental bit 0x20 → state 5 (register).
 ADDR_MAGLIST_EXTRA = 0x0010441C  # cmp r0,#0 after FUN_004fd248
 VANILLA_MAGLIST_EXTRA = bytes.fromhex("000050e3")  # cmp r0, #0
-PATCHED_MAGLIST_EXTRA = bytes.fromhex("0c0000ea")  # b 0x104454 mov r2,#9
+# Vanilla again (2026-10-18). This "MagList" is the Communication Settings
+# StreetPass handler (parent 0x105D84 compares +0x66/+0x69). Command 9 is
+# the "agree to the latest terms of use" error, so forcing it broke
+# StreetPass ON. Watcher still opens from the in-room book without it.
+PATCHED_MAGLIST_EXTRA = VANILLA_MAGLIST_EXTRA
 # bl FUN_004fd248. Leaving it in crashes with 0xD8E007F7. NOP-ing it
 # reaches command 9. A constructed worker still dies in FUN_005fe718:
 # PC=0, LR=0x005F99B4. Keep the call. Do not host this operator.
@@ -2228,7 +2231,7 @@ def apply_patch(data: bytearray) -> bool:
         f"confirm +0x48=1, home lock nop @{ADDR_CONFIRM_INC:#x}/"
         f"{ADDR_CONFIRM_DEC:#x}, DATA kick @{ADDR_DATA_KICK:#x} -> {kick:#x}, "
         f"merge ret1 @{ADDR_MERGE_ENTRY:#x} (no parse / ac:u), "
-        f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} then state 6, "
+        f"StreetPass EULA branch vanilla @{ADDR_MAGLIST_EXTRA:#x}, "
         f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
         f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} extra @{ADDR_WATCHER_EXTRA_CMP:#x} "
         f"then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
@@ -2419,7 +2422,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{ADDR_HASSTATE6_READY:#x}/{ADDR_PREUNPACK_READY:#x}"
         )
         print(
-            f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} -> state 6, "
+            f"StreetPass EULA branch vanilla @{ADDR_MAGLIST_EXTRA:#x}, "
             f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
             f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
             f"SaveErase 0x5a564..0x5c1a8 vanilla, "

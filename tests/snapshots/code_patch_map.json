@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "f22b556cb7e06e73d640b63d006299ade192dab0db555144475857c22c8b69e5",
+ "final_sha256": "72c9a6a369a6b0ead2e1abad4aede4c150451dad5579b151868372675734c9c9",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -295,12 +295,11 @@
   },
   {
    "name": "apply_spotpass_embed",
-   "written_sha256": "8fce0fac5db91eb01261252c206c1ce215c6d3b5b2032dc07fbc37ba4b2a45c4",
+   "written_sha256": "5cc9b7d2758e271683cca2a0d926c0cdfe38c9c72dad502cca7b0301bdcafd7e",
    "ranges": [
     "0x04fc20-0x04fc24",
     "0x04fc58-0x04fc5c",
     "0x1043fc-0x104400",
-    "0x10441c-0x104420",
     "0x10446c-0x104470",
     "0x104508-0x10450c",
     "0x104624-0x104628",
@@ -425,6 +424,15 @@
    "written_sha256": "92eddf87b3c4d4fac46b6f6b8601510e5a4e6a349e4839fb9d30a0ce3560eb0c",
    "ranges": [
     "0x6e3004-0x6e3014"
+   ]
+  },
+  {
+   "name": "apply_eula_agreed",
+   "written_sha256": "0a8282f911cccedc5e67dfdcb74f8bbd5926aaefd9c01ebc6a422e9b19559aa1",
+   "ranges": [
+    "0x4fa79c-0x4fa7a0",
+    "0x4fd248-0x4fd250",
+    "0x632534-0x63253c"
    ]
   }
  ]

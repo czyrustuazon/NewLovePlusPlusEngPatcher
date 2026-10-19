@@ -27,6 +27,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
   16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
   17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
+  18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -148,6 +149,10 @@ from patch_web_event_date import (  # noqa: E402
 from patch_speaker_spacing import (  # noqa: E402
     apply_patch as apply_speaker_spacing,
     is_patched as speaker_spacing_already,
+)
+from patch_eula_agreed import (  # noqa: E402
+    apply_patch as apply_eula_agreed,
+    is_patched as eula_agreed_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -326,6 +331,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] speaker_spacing already applied")
     else:
         apply_speaker_spacing(data)
+        steps += 1
+
+    if eula_agreed_already(data):
+        print("[skip] eula_agreed already applied")
+    else:
+        apply_eula_agreed(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
