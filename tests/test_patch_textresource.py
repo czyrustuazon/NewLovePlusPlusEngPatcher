@@ -54,9 +54,7 @@ def test_yamanashi_keys_are_full_prefecture_strings():
     mapping = trb.load_translations(trb.DEFAULT_TRANSLATIONS)
     assert mapping.get("山") != "Yamanashi"
     assert mapping["山梨県"] == "Yamanashi"
-    assert mapping["山梨県民と名刺交換"] == (
-        "Swap cards with\nYamanashi"
-    )
+    assert mapping["山梨県民と名刺交換"] == "Card swap in\nYamanashi"
     assert mapping["アイ・ラブ・山梨！"] == "I love Yamanashi!"
     assert "アイ・ラブ・山" not in mapping
 
