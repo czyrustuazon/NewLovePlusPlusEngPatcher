@@ -16,7 +16,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
   7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
   7b. patch_input_call_romaji               # UTF-8 Called walk + no-match typed candidate
-  8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
+  8. patch_message_speed                   # Options 4/2/1/0 + TalkWindow 10/20/35/60 ms + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
   9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS

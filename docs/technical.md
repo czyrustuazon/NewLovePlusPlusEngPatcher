@@ -37,7 +37,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Profile hometown region chips** (`全国` / `北海道東北` / …) are RGBA4444 `Profile_Btn_Com02_Text01..08` @ **5252**, not DrawText. Zhoumaru two-line EN overflowed the rounded pills — contain-fit to the 6px inset (**§12.4.3**).
 - **Profile First Name / name-input:** `python tools/deploy_name_input_en.py` or `.\ab_test\make.ps1 deploy-a` — **§17**. Never deploy `candmode_reset` (`+0x24=0` → dead taps).
 
-- **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **14/8/2/0**). In-game TalkWindow table @ `0x006E3024` (vanilla 40/70/90/110/220 → **10/18/22/28/55**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
+- **Message Speed delays:** Options preview is `FUN_005d1e18` @ `0x005D1E18` (vanilla 18/12/6/0 → **4/2/1/0**). In-game TalkWindow table @ `0x006E3024` is **ms per glyph** (vanilla 40/70/90/110/220 → **10/20/35/60/120**) plus tick cap `min(delay, table)` so voiced lines honor the slider — **§21**. Sample sentence is UTF-8 at `0x005D1928`, not TRB.
 
 - **Azahar a/b instances:** `ab_test/README.md` — dual LayeredFS user dirs; do not tell the user to quit Azahar between tests.
 - **Communications load hang on Azahar (2026-09-18):** not extra data `00000F4E`, not pkg **5237**. Stock `FSFile::OpenLinkFile` reset the clone to the full extra-data blob; **§10.1**.
@@ -106,8 +106,8 @@ file_offset = runtime_va - 0x100000
 | Options button BCLIM bind | `OptionMenu_BindBtnTextures` @ `001eb3dc` |
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
-| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options 18/12/6/0 → 14/8/2/0) — **§21** |
-| TalkWindow delay table | `0x006E3024` (40/70/90/110/220 → 10/18/22/28/55) — **§21** |
+| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options 18/12/6/0 → 4/2/1/0) — **§21** |
+| TalkWindow delay table | `0x006E3024` (40/70/90/110/220 → 10/20/35/60/120 ms/glyph) — **§21** |
 
 ---
 
@@ -1145,7 +1145,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `src/patch_textresource.py` | TRB dump / translate / rebuild / inplace |
 | `src/patch_cesa.py` | Boot CESA TEX encode/decode + pkg **90** PACK rebuild (`logo_white` 240×320 companion) |
 | `src/patch_code.py` | code.bin patches (incl. CesaLogo skip 400×400 stub quad @ `0x0016ED80`) |
-| `src/patch_message_speed.py` | Options 18/12/6/0 → **14/8/2/0**, TalkWindow 40/70/90/110/220 → **10/18/22/28/55**, tick `min` vs table @ `0x0013B718` |
+| `src/patch_message_speed.py` | Options 18/12/6/0 → **4/2/1/0**, TalkWindow 40/70/90/110/220 → **10/20/35/60/120** ms/glyph, tick `min` vs table @ `0x0013B718` |
 | `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1386,7 +1386,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Keyboard mode tabs / popup buttons | **5190** / **5259** / … | `deploy_ui_buttons_en.py` then `deploy_input_keyboard_en.py` |
 | In-room Options overlay | **5380** / **5575** | `deploy_myroom_options_en.py` (`optn_tex_*`; after shared-ARC writers) |
 | In-room Mini-game hub | **5380** / **5575** | `deploy_minigame_hub_en.py` (`game_text_*`; after web hub) |
-| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options −4 frames + TalkWindow ÷4 + voice cap, §21) |
+| Profile name-input (romaji) | ExeFS `code.bin` | `deploy_name_input_en.py` → `release/name_input_code.bin` (not in `img.bin`; also applies Message Speed Options 4/2/1/0 frames + TalkWindow 10/20/35/60 ms + voice cap, §21) |
 | “Main Menu” title string | **5261** `Title_menu_word` (`Pts_Title_menu`) | Render gray EN + RGBA4444 encode (same path as hub rows); Zhoumaru dump RGB was swizzled |
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
@@ -1916,7 +1916,7 @@ a/b guide: **`ab_test/README.md`**.
 | 6 | Skip ASCII dakuten | `src/patch_input_skip_ascii_dakuten.py` | Hepburn taps skip ゛/っ combine |
 | 7 | Raw strcat join | `src/patch_input_strcat_raw.py` | byte strcat; collapse KKE; 8-glyph cap |
 | 7b | Called list romaji lookup | `src/patch_input_call_romaji.py` | Compiled romaji matcher in `FUN_00147b3c` / `FUN_00147e04` / `FUN_00148f44` (exact + fuzzy suggestions with reading IDs) + typed name as candidate 0 when there is no exact match (**§17.8**) |
-| 8 | Message Speed delays | `src/patch_message_speed.py` | Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap (bake sidecar) |
+| 8 | Message Speed delays | `src/patch_message_speed.py` | Options 4/2/1/0 + TalkWindow 10/20/35/60 ms + voice/script cap (bake sidecar) |
 | 9 | CesaLogo native size | `patch_cesa_logo_white_native_size` | skip 400×400 stub quad on `logo_white` |
 | 9b | Nintendo thank flash | `patch_nintendo_logo_skip_thank_flash` | zero `0x0016EA8C` so the boot beat does not bind `logo_white` on both screens |
 | 10 | SpotPass no-data skip | `src/patch_spotpass_skip.py` | `FUN_000ea254` hide `+0xa8` then dismiss + NOP `FUN_004b17b0` 0x2b61 show + `FUN_004b119c` 0x1e7 pane + `FUN_00319320` @ `0xEED44` + leftover `FUN_0059a010` NOPs + NetDl jt0 + `moveq #4`→`#0` (**§16.7**) |
@@ -2386,8 +2386,8 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 
 Display Settings → **Message Speed** is a 1–4 slider. It is **not** TRB and not a BCLIM. Three printers share the saved level (`cfg+0x0C`) but **not** the same delay table:
 
-1. Options preview widget — `FUN_005d1e18` 18/12/6/0 → **14/8/2/0** (§21.2).
-2. Unvoiced TalkWindow — `.rodata` @ `0x006E3024` 40/70/90/110/220 → **10/18/22/28/55** (§21.4).
+1. Options preview widget — `FUN_005d1e18` 18/12/6/0 → **4/2/1/0** (§21.2).
+2. Unvoiced TalkWindow — `.rodata` @ `0x006E3024` 40/70/90/110/220 → **10/20/35/60/120** (§21.4).
 3. Voiced / scripted TalkWindow — `+0xd60` / `+0xd5c` replace that table unless capped (§21.5–21.6).
 
 Ghidra image base **0**. Runtime VA = file + `0x100000`.
@@ -2425,15 +2425,15 @@ Message widget (Display Settings `this+0xF4`; delay alias `this+0x118` = widget 
 
 Options Display Settings is window index **2** (`FUN_00682830` / `UIWindowMgr_Show(..., 0, 2, ...)`).
 
-### 21.2 Delay table (patched −4 frames)
+### 21.2 Delay table (patched 4/2/1/0 frames)
 
-`FUN_005d1e18` is a unique `cmp` / `moveq r0,#imm` / `beq` chain (only one copy in `code.bin`). EngPatcher subtracts 4 from each **positive** delay; level 4 stays 0 (cannot go negative).
+`FUN_005d1e18` is a unique `cmp` / `moveq r0,#imm` / `beq` chain (only one copy in `code.bin`). The tick adds a step to `+0x2C` and shows at most **one glyph per call**, so the preview cannot exceed the frame rate. 4/2/1/0 is the closest match to the in-game 60/35/20/10 ms table (§21.4) at 60 fps: about 15 / 30 / 60 glyphs/s, then instant. NLPP-024..034 shipped 14/8/2/0 (vanilla −4); the patcher upgrades that in place.
 
 | Slider | Vanilla frames | Vanilla insn | Patch frames | Patch insn |
 |--------|----------------|--------------|--------------|------------|
-| 1 | 18 | `moveq r0,#0x12` @ `0x005D1E1C` | **14** | `#0x0E` |
-| 2 | 12 | `moveq r0,#0x0C` @ `0x005D1E28` | **8** | `#0x08` |
-| 3 | 6 | `moveq r0,#0x06` @ `0x005D1E34` | **2** | `#0x02` |
+| 1 | 18 | `moveq r0,#0x12` @ `0x005D1E1C` | **4** | `#0x04` |
+| 2 | 12 | `moveq r0,#0x0C` @ `0x005D1E28` | **2** | `#0x02` |
+| 3 | 6 | `moveq r0,#0x06` @ `0x005D1E34` | **1** | `#0x01` |
 | 4 | 0 (instant) | `moveq r0,#0x00` @ `0x005D1E40` | **0** | unchanged |
 
 Script: `src/patch_message_speed.py` (Options + TalkWindow table §21.4 + voice/script cap §21.6). Applied from `tools/deploy_name_input_en.py` so Drop CIA / `rebuild_bake_img.py` inject it inside `release/name_input_code.bin`. LayeredFS-only: `python src/patch_message_speed.py --deploy-azahar` (backup `exefs/code.bin.bak_pre_msg_speed`). Tests: `tests/test_patch_message_speed.py`.
@@ -2454,7 +2454,7 @@ Config manager singleton pointer **`0x0089A330`** (literals at `0x005CD30C` load
 
 Help Display Every Time/Once is a neighboring byte at config `+0x20` (inverted: `0` → show every time). Color knob is `+0x10…+0x1C` via `FUN_002d8754`.
 
-### 21.4 In-game TalkWindow delay (patched /4)
+### 21.4 In-game TalkWindow delay (ms per glyph)
 
 NLPP-024 patched only `FUN_005d1e18`. That table is **Options-only** (`FUN_002d544c` has no ARM `BL` callers — vtable / Display Settings widget). Date talk did not change.
 
@@ -2462,16 +2462,20 @@ Live date talk is `TalkWindowProcess` (`FUN_0013f6a4`), not `Window_Message`. Gl
 
 | File | Runtime VA | Vanilla dwords | Patch |
 |------|------------|----------------|-------|
-| `0x006E3024` | `0x007E3024` | **40, 70, 90, 110, 220, 0** | **10, 18, 22, 28, 55, 0** |
+| `0x006E3024` | `0x007E3024` | **40, 70, 90, 110, 220, 0** | **10, 20, 35, 60, 120, 0** |
 
 Index is TalkWindow `+0xd9c`. Setter `FUN_0013f260` @ `0x0013F260` stores `r1` only if `r1 < 5` (so table[5]=0 instant is unused; delay 0 would divide-by-zero in `FUN_0001a43c`). Converter `FUN_002d8874` @ `0x002D8874` maps saved `cfg+0x0C`:
 
 | Slider | Saved rate | Index | Vanilla wait | Patch wait |
 |--------|------------|-------|--------------|------------|
-| 1 | `0x3F` | 3 | 110 | **28** |
-| 2 | `0x7F` | 2 | 90 | **22** |
-| 3 | `0xBF` | 1 | 70 | **18** |
+| 1 | `0x3F` | 3 | 110 | **60** |
+| 2 | `0x7F` | 2 | 90 | **35** |
+| 3 | `0xBF` | 1 | 70 | **20** |
 | 4 | `0xFF` | 0 | 40 | **10** |
+
+Units: the tick caller `0x0013EE8C` passes `now − +0xd28` from `FUN_0060e24c` (`svc 0x28` GetSystemTick → ns via `0x0059DD2C`). The tick adds that to `+0xd30` and computes `glyphs = (+0xd30 / 1e6) / delay`, so table values are **milliseconds per glyph**.
+
+Step sizes (2026-10-19): NLPP-025 shipped vanilla ÷4 = **28/22/18/10**. That kept vanilla's ~20% steps between sliders 1–3. A 40-glyph line took 1.12 / 0.88 / 0.72 s, and at 60 fps all three show under one glyph per frame. Users reported sliders 1–3 felt the same. The current table spaces each step about 1.7–2×: 2.4 / 1.4 / 0.8 / 0.4 s per 40-glyph line. Index 4 (unused by the slider) is 120 to keep the table monotonic.
 
 Callers (pass `*(obj+0x0C)` through `FUN_002d8874` then `FUN_0013f260`): `FUN_003bd280`, `FUN_003c2130`. Draw with new glyph count: `FUN_0013bd20`. Tap-to-complete is a separate skip (`r11`) that copies `+0xd54` → `+0xd50`.
 

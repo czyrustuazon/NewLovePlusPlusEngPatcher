@@ -6,14 +6,19 @@ Two independent tables plus a voice/script cap:
 1. Options preview ``FUN_005d1e18`` @ file ``0x005D1E18`` (slider → frames/glyph):
 
        1 → 18    2 → 12    3 → 6    4 → 0 (instant)
-   patched: 1 → 14    2 → 8     3 → 2    4 → 0
+   patched: 1 → 4     2 → 2     3 → 1    4 → 0
 
-   Only the Display Settings sample uses this (``FUN_001d2e5c``).
+   Only the Display Settings sample uses this (``FUN_001d2e5c``). The tick
+   shows at most one glyph per frame, so this only approximates table 2.
 
 2. In-game TalkWindow @ ``0x006E3024`` (index → wait units):
 
        index 0..4 = 40, 70, 90, 110, 220   (5 = 0 unused)
-   patched:          10, 18, 22,  28,  55
+   patched:          10, 20, 35,  60, 120
+
+   Values are ms per glyph (tick divides GetSystemTick ns by 1e6). Slider
+   1/2/3/4 = index 3/2/1/0. Each step roughly halves line time; the old
+   ÷4 table (28/22/18/10) kept vanilla's ~20% steps and felt flat.
 
    Saved rate ``cfg+0x0C`` (0x3F/0x7F/0xBF/0xFF) is mapped by ``FUN_002d8874``
    to index 3/2/1/0 and stored at TalkWindow ``+0xd9c``. Tick ``0x0013B6C4``.
@@ -65,9 +70,13 @@ VANILLA_LV1 = _mov_eq_r0(0x12)  # 18
 VANILLA_LV2 = _mov_eq_r0(0x0C)  # 12
 VANILLA_LV3 = _mov_eq_r0(0x06)  # 6
 VANILLA_LV4 = _mov_eq_r0(0x00)  # 0 (unchanged)
-PATCHED_LV1 = _mov_eq_r0(0x0E)  # 14
-PATCHED_LV2 = _mov_eq_r0(0x08)  # 8
-PATCHED_LV3 = _mov_eq_r0(0x02)  # 2
+PATCHED_LV1 = _mov_eq_r0(0x04)  # 4
+PATCHED_LV2 = _mov_eq_r0(0x02)  # 2
+PATCHED_LV3 = _mov_eq_r0(0x01)  # 1
+# NLPP-024..034 shipped 14/8/2; upgrade those in place.
+LEGACY_LV1 = _mov_eq_r0(0x0E)  # 14
+LEGACY_LV2 = _mov_eq_r0(0x08)  # 8
+LEGACY_LV3 = _mov_eq_r0(0x02)  # 2
 
 # cmp r0,#1 at function entry — refuse unknown binaries
 VANILLA_HEAD = bytes.fromhex("010050e3")
@@ -77,13 +86,16 @@ _SITES = (
     (OFF_LV2, VANILLA_LV2, PATCHED_LV2, "lv2"),
     (OFF_LV3, VANILLA_LV3, PATCHED_LV3, "lv3"),
 )
+_LEGACY_SITES = ((OFF_LV1, LEGACY_LV1), (OFF_LV2, LEGACY_LV2), (OFF_LV3, LEGACY_LV3))
 
 # TalkWindow delay table (file). Index 5 stays 0 (divide-by-zero if used).
 TALK_TABLE_OFF = 0x006E3024
 TALK_VANILLA = (40, 70, 90, 110, 220)
-TALK_PATCHED = (10, 18, 22, 28, 55)
+TALK_PATCHED = (10, 20, 35, 60, 120)
+TALK_LEGACY = (10, 18, 22, 28, 55)  # NLPP-025..034 ÷4 table
 TALK_VANILLA_BYTES = struct.pack(f"<{len(TALK_VANILLA)}I", *TALK_VANILLA)
 TALK_PATCHED_BYTES = struct.pack(f"<{len(TALK_PATCHED)}I", *TALK_PATCHED)
+TALK_LEGACY_BYTES = struct.pack(f"<{len(TALK_LEGACY)}I", *TALK_LEGACY)
 _TALK_NEED = TALK_TABLE_OFF + len(TALK_VANILLA_BYTES)
 
 # After table / +0xd5c / voice-sync, cpy r6, r2 @ tick 0x0013B718.
@@ -176,6 +188,10 @@ def is_options_vanilla(data: bytes) -> bool:
     return all(data[off : off + 4] == vanilla for off, vanilla, _p, _n in _SITES)
 
 
+def is_options_legacy(data: bytes) -> bool:
+    return all(data[off : off + 4] == legacy for off, legacy in _LEGACY_SITES)
+
+
 def is_talk_patched(data: bytes) -> bool:
     if not _has_talk(data):
         return False
@@ -186,6 +202,12 @@ def is_talk_vanilla(data: bytes) -> bool:
     if not _has_talk(data):
         return False
     return data[TALK_TABLE_OFF : TALK_TABLE_OFF + len(TALK_VANILLA_BYTES)] == TALK_VANILLA_BYTES
+
+
+def is_talk_legacy(data: bytes) -> bool:
+    if not _has_talk(data):
+        return False
+    return data[TALK_TABLE_OFF : TALK_TABLE_OFF + len(TALK_LEGACY_BYTES)] == TALK_LEGACY_BYTES
 
 
 def is_patched(data: bytes) -> bool:
@@ -232,14 +254,14 @@ def is_fully_patched(data: bytes) -> bool:
 
 def _apply_options(data: bytearray) -> bool:
     if is_options_patched(data):
-        print(f"[msg-speed] options already patched @{ADDR_FN:#x} (14/8/2/0)")
+        print(f"[msg-speed] options already patched @{ADDR_FN:#x} (4/2/1/0)")
         return False
     if data[ADDR_FN : ADDR_FN + 4] != VANILLA_HEAD:
         raise ValueError(
             f"unexpected FUN_005d1e18 head @{ADDR_FN:#x}: "
             f"{data[ADDR_FN:ADDR_FN+4].hex()} (want {VANILLA_HEAD.hex()})"
         )
-    if not is_options_vanilla(data):
+    if not is_options_vanilla(data) and not is_options_legacy(data):
         got = " ".join(
             f"{name}={data[off:off+4].hex()}" for off, _v, _p, name in _SITES
         )
@@ -259,13 +281,17 @@ def _apply_talk(data: bytearray) -> bool:
             f"({'/'.join(str(v) for v in TALK_PATCHED)})"
         )
         return False
-    if not is_talk_vanilla(data):
+    if is_talk_vanilla(data):
+        before = TALK_VANILLA
+    elif is_talk_legacy(data):
+        before = TALK_LEGACY
+    else:
         got = struct.unpack_from(f"<{len(TALK_VANILLA)}I", data, TALK_TABLE_OFF)
         raise ValueError(f"unexpected talk delay table: {got}")
     data[TALK_TABLE_OFF : TALK_TABLE_OFF + len(TALK_PATCHED_BYTES)] = TALK_PATCHED_BYTES
     print(
         f"[msg-speed] talk @{TALK_TABLE_OFF:#x} "
-        f"{'/'.join(str(v) for v in TALK_VANILLA)} -> "
+        f"{'/'.join(str(v) for v in before)} -> "
         f"{'/'.join(str(v) for v in TALK_PATCHED)}"
     )
     return True
@@ -323,7 +349,7 @@ def _revert_options(data: bytearray) -> bool:
     if is_options_vanilla(data):
         print(f"[msg-speed] options already vanilla @{ADDR_FN:#x} (18/12/6/0)")
         return False
-    if not is_options_patched(data):
+    if not is_options_patched(data) and not is_options_legacy(data):
         raise ValueError("cannot revert: options delay table is neither vanilla nor patched")
     for off, vanilla, _patched, name in _SITES:
         data[off : off + 4] = vanilla
@@ -340,7 +366,7 @@ def _revert_talk(data: bytearray) -> bool:
             f"({'/'.join(str(v) for v in TALK_VANILLA)})"
         )
         return False
-    if not is_talk_patched(data):
+    if not is_talk_patched(data) and not is_talk_legacy(data):
         raise ValueError("cannot revert: talk delay table is neither vanilla nor patched")
     data[TALK_TABLE_OFF : TALK_TABLE_OFF + len(TALK_VANILLA_BYTES)] = TALK_VANILLA_BYTES
     print(
@@ -404,7 +430,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         print(
             f"FUN_005d1e18 @{ADDR_FN:#x}: "
-            f"vanilla 18/12/6/0 -> patched 14/8/2/0"
+            f"vanilla 18/12/6/0 -> patched 4/2/1/0"
         )
         print(
             f"TalkWindow @{TALK_TABLE_OFF:#x}: "
