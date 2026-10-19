@@ -25,7 +25,7 @@ CESA is a separate EngPatcher boot-warning texture (not Zhoumaru paint). English
 
 ## When a screen is still JP
 
-A vanilla-sourced last-writer drops every `.check` master it does not list (Album **4149** in `deploy_ui_buttons_en.py`, MyroomHeader **5575** in `deploy_schedule_header_en.py`, Mail **5207** in `deploy_mail_home_en.py`, ScdStatus **5255** / KareshiPower **5501** in `deploy_status_stats_en.py`). Compare the bake BCLIM with vanilla before suspecting the pack.
+A vanilla-sourced last-writer drops every `.check` master it does not list (Album **4149** in `deploy_ui_buttons_en.py`, MyroomHeader **5575** in `deploy_schedule_header_en.py`, Mail **5207** in `deploy_mail_home_en.py`, ScdStatus **5255** / KareshiPower **5501** in `deploy_status_stats_en.py`, TownGuide **5265** in `deploy_watcher_issue28_en.py`). Compare the bake BCLIM with vanilla before suspecting the pack.
 `tests/test_zhoumaru_coverage.py` fails when one of those folders gains a master that no writer packs and no reviewed exclusion explains.
 
 1. Look for a Zhoumaru `.check` PNG first.

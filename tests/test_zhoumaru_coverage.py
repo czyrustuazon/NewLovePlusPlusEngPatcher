@@ -94,3 +94,22 @@ def test_mydata_5380_buttons_all_zhoumaru():
     mcmn = {s for s in _masters("Myroom.check") if s.startswith("mcmn_tex_")}
     # 5380 is patched live, so pack_images' Tutorial master survives untouched.
     assert mcmn - mydata.ZHOUMARU_BUTTONS == {"mcmn_tex_tutorial_RGBA4"}
+
+
+def test_townguide_5265_packs_the_whole_folder():
+    """deploy_watcher_issue28_en rebuilds 5265 from vanilla after pack_images."""
+    watcher = load_module("deploy_watcher_issue28_en", TOOLS / "deploy_watcher_issue28_en.py")
+    assert watcher.MASTERS == ASSETS / "TownGuide.check" / "timg"
+    # English Holy Site / FEVER banners: whole banner on the panel, logo blank.
+    # Mark02 緊急速報 (Breaking News), Mark04 最新情報 (Latest News).
+    banners = {"Mag_Tit03_Pnl", "Mag_Tit03_Logo", "Mag_Tit05_Pnl", "Mag_Tit05_Logo"}
+    assert banners | {"Mag_Spot_Mark02", "Mag_Spot_Mark04"} <= _masters("TownGuide.check")
+
+
+def test_townguide_spot_badges_are_transparent():
+    """Zhoumaru's Mark02 dump was opaque: a black square around the badge."""
+    from PIL import Image
+
+    for stem in ("Mag_Spot_Mark02", "Mag_Spot_Mark04"):
+        with Image.open(ASSETS / "TownGuide.check" / "timg" / f"{stem}.png") as im:
+            assert im.convert("RGBA").getpixel((0, 0))[3] == 0, stem

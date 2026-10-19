@@ -18,7 +18,6 @@ UNTESTED = {
     "deploy_sound_settings_en",
     "deploy_todo_en",
     "deploy_todo_hist_en",
-    "deploy_watcher_issue28_en",
 }
 
 

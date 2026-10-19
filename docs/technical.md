@@ -1724,9 +1724,9 @@ The page walker at `0x004DA658` loads the article mask from `[r4,#0x8c]` and cou
 | Bit | Page type | Title index | Banner |
 |-----|-----------|-------------|--------|
 | 0 | `0xA` | 0 | `Mag_Tit02` New Open |
-| 1 | `0xB` | 1 | `Mag_Tit03` 恋愛の聖地 (lake). Mask value **2**. |
+| 1 | `0xB` | 1 | `Mag_Tit03` 恋愛の聖地 (lake). Mask value **2**. English banner (“Love Sanctuary” NEW Is Born!) is all on `Mag_Tit03_Pnl`; `Mag_Tit03_Logo` is blank. |
 | 2 | `0xC` | 2 | `Mag_Tit04` START |
-| 3 | `0xD` | 3 | `Mag_Tit05` FEVER (pool) |
+| 3 | `0xD` | 3 | `Mag_Tit05` FEVER (pool). English banner is all on `Mag_Tit05_Pnl`; `Mag_Tit05_Logo` is blank. |
 | 4 | `0xE` | 4 | `Mag_Tit06` PICK UP |
 | 5 | `0xF` / `0x10` | ≥5 | `Mag_Tit07` (clamped) |
 | 6 | survey | | `Mag_Tit08` |
@@ -1740,7 +1740,7 @@ The title binder at `0x00247018` uses index `r4`. When `r4<5`, the Mag_Tit numbe
 | `0x004DA664` `ldr r2,[r4,#0x8c]` | `8c2094e5` | `mov r2,#0x0A` `0a20a0e3` |
 | `0x00631354` `ldr ip,[r0,#0x8c]` | `8cc090e5` | `mov ip,#0x0A` `0ac0a0e3` |
 
-`tools/deploy_watcher_issue28_en.py` paints the lake paragraph onto `Mag_Page01` and splices package 5265 at the same offset. The sheet is drawn in screen space (248 wide by 320 tall) with the UI font at size 13, then rotated 270° so the lines read upright under the banner. Each of the eight lines is centered in the gap above one rule (§16.11.1). The SPOT name is not on that sheet. One spread is two layouts:
+`tools/deploy_watcher_issue28_en.py` rebuilds 5265 from vanilla after `pack_images`, so it first packs every `TownGuide.check` master itself. It then paints the lake paragraph onto `Mag_Page01` and splices package 5265 at the same offset. The sheet is drawn in screen space (248 wide by 320 tall) with the UI font at size 13, then rotated 270° so the lines read upright under the banner. Each of the eight lines is centered in the gap above one rule (§16.11.1). The SPOT name is not on that sheet. One spread is two layouts:
 
 | Page | Layout | What stays |
 |------|--------|------------|
