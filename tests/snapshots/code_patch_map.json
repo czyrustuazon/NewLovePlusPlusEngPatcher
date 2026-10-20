@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "540bea0b3b6079e9ff7afa482df0c94fe4533601279e651008fa12a26548908a",
+ "final_sha256": "f714c9d9d031e9f41e8bc3fcd94dcaa4743423529059095b03eab9aea57a70ba",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -437,12 +437,11 @@
   },
   {
    "name": "apply_camera_reset",
-   "written_sha256": "2c167309a0130e727868cf553ff1dfee038916fe65a7b3fe5c25d3a617e8309e",
+   "written_sha256": "28319f3fd225922ccb00c02c4a711d35cbdd9f5c28f3d198cbbfe2d85dcd3126",
    "ranges": [
-    "0x2d062c-0x2d0640",
-    "0x2d0648-0x2d06d0",
-    "0x2d06d4-0x2d073c",
-    "0x2d0740-0x2d0750",
+    "0x0ea968-0x0eab5c",
+    "0x0eab64-0x0eab80",
+    "0x2d0760-0x2d0764",
     "0x2d07c8-0x2d07cc"
    ]
   }

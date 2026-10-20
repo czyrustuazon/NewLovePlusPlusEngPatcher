@@ -1,62 +1,97 @@
-"""Restore Default on the My Camera list unequips everything but the Memory Card.
+"""Restore Default on the My Camera list asks first, then unequips all but the Memory Card.
 
 ``patch_camera_restore_default`` shows the softkey (slot 3). This makes a tap
-do something. In the list update ``0x002D0438`` (r4 = camera-settings
-operator, r6 = softkey manager) the Back check
-``ldrb r0, [r6, #0xdb]`` @ ``0x002D07C8`` becomes ``bl`` to a cave. The cave
-reads slot 3's pressed byte ``[r6+0x10f]`` (slot ``mgr+0x6C+3*0x34``, +7;
-Back is ``+0xdb``). Unless it is set, the cave returns Back's byte as before.
+open a Yes/No dialog and, on Yes, reset the equipment. Both hooks are in the
+list update ``0x002D0438`` (r4 = camera-settings operator, r6 = softkey
+manager); the caves live in the dead body of ``FUN_000EA964``, which
+``patch_spotpass_skip`` turns into ``bx lr`` at its first word.
 
-Categories (``r4[0x84 + cat*4]``) are not in screen order. The row setters
-(``0x001E380C(list, row, text)``) give: cat 3 = row 0 Mem. Card, cat 1 =
-Lens, cat 4 = Stabilization, cat 2 = S. Effects, cat 0 = row 4 Parts. The
-picker's cursor map (``0x002D0848``) agrees and never offers cat 3.
+Press (``ldrb r0, [r6, #0xdb]`` @ ``0x002D07C8``, Back's pressed byte): the
+cave reads slot 3's pressed byte ``[r6+0x10f]`` (slot ``mgr+0x6C+3*0x34``,
++7). Unless it is set it returns Back's byte as before. On a press it opens
+the game's message dialog ``FUN_00195FA4(*0x008BFA7C, layout, mode, 2, 2, 0,
+0, 0, 0, 0)``, the call the album's wallpaper confirm makes (``0x002DED38``):
+``r3 = 2`` is the Yes/No button set (1 is OK only), the first stack word the
+window style. The handle goes to ``r4+0x4c`` (the picker's sub-state, -1
+whenever the list runs; the picker sets it on entry) and ``r4+0x5d`` (padding
+after the ``+0x5c`` byte, unused by the operator) marks the confirm open. It
+then jumps to the list's own exit hide (``0x002D08D4``: Back, and Restore
+Default through the softkey cave, and Select) and returns 0.
 
-On a press, for categories 0, 1, 2 and 4 (everything but the Memory Card):
+Poll (``ldrb r0, [r4, #0x52]`` @ ``0x002D0760``, the start of the active-list
+block): with ``+0x5d`` clear it returns that byte. Otherwise it asks
+``FUN_00196FF8(_, handle)``: 1 is Yes, 2 is No (also for a handle of 0, so a
+dialog that failed to open cancels), anything else is still open and the
+list update returns 0 without touching the list, like the wallpaper screen.
 
-* ``r4[0x84 + cat*4] = -1``: the operator's equipped index (-1 = none,
-  the list draws an empty row);
+On Yes, for categories 0, 1, 2 and 4 (everything but the Memory Card, cat 3):
+
+* ``r4[0x84 + cat*4] = -1``: the operator's equipped index (-1 = none);
 * ``SetCameraEquip(cat, -1)`` @ ``0x005CFB04``: the save-data setter the
-  picker's Equip confirm uses (``0x002D0F1C``). It ends in ``0x002E1094``,
-  which stores the item id at ``save+0xC+cat*2`` and clears the category's
-  bit in ``save+0x59`` for -1, so it persists like a normal equip;
+  picker's Equip confirm uses (``0x002D0F1C``), so it persists like a normal
+  equip;
 
 then ``CalcCameraStats(r4+0x68)`` @ ``0x005CDD9C`` recomputes the left-screen
-values (shots, zoom, stabilize, stealth, part effect, preview) from the new
-indices. Last it sets ``r4[0x50] = r4[0x51] = 1``. That is the list's
-return-from-picker entry, so the next frame redraws both screens.
+values. Categories are not in screen order: cat 3 = row 0 Mem. Card,
+1 = Lens, 4 = Stabilization, 2 = S. Effects, 0 = row 4 Parts.
 
-Room: the list draws its five row names (``0x002D0628``-``0x002D074C``) as
-five unrolled if/else blocks with NOP pairs. They are rewritten here as five
-straight blocks using conditional adds (same calls, same arguments). That
-frees the tail of the region for the cave; a ``b`` skips over it.
+Yes and No both clear the flag, restore ``+0x4c = -1``, drop stale softkey
+presses, set ``+0x58 = -2`` so the Select softkey is re-shown for the cursor,
+and set ``r4[0x50] = r4[0x51] = 1``. That is the list's return-from-picker
+entry: next frame it redraws both screens and shows Back and Restore Default.
+
+The sentence is pack ``0x1901`` slot ``table[layout] + mode`` (halfwords at
+``0x006C6F5C``). The last layout, 53, starts at slot 498 and the vanilla sub
+has 501 slots, so mode 3 is a new slot 501. ``append_confirm_message`` adds it
+to the TRB (``tools/deploy_name_kanji_trb.py``).
 """
 from __future__ import annotations
 
 import hashlib
 import struct
 
-REGION_START = 0x002D0628
-REGION_END = 0x002D0750  # first insn after the row-name blocks (strb sb, [r4, #0x50])
-REGION_VANILLA_SHA256 = "db67e0b0289cb2979a431ebd94275e75f80589bd833ac7e61280b13c8bd1f2df"
-EMPTY_STRING = 0x002D0990  # zero word after the function's literal pool
+# Dead body of FUN_000EA964 (entry stubbed to bx lr by patch_spotpass_skip),
+# up to and including its literal pool.
+ADDR_STUB = 0x000EA964
+STUB_PATCHED = bytes.fromhex("1eff2fe1")  # bx lr
+CAVE_START = 0x000EA968
+CAVE_END = 0x000EAB80
+CAVE_VANILLA_SHA256 = "ee35577b247e9ec61b9b4cbf209ce854b2b831765deffad07fda86e6d1ec5685"
 
-HOOK = 0x002D07C8
-HOOK_VANILLA = bytes.fromhex("db00d6e5")  # ldrb r0, [r6, #0xdb]
+HOOK_PRESS = 0x002D07C8
+HOOK_PRESS_VANILLA = bytes.fromhex("db00d6e5")  # ldrb r0, [r6, #0xdb]
+HOOK_POLL = 0x002D0760
+HOOK_POLL_VANILLA = bytes.fromhex("5200d4e5")  # ldrb r0, [r4, #0x52]
 
+LIST_HIDE_SOFTKEYS = 0x002D08D4  # hide Back (+ slot 3 via cave) and Select, return 0
+LIST_RETURN_0 = 0x002D0914  # mov r0, #0; pop
+
+ADDR_OPEN_DIALOG = 0x00195FA4
+ADDR_DIALOG_RESULT = 0x00196FF8
+DIALOG_MGR_PTR = 0x008BFA7C  # VA; *ptr is FUN_00195FA4's r0
 ADDR_SET_CAMERA_EQUIP = 0x005CFB04  # (cat, item id or -1)
 ADDR_CALC_CAMERA_STATS = 0x005CDD9C  # (stats = operator + 0x68)
 
-# (operator field, name offset in the operator, draw function) in list order.
-ROWS: tuple[tuple[int, int, int], ...] = (
-    (0x84, 0x0AE, 0x001E3800),  # cat 0 -> row 4 Parts
-    (0x88, 0x618, 0x001E3698),  # cat 1 -> row 1 Lens
-    (0x90, 0x10EC, 0x001E368C),  # cat 3 -> row 0 Mem. Card
-    (0x94, 0x1656, 0x001E3A28),  # cat 4 -> row 2 Stabilization
-    (0x8C, 0xB82, 0x001E3A00),  # cat 2 -> row 3 S. Effects
+# Sentence: pack 0x1901 slot table[layout] + mode.
+ADDR_LAYOUT_TABLE = 0x006C6F5C
+DIALOG_LAYOUT = 53
+DIALOG_LAYOUT_BASE = 498
+DIALOG_MODE = 3
+DIALOG_BUTTONS_YES_NO = 2
+DIALOG_STYLE = 2  # same as the wallpaper confirm
+MSG_CAT = 0x19
+MSG_SUB = 1
+MSG_SLOT = DIALOG_LAYOUT_BASE + DIALOG_MODE  # 501
+MSG_VANILLA_SLOTS = 501
+CONFIRM_TEXT = (
+    "Restore the defaults？\n"
+    "The Lens, Stabilization,\n"
+    "S. Effects and Parts\n"
+    "will be unequipped.\n"
+    "The Memory Card stays."
 )
+
 CAT_MEMORY_CARD = 3  # kept; the loop runs cat 4..0 and skips it
-NOP = 0xE320F000
 
 
 def _u32(x: int) -> bytes:
@@ -71,127 +106,199 @@ def b(here: int, target: int, cond: int = 0xE) -> bytes:
     return _u32((cond << 28) | 0x0A000000 | (((target - here - 8) >> 2) & 0xFFFFFF))
 
 
-def _imm12(value: int) -> int:
-    """ARM data-processing immediate (8 bits rotated right by an even amount)."""
-    for rot in range(16):
-        v = ((value << (2 * rot)) | (value >> (32 - 2 * rot))) & 0xFFFFFFFF
-        if v < 0x100:
-            return (rot << 8) | v
-    raise ValueError(f"{value:#x} is not an ARM immediate")
-
-
-def _split_imm(value: int) -> list[int]:
-    """One or two ARM immediates that add up to ``value``."""
-    try:
-        _imm12(value)
-        return [value]
-    except ValueError:
-        hi = value & ~0xFF
-        _imm12(hi)
-        _imm12(value & 0xFF)
-        return [hi, value & 0xFF]
-
-
-def build_rows(base: int = REGION_START) -> bytes:
-    """Five row-name draws: r1 = idx == -1 ? "" : name; FN(r7, r1)."""
+def build_cave(base: int = CAVE_START) -> tuple[bytes, int, int]:
+    """Return (blob, press entry, poll entry)."""
     code = bytearray()
+    fixups: list[tuple[int, str, int]] = []  # (offset, label, cond)
+    labels: dict[str, int] = {}
+
+    def here() -> int:
+        return base + len(code)
 
     def op(word: int) -> None:
         code.extend(_u32(word))
 
-    for field, name_off, fn in ROWS:
-        here = base + len(code)
-        op(0xE5940000 | field)  # ldr r0, [r4, #field]
-        op(0xE28F1000 | _imm12(EMPTY_STRING - (base + len(code)) - 8))  # add r1, pc, #""
-        op(0xE3700001)  # cmn r0, #1
-        op(0x10800280)  # addne r0, r0, r0, lsl #5  (idx * 33)
-        op(0x10840080)  # addne r0, r4, r0, lsl #1  (operator + idx * 66)
-        parts = _split_imm(name_off)
-        op(0x12801000 | _imm12(parts[0]))  # addne r1, r0, #hi
-        for extra in parts[1:]:
-            op(0x12811000 | _imm12(extra))  # addne r1, r1, #lo
-        op(0xE1A00007)  # mov r0, r7
-        code.extend(bl(base + len(code), fn))
-        del here
-    return bytes(code)
+    def call(target: int) -> None:
+        code.extend(bl(here(), target))
 
+    def jump(target: int, cond: int = 0xE) -> None:
+        code.extend(b(here(), target, cond))
 
-def build_reset(base: int) -> bytes:
-    """Hooked over ``ldrb r0, [r6, #0xdb]``; returns Back's pressed byte in r0."""
-    code = bytearray()
+    def jump_label(label: str, cond: int = 0xE) -> None:
+        fixups.append((len(code), label, cond))
+        op(0)
 
-    def op(word: int) -> None:
-        code.extend(_u32(word))
-
+    # Press: replaces ldrb r0, [r6, #0xdb]; returns Back's byte when slot 3 is idle.
+    press = here()
     op(0xE5D6010F)  # ldrb r0, [r6, #0x10f]  (slot 3 pressed)
     op(0xE3500000)  # cmp r0, #0
     op(0x05D600DB)  # ldrbeq r0, [r6, #0xdb]
     op(0x012FFF1E)  # bxeq lr
-    op(0xE92D4020)  # push {r5, lr}
     op(0xE3A00000)  # mov r0, #0
     op(0xE5C6010F)  # strb r0, [r6, #0x10f]
-    op(0xE3A05004)  # mov r5, #4
-    loop = len(code)
+    op(0xE3A01000)  # mov r1, #0
+    op(0xE52D1004)  # str r1, [sp, #-4]!  (alt-table flag = 0)
+    op(0xE3A00000 | DIALOG_STYLE)  # mov r0, #style
+    op(0xE3A02000)  # mov r2, #0
+    op(0xE3A03000)  # mov r3, #0
+    op(0xE3A0C000)  # mov ip, #0
+    op(0xE92D100F)  # push {r0-r3, ip}  (style, then four empty params)
+    lit_at = len(code)
+    op(0)  # ldr r0, =DIALOG_MGR_PTR (patched below)
+    op(0xE5900000)  # ldr r0, [r0]
+    op(0xE3A01000 | DIALOG_LAYOUT)  # mov r1, #layout
+    op(0xE3A02000 | DIALOG_MODE)  # mov r2, #mode
+    op(0xE3A03000 | DIALOG_BUTTONS_YES_NO)  # mov r3, #2
+    call(ADDR_OPEN_DIALOG)
+    op(0xE28DD018)  # add sp, sp, #0x18
+    op(0xE584004C)  # str r0, [r4, #0x4c]  (handle)
+    op(0xE3A00001)  # mov r0, #1
+    op(0xE5C4005D)  # strb r0, [r4, #0x5d]  (confirm open)
+    jump(LIST_HIDE_SOFTKEYS)
+
+    # Poll: replaces ldrb r0, [r4, #0x52].
+    poll = here()
+    op(0xE5D4005D)  # ldrb r0, [r4, #0x5d]
+    op(0xE3500000)  # cmp r0, #0
+    op(0x05D40052)  # ldrbeq r0, [r4, #0x52]
+    op(0x012FFF1E)  # bxeq lr
+    op(0xE594104C)  # ldr r1, [r4, #0x4c]
+    call(ADDR_DIALOG_RESULT)
+    op(0xE3500001)  # cmp r0, #1
+    jump_label("yes", cond=0x0)  # beq yes
+    op(0xE3500002)  # cmp r0, #2
+    jump(LIST_RETURN_0, cond=0x1)  # bne: still open
+    labels["done"] = len(code)
+    op(0xE3A00000)  # mov r0, #0
+    op(0xE5C4005D)  # strb r0, [r4, #0x5d]
+    op(0xE5C600DB)  # strb r0, [r6, #0xdb]   (Back)
+    op(0xE5C6010F)  # strb r0, [r6, #0x10f]  (Restore Default)
+    op(0xE5C60143)  # strb r0, [r6, #0x143]  (Select)
+    op(0xE3E00000)  # mvn r0, #0
+    op(0xE584004C)  # str r0, [r4, #0x4c]  (picker sub-state idle)
+    op(0xE2400001)  # sub r0, r0, #1
+    op(0xE5840058)  # str r0, [r4, #0x58]  (-2: re-show Select for the cursor)
+    op(0xE3A00001)  # mov r0, #1
+    op(0xE5C40050)  # strb r0, [r4, #0x50]
+    op(0xE5C40051)  # strb r0, [r4, #0x51]
+    jump(LIST_RETURN_0)
+
+    labels["yes"] = len(code)
+    op(0xE3A05004)  # mov r5, #4  (r5 is saved by the list update)
+    loop = here()
     op(0xE3550000 | CAT_MEMORY_CARD)  # cmp r5, #3
-    skip_at = len(code)
-    op(0)  # beq next (patched below)
+    jump_label("next", cond=0x0)  # beq next
     op(0xE3E01000)  # mvn r1, #0
     op(0xE0840105)  # add r0, r4, r5, lsl #2
     op(0xE5801084)  # str r1, [r0, #0x84]
     op(0xE1A00005)  # mov r0, r5
-    code.extend(bl(base + len(code), ADDR_SET_CAMERA_EQUIP))
-    nxt = len(code)
+    call(ADDR_SET_CAMERA_EQUIP)
+    labels["next"] = len(code)
     op(0xE2555001)  # subs r5, r5, #1
-    code.extend(b(base + len(code), base + loop, cond=0x5))  # bpl loop (0 included)
-    code[skip_at : skip_at + 4] = b(base + skip_at, base + nxt, cond=0x0)  # beq next
+    jump(loop, cond=0x5)  # bpl loop (cat 0 included)
     op(0xE2840068)  # add r0, r4, #0x68
-    code.extend(bl(base + len(code), ADDR_CALC_CAMERA_STATS))
-    op(0xE3A00001)  # mov r0, #1
-    op(0xE5C40050)  # strb r0, [r4, #0x50]
-    op(0xE5C40051)  # strb r0, [r4, #0x51]
-    op(0xE5D600DB)  # ldrb r0, [r6, #0xdb]
-    op(0xE8BD8020)  # pop {r5, pc}
-    return bytes(code)
+    call(ADDR_CALC_CAMERA_STATS)
+    jump_label("done")
+
+    lit = len(code)
+    op(DIALOG_MGR_PTR)
+    code[lit_at : lit_at + 4] = _u32(0xE59F0000 | (lit - lit_at - 8))  # ldr r0, [pc, #imm]
+    for at, label, cond in fixups:
+        code[at : at + 4] = b(base + at, base + labels[label], cond)
+    return bytes(code), press, poll
 
 
-def build_region() -> tuple[bytes, int]:
-    """Rows + ``b REGION_END`` + reset cave, NOP-padded to the region size."""
-    rows = build_rows()
-    skip_at = REGION_START + len(rows)
-    blob = bytearray(rows)
-    blob += b(skip_at, REGION_END)
-    reset_at = REGION_START + len(blob)
-    blob += build_reset(reset_at)
-    size = REGION_END - REGION_START
+def build_region() -> tuple[bytes, int, int]:
+    """Cave blob NOP-padded to the dead body."""
+    blob, press, poll = build_cave()
+    size = CAVE_END - CAVE_START
     if len(blob) > size:
-        raise ValueError(f"rows + reset {len(blob)} > region {size}")
-    while len(blob) < size:
-        blob += _u32(NOP)
-    return bytes(blob), reset_at
+        raise ValueError(f"camera reset cave {len(blob)} > {size}")
+    return blob + _u32(0xE320F000) * ((size - len(blob)) // 4), press, poll
 
 
 def is_patched(data: bytes) -> bool:
-    region, reset_at = build_region()
+    region, press, poll = build_region()
     return (
-        data[REGION_START:REGION_END] == region
-        and data[HOOK : HOOK + 4] == bl(HOOK, reset_at)
+        data[CAVE_START:CAVE_END] == region
+        and data[HOOK_PRESS : HOOK_PRESS + 4] == bl(HOOK_PRESS, press)
+        and data[HOOK_POLL : HOOK_POLL + 4] == bl(HOOK_POLL, poll)
     )
 
 
 def apply_patch(data: bytearray) -> bool:
-    region, reset_at = build_region()
+    region, press, poll = build_region()
     if is_patched(data):
-        print(f"[camera-reset] already applied @{reset_at:#x}")
+        print(f"[camera-reset] already applied @{CAVE_START:#x}")
         return False
-    got = hashlib.sha256(bytes(data[REGION_START:REGION_END])).hexdigest()
-    if got != REGION_VANILLA_SHA256:
-        raise ValueError(f"camera row-name region @{REGION_START:#x} is not vanilla")
-    if data[HOOK : HOOK + 4] != HOOK_VANILLA:
-        raise ValueError(f"unexpected insn @{HOOK:#x}: {data[HOOK:HOOK+4].hex()}")
-    data[REGION_START:REGION_END] = region
-    data[HOOK : HOOK + 4] = bl(HOOK, reset_at)
+    if data[ADDR_STUB : ADDR_STUB + 4] != STUB_PATCHED:
+        raise ValueError(f"{ADDR_STUB:#x} is not bx lr; apply patch_spotpass_skip first")
+    got = hashlib.sha256(bytes(data[CAVE_START:CAVE_END])).hexdigest()
+    if got != CAVE_VANILLA_SHA256:
+        raise ValueError(f"dead body @{CAVE_START:#x} is not vanilla")
+    for addr, vanilla in ((HOOK_PRESS, HOOK_PRESS_VANILLA), (HOOK_POLL, HOOK_POLL_VANILLA)):
+        if data[addr : addr + 4] != vanilla:
+            raise ValueError(f"unexpected insn @{addr:#x}: {data[addr:addr+4].hex()}")
+    base = struct.unpack_from("<H", data, ADDR_LAYOUT_TABLE + 2 * DIALOG_LAYOUT)[0]
+    if base != DIALOG_LAYOUT_BASE:
+        raise ValueError(f"dialog layout {DIALOG_LAYOUT} starts at slot {base}, not {DIALOG_LAYOUT_BASE}")
+    data[CAVE_START:CAVE_END] = region
+    data[HOOK_PRESS : HOOK_PRESS + 4] = bl(HOOK_PRESS, press)
+    data[HOOK_POLL : HOOK_POLL + 4] = bl(HOOK_POLL, poll)
     print(
-        f"[camera-reset] Restore Default press @{HOOK:#x} -> cave @{reset_at:#x} "
-        f"(rows compacted in {REGION_START:#x}..{REGION_END:#x})"
+        f"[camera-reset] Restore Default confirm: press @{HOOK_PRESS:#x} -> {press:#x}, "
+        f"poll @{HOOK_POLL:#x} -> {poll:#x}"
     )
     return True
+
+
+def append_confirm_message(data: bytes) -> tuple[bytes, list[str]]:
+    """Add pack 0x1901 slot 501 (the confirm sentence) to a TRB.
+
+    The new slot's u16 goes at the end of the sub's list with a u16 pad, so
+    every later offset in INDX moves by 4 and keeps its alignment.
+    """
+    from patch_password_serials import _pack_trb, _strb_used, _sub_u16_off
+    from patch_textresource import iter_entries, parse_chunks, to_game_newlines
+
+    chunks = parse_chunks(data)
+    stri = bytearray(chunks["STRI"])
+    strb = bytearray(chunks["STRB"])
+    indx = bytearray(chunks["INDX"])
+    u16_off, count = _sub_u16_off(indx, MSG_CAT, MSG_SUB)
+    payload = to_game_newlines(CONFIRM_TEXT).encode("utf-8")
+    if count == MSG_VANILLA_SLOTS + 1:
+        cur = struct.unpack_from("<H", indx, u16_off + 2 * MSG_SLOT)[0]
+        start = struct.unpack_from("<I", stri, cur * 8)[0]
+        if bytes(strb[start : start + len(payload) + 1]) == payload + b"\x00":
+            return data, [f"slot {MSG_SLOT} already set"]
+        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} slot {MSG_SLOT} holds other text")
+    if count != MSG_VANILLA_SLOTS:
+        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} has {count} slots, expected {MSG_VANILLA_SLOTS}")
+
+    new_idx = sum(1 for _ in iter_entries(stri))
+    strb = strb[: _strb_used(stri, strb)]
+    stri += struct.pack("<IHH", len(strb), len(payload), 1)
+    strb += payload + b"\x00"
+    strb += b"\xc9" * ((4 - len(strb) % 4) % 4)
+
+    insert_at = u16_off + 2 * count
+    cat_off = struct.unpack_from("<I", indx, MSG_CAT * 4)[0]
+    sub_rel = struct.unpack_from("<I", indx, cat_off + 4 + MSG_SUB * 4)[0]
+    sub_count = struct.unpack_from("<I", indx, cat_off)[0]
+    for s in range(sub_count):
+        at = cat_off + 4 + s * 4
+        rel = struct.unpack_from("<I", indx, at)[0]
+        if rel > sub_rel:
+            struct.pack_into("<I", indx, at, rel + 4)
+    for c in range(0x100):
+        off = struct.unpack_from("<I", indx, c * 4)[0]
+        if off > cat_off:
+            struct.pack_into("<I", indx, c * 4, off + 4)
+    struct.pack_into("<I", indx, u16_off - 4, count + 1)
+    indx[insert_at:insert_at] = struct.pack("<HH", new_idx, 0)
+
+    chunks["STRI"] = bytes(stri)
+    chunks["STRB"] = bytes(strb)
+    chunks["INDX"] = bytes(indx)
+    return _pack_trb(chunks), [f"slot {MSG_SLOT} -> stri={new_idx} (Restore Default confirm)"]

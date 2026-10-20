@@ -29,7 +29,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
   18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
   19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
-  20. patch_camera_defaults_reset          # Restore Default unequips all but the Memory Card
+  20. patch_camera_defaults_reset          # Restore Default asks Yes/No, then unequips all but the Memory Card
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py

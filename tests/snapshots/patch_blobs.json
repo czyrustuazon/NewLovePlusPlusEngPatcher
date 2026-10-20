@@ -1,4 +1,7 @@
 {
+ "patch_camera_defaults_reset.build_cave": "c043e6f74bb2f7bc0d71f9e21d900e3afb3f8da55e09d30b2be6a13d8e9edb48",
+ "patch_camera_defaults_reset.build_region": "8c0c4443504c02565b17f6866bf21d431eef673af383944bfaa8a44c393b7807",
+ "patch_camera_restore_default.build_cave": "a6b3a259c963ee2b82a8befa9da7bcacefbb83920d586fc32b3a346dcdec9deb",
  "patch_chunk_walk_guard.build_cave": "8522b3f1e83073ea9d1cf29577e611519497232439a343a1a04f703d6f588d51",
  "patch_chunk_walk_guard.build_clyt_cave": "1f9b4f19331f3f2d080f44add8516730202ede671657a3e3a712e2d275961d92",
  "patch_chunk_walk_guard.build_field_cave": "c9c74c1e18260978fa1dfd208e45413a6baa7e2df6624ccf4c8da90f99a6d33e",
