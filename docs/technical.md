@@ -31,6 +31,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
 
 - **Girlfriend Comm. white header** (`カノジョ通信`) is MultiWin **5237** 192×16 ETC1A4, not the MSel plate. Full “Girlfriend Communication” fries that bar; shipped copy is **Heart to Heart** (**§12.4.1**).
+- **Anywhere Date "Communication Menu" header** (Direct Send/Receive screen) is LA8 `DE_plt_txt0500` @ DateEditCom **4198** (+ **4195**), packed from Zhoumaru by `pack_images` — **not** MSel `Plate_Text04_01_00` @ **5241**. The DateEdit / Camera / Main / SpotInfo copies (**5382**, **5384–5386**) use Zhoumaru's light outlined master. Fried text there was the fmt 3 encoder (**§5.1**).
 - **Profile white header** (`プロフィール`) is A8 `Plate_Text01_00_00` @ **5246** 144×28. Ship Heisei W5 on a 16px strip (same as Heart to Heart), not MPLUS and not Zhoumaru paint — **§12.4.2**.
 - **Profile Call / atlas labels** (`Last Name` / `Written` / `Called`) are RGB565 chroma @ **5252**. Use JP yellow/green/cyan **ramps** (2× Heisei), not 1-bit crush — **§12.4.4**.
 - **Profile name rows** stay family-name first. `Profile_Info_Profile_t` top row is 姓 (**Last Name**), second row is 名 (**First Name**). Call01 matches. Do not paint Western order onto those boxes — the panes still edit 姓 then 名. Verified in Azahar A, 2026-10-10. **§12.4.4**.
@@ -274,7 +275,7 @@ Prefer `assets/images/<Name>.check/` over raw trees when both exist.
 | CLIM fmt | Meaning | Notes |
 |----------|---------|--------|
 | 1 | A8 | Alpha / text panes |
-| 3 | RGB565 | Some Release buttons |
+| 3 | LA8 | Stored **A, L**. Date Edit plates `DE_plt_txt*`, SysPopup Release buttons. Not RGB565 (that is fmt 5); see below |
 | 8 | RGBA4444 | Common UI labels |
 | `0xB` / 11 | ETC1A4 | 16 bytes per 4×4 block; Ohana scramble |
 
@@ -285,7 +286,8 @@ Implementation: `EngPatcher/src/bclimutil.py`
 - Morton / Z-order 8×8 tiles: `d2xy`, `gcm`
 - ETC1A4: `etc1_scramble`, `encode_etc1a4_pixels` (etcpak + byte-reversed color + scramble). A same-size edit keeps any 8×8 tile whose pixels already match the decoded original (`decode_etc1a4_pixels`), so the rest of the texture is not re-compressed.
 - RGB8 (fmt 6) is stored **B, G, R**. RGBA8 (fmt 9) is stored **A, B, G, R**. Thank you to Cetaceaqua for the RGB8 and RGBA8 byte order.
-- Same-size writers: `png_to_bclim_a8_same_size`, `png_to_bclim_rgba4444_same_size`, `png_to_bclim_etc1a4_same_size`
+- Same-size writers: `png_to_bclim_a8_same_size`, `png_to_bclim_rgba4444_same_size`, `png_to_bclim_etc1a4_same_size`, `png_to_bclim_la8_same_size`
+- **fmt 3 is LA8** (GPU table row 3, §5.4). `png_to_bclim_same_size` (used by `pack_images` and `deploy_ui_buttons_en`) used to write RGB565 bytes there, so the low color byte became alpha and Zhoumaru masters came out mottled ("deep fried"), e.g. the Anywhere Date **Communication Menu** header `DE_plt_txt0500`. It now writes LA8. Hand-tuned deploys (Profile **5252**, Card flist **4152**, Delete Save Data, Commu Option, Watcher) still call `png_to_bclim_rgb565_same_size` on purpose, and `decode_bclim_to_image` still reads fmt 3 as 565 for those round trips.
 
 ### 5.2 Hard rules for conversion
 
@@ -639,16 +641,16 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Anywhere Date empty list `デートデータがありません。「デートの編集」から…` | DrawText / TRB STRI **25183** on `Lyt_De0200` Opt_Win (no body BCLIM; DateEdit `De_*_Txt` are short labels). | **EN** — full JP key in `translations.json`. A truncated key ending `デートを作` never matched, so LayeredFS kept JP. |
 | Options help line | DrawText / TRB | Already EN |
 | 年 / 月 / 日 | Option06 A4 @ 5248 (`Lyt_Opt_Time` + `Pts_Opt_Time_Win`) | US `MM / DD / YYYY` — `tools/deploy_clock_date_order_en.py` |
-| Gallery home | A8 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options) |
-| Event Gallery rows | A8 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
+| Gallery home | ETC1A4 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options). `deploy_msel_menus_en.py` keeps Zhoumaru masters in vanilla ETC1A4 (RGB flattened to the master ink) for **5240** / **5241** / **5242** / **5244**; A8 dropped the gray ink. Font-rendered labels there stay A8 |
+| Event Gallery rows | ETC1A4 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
 | Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Zhoumaru plates **Confession Memories** / **After the Dream** / **Trip Memories** / **Drama Gallery** (aligned with row btn `ドラマギャラリー`; MultiWin `01_01` PNG is Friend's Memory — do not use) |
 | Gallery **submenu white headers** | ETC1A4 `Com_MultiWin_W01_Text02_*` @ **5237** via `FUN_00255a18` | Deployed (`Gallery` / Event / Illustration / Dream / Special / Gallery Options) — `tools/deploy_multiwin_headers_en.py` (plates of same labels also in **5244**) |
 | Gallery girl-select labels | ETC1A4 `Gallery_txt01..03` + RGBA4444 `Gallery_txt04..06` + `Gal_girl_select{M,N,R}` @ **5153** | Deployed (`Preview` / `Slideshow` / `All` + heroine names on list + Dream Gallery buttons) — `tools/deploy_gallery_common_en.py` |
 | Gallery Options strips `再生スピード` / `呼ばれ方` | ETC1A4 `Gallery_txt08` / `Gallery_txt09` @ **5153** | Deployed (`Playback Speed` / `Called As:` — Profile confirm copy; Zhoumaru). `Gallery_txt07` stays vanilla `BGM` (Zhoumaru dump is wrong Fitness). Same deploy. |
-| Communication home | A8 Text04 @ **5241** | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
-| Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | A8 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
-| Wireless Battle session rows `対戦相手を募集` / `対戦参加` | A8 `Com_M_Sel_Btn_Text04_03_01..02` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Battle Opponent** / **Join Battle** — same deploy |
-| Girlfriend Introduction / Double Date rows | A8 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
+| Communication home | ETC1A4 Text04 @ **5241** (Heart to Heart pill/plate font-rendered A8) | Deployed (`Communication` / Heart to Heart / Business Card / Wireless Battle) |
+| Girlfriend Comm. session rows `２人会話を募集` / `３人会話を募集` / `会話に参加` | ETC1A4 `Com_M_Sel_Btn_Text04_01_04..06` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Two-Person Chat** / **Find Three-Person Chat** / **Join Chat** — `deploy_msel_menus_en.py` |
+| Wireless Battle session rows `対戦相手を募集` / `対戦参加` | ETC1A4 `Com_M_Sel_Btn_Text04_03_01..02` @ **5241** | Zhoumaru `NCommonMSel(7).check`: **Find Battle Opponent** / **Join Battle** — same deploy |
+| Girlfriend Introduction / Double Date rows | ETC1A4 `Com_M_Sel_Btn_Text04_01_07..10` @ **5241** | Zhoumaru: **Introduce Girlfriend** / **Get Introduced** / **Find Couple** / **Join Double Date** |
 | Girlfriend Comm. white header `カノジョ通信` | ETC1A4 MultiWin `Text04_01_00` (+ `01_01`) @ **5237** + A8 plate `Plate_Text04_01_01` @ **5241** | **Heart to Heart** — see **§12.4.1**. Home-menu row `Btn_Text04_01_01` is the same wording. Loading hang was Azahar `OpenLinkFile` — **§10.1**. |
 | Business Card submenu | A8 Text04_02 @ **5240** | Deployed (header + My/Friends/Direct Exchange/StreetPass) |
 | Communication settings rows `すれちがい通信` / `いつの間に通信` / `ダブルデート` | RGBA4444 `Commu_Op_Text02/03/04` @ **4185** | **StreetPass** / **SpotPass** / **Double Date**. Zhoumaru Text02/Text04 are ToDoList / Gallery. Help line `Commu_Op_Text01` is the Zhoumaru ON/OFF sentence composited from alpha (RGB dump was noisy). The SpotPass row (`Pos_Text03`, `Pos_Btn_Change02`) and the DATA button (`Pos_Data_Btn`) are hidden and moved to y −1000 in `Lyt_Commu_Option.bclyt`: SpotPass state is read back from BOSS queries that `patch_spotpass_embed` stubs to 1, so OFF never stuck, and DATA needs the servers. The operator code (`0x104000..0x106800`) is vanilla. `tools/deploy_commu_option_en.py` |
