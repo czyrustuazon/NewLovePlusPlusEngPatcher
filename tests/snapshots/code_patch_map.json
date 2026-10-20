@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "c55a268b2b9c7120e47f75c4f3852d4e257215af23a3b464641da6ad8bfdd9db",
+ "final_sha256": "ed8b3d8c26d5ced843bc7d5968cade6857bd19208d1b94f8c52029a26a89c6a3",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -424,6 +424,15 @@
     "0x4fa79c-0x4fa7a0",
     "0x4fd248-0x4fd250",
     "0x632534-0x63253c"
+   ]
+  },
+  {
+   "name": "apply_camera_defaults",
+   "written_sha256": "a4c06ad3d7844a1f89424d5d75eec003291a0e3d59eafd719fdb4bfe9b83c8d5",
+   "ranges": [
+    "0x2d0564-0x2d0568",
+    "0x2d08e0-0x2d08e4",
+    "0x68ff50-0x68ffa8"
    ]
   }
  ]
