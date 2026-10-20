@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Gallery / Communication / Data Management MSel EN — exact-zopfli splice.
 
-Packages (A8 Text BCLIMs, same pattern as Options pkg 5245):
+Packages (vanilla ETC1A4 Text BCLIMs; Zhoumaru masters stay ETC1A4 so they
+keep their gray ink, font renders go out as A8 like Options pkg 5245):
   5244 Text02 — Gallery home
   5241 Text04 — Communication home
   5242 Text05 — Data Management home
@@ -26,6 +27,7 @@ from bclimutil import (  # noqa: E402
     gcm,
     parse_bclim,
     png_to_bclim_a8_same_size,
+    png_to_bclim_etc1a4_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
 from exact_zlib import compress_exact_zopfli  # noqa: E402
@@ -162,6 +164,16 @@ def decode_a8(raw: bytes) -> tuple[np.ndarray, int, int]:
     return canvas, w, h
 
 
+def flatten_ink(rgba: Image.Image) -> Image.Image:
+    """Paint every texel in the master's opaque ink color, keeping alpha."""
+    arr = np.array(rgba.convert("RGBA"))
+    solid = arr[..., 3] >= 200
+    src = arr[solid] if solid.any() else arr[arr[..., 3] > 0]
+    ink = np.median(src[:, :3], axis=0).astype(np.uint8) if len(src) else (51, 51, 51)
+    arr[..., :3] = ink
+    return Image.fromarray(arr, "RGBA")
+
+
 def render_en_alpha(w: int, h: int, text: str, target_h: int) -> np.ndarray:
     for size in range(target_h + 4, 7, -1):
         scale = 2
@@ -237,6 +249,13 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 96, 255, 0).astype(np.uint8)
             rgba.putalpha(Image.fromarray(a, "L"))
+        if parse_bclim(raw)[3] == 0xB:
+            # Vanilla plates/pills are ETC1A4. A8 drops the master's dark-gray
+            # ink, so the game draws the text as a flat light-gray blob. Keep
+            # ETC1A4 and flatten RGB to that ink so ETC1 stays lossless.
+            rgba = flatten_ink(rgba)
+            rgba.save(png)
+            return png_to_bclim_etc1a4_same_size(png, orig)
         rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]

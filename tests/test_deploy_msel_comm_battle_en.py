@@ -83,3 +83,37 @@ def test_msel_menus_on_bake_chrome_list():
     text = (TOOLS / "rebuild_bake_img.py").read_text(encoding="utf-8")
     assert "deploy_msel_menus_en.py" in text
     assert "deploy_multiwin_headers_en.py" in text
+
+
+def test_flatten_ink_keeps_alpha_and_uses_master_ink():
+    im = Image.new("RGBA", (8, 4), (0, 0, 0, 0))
+    im.putpixel((1, 1), (51, 51, 51, 255))
+    im.putpixel((2, 1), (200, 10, 10, 119))
+    out = msel.flatten_ink(im)
+    assert out.getchannel("A").tobytes() == im.getchannel("A").tobytes()
+    assert {px[:3] for px in out.getdata()} == {(51, 51, 51)}
+
+
+def test_zhoumaru_plate_keeps_vanilla_etc1a4(tmp_path):
+    """A8 drops the Zhoumaru ink; the Communication Menu plate went light gray."""
+    import pytest
+
+    vanilla = msel.pick_vanilla() if hasattr(msel, "pick_vanilla") else None
+    if vanilla is None or not vanilla.is_file():
+        pytest.skip("no vanilla img.bin")
+    from darcutil import DarcArchive
+    from img import ARC, FileWindow, Image as ImgBin, Package
+
+    img = ImgBin(str(vanilla))
+    img.parse(False)
+    res = img.entries[5241]
+    pkg = Package(FileWindow(str(vanilla), res.fw.base_offset, res.fw.len()), 0)
+    pkg.parse(False)
+    arc = next(e for e in pkg.entries if isinstance(e, ARC))
+    darc = DarcArchive(bytearray(arc.parsed()))
+    stem = "Com_M_Sel_Plate_Text04_01_00"
+    raw = darc.extract_file(darc.find(f"timg/{stem}.bclim"))
+    assert msel.parse_bclim(raw)[3] == 0xB
+    new = msel.make_en_bclim(raw, "Communication Menu", tmp_path, hard=False, salt=0.0, stem=stem)
+    assert len(new) == len(raw)
+    assert msel.parse_bclim(new)[3] == 0xB
