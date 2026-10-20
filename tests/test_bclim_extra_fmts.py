@@ -214,3 +214,23 @@ def test_blank_texels_left_of_rejects_8bit():
     raw = bytes(64) + _footer(8, 8, 1, 64)
     with pytest.raises(ValueError, match="unsupported fmt"):
         blank_texels_left_of(raw, 4)
+
+
+def test_fmt3_same_size_is_la8_alpha_then_luminance(tmp_path: Path):
+    """Game samples fmt 3 as LA8; RGB565 bytes there fry Date Edit plates."""
+    w, h = 16, 8
+    orig = _write_bclim(tmp_path, w, h, 3, bytes(w * h * 2))
+    png = tmp_path / "t.png"
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    im.putpixel((0, 0), (51, 51, 51, 255))
+    im.putpixel((1, 0), (51, 51, 51, 119))
+    im.save(png)
+    out = png_to_bclim_same_size(png, orig)
+    assert len(out) == orig.stat().st_size
+    pix, ow, oh, fmt, _ = parse_bclim(out)
+    assert (ow, oh, fmt) == (w, h, 3)
+    # Texel 0 is (0, 0); Morton texel 1 is (1, 0).
+    assert d2xy(1) == (1, 0)
+    assert pix[0:2] == bytes([255, 51])
+    assert pix[2:4] == bytes([119, 51])
+    assert pix[4:6] == b"\x00\x00"

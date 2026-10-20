@@ -2,7 +2,8 @@
 """Minimal BCLIM helpers for NLPP UI text textures.
 
 NW4C CLIM format IDs (this game):
-  0 L8, 1 A8, 2 LA4, 3 LA8 (also packed as RGB565 by older encodes),
+  0 L8, 1 A8, 2 LA4, 3 LA8 (stored A, L; hand-tuned deploys still write
+  RGB565 bytes into some fmt 3 slots, and decode_bclim_to_image reads 565),
   5 RGB565, 6 RGB8, 8 RGBA4444, 9 RGBA8, 0xB ETC1A4, 0xD A4.
 
 Title button labels are RGBA4444 (fmt 8). FileSelect label sheets are
@@ -580,6 +581,17 @@ def encode_la4_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
     return encode_tiled_pixels(img, pot_w, pot_h, write)
 
 
+def encode_la8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
+    """LA8 (fmt 3), stored A, L (same order as LA4's low-nibble A)."""
+
+    def write(r: int, g: int, b: int, a: int) -> bytes:
+        if not a:
+            return b"\x00\x00"
+        return bytes([a, (r * 299 + g * 587 + b * 114) // 1000])
+
+    return encode_tiled_pixels(img, pot_w, pot_h, write)
+
+
 def encode_rgb8_pixels(img: Image.Image, pot_w: int, pot_h: int) -> bytes:
     """RGB8 (fmt 6), stored B, G, R.
 
@@ -635,6 +647,10 @@ def png_to_bclim_rgb565_same_size(png: Path, orig_bclim: Path) -> bytes:
     return _png_to_tiled_same_size(
         png, orig_bclim, (3, 5), 2, encode_rgb565_pixels
     )
+
+
+def png_to_bclim_la8_same_size(png: Path, orig_bclim: Path) -> bytes:
+    return _png_to_tiled_same_size(png, orig_bclim, 3, 2, encode_la8_pixels)
 
 
 def png_to_bclim_l8_same_size(png: Path, orig_bclim: Path) -> bytes:
@@ -777,7 +793,11 @@ def png_to_bclim_same_size(png: Path, orig_bclim: Path) -> bytes:
         return png_to_bclim_etc1a4_same_size(png, orig_bclim)
     if fmt == 1:
         return png_to_bclim_a8_same_size(png, orig_bclim)
-    if fmt in (3, 5):
+    if fmt == 3:
+        # The game samples fmt 3 as LA8. RGB565 bytes here turn the low
+        # color byte into alpha (mottled "deep fried" Date Edit plates).
+        return png_to_bclim_la8_same_size(png, orig_bclim)
+    if fmt == 5:
         return png_to_bclim_rgb565_same_size(png, orig_bclim)
     if fmt == 0xD:
         return png_to_bclim_a4_same_size(png, orig_bclim)
