@@ -31,7 +31,7 @@ The live homepage **script** bar can also be POSTed by nlpp-gold-maker / Drop CI
 
 If you cannot re-export, apply the **Facts** below to copy and to `images_ui` headlines only. Do not hand-rewrite the 5k-line script file tables.
 
-### Facts you must use (2026-09-20)
+### Facts you must use (2026-10-20)
 
 **Dialogue / SMS / TRB (unchanged vs Sep 1 shipping stack unless a fresh export says otherwise):**
 
@@ -52,17 +52,17 @@ NLPPATCH “28%” = 169 / 578 dialogue files. That is still only Rinko+Nene cov
 
 | Measure | Count | Notes |
 |---------|------:|-------|
-| Full mapped pack (`IMAGE_MAP`) | **1745** unique PNGs in **95 / 95** folders | What gold bake packs. Deduped by stem; prefer `.check`. |
-| Chrome subset (site `images_ui` today) | **562** in **25 / 25** folders | What `export_progress_metrics.py` → `ui_png_masters_total` currently exports. Was **461**. |
+| Full mapped pack (`IMAGE_MAP`) | **1765** unique PNGs in **101 / 101** folders | What gold bake packs. Deduped by stem; prefer `.check`. Recounted 2026-10-20 (was 1745 / 95). |
+| Chrome subset (site `images_ui` today) | **564** in **25 / 25** folders | What `export_progress_metrics.py` → `ui_png_masters_total` currently exports. Was **562**, then **461**. |
 | Sparse intros | `intro111`, `intro203`, `intro304` | Folders exist (11 / 5 / 3 PNGs). Not empty. |
 
 These are **English masters present**, not “% of every vanilla BCLIM in `img.bin`”. Do not invent a texture %.
 
-The `/progress/` UI table is driven by `images_ui.by_folder` (the chrome 25 keys). After a real import, `ui_png_masters_total` should read **562**, not 461. Optionally mention the full pack in prose:
+The `/progress/` UI table is driven by `images_ui.by_folder` (the chrome 25 keys). After a real import, `ui_png_masters_total` should read **564**, not 562 or 461. Optionally mention the full pack in prose:
 
-> 562 English PNG masters in the 25 chrome packages the dashboard tracks (was 461). The shipping image map has **1745** unique masters across **all 95** folders. intro111 / intro203 / intro304 are sparse dumps, not missing folders.
+> 564 English PNG masters in the 25 chrome packages the dashboard tracks (was 562). The shipping image map has **1765** unique masters across **all 101** folders. intro111 / intro203 / intro304 are sparse dumps, not missing folders.
 
-Replace any volunteer/workbench copy that still says **~1210 PNGs / ~68 folders** or **1727 / 92 of 95** with **1745 / 95 of 95**.
+Replace any volunteer/workbench copy that still says **~1210 PNGs / ~68 folders**, **1727 / 92 of 95**, or **1745 / 95 of 95** with **1765 / 101 of 101**.
 
 **Do not treat as translation progress:**
 
@@ -75,18 +75,18 @@ Replace any volunteer/workbench copy that still says **~1210 PNGs / ~68 folders*
 | Page | What to update |
 |------|----------------|
 | `/progress/` (`src/pages/progress.astro`) | Image blurb + optional milestone for the audited community UI PNG pack. After import, the table fills itself. |
-| Homepage (`ProgressBar.astro`) | Comes from `progress.json` — no hardcoded 461. Leave script/SMS/TRB bars unless export changed them. |
+| Homepage (`ProgressBar.astro`) | Comes from `progress.json`. Leave script/SMS/TRB bars unless a fresh export changed them (dialogue is still 326 / 578). |
 | Volunteer (`volunteer.astro` / workbench sizes) | Image kit size if it still quotes 1210 / 68. |
-| Changelog / devlog | Optional: note that UI masters are **1745** mapped / **562** chrome after rc-3 → main. |
+| Changelog / devlog | Optional: note that UI masters are **1765** mapped / **564** chrome (2026-10-20 recount). |
 
 ### Tone
 
-Same as the current Progress page: numbers are regenerated from the patcher, dialogue+SMS are the bottleneck, TRB 98% is a machine pass. Do not claim menus are “done” because TRB is high. Do not claim every in-game texture is English because 1745 masters exist.
+Same as the current Progress page: numbers are regenerated from the patcher, dialogue+SMS are the bottleneck, TRB 98% is a machine pass. Do not claim menus are “done” because TRB is high. Do not claim every in-game texture is English because 1765 masters exist.
 
 ### Output
 
 1. Exact edits (file + snippet) **or** confirmation that `import-progress.mjs` is enough for the bars.
-2. Ready-to-paste Progress-page image paragraph using 562 + 1745.
+2. Ready-to-paste Progress-page image paragraph using 564 + 1765.
 3. A one-line volunteer Images kit size if that page still has the old ~1210 figure.
 
 ### Do not include

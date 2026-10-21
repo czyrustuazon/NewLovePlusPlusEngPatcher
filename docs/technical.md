@@ -2231,7 +2231,7 @@ Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` 
 |------|--------|
 | `tools/export_progress_metrics.py` | `out/progress_metrics.json` — per-file script lists, SMS messages, TRB STRI indices, UI PNG names |
 | `tools/script_coverage_report.py` | Console summary |
-| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes (2026-09-20: **562** chrome / **1745** mapped PNG masters in **95 / 95** folders) |
+| `docs/TRANSLATION_PROGRESS.md` | Human-readable headline table + fansite layout notes (2026-10-20: **564** chrome / **1765** mapped PNG masters in **101 / 101** folders) |
 
 Regenerate before publishing; `out/` is gitignored.
 
@@ -2247,10 +2247,9 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 | Re-enable EN SMS after placeholder audit | WIP — `assets/sms_en/`; use `--include-sms` |
 | Full Rinko / Nene routes | **JP** except NLPPPATCH early ~28% per route |
 | `img.bin` name table — 0 replacements on last deploy | Exact C-string slots via `deploy_day_counter_en.py` (**§23**). Leave `patch_name_table_bytes` off the live blob |
-| Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` |
+| Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` (recounted 2026-10-20: **564** chrome / **1765** mapped) |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |
-| Commit / push session tooling | `script_inject.py`, `export_progress_metrics.py`, `restore_*.py`, etc. — whitelisted in `.gitignore` |
-| README / forum post | Community update: NLPPCTR menu migration, 28% baseline restore, nickname fix, progress % |
+| README | Updated 2026-10-20 (mini-games, My Camera, Communication Settings, US clock, PNG recount). A forum post is still optional |
 
 ---
 
@@ -2285,13 +2284,13 @@ Or set `NLPP_ENG_PATCHER` / `NLPP_WORKBENCH`.
 |-----|--------------|---------|---------------------|
 | **Scripts** | `kit/NLPP_Translate.html` | Dialogue still needing EN (dialogs only in embed; ~6 MB) | `nlpp-contrib-….json` (`kind: nlpp-contrib`) |
 | **Strings** | `kit/NLPP_Translate_Strings.html` | SMS (`maildic_*`) + TRB leftovers still JP | `nlpp-strings-….json` (`kind: nlpp-strings-contrib`) |
-| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1745** across **95 / 95** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
+| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1765** across **101 / 101** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
 
 Hub tabs lazy-load iframes; unsaved edits warn via `postMessage` `{type:'nlpp-unsaved', tool, dirty}`.
 
 **Volunteer loop:** open hub → edit → **Save progress** → post JSON in Discord `#translated-work-to-review`.
 
-Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1745** PNGs / **95 of 95** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **562** in 25 folders (`tools/export_progress_metrics.py`).
+Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20 scripts/strings, 2026-10-20 images): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1765** PNGs / **101 of 101** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **564** in 25 folders (`tools/export_progress_metrics.py`). Dialogue scripts are still **326 / 578 (56.4%)**.
 
 #### Scripts kit — routes and sources (`export_workkit.py`)
 
@@ -2347,7 +2346,7 @@ Heroine SMS stems: Manaka `maildic_m`, Nene `maildic_n`, Rinko `maildic_r`. Jump
 | Volunteer actions | Unchecked → **OK** / **Needs fix** / **Upload PNG** (same W×H) → Save → JSON may embed `png_b64` |
 | Preview | Background toggle (light checker default) — view only |
 
-**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **95 of 95** keys / **1745** PNGs (`intro111` / `intro203` / `intro304` are sparse dumps). Do not quote the old ~68 / ~1210 or **1727 / 92 of 95** snapshots.
+**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **101 of 101** keys / **1765** PNGs (`intro111` / `intro203` / `intro304` are sparse dumps). Do not quote the old ~68 / ~1210, **1727 / 92 of 95**, or **1745 / 95 of 95** snapshots.
 
 Ingest: `ingest_images.py --apply` writes replacements back under `assets/images/` for later `pack_images` / bake.
 
@@ -2711,5 +2710,5 @@ The function that should copy the saved names onto these two keys was not found.
 
 ---
 
-*Last updated 2026-10-11 — heroine family slots are exact C strings in pkg 5508: Takane, Kobayaka, Anegasaki (§23). Player marks `▲苗字▲` / `▲名前▲` still draw themselves; the copy that should fill them was not found. Prior audit: Drop wipes `out/` + `release/` + `cache/` and fetches the gold Release first (§15.3, §15.5 incl. NEED_FINISH); `translations.json` lives in `assets/textresource/`; SpotPass inject optional only (§16.1); `deploy-a` installs the post-bake stack (§17.1, §18.1); references to scripts removed in 9e7c6cb cleaned up; workbench ingest planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5; UI PNG masters **1745** mapped / **562** chrome.*
+*Last updated 2026-10-20 — fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **326 / 578 (56.4%)**; SMS still off.*
 

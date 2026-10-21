@@ -14,7 +14,7 @@ Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `
 
 ---
 
-## Headline numbers (2026-09-20)
+## Headline numbers (2026-10-20)
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
@@ -22,8 +22,8 @@ Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `
 | **SMS / phone** (`maildic_*.mdc`) | 0 / 1822 | **0%** | JP in gold bake (audit) |
 | **Scripts + SMS combined** | 326 / 2400 | **13.6%** | Use for “all spoken + phone text” rollup |
 | **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Machine pass, unreviewed |
-| **UI PNG masters** (chrome, site `images_ui`) | **562** in **25 / 25** folders | — | `ui_png_masters_total` (was 461) |
-| **UI PNG masters** (full `IMAGE_MAP`) | **1745** in **95 / 95** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
+| **UI PNG masters** (chrome, site `images_ui`) | **564** in **25 / 25** folders | — | `ui_png_masters_total` (was 562 on 2026-09-20, 461 before that) |
+| **UI PNG masters** (full `IMAGE_MAP`) | **1765** in **101 / 101** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
 
 PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend TRB 98% into a single “translation done” headline.
 
@@ -90,6 +90,6 @@ Chrome folder list: `progress_metrics.json` → `images_ui.ui_folder_keys` (25 k
 2. **Phone / SMS** — separate panel: `maildic_m` / `maildic_n` / `maildic_r`
 3. **Rollup** — scripts + SMS message count (13.6% today)
 4. **System strings** — TRB 98.1% (+ optional INDX category drill-down)
-5. **UI textures** — chrome table from `images_ui.by_folder` (**562**); prose may also mention the full mapped pack (**1745** in **95 of 95**)
+5. **UI textures** — chrome table from `images_ui.by_folder` (**564**); prose may also mention the full mapped pack (**1765** in **101 of 101**)
 
 Do **not** show resident TRB fragment % as “translation progress” (mostly JP date/time building blocks by design).

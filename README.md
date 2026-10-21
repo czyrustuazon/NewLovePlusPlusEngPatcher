@@ -20,8 +20,8 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`)  
 
 5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
-6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
-7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
+6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Called-name list, Message Speed, US date order, AM/PM on the home clock, title-loop guard, My Camera Restore Default, Communication Settings StreetPass). Older single-pane `--patch-code` is still available and is **not** this stack  
+7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + English mini-game screens + CESA + SMS/day-counter)  
 8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/NewLovePlusPlus-EN.cia`. A Luma LayeredFS folder is **not** built (see [LayeredFS does not work on hardware](#layeredfs-does-not-work-on-hardware))
 10. **Clean** `out/` to the CIA + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`)
@@ -30,10 +30,10 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 | Included assets | Approx. count |
 |-----------------|--------------:|
 | Finished dialog scripts (XML → `.dbin2`) | 230 XML in `assets/scripts` → 753 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
-| Unique EN UI PNG masters (`IMAGE_MAP`) | **1745** in **95 / 95** folders |
-| Chrome subset (site “UI textures”) | **562** in **25 / 25** folders |
+| Unique EN UI PNG masters (`IMAGE_MAP`) | **1765** in **101 / 101** folders |
+| Chrome subset (site “UI textures”) | **564** in **25 / 25** folders |
 
-PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; 2026-09-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 95 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
+PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; recounted 2026-10-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 101 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
 
 Title ID: `00040000000F4E00`
 
@@ -111,7 +111,7 @@ Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed 
 `rebuild`, after a successful Drop CIA run, and from **nlpp-gold-maker** CI — when
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
 nlpp-gold-maker Actions secrets). Graphics/menus stay manual in the site admin —
-use **562** (chrome) or **1745** (all mapped UI masters) from the table above.
+use **564** (chrome) or **1765** (all mapped UI masters) from the table above.
 See [`infra/README.md`](infra/README.md). Manual: `.\ab_test\make.ps1 progress`.
 Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
@@ -456,7 +456,7 @@ A browser workbench so translators can help **without Python**: [czyrustuazon/nl
 2. Open **`index.html`** → tabs:
    - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-   - **Images** — **full UI PNG audit** (**1745** unique masters in **95 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
+   - **Images** — **full UI PNG audit** (**1765** unique masters in **101 / 101** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
