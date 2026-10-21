@@ -253,35 +253,32 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
     return None
 
 
+def _zopfli(data: bytes) -> bytes:
+    # Block splitting is required to land under the slot. The hang was the
+    # per-byte walk after the search, not this one compress.
+    return zopfli_zlib.compress(data)
+
+
 def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
     """Return (possibly padded uncompressed, zlib stream of len==target)."""
-    base_z = len(zopfli_zlib.compress(data))
-    if base_z > target:
-        raise SystemExit(f"zopfli {base_z} already exceeds slot {target}")
-    if base_z == target:
-        slot = zopfli_zlib.compress(data)
+    slot = compress_exact_empty_blocks(data, target)
+    if slot is not None:
+        print("  empty-block pad", flush=True)
         return data, slot
-
-    # Prefer empty-block pad when under by a lot (gap pad can't always grow enough).
-    if target - base_z >= 64:
-        slot = compress_exact_empty_blocks(data, target)
-        if slot is not None:
-            print(f"  empty-block pad (zopfli was {base_z})", flush=True)
-            return data, slot
 
     runs = interfile_zero_gaps(data)
     if not runs:
-        slot = compress_exact_empty_blocks(data, target)
-        if slot is None:
-            raise SystemExit("no gaps and empty-block pad failed")
-        return data, slot
-    cap = sum(sz for sz, _ in runs)
+        raise SystemExit("no gaps and empty-block pad failed")
+    cap = min(sum(sz for sz, _ in runs), 4096)
     rng = os.urandom(cap)
     chunks: list[tuple[int, int, bytes]] = []
     off = 0
     for sz, po in runs:
-        chunks.append((po, sz, rng[off : off + sz]))
-        off += sz
+        take = min(sz, cap - off)
+        if take <= 0:
+            break
+        chunks.append((po, take, rng[off : off + take]))
+        off += take
 
     def apply_prefix(n_bytes: int) -> bytes:
         t = bytearray(data)
@@ -295,49 +292,64 @@ def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
                 break
         return bytes(t)
 
+    def consider(n: int) -> tuple[bytes, bytes] | None:
+        cand = apply_prefix(n)
+        stream = _zopfli(cand)
+        print(f"  pad_bytes={n} zopfli={len(stream)}", flush=True)
+        if len(stream) == target:
+            return cand, stream
+        return None
+
+    base = _zopfli(data)
+    print(f"  fast zopfli {len(base)} slot {target}", flush=True)
+    if len(base) == target:
+        return data, base
+    if len(base) > target:
+        raise SystemExit(f"zopfli {len(base)} already exceeds slot {target}")
+
     lo, hi = 0, cap
-    hit: bytes | None = None
+    closest = (len(base), 0)
+    under = (len(base), 0)
     while lo <= hi:
         mid = (lo + hi) // 2
         cand = apply_prefix(mid)
-        cl = len(zopfli_zlib.compress(cand))
-        print(f"  pad_bytes={mid} zopfli={cl}")
-        if cl == target:
-            hit = cand
-            break
-        if cl < target:
+        stream = _zopfli(cand)
+        print(f"  pad_bytes={mid} zopfli={len(stream)}", flush=True)
+        if len(stream) == target:
+            return cand, stream
+        if abs(len(stream) - target) < abs(closest[0] - target):
+            closest = (len(stream), mid)
+        if len(stream) < target and len(stream) > under[0]:
+            under = (len(stream), mid)
+        if len(stream) < target:
             lo = mid + 1
         else:
             hi = mid - 1
 
-    if hit is None:
-        t = bytearray(apply_prefix(max(hi, 0)))
-        for po, sz, ch in chunks:
-            for i in range(sz):
-                if t[po + i] != 0:
-                    continue
-                t[po + i] = ch[i]
-                cl = len(zopfli_zlib.compress(bytes(t)))
-                if cl == target:
-                    hit = bytes(t)
-                    break
-                if cl > target:
-                    t[po + i] = 0
-            if hit is not None:
+    # Independent gap fills. A single random prefix often skips the exact length.
+    width = under[1] if under[1] else closest[1]
+    width = max(width, 1)
+    seen: set[int] = set()
+    for attempt in range(48):
+        salt = os.urandom(width)
+        cand = bytearray(data)
+        left = 0
+        for po, sz, _ch in chunks:
+            take = min(sz, width - left)
+            if take <= 0:
                 break
-        if hit is None:
-            slot = compress_exact_empty_blocks(data, target)
-            if slot is not None:
-                print("  fallback empty-block on unpadded ARC", flush=True)
-                return data, slot
-            raise SystemExit("could not hit exact zopfli length")
-
-    slot = zopfli_zlib.compress(hit)
-    do = zlib.decompressobj()
-    got = do.decompress(slot)
-    if got != hit or do.unused_data or not do.eof:
-        raise SystemExit("exact stream verify failed")
-    return hit, slot
+            cand[po : po + take] = salt[left : left + take]
+            left += take
+        stream = _zopfli(bytes(cand))
+        seen.add(len(stream))
+        if len(stream) == target:
+            print(f"  salt exact attempt={attempt}", flush=True)
+            return bytes(cand), stream
+        if attempt % 8 == 7:
+            print(f"  salt {attempt + 1} last={len(stream)}", flush=True)
+    raise SystemExit(
+        f"could not hit exact zopfli length (closest {closest[0]} at {closest[1]}; saw {sorted(seen)[:12]})"
+    )
 
 
 def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:

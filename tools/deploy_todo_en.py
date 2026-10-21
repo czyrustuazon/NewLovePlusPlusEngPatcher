@@ -21,6 +21,7 @@ from bclimutil import (  # noqa: E402
     parse_bclim,
     png_to_bclim_etc1a4_same_size,
     png_to_bclim_rgba4444_same_size,
+    png_to_bclim_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
@@ -50,8 +51,11 @@ HEADER_LABELS = [
     ("timg/mydata_toptex_06.bclim", "My Camera"),  # マイカメラ
 ]
 
-# Quest top select buttons + History points row (RGBA4444)
+# Quest top select buttons + History points row (RGBA4444). Rebuilt from
+# vanilla, so every Quest.check master is packed here; labels below are
+# rendered only when their master is missing.
 QUEST_PKG = 5253
+QUEST_MASTERS = ROOT / "assets" / "images" / "Quest.check" / "timg"
 QUEST_LABELS = [
     ("timg/Que_Txt01b.bclim", "To-Do List"),  # ToDoリスト
     ("timg/Que_Txt01d.bclim", "History"),  # ToDo履歴
@@ -272,9 +276,26 @@ def patch_etc1_labels(
     return best[1]
 
 
+def pack_quest_masters(darc: DarcArchive, tmp: Path) -> set[str]:
+    packed = set()
+    for png in sorted(QUEST_MASTERS.glob("*.png")):
+        entry = darc.find(f"timg/{png.stem}.bclim")
+        if entry is None:
+            raise SystemExit(f"{png.name}: no timg/{png.stem}.bclim in {QUEST_PKG}")
+        orig = tmp / f"{png.stem}.bclim"
+        orig.write_bytes(darc.extract_file(entry))
+        darc.replace_same_size(entry, png_to_bclim_same_size(png, orig))
+        packed.add(png.stem)
+        print(f"OK {png.stem} master", flush=True)
+    return packed
+
+
 def patch_rgba_labels(vanilla_arc: bytes, labels: list[tuple[str, str]], tmp: Path) -> bytes:
     darc = DarcArchive(bytearray(vanilla_arc))
+    packed = pack_quest_masters(darc, tmp)
     for path, en in labels:
+        if Path(path).stem in packed:
+            continue
         entry = darc.find(path) or darc.find(Path(path).name)
         if entry is None:
             raise SystemExit(f"missing {path}")

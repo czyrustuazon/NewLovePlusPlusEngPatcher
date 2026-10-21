@@ -248,7 +248,7 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 
 SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle are StreetPass / local wireless). Enoshima is already on the cart (script `t146`, extra data `00000f4e`) and has nothing to do with SpotPass.
 
-Thank you to **Cetaceaqua** for providing the SpotPass dump this comes from (vendored under `tools/spotpass/`).
+Thank you to **[Cetaceaqua](https://github.com/Cetaceaqua/)** for providing the SpotPass dump this comes from (vendored under `tools/spotpass/`).
 
 `tools/build_spotpass_inject.py` still builds a BOSS-shaped `extdata/…/00000321/boss/info.dat` for RE and emulator experiments. The English CIA does not use it. See [`tools/spotpass/README.md`](tools/spotpass/README.md) and [`docs/technical.md` §16](docs/technical.md). [`docs/spotpass-rebuild.md`](docs/spotpass-rebuild.md) covers rebuilding the service so new issues can go out.
 
@@ -337,7 +337,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/N
 
 ## Credits
 
-Thank you to everyone whose work this patcher builds on. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
+Thank you to everyone whose work this patcher builds on — translators who lived in XML for years, painters who redrew every softkey, and the people who clicked through every menu so the rest of us didn’t have to. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
 
 ### EngPatcher contributors
 
@@ -345,10 +345,14 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 
 | Person | Contribution |
 |--------|----------------|
-| **Zhoumaru** | A large UI overhaul and translation work |
-| **D.** | Debugging and testing the patch |
+| **[Zhoumaru](https://github.com/andiii-k/NLPP-ETT)** | Complete English UI texture translations ([NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)) — the painted masters gold bake packs into `img.bin` |
+| **DDMeisterX** | Manaka (`t*`) + everyday / player (`p*`) routes, and the early Rinko (`k*`) layer shipped here (~28% of Rinko overall; see note below) |
+| **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
+| **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **i need help here...** | Knowledge sharing |
-| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that allowed quicker access to postgame context |
+| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
+
+**Rinko post-game note:** DDMeisterX’s GitHub-era Rinko work is the early-story NLPPATCH layer (`k000`–early `k05x`, plus a couple of outliers). In this repo that is **48 / 174** Rinko scripts (**27.6%**). Post-game stems (`k*` id ≥ **800**) are almost untouched: **2 / 39** files have English (`k936`, `k953`) — roughly **5%** of post-game slots. Contentful post-game beats like `k912` / `k970` / `k999` are still Japanese. If you have a fuller Rinko dump elsewhere, it never landed in this tree.
 
 ### CIA / RomFS tooling
 
@@ -363,7 +367,9 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | `nlpp-tools` (`ie`, `pe`, `png2bclim`, `png2texi`, …) | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** — thank you to **kiwiz** |
-| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order. |
+| NLPP Toolchain (packing / BCLIM fixes used by EngPatcher + nlpp-texture-tool) | **[Cetaceaqua](https://github.com/Cetaceaqua/)** |
+| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order |
+| Zhoumaru UI PNG masters (menus, softkeys, headers, …) | **[Zhoumaru / NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)** |
 | Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
@@ -373,11 +379,12 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | NLPPATCH (historical community patch) | [LovePlusProject/NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) and contributors (see [their credits](https://github.com/LovePlusProject/NLPPATCH/issues/1)) — EngPatcher ships its own `rebuild_dbin2/` + `assets/` |
+| Manaka + common + early Rinko dialogue layer | **DDMeisterX** (via the NLPPATCH-era scripts this repo still injects) |
 | NLPTextTool (XML ↔ `.dbin2`) | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) (orig. [gdkchan](https://github.com/gdkchan)) |
 | NLPUnpacker | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) (orig. [gdkchan](https://github.com/gdkchan)) |
 | Translation asset repo (reference) | [Makein/NLPPGit](https://github.com/Makein/NLPPGit) |
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
-| SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
+| SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **[Cetaceaqua](https://github.com/Cetaceaqua/)** — thank you for providing the SpotPass dump |
 
 Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM), [PyYAML](https://pyyaml.org/) (`yaml` — required by vendored `ie` / nlpp-tools).
 

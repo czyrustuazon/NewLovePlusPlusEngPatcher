@@ -39,6 +39,7 @@ IMAGE_MAP: dict[str, tuple[int, str]] = {
     "gallery_common": (5153, "Gallery_Common.arc"),
     "gameinfo": (5188, "GameInfo.arc"),
     "girlstalk": (5189, "GirlsTalk.arc"),
+    "hv_bg": (19, "HV_BG.arc"),  # school-hallway status window (廊下 sign, stats panel)
     "inputctexture": (5190, "InputCTexture.arc"),
     "inputntexture": (5190, "InputNTexture.arc"),
     # Boot / intro UI (CESA warning, name entry, etc.)
