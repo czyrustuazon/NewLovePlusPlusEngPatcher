@@ -2,24 +2,27 @@
 
 Target patch composition (scripts only — img.bin / TRB unchanged):
 
-1. **Manaka 100%** — ``rebuild_dbin2`` for every ``t*`` (all packs).
-2. **EngPatcher common** — ``rebuild_dbin2`` for ``p*`` when present.
-3. **Optional Gemini Nene** — ``assets/gemini_heroines/dbin2`` ``a*`` in every
+1. **Contributor review** — ``assets/script_contrib/dbin2`` when a stem has
+   one. Always on. Wins over Gemini and over the community file.
+2. **Manaka 100%** — ``rebuild_dbin2`` for every ``t*`` (all packs).
+3. **EngPatcher common** — ``rebuild_dbin2`` for ``p*`` when present.
+4. **Optional Gemini Nene** — ``assets/gemini_heroines/dbin2`` ``a*`` in every
    pack when ``NLPP_INCLUDE_GEMINI_NENE=1`` / ``--include-gemini-nene`` (machine
    pass, unreviewed; see ``assets/gemini_heroines/README.md``).
-4. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
+   A stem that already has a contributor file keeps that file.
+5. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
    stems listed in ``assets/nlppatch/stems.json``) from the historical NLPPATCH
    layer, now shipped inside EngPatcher (no ``vendor/NLPPATCH`` required).
-   Skipped for ``a*`` stems already taken by (3).
-5. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
+   Skipped for stems already taken by (1) or (4).
+6. **Japanese** — everything else left to the base ROM/CIA. When a vanilla
    script tree is supplied, nickname markers on those Japanese files are
    still swapped: Manaka's to ▲Takane＊＊▲ (including an exact 高嶺
    nameplate), Nene's to ▲Anegasaki＊▲ (including an exact 姉ヶ崎
    nameplate), and Rinko's to ▲Kobayaka＊▲ (an exact 小早川 nameplate
    becomes Kobayakawa).
 
-Community scripts never shipped ``NLP_01`` / ``NLP_02``; only (1)+(2) apply
-there unless Gemini Nene is opted in.
+Community scripts never shipped ``NLP_01`` / ``NLP_02``; only Manaka and common
+apply there, plus a contributor file for that pack, and Gemini Nene when opted in.
 """
 from __future__ import annotations
 
@@ -38,6 +41,8 @@ COMMUNITY_MANIFEST = ROOT / "assets" / "nlppatch" / "stems.json"
 GEMINI_NENE_ROOT = ROOT / "assets" / "gemini_heroines"
 GEMINI_NENE_DBIN = GEMINI_NENE_ROOT / "dbin2"
 GEMINI_NENE_MANIFEST = GEMINI_NENE_ROOT / "stems.json"
+# Human ingest of a Gemini stem. Shipped whenever the file exists.
+CONTRIB_DBIN = ROOT / "assets" / "script_contrib" / "dbin2"
 # Legacy offline mirror (optional). Prefer rebuild_dbin2 + stems.json.
 LEGACY_NLPPATCH_SCRIPT = (
     ROOT
@@ -219,6 +224,7 @@ def inject_scripts(
         "eng_p": 0,
         "gemini_nene": 0,
         "nlppatch": 0,
+        "contrib": 0,
     }
     skipped = 0
     gemini_on = include_gemini_nene()
@@ -240,6 +246,9 @@ def inject_scripts(
         stems = {p.stem for p in src_dir.glob("*.dbin2")}
         if not stems:
             raise ScriptInjectError(f"no .dbin2 files in {src_dir}")
+        contrib_dir = CONTRIB_DBIN / pack
+        if contrib_dir.is_dir():
+            stems |= {p.stem for p in contrib_dir.glob("*.dbin2")}
         if gemini_on:
             gem_dir = GEMINI_NENE_DBIN / pack
             if gem_dir.is_dir():
@@ -265,6 +274,7 @@ def inject_scripts(
     print(
         f"[inject] total EN: {total} "
         f"(manaka={layers['manaka']}, p*={layers['eng_p']}, "
+        f"contrib={layers['contrib']}, "
         f"gemini_nene={layers['gemini_nene']}, nlppatch={layers['nlppatch']})"
     )
     if skipped:
@@ -283,6 +293,11 @@ def resolve_script_source(
     """Return (source path, layer tag) or (None, 'jp')."""
     eng = eng_root / pack / f"{stem}.dbin2"
     pref = script_prefix(stem)
+
+    # Human review of a Gemini (or any) stem. Always on, ahead of the machine pass.
+    contrib = CONTRIB_DBIN / pack / f"{stem}.dbin2"
+    if contrib.is_file():
+        return contrib, "contrib"
 
     # Optional Gemini Nene (all packs). Wins over community a* for the same stem.
     if include_gemini_nene() and pref == "a":
@@ -331,12 +346,15 @@ def coverage_summary(eng_root: Path | None = None) -> dict[str, int | bool]:
         present = {p.stem for p in script_dir.glob("*.dbin2")}
     # Include allowlisted community stems even if a file is temporarily missing.
     present |= community_stems()
+    if CONTRIB_DBIN.is_dir():
+        present |= {p.stem for p in CONTRIB_DBIN.glob("*/*.dbin2")}
     if include_gemini_nene():
         present |= gemini_nene_stems()
 
     layers: dict[str, int | bool | float] = {
         "manaka": 0,
         "eng_p": 0,
+        "contrib": 0,
         "gemini_nene": 0,
         "nlppatch": 0,
         "jp": 0,
@@ -350,6 +368,7 @@ def coverage_summary(eng_root: Path | None = None) -> dict[str, int | bool]:
     en = (
         int(layers["manaka"])
         + int(layers["eng_p"])
+        + int(layers["contrib"])
         + int(layers["gemini_nene"])
         + int(layers["nlppatch"])
     )

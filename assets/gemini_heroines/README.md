@@ -23,6 +23,8 @@ To also ship this Gemini machine-pass Nene route (~146 `a*` scripts, **unreviewe
 
 That injects `dbin2/` into every matching pack via `src/script_inject.py`. It does **not** overwrite the community binaries under `rebuild_dbin2/`.
 
+A human review of one of these stems is not written back into this folder. `tools/ingest_pack.py` puts it in `assets/script_contrib/`, and the patcher includes that file on its own. Gemini stays optional for every stem that has no contributor file.
+
 Rebuild from XML (maintainer):
 
 ```bash

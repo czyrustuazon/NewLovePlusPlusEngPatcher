@@ -2255,7 +2255,7 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 
 ## 20. Volunteer localization workbench (2026-09-03)
 
-Browser HTML kits for community translators (no Python). The maintainer side that works with the workbench's saved JSON (HTML templates in `tools/localization_workbench/` + the parser's ingest scripts) is **planned, not built yet** — there have been no contributors so far.
+Browser HTML kits for community translators (no Python). Script packs (`nlpp-contrib` JSON) apply with `tools/ingest_pack.py`. HTML templates and the strings / images ingest scripts are still not built.
 
 ### 20.1 Three trees
 
@@ -2352,7 +2352,18 @@ Ingest: `ingest_images.py --apply` writes replacements back under `assets/images
 
 ### 20.3 Maintainer export / ingest
 
-**Planned, not built yet.** This is the intended flow for applying contributor JSON once there are contributors.
+Script packs (`kind: nlpp-contrib`, schema **1**) apply in this repo:
+
+```bash
+python tools/ingest_pack.py path/to/nlpp-contrib.json
+python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
+```
+
+Dry-run is the default. `--apply` writes a changed line only when that repo dialog is still the Japanese baseline. A line that already has other text (shipped English) is a conflict and is left alone. `--force` replaces conflicts. A nickname-token multiset change, a drop in `※` or `▼`, or an edit to a circle / punctuation placeholder rejects the item and writes nothing. A `●` count change warns and still applies.
+
+Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake.
+
+Export, strings ingest, and images ingest are still the planned parser flow:
 
 ```bash
 cd nlpp-localization-workbench-parser
@@ -2361,14 +2372,13 @@ python export_strings.py
 python export_images.py
 python sync_hub.py
 
-python ingest_pack.py path/to/nlpp-contrib.json --apply
 python ingest_strings.py path/to/nlpp-strings.json --apply
 python ingest_images.py path/to/nlpp-images.json --apply
 ```
 
 - Export reads templates from `tools/localization_workbench/` via `paths.templates_dir()`.
 - Export writes under `workbench/kit/` (and hub `index.html`).
-- Ingest applies into EngPatcher `assets/` (scripts XML, `translations.json` / SMS, UI PNGs) — review before bake/CIA.
+- Strings / images ingest applies into EngPatcher `assets/` (`translations.json` / SMS, UI PNGs) — review before bake/CIA.
 
 Pack **schema `1`**. Edit UI behavior in EngPatcher templates, then re-export (do not hand-edit the giant embedded kit HTML).
 
@@ -2391,7 +2401,7 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 ### 20.5 What not to confuse
 
 - Volunteer **built** kits ≠ EngPatcher **templates** — only templates are edited for UI changes.
-- `tools/localization_workbench/` and the ingest side are not built yet; they get written once contributors start sending JSON.
+- `tools/localization_workbench/` templates, strings ingest, and images ingest are not built yet. Script ingest is `tools/ingest_pack.py`.
 - Parser repo must stay **Python-only** (HTML removed 2026-09-03).
 - `contrib/` in EngPatcher is a pointer README only (old in-tree workbench moved out).
 - Workbench kits are for **leftover** JP / UI audit — finished shipping assets remain under EngPatcher `assets/` + `rebuild_dbin2/`.

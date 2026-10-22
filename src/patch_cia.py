@@ -352,7 +352,7 @@ def ensure_romfs_dir(romfs_bin: Path, romfs_dir: Path, reuse: Path | None) -> Pa
 
 # Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% + optional Gemini Nene
 # (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE).
-from script_inject import resolve_script_source  # noqa: E402
+from script_inject import CONTRIB_DBIN, resolve_script_source  # noqa: E402
 
 
 def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
@@ -1528,6 +1528,17 @@ def build_patch_summary(
                 "community Nene/Rinko layer only",
             )
         )
+
+    if CONTRIB_DBIN.is_dir():
+        contrib_stems = {path.stem for path in CONTRIB_DBIN.glob("*/*.dbin2")}
+        if contrib_stems:
+            lines.append(
+                _summary_line(
+                    "OK",
+                    "Contributor dialogue",
+                    f"{len(contrib_stems)} script(s) from assets/script_contrib",
+                )
+            )
 
     if layeredfs_only:
         lines.append(

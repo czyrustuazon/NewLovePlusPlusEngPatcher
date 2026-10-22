@@ -73,6 +73,44 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"community-k"
 
 
+def test_contrib_file_ships_without_gemini_and_wins_over_it(
+    tmp_path: Path, monkeypatch
+):
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    _write(eng, "script/t002.dbin2", b"manaka-script")
+    _write(eng, "script/a900.dbin2", b"community-a900")
+
+    gem = tmp_path / "gemini_dbin2"
+    _write(gem, "script/a900.dbin2", b"gemini-a900")
+    _write(gem, "script/a901.dbin2", b"gemini-a901")
+    _write(gem, "NLP_01/a901.dbin2", b"gemini-a901-nlp")
+
+    contrib = tmp_path / "script_contrib"
+    _write(contrib, "script/a900.dbin2", b"human-a900")
+    _write(contrib, "script/a901.dbin2", b"human-a901")
+    _write(contrib, "NLP_01/a901.dbin2", b"human-a901-nlp")
+
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900"})
+    monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"a900", "a901"})
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", contrib)
+    monkeypatch.delenv("NLPP_INCLUDE_GEMINI_NENE", raising=False)
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+    assert (romfs / "script/bin/script/a900.dbin2").read_bytes() == b"human-a900"
+    assert (romfs / "script/bin/script/a901.dbin2").read_bytes() == b"human-a901"
+    assert (romfs / "script/bin/NLP_01/a901.dbin2").read_bytes() == b"human-a901-nlp"
+
+    monkeypatch.setenv("NLPP_INCLUDE_GEMINI_NENE", "1")
+    romfs_on = tmp_path / "romfs-on"
+    script_inject.inject_scripts(romfs_on, eng, create_dirs=True)
+    assert (romfs_on / "script/bin/script/a900.dbin2").read_bytes() == b"human-a900"
+    assert (romfs_on / "script/bin/script/a901.dbin2").read_bytes() == b"human-a901"
+
+
 def test_nene_speaker_becomes_anegasaki_on_every_stem(tmp_path: Path, monkeypatch):
     import patch_names as names
 

@@ -17,7 +17,7 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Wipe `out/`, `release/`, and `cache/`** completely, then recreate them empty. That deletes the previous CIA, logs, `out/extdata_backup/`, gold bake, TRB overlay, name-input `code.bin`, the vanilla RomFS extract, and the PNG pack cache. The A/B Azahar copies in `ab_test/azahar_instances/` are left in place. `python src/patch_cia.py` on its own does not do this wipe  
 3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`)  
+4. **Inject English scripts** — layered: contributor reviews in `assets/script_contrib/` (always, when present), Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`). A contributor file for a stem wins over that Gemini copy.  
 
 5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Called-name list, Message Speed, US date order, AM/PM on the home clock, title-loop guard, My Camera Restore Default, Communication Settings StreetPass). Older single-pane `--patch-code` is still available and is **not** this stack  
@@ -466,7 +466,18 @@ Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. 
 
 ### For maintainers
 
-The tooling that applies the workbench's saved JSON back into `assets/` (HTML templates in `tools/localization_workbench/` + the ingest scripts) is **planned, not built yet**. It gets written once contributors start sending JSON. Intended flow, pack schema, and validation rules: **`docs/technical.md` §20**.
+Script packs (`nlpp-contrib-….json`) apply with:
+
+```bash
+python tools/ingest_pack.py path\to\nlpp-contrib.json
+python tools/ingest_pack.py path\to\nlpp-contrib.json --apply
+```
+
+The first command only reports. `--apply` writes a line only when the volunteer changed it and the repo line is still the Japanese baseline they edited. A script that already has English on that line is listed as a conflict and left as-is. `--force` replaces those conflicts. Nickname tokens (`▲…▲`, including an unclosed `▲`) must keep the same multiset. A drop in `※` or `▼`, or an edit to a circle / punctuation placeholder, rejects the pack and writes nothing. A `●` count change is a warning.
+
+Writes land in `assets/scripts/<stem>.xml` and the matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated is left alone: the review is written under `assets/script_contrib/` instead, and Drop CIA includes that file on its own, ahead of the Gemini machine pass. A stem that exists only as `.dbin2` also gains an XML file. Review the diff, then run Drop CIA. This command does not bake.
+
+Strings packs, image packs, and the HTML templates under `tools/localization_workbench/` are not built yet. Pack schema and the rest of the rules: **`docs/technical.md` §20**.
 
 
 
@@ -508,6 +519,9 @@ python src/patch_cia.py --cia "..." --skip-hash
 # Name patches only
 python src/patch_names.py --romfs "path\to\romfs"
 python src/patch_names.py --dbin rebuild_dbin2
+
+# Volunteer Scripts pack (report only; add --apply to write)
+python tools/ingest_pack.py path\to\nlpp-contrib.json
 
 # Name-input LayeredFS (Azahar a/b)
 .\ab_test\make.ps1 deploy-a
