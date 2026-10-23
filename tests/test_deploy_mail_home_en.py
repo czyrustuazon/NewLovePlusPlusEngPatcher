@@ -30,3 +30,13 @@ def test_mail_arc_lists_good_zhoumaru_masters():
     for stem in stems:
         assert (ROOT / "assets" / "images" / "Mail.check" / "timg" / f"{stem}.png").is_file()
     assert stems <= deploy.ZHOUMARU_BUTTONS
+
+
+def test_category_rows_render_menu_row_style():
+    """Inbox rows use the Zhoumaru menu-row lettering (Arimo, gray 47)."""
+    assert deploy.MENU_FONT.is_file()
+    for _path, en in deploy.CATEGORY_LABELS:
+        im = deploy.render_menu_label(142, 18, en)
+        assert im.size == (142, 18)
+        assert im.split()[3].getbbox() is not None
+

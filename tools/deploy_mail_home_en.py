@@ -9,7 +9,9 @@ All use the Zhoumaru masters ``Mail.check/timg/mail_tex_{jyusin,shinki,chak}_RGB
 (flat gray like vanilla) and ``C_Btn_Play_{Off,On}.png``.
 
 Inbox category rows ``Sel_Tex_ma02_01..05`` (カノジョのメール … 謎メール) are
-font-rendered here — Zhoumaru left 01 in JP and mistranslated 05.
+font-rendered here — Zhoumaru left 01 in JP and mistranslated 05. They copy
+Zhoumaru's in-room menu rows (``game_text_twinbe``, ``optn_tex_option*``):
+``render_menu_label`` in gray 47.
 
 Mail.arc is rebuilt from vanilla, so ``ZHOUMARU_ONLY`` lists every other good
 ``Mail.check`` master (compose tabs, emoji names, phone menu, Check/Reply,
@@ -42,8 +44,10 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     HEISEI_W5,
+    MENU_FONT,
     UI_FONT,
     find_ui_png,
+    render_menu_label,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -55,8 +59,6 @@ OUT = ROOT / "out" / "mail_home_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 # Dark-blue ink on transparent (white button / patterned header behind).
 INK = (70, 110, 160)
-# Vanilla Sel_Tex_ma02 rows are flat gray (85) RGBA4444 on transparent.
-CATEGORY_INK = (85, 85, 85)
 
 
 BUTTON_PKG = 5207
@@ -146,6 +148,7 @@ def render_label(
         dr.text((x, y), text, font=f, fill=ink + (255,))
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+
 
 
 def interfile_zero_gaps(data: bytes, min_len: int = 4) -> list[tuple[int, int]]:
@@ -280,10 +283,8 @@ def replace_labels(
         elif stem in ZHOUMARU_ONLY_STEMS:
             raise SystemExit(f"{path}: missing Zhoumaru master")
         elif stem.startswith("Sel_Tex_ma02_"):
-            rgba = render_label(
-                w, h, en, ink=CATEGORY_INK, face=HEISEI_W5
-            )
-            src = "render Heisei"
+            rgba = render_menu_label(w, h, en)
+            src = "render menu"
         else:
             rgba = render_label(w, h, en)
             src = "render"

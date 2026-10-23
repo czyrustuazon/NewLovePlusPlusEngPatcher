@@ -374,6 +374,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
 
+| Menu-row font `Arimo[wght].ttf` | [Arimo](https://fonts.google.com/specimen/Arimo) by The Arimo Project Authors, SIL OFL 1.1 (`assets/fonts/Arimo-OFL.txt`) |
 ### Text / scripts / localization community
 
 | Component | Credit |

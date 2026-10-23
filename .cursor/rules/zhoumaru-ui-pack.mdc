@@ -39,8 +39,8 @@ Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/gar
 | Dump | Pkg | Why skip / replace |
 |------|-----|--------------------|
 | `Title.check/timg/Title_menu_word.png` | **5261** `Pts_Title_menu` | Re-render gray `(51,51,51)` “Main Menu” and RGBA4444-encode. Zhoumaru RGB was swizzle trash → colorful hub header on first boot. Magenta probe confirmed this pane. `docs/technical.md` **§15.1.1**. |
-| `Myroom.check/timg/optn_tex_optionkabegami_RGBA4.png` | **5380** Wallpaper row | Opaque RGB is all `(0,0,0)` (filled slab). Re-render **Wallpaper**; other in-room `optn_tex_*` gray masters are good. `deploy_myroom_options_en.py`. |
-| `Myroom.check/timg/game_text_puzzle_RGBA4.png` | **5380** Mini-game row | Painted **Subarudama** (すばる≠ぱずる). Re-render **Puzzle-dama**; title/TwinBee+/Kung-Fu+ masters are good. `deploy_minigame_hub_en.py`. |
+| `Myroom.check/timg/optn_tex_optionkabegami_RGBA4.png` | **5380** Wallpaper row | Opaque RGB is all `(0,0,0)` (filled slab). Re-render **Wallpaper** (`render_menu_label`); other in-room `optn_tex_*` gray masters are good. `deploy_myroom_options_en.py`. |
+| `Myroom.check/timg/game_text_puzzle_RGBA4.png` | **5380** Mini-game row | Painted **Subarudama** (すばる≠ぱずる). Re-render **Puzzle-dama** (`render_menu_label`); title/TwinBee+/Kung-Fu+ masters are good. `deploy_minigame_hub_en.py`. |
 | `MyroomHeader.check/timg/mydata_toptex_RGBA4.png` (+ `Title.check` copy) | **5575** My Data header | Letter-spaced **M y D a t a**, unlike the other gray headers. Re-render in that gray (`render_gray_header`); the Schedule / Mail / Phone / `mydata_toptex_01..06` masters are good. `deploy_schedule_header_en.py`. |
 | `MyroomHeader.check/timg/album_top_tex.png` (+ `Title.check` copy) | **5575** Album header | Says letter-spaced **i n b o x**, not Album. Re-render **Album** in the header gray. `deploy_schedule_header_en.py`. |
 | `Mail.check/timg/C_Com_icon_Repry2.png` | **5207** Send tab | Vanilla is 送信 **Send**; Zhoumaru painted **Reply** (copy of Repry1). Not packed (stays JP) until a Send master exists. `deploy_mail_home_en.py`. |

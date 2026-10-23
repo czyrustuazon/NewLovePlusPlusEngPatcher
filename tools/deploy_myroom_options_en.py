@@ -10,7 +10,8 @@ Zhoumaru painted them.
 
 Zhoumaru: ``Myroom.check/timg/optn_tex_*.png`` and
 ``MyroomHeader.check/timg/optn_tex_optionmenu_*.png``.
-Skip ``optn_tex_optionkabegami_RGBA4`` (black filled dump) and re-render Wallpaper.
+Skip ``optn_tex_optionkabegami_RGBA4`` (black filled dump) and re-render Wallpaper
+with ``render_menu_label`` so it matches the other Zhoumaru rows.
 
 Patch *live* packages so Schedule / Mail / My Data / Back EN stay.
 Bake last-writer after ``deploy_ui_buttons_en.py`` + ``deploy_schedule_header_en.py``.
@@ -42,6 +43,7 @@ from deploy_common import (  # noqa: E402
     maybe_backup_img,
     iter_deploy_targets,
     render_header_aa,
+    render_menu_label,
     resolve_img_paths,
 )
 
@@ -120,10 +122,11 @@ def _deploy_targets() -> list[Path]:
 
 
 def _rgba_for(folder: str, stem: str, en: str, w: int, h: int) -> tuple[Image.Image, str]:
-    if stem not in SKIP_UI_PNG:
-        master = find_ui_png((folder,), stem, (w, h))
-        if master is not None:
-            return Image.open(master).convert("RGBA"), str(master.relative_to(ROOT))
+    if stem in SKIP_UI_PNG:
+        return render_menu_label(w, h, en), f"render menu:{en}"
+    master = find_ui_png((folder,), stem, (w, h))
+    if master is not None:
+        return Image.open(master).convert("RGBA"), str(master.relative_to(ROOT))
     return render_header_aa(w, h, en), f"render:{en}"
 
 

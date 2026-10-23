@@ -21,10 +21,10 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
-    HEADER_INK,
     UI_FONT,
     maybe_backup_img,
     iter_deploy_targets,
+    render_menu_label,
     resolve_img_paths,
 )
 
@@ -34,7 +34,11 @@ OUT = ROOT / "out" / "myroom_en"
 PKG = 5380
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 # Screenshot: dark-blue ink on white button chrome (icons are separate).
-# Love Plus badge is dark gray on the white heart pill (not button blue).
+# Love Plus badge copies the Zhoumaru Youth Story pill next to it
+# (``main_tex_seisyunno1P_RGBA4_NEW``: gray 47, ~9 px caps, heavier than the
+# menu rows). Zhoumaru's own love master drops the space ("LovePlus").
+LOVE_CAP_PX = 9
+LOVE_WEIGHT = 700
 LABELS = [
     ("timg/main_tex_yotei_RGBA4_NEW.bclim", "Schedule"),
     ("timg/main_tex_sleep_RGBA4_NEW.bclim", "Sleep"),
@@ -208,8 +212,12 @@ def main() -> None:
             src.save(OUT / f"{stem}_en.png")
             print(f"OK {path} -> {en!r} (master PNG)", flush=True)
         else:
-            ink = HEADER_INK if stem == LOVE_STEM else INK
-            rgba = render_label(w, h, en, ink=ink)
+            if stem == LOVE_STEM:
+                rgba = render_menu_label(
+                    w, h, en, cap_px=LOVE_CAP_PX, weight=LOVE_WEIGHT
+                )
+            else:
+                rgba = render_label(w, h, en)
             rgba.save(png)
             rgba.save(OUT / f"{stem}_en.png")
             print(f"OK {path} -> {en!r}", flush=True)
