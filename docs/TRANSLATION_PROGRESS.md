@@ -21,11 +21,11 @@ Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `
 | **Dialogue scripts** (`script` pack) | 522 / 578 | **90.3%** | Community layer + Gemini machine pass. 56 files are empty retail stubs |
 | **SMS / phone** (`maildic_*.mdc`) | 1822 / 1822 | **100%** | Gemini machine pass. Still JP in the gold bake until `--include-sms` |
 | **Scripts + SMS combined** | 2344 / 2400 | **97.7%** | Spoken files + phone messages. Gemini rows are unreviewed |
-| **Main TRB** (`textresource_jpn.trb`) | 24549 / 25370 STRI | **96.8%** | Machine pass, unreviewed |
+| **Main TRB** (`textresource_jpn.trb`) | 25333 / 25346 STRI | **99.9%** | Last 13 are quiz kanji and stay Japanese |
 | **UI PNG masters** (chrome, site `images_ui`) | **564** in **25 / 25** folders | — | `ui_png_masters_total` (was 562 on 2026-09-20, 461 before that) |
 | **UI PNG masters** (full `IMAGE_MAP`) | **1765** in **101 / 101** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
 
-PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend TRB 98% into a single “translation done” headline.
+PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend the TRB percent into a single “translation done” headline. The last 13 system-text slots are quiz kanji and stay Japanese.
 
 Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Reviewed coverage on top of that is Manaka and common at 100% plus 48 Nene and 48 Rinko. The Gemini rows below are a machine pass, not proofread.
 
@@ -64,7 +64,7 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Re
 
 | File | Role |
 |------|------|
-| `release/textresource/textresource_jpn.trb` | Main STRI table (98%+ EN) |
+| `release/textresource/textresource_jpn.trb` | Main STRI table (99.9% EN) |
 | `assets/textresource/translations.json` | 24k+ JP→EN keys (rebuild source) |
 | `release/romfs_overlay/.../textresource_resident_jpn.trb` | Date/time + name fragments (`patch_names.py`) |
 
@@ -89,7 +89,7 @@ Chrome folder list: `progress_metrics.json` → `images_ui.ui_folder_keys` (25 k
 1. **Main game** — horizontal bars: Manaka, Rinko, Nene, Common, Total (script pack)
 2. **Phone / SMS** — separate panel: `maildic_m` / `maildic_n` / `maildic_r`
 3. **Rollup** — scripts + SMS message count (97.7% today; Gemini segments stay unreviewed)
-4. **System strings** — TRB 96.8% (+ optional INDX category drill-down)
+4. **System strings** — TRB 99.9%. The last 13 slots are single kanji a study quiz asks you to read, so they stay Japanese. A quoted Japanese word inside an English quiz prompt stays too. The player-name token, `・`, and `ー` are already English and are not leftover text.
 5. **UI textures** — chrome table from `images_ui.by_folder` (**564**); prose may also mention the full mapped pack (**1765** in **101 of 101**)
 
 Do **not** show resident TRB fragment % as “translation progress” (mostly JP date/time building blocks by design).

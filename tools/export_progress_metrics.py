@@ -381,13 +381,23 @@ def trb_metrics(trb_path: Path, translations_path: Path) -> dict:
     chunks = parse_chunks(data)
     cat_map = parse_indx_categories(chunks.get("INDX", b""))
 
+    # Name tokens and list marks are not leftover Japanese. A quoted kanji
+    # specimen inside an English quiz prompt is the question, not an untranslated UI string.
+    marker_re = re.compile(r"▲[^▲]*▲")
+    quote_re = re.compile(r"「[^」]*」|\"[^\"]*\"")
+
+    def countable(text: str) -> str:
+        text = marker_re.sub("", text)
+        text = quote_re.sub("", text)
+        return text.replace("\u30fb", "").replace("\u30fc", "")
+
     # Per STRI entry: translated if no JP in text OR key in translations.json
     def is_english(text: str, idx: int) -> bool:
         if not text or text.strip() == "":
             return True
         if text in trans:
             return True
-        return not JP_RE.search(text)
+        return not JP_RE.search(countable(text))
 
     en_entries = []
     jp_entries = []

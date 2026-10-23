@@ -354,6 +354,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 
 **Nene / Rinko coverage (2026-10-23):** the reviewed community layer is still **48 / 174** scripts each (**27.6%**), the early-story NLPPATCH files. A Gemini machine pass now covers every other script that has dialogue, **146 / 174 (83.9%)** per route. The other **28** files on each route are empty retail stubs with no lines. Nene’s pass, including post-game (`a900`, `a912`, `a970`, `a999`, and the other contentful `a9*`), is optional at Drop time. Rinko’s pass, including post-game (`k912`, `k970`, `k999`, and the rest), is in `assets/gemini_heroines/xml/` and is not injected yet. Phone messages for all three heroines are translated in `assets/gemini_heroines/sms/` (**1822 / 1822**, unreviewed) and stay out of the gold bake until `--include-sms`.
 
+**System text (2026-10-23):** `textresource_jpn.trb` is **25,333 / 25,346 (99.9%)**. The last **13** slots stay Japanese on purpose. They are single kanji a study quiz asks you to read (`胤`, `欧`, `戟`, `原`, `哉`, `諏`, `成`, `替`, `鉄`, `乍`, `蜂`, `憂`, `梨`). An English quiz prompt that quotes a Japanese word keeps that quotation. The player-name token, the middle dot `・`, and the long-vowel mark `ー` are already English, so the counter skips them.
+
 ### CIA / RomFS tooling
 
 | Component | Credit |
@@ -372,9 +374,9 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Zhoumaru UI PNG masters (menus, softkeys, headers, …) | **[Zhoumaru / NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)** |
 | Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
+| Menu-row font `Arimo[wght].ttf` | [Arimo](https://fonts.google.com/specimen/Arimo) by The Arimo Project Authors, SIL OFL 1.1 (`assets/fonts/Arimo-OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
 
-| Menu-row font `Arimo[wght].ttf` | [Arimo](https://fonts.google.com/specimen/Arimo) by The Arimo Project Authors, SIL OFL 1.1 (`assets/fonts/Arimo-OFL.txt`) |
 ### Text / scripts / localization community
 
 | Component | Credit |

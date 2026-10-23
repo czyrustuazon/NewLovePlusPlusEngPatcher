@@ -27,7 +27,7 @@ node scripts/import-progress.mjs
 
 `src/data/progress.json` is a **trimmed committed copy** of that export. `src/lib/progress.ts` recomputes bar percents from raw counts. Homepage `ProgressBar.astro` and `/progress/` both read that file.
 
-The live homepage **script** bar can also be POSTed by nlpp-gold-maker / Drop CIA (`GET /api/progress`). Graphics/menus on the site admin stay **manual**. Do not blend TRB ~98% into a single “translation done” headline.
+The live homepage **script** bar can also be POSTed by nlpp-gold-maker / Drop CIA (`GET /api/progress`). Graphics/menus on the site admin stay **manual**. Do not blend the TRB percent into a single “translation done” headline. The system-text bar stops at 99.9% because 13 quiz kanji stay Japanese.
 
 If you cannot re-export, apply the **Facts** below to copy and to `images_ui` headlines only. Do not hand-rewrite the 5k-line script file tables.
 
@@ -44,7 +44,7 @@ If you cannot re-export, apply the **Facts** below to copy and to `images_ui` he
 | Nene `a*` | 146 / 174 | 83.9% (48 community + 98 Gemini, optional at Drop) |
 | SMS (`maildic_*`, pkg 92) | 1822 / 1822 | 100% Gemini; still JP in the gold bake |
 | Scripts + SMS rollup | 2344 / 2400 | 97.7% |
-| Main TRB STRI | 24549 / 25370 | 96.8% (machine pass, unreviewed) |
+| Main TRB STRI | 25333 / 25346 | 99.9%. The last 13 slots are single kanji a study quiz asks you to read (`胤` `欧` `戟` `原` `哉` `諏` `成` `替` `鉄` `乍` `蜂` `憂` `梨`) and stay Japanese. Quoted Japanese inside an English quiz prompt stays too. |
 
 NLPPATCH “28%” = 169 / 578 dialogue files. Reviewed coverage is that baseline plus Manaka, common, and 48 Nene / 48 Rinko. The rest of the 90.3% is Gemini.
 
