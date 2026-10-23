@@ -346,13 +346,13 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Person | Contribution |
 |--------|----------------|
 | **[Zhoumaru](https://github.com/andiii-k/NLPP-ETT)** | Complete English UI texture translations ([NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)) — the painted masters gold bake packs into `img.bin` |
-| **DDMeisterX** | Manaka (`t*`) + everyday / player (`p*`) routes, and the early Rinko (`k*`) layer shipped here (~28% of Rinko overall; see note below) |
+| **DDMeisterX** | Manaka (`t*`) + everyday / player (`p*`) routes, and the early Rinko/Nene community layer (48 reviewed scripts each; see note below) |
 | **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
 | **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **i need help here...** | Knowledge sharing |
 | **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
 
-**Rinko post-game note:** DDMeisterX’s GitHub-era Rinko work is the early-story NLPPATCH layer (`k000`–early `k05x`, plus a couple of outliers). In this repo that is **48 / 174** Rinko scripts (**27.6%**). Post-game stems (`k*` id ≥ **800**) are almost untouched: **2 / 39** files have English (`k936`, `k953`) — roughly **5%** of post-game slots. Contentful post-game beats like `k912` / `k970` / `k999` are still Japanese. If you have a fuller Rinko dump elsewhere, it never landed in this tree.
+**Nene / Rinko coverage (2026-10-23):** the reviewed community layer is still **48 / 174** scripts each (**27.6%**), the early-story NLPPATCH files. A Gemini machine pass now covers every other script that has dialogue, **146 / 174 (83.9%)** per route. The other **28** files on each route are empty retail stubs with no lines. Nene’s pass, including post-game (`a900`, `a912`, `a970`, `a999`, and the other contentful `a9*`), is optional at Drop time. Rinko’s pass, including post-game (`k912`, `k970`, `k999`, and the rest), is in `assets/gemini_heroines/xml/` and is not injected yet. Phone messages for all three heroines are translated in `assets/gemini_heroines/sms/` (**1822 / 1822**, unreviewed) and stay out of the gold bake until `--include-sms`.
 
 ### CIA / RomFS tooling
 

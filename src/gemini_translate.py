@@ -16,10 +16,11 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Latest Gemini Pro (2026-09). gemini-3-pro-preview shut down 2026-03-09.
-DEFAULT_GEMINI_MODEL = "gemini-3.1-pro-preview"
-# JP-TL-Bench slightly favored Flash for raw JP→EN; Pro is the quality default.
-ALT_FLASH_MODEL = "gemini-3-flash-preview"
+# Quality default (2026-10): Gemini 4 Argon, the flagship reasoning model.
+# Structured JSON and thinking_level HIGH are supported. Sampling params are ignored.
+DEFAULT_GEMINI_MODEL = "gemini-4-argon"
+# Faster/cheaper fallback. Not the quality default.
+ALT_FLASH_MODEL = "gemini-3.8-flash"
 
 JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 # Placeholder-only / punct-only lines are left alone (volunteer workbench rule).
@@ -38,28 +39,31 @@ SENTINEL_RE = re.compile(r"@@M(\d+)@@")
 
 HEROINE_VOICES = {
     "nene": (
-        "Anegasaki Nene — warm, teasing 'older girlfriend' energy; casual, "
-        "affectionate, a little playful. Sound like a real person talking, "
-        "not a subtitle dump."
+        "Anegasaki Nene — laid-back third-year senpai; casual, warm, lightly "
+        "teasing. Affectionate when the Japanese is. Easygoing, not cutesy, "
+        "and not sultry."
     ),
     "rinko": (
-        "Kobayakawa Rinko — reserved bookworm; polite, dry, sometimes blunt. "
-        "Keep her composed; do not make her bubbly or slangy unless the JP is."
+        "Kobayakawa Rinko — quiet first-year bookworm; polite, reserved, a "
+        "little dry. Warm or blunt only when the Japanese is. Composed, not "
+        "bubbly, and not slangy."
     ),
     "manaka": (
-        "Takane Manaka — bright, earnest, athletic club-captain energy; "
-        "friendly and a bit straightforward."
+        "Takane Manaka — bright second-year tennis player; earnest, friendly, "
+        "straightforward. Energetic when the Japanese is. Plain-spoken and "
+        "cheerful, not bossy, and not cutesy."
     ),
     "common": "Shared / system scenes. Match the speaker implied by the Japanese.",
 }
 
 
-SYSTEM_PROMPT = """You translate Japanese Nintendo 3DS dating-sim dialogue from NEW Love Plus+ into natural spoken English.
+SYSTEM_PROMPT = """You translate Japanese Nintendo 3DS dating-sim dialogue from NEW Love Plus+ into English as naturally as possible.
 
 Output rules:
 - Return ONLY JSON: {"items":[{"i": <int>, "t": "<english>"}]}
 - Translate only objects whose "need" is true. Keep the same "i" values.
-- Sound like the character speaking, not like a dictionary. Contractions are fine.
+- Write spoken English a person would actually say. Prefer the most natural phrasing over a close calque. Contractions are fine.
+- Sound like the character speaking, not like a dictionary or a subtitle dump.
 - Preserve every @@Mn@@ sentinel EXACTLY, in the same order. These stand in for game markers (names, wait codes). Never drop, translate, reorder, or spell them out.
 - Input may use ◙ for a line break. Put ◙ in the English at natural wrap points (3DS bubble is narrow, ~22–28 Latin letters).
 - Prefer fullwidth ？ for questions (matches existing EN scripts). Prefer ASCII letters.
@@ -292,7 +296,7 @@ def build_user_prompt(
     ]
     header = [
         f"Heroine/route: {heroine}. Voice: {voice}",
-        "Translate each object with need=true into natural English.",
+        "Translate each object with need=true into English as naturally as possible.",
         "Copy every @@Mn@@ sentinel into the English unchanged.",
     ]
     if context:

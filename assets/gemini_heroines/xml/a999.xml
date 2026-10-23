@@ -33,13 +33,12 @@
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(So sleepy...
-We're leaving pretty early,
-after all...)</Dialog>
+We're leaving early today...)</Dialog>
           <Dialog>(I wonder if ▲姉ヶ崎＊▲
-is already here？)</Dialog>
+is here already？)</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Good morning.</Dialog>
-          <Dialog>Ah, ▲姉ヶ崎＊▲！</Dialog>
+          <Dialog>Oh, ▲姉ヶ崎＊▲!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -67,8 +66,7 @@ is already here？)</Dialog>
           <Dialog>Standing by...</Dialog>
           <Dialog>Standing by......</Dialog>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>That's all from your
-big sister.</Dialog>
+          <Dialog>That's all from your big sis.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -88,10 +86,10 @@ big sister.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Mandarin, strawberry,
-coffee, beautiful.</Dialog>
+          <Dialog>Tangerine, strawberry,
+coffee, pretty.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Chirp.</Dialog>
+          <Dialog>Peep.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

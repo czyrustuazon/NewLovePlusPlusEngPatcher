@@ -2191,7 +2191,7 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 
 **Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (NLPPCTR fallback if the old release zip 404s).
 
-**Headline script-pack coverage:** **326 / 578 (56.4%)**. Legacy "28%" = community layer alone (~169 stems upstream / ~96 injected after Manaka/`p*` override).
+**Headline script-pack coverage:** **522 / 578 (90.3%)** including the Gemini machine pass (reviewed community layer alone is 326 / 578, 56.4%). Legacy "28%" = community Nene+Rinko (~169 stems upstream / ~96 injected after Manaka/`p*` override).
 
 ### 19.2 Nickname / name-table fix
 
@@ -2290,7 +2290,7 @@ Hub tabs lazy-load iframes; unsaved edits warn via `postMessage` `{type:'nlpp-un
 
 **Volunteer loop:** open hub → edit → **Save progress** → post JSON in Discord `#translated-work-to-review`.
 
-Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20 scripts/strings, 2026-10-20 images): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1765** PNGs / **101 of 101** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **564** in 25 folders (`tools/export_progress_metrics.py`). Dialogue scripts are still **326 / 578 (56.4%)**.
+Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20 scripts/strings, 2026-10-20 images): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1765** PNGs / **101 of 101** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **564** in 25 folders (`tools/export_progress_metrics.py`). Dialogue scripts are **522 / 578 (90.3%)** with the Gemini machine pass (community layer alone remains 326 / 578).
 
 #### Scripts kit — routes and sources (`export_workkit.py`)
 
@@ -2720,5 +2720,5 @@ The function that should copy the saved names onto these two keys was not found.
 
 ---
 
-*Last updated 2026-10-20 — fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **326 / 578 (56.4%)**; SMS still off.*
+*Last updated 2026-10-20 — fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, still off in the gold bake.*
 

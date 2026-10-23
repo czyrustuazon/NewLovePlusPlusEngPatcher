@@ -12,6 +12,7 @@ import json
 import re
 import struct
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +39,7 @@ from patch_textresource import (  # noqa: E402
 )
 from img import Image as ImgBin  # noqa: E402
 from mdcutil import parse_mdc  # noqa: E402
+from gemini_translate import has_japanese  # noqa: E402
 
 JP_RE = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
 BAKE_IMG = ROOT / "release" / "bake_img.bin"
@@ -52,6 +54,12 @@ SMS_EN_SOURCES = {
     "nene": "assets/sms_en/maildic_n.en.xml",
     "rinko": "assets/sms_en/maildic_r.en.xml",
 }
+SMS_GEMINI = {
+    "manaka": ROOT / "assets" / "gemini_heroines" / "sms" / "maildic_m.en.xml",
+    "nene": ROOT / "assets" / "gemini_heroines" / "sms" / "maildic_n.en.xml",
+    "rinko": ROOT / "assets" / "gemini_heroines" / "sms" / "maildic_r.en.xml",
+}
+SMS_TOTALS = {"manaka": 599, "nene": 634, "rinko": 589}
 
 # UI chrome packages (documented + bake pipeline)
 UI_FOLDER_KEYS: tuple[str, ...] = (
@@ -98,9 +106,25 @@ def route_for_stem(stem: str) -> str:
     return {"t": "manaka", "k": "rinko", "a": "nene", "p": "common"}.get(p, "other")
 
 
+def gemini_script_sources() -> dict[str, Path]:
+    """Stems translated by the Gemini machine pass, XML preferred over dbin2."""
+    found: dict[str, Path] = {}
+    root = ROOT / "assets" / "gemini_heroines"
+    xml_dir = root / "xml"
+    dbin_dir = root / "dbin2" / "script"
+    if dbin_dir.is_dir():
+        for path in dbin_dir.glob("*.dbin2"):
+            found[path.stem] = path
+    if xml_dir.is_dir():
+        for path in xml_dir.glob("*.xml"):
+            found[path.stem] = path
+    return found
+
+
 def script_metrics(eng_root: Path) -> dict:
     script_dir = eng_root / "script"
-    stems = sorted(p.stem for p in script_dir.glob("*.dbin2"))
+    gemini = gemini_script_sources()
+    stems = sorted({p.stem for p in script_dir.glob("*.dbin2")} | set(gemini))
     routes: dict[str, dict] = {}
     files: dict[str, list[dict]] = {
         "english": [],
@@ -108,8 +132,13 @@ def script_metrics(eng_root: Path) -> dict:
     }
     for stem in stems:
         route = route_for_stem(stem)
-        src, tag = resolve_script_source("script", stem, eng_root)
-        en = tag != "jp"
+        if (script_dir / f"{stem}.dbin2").is_file():
+            src, tag = resolve_script_source("script", stem, eng_root)
+            en = tag != "jp"
+        elif stem in gemini:
+            src, tag, en = gemini[stem], "gemini", True
+        else:
+            continue
         rec = {
             "stem": stem,
             "file": f"script/{stem}.dbin2",
@@ -156,7 +185,56 @@ def script_metrics(eng_root: Path) -> dict:
     }
 
 
+def _xml_message_texts(path: Path) -> list[str]:
+    root = ET.parse(path).getroot()
+    texts: list[str] = []
+    for entry in root.findall("Entry"):
+        node = entry.find("JapaneseText")
+        texts.append((node.text or "") if node is not None else "")
+    return texts
+
+
+def gemini_sms_metrics() -> dict | None:
+    """English SMS from the Gemini archive, when every heroine file is present."""
+    if not all(path.is_file() for path in SMS_GEMINI.values()):
+        return None
+    by_hero: dict[str, dict] = {}
+    for hero, path in SMS_GEMINI.items():
+        texts = _xml_message_texts(path)
+        en_n = sum(1 for text in texts if not has_japanese(text))
+        total = len(texts) or SMS_TOTALS[hero]
+        by_hero[hero] = {
+            "hero": hero,
+            "mdc_file": SMS_FILES[hero],
+            "img_bin_package": SMS_PKG,
+            "en_wip_source": str(path.relative_to(ROOT)).replace("\\", "/"),
+            "total_messages": total,
+            "english_messages": en_n,
+            "japanese_messages": total - en_n,
+            "percent": round(100.0 * en_n / total, 1) if total else 0.0,
+        }
+    total = sum(SMS_TOTALS.values())
+    en = sum(h["english_messages"] for h in by_hero.values())
+    return {
+        "storage": f"img.bin package {SMS_PKG}",
+        "deploy_tool": "tools/deploy_sms_maildic_en.py",
+        "restore_tool": "tools/restore_sms_maildic_jpn.py",
+        "note": (
+            "Gemini machine pass in assets/gemini_heroines/sms/ "
+            "(unreviewed). Not injected into the gold bake until --include-sms."
+        ),
+        "total_messages": total,
+        "english_messages": en,
+        "machine_pass_messages": en,
+        "percent": round(100.0 * en / total, 1) if total else 0.0,
+        "by_hero": by_hero,
+    }
+
+
 def sms_metrics(img_path: Path) -> dict:
+    gemini = gemini_sms_metrics()
+    if gemini is not None:
+        return gemini
     if not img_path.is_file():
         # Gold bake is gitignored; still emit the known JP-in-bake SMS headline
         # so image/script exports do not die on a missing 680 MB img.bin.

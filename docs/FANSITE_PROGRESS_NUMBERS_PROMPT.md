@@ -31,22 +31,22 @@ The live homepage **script** bar can also be POSTed by nlpp-gold-maker / Drop CI
 
 If you cannot re-export, apply the **Facts** below to copy and to `images_ui` headlines only. Do not hand-rewrite the 5k-line script file tables.
 
-### Facts you must use (2026-10-20)
+### Facts you must use (2026-10-23)
 
-**Dialogue / SMS / TRB (unchanged vs Sep 1 shipping stack unless a fresh export says otherwise):**
+**Dialogue / SMS / TRB.** Gemini rows are an unreviewed machine pass. The 28 Nene and 28 Rinko files with no English are empty retail stubs.
 
 | Bucket | EN / total | % |
 |--------|------------|---|
-| Dialogue scripts (`script/*.dbin2`) | 326 / 578 | 56.4% |
+| Dialogue scripts (`script/*.dbin2` + Gemini archive) | 522 / 578 | 90.3% |
 | Manaka `t*` | 175 / 175 | 100% |
 | Common `p*` | 55 / 55 | 100% |
-| Rinko `k*` | 48 / 174 | 27.6% (NLPPATCH layer) |
-| Nene `a*` | 48 / 174 | 27.6% (NLPPATCH layer) |
-| SMS (`maildic_*`, pkg 92) | 0 / 1822 | 0% (JP in gold bake) |
-| Scripts + SMS rollup | 326 / 2400 | 13.6% |
-| Main TRB STRI | 24872 / 25346 | 98.1% (machine pass, unreviewed) |
+| Rinko `k*` | 146 / 174 | 83.9% (48 community + 98 Gemini XML, not injected) |
+| Nene `a*` | 146 / 174 | 83.9% (48 community + 98 Gemini, optional at Drop) |
+| SMS (`maildic_*`, pkg 92) | 1822 / 1822 | 100% Gemini; still JP in the gold bake |
+| Scripts + SMS rollup | 2344 / 2400 | 97.7% |
+| Main TRB STRI | 24549 / 25370 | 96.8% (machine pass, unreviewed) |
 
-NLPPATCH “28%” = 169 / 578 dialogue files. That is still only Rinko+Nene coverage. Current 56.4% = that baseline + finished Manaka + common.
+NLPPATCH “28%” = 169 / 578 dialogue files. Reviewed coverage is that baseline plus Manaka, common, and 48 Nene / 48 Rinko. The rest of the 90.3% is Gemini.
 
 **UI PNG masters (updated — community English pack, audited):**
 
@@ -75,7 +75,7 @@ Replace any volunteer/workbench copy that still says **~1210 PNGs / ~68 folders*
 | Page | What to update |
 |------|----------------|
 | `/progress/` (`src/pages/progress.astro`) | Image blurb + optional milestone for the audited community UI PNG pack. After import, the table fills itself. |
-| Homepage (`ProgressBar.astro`) | Comes from `progress.json`. Leave script/SMS/TRB bars unless a fresh export changed them (dialogue is still 326 / 578). |
+| Homepage (`ProgressBar.astro`) | Comes from `progress.json`. A fresh export moves dialogue to **522 / 578** and SMS to **1822 / 1822** (Gemini, unreviewed). |
 | Volunteer (`volunteer.astro` / workbench sizes) | Image kit size if it still quotes 1210 / 68. |
 | Changelog / devlog | Optional: note that UI masters are **1765** mapped / **564** chrome (2026-10-20 recount). |
 

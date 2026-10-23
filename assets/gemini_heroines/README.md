@@ -31,4 +31,4 @@ Rebuild from XML (maintainer):
 python tools/rebuild_dbin2_from_xml.py --glob "a*.xml" --xml-dir assets/gemini_heroines/xml
 ```
 
-Rinko `k*` is not in this archive. Nene stays a **machine pass** until a stem is listed in `proofread.json`.
+Rinko `k*` XML is in this archive and is not injected. Nene and Rinko stay a **machine pass** until a stem is listed in `proofread.json`. Phone text is `sms/maildic_{m,n,r}.en.xml`.
