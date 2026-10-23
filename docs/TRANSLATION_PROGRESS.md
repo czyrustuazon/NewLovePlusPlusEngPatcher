@@ -18,9 +18,9 @@ Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
-| **Dialogue scripts** (`script` pack) | 522 / 578 | **90.3%** | Community layer + Gemini machine pass. 56 files are empty retail stubs |
+| **Dialogue scripts** (`script` pack) | 522 / 578 | **90.3%** of files with lines. The fansite bar adds the 56 empty stubs as their own segment and reads **100%** | Community layer + Gemini machine pass. 56 files are empty retail stubs |
 | **SMS / phone** (`maildic_*.mdc`) | 1822 / 1822 | **100%** | Gemini machine pass. Still JP in the gold bake until `--include-sms` |
-| **Scripts + SMS combined** | 2344 / 2400 | **97.7%** | Spoken files + phone messages. Gemini rows are unreviewed |
+| **Scripts + SMS combined** | 2344 / 2400 | **97.7%** of entries with text. The fansite bar adds the same 56 empty script files and reads **100%** | Spoken files + phone messages. Gemini rows are unreviewed |
 | **Main TRB** (`textresource_jpn.trb`) | 25333 / 25346 STRI | **99.9%** | Last 13 are quiz kanji and stay Japanese |
 | **UI PNG masters** (chrome, site `images_ui`) | **564** in **25 / 25** folders | — | `ui_png_masters_total` (was 562 on 2026-09-20, 461 before that) |
 | **UI PNG masters** (full `IMAGE_MAP`) | **1765** in **101 / 101** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
