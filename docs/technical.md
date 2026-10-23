@@ -1324,7 +1324,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
 
-**Badge tap → INFORMATION box (2026-10-23):** `src/patch_title_engpatch_info.py` (name-input stack step 21). The badge is a picture, so the tap is read from HID shared memory (`*(0x9A13F8+0xC)` = touch section) in the title operator's Main Menu wait (`ldr r0, [r5, #0x70]` @ `0x2C6018`, r5 = hub) and tested against the badge rectangle for the hold angle in `hub+0x64` (H / VR / VL, from `Pos_Copyright_*` + `Pic_EngPatch`). Release on the badge opens `FUN_00195fa4` layout 53 mode 4 (pack `0x1901` slot **502**), OK only, style 2. Hub vtable `+0x28` (touch-down) is guarded while it is open. Do not route it through the operator's own `+0x58` dialog wait: that path ends in `0x1EED80(hub, 1)`, which replays the hub intro.
+**Badge tap → localization credits (2026-10-23):** `src/patch_title_engpatch_info.py` (name-input stack step 21). The badge is a picture, so the tap is read from HID shared memory (`*(0x9A13F8+0xC)` = touch section) in the title operator's Main Menu wait (`ldr r0, [r5, #0x70]` @ `0x2C6018`, r5 = hub) and tested against the badge rectangle for the hold angle in `hub+0x64` (H / VR / VL, from `Pos_Copyright_*` + `Pic_EngPatch`). Release on the badge opens the localization credits: `FUN_00195fa4` layout 53, OK only, style 2, one box per page (modes 4–7 = pack `0x1901` slots **502–505**, `CREDIT_PAGES`); closing one opens the next. Pages stay within vanilla's 14 lines / ~30 characters (longer boxes scroll, but the 204×256 text texture caps them). Hub vtable `+0x28` (touch-down) is guarded while a page is open. Do not route it through the operator's own `+0x58` dialog wait: that path ends in `0x1EED80(hub, 1)`, which replays the hub intro.
 
 Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only fringe **vanishes** on Main Menu even when bake/CIA contain the strip — outline strength is the visibility fix, not “merge into Copyright.”
 
@@ -1485,6 +1485,7 @@ Scratch cleanup is incremental (not only at the end): PNG pack drops each packag
 | `NLPP_WITH_IMAGES=0` | **Refused by Drop CIA** (no incomplete patches). For a scripts-only test CIA run `patch_cia.py --no-images` by hand |
 | `NLPP_REPACK_IMAGES=1` | Dev: rebuild `cache/new_img.bin` PNG scratch only — **incomplete vs gold** |
 | `NLPP_VANILLA_IMG` | Point rebuild at a vanilla `img.bin` if ROM extract fails |
+| `NLPP_INCLUDE_GEMINI_NENE=1` | Drop asks `Include Gemini Nene, Rinko, and SMS? [y/N]` before the wipe. **y** sets this. Injects Gemini `a*` and `k*` from `assets/gemini_heroines/dbin2` and splices Gemini SMS into a **copy** of `img.bin` (`assets/gemini_heroines/sms`). `0` skips the prompt. Contributor files still ship either way |
 | `NLPP_NO_LOG=1` | Skip appending the PATCH SUMMARY to `out/log.txt` |
 | `NLPP_OVERALL_LO` / `NLPP_OVERALL_HI` | Map this process's 0–100% onto that slice of the Drop bar. Drop sets 0–80 for a rebuild that actually runs, then 80–100 for `patch_cia.py`. Unset means the process owns 0–100. |
 
@@ -2203,12 +2204,14 @@ Session goal: ship a **known-good stack** — community NLPPPATCH baseline + ful
 
 | Priority | Source | Stems |
 |----------|--------|-------|
-| 1 | `rebuild_dbin2/<pack>/t*.dbin2` | Manaka 100% (175 in `script` pack) |
-| 2 | `rebuild_dbin2/<pack>/p*.dbin2` | Common 100% (55) |
-| 3 | `rebuild_dbin2/script/{a,k}*.dbin2` | Community ~28% (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`, ~96 stems) |
-| 4 | Base ROM | Everything else JP |
+| 1 | `assets/script_contrib/dbin2` | Any reviewed stem. Always on. Wins over Gemini and community. Does not rewrite `assets/gemini_heroines/` |
+| 2 | `rebuild_dbin2/<pack>/t*.dbin2` | Manaka 100% (175 in `script` pack) |
+| 3 | `rebuild_dbin2/<pack>/p*.dbin2` | Common 100% (55) |
+| 4 | `assets/gemini_heroines/dbin2` | Optional Nene `a*` and Rinko `k*` machine pass (`NLPP_INCLUDE_GEMINI_NENE=1`). Allowlist `assets/gemini_heroines/stems.json` |
+| 5 | `rebuild_dbin2/script/{a,k}*.dbin2` | Community ~28% (ex-NLPPATCH; allowlist `assets/nlppatch/stems.json`, ~96 stems). Skipped when (1) or (4) already took the stem |
+| 6 | Base ROM | Everything else JP |
 
-**Not injected from XML:** Nene (`a*`) / Rinko (`k*`) — community binaries in `rebuild_dbin2` / JP ROM until promoted. (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
+**Not injected from XML at Drop time:** Nene and Rinko ship as prebuilt `.dbin2` (community, or Gemini when opted in). (Former `assets/scripts_deferred/` machine-EN stash removed 2026-09-03.)
 
 **Community layer:** integrated into EngPatcher — no `vendor/NLPPATCH` required for Drop. Re-import: `tools/fetch_nlppatch_release.py` then `tools/integrate_nlppatch_into_rebuild.py` (NLPPCTR fallback if the old release zip 404s).
 
@@ -2240,8 +2243,10 @@ Gold bake unchanged by script-layer changes; redeploy LayeredFS after `img.bin` 
 | Item | Detail |
 |------|--------|
 | Storage | `img.bin` pkg **92**: `maildic_m.mdc`, `maildic_n.mdc`, `maildic_r.mdc` |
-| Gold bake | **Japanese** (rolled back for nickname-placeholder audit) |
-| Re-enable EN | `tools/translate_sms_en.py` → `assets/sms_en/` → `rebuild_bake_img.py --include-sms` or `deploy_sms_maildic_en.py` |
+| Gold bake | **Japanese** (rolled back for nickname-placeholder audit). The bake file itself stays Japanese |
+| Gemini opt-in | Same Drop yes as Nene/Rinko (`NLPP_INCLUDE_GEMINI_NENE=1`). `patch_cia.py` copies `img.bin` and `deploy_sms_maildic_en.py --en-dir assets/gemini_heroines/sms` splices `maildic_{m,n,r}` into that copy |
+| Contributor SMS | `assets/sms_contrib/maildic_{m,n,r}.en.xml` replaces that heroine's Gemini dictionary when the file exists. Gemini `sms/` is not edited. Script-pack ingest does not write this directory |
+| Older EN path | `tools/translate_sms_en.py` → `assets/sms_en/` → `rebuild_bake_img.py --include-sms` or `deploy_sms_maildic_en.py` |
 | Restore JP | `tools/restore_sms_maildic_jpn.py` |
 
 **1822** SMS messages total (599 + 634 + 589). Included in fansite “scripts + SMS” rollup (**326 / 2400 = 13.6%** with current JP SMS).
@@ -2265,8 +2270,8 @@ Safe to delete (~5 GB): duplicate `cache/*.img.bin` scratch (smoke tests, NLPPCT
 | Item | Status |
 |------|--------|
 | In-game verify nicknames after resident TRB fix | Family slots shipped 2026-10-11 (**§23**). `▲主人公＊▲` and the player marks `▲苗字▲` / `▲名前▲` are still open |
-| Re-enable EN SMS after placeholder audit | WIP — `assets/sms_en/`; use `--include-sms` |
-| Full Rinko / Nene routes | **JP** except NLPPPATCH early ~28% per route |
+| Re-enable EN SMS after placeholder audit | Opt-in on Drop (`NLPP_INCLUDE_GEMINI_NENE=1`) splices Gemini `assets/gemini_heroines/sms`. Gold bake stays JP. `assets/sms_en/` + `--include-sms` remains the older path |
+| Full Rinko / Nene routes | Community ~28% by default. Gemini `a*` / `k*` machine pass when Drop opts in. Reviewed stems in `assets/script_contrib/` always win |
 | `img.bin` name table — 0 replacements on last deploy | Exact C-string slots via `deploy_day_counter_en.py` (**§23**). Leave `patch_name_table_bytes` off the live blob |
 | Fansite progress page | Consume `out/progress_metrics.json`; see `docs/TRANSLATION_PROGRESS.md` (recounted 2026-10-20: **564** chrome / **1765** mapped) |
 | Image % denominator | Count vanilla BCLIMs per UI ARC (`ie`/`pe`) — export currently reports PNG master **counts** only |
@@ -2345,6 +2350,8 @@ Former `assets/scripts_deferred/` (machine/community EN) was **deleted** 2026-09
 
 Jump: `a042`, `k100`, `a970`, `k970`, `t151 - #775`. Filter: All / Needs JP / Done / Edited (no route dropdown).
 
+`python tools/export_workbench_gemini.py` writes `gemini_dialogs` (scripts) and `gemini` (SMS) into the sibling workbench kits from `assets/gemini_heroines`. It does not replace `baseline_dialogs` / `baseline`. Save progress still exports that Japanese baseline plus the edit box. `ingest_pack.py` applies a Gemini-stem proofread onto the machine pass (a line left as Japanese is skipped; a line that still equals the machine pass is already applied). The same command bumps `version.json` `build` and the `nlpp-workbench-build` meta. `kit/update.js` compares that build with GitHub on load, on a timer, and from **Check for updates**. A newer build locks the open page until refresh.
+
 #### Strings kit — SMS + TRB (`export_strings.py`)
 
 | Kind | What | Source | Notes |
@@ -2382,7 +2389,7 @@ python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 
 Dry-run is the default. `--apply` writes a changed line only when that repo dialog is still the Japanese baseline. A line that already has other text (shipped English) is a conflict and is left alone. `--force` replaces conflicts. A nickname-token multiset change, a drop in `※` or `▼`, or an edit to a circle / punctuation placeholder rejects the item and writes nothing. A `●` count change warns and still applies.
 
-Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake.
+Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated (Nene `a*` or Rinko `k*`) is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake. SMS proofreads are not part of this pack; a reviewed `assets/sms_contrib/maildic_*.en.xml` is only read at SMS splice time.
 
 Export, strings ingest, and images ingest are still the planned parser flow:
 
@@ -2743,5 +2750,5 @@ The function that should copy the saved names onto these two keys was not found.
 
 ---
 
-*Last updated 2026-10-20 — fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, still off in the gold bake.*
+*Last updated 2026-10-23 — Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5` / CIA title version 5. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
 

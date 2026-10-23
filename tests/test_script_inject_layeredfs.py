@@ -73,6 +73,33 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"community-k"
 
 
+def test_gemini_rinko_opt_in_overrides_community_k(tmp_path: Path, monkeypatch):
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    _write(eng, "script/t002.dbin2", b"manaka-script")
+    _write(eng, "script/k001.dbin2", b"community-k")
+
+    gem = tmp_path / "gemini_dbin2"
+    _write(gem, "script/k001.dbin2", b"gemini-k001")
+    _write(gem, "NLP_01/k001.dbin2", b"gemini-k001-nlp")
+
+    contrib = tmp_path / "script_contrib"
+    _write(contrib, "script/k001.dbin2", b"human-k001")
+
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"k001"})
+    monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"k001"})
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", contrib)
+    monkeypatch.setenv("NLPP_INCLUDE_GEMINI_NENE", "1")
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+    assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"human-k001"
+    assert (romfs / "script/bin/NLP_01/k001.dbin2").read_bytes() == b"gemini-k001-nlp"
+    assert (gem / "script/k001.dbin2").read_bytes() == b"gemini-k001"
+
+
 def test_contrib_file_ships_without_gemini_and_wins_over_it(
     tmp_path: Path, monkeypatch
 ):

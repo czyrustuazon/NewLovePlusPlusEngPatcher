@@ -215,7 +215,7 @@ def test_bat_asks_gemini_nene_after_gold_before_wipe():
     """Optional Gemini Nene is asked after the gold-bake question, before wipe."""
     text = _bat_text()
     gold_idx = text.index("Skip the gold download and build from this checkout?")
-    nene_idx = text.index("Include Gemini Nene dialogue?")
+    nene_idx = text.index("Include Gemini Nene, Rinko, and SMS?")
     wipe_idx = text.index("--wipe-cia-build")
     assert gold_idx < nene_idx < wipe_idx
     assert "NLPP_INCLUDE_GEMINI_NENE" in text

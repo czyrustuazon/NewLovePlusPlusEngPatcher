@@ -350,8 +350,9 @@ def ensure_romfs_dir(romfs_bin: Path, romfs_dir: Path, reuse: Path | None) -> Pa
     return romfs_dir
 
 
-# Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% + optional Gemini Nene
-# (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE).
+# Layered inject: Manaka t* + EngPatcher p* + community ~28% + optional Gemini
+# Nene/Rinko (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE). The same flag
+# also splices Gemini SMS into a copy of img.bin. Contributor files win.
 from script_inject import CONTRIB_DBIN, resolve_script_source  # noqa: E402
 
 
@@ -979,6 +980,34 @@ def _require_name_input_for_ui(args: argparse.Namespace) -> None:
         )
 
 
+def _apply_gemini_sms(img: Path, work: Path) -> Path:
+    """Splice Gemini SMS into a copy of img.bin. Leaves the bake and XML alone.
+
+    A file in assets/sms_contrib/ replaces that heroine's Gemini dictionary.
+    """
+    if not _env_flag("NLPP_INCLUDE_GEMINI_NENE"):
+        return img
+    sms_dir = ROOT / "assets" / "gemini_heroines" / "sms"
+    if not (sms_dir / "maildic_m.en.xml").is_file():
+        raise PatchError(f"Gemini SMS missing: {sms_dir}")
+    dest = work / "img_gemini_sms.bin"
+    print(f"[sms] copying {img.name} and splicing Gemini SMS")
+    shutil.copy2(img, dest)
+    script = ROOT / "tools" / "deploy_sms_maildic_en.py"
+    _run(
+        [
+            sys.executable,
+            str(script),
+            "--img",
+            str(dest),
+            "--en-dir",
+            str(sms_dir),
+            "--no-backup",
+        ]
+    )
+    return dest
+
+
 def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     """Inject gold bake, or pack assets/images into cache/new_img.bin."""
     from pack_images import PackError, pack_images
@@ -1516,7 +1545,7 @@ def build_patch_summary(
         lines.append(
             _summary_line(
                 "OK",
-                "Gemini Nene dialogue",
+                "Gemini Nene, Rinko, and SMS",
                 "machine pass, unreviewed (assets/gemini_heroines)",
             )
         )
@@ -1524,8 +1553,8 @@ def build_patch_summary(
         lines.append(
             _summary_line(
                 "SKIPPED",
-                "Gemini Nene dialogue",
-                "community Nene/Rinko layer only",
+                "Gemini Nene, Rinko, and SMS",
+                "community Nene/Rinko layer, Japanese SMS",
             )
         )
 
@@ -1909,7 +1938,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"work:   {work}")
     print(f"output: {out_cia}")
     if _env_flag("NLPP_INCLUDE_GEMINI_NENE"):
-        print("gemini: Nene machine pass ON (assets/gemini_heroines/dbin2)")
+        print("gemini: Nene, Rinko, and SMS machine pass ON (assets/gemini_heroines)")
     print()
 
     try:
@@ -1977,7 +2006,7 @@ def _cmd_patch_body_impl(
         # Patch badge — the Sep 2026 Desktop CIA regression.
         timer.mark("resolving / packing UI img.bin")
         tick("UI images", 0.0)
-        packed_img = pack_ui_images(args, work)
+        packed_img = _apply_gemini_sms(pack_ui_images(args, work), work)
         layered_img = packed_img
         timer.mark("UI img.bin ready")
         _require_name_input_for_ui(args)
@@ -2501,8 +2530,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--include-gemini-nene",
         action="store_true",
-        help="Inject optional Gemini machine-pass Nene a* from "
-        "assets/gemini_heroines/dbin2 (or set NLPP_INCLUDE_GEMINI_NENE=1)",
+        help="Inject optional Gemini Nene a*, Rinko k*, and SMS from "
+        "assets/gemini_heroines (or set NLPP_INCLUDE_GEMINI_NENE=1)",
     )
     p.add_argument(
         "--name-img",

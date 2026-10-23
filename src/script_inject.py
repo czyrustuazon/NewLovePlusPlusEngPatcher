@@ -6,10 +6,12 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
    one. Always on. Wins over Gemini and over the community file.
 2. **Manaka 100%** — ``rebuild_dbin2`` for every ``t*`` (all packs).
 3. **EngPatcher common** — ``rebuild_dbin2`` for ``p*`` when present.
-4. **Optional Gemini Nene** — ``assets/gemini_heroines/dbin2`` ``a*`` in every
-   pack when ``NLPP_INCLUDE_GEMINI_NENE=1`` / ``--include-gemini-nene`` (machine
-   pass, unreviewed; see ``assets/gemini_heroines/README.md``).
-   A stem that already has a contributor file keeps that file.
+4. **Optional Gemini Nene and Rinko** — ``assets/gemini_heroines/dbin2`` ``a*``
+   and ``k*`` in every pack when ``NLPP_INCLUDE_GEMINI_NENE=1`` /
+   ``--include-gemini-nene`` (machine pass, unreviewed; see
+   ``assets/gemini_heroines/README.md``). The same yes also installs Gemini SMS
+   (``assets/gemini_heroines/sms``) from the CIA patcher. A stem that already
+   has a contributor file keeps that file. Gemini files are not overwritten.
 5. **Community ~28%** — ``rebuild_dbin2/script`` ``a*``/``k*`` (and any other
    stems listed in ``assets/nlppatch/stems.json``) from the historical NLPPATCH
    layer, now shipped inside EngPatcher (no ``vendor/NLPPATCH`` required).
@@ -68,7 +70,7 @@ _gemini_nene_stems: set[str] | None = None
 
 
 def include_gemini_nene() -> bool:
-    """True when Drop / patch_cia opted into the Gemini Nene machine pass."""
+    """True when Drop / patch_cia opted into Gemini Nene, Rinko, and SMS."""
     return str(os.environ.get("NLPP_INCLUDE_GEMINI_NENE", "")).strip().lower() in {
         "1",
         "true",
@@ -78,7 +80,7 @@ def include_gemini_nene() -> bool:
 
 
 def gemini_nene_stems() -> set[str]:
-    """Allowlisted Gemini Nene ``a*`` stems (empty when the archive is missing)."""
+    """Allowlisted Gemini Nene ``a*`` and Rinko ``k*`` stems."""
     global _gemini_nene_stems
     if _gemini_nene_stems is not None:
         return _gemini_nene_stems
@@ -90,8 +92,13 @@ def gemini_nene_stems() -> set[str]:
             stems = {str(s) for s in data.get("stems", [])}
         except (OSError, json.JSONDecodeError, TypeError):
             stems = set()
-    if not stems and (GEMINI_NENE_DBIN / "script").is_dir():
-        stems = {p.stem for p in (GEMINI_NENE_DBIN / "script").glob("a*.dbin2")}
+    script_dir = GEMINI_NENE_DBIN / "script"
+    xml_dir = GEMINI_NENE_ROOT / "xml"
+    for prefix in ("a", "k"):
+        if script_dir.is_dir():
+            stems |= {p.stem for p in script_dir.glob(f"{prefix}*.dbin2")}
+        if xml_dir.is_dir():
+            stems |= {p.stem for p in xml_dir.glob(f"{prefix}*.xml")}
     _gemini_nene_stems = stems
     return _gemini_nene_stems
 
@@ -230,8 +237,8 @@ def inject_scripts(
     gemini_on = include_gemini_nene()
     if gemini_on:
         print(
-            "[inject] Gemini Nene machine pass enabled "
-            f"({len(gemini_nene_stems())} a* stems)",
+            "[inject] Gemini Nene and Rinko machine pass enabled "
+            f"({len(gemini_nene_stems())} a*/k* stems)",
             flush=True,
         )
     for pack in PACKS:
@@ -253,6 +260,7 @@ def inject_scripts(
             gem_dir = GEMINI_NENE_DBIN / pack
             if gem_dir.is_dir():
                 stems |= {p.stem for p in gem_dir.glob("a*.dbin2")}
+                stems |= {p.stem for p in gem_dir.glob("k*.dbin2")}
         injected = 0
         pack_layers: dict[str, int] = {}
         for stem in sorted(stems):
@@ -299,8 +307,9 @@ def resolve_script_source(
     if contrib.is_file():
         return contrib, "contrib"
 
-    # Optional Gemini Nene (all packs). Wins over community a* for the same stem.
-    if include_gemini_nene() and pref == "a":
+    # Optional Gemini Nene/Rinko (all packs). Wins over community a*/k*.
+    # A contributor file above already won, and this does not rewrite Gemini.
+    if include_gemini_nene() and pref in COMMUNITY_PREFIXES:
         allow_g = gemini_nene_stems()
         gem = GEMINI_NENE_DBIN / pack / f"{stem}.dbin2"
         if gem.is_file() and (not allow_g or stem in allow_g):
@@ -402,7 +411,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--include-gemini-nene",
         action="store_true",
-        help="Also inject assets/gemini_heroines/dbin2 a* (or set NLPP_INCLUDE_GEMINI_NENE=1)",
+        help="Also inject Gemini Nene a* and Rinko k* from "
+        "assets/gemini_heroines/dbin2 (or set NLPP_INCLUDE_GEMINI_NENE=1)",
     )
     args = ap.parse_args(argv)
     if args.include_gemini_nene:
