@@ -1,4 +1,4 @@
-"""Message Speed: Options 4/2/1/0, TalkWindow 10/20/35/60 ms, voice/script cap."""
+"""Message Speed: Options 5/3/2/0, TalkWindow 10/20/35/60 ms, voice/script cap."""
 
 from __future__ import annotations
 
@@ -45,6 +45,15 @@ def test_message_speed_upgrades_legacy_options():
     assert ms.apply_patch(data) is True
     assert ms.is_patched(data)
     assert ms.apply_patch(data) is False
+
+
+def test_message_speed_upgrades_60fps_options():
+    data = _blob((ms.LEGACY_60FPS_LV1, ms.LEGACY_60FPS_LV2, ms.LEGACY_60FPS_LV3))
+    assert ms.is_options_legacy(data)
+    assert ms.apply_patch(data) is True
+    assert ms.is_patched(data)
+    assert ms.revert_patch(data) is True
+    assert ms.is_vanilla(data)
 
 
 def test_talk_table_upgrades_legacy_quarter_table():

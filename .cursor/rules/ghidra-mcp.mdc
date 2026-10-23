@@ -40,7 +40,7 @@ Headless and new projects use repo-root `ghidra_nlpp/` (`nlpp_paths.GHIDRA_PROJE
 | MSel icon+text bind | `BindMSelBtnIconAndText` @ `0020ad74` |
 | Options/clock plate bind | `OptionMenu_BindPlateTextures` @ `0020bcc0` (slot 6 = clock title) |
 | MultiWin white-bar bind | `FUN_00255a18` @ `00255a18` (table ~`0x6c3f9c`; GF Comm = `Text04_01_00`) |
-| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options preview 18/12/6/0 → 4/2/1/0) |
+| Message Speed delay table | `FUN_005d1e18` @ `005D1E18` (Options preview 18/12/6/0 → 5/3/2/0) |
 | Message Speed typewriter tick | `FUN_002d544c` @ `002D544C` (Options widget `+0x24` delay, `0` = instant) |
 | TalkWindow delay table | `0x006E3024` (ms/glyph, 40/70/90/110/220 → 10/20/35/60/120; index via `FUN_002d8874`) |
 | TalkWindow delay setter | `FUN_0013f260` @ `0013F260` (`+0xd9c`, stores if index `< 5`) |

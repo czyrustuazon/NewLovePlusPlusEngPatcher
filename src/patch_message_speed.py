@@ -6,10 +6,13 @@ Two independent tables plus a voice/script cap:
 1. Options preview ``FUN_005d1e18`` @ file ``0x005D1E18`` (slider → frames/glyph):
 
        1 → 18    2 → 12    3 → 6    4 → 0 (instant)
-   patched: 1 → 4     2 → 2     3 → 1    4 → 0
+   patched: 1 → 5     2 → 3     3 → 2    4 → 0
 
    Only the Display Settings sample uses this (``FUN_001d2e5c``). The tick
-   shows at most one glyph per frame, so this only approximates table 2.
+   ``FUN_002d544c`` adds the scene frame step (``FUN_0059a7fc``: 1 at 60 fps,
+   2 at 30 fps) and shows at most one glyph per call, so any delay ≤ step is
+   one glyph per call. With step 2 the old 4/2/1 made sliders 2 and 3 equal.
+   5/3/2 is 12/20/30 glyphs/s at either step; it only approximates table 2.
 
 2. In-game TalkWindow @ ``0x006E3024`` (index → wait units):
 
@@ -70,13 +73,17 @@ VANILLA_LV1 = _mov_eq_r0(0x12)  # 18
 VANILLA_LV2 = _mov_eq_r0(0x0C)  # 12
 VANILLA_LV3 = _mov_eq_r0(0x06)  # 6
 VANILLA_LV4 = _mov_eq_r0(0x00)  # 0 (unchanged)
-PATCHED_LV1 = _mov_eq_r0(0x04)  # 4
-PATCHED_LV2 = _mov_eq_r0(0x02)  # 2
-PATCHED_LV3 = _mov_eq_r0(0x01)  # 1
+PATCHED_LV1 = _mov_eq_r0(0x05)  # 5
+PATCHED_LV2 = _mov_eq_r0(0x03)  # 3
+PATCHED_LV3 = _mov_eq_r0(0x02)  # 2
 # NLPP-024..034 shipped 14/8/2; upgrade those in place.
 LEGACY_LV1 = _mov_eq_r0(0x0E)  # 14
 LEGACY_LV2 = _mov_eq_r0(0x08)  # 8
 LEGACY_LV3 = _mov_eq_r0(0x02)  # 2
+# NLPP-035 builds had 4/2/1 (sliders 2 and 3 equal at 30 fps); upgrade too.
+LEGACY_60FPS_LV1 = _mov_eq_r0(0x04)  # 4
+LEGACY_60FPS_LV2 = _mov_eq_r0(0x02)  # 2
+LEGACY_60FPS_LV3 = _mov_eq_r0(0x01)  # 1
 
 # cmp r0,#1 at function entry — refuse unknown binaries
 VANILLA_HEAD = bytes.fromhex("010050e3")
@@ -86,7 +93,10 @@ _SITES = (
     (OFF_LV2, VANILLA_LV2, PATCHED_LV2, "lv2"),
     (OFF_LV3, VANILLA_LV3, PATCHED_LV3, "lv3"),
 )
-_LEGACY_SITES = ((OFF_LV1, LEGACY_LV1), (OFF_LV2, LEGACY_LV2), (OFF_LV3, LEGACY_LV3))
+_LEGACY_TABLES = (
+    ((OFF_LV1, LEGACY_LV1), (OFF_LV2, LEGACY_LV2), (OFF_LV3, LEGACY_LV3)),
+    ((OFF_LV1, LEGACY_60FPS_LV1), (OFF_LV2, LEGACY_60FPS_LV2), (OFF_LV3, LEGACY_60FPS_LV3)),
+)
 
 # TalkWindow delay table (file). Index 5 stays 0 (divide-by-zero if used).
 TALK_TABLE_OFF = 0x006E3024
@@ -189,7 +199,10 @@ def is_options_vanilla(data: bytes) -> bool:
 
 
 def is_options_legacy(data: bytes) -> bool:
-    return all(data[off : off + 4] == legacy for off, legacy in _LEGACY_SITES)
+    return any(
+        all(data[off : off + 4] == legacy for off, legacy in sites)
+        for sites in _LEGACY_TABLES
+    )
 
 
 def is_talk_patched(data: bytes) -> bool:
@@ -254,7 +267,7 @@ def is_fully_patched(data: bytes) -> bool:
 
 def _apply_options(data: bytearray) -> bool:
     if is_options_patched(data):
-        print(f"[msg-speed] options already patched @{ADDR_FN:#x} (4/2/1/0)")
+        print(f"[msg-speed] options already patched @{ADDR_FN:#x} (5/3/2/0)")
         return False
     if data[ADDR_FN : ADDR_FN + 4] != VANILLA_HEAD:
         raise ValueError(
@@ -430,7 +443,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         print(
             f"FUN_005d1e18 @{ADDR_FN:#x}: "
-            f"vanilla 18/12/6/0 -> patched 4/2/1/0"
+            f"vanilla 18/12/6/0 -> patched 5/3/2/0"
         )
         print(
             f"TalkWindow @{TALK_TABLE_OFF:#x}: "
