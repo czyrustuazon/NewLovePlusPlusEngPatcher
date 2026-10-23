@@ -697,6 +697,10 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Boot CESA anti-piracy warning | RGB TEX `CESA_240X400.texi` @ pkg **90** (240×400 visible) | **EN** — NLPPPATCH Heisei Gothic, vanilla layout; **§12.7** |
 | CESA companion blurb | RGB TEX `logo_white.texi` @ pkg **90** (CesaLogo `0x5A0008`; **240×320** portrait; vanilla 16×16 stub) | **EN** (verified 2026-09-15) — teal gothic; PACK rebuild **+ idx `dec_len` 1576192** + skip 400×400 stub quad; **§12.7** |
 
+#### Local UI edits vs. Zhoumaru updates
+
+`assets/images/LOCAL_EDITS.json` lists the 66 `*.check` PNGs we edited after the Zhoumaru import `7ce3dd3`: canvas fits (`1082419`), the camera **Select** tab, the Camera Settings note, the **Drama Gallery** bar, Towano Watcher banners, Web weather/date panels, the clock, Main Menu and Eng Patch title art. `tests/test_local_ui_edits.py` checks each git blob hash. The `d201351` pack update overwrote four of them (the camera tab ×2, the note, the Drama Gallery bar); they were restored from `d201351^` on 2026-10-23. The import procedure and the code-level overrides are in `.cursor/rules/zhoumaru-ui-pack.mdc`.
+
 #### Menu-row lettering (`render_menu_label`)
 
 Rendered stand-ins for Zhoumaru's in-room menu rows (`game_text_twinbe`, `optn_tex_option*`, `main_tex_seisyunno1P`): Mail inbox categories, Wallpaper, Puzzle-dama, Love Plus.

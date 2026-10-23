@@ -32,6 +32,33 @@ A vanilla-sourced last-writer drops every `.check` master it does not list (Albu
 2. If missing, it is not “Zhoumaru forgot CESA-class extras” unless the asset is actually a mapped BCLIM folder.
 3. CESA questions → `patch_cesa.py` / `deploy_cesa_en.py`, not the Zhoumaru tree.
 
+## Importing a new Zhoumaru drop
+
+Our own UI edits must survive a pack update. The last update (`d201351`, 2026-10-20) copied the whole drop over `assets/images/*.check` and silently put back Zhoumaru's **Apply** camera tab (ours: **Select**), the **Youth Story** Drama Gallery bar, and the old Camera Settings note. Restored 2026-10-23.
+
+Two kinds of local override:
+
+1. **File edits**: PNGs under `*.check` that we changed after the import (`7ce3dd3`). All are listed in `assets/images/LOCAL_EDITS.json` with git blob hash, commit, and reason. `tests/test_local_ui_edits.py` fails when one is overwritten or deleted.
+2. **Code overrides**: stems a deploy renders or skips no matter what the PNG says (table below and the Known-bad table). A new drop cannot undo these, but re-check them in case Zhoumaru fixed the master.
+
+Procedure:
+
+1. Copy the drop in **without** the paths in `LOCAL_EDITS.json`. If you copy everything, restore those paths with `git restore --source=HEAD -- <path>`.
+2. `python -m pytest -q tests/test_local_ui_edits.py tests/test_zhoumaru_coverage.py`. Coverage fails when the drop adds a master that no vanilla-rebuild writer packs.
+3. For each new or changed master, look at it (alpha over gray, and RGB alone; see the dump check at the bottom). Wording must match our labels in the deploys and TRB.
+4. If a new Zhoumaru file really is better than our edit, take it and **remove or update its `LOCAL_EDITS.json` entry** in the same commit, with the reason.
+5. Every new hand edit to a `*.check` PNG gets a `LOCAL_EDITS.json` entry (`path`, `blob` = `git hash-object`, `commit`, `reason`).
+
+| Code override | Pkg | Script | Why |
+|---------------|-----|--------|-----|
+| `Sel_Tex_ma02_01..05` Mail inbox rows | **5207** | `deploy_mail_home_en.py` (`CATEGORY_LABELS`) | Rendered (`render_menu_label`): Zhoumaru left 01 JP and called 05 Apology |
+| `main_tex_{yotei,sleep,mail,tel}_RGBA4_NEW`, `main_tex_love_RGBA4` | **5380** | `deploy_myroom_main_en.py` | Rendered; Zhoumaru love master reads `LovePlus` |
+| `Com_MultiWin_W01_Text04_01_00/01` | **5237** | `deploy_multiwin_headers_en.py` (`SKIP_UI_PNG`) | Heart to Heart bar copy (§12.4.1) |
+| `Com_M_Sel_Plate_Text04_01_01`, `Com_M_Sel_Btn_Text04_01_01` | **5241** | `deploy_msel_menus_en.py` (`SKIP_UI_PNG`, `FONT_BTN_H`) | Heart to Heart; Zhoumaru is the long title |
+| `Gallery_txt07` | **5153** | `deploy_gallery_common_en.py` | Stays vanilla `BGM`; Zhoumaru dump says Fitness |
+| `Commu_Op_Text02/04` | **4185** | `deploy_commu_option_en.py` | Zhoumaru says ToDoList / Gallery |
+| `C_Com_icon_Repry2`, `Sel_Tex_ma15_*`, `Sel_Tex_te05` | **5207** | `deploy_mail_home_en.py` | Not packed (wrong label / 1×1 stubs) |
+
 ## Known-bad dumps (do not pack as-is)
 
 Azahar/Citra texture dumps can store **correct alpha glyphs** and **swizzled/garbage RGB**. Offline decode + alpha-composite on gray looks like a clean EN label; in-game the pic pane shows the RGB noise.
