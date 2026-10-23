@@ -50,13 +50,14 @@ from __future__ import annotations
 import hashlib
 import struct
 
-# Dead body of FUN_000EA964 (entry stubbed to bx lr by patch_spotpass_skip),
-# up to and including its literal pool.
+# Dead body of FUN_000EA964 (entry stubbed to bx lr by patch_spotpass_skip).
+# The rest of the body, up to its literal pool end 0x000EAB80, belongs to
+# patch_title_engpatch_info.
 ADDR_STUB = 0x000EA964
 STUB_PATCHED = bytes.fromhex("1eff2fe1")  # bx lr
 CAVE_START = 0x000EA968
-CAVE_END = 0x000EAB80
-CAVE_VANILLA_SHA256 = "ee35577b247e9ec61b9b4cbf209ce854b2b831765deffad07fda86e6d1ec5685"
+CAVE_END = 0x000EAA60
+CAVE_VANILLA_SHA256 = "beb9bef8b7acef4fe94722c87f11d2b3a8f7383cc5d60d40b6ecbd36c11e9628"
 
 HOOK_PRESS = 0x002D07C8
 HOOK_PRESS_VANILLA = bytes.fromhex("db00d6e5")  # ldrb r0, [r6, #0xdb]
@@ -253,10 +254,16 @@ def apply_patch(data: bytearray) -> bool:
 
 
 def append_confirm_message(data: bytes) -> tuple[bytes, list[str]]:
-    """Add pack 0x1901 slot 501 (the confirm sentence) to a TRB.
+    """Add pack 0x1901 slot 501 (the confirm sentence) to a TRB."""
+    return append_message_slot(data, MSG_SLOT, CONFIRM_TEXT, "Restore Default confirm")
+
+
+def append_message_slot(data: bytes, slot: int, text: str, label: str) -> tuple[bytes, list[str]]:
+    """Add ``slot`` to the end of pack 0x1901 sub 1, which must hold ``slot`` slots.
 
     The new slot's u16 goes at the end of the sub's list with a u16 pad, so
-    every later offset in INDX moves by 4 and keeps its alignment.
+    every later offset in INDX moves by 4 and keeps its alignment. A TRB that
+    already holds ``text`` there is returned unchanged.
     """
     from patch_password_serials import _pack_trb, _strb_used, _sub_u16_off
     from patch_textresource import iter_entries, parse_chunks, to_game_newlines
@@ -266,15 +273,15 @@ def append_confirm_message(data: bytes) -> tuple[bytes, list[str]]:
     strb = bytearray(chunks["STRB"])
     indx = bytearray(chunks["INDX"])
     u16_off, count = _sub_u16_off(indx, MSG_CAT, MSG_SUB)
-    payload = to_game_newlines(CONFIRM_TEXT).encode("utf-8")
-    if count == MSG_VANILLA_SLOTS + 1:
-        cur = struct.unpack_from("<H", indx, u16_off + 2 * MSG_SLOT)[0]
+    payload = to_game_newlines(text).encode("utf-8")
+    if count > slot:
+        cur = struct.unpack_from("<H", indx, u16_off + 2 * slot)[0]
         start = struct.unpack_from("<I", stri, cur * 8)[0]
         if bytes(strb[start : start + len(payload) + 1]) == payload + b"\x00":
-            return data, [f"slot {MSG_SLOT} already set"]
-        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} slot {MSG_SLOT} holds other text")
-    if count != MSG_VANILLA_SLOTS:
-        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} has {count} slots, expected {MSG_VANILLA_SLOTS}")
+            return data, [f"slot {slot} already set"]
+        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} slot {slot} holds other text")
+    if count != slot:
+        raise ValueError(f"pack 0x{MSG_CAT:02x}{MSG_SUB:02x} has {count} slots, expected {slot}")
 
     new_idx = sum(1 for _ in iter_entries(stri))
     strb = strb[: _strb_used(stri, strb)]
@@ -301,4 +308,4 @@ def append_confirm_message(data: bytes) -> tuple[bytes, list[str]]:
     chunks["STRI"] = bytes(stri)
     chunks["STRB"] = bytes(strb)
     chunks["INDX"] = bytes(indx)
-    return _pack_trb(chunks), [f"slot {MSG_SLOT} -> stri={new_idx} (Restore Default confirm)"]
+    return _pack_trb(chunks), [f"slot {slot} -> stri={new_idx} ({label})"]

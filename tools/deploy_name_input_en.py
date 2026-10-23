@@ -30,6 +30,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
   19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
   20. patch_camera_defaults_reset          # Restore Default asks Yes/No, then unequips all but the Memory Card
+  21. patch_title_engpatch_info            # Main Menu Eng Patch badge tap opens an INFORMATION box (OK)
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -163,6 +164,10 @@ from patch_camera_restore_default import (  # noqa: E402
 from patch_camera_defaults_reset import (  # noqa: E402
     apply_patch as apply_camera_reset,
     is_patched as camera_reset_already,
+)
+from patch_title_engpatch_info import (  # noqa: E402
+    apply_patch as apply_engpatch_info,
+    is_patched as engpatch_info_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -359,6 +364,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] camera_defaults_reset already applied")
     else:
         apply_camera_reset(data)
+        steps += 1
+
+    if engpatch_info_already(data):
+        print("[skip] title_engpatch_info already applied")
+    else:
+        apply_engpatch_info(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

@@ -53,6 +53,7 @@ DATA_WRITERS = {
     "apply_password_uribo",
     "apply_profile_birthday",
     "apply_speaker_spacing",
+    "apply_engpatch_info",  # hub vtable slot +0x28 -> its touch-down guard
 }
 
 # Written ranges a step does not check before overwriting. These are dead
