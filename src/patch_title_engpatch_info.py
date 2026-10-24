@@ -130,7 +130,7 @@ CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
     (" ", None),
     ("[QA Engineers]", ("Dragios", "D.", "THE DRIZZLE")),
     (" ", None),
-    ("[Special Thanks]", ("anon","lolipop221", "i need help here...", "gamebrew.org", "LovePlusProject", "gbatemp.net")),
+    ("[Special Thanks]", ("anon","lolipop221", "i need help here...", "2Soulz the sheep", "gamebrew.org", "LovePlusProject", "gbatemp.net")),
     ("== Pioneer Legacy Team ==", None),
     ("[Project Coordination]", ("Dgrin", "Makein")),
     (" ", None),
