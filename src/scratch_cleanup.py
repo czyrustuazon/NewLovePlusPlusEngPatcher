@@ -34,6 +34,36 @@ def is_reparse_dir(path: Path) -> bool:
     return False
 
 
+def long_path(path: Path) -> Path:
+    """Windows extended-length form so deletes can see past MAX_PATH.
+
+    Citra extra-data backups nest
+    ``sdmc/Nintendo 3DS/<32 hex>/<32 hex>/title/.../data/00000001``.
+    ``shutil.rmtree`` then reports WinError 145 (directory not empty)
+    because it cannot list the files inside. Drop uses this for
+    ``out/``, ``release/``, and ``cache/``.
+    """
+    if sys.platform != "win32":
+        return path
+    text = str(path)
+    if text.startswith("\\\\?\\"):
+        return Path(text)
+    try:
+        text = str(path.resolve())
+    except OSError:
+        text = str(path)
+    if text.startswith("\\\\?\\"):
+        return Path(text)
+    if text.startswith("\\\\"):
+        return Path("\\\\?\\UNC\\" + text[2:])
+    return Path("\\\\?\\" + text)
+
+
+def rmtree(path: Path) -> None:
+    """Delete a tree, including Windows paths longer than 260 characters."""
+    shutil.rmtree(long_path(path))
+
+
 def path_is_under(path: Path, root: Path) -> bool:
     """True when ``path`` is ``root`` or a descendant (resolved)."""
     try:
@@ -72,7 +102,7 @@ def wipe_directory(path: Path, *, root: Path) -> None:
                     romfs.unlink()
                 except OSError:
                     romfs.rmdir()
-            shutil.rmtree(resolved)
+            rmtree(resolved)
     except OSError as exc:
         raise SystemExit(f"[wipe] {label}/: {exc}") from exc
 
@@ -160,7 +190,7 @@ def remove_scratch(path: Path | None, *, label: str | None = None) -> None:
                 except OSError:
                     pass
         print(f"[cleanup] removing {name}", flush=True)
-        shutil.rmtree(path, ignore_errors=True)
+        shutil.rmtree(long_path(path), ignore_errors=True)
     except OSError as exc:
         print(f"[cleanup] warning: {name}: {exc}", flush=True)
 
