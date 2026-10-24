@@ -259,11 +259,42 @@ def _zopfli(data: bytes) -> bytes:
     return zopfli_zlib.compress(data)
 
 
+def compress_exact_stored_prefix(data: bytes, target: int) -> bytes | None:
+    """Zopfli stream padded to target with stored blocks ahead of the deflate data.
+
+    Empty stored blocks cost 5 bytes each and keep the following zopfli blocks
+    byte-aligned. The 0-4 byte remainder comes from moving the first L bytes of
+    data into a stored block and zopfli-compressing data[L:] instead.
+    """
+    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
+    for lead in range(0, 64):
+        z = _zopfli(data[lead:])
+        hdr, raw = z[:2], z[2:-4]
+        stored = (
+            b"\x00" + struct.pack("<HH", lead, lead ^ 0xFFFF) + data[:lead]
+            if lead
+            else b""
+        )
+        remain = target - (len(hdr) + len(stored) + len(raw) + len(adler))
+        print(f"  stored lead={lead} zopfli={len(z)} remain={remain}", flush=True)
+        if remain < 0 or remain % 5:
+            continue
+        out = hdr + b"\x00\x00\x00\xff\xff" * (remain // 5) + stored + raw + adler
+        d = zlib.decompressobj()
+        if d.decompress(out) == data and d.eof and not d.unused_data:
+            return out
+    return None
+
+
 def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
     """Return (possibly padded uncompressed, zlib stream of len==target)."""
     slot = compress_exact_empty_blocks(data, target)
     if slot is not None:
         print("  empty-block pad", flush=True)
+        return data, slot
+    slot = compress_exact_stored_prefix(data, target)
+    if slot is not None:
+        print("  stored-block pad", flush=True)
         return data, slot
 
     runs = interfile_zero_gaps(data)
