@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "cd0bc892bb1a6a91afbba4c0d318135588ca2b414cc76123114a7adad50d1fa9",
+ "final_sha256": "503691047ae090b9cbc0ec371d9f686022ad50ce64f266a7c445bac9e3e33f70",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -471,10 +471,12 @@
   },
   {
    "name": "apply_syspopup_tall",
-   "written_sha256": "a5eab8d97864d3bb6f20267832d478c9a65973082b9087a326eac9063e74104f",
+   "written_sha256": "05f9cc48bbf009086a432dc7fd39c621c5256d7faa48d06b52ab83d229319f3f",
    "ranges": [
     "0x1d94b8-0x1d94bc",
-    "0x1d94c0-0x1d94c4"
+    "0x1d94c0-0x1d94c4",
+    "0x1d96e4-0x1d9700",
+    "0x1d975c-0x1d9778"
    ]
   },
   {
