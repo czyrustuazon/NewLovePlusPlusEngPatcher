@@ -123,11 +123,12 @@ def test_credit_lines_fit_the_box_width():
         assert len(lines) <= info.MAX_BOX_LINES  # DrawTextToPane line table
 
 
-def test_each_role_has_one_bullet_before_its_names():
+def test_each_role_line_is_followed_by_its_names():
     text = "\n".join(info.CREDIT_PAGES)
     for role, names in info.CREDITS:
         if names is None:
             continue
         assert role + "\n" + info.BULLET + names[0] in text
-    assert text.count(info.BULLET[0]) == sum(1 for _r, n in info.CREDITS if n)
-    assert "\n-" not in text
+    if info.BULLET:
+        assert text.count(info.BULLET) == sum(1 for _r, n in info.CREDITS if n)
+    assert "\n-" not in text and "\n " not in text

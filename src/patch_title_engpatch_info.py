@@ -118,51 +118,62 @@ PAGE_LINES = 0  # lines per box, title included; 0 = everything in one scrolling
 MAX_BOX_LINES = 64
 BLANK_BETWEEN_ROLES = False  # a blank line before every role costs ~20 lines
 LINE_WIDTH = 26  # lines are centred; ~30 (● counted twice) ran past the box edges
-BULLET = "● "  # the game's own list bullet ("● Event log")
-# (role, names); names None = a team heading line.
+BULLET = ""  # names line prefix; the game's "● " bullet looked busy
+# (role, names); names None = a team heading line; ("", None) = one blank line.
 CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
     ("== 2026 Team ==", None),
-    ("Software Engineers", ("zaccken", "Cetaceaqua")),
-    ("UI Texture Overhaul and QA", ("Zhoumaru",)),
-    ("Translation", ("DDMeisterX",)),
-    ("QA Engineers", ("Dragios", "D.", "THE DRIZZLE")),
-    ("Save File Sharing", ("anon",)),
-    ("Knowledge Sharing", ("i need help here...",)),
-    ("Special Thanks", ("lolipop221", "gamebrew.org")),
-    ("== Pioneer Team ==", None),
-    ("Project Coordination", ("Dgrin", "Makein")),
-    ("Original Love Plus (DS)", ("TLWiki group", "jjjewel & team")),
-    ("Translation & Editing", ("Mayne", "DDMeisterX", "Shakkolvan", "Scarymonsters", "Kai", "Oli")),
-    ("Script Integration", ("impeio92", "Keimeow")),
+    ("[Software Engineers]", ("zaccken", "Cetaceaqua")),
+    (" ", None),
+    ("[UI Texture Overhaul]", ("Zhoumaru",)),
+    (" ", None),
+    ("[QA Engineers]", ("Dragios", "D.", "THE DRIZZLE")),
+    (" ", None),
+    ("[Special Thanks]", ("anon","lolipop221", "i need help here...", "gamebrew.org", "LovePlusProject", "gbatemp.net")),
+    ("== Pioneer Legacy Team ==", None),
+    ("[Project Coordination]", ("Dgrin", "Makein")),
+    (" ", None),
+    ("[Original Love Plus (DS)]", ("TLWiki group", "jjjewel & team")),
+    (" ", None),
+    ("[Translation & Editing]", ("Mayne", "DDMeisterX", "Shakkolvan", "Scarymonsters", "Kai", "Oli")),
+    (" ", None),
+    ("[Script Integration]", ("impeio92", "Keimeow")),
+    (" ", None),
     (
-        "Hacking & Tools",
+        "[Hacking & Tools]",
         (
             "gdkchan", "Demonslayerx8", "MGDanon", "deaknaew", "froid_san", "kiwiz", "Chulio",
             "Nagato", "Makein", "Zander1995", "Asia81", "internetakias", "ofan", "NCDyson",
             "Aikin-Ai",
         ),
     ),
-    ('"New Script"', ("Bango", "Cozy Translations")),
-    ("Proofreading", ("Bango", "Incolbum")),
-    ("Text & Strings", ("Jaslyn",)),
-    ("Graphics Translation", ("eyenight", "Jaslyn", "Karuta", "Bango")),
-    ("Graphics Editing", ("Kaizerscythe", "Shakkolvan", "Yuuyuun", "bigcookie")),
-    ("Later Passes", ("k7ra", "rinkohot1337")),
-    ("Special Thanks", ("LovePlusProject", "gbatemp.net")),
+    (" ", None),
+    ('["New Script"]', ("Bango", "Cozy Translations")),
+    (" ", None),
+    ("[Proofreading]", ("Bango", "Incolbum")),
+    (" ", None),
+    ("[Text & Strings]", ("Jaslyn",)),
+    (" ", None),
+    ("[Graphics Translation]", ("eyenight", "Jaslyn", "Karuta", "Bango")),
+    (" ", None),
+    ("[Graphics Editing]", ("Kaizerscythe", "Shakkolvan", "Yuuyuun", "bigcookie")),
+    (" ", None),
+    ("[Later Passes]", ("k7ra", "rinkohot1337")),
 )
 
 
 def _width(line: str) -> int:
     # The box centres each line; ● draws about two letters wide.
-    return len(line) + line.count(BULLET[0])
+    return len(line) + line.count("●")
 
 
 def _name_lines(names: tuple[str, ...]) -> list[str]:
-    """"● name, name, ..." wrapped at LINE_WIDTH without splitting a name."""
+    """BULLET + "name, name, ..." wrapped at LINE_WIDTH without splitting a name."""
     lines = [BULLET.rstrip()]
     for i, name in enumerate(names):
         item = name + ("," if i < len(names) - 1 else "")
-        if _width(lines[-1]) + 1 + len(item) <= LINE_WIDTH or lines[-1] == BULLET.rstrip():
+        if lines[-1] == BULLET.rstrip():
+            lines[-1] = (lines[-1] + " " + item).lstrip()
+        elif _width(lines[-1]) + 1 + len(item) <= LINE_WIDTH:
             lines[-1] += " " + item
         else:
             lines.append(item)
@@ -172,6 +183,9 @@ def _name_lines(names: tuple[str, ...]) -> list[str]:
 def _credit_pages() -> tuple[str, ...]:
     pages: list[list[str]] = [[]]
     for role, names in CREDITS:
+        if not role.strip():  # ("", None): one blank line, nothing else
+            pages[-1].append("")
+            continue
         block = [role] if names is None else [role, *_name_lines(names)]
         if PAGE_LINES and pages[-1] and len(pages[-1]) + 1 + len(block) > PAGE_LINES - 1:
             pages.append([])

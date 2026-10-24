@@ -33,6 +33,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   21. patch_title_engpatch_info            # Main Menu Eng Patch badge tap opens an INFORMATION box (OK)
   22. patch_drawtext_64_lines              # DrawTextToPane lays out 64 lines (credits box), not 32
   23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
+  24. patch_syspopup_scroll_bar            # message box scroll ends at the last line; bar spans the text
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -170,6 +171,10 @@ from patch_camera_defaults_reset import (  # noqa: E402
 from patch_drawtext_64_lines import (  # noqa: E402
     apply_patch as apply_drawtext_64,
     is_patched as drawtext_64_already,
+)
+from patch_syspopup_scroll_bar import (  # noqa: E402
+    apply_patch as apply_syspopup_scroll,
+    is_patched as syspopup_scroll_already,
 )
 from patch_syspopup_tall_text import (  # noqa: E402
     apply_patch as apply_syspopup_tall,
@@ -392,6 +397,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] syspopup_tall_text already applied")
     else:
         apply_syspopup_tall(data)
+        steps += 1
+
+    if syspopup_scroll_already(data):
+        print("[skip] syspopup_scroll_bar already applied")
+    else:
+        apply_syspopup_scroll(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
