@@ -78,3 +78,16 @@ def test_todo_packs_every_quest_master(tmp_path):
     packed = todo.pack_quest_masters(darc, tmp_path)
     assert packed == {p.stem for p in todo.QUEST_MASTERS.glob("*.png")}
     assert {Path(p).stem for p, _en in todo.QUEST_LABELS} <= packed
+
+
+def test_dilate_is_scipys_default_cross():
+    # scipy.ndimage.binary_dilation's default structure is 4-connected; the
+    # NumPy port first used 8 and grew the re-encoded text.
+    m = np.zeros((5, 5), dtype=bool)
+    m[2, 2] = True
+    want = np.zeros((5, 5), dtype=bool)
+    want[1:4, 2] = want[2, 1:4] = True
+    assert (camera._dilate(m) == want).all()
+    edge = np.zeros((3, 3), dtype=bool)
+    edge[0, 0] = True
+    assert camera._dilate(edge).sum() == 3

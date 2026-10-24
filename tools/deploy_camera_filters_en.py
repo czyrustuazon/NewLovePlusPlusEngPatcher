@@ -65,13 +65,12 @@ def decode(raw: bytes) -> Image.Image:
 
 
 def _dilate(mask: np.ndarray) -> np.ndarray:
-    """One-pixel 8-connected dilation. Same result as scipy's default structure."""
+    """One-pixel 4-connected (cross) dilation, scipy's default structure."""
     padded = np.pad(mask, 1, constant_values=False)
     h, w = mask.shape
     out = np.zeros_like(mask, dtype=bool)
-    for dy in range(3):
-        for dx in range(3):
-            out |= padded[dy : dy + h, dx : dx + w]
+    for dy, dx in ((1, 1), (0, 1), (2, 1), (1, 0), (1, 2)):
+        out |= padded[dy : dy + h, dx : dx + w]
     return out
 
 
