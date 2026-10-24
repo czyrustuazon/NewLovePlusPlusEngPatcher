@@ -98,7 +98,10 @@ def test_zhoumaru_plate_keeps_vanilla_etc1a4(tmp_path):
     """A8 drops the Zhoumaru ink; the Communication Menu plate went light gray."""
     import pytest
 
-    vanilla = msel.pick_vanilla() if hasattr(msel, "pick_vanilla") else None
+    try:
+        vanilla = msel.pick_vanilla()
+    except SystemExit:  # CI has no img.bin
+        vanilla = None
     if vanilla is None or not vanilla.is_file():
         pytest.skip("no vanilla img.bin")
     from darcutil import DarcArchive
