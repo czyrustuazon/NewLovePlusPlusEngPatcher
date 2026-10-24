@@ -980,6 +980,9 @@ def _require_name_input_for_ui(args: argparse.Namespace) -> None:
         )
 
 
+GEMINI_SMS_IMG = "img_gemini_sms.bin"
+
+
 def _apply_gemini_sms(img: Path, work: Path) -> Path:
     """Splice Gemini SMS into a copy of img.bin. Leaves the bake and XML alone.
 
@@ -990,7 +993,7 @@ def _apply_gemini_sms(img: Path, work: Path) -> Path:
     sms_dir = ROOT / "assets" / "gemini_heroines" / "sms"
     if not (sms_dir / "maildic_m.en.xml").is_file():
         raise PatchError(f"Gemini SMS missing: {sms_dir}")
-    dest = work / "img_gemini_sms.bin"
+    dest = work / GEMINI_SMS_IMG
     print(f"[sms] copying {img.name} and splicing Gemini SMS")
     shutil.copy2(img, dest)
     script = ROOT / "tools" / "deploy_sms_maildic_en.py"
@@ -1640,16 +1643,19 @@ def build_patch_summary(
                 "needs gold bake img.bin",
             )
         )
-    elif packed_img is not None and packed_img.is_file():
-        kind = (
-            "gold bake"
-            if packed_img.resolve() == DEFAULT_BAKE_IMG.resolve()
-            else "packed img"
-        )
+    elif packed_img is not None:
+        # Injection hard-fails, so a packed img here was injected. The Gemini
+        # SMS copy lives in the work dir, which cleanup deletes before this.
+        if packed_img.name == GEMINI_SMS_IMG:
+            kind = "gold bake + Gemini SMS"
+        elif packed_img.resolve() == DEFAULT_BAKE_IMG.resolve():
+            kind = "gold bake"
+        else:
+            kind = "packed img"
         lines.append(
             _summary_line("OK", "UI img.bin (menus / chrome)", f"{kind}: {packed_img}")
         )
-        if eng_patch is None:
+        if eng_patch is None and packed_img.is_file():
             try:
                 eng_patch = _title_pkg_has_eng_patch(packed_img)
             except Exception:  # noqa: BLE001 — summary must not crash the run
@@ -2000,6 +2006,7 @@ def _cmd_patch_body_impl(
 
     packed_img: Path | None = None
     layered_img: Path | None = None
+    eng_patch: bool | None = None
     if args.with_images and not args.no_images:
         # Hard-fail on image errors. Swallowing PatchError and continuing
         # scripts-only ships name-input code.bin + vanilla JP menus / no Eng
@@ -2008,6 +2015,11 @@ def _cmd_patch_body_impl(
         tick("UI images", 0.0)
         packed_img = _apply_gemini_sms(pack_ui_images(args, work), work)
         layered_img = packed_img
+        # Probe now: cleanup may delete a work-dir copy before the summary.
+        try:
+            eng_patch = _title_pkg_has_eng_patch(packed_img)
+        except Exception:  # noqa: BLE001 — summary must not crash the run
+            eng_patch = None
         timer.mark("UI img.bin ready")
         _require_name_input_for_ui(args)
     elif args.no_images:
@@ -2070,6 +2082,7 @@ def _cmd_patch_body_impl(
             romfs_overlay=romfs_overlay,
             args=args,
             layeredfs_only=True,
+            eng_patch=eng_patch,
             elapsed=elapsed,
             started_at=started_at,
         )
@@ -2123,6 +2136,7 @@ def _cmd_patch_body_impl(
         romfs_overlay=romfs_overlay,
         args=args,
         layeredfs_only=False,
+        eng_patch=eng_patch,
         elapsed=elapsed,
         started_at=started_at,
         title_ver=title_ver,
