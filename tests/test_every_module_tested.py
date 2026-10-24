@@ -13,7 +13,6 @@ from conftest import ROOT, SRC, TOOLS
 
 UNTESTED = {
     "deploy_bleeding_edge_name_input",
-    "deploy_sms_maildic_en",
     "deploy_sound_settings_en",
     "deploy_todo_hist_en",
 }
