@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""EN Mail home: header (MyroomHeader 5575) + Mail buttons (Mail 5207).
+"""EN Mail home: Mail buttons and Mail.arc chrome (Mail 5207).
 
-Buttons: Inbox / New Mail / Ringtone Settings (着信音設定) / Play (再生).
-Ringtone uses Zhoumaru ``Mail.check/timg/mail_tex_chak_RGBA4.png`` when present.
-Play uses Zhoumaru ``Mail.check/timg/C_Btn_Play_{Off,On}.png``.
+The Mail header (``mail_toptex_RBGA4`` @ MyroomHeader 5575) belongs to
+``deploy_schedule_header_en.py``, which rebuilds 5575 later in the bake.
+
+Buttons: Inbox / New Message / Ringtone Settings (着信音設定) / Play (再生).
+All use the Zhoumaru masters ``Mail.check/timg/mail_tex_{jyusin,shinki,chak}_RGBA4.png``
+(flat gray like vanilla) and ``C_Btn_Play_{Off,On}.png``.
 
 Inbox category rows ``Sel_Tex_ma02_01..05`` (カノジョのメール … 謎メール) are
-font-rendered here — Zhoumaru left 01 in JP and mistranslated 05.
+font-rendered here — Zhoumaru left 01 in JP and mistranslated 05. They copy
+Zhoumaru's in-room menu rows (``game_text_twinbe``, ``optn_tex_option*``):
+``render_menu_label`` in gray 47.
+
+Mail.arc is rebuilt from vanilla, so ``ZHOUMARU_ONLY`` lists every other good
+``Mail.check`` master (compose tabs, emoji names, phone menu, Check/Reply,
+OK). Without it they shipped Japanese.
 """
 from __future__ import annotations
 
@@ -35,8 +44,10 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     HEISEI_W5,
+    MENU_FONT,
     UI_FONT,
     find_ui_png,
+    render_menu_label,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -48,18 +59,12 @@ OUT = ROOT / "out" / "mail_home_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 # Dark-blue ink on transparent (white button / patterned header behind).
 INK = (70, 110, 160)
-# Vanilla Sel_Tex_ma02 rows are flat gray (85) RGBA4444 on transparent.
-CATEGORY_INK = (85, 85, 85)
 
-HEADER_PKG = 5575
-HEADER_LABELS = [
-    ("timg/mail_toptex_RBGA4.bclim", "Mail"),  # note: game typo RBGA4
-]
 
 BUTTON_PKG = 5207
 BUTTON_LABELS = [
     ("timg/mail_tex_jyusin_RGBA4.bclim", "Inbox"),
-    ("timg/mail_tex_shinki_RGBA4.bclim", "New Mail"),
+    ("timg/mail_tex_shinki_RGBA4.bclim", "New Message"),  # 新規作成; Zhoumaru wording
     ("timg/mail_tex_chak_RGBA4.bclim", "Ringtone Settings"),
     ("timg/C_Btn_Play_Off.bclim", "Play"),  # 再生
     ("timg/C_Btn_Play_On.bclim", "Play"),
@@ -72,10 +77,47 @@ CATEGORY_LABELS = [
     ("timg/Sel_Tex_ma02_04.bclim", "Info Mail"),  # 情報メール
     ("timg/Sel_Tex_ma02_05.bclim", "Mystery Mail"),  # 謎メール
 ]
-# Prefer Zhoumaru masters for these stems (chak / Play pill chrome).
+# Packed straight from Mail.check (fmt 8 or ETC1A4). Not listed: the 1x1
+# Sel_Tex_ma15_* / te05 stubs, and C_Com_icon_Repry2 (送信 "Send"), which
+# Zhoumaru mislabeled "Reply".
+ZHOUMARU_ONLY = [
+    ("timg/C_Com_Win01_Btn02_Ok_Off.bclim", "OK"),
+    ("timg/C_Com_Win01_Btn02_Ok_Press.bclim", "OK"),
+    ("timg/C_Com_icon_Confirm.bclim", "Check"),  # 確認
+    ("timg/C_Com_icon_Repry1.bclim", "Reply"),  # 返信
+    ("timg/Mail_PopTxt03.bclim", "Select Emoji"),
+    ("timg/Mail_SendType_T01.bclim", "Greeting"),  # 挨拶
+    ("timg/Mail_SendType_T02.bclim", "Love Words"),  # 愛の言葉
+    ("timg/Mail_SendType_T03.bclim", "Send Mood"),  # 気分送信
+    ("timg/Mail_SendType_T04.bclim", "Special"),  # 特殊
+    ("timg/Sel_Tex_na01.bclim", "Manaka Takane"),
+    ("timg/Sel_Tex_na02.bclim", "Rinko Kobayakawa"),
+    ("timg/Sel_Tex_na03.bclim", "Nene Anegasaki"),
+    ("timg/Sel_Tex_te01.bclim", "Call Log"),
+    ("timg/Sel_Tex_te02.bclim", "Date Reservation"),
+    ("timg/Sel_Tex_te03.bclim", "Premium Date R."),
+    ("timg/Sel_Tex_te04.bclim", "Call Out"),
+    ("timg/Sel_Tex_te06.bclim", "Cancel Date"),
+    ("timg/Sel_Tex_te07.bclim", "Change Date & Time"),
+    ("timg/Sel_Tex_te08.bclim", "Latest Call"),
+    ("timg/Sel_Tex_te09.bclim", "Play Voicemail"),
+    ("timg/Sel_Tex_te10.bclim", "Date M D ( )"),
+    ("timg/Sel_Tex_te11.bclim", "Change Travel Date"),
+    ("timg/Tel_PlayBtn_Off.bclim", "Play Voicemail"),
+    ("timg/Tel_PlayBtn_On.bclim", "Play Voicemail"),
+] + [(f"timg/Emoji_Name_{i:02d}.bclim", "emoji") for i in range(1, 25)]
+ZHOUMARU_ONLY_STEMS = frozenset(Path(p).stem for p, _en in ZHOUMARU_ONLY)
+
+# Prefer Zhoumaru masters for these stems (home buttons + Play pill chrome).
 ZHOUMARU_BUTTONS = frozenset(
-    {"mail_tex_chak_RGBA4", "C_Btn_Play_Off", "C_Btn_Play_On"}
-)
+    {
+        "mail_tex_jyusin_RGBA4",
+        "mail_tex_shinki_RGBA4",
+        "mail_tex_chak_RGBA4",
+        "C_Btn_Play_Off",
+        "C_Btn_Play_On",
+    }
+) | ZHOUMARU_ONLY_STEMS
 
 
 def font(size: int, face: Path = FONT) -> ImageFont.FreeTypeFont:
@@ -106,6 +148,7 @@ def render_label(
         dr.text((x, y), text, font=f, fill=ink + (255,))
         return big.resize((w, h), Image.Resampling.BILINEAR)
     raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
+
 
 
 def interfile_zero_gaps(data: bytes, min_len: int = 4) -> list[tuple[int, int]]:
@@ -214,15 +257,16 @@ def replace_labels(
     labels: list[tuple[str, str]],
     tmp: Path,
     *,
-    fmt: int,
+    fmt: int | None,
 ) -> None:
+    """``fmt=None`` accepts fmt 8 or ETC1A4 per stem (``ZHOUMARU_ONLY``)."""
     for path, en in labels:
         entry = darc.find(path) or darc.find(Path(path).name)
         if entry is None:
             raise SystemExit(f"missing {path}")
         raw = darc.extract_file(entry)
         _pix, w, h, got, _ft = parse_bclim(raw)
-        if got != fmt:
+        if fmt is not None and got != fmt or got not in (8, 0xB):
             raise SystemExit(f"{path} fmt {got} != {fmt}")
         stem = Path(path).stem
         master = (
@@ -236,11 +280,11 @@ def replace_labels(
             if rgba.size != (w, h):
                 rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
             src = master.name
+        elif stem in ZHOUMARU_ONLY_STEMS:
+            raise SystemExit(f"{path}: missing Zhoumaru master")
         elif stem.startswith("Sel_Tex_ma02_"):
-            rgba = render_label(
-                w, h, en, ink=CATEGORY_INK, face=HEISEI_W5
-            )
-            src = "render Heisei"
+            rgba = render_menu_label(w, h, en)
+            src = "render menu"
         else:
             rgba = render_label(w, h, en)
             src = "render"
@@ -249,7 +293,7 @@ def replace_labels(
         rgba.save(png)
         rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw)
-        if fmt == 0xB:
+        if got == 0xB:
             new = png_to_bclim_etc1a4_same_size(png, orig)
         else:
             new = png_to_bclim_rgba4444_same_size(png, orig)
@@ -261,7 +305,7 @@ def patch_package(
     pkg_id: int,
     labels: list[tuple[str, str]],
     *,
-    fmt: int,
+    fmt: int | None,
     use_zopfli: bool,
 ) -> None:
     vanilla = VANILLA if VANILLA.is_file() else MOD_IMG
@@ -342,11 +386,10 @@ def main() -> None:
     bak = maybe_backup_img(MOD_IMG, "mail_home")
     OUT.mkdir(parents=True, exist_ok=True)
 
-    patch_package(HEADER_PKG, HEADER_LABELS, fmt=0xB, use_zopfli=True)
     patch_package(
         BUTTON_PKG,
-        BUTTON_LABELS + CATEGORY_LABELS,
-        fmt=8,
+        BUTTON_LABELS + CATEGORY_LABELS + ZHOUMARU_ONLY,
+        fmt=None,
         use_zopfli=False,
     )
     print("deployed Mail home EN ->", MOD_IMG, flush=True)

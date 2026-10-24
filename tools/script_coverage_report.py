@@ -34,6 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Unique script IDs:   {s['total_stems']} (script pack)")
     print(f"  Manaka t* (100%):  {s['manaka']}")
     print(f"  EngPatcher p*:     {s['eng_p']}")
+    print(f"  Contributor:       {s['contrib']}")
     print(f"  NLPPPATCH layer:   {s['nlppatch']}")
     print(f"  Japanese (base):   {s['jp']}")
     print(f"English total:       {s['english_stems']} ({s['english_pct']}%)")

@@ -28,7 +28,7 @@
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Invalid message number.</Dialog>
+          <Dialog>Wrong message number.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -186,25 +186,25 @@
           <Dialog>Surprised</Dialog>
           <Dialog>Troubled</Dialog>
           <Dialog>Smitten</Dialog>
-          <Dialog>Smile (Blush)</Dialog>
-          <Dialog>Angry (Blush)</Dialog>
+          <Dialog>Smile (blush)</Dialog>
+          <Dialog>Angry (blush)</Dialog>
           <Dialog>Embarrassed</Dialog>
-          <Dialog>Surprised (Blush)</Dialog>
-          <Dialog>Happy (Blush)</Dialog>
-          <Dialog>Fidgety (Blush)</Dialog>
-          <Dialog>Troubled Smile</Dialog>
-          <Dialog>Fixed Smile</Dialog>
-          <Dialog>Kiss Face</Dialog>
-          <Dialog>Kiss Face (Half)</Dialog>
-          <Dialog>Kiss Face (Eyes Closed)</Dialog>
-          <Dialog>Normal (Eyes Closed)</Dialog>
-          <Dialog>Troubled (Eyes Closed)</Dialog>
-          <Dialog>Angry (Eyes Closed)</Dialog>
-          <Dialog>Smitten (Eyes Closed)</Dialog>
-          <Dialog>Embarrassed (Eyes Closed)</Dialog>
-          <Dialog>Grin (Blush)</Dialog>
-          <Dialog>Fixed Smile (Blush)</Dialog>
-          <Dialog>Fixed Smile (Troubled)</Dialog>
+          <Dialog>Surprised (blush)</Dialog>
+          <Dialog>Happy (blush)</Dialog>
+          <Dialog>Fidgety (blush)</Dialog>
+          <Dialog>Troubled smile</Dialog>
+          <Dialog>Beaming (fixed)</Dialog>
+          <Dialog>Kiss face</Dialog>
+          <Dialog>Kiss face (half)</Dialog>
+          <Dialog>Kiss face (eyes closed)</Dialog>
+          <Dialog>Normal (eyes closed)</Dialog>
+          <Dialog>Troubled (eyes closed)</Dialog>
+          <Dialog>Angry (eyes closed)</Dialog>
+          <Dialog>Smitten (eyes closed)</Dialog>
+          <Dialog>Embarrassed (eyes closed)</Dialog>
+          <Dialog>Beaming (blush)</Dialog>
+          <Dialog>Beaming (fixed, blush)</Dialog>
+          <Dialog>Beaming (fixed, troubled)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

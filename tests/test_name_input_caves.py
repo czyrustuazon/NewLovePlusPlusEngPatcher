@@ -24,6 +24,7 @@ ascii_dakuten = load_module(
     "patch_input_skip_ascii_dakuten",
     SRC / "patch_input_skip_ascii_dakuten.py",
 )
+force_ml = load_module("patch_input_force_ml", SRC / "patch_input_force_ml.py")
 strcat_raw = load_module("patch_input_strcat_raw", SRC / "patch_input_strcat_raw.py")
 call_romaji = load_module("patch_input_call_romaji", SRC / "patch_input_call_romaji.py")
 
@@ -163,6 +164,93 @@ def test_skip_ascii_dakuten_is_inplace_strcat_branch():
     assert ascii_dakuten.PATCHED_SITE != ascii_dakuten.EXPECT_SITE
 
 
+def test_force_ml_is_inplace_kit_open():
+    # Shared input kit open: kit+8 = 4 (ABC), kit+1 = 1 (Win_ML), no cave.
+    assert force_ml.SITE == 0x00255F40
+    assert len(force_ml.PATCHED) == len(force_ml.VANILLA) == 32
+    assert force_ml.PATCHED[:8] == bytes.fromhex("0400a0e3080084e5")
+    # ldr r5,=mgr is pc-relative and stays at the same address.
+    assert force_ml.PATCHED[8:12] == force_ml.VANILLA[8:12]
+    # Ends in an unconditional b to the same ML open the vanilla beq takes.
+    assert force_ml.PATCHED[-4:] == bytes.fromhex("210000ea")
+    assert force_ml.VANILLA[-4:] == bytes.fromhex("2100000a")
+
+
+def test_force_ml_sites():
+    by_label = {label: (site, van, pat) for site, van, pat, label in force_ml.SITES}
+    assert by_label["sync mode"][0] == 0x00257238
+    # Btn_ML jump table ids 0-3 (Kanji, Kana 1, Kana 2, S. Kana) -> exit.
+    for i in range(4):
+        site, van, pat = by_label[f"btn {i}"]
+        assert site == 0x001F8C9C + 4 * i
+        assert pat == bytes.fromhex("a88f2f00")
+    assert "btn 4" not in by_label  # ABC stays live
+    assert by_label["pencil +0x2c"][0] == 0x0022BFA4
+    assert by_label["pencil +0x28"][0] == 0x0022C1F8
+    sites = [s for s, _v, _p, _l in force_ml.SITES] + [force_ml.SITE]
+    assert len(sites) == len(set(sites))
+
+
+def _force_ml_vanilla_buf() -> bytearray:
+    data = bytearray(force_ml.SITE + 0x2000)
+    data[force_ml.SITE : force_ml.SITE + len(force_ml.VANILLA)] = force_ml.VANILLA
+    for site, van, _pat, _label in force_ml.SITES:
+        data[site : site + len(van)] = van
+    return data
+
+
+def test_force_ml_apply_on_synthetic_site():
+    site = force_ml.SITE
+    data = _force_ml_vanilla_buf()
+    assert not force_ml.is_patched(data)
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+    force_ml.apply_patch(data)  # idempotent
+    assert data[site : site + len(force_ml.PATCHED)] == force_ml.PATCHED
+    for s, _van, pat, _label in force_ml.SITES:
+        assert data[s : s + len(pat)] == pat
+
+    # One site still vanilla: not done, re-apply fixes it.
+    s0, van0, _pat0, _l0 = force_ml.SITES[0]
+    data[s0 : s0 + len(van0)] = van0
+    assert not force_ml.is_patched(data)
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+
+    # Earlier grid-only kit-open revision upgrades in place.
+    old = _force_ml_vanilla_buf()
+    old[site : site + len(force_ml._OLD_PATCHED)] = force_ml._OLD_PATCHED
+    force_ml.apply_patch(old)
+    assert force_ml.is_patched(old)
+
+    bad = _force_ml_vanilla_buf()
+    bad[site : site + 4] = bytes(4)
+    with pytest.raises(ValueError, match="unexpected kit open"):
+        force_ml.apply_patch(bad)
+    bad = _force_ml_vanilla_buf()
+    bad[s0 : s0 + 4] = bytes(4)
+    with pytest.raises(ValueError, match="unexpected sync mode"):
+        force_ml.apply_patch(bad)
+
+
+def test_force_ml_main(capsys):
+    assert force_ml.main(["--dry-run"]) == 0
+    assert "strb" in capsys.readouterr().out
+    with pytest.raises(SystemExit, match="deploy_name_input_en"):
+        force_ml.main([])
+
+
+@pytest.mark.local_data
+def test_force_ml_on_vanilla(vanilla_code):
+    data = bytearray(vanilla_code)
+    site = data[force_ml.SITE : force_ml.SITE + len(force_ml.VANILLA)]
+    if site != force_ml.VANILLA:
+        pytest.skip("code.bin kit-open site is not vanilla")
+    force_ml.apply_patch(data)
+    assert force_ml.is_patched(data)
+    force_ml.apply_patch(data)  # idempotent
+
+
 @pytest.mark.local_data
 def test_skip_ascii_dakuten_on_vanilla(vanilla_code):
     data = bytearray(vanilla_code)
@@ -211,24 +299,67 @@ def test_strcat_raw_on_vanilla(vanilla_code):
     assert bytes(data[cave : cave + len(blob)]) == blob
 
 
-def test_call_romaji_caves_assemble_and_hook_vanilla():
-    """Called-list *3 walk + ASCII fallback stay in .text RX after strcat."""
+def test_call_romaji_cave_fits_after_strcat():
     cave = call_romaji.cave_addr()
     blob, labs = call_romaji.build_blob(base=cave)
     assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
-    assert labs["utf8_off"] == cave
-    # GetUtf8CharByteLength writes r1. Cursor is ldrb r0, [r6, r3], not r1.
-    off = labs["utf8_off"] - cave
-    adv = labs["utf8_adv"] - cave
-    walk = blob[off:adv]
-    assert bytes.fromhex("0300d6e7") in walk  # ldrb r0, [r6, r3]
-    assert bytes.fromhex("0610a0e1") not in walk  # mov r1, r6
-    assert "call01" in labs and "call02" in labs
-    assert bytes.fromhex("00c00fe1") in blob  # mrs r12, cpsr (preserve +3 loop flags)
-    assert bytes.fromhex("0cf028e1") in blob  # msr cpsr_f, r12
-    assert bytes.fromhex("0190a0e3") in blob  # mov r9, #1 before ASCII DrawText jump
-    bls = _arm_bl_targets(blob, cave)
-    assert any(tgt == call_romaji.ADDR_UTF8_LEN for _, tgt in bls)
+    assert labs["typed01"] == cave
+
+
+def test_call_romaji_matcher_fits_dead_lookup_bodies():
+    """The compiled matcher overwrites FUN_00147b3c / FUN_00147e04 / FUN_00148f44
+    from their entries, and stays inside each body."""
+    regions = call_romaji.MATCH_REGIONS
+    assert [s for s, _p in call_romaji.MATCH_PIECES] == list(regions)
+    for start, piece in call_romaji.MATCH_PIECES:
+        assert start + len(piece) <= regions[start][0]
+    # FUN_001480a8 right after FUN_00147e04 is live.
+    assert regions[0x00147E04][0] == 0x001480A8
+
+
+def _b_target(word: bytes, here: int) -> int:
+    imm = int.from_bytes(word, "little") & 0xFFFFFF
+    if imm & 0x800000:
+        imm -= 0x1000000
+    return here + 8 + (imm << 2)
+
+
+def test_call_romaji_no_match_shows_typed_name():
+    """Exact lookup failed + non-empty name → nlpp_call_typed gives the row's
+    reading ID (long-vowel match or -1) and text ("Zack *"), count 1, then the
+    candidate-0 tail with r1 = that text.
+
+    The ID must come from nlpp_call_typed: the slot otherwise holds 0 (pack
+    0x7200 slot 0, Aizawa) or a stale ID, and the heroine would say that
+    reading for a typed name.
+    """
+    from capstone import CS_ARCH_ARM, CS_MODE_ARM, Cs
+
+    md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
+    cave = call_romaji.cave_addr()
+    blob, labs = call_romaji.build_blob(base=cave)
+    typed = f"bl #{call_romaji.NLPP_CALL_TYPED:#x}"
+    expected = {
+        "01": [
+            "ldr r0, [sp, #0x168]", "cmp r0, #0", f"beq #{call_romaji.MISS01_SKIP:#x}",
+            "ldrb r1, [r0]", "cmp r1, #0", f"beq #{call_romaji.MISS01_SKIP:#x}",
+            "mov r1, #1", "add r2, sp, #0x10c", typed,
+            "str r0, [r6, #0x394]",
+            "add r1, sp, #0x10c", "mov r7, #1", f"b #{call_romaji.CALL01_DRAW0:#x}",
+        ],
+        "02": [
+            "ldr r0, [sp, #0x168]", "cmp r0, #0", f"beq #{call_romaji.MISS02_SKIP:#x}",
+            "ldrb r1, [r0]", "cmp r1, #0", f"beq #{call_romaji.MISS02_SKIP:#x}",
+            "ldr r1, [r7, #0x2c]", "add r2, sp, #0x110", typed,
+            "add ip, r7, #0x200", "strh r0, [ip, #0x34]",
+            "add r1, sp, #0x110", "mov r6, #1", f"b #{call_romaji.CALL02_DRAW0:#x}",
+        ],
+    }
+    for n, want in expected.items():
+        at = labs["typed" + n]
+        code = blob[at - cave : at - cave + 4 * len(want)]
+        got = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(code, at)]
+        assert got == want, n
 
 
 @pytest.mark.local_data
@@ -236,15 +367,24 @@ def test_call_romaji_hooks_vanilla(vanilla_code):
     cave = call_romaji.cave_addr()
     blob, _labs = call_romaji.build_blob(base=cave)
     data = bytearray(vanilla_code)
-    if data[call_romaji.SITE_INDEX_MUL3 : call_romaji.SITE_INDEX_MUL3 + 4] != (
-        call_romaji.ORIG_INDEX_MUL3
-    ):
+    if data[call_romaji.SITE_MISS01 : call_romaji.SITE_MISS01 + 4] != call_romaji.ORIG_MISS01:
         pytest.skip("code.bin call-list site is not vanilla")
     if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] == strcat_raw.VANILLA_HEAD:
         strcat_raw.apply_patch(data)
     call_romaji.apply_patch(data)
     assert call_romaji.is_patched(data)
     assert bytes(data[cave : cave + len(blob)]) == blob
+    for start, piece in call_romaji.MATCH_PIECES:
+        assert bytes(data[start : start + len(piece)]) == piece
+    for site, typed in ((call_romaji.SITE_MISS01, "typed01"), (call_romaji.SITE_MISS02, "typed02")):
+        assert data[site + 3] == 0x0A  # still beq
+        assert _b_target(bytes(data[site : site + 4]), site) == _labs[typed]
+    for site in (call_romaji.SITE_PICK01, call_romaji.SITE_PICK02):
+        assert data[site + 3] == 0xEB  # still bl
+        assert _b_target(bytes(data[site : site + 4]), site) == call_romaji.NLPP_CALL_PICK
+    # No other caller of the replaced lookups (FUN_00148f44 / FUN_00147808 are
+    # only reached from inside them).
+    assert call_romaji.apply_patch(data) is False
 
 
 def test_lyt_null_pane_caves_assemble_and_hook_vanilla():

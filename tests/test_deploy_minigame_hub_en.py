@@ -56,7 +56,7 @@ def test_zhoumaru_minigame_hub_masters_exist():
             assert im.size == size
 
 
-def test_render_game_text_row_matches_zhoumaru_weight():
+def test_puzzle_row_matches_zhoumaru_weight():
     """Puzzle-dama should be ink-47 and ~TwinBee glyph height, not header-aa."""
     twin = Image.open(
         ROOT
@@ -70,11 +70,16 @@ def test_render_game_text_row_matches_zhoumaru_weight():
     tys, txs = np.where(tarr[:, :, 3] > 32)
     twin_h = int(tys.max() - tys.min() + 1)
 
-    im = deploy_minigame_hub_en.render_game_text_row(96, 18, "Puzzle-dama")
+    im, src = deploy_minigame_hub_en._rgba_for(
+        "Myroom.check", "game_text_puzzle_RGBA4", "Puzzle-dama", 96, 18
+    )
+    assert src == "render menu:Puzzle-dama"
     arr = np.array(im)
     opaque = arr[:, :, 3] > 32
     assert opaque.any()
     assert tuple(int(x) for x in arr[opaque][:, :3].mean(0).round()) == (47, 47, 47)
+    # Smooth edges, not the old hard-threshold (deep-fried) mask.
+    assert ((arr[:, :, 3] > 0) & (arr[:, :, 3] < 255)).sum() > 0
     ys, xs = np.where(opaque)
     glyph_h = int(ys.max() - ys.min() + 1)
     assert glyph_h >= twin_h - 1

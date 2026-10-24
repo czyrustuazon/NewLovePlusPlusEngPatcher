@@ -17,7 +17,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone's gonna see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -37,7 +37,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone's gonna see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -57,7 +57,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone's gonna see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -85,8 +85,10 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Alright, I'll be gentle.)</Dialog>
-          <Dialog>(Alright, let's tease her a bit.)</Dialog>
+          <Dialog>(All right, let's be gentle
+and affectionate.)</Dialog>
+          <Dialog>(All right, let's tease her
+a little.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -106,8 +108,10 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Alright, I'll be gentle.)</Dialog>
-          <Dialog>(Alright, let's tease her a bit.)</Dialog>
+          <Dialog>(All right, let's be gentle
+and affectionate.)</Dialog>
+          <Dialog>(All right, let's tease her
+a little.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -127,8 +131,10 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Alright, I'll be gentle.)</Dialog>
-          <Dialog>(Alright, let's tease her a bit.)</Dialog>
+          <Dialog>(All right, let's be gentle
+and affectionate.)</Dialog>
+          <Dialog>(All right, let's tease her
+a little.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -149,7 +155,7 @@
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Invalid message number.</Dialog>
+          <Dialog>Wrong message number.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -194,7 +200,7 @@
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Invalid message number.</Dialog>
+          <Dialog>Wrong message number.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -239,7 +245,7 @@
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Invalid message number.</Dialog>
+          <Dialog>Wrong message number.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -284,7 +290,7 @@
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Invalid message number.</Dialog>
+          <Dialog>Wrong message number.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -640,37 +646,34 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Hm.</Dialog>
+          <Dialog>Mm.</Dialog>
           <Dialog>Hehe♪</Dialog>
           <Dialog>Ah.</Dialog>
-          <Dialog>Hmm...</Dialog>
-          <Dialog>Phew.</Dialog>
+          <Dialog>Mmm.</Dialog>
+          <Dialog>Haa.</Dialog>
           <Dialog>Yeah.</Dialog>
-          <Dialog>No, thanks.</Dialog>
-          <Dialog>Ehehe.</Dialog>
-          <Dialog>Yep.</Dialog>
+          <Dialog>That's nice.</Dialog>
+          <Dialog>Ehe.</Dialog>
+          <Dialog>Just like that.</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>Okay.</Dialog>
-          <Dialog>Whaaat？</Dialog>
-          <Dialog>...Hmm？</Dialog>
+          <Dialog>Ahh.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>Mmph.</Dialog>
-          <Dialog>Hey now...</Dialog>
-          <Dialog>Hey.</Dialog>
-          <Dialog>Ah!</Dialog>
-          <Dialog>It is.</Dialog>
-          <Dialog>Hey, you!</Dialog>
+          <Dialog>Oh!</Dialog>
+          <Dialog>Hold on.</Dialog>
+          <Dialog>Stop.</Dialog>
+          <Dialog>Don't.</Dialog>
+          <Dialog>Hey!</Dialog>
           <Dialog>Ah, not there!</Dialog>
-          <Dialog>This spot is off-limits.</Dialog>
-          <Dialog>You're such a pervert...</Dialog>
-          <Dialog>Doing that all of a sudden
-is a bit...</Dialog>
-          <Dialog>I won't let you get away
-with everything, you know？</Dialog>
-          <Dialog>I understand, but
-control yourself.</Dialog>
+          <Dialog>No touching here.</Dialog>
+          <Dialog>You're so naughty...</Dialog>
+          <Dialog>Doing that out of nowhere is...</Dialog>
+          <Dialog>I don't just let everything slide, okay？</Dialog>
+          <Dialog>I get it, but behave yourself.</Dialog>
           <Dialog>Bad boy. Hmph.</Dialog>
-          <Dialog>Hey, those eyes look naughty!</Dialog>
-          <Dialog>You're on time-out.</Dialog>
+          <Dialog>Hey, you've got a naughty look in your eyes.</Dialog>
+          <Dialog>Nope, you'll have to wait.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -970,37 +973,34 @@ control yourself.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Hm.</Dialog>
+          <Dialog>Mm.</Dialog>
           <Dialog>Hehe♪</Dialog>
           <Dialog>Ah.</Dialog>
-          <Dialog>Hmm...</Dialog>
-          <Dialog>Phew.</Dialog>
+          <Dialog>Mmm.</Dialog>
+          <Dialog>Haa.</Dialog>
           <Dialog>Yeah.</Dialog>
-          <Dialog>No, thanks.</Dialog>
-          <Dialog>Ehehe.</Dialog>
-          <Dialog>Yep.</Dialog>
+          <Dialog>Go ahead.</Dialog>
+          <Dialog>Ehe.</Dialog>
+          <Dialog>Right there.</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>Okay.</Dialog>
-          <Dialog>Whaaat？</Dialog>
-          <Dialog>...Hmm？</Dialog>
+          <Dialog>Ahh.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>Mmph.</Dialog>
-          <Dialog>Hey now...</Dialog>
-          <Dialog>Hey.</Dialog>
+          <Dialog>Hey now.</Dialog>
+          <Dialog>Wait a sec.</Dialog>
           <Dialog>Ah!</Dialog>
-          <Dialog>It is.</Dialog>
-          <Dialog>Hey, you!</Dialog>
+          <Dialog>No.</Dialog>
+          <Dialog>Hey!</Dialog>
           <Dialog>Ah, not there!</Dialog>
-          <Dialog>This spot is off-limits.</Dialog>
-          <Dialog>You're such a pervert...</Dialog>
-          <Dialog>Doing that all of a sudden
-is a bit...</Dialog>
-          <Dialog>I won't let you get away
-with everything, you know？</Dialog>
-          <Dialog>I understand, but
-control yourself.</Dialog>
+          <Dialog>No touching here.</Dialog>
+          <Dialog>You're so naughty...</Dialog>
+          <Dialog>Doing that out of nowhere is...</Dialog>
+          <Dialog>I don't just let everything slide, okay？</Dialog>
+          <Dialog>I get it, but behave yourself.</Dialog>
           <Dialog>Bad boy. Hmph.</Dialog>
-          <Dialog>Hey, those eyes look naughty!</Dialog>
-          <Dialog>You're on time-out.</Dialog>
+          <Dialog>Hey, you've got a naughty look in your eyes.</Dialog>
+          <Dialog>Nope, you'll have to wait.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1300,37 +1300,38 @@ control yourself.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Hm.</Dialog>
+          <Dialog>Mm.</Dialog>
           <Dialog>Hehe♪</Dialog>
           <Dialog>Ah.</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mmm.</Dialog>
           <Dialog>Phew.</Dialog>
           <Dialog>Yeah.</Dialog>
-          <Dialog>No, thanks.</Dialog>
-          <Dialog>Ehehe.</Dialog>
-          <Dialog>Yep.</Dialog>
+          <Dialog>Sure.</Dialog>
+          <Dialog>Ehe.</Dialog>
+          <Dialog>Right there.</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>Okay.</Dialog>
-          <Dialog>Whaaat？</Dialog>
-          <Dialog>...Hmm？</Dialog>
-          <Dialog>Mmph.</Dialog>
-          <Dialog>Hey now...</Dialog>
-          <Dialog>Hey.</Dialog>
+          <Dialog>Ahh.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Hmph.</Dialog>
+          <Dialog>Hey now.</Dialog>
+          <Dialog>Hold on.</Dialog>
           <Dialog>Ah!</Dialog>
-          <Dialog>It is.</Dialog>
-          <Dialog>Hey, you!</Dialog>
+          <Dialog>Don't.</Dialog>
+          <Dialog>Hey!</Dialog>
           <Dialog>Ah, not there!</Dialog>
-          <Dialog>This spot is off-limits.</Dialog>
-          <Dialog>You're such a pervert...</Dialog>
-          <Dialog>Doing that all of a sudden
-is a bit...</Dialog>
-          <Dialog>I won't let you get away
-with everything, you know？</Dialog>
-          <Dialog>I understand, but
-control yourself.</Dialog>
+          <Dialog>No touching there.</Dialog>
+          <Dialog>You're so naughty...</Dialog>
+          <Dialog>Doing that right out of
+the blue is...</Dialog>
+          <Dialog>I won't just let you get
+away with anything, okay？</Dialog>
+          <Dialog>I get how you feel,
+but hold back.</Dialog>
           <Dialog>Bad boy. Hmph.</Dialog>
-          <Dialog>Hey, those eyes look naughty!</Dialog>
-          <Dialog>You're on time-out.</Dialog>
+          <Dialog>Hey, you've got a naughty
+look in your eyes.</Dialog>
+          <Dialog>You'll just have to wait.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1615,8 +1616,8 @@ control yourself.</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Touch Skinship</Dialog>
-          <Dialog>Retry (From Load)</Dialog>
-          <Dialog>Retry (After Load)</Dialog>
+          <Dialog>Again (from load</Dialog>
+          <Dialog>Again (after load</Dialog>
           <Dialog>Quit</Dialog>
           <Dialog>SKINSHIP_RET_UNINITIALIZE</Dialog>
           <Dialog>SKINSHIP_RET_IDLE</Dialog>
@@ -1629,9 +1630,9 @@ control yourself.</Dialog>
           <Dialog>SKINSHIP_RET_CHANGE_SITUATION</Dialog>
           <Dialog>SKINSHIP_RET_END</Dialog>
           <Dialog>SKINSHIP_RET_OTHER</Dialog>
-          <Dialog>Standing Face-to-Face</Dialog>
-          <Dialog>Sitting Side-by-Side</Dialog>
-          <Dialog>Walking Conversation</Dialog>
+          <Dialog>Standing face-to-face</Dialog>
+          <Dialog>Sitting side-by-side</Dialog>
+          <Dialog>Moving conversation</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1687,12 +1688,16 @@ control yourself.</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Anytime Skinship</Dialog>
-          <Dialog>Standing Face-to-Face (Dates, Normal Talk)</Dialog>
-          <Dialog>Sitting Face-to-Face (Facing Conversation)</Dialog>
-          <Dialog>Walking Side-by-Side (Commuting, etc.)</Dialog>
-          <Dialog>Sitting Side-by-Side (Dates, etc.)</Dialog>
-          <Dialog>Restart from Beginning</Dialog>
-          <Dialog>Retry with Carryover</Dialog>
+          <Dialog>Standing face-to-face chat
+(dates, normal chat</Dialog>
+          <Dialog>Sitting face-to-face
+(face-to-face chat</Dialog>
+          <Dialog>Walking side-by-side chat
+(commuting, etc.</Dialog>
+          <Dialog>Sitting side-by-side chat
+(on dates, etc.</Dialog>
+          <Dialog>Restart from the beginning</Dialog>
+          <Dialog>Carry over and try again</Dialog>
           <Dialog>Quit</Dialog>
           <Dialog>Next</Dialog>
         </Dialogs>

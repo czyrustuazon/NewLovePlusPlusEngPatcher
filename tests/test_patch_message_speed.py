@@ -1,4 +1,4 @@
-"""Message Speed: Options 14/8/2/0, TalkWindow ÷4, voice/script cap."""
+"""Message Speed: Options 5/3/2/0, TalkWindow 10/20/35/60 ms, voice/script cap."""
 
 from __future__ import annotations
 
@@ -37,6 +37,44 @@ def test_message_speed_revert_restores_vanilla():
     assert ms.revert_patch(data) is True
     assert ms.is_vanilla(data)
     assert ms.revert_patch(data) is False
+
+
+def test_message_speed_upgrades_legacy_options():
+    data = _blob((ms.LEGACY_LV1, ms.LEGACY_LV2, ms.LEGACY_LV3))
+    assert ms.is_options_legacy(data)
+    assert ms.apply_patch(data) is True
+    assert ms.is_patched(data)
+    assert ms.apply_patch(data) is False
+
+
+def test_message_speed_upgrades_60fps_options():
+    data = _blob((ms.LEGACY_60FPS_LV1, ms.LEGACY_60FPS_LV2, ms.LEGACY_60FPS_LV3))
+    assert ms.is_options_legacy(data)
+    assert ms.apply_patch(data) is True
+    assert ms.is_patched(data)
+    assert ms.revert_patch(data) is True
+    assert ms.is_vanilla(data)
+
+
+def test_talk_table_upgrades_legacy_quarter_table():
+    data = _blob((ms.LEGACY_LV1, ms.LEGACY_LV2, ms.LEGACY_LV3))
+    data.extend(bytes(ms.TALK_TABLE_OFF + 32 - len(data)))
+    data[ms.TALK_TABLE_OFF : ms.TALK_TABLE_OFF + len(ms.TALK_LEGACY_BYTES)] = (
+        ms.TALK_LEGACY_BYTES
+    )
+    assert ms.is_talk_legacy(data)
+    assert ms.apply_patch(data) is True
+    assert ms.is_talk_patched(data)
+    assert ms.revert_patch(data) is True
+    assert ms.is_talk_vanilla(data)
+
+
+def test_talk_table_steps_are_distinct():
+    # slider 1..4 = index 3..0; each step at least ~1.7x faster
+    by_slider = [ms.TALK_PATCHED[i] for i in (3, 2, 1, 0)]
+    for slow, fast in zip(by_slider, by_slider[1:]):
+        assert slow / fast >= 1.7
+    assert ms.TALK_PATCHED[4] > ms.TALK_PATCHED[3]
 
 
 def test_message_speed_rejects_unknown_bytes():

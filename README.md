@@ -17,11 +17,11 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Wipe `out/`, `release/`, and `cache/`** completely, then recreate them empty. That deletes the previous CIA, logs, `out/extdata_backup/`, gold bake, TRB overlay, name-input `code.bin`, the vanilla RomFS extract, and the PNG pack cache. The A/B Azahar copies in `ab_test/azahar_instances/` are left in place. `python src/patch_cia.py` on its own does not do this wipe  
 3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-4. **Inject English scripts** — layered: Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`)  
+4. **Inject English scripts** — layered: contributor reviews in `assets/script_contrib/` (always, when present), Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`). A contributor file for a stem wins over that Gemini copy.  
 
 5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
-6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Message Speed, title-loop guard). Older single-pane `--patch-code` is still available and is **not** this stack  
-7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + CESA + SMS/day-counter)  
+6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Called-name list, Message Speed, US date order, AM/PM on the home clock, title-loop guard, My Camera Restore Default, Communication Settings StreetPass). Older single-pane `--patch-code` is still available and is **not** this stack  
+7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + English mini-game screens + CESA + SMS/day-counter)  
 8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/NewLovePlusPlus-EN.cia`. A Luma LayeredFS folder is **not** built (see [LayeredFS does not work on hardware](#layeredfs-does-not-work-on-hardware))
 10. **Clean** `out/` to the CIA + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`)
@@ -30,10 +30,10 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 | Included assets | Approx. count |
 |-----------------|--------------:|
 | Finished dialog scripts (XML → `.dbin2`) | 230 XML in `assets/scripts` → 753 `.dbin2` across `NLP_01` / `NLP_02` / `script` |
-| Unique EN UI PNG masters (`IMAGE_MAP`) | **1745** in **95 / 95** folders |
-| Chrome subset (site “UI textures”) | **562** in **25 / 25** folders |
+| Unique EN UI PNG masters (`IMAGE_MAP`) | **1765** in **101 / 101** folders |
+| Chrome subset (site “UI textures”) | **564** in **25 / 25** folders |
 
-PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; 2026-09-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 95 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
+PNG counts are **audited English masters present** (deduped by stem under `assets/images/`, prefer `.check`; recounted 2026-10-20). Not a percent of every BCLIM in vanilla `img.bin`. Chrome = the 25 folders `tools/export_progress_metrics.py` posts as UI textures. Full mapped pack is what gold bake packs. All 101 `IMAGE_MAP` keys have an asset folder (`intro111` / `intro203` / `intro304` are sparse dumps).
 
 Title ID: `00040000000F4E00`
 
@@ -111,13 +111,13 @@ Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed 
 `rebuild`, after a successful Drop CIA run, and from **nlpp-gold-maker** CI — when
 `NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
 nlpp-gold-maker Actions secrets). Graphics/menus stay manual in the site admin —
-use **562** (chrome) or **1745** (all mapped UI masters) from the table above.
+use **564** (chrome) or **1765** (all mapped UI masters) from the table above.
 See [`infra/README.md`](infra/README.md). Manual: `.\ab_test\make.ps1 progress`.
 Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc4.1`** on main. `CIA_TITLE_VERSION` is **4**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc5`** on main. `CIA_TITLE_VERSION` is **5**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 
@@ -248,7 +248,7 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 
 SpotPass is **not** the in-game **Communication** menu (Girlfriend Comm / Business Card / Wireless Battle are StreetPass / local wireless). Enoshima is already on the cart (script `t146`, extra data `00000f4e`) and has nothing to do with SpotPass.
 
-Thank you to **Cetaceaqua** for providing the SpotPass dump this comes from (vendored under `tools/spotpass/`).
+Thank you to **[Cetaceaqua](https://github.com/Cetaceaqua/)** for providing the SpotPass dump this comes from (vendored under `tools/spotpass/`).
 
 `tools/build_spotpass_inject.py` still builds a BOSS-shaped `extdata/…/00000321/boss/info.dat` for RE and emulator experiments. The English CIA does not use it. See [`tools/spotpass/README.md`](tools/spotpass/README.md) and [`docs/technical.md` §16](docs/technical.md). [`docs/spotpass-rebuild.md`](docs/spotpass-rebuild.md) covers rebuilding the service so new issues can go out.
 
@@ -337,7 +337,7 @@ python src/patch_cia.py --cia "C:\path\to\00040000000F4E00_v00.3ds" --out "out/N
 
 ## Credits
 
-Thank you to everyone whose work this patcher builds on. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
+Thank you to everyone whose work this patcher builds on — translators who lived in XML for years, painters who redrew every softkey, and the people who clicked through every menu so the rest of us didn’t have to. Their materials keep **their own** licenses; the MIT grant in [`LICENSE`](LICENSE) is only for EngPatcher original work.
 
 ### EngPatcher contributors
 
@@ -345,10 +345,16 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 
 | Person | Contribution |
 |--------|----------------|
-| **Zhoumaru** | A large UI overhaul and translation work |
-| **D.** | Debugging and testing the patch |
+| **[Zhoumaru](https://github.com/andiii-k/NLPP-ETT)** | Complete English UI texture translations ([NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)) — the painted masters gold bake packs into `img.bin` |
+| **DDMeisterX** | Manaka (`t*`) + everyday / player (`p*`) routes, and the early Rinko/Nene community layer (48 reviewed scripts each; see note below) |
+| **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
+| **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **i need help here...** | Knowledge sharing |
-| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that allowed quicker access to postgame context |
+| **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
+
+**Nene / Rinko coverage (2026-10-23):** the reviewed community layer is still **48 / 174** scripts each (**27.6%**), the early-story NLPPATCH files. A Gemini machine pass now covers every other script that has dialogue, **146 / 174 (83.9%)** per route. The other **28** files on each route are empty retail stubs with no lines. The fansite dialogue bar draws those **56** files as their own segment, so the bar fills to **100%**. **522 / 578 (90.3%)** is the count of files that actually contain lines. Spoken text plus phone messages is **2,344 / 2,400 (97.7%)** entries that contain text. The same **56** empty script files are the stone segment on that bar, so it fills to **100%** as well. Nene’s pass, including post-game (`a900`, `a912`, `a970`, `a999`, and the other contentful `a9*`), is optional at Drop time. Rinko’s pass, including post-game (`k912`, `k970`, `k999`, and the rest), is in `assets/gemini_heroines/xml/` and is not injected yet. Phone messages for all three heroines are translated in `assets/gemini_heroines/sms/` (**1822 / 1822**, unreviewed) and stay out of the gold bake until `--include-sms`.
+
+**System text (2026-10-23):** `textresource_jpn.trb` is **25,333 / 25,346 (99.9%)**. The last **13** slots stay Japanese on purpose. They are single kanji a study quiz asks you to read (`胤`, `欧`, `戟`, `原`, `哉`, `諏`, `成`, `替`, `鉄`, `乍`, `蜂`, `憂`, `梨`). An English quiz prompt that quotes a Japanese word keeps that quotation. The player-name token, the middle dot `・`, and the long-vowel mark `ー` are already English, so the counter skips them.
 
 ### CIA / RomFS tooling
 
@@ -363,9 +369,12 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | `nlpp-tools` (`ie`, `pe`, `png2bclim`, `png2texi`, …) | **[kiwiz/nlpp-tools](https://github.com/kiwiz/nlpp-tools)** — thank you to **kiwiz** |
-| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order. |
+| NLPP Toolchain (packing / BCLIM fixes used by EngPatcher + nlpp-texture-tool) | **[Cetaceaqua](https://github.com/Cetaceaqua/)** |
+| BCLIM RGB8 / RGBA8 byte order | Thank you to **Cetaceaqua** for the RGB8 and RGBA8 byte order |
+| Zhoumaru UI PNG masters (menus, softkeys, headers, …) | **[Zhoumaru / NLPP-ETT](https://github.com/andiii-k/NLPP-ETT)** |
 | Name-select screen buttons (OK / Yes / No / Options) | **lolipop221** |
 | UI glyph font `MPLUS1p-Regular.ttf` | [M PLUS 1p](https://fonts.google.com/specimen/M+PLUS+1p) / [Coji / M+ FONTS](https://github.com/coz-m/MPLUS_FONTS), SIL OFL 1.1 (`assets/fonts/OFL.txt`) |
+| Menu-row font `Arimo[wght].ttf` | [Arimo](https://fonts.google.com/specimen/Arimo) by The Arimo Project Authors, SIL OFL 1.1 (`assets/fonts/Arimo-OFL.txt`) |
 | Other fonts under `assets/fonts/` (Pixelify Sans, Press Start 2P, Silkscreen, VT323) | [Google Fonts](https://fonts.google.com/) / respective OFL authors (editor / optional assets) |
 
 ### Text / scripts / localization community
@@ -373,11 +382,12 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | Component | Credit |
 |-----------|--------|
 | NLPPATCH (historical community patch) | [LovePlusProject/NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) and contributors (see [their credits](https://github.com/LovePlusProject/NLPPATCH/issues/1)) — EngPatcher ships its own `rebuild_dbin2/` + `assets/` |
+| Manaka + common + early Rinko dialogue layer | **DDMeisterX** (via the NLPPATCH-era scripts this repo still injects) |
 | NLPTextTool (XML ↔ `.dbin2`) | [LovePlusProject/NLPTextTool](https://github.com/LovePlusProject/NLPTextTool) (orig. [gdkchan](https://github.com/gdkchan)) |
 | NLPUnpacker | [LovePlusProject/NLPUnpacker](https://github.com/LovePlusProject/NLPUnpacker) (orig. [gdkchan](https://github.com/gdkchan)) |
 | Translation asset repo (reference) | [Makein/NLPPGit](https://github.com/Makein/NLPPGit) |
 | `Trb2xlsx` / `lookup.txt` (TRB character codebook) | [deaknaew/Trb2xlsx](https://github.com/deaknaew/Trb2xlsx) (vendored under `tools/Trb2xlsx/`) |
-| SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **Cetaceaqua** — thank you for providing the SpotPass dump |
+| SpotPass / とわのウォッチャー archive (`tools/spotpass/`) | **[Cetaceaqua](https://github.com/Cetaceaqua/)** — thank you for providing the SpotPass dump |
 
 Python packages used at runtime: [Pillow](https://python-pillow.org/), [NumPy](https://numpy.org/), [zopfli](https://github.com/google/zopfli) (`python-zopfli`), [etcpak](https://github.com/K0lb3/etcpak) (ETC1/ETC1A4 for BCLIM), [PyYAML](https://pyyaml.org/) (`yaml` — required by vendored `ie` / nlpp-tools).
 
@@ -449,7 +459,7 @@ A browser workbench so translators can help **without Python**: [czyrustuazon/nl
 2. Open **`index.html`** → tabs:
    - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
    - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-   - **Images** — **full UI PNG audit** (**1745** unique masters in **95 / 95** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
+   - **Images** — **full UI PNG audit** (**1765** unique masters in **101 / 101** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
@@ -459,7 +469,18 @@ Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. 
 
 ### For maintainers
 
-The tooling that applies the workbench's saved JSON back into `assets/` (HTML templates in `tools/localization_workbench/` + the ingest scripts) is **planned, not built yet**. It gets written once contributors start sending JSON. Intended flow, pack schema, and validation rules: **`docs/technical.md` §20**.
+Script packs (`nlpp-contrib-….json`) apply with:
+
+```bash
+python tools/ingest_pack.py path\to\nlpp-contrib.json
+python tools/ingest_pack.py path\to\nlpp-contrib.json --apply
+```
+
+The first command only reports. `--apply` writes a line only when the volunteer changed it and the repo line is still the Japanese baseline they edited. A script that already has English on that line is listed as a conflict and left as-is. `--force` replaces those conflicts. Nickname tokens (`▲…▲`, including an unclosed `▲`) must keep the same multiset. A drop in `※` or `▼`, or an edit to a circle / punctuation placeholder, rejects the pack and writes nothing. A `●` count change is a warning.
+
+Writes land in `assets/scripts/<stem>.xml` and the matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated is left alone: the review is written under `assets/script_contrib/` instead, and Drop CIA includes that file on its own, ahead of the Gemini machine pass. A stem that exists only as `.dbin2` also gains an XML file. Review the diff, then run Drop CIA. This command does not bake.
+
+Strings packs, image packs, and the HTML templates under `tools/localization_workbench/` are not built yet. Pack schema and the rest of the rules: **`docs/technical.md` §20**.
 
 
 
@@ -501,6 +522,9 @@ python src/patch_cia.py --cia "..." --skip-hash
 # Name patches only
 python src/patch_names.py --romfs "path\to\romfs"
 python src/patch_names.py --dbin rebuild_dbin2
+
+# Volunteer Scripts pack (report only; add --apply to write)
+python tools/ingest_pack.py path\to\nlpp-contrib.json
 
 # Name-input LayeredFS (Azahar a/b)
 .\ab_test\make.ps1 deploy-a

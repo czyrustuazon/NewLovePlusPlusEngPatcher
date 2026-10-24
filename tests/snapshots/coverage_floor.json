@@ -1,6 +1,6 @@
 {
-  "_total": 34,
-  "src/bclimutil.py": 69,
+  "_total": 35,
+  "src/bclimutil.py": 70,
   "src/darcutil.py": 36,
   "src/deploy_nlppatch_scripts.py": 0,
   "src/exact_zlib.py": 59,
@@ -52,6 +52,7 @@
   "tools/deploy_card_name_labels_en.py": 24,
   "tools/deploy_card_side_btn_en.py": 0,
   "tools/deploy_cesa_en.py": 37,
+  "tools/deploy_clock_date_order_en.py": 55,
   "tools/deploy_commu_option_en.py": 0,
   "tools/deploy_commu_settings_header_en.py": 0,
   "tools/deploy_confirm_btn_en.py": 0,

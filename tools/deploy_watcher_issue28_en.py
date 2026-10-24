@@ -25,6 +25,7 @@ from bclimutil import (  # noqa: E402
     png_to_bclim_la4_same_size,
     png_to_bclim_rgba4444_same_size,
     png_to_bclim_rgb565_same_size,
+    png_to_bclim_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
 from deploy_common import (  # noqa: E402
@@ -40,6 +41,12 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "watcher_issue28"
 PKG = 5265
+# This deploy rebuilds 5265 from vanilla after pack_images, so it must pack
+# every TownGuide master itself (banners, spot badges, survey chrome).
+# Mark02 is 緊急速報 (Breaking News), replacing Zhoumaru's opaque dump; Mark04
+# is 最新情報 (Latest News). Mag_Tit03_Pnl / Mag_Tit05_Pnl are the whole
+# English Holy Site / FEVER banners; their _Logo layers are blank.
+MASTERS = ROOT / "assets" / "images" / "TownGuide.check" / "timg"
 
 # Mag_Page01 is the one sheet behind every remaining spread. Issue 28's lake
 # sentence belongs on the holy-site corner (Mag_Tit03). The heated-pool
@@ -142,8 +149,20 @@ def _encode(page: Image.Image, orig: bytes, tmp: Path, stem: str, kind: str) -> 
     return png_to_bclim_rgb565_same_size(png, orig_path)
 
 
+def _pack_masters(darc: DarcArchive, tmp: Path) -> None:
+    for png in sorted(MASTERS.glob("*.png")):
+        entry = darc.find(f"timg/{png.stem}.bclim")
+        if entry is None:
+            raise SystemExit(f"{png.name}: no timg/{png.stem}.bclim in 5265")
+        orig_path = tmp / f"vanilla_{png.stem}.bclim"
+        orig_path.write_bytes(darc.extract_file(entry))
+        darc.replace_same_size(entry, png_to_bclim_same_size(png, orig_path))
+        print(f"OK {png.stem} master", flush=True)
+
+
 def patch_arc(vanilla_arc: bytes, tmp: Path) -> bytes:
     darc = DarcArchive(bytearray(vanilla_arc))
+    _pack_masters(darc, tmp)
     page1 = darc.find("timg/Mag_Page01.bclim")
     if page1 is None:
         raise SystemExit("missing Mag_Page01")

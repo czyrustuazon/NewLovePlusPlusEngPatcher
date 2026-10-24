@@ -1,0 +1,981 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="833355077" Unknown="36">
+  <Entries>
+    <Entry Unknown0="4188024867" Unknown1="3516748802">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46147</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, you're already here. Did I keep you waiting？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>It's fine. I just got here myself.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2657108934" Unknown1="2437674946">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46148</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Sorry for the wait. Getting here before me is pretty impressive.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Can't keep you waiting, after all.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1577967750" Unknown1="1055897455">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46149</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Sorry for the wait. My bad—I ended up being the late one.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Don't worry about it. You're right on time.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="162537523" Unknown1="3769459730">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46150</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>My bad. You came early even in this heat？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I couldn't make you wait, right？ You don't do well in the heat, ▲小早川＊▲.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2926605270" Unknown1="2690320338">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46151</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Look at you, getting here early. If you made me wait in this heat, I would've kicked you.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Glad I got here early, then.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1847431318" Unknown1="1342162815">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46152</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's hot again today. You're sweating. Sorry... Did I keep you waiting？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Not at all. You're right on time.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="432066627" Unknown1="4089279522">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46153</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Sorry for the wait. Weren't you cold？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm fine, I just got here.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3196085222" Unknown1="3010140130">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46154</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Sorry for the wait. Pretty cold, huh？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah, seriously.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2116911270" Unknown1="1544542095">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46155</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's freezing... You're all hunched over. Have you been waiting long？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Am I？ I haven't been waiting that long, though.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="701546579" Unknown1="1707967538">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46156</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, you're here. Right on time, huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Of course. Call it grown-up manners.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3465548790" Unknown1="2776311794">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46157</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>There you are. Right on time, and it saved me the trouble of looking for you.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Well, it's easy to spot you, ▲小早川＊▲.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2386407606" Unknown1="169863071">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46158</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Right on the dot. I just got here myself, actually.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I see. Glad I didn't keep you waiting long.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="971042915" Unknown1="1960678466">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46159</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, there you are. Right on time, huh. Wanna head somewhere else quick？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah. It's so hot out here I'm gonna get dizzy.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3735028486" Unknown1="3029022466">
+      <SDL2 Key="660519753">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46160</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Over here. Hey, you didn't show up late.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>If I showed up late in this heat, you'd probably call me a failure of a boyfriend.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2655887558" Unknown1="456128431">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46161</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Yep, right on time. Let's get going. I hate the heat.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Okay. Let's move before you melt, ▲小早川＊▲.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1240522867" Unknown1="1206756434">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46162</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>So you're the punctual type, huh. Brr, it's freezing.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>No kidding. Let's head somewhere else quick.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4004524822" Unknown1="2275100434">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46163</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Why is it this cold？ No point sticking around here. Come on, let's go.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah, it was.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2925351126" Unknown1="3896444863">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46164</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Thank goodness you didn't make me wait. The cold is a lethal weapon to me.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Haha, glad I wasn't late, then.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1493209219" Unknown1="1459467362">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46165</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, you're here. Listen... Can you promise me you'll be on time from now on？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry. I'll take it to heart...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4274004774" Unknown1="2527811362">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46166</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Late, huh. Does that mean you're not in the mood for our date？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>...Sorry.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3194831078" Unknown1="4182710223">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46167</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, look who's here. Seriously... Am I the kind of girl you just leave waiting？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm really sorry...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1762689171" Unknown1="688768114">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46168</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>You're late... It's hot... I'm thirsty.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm really sorry! I'll go get you something cold right now.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="248566582" Unknown1="1773889330">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46169</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Making me wait out in this heat... You've got some nerve.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry... Look, I'm apologizing, so spare me the kick.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3464327414" Unknown1="3328124895">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46170</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's hot, and you're late! Direct sunlight is a lethal weapon to me, you know.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry, sorry. Forgive me.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2032185507" Unknown1="941479042">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46171</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>46172</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Took you long enough, huh？ Well, whatever. By the way, what is with this cold？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>(She's definitely mad... right？)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="518046534" Unknown1="2026600258">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46173</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, I'm freezing here. Are you asking to be punished or what？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>No way! ...I'm sorry.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3733807110" Unknown1="3614390255">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46174</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's so cold... A little later and I would've been frozen solid.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm really... sorry for making you wait.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2301665459" Unknown1="187557010">
+      <SDL2 Key="1201529492">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46175</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>So, what's your excuse？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm really, truly sorry!</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="787542870" Unknown1="1272678226">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46176</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Who said you could be late？ Want a flurry of low kicks？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Have mercy! I really do feel bad about it.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4003270678" Unknown1="2759804927">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46177</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>You're way too late! I started worrying you weren't gonna show up at all. Jeez!</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm really sorry I made you worry!</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2571129027" Unknown1="440267938">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46178</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>...My brain stopped working from the heat. What are you gonna do about it？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I know I messed up... I'll figure out a way to make it up to you.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1040245606" Unknown1="1525389154">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46179</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's hot, hot, hot! Three seconds later and I would've gone home.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry! I shouldn't have made you wait in this heat...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4272750630" Unknown1="3046070031">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46180</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>You're way too late! I was so worried I even forgot how hot it was.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm sorry. Thanks for waiting for me.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2840608979" Unknown1="3981247666">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46181</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>...I'm cold. Inside and out.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry! I'll definitely make it up to you... so please forgive me.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1309709174" Unknown1="771467122">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46182</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's freezing! ...I'm too cold to even bother kicking you.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>(Did I just get off easy...？)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="247279670" Unknown1="2191484703">
+      <SDL2 Key="2009934063">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>46183</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>You're way too late! I was worried I got the meeting spot wrong, you know. Idiot...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'm sorry. Thanks for waiting for me out in the cold like this.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>

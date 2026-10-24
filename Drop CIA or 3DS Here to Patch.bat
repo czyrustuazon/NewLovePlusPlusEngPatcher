@@ -151,6 +151,32 @@ echo  Using:
 echo    %PYTHON%
 echo.
 
+REM Installing the patched CIA can cost the player their save if they have no
+REM backup. Asked first so nobody waits through the hash before being sent away.
+REM Preset NLPP_BACKUP_CONFIRMED=1 skips the question for scripted runs.
+if /i not "%NLPP_BACKUP_CONFIRMED%"=="1" (
+  echo Before installing the patched CIA, back up your save and extra data
+  echo ^(extdata^), e.g. with Checkpoint or JKSM on 3DS, or on Azahar:
+  echo     python tools\restore_azahar_extdata.py backup
+  echo Install over the existing game later - do not delete it first.
+  echo.
+  set "BACKUP_ANS="
+  set /p "BACKUP_ANS=Have you backed up your save and extdata? [y/N]: "
+  set "BACKUP_OK="
+  if /i "!BACKUP_ANS!"=="y" set "BACKUP_OK=1"
+  if /i "!BACKUP_ANS!"=="yes" set "BACKUP_OK=1"
+  set "BACKUP_ANS="
+  if not defined BACKUP_OK (
+    echo.
+    echo [cancelled] Back up your save and extdata first, then drop the dump again.
+    echo.
+    pause
+    exit /b 1
+  )
+  set "BACKUP_OK="
+  echo.
+)
+
 REM Do not use FOR /F around '"%PYTHON%" -c "import ...' - cmd treats
 REM 'C:\...\python.exe" -c "import' as the executable name (quote pairing).
 REM Write the unix stamp to a temp file instead (same pattern as SHA-1).
@@ -241,24 +267,27 @@ if exist "%~dp0.git" if not defined NLPP_SKIP_GOLD_FETCH if /i not "%NLPP_REPACK
   set "GOLD_ANS="
 )
 
-REM Optional Gemini Nene machine-pass dialogue (assets\gemini_heroines).
+REM Optional Gemini Nene/Rinko dialogue and SMS (assets\gemini_heroines).
 REM Asked after the gold-bake question. Any preset NLPP_INCLUDE_GEMINI_NENE
-REM (0 or 1) skips the prompt. Default is off — community ~28% Nene/Rinko only.
+REM (0 or 1) skips the prompt. Default is off — community ~28% Nene/Rinko
+REM and Japanese SMS. Workbench reviews in assets\script_contrib and
+REM assets\sms_contrib still ship, and they win over this machine pass.
 if not defined NLPP_INCLUDE_GEMINI_NENE (
   echo.
-  echo Optional: Gemini machine-pass Nene dialogue ^(~146 a* scripts, unreviewed^).
-  echo Default keeps the community ~28%% Nene/Rinko layer only.
+  echo Optional: Gemini machine-pass Nene and Rinko dialogue, plus SMS ^(unreviewed^).
+  echo Default keeps the community ~28%% Nene/Rinko layer and Japanese SMS.
+  echo Reviewed workbench files still ship either way and win over Gemini.
   set "NENE_ANS="
-  set /p "NENE_ANS=Include Gemini Nene dialogue? [y/N]: "
+  set /p "NENE_ANS=Include Gemini Nene, Rinko, and SMS? [y/N]: "
   if /i "!NENE_ANS!"=="y" set "NLPP_INCLUDE_GEMINI_NENE=1"
   if /i "!NENE_ANS!"=="yes" set "NLPP_INCLUDE_GEMINI_NENE=1"
   if not defined NLPP_INCLUDE_GEMINI_NENE set "NLPP_INCLUDE_GEMINI_NENE=0"
   set "NENE_ANS="
 )
 if /i "%NLPP_INCLUDE_GEMINI_NENE%"=="1" (
-  echo Including Gemini Nene dialogue ^(machine pass, unreviewed^).
+  echo Including Gemini Nene, Rinko, and SMS ^(machine pass, unreviewed^).
 ) else (
-  echo Skipping Gemini Nene dialogue ^(community Nene/Rinko layer only^).
+  echo Skipping Gemini Nene, Rinko, and SMS ^(community layer, Japanese SMS^).
 )
 
 echo.

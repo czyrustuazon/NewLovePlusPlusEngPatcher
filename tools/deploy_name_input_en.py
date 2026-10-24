@@ -11,11 +11,12 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   3. patch_input_candmode_fillflag_reset   # NOT candmode_reset (+0x24)
   4. patch_input_romaji                    # Hepburn labels + romaji insert
   5. patch_input_kana_direct_insert        # skip kanji list; tap inserts
+  5b. patch_input_force_ml                  # text entry opens on the gojūon grid
   6. patch_input_skip_ascii_dakuten        # Hepburn taps skip ゛/っ combine
   7. patch_input_strcat_raw                # byte strcat; collapse KKE; 8-glyph cap
   7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
-  7b. patch_input_call_romaji               # UTF-8 Called walk + ASCII candidate
-  8. patch_message_speed                   # Options 14/8/2/0 + TalkWindow ÷4 + voice/script cap + sample EN
+  7b. patch_input_call_romaji               # UTF-8 Called walk + no-match typed candidate
+  8. patch_message_speed                   # Options 5/3/2/0 + TalkWindow 10/20/35/60 ms + voice/script cap + sample EN
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
   9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
@@ -25,6 +26,14 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   14. patch_weather_day_text               # weekly day names captured at 64×28
   15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
   16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
+  17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
+  18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
+  19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
+  20. patch_camera_defaults_reset          # Restore Default asks Yes/No, then unequips all but the Memory Card
+  21. patch_title_engpatch_info            # Main Menu Eng Patch badge tap opens an INFORMATION box (OK)
+  22. patch_drawtext_64_lines              # DrawTextToPane lays out 64 lines (credits box), not 32
+  23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
+  24. patch_syspopup_scroll_bar            # message box scroll ends at the last line; bar spans the text
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -71,6 +80,10 @@ from patch_input_kana_direct_insert import (  # noqa: E402
     PATCHED as KANA_PATCHED,
     apply_patch as apply_kana_direct,
     restore_bind_sites,
+)
+from patch_input_force_ml import (  # noqa: E402
+    apply_patch as apply_force_ml,
+    is_patched as force_ml_already,
 )
 from patch_lyt_null_pane import (  # noqa: E402
     apply_patch as apply_lyt_null_pane,
@@ -138,6 +151,38 @@ from patch_profile_birthday import (  # noqa: E402
 from patch_web_event_date import (  # noqa: E402
     apply_patch as apply_web_event_date,
     is_patched as web_event_date_already,
+)
+from patch_speaker_spacing import (  # noqa: E402
+    apply_patch as apply_speaker_spacing,
+    is_patched as speaker_spacing_already,
+)
+from patch_eula_agreed import (  # noqa: E402
+    apply_patch as apply_eula_agreed,
+    is_patched as eula_agreed_already,
+)
+from patch_camera_restore_default import (  # noqa: E402
+    apply_patch as apply_camera_defaults,
+    is_patched as camera_defaults_already,
+)
+from patch_camera_defaults_reset import (  # noqa: E402
+    apply_patch as apply_camera_reset,
+    is_patched as camera_reset_already,
+)
+from patch_drawtext_64_lines import (  # noqa: E402
+    apply_patch as apply_drawtext_64,
+    is_patched as drawtext_64_already,
+)
+from patch_syspopup_scroll_bar import (  # noqa: E402
+    apply_patch as apply_syspopup_scroll,
+    is_patched as syspopup_scroll_already,
+)
+from patch_syspopup_tall_text import (  # noqa: E402
+    apply_patch as apply_syspopup_tall,
+    is_patched as syspopup_tall_already,
+)
+from patch_title_engpatch_info import (  # noqa: E402
+    apply_patch as apply_engpatch_info,
+    is_patched as engpatch_info_already,
 )
 
 from nlpp_paths import (  # noqa: E402
@@ -223,6 +268,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_kana_direct(data)
         steps += 1
 
+    if force_ml_already(data):
+        print("[skip] force_ml already applied")
+    else:
+        apply_force_ml(data)
+        steps += 1
+
     if ascii_dakuten_already(data):
         print("[skip] skip_ascii_dakuten already applied")
     else:
@@ -304,6 +355,54 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] web_event_date already applied")
     else:
         apply_web_event_date(data)
+        steps += 1
+
+    if speaker_spacing_already(data):
+        print("[skip] speaker_spacing already applied")
+    else:
+        apply_speaker_spacing(data)
+        steps += 1
+
+    if eula_agreed_already(data):
+        print("[skip] eula_agreed already applied")
+    else:
+        apply_eula_agreed(data)
+        steps += 1
+
+    if camera_defaults_already(data):
+        print("[skip] camera_restore_default already applied")
+    else:
+        apply_camera_defaults(data)
+        steps += 1
+
+    if camera_reset_already(data):
+        print("[skip] camera_defaults_reset already applied")
+    else:
+        apply_camera_reset(data)
+        steps += 1
+
+    if engpatch_info_already(data):
+        print("[skip] title_engpatch_info already applied")
+    else:
+        apply_engpatch_info(data)
+        steps += 1
+
+    if drawtext_64_already(data):
+        print("[skip] drawtext_64_lines already applied")
+    else:
+        apply_drawtext_64(data)
+        steps += 1
+
+    if syspopup_tall_already(data):
+        print("[skip] syspopup_tall_text already applied")
+    else:
+        apply_syspopup_tall(data)
+        steps += 1
+
+    if syspopup_scroll_already(data):
+        print("[skip] syspopup_scroll_bar already applied")
+    else:
+        apply_syspopup_scroll(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

@@ -77,6 +77,8 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_softkey_defaults_en.py",  # 5238 初期設定 → Restore Default
     "deploy_card_side_btn_en.py",  # 5238 last-writer: 表面/裏面 → Front Side / Back Side
     "deploy_display_settings_en.py",
+    "deploy_clock_date_order_en.py",  # 5248 clock date MM / DD / YYYY
+    "deploy_header_clock_ampm_en.py",  # 5402 home header HH:MM AM/PM
     "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
@@ -105,11 +107,13 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
     "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
     "deploy_minigame_hub_en.py",  # 5380+5575 Mini-Game / Puzzle-dama / TwinBee+ / Yie Ar Kung-Fu+
+    "deploy_minigame_textures_en.py",  # l2mgtex mini-game screens: 95/94 hold-sideways, 117/125/120 Puzzle-dama card, logo, names
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
     "deploy_web_weather_en.py",  # 5316 Weekly title + day panes
     "deploy_web_event_date_en.py",  # 5316 event-card date is MM/DD plus a smaller Update
+    "deploy_camera_filters_en.py",  # 5322-5326 camera buttons + filter names (overflow pack_images' slots)
     "deploy_cesa_en.py",
 ]
 

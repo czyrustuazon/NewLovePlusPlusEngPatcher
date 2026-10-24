@@ -9,7 +9,7 @@
 | ``Mail_PopTxt05`` | ETC1A4 104×96 | Timestamp / Sender / Lock |
 | ``C_Com_Win01_Btn02_Cancel_{Off,Press}`` | RGBA4444 98×42 | Cancel |
 
-Self-rendered Heisei (no Zhoumaru). Live Mail.arc first so Inbox / New Mail /
+Self-rendered Heisei (no Zhoumaru). Live Mail.arc first so Inbox / New Message /
 Play from ``deploy_mail_home_en.py`` stays. Never fall back to vanilla if live
 already has those EN stems (vanilla fallback would wipe them). Bake after
 mail_home.
@@ -50,6 +50,7 @@ from deploy_common import (  # noqa: E402
     iter_deploy_targets,
     resolve_img_paths,
 )
+from deploy_mail_home_en import ZHOUMARU_ONLY  # noqa: E402
 
 MOD_IMG, VANILLA = resolve_img_paths()
 
@@ -90,6 +91,8 @@ PRESERVE_HOME_PATHS = [
     "timg/Sel_Tex_ma02_03.bclim",
     "timg/Sel_Tex_ma02_04.bclim",
     "timg/Sel_Tex_ma02_05.bclim",
+    # Zhoumaru Mail.check chrome packed by deploy_mail_home_en (compose tabs …).
+    *(path for path, _en in ZHOUMARU_ONLY),
 ]
 
 

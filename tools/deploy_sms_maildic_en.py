@@ -10,7 +10,9 @@ Game storage (NOT romfs/dictionary/all2_u.bin — that is an IME font dict):
     maildic_m.mdc  / maildic_n.mdc  / maildic_r.mdc   (MDC type)
     worddic_m.mdc  / worddic_n.mdc  / worddic_r.mdc   (left alone)
 
-EN sources: assets/sms_en/maildic_{m,n,r}.en.xml (index-aligned with vanilla MDC).
+EN sources: ``--en-dir`` (default assets/sms_en/). The Gemini Drop option
+passes assets/gemini_heroines/sms and does not modify those files. A matching
+file under assets/sms_contrib/ replaces that heroine's Gemini dictionary.
 
 Same-size: each MDC is rebuilt then padded with 0xFF back to the original
 element length, then spliced in-place into the live LayeredFS img.bin.
@@ -46,6 +48,8 @@ from deploy_common import (  # noqa: E402
 PKG = 92
 STEMS = ("maildic_m", "maildic_n", "maildic_r")
 EN_DIR = ROOT / "assets" / "sms_en"
+GEMINI_SMS_DIR = ROOT / "assets" / "gemini_heroines" / "sms"
+CONTRIB_SMS_DIR = ROOT / "assets" / "sms_contrib"
 OUT = ROOT / "out" / "sms_mdc_en"
 BAK_NAME = "img.bin.bak_pre_sms_maildic"
 
@@ -60,7 +64,20 @@ def load_pkg92(img_path: Path):
     return im, pak
 
 
-def build_en_mdcs(pak) -> dict[str, bytes]:
+def resolve_sms_xml(stem: str, en_dir: Path) -> Path:
+    """Contributor dictionary wins. Gemini (or ``en_dir``) stays untouched."""
+    contrib = CONTRIB_SMS_DIR / f"{stem}.en.xml"
+    if contrib.is_file():
+        print(f"{stem}: using contributor {contrib}")
+        return contrib
+    en_xml = en_dir / f"{stem}.en.xml"
+    if not en_xml.is_file():
+        raise SystemExit(f"missing {en_xml}")
+    return en_xml
+
+
+def build_en_mdcs(pak, en_dir: Path | None = None) -> dict[str, bytes]:
+    en_dir = en_dir or EN_DIR
     by_name = {e.fn: e for e in pak.entries}
     built: dict[str, bytes] = {}
     OUT.mkdir(parents=True, exist_ok=True)
@@ -69,10 +86,8 @@ def build_en_mdcs(pak) -> dict[str, bytes]:
         elem = by_name[fn]
         jp_blob = elem.read()
         base = parse_mdc(jp_blob)
-        en_xml = EN_DIR / f"{stem}.en.xml"
-        if not en_xml.is_file():
-            raise SystemExit(f"missing {en_xml}")
-        texts = texts_from_dictionary_xml(en_xml)
+        en_xml = resolve_sms_xml(stem, en_dir)
+        texts = texts_from_dictionary_xml(en_xml, base)
         en_entries = apply_texts(base, texts)
         packed = pack_mdc(en_entries)
         padded = pad_to_size(packed, elem.fw.wlen, b"\xff")
@@ -112,6 +127,12 @@ def main() -> None:
         help="img.bin to patch (default: release bake / NLPP_DEPLOY_IMG)",
     )
     ap.add_argument(
+        "--en-dir",
+        type=Path,
+        default=None,
+        help="maildic_*.en.xml directory (default: assets/sms_en)",
+    )
+    ap.add_argument(
         "--dry-run",
         action="store_true",
         help="build padded MDCs only; do not write img.bin",
@@ -140,7 +161,8 @@ def main() -> None:
     src_for_parse = vanilla if vanilla is not None else img_path
     print(f"reading package {PKG} from {src_for_parse}")
     _im, pak = load_pkg92(src_for_parse)
-    built = build_en_mdcs(pak)
+    en_dir = args.en_dir.resolve() if args.en_dir else EN_DIR
+    built = build_en_mdcs(pak, en_dir)
 
     if args.dry_run:
         print("dry-run: not writing img.bin")

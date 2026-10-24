@@ -196,7 +196,7 @@ white.</Dialog>
           <Dialog>...It's starting to become a
 little clearer.</Dialog>
           <Dialog>Eh ！？
-▲姉ヶ崎＊▲！？</Dialog>
+▲Anegasaki＊▲！？</Dialog>
           <Dialog>hy am I here...？ So, this is
 just a dream.</Dialog>
           <Dialog>Since it's a dream, maybe she
@@ -216,7 +216,7 @@ it's not good to touch her.</Dialog>
           <Dialog>It looks like she's really
 enjoying it.</Dialog>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone's gonna see us...？</Dialog>
           <Dialog>Her responses are different
 depending on where I touch
 her.</Dialog>
@@ -244,11 +244,11 @@ her hand.</Dialog>
           <Dialog>Her hair, forehead, ear, body,
 arm, and hand. That's about
 all.</Dialog>
-          <Dialog>...Hm？</Dialog>
+          <Dialog>...Hmm？</Dialog>
           <Dialog>Ah, the world is turning white
 again... Is it over already？</Dialog>
           <Dialog>Just a bit more...
-▲姉ヶ崎＊▲,
+▲Anegasaki＊▲,
 WAIT！</Dialog>
           <Dialog>Huh？ Where am I？</Dialog>
           <Dialog>I see. A dream, huh？ What a
@@ -591,8 +591,8 @@ no one here...</Dialog>
 turning white.</Dialog>
           <Dialog>That's right. I feel like I've
 had this dream before...</Dialog>
-          <Dialog>Whoa！</Dialog>
-          <Dialog>▲姉ヶ崎＊▲
+          <Dialog>Whoa ！</Dialog>
+          <Dialog>▲Anegasaki＊▲
 is this close...</Dialog>
           <Dialog>The atmosphere now is nice,
 too.</Dialog>
@@ -635,7 +635,7 @@ shoulder... I think I've got
 it.</Dialog>
           <Dialog>...Hm？</Dialog>
           <Dialog>In this situation...</Dialog>
-          <Dialog>Whoa!?</Dialog>
+          <Dialog>Whoa！ ？</Dialog>
           <Dialog>This is...</Dialog>
           <Dialog>Am I allowed to kiss her after
 all？</Dialog>
@@ -682,7 +682,7 @@ think that this is only a
 dream.</Dialog>
           <Dialog>I'm so embarrassed. I
 definitely can't tell
-▲姉ヶ崎＊▲
+▲Anegasaki＊▲
 about this.</Dialog>
           <Dialog>Ah, everything is going white
 again... Is it over？</Dialog>
@@ -691,7 +691,7 @@ guess it's just a dream, after
 all...</Dialog>
           <Dialog>After a dream like this, it
 will be tough seeing
-▲姉ヶ崎＊▲.</Dialog>
+▲Anegasaki＊▲.</Dialog>
           <Dialog>I hope that I can do this in
 real life, not just in my
 dreams...</Dialog>
@@ -755,10 +755,9 @@ going to...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>This isn't going
-very well...</Dialog>
-          <Dialog>Not over yet!</Dialog>
-          <Dialog>I'm done with this</Dialog>
+          <Dialog>This isn't going so well...</Dialog>
+          <Dialog>Keep trying!</Dialog>
+          <Dialog>That's enough for now</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

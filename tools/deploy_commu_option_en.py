@@ -7,6 +7,10 @@ Vanilla pic panes:
   Commu_Op_Text04  ダブルデート
   Commu_Op_Text01  ON/OFF help line (RGB565)
 
+The SpotPass row (Pos_Text03 + Pos_Btn_Change02) and the DATA button
+(Pos_Data_Btn) are hidden and moved off-screen in Lyt_Commu_Option.bclyt:
+SpotPass OFF cannot persist and DATA has no servers (see hide_spotpass_row).
+
 Zhoumaru Text02/Text04 are ToDoList / Gallery (wrong screen). The three
 rows are painted together. The help line's alpha is the right sentence
 but its RGB is noisy, so the sentence is composited from that alpha.
@@ -18,6 +22,7 @@ The white bar 通信設定 is ETC1A4 Com_M_Sel_Plate_Text04_04_00 @ 5241
 """
 from __future__ import annotations
 
+import struct
 import sys
 import zlib
 from pathlib import Path
@@ -64,6 +69,43 @@ SPOTPASS_PNG = (
 HELP_PNG = (
     ROOT / "assets" / "images" / "Commu_Option.check" / "timg" / "Commu_Op_Text01.png"
 )
+
+
+# SpotPass row (bottom): label Pos_Text03 and ON/OFF button Pos_Btn_Change02.
+# Its state is read back from BOSS queries that patch_spotpass_embed stubs to
+# 1 for the Watcher, so OFF never sticks. The DATA button (Pos_Data_Btn) is
+# SpotPass data too and does nothing without the servers. Hide those panes
+# and park them far below the screen so they cannot be touched.
+LYT_PATH = "blyt/Lyt_Commu_Option.bclyt"
+HIDDEN_PANES = ("Pos_Text03", "Pos_Btn_Change02", "Pos_Data_Btn")
+HIDDEN_Y = -1000.0
+
+
+def _find_pane(lyt: bytes | bytearray, name: str) -> int:
+    """Offset of the pan1 section named ``name`` (name at +0x0C, 24 bytes)."""
+    key = name.encode("ascii")
+    off = 0
+    hits = []
+    while True:
+        off = lyt.find(b"pan1", off)
+        if off < 0:
+            break
+        if bytes(lyt[off + 0x0C : off + 0x24]).split(b"\0")[0] == key:
+            hits.append(off)
+        off += 4
+    if len(hits) != 1:
+        raise SystemExit(f"{LYT_PATH}: {name} found {len(hits)} times")
+    return hits[0]
+
+
+def hide_spotpass_row(lyt: bytes) -> bytes:
+    """Clear the visible bit and move translate.y off-screen. Same size."""
+    out = bytearray(lyt)
+    for name in HIDDEN_PANES:
+        off = _find_pane(out, name)
+        out[off + 8] &= ~1 & 0xFF
+        struct.pack_into("<f", out, off + 0x28, HIDDEN_Y)
+    return bytes(out)
 
 
 def _deploy_targets() -> list[Path]:
@@ -182,6 +224,11 @@ def main() -> None:
     entry = darc.find("timg/Commu_Op_Text01.bclim")
     _pix, w, h, _fmt, _ft = parse_bclim(darc.extract_file(entry))
     replace("Commu_Op_Text01", help_from_alpha(HELP_PNG, w, h), png_to_bclim_rgb565_same_size)
+    lyt_entry = darc.find(LYT_PATH)
+    if lyt_entry is None:
+        raise SystemExit(f"missing {LYT_PATH}")
+    darc.replace_same_size(lyt_entry, hide_spotpass_row(darc.extract_file(lyt_entry)))
+    print(f"  OK {LYT_PATH} hid {', '.join(HIDDEN_PANES)}", flush=True)
 
     patched = bytes(darc.data)
     if len(patched) != len(arc_elem.parsed()):

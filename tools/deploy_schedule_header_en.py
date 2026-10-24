@@ -2,6 +2,9 @@
 """EN MyroomHeader pkg 5575 — Schedule (予定入力) + re-apply known toptex EN.
 
 Rebuilds from vanilla so Mail / My Data / To-Do headers stay in sync.
+Packs Zhoumaru ``MyroomHeader.check`` masters (gray (52,52,52), same style as
+the in-room Options Menu); renders that gray only where a master is missing
+or unusable.
 """
 from __future__ import annotations
 
@@ -13,7 +16,7 @@ from pathlib import Path
 
 import numpy as np
 import zopfli.zlib as zopfli_zlib
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -26,63 +29,68 @@ from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
-    UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
+    render_header_aa,
     resolve_img_paths,
 )
 
 MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "schedule_hdr_en"
-FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 PKG = 5575
-INK = (70, 110, 160)
+UI_PNG_FOLDERS = ("MyroomHeader.check",)
 
 # All known EN headers in this shared ARC (game typo RBGA4 on some names).
 LABELS = [
-    ("timg/scd_toptex_RBGA4.bclim", "Schedule"),
+    ("timg/scd_toptex_RBGA4.bclim", "Schedule Entry"),
     ("timg/mail_toptex_RBGA4.bclim", "Mail"),
     ("timg/tel_toptex_RBGA4.bclim", "Phone"),
     ("timg/mydata_toptex_RGBA4.bclim", "My Data"),
     ("timg/mydata_toptex_01.bclim", "To-Do List"),
     ("timg/mydata_toptex_02.bclim", "To-Do List"),
-    ("timg/mydata_toptex_03.bclim", "History"),
+    ("timg/mydata_toptex_03.bclim", "To-Do History"),
     ("timg/mydata_toptex_04.bclim", "Status"),
     ("timg/mydata_toptex_05.bclim", "Item List"),
     ("timg/mydata_toptex_06.bclim", "My Camera"),
+    ("timg/album_top_tex.bclim", "Album"),
+    ("timg/web_toptex_RGBA4.bclim", "WEB"),  # vanilla letter-spaced "W E B"
 ]
 
+# Unusable Zhoumaru masters, rendered instead: My Data is letter-spaced
+# "M y D a t a"; album_top_tex is a letter-spaced "i n b o x".
+SKIP_UI_PNG = frozenset({"mydata_toptex_RGBA4", "album_top_tex"})
+# Fit to the Zhoumaru "My Camera" master: ink, glyph size, total alpha and a
+# baseline 1px lower than render_header_aa centers it.
+ZHOUMARU_HEADER_INK = (52, 52, 52)
+HEADER_PX = 14
+HEADER_ALPHA_GAIN = 1.15
+HEADER_DROP_PX = 1
 
-def font(size: int) -> ImageFont.FreeTypeFont:
-    return ImageFont.truetype(str(FONT), size=size)
+
+def render_gray_header(w: int, h: int, text: str) -> Image.Image:
+    arr = np.array(render_header_aa(w, h, text, max_size=HEADER_PX), dtype=np.float32)
+    arr[:, :, 3] = np.clip(arr[:, :, 3] * HEADER_ALPHA_GAIN, 0, 255)
+    arr[:, :, :3] = ZHOUMARU_HEADER_INK
+    arr = np.roll(arr, HEADER_DROP_PX, axis=0)
+    arr[:HEADER_DROP_PX] = 0
+    return Image.fromarray(arr.astype(np.uint8), "RGBA")
 
 
-def render_label(
-    w: int, h: int, text: str, *, hard: bool = False
-) -> Image.Image:
-    for size in range(min(16, h + 2), 8, -1):
-        scale = 2
-        big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
-        dr = ImageDraw.Draw(big)
-        f = font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w * scale - 4:
-            continue
-        x = (w * scale - tw) // 2 - b[0]
-        y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=INK + (255,))
-        resample = Image.Resampling.NEAREST if hard else Image.Resampling.BILINEAR
-        im = big.resize((w, h), resample)
-        if hard:
-            arr = np.array(im)
-            mask = arr[:, :, 3] >= 80
-            arr[~mask] = 0
-            arr[mask, 3] = 255
-            im = Image.fromarray(arr, "RGBA")
-        return im
-    raise RuntimeError(f"cannot fit {text!r}")
+def header_rgba(stem: str, en: str, w: int, h: int) -> tuple[Image.Image, str]:
+    """Zhoumaru master when usable, else the matching gray render."""
+    if stem not in SKIP_UI_PNG:
+        master = find_ui_png(UI_PNG_FOLDERS, stem, (w, h))
+        if master is not None:
+            with Image.open(master) as im:
+                rgba = im.convert("RGBA")
+            if rgba.size != (w, h):
+                rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
+            return rgba, master.name
+    return render_gray_header(w, h, en), f"render:{en}"
+
+
 
 
 def interfile_zero_gaps(data: bytes, min_len: int = 4) -> list[tuple[int, int]]:
@@ -248,36 +256,29 @@ def main() -> None:
     cmp_len = arc.fw.len()
     print(f"pkg {PKG} slot={cmp_len}", flush=True)
 
-    best: tuple[int, bytes] | None = None
-    for hard in (False, True):
-        darc = DarcArchive(bytearray(arc.parsed()))
-        for path, en in LABELS:
-            entry = darc.find(path) or darc.find(Path(path).name)
-            if entry is None:
-                raise SystemExit(f"missing {path}")
-            raw_b = darc.extract_file(entry)
-            _pix, w, h, fmt, _ = parse_bclim(raw_b)
-            if fmt != 0xB:
-                raise SystemExit(f"{path} fmt {fmt}")
-            rgba = render_label(w, h, en, hard=hard)
-            png = tmp / "t.png"
-            orig = tmp / "o.bclim"
-            rgba.save(png)
-            if path.endswith("scd_toptex_RBGA4.bclim"):
-                rgba.save(OUT / "scd_toptex_RBGA4_en.png")
-            orig.write_bytes(raw_b)
-            darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
-            print(f"OK {path} -> {en!r} hard={hard}", flush=True)
-        patched = bytes(darc.data)
-        z = len(zopfli_zlib.compress(patched))
-        print(f"  trial hard={hard}: zopfli={z}", flush=True)
-        if best is None or z < best[0]:
-            best = (z, patched)
-        if z <= cmp_len:
-            best = (z, patched)
-            break
-    assert best is not None
-    patched = best[1]
+    darc = DarcArchive(bytearray(arc.parsed()))
+    for path, en in LABELS:
+        entry = darc.find(path) or darc.find(Path(path).name)
+        if entry is None:
+            raise SystemExit(f"missing {path}")
+        raw_b = darc.extract_file(entry)
+        _pix, w, h, fmt, _ = parse_bclim(raw_b)
+        if fmt != 0xB:
+            raise SystemExit(f"{path} fmt {fmt}")
+        rgba, how = header_rgba(Path(path).stem, en, w, h)
+        png = tmp / "t.png"
+        orig = tmp / "o.bclim"
+        rgba.save(png)
+        if path.endswith("scd_toptex_RBGA4.bclim"):
+            rgba.save(OUT / "scd_toptex_RBGA4_en.png")
+        orig.write_bytes(raw_b)
+        darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
+        print(f"OK {path} -> {en!r} ({how})", flush=True)
+    patched = bytes(darc.data)
+    z = len(zopfli_zlib.compress(patched))
+    print(f"  zopfli={z} slot={cmp_len}", flush=True)
+    if z > cmp_len:
+        raise SystemExit(f"patched zopfli {z} exceeds slot {cmp_len}")
     tuned, slot = compress_exact_zopfli(patched, cmp_len)
     do = zlib.decompressobj()
     got = do.decompress(slot)

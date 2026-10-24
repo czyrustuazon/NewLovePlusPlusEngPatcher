@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Gallery / Communication / Data Management MSel EN — exact-zopfli splice.
 
-Packages (A8 Text BCLIMs, same pattern as Options pkg 5245):
+Packages (vanilla ETC1A4 Text BCLIMs; Zhoumaru masters stay ETC1A4 so they
+keep their gray ink, font renders go out as A8 like Options pkg 5245):
   5244 Text02 — Gallery home
   5241 Text04 — Communication home
   5242 Text05 — Data Management home
@@ -26,6 +27,7 @@ from bclimutil import (  # noqa: E402
     gcm,
     parse_bclim,
     png_to_bclim_a8_same_size,
+    png_to_bclim_etc1a4_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
 from exact_zlib import compress_exact_zopfli  # noqa: E402
@@ -76,9 +78,9 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Btn_Text02_02_00.bclim", "Illustration Gallery"),
         # Submenu headers (plates; MultiWin Text02_* @ 5237 is the live white strip)
         ("Com_M_Sel_Plate_Text02_01_00.bclim", "Event Gallery"),
-        ("Com_M_Sel_Plate_Text02_01_01.bclim", "Confession Memories"),
+        ("Com_M_Sel_Plate_Text02_01_01.bclim", "Memory Gallery"),
         ("Com_M_Sel_Plate_Text02_01_02.bclim", "After the Dream"),
-        ("Com_M_Sel_Plate_Text02_01_03.bclim", "Trip Memories"),
+        ("Com_M_Sel_Plate_Text02_01_03.bclim", "Trip Memory Gallery"),
         ("Com_M_Sel_Plate_Text02_01_04.bclim", "Drama Gallery"),
         ("Com_M_Sel_Plate_Text02_01_05.bclim", "Gallery Options"),
         ("Com_M_Sel_Plate_Text02_02_00.bclim", "Illustration Gallery"),
@@ -103,14 +105,18 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Btn_Text04_01_09.bclim", "Find Couple"),
         ("Com_M_Sel_Btn_Text04_01_10.bclim", "Join Double Date"),
         ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
-        ("Com_M_Sel_Btn_Text04_03_00.bclim", "Wireless Battle"),
-        # Girlfriend Comm. / Wireless Battle submenu headers
+        # Zhoumaru NCommonMSel(7): Communication Battle (not "Wireless Battle")
+        ("Com_M_Sel_Btn_Text04_03_00.bclim", "Communication Battle"),
+        # Session rows (対戦相手を募集 / 対戦参加)
+        ("Com_M_Sel_Btn_Text04_03_01.bclim", "Find Battle Opponent"),
+        ("Com_M_Sel_Btn_Text04_03_02.bclim", "Join Battle"),
+        # Girlfriend Comm. / Communication Battle submenu headers
         # Zhoumaru Plate_Text04_01_00 is "Communication Menu"; カノジョ通信 is 01_01.
         ("Com_M_Sel_Plate_Text04_01_00.bclim", "Girlfriend Communication"),
         ("Com_M_Sel_Plate_Text04_01_01.bclim", "Heart to Heart"),
         ("Com_M_Sel_Plate_Text04_01_02.bclim", "Girlfriend Introduction"),
         ("Com_M_Sel_Plate_Text04_01_03.bclim", "Double Date"),
-        ("Com_M_Sel_Plate_Text04_03_00.bclim", "Wireless Battle"),
+        ("Com_M_Sel_Plate_Text04_03_00.bclim", "Communication Battle"),
     ],
     5242: [  # Data Management
         ("Com_M_Sel_Plate_Text05_00_00.bclim", "Data Management"),
@@ -156,6 +162,16 @@ def decode_a8(raw: bytes) -> tuple[np.ndarray, int, int]:
         if x < pot_w and y < pot_h:
             canvas[y, x] = a
     return canvas, w, h
+
+
+def flatten_ink(rgba: Image.Image) -> Image.Image:
+    """Paint every texel in the master's opaque ink color, keeping alpha."""
+    arr = np.array(rgba.convert("RGBA"))
+    solid = arr[..., 3] >= 200
+    src = arr[solid] if solid.any() else arr[arr[..., 3] > 0]
+    ink = np.median(src[:, :3], axis=0).astype(np.uint8) if len(src) else (51, 51, 51)
+    arr[..., :3] = ink
+    return Image.fromarray(arr, "RGBA")
 
 
 def render_en_alpha(w: int, h: int, text: str, target_h: int) -> np.ndarray:
@@ -233,6 +249,13 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 96, 255, 0).astype(np.uint8)
             rgba.putalpha(Image.fromarray(a, "L"))
+        if parse_bclim(raw)[3] == 0xB:
+            # Vanilla plates/pills are ETC1A4. A8 drops the master's dark-gray
+            # ink, so the game draws the text as a flat light-gray blob. Keep
+            # ETC1A4 and flatten RGB to that ink so ETC1 stays lossless.
+            rgba = flatten_ink(rgba)
+            rgba.save(png)
+            return png_to_bclim_etc1a4_same_size(png, orig)
         rgba.save(png)
         return png_to_bclim_a8_same_size(png, orig)
     jp = canvas[:h, :w]

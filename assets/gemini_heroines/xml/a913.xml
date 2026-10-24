@@ -102,7 +102,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -122,7 +122,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -142,7 +142,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -232,9 +232,9 @@
           <Dialog>Did that feel good？</Dialog>
           <Dialog>Sorry...</Dialog>
           <Dialog>I love you...</Dialog>
-          <Dialog>I really like you...</Dialog>
+          <Dialog>I like you...</Dialog>
           <Dialog>I'm so happy...</Dialog>
-          <Dialog>I'm so glad...</Dialog>
+          <Dialog>That makes me happy...</Dialog>
           <Dialog>You're so cute...</Dialog>
           <Dialog>You're beautiful...</Dialog>
           <Dialog>How was that？</Dialog>
@@ -322,9 +322,9 @@
           <Dialog>Did that feel good？</Dialog>
           <Dialog>Sorry...</Dialog>
           <Dialog>I love you...</Dialog>
-          <Dialog>I really like you...</Dialog>
+          <Dialog>I like you...</Dialog>
           <Dialog>I'm so happy...</Dialog>
-          <Dialog>I'm so glad...</Dialog>
+          <Dialog>That makes me happy...</Dialog>
           <Dialog>You're so cute...</Dialog>
           <Dialog>You're beautiful...</Dialog>
           <Dialog>How was that？</Dialog>
@@ -412,15 +412,15 @@
           <Dialog>Did that feel good？</Dialog>
           <Dialog>Sorry...</Dialog>
           <Dialog>I love you...</Dialog>
-          <Dialog>I really like you...</Dialog>
+          <Dialog>I like you...</Dialog>
           <Dialog>I'm so happy...</Dialog>
-          <Dialog>I'm so glad...</Dialog>
+          <Dialog>That makes me happy...</Dialog>
           <Dialog>You're so cute...</Dialog>
           <Dialog>You're beautiful...</Dialog>
           <Dialog>How was that？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>……。</Dialog>
-          <Dialog>Reaction ID does not exist.</Dialog>
+          <Dialog>Reaction ID does not exist</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -679,12 +679,12 @@
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Short Kiss</Dialog>
-          <Dialog>Standing Face-to-Face (2D)</Dialog>
-          <Dialog>Standing Face-to-Face (3D)</Dialog>
-          <Dialog>Sitting Face-to-Face (Facing Conversation)</Dialog>
-          <Dialog>Sitting Side-by-Side (Dates, etc.)</Dialog>
+          <Dialog>Standing talk (2D)</Dialog>
+          <Dialog>Standing talk (3D)</Dialog>
+          <Dialog>Sitting talk (face-to-face)</Dialog>
+          <Dialog>Side-by-side talk (on dates, etc.)</Dialog>
           <Dialog>Again</Dialog>
-          <Dialog>Quit</Dialog>
+          <Dialog>Stop</Dialog>
           <Dialog>Next</Dialog>
         </Dialogs>
       </SDL2>
@@ -713,7 +713,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -733,7 +733,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -753,7 +753,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>Someone might see us...</Dialog>
+          <Dialog>Someone might see us...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

@@ -128,7 +128,7 @@ ARM_NOP = bytes.fromhex("00f020e3")  # nop
 # Holy-site names. Tex_Name / Tex_Place are DrawText'd from inline buffers
 # the stubbed merge never fills, and the pane pointers stay null while the
 # binder searches the empty-data group. The cave binds both panes, then
-# draws 「湖」 and the station in the game font. It sits in the dead body
+# draws Lake and the station in the game font. It sits in the dead body
 # of the ret0 gate, after the vanilla has-rows BL at 0x14EBC4.
 ADDR_AREA_DRAW = 0x004DCBCC  # add r1, r5, #0x84 ; mov r0, r8 ; bl drawer
 VANILLA_AREA_DRAW = bytes.fromhex("841085e20800a0e17ca7f5eb")
@@ -144,8 +144,8 @@ _AREA_GLOBAL_VA = 0x008BFA40
 _AREA_POS_VA = 0x003468E4  # "Pos_Spot_O01"
 _AREA_NAME_VA = 0x003468F4  # "Tex_Name"
 _AREA_PLACE_VA = 0x00346900  # "Tex_Place"
-_AREA_NAME = "奥十羽野駅".encode("utf-8") + b"\x00"
-_SPOT_NAME = "湖".encode("utf-8") + b"\x00"
+_AREA_NAME = "Oku-Towano Station".encode("utf-8") + b"\x00"
+_SPOT_NAME = "Lake".encode("utf-8") + b"\x00"
 # Dead instructions the cave replaces (gate body after the has-rows BL).
 VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "30a19fe530919fe530719fe5000054e30060a0e10080a0e30500000a"
@@ -160,11 +160,14 @@ VANILLA_AREA_CAVE_BODY = bytes.fromhex(
     "0f10a0e39d0c82e21ec811eb0030a0e10120a0e30310a0e30700a0e1"
     "f080cde1"
 )
-# MagList: extra-data version + no bit 0x20 → state 5. NOP of that beq
-# sent worker command 10 (empty SpotPass). Force command 9 (cart).
+# MagList: EULA agreed + no parental bit 0x20 → state 5 (register).
 ADDR_MAGLIST_EXTRA = 0x0010441C  # cmp r0,#0 after FUN_004fd248
 VANILLA_MAGLIST_EXTRA = bytes.fromhex("000050e3")  # cmp r0, #0
-PATCHED_MAGLIST_EXTRA = bytes.fromhex("0c0000ea")  # b 0x104454 mov r2,#9
+# Vanilla again (2026-10-18). This "MagList" is the Communication Settings
+# StreetPass handler (parent 0x105D84 compares +0x66/+0x69). Command 9 is
+# the "agree to the latest terms of use" error, so forcing it broke
+# StreetPass ON. Watcher still opens from the in-room book without it.
+PATCHED_MAGLIST_EXTRA = VANILLA_MAGLIST_EXTRA
 # bl FUN_004fd248. Leaving it in crashes with 0xD8E007F7. NOP-ing it
 # reaches command 9. A constructed worker still dies in FUN_005fe718:
 # PC=0, LR=0x005F99B4. Keep the call. Do not host this operator.
@@ -176,24 +179,24 @@ ADDR_MAGLIST_CLEAR_LAYOUT = 0x001043FC  # str r10, [r4, #0x7c]
 VANILLA_MAGLIST_CLEAR_LAYOUT = bytes.fromhex("7ca084e5")
 ADDR_MAGLIST_CMD9_TAIL = 0x0010446C  # b 0x1044e8 (state 0x17)
 VANILLA_MAGLIST_CMD9_TAIL = bytes.fromhex("1d0000ea")
-PATCHED_MAGLIST_CMD9_TAIL = bytes.fromhex("210000ea")  # b 0x1044f8 state 6
+PATCHED_MAGLIST_CMD9_TAIL = VANILLA_MAGLIST_CMD9_TAIL  # Comm Settings
 ADDR_MAGLIST_ST6_FAIL = 0x00104508  # beq 0x1044f0 (state 0x14 ERROR)
 VANILLA_MAGLIST_ST6_FAIL = bytes.fromhex("f8ffff0a")
-PATCHED_MAGLIST_ST6_FAIL = bytes.fromhex("2c00000a")  # beq 0x1045c0 stay
+PATCHED_MAGLIST_ST6_FAIL = VANILLA_MAGLIST_ST6_FAIL  # Comm Settings
 ADDR_PARENT_MAGLIST_SKIP = 0x00105D78  # beq skip MagList when +0x66==+0x69
 VANILLA_PARENT_MAGLIST_SKIP = bytes.fromhex("0500000a")
 ADDR_PARENT_AFTER_MAGLIST = 0x00105D94  # mov r0, #0xd (Watcher)
 VANILLA_PARENT_AFTER_MAGLIST = bytes.fromhex("0d00a0e3")
-PATCHED_PARENT_AFTER_MAGLIST = bytes.fromhex("1700a0e3")  # mov r0, #0x17 dismiss
+PATCHED_PARENT_AFTER_MAGLIST = VANILLA_PARENT_AFTER_MAGLIST  # Comm Settings
 ADDR_WATCHER_ST0_MOV = 0x00104624  # moveq r0, #4 (create layout 0x31)
 VANILLA_WATCHER_ST0_MOV = bytes.fromhex("0400a003")
-PATCHED_WATCHER_ST0_MOV = bytes.fromhex("0500a003")  # moveq r0, #5 skip empty pane
+PATCHED_WATCHER_ST0_MOV = VANILLA_WATCHER_ST0_MOV  # Comm Settings
 ADDR_WATCHER_EXTRA_CMP = 0x00104724  # cmp r0, #0 extra-data
 VANILLA_WATCHER_EXTRA_CMP = bytes.fromhex("000050e3")
-PATCHED_WATCHER_EXTRA_CMP = bytes.fromhex("0100a0e3")  # mov r0, #1 treat extra present
+PATCHED_WATCHER_EXTRA_CMP = VANILLA_WATCHER_EXTRA_CMP  # Comm Settings
 ADDR_PARENT_AFTER_WATCHER = 0x00105DD4  # mov r0, #0xe
 VANILLA_PARENT_AFTER_WATCHER = bytes.fromhex("0e00a0e3")
-PATCHED_PARENT_AFTER_WATCHER = bytes.fromhex("0c00a0e3")  # mov r0, #0xc MagList
+PATCHED_PARENT_AFTER_WATCHER = VANILLA_PARENT_AFTER_WATCHER  # Comm Settings
 # The "WEB_*" sites in 0x5A564..0x5C1A8 are not the in-room WEB Watcher.
 # That range is the SaveErase scene (scene table 0x690200 → 0x5AB58, vtable
 # 0x80502C), i.e. Data Management → Delete Save Data. Message 0x17 item 9 at
@@ -428,7 +431,7 @@ VANILLA_MENU_OPEN_BODY = bytes.fromhex(
 # Prep and the sheet show/hide sit here. Stop before the next live function.
 ADDR_MENU_OPEN = 0x0060960C
 ADDR_MENU_OPEN_LIMIT = 0x006096D8
-# After the pad's pop. Draws 「湖」 / 奥十羽野駅, or the pool spot and a blank station.
+# After the pad's pop. Draws Lake / Oku-Towano Station, or the pool spot and a blank station.
 ADDR_PLACE_LABELS = ADDR_MENU_OPEN + 21 * 4
 # beq taken when the page mask has nowhere to turn. Both arrows land here.
 ADDR_ARROW_SKIP = 0x004DCCB4
@@ -514,30 +517,31 @@ ADDR_TITLE_BIND_FN = 0x00247018
 _SHEET_NAME = b"Pic_Page01_04\x00"
 _SHEET_PART = b"Pic_Page01_00\x00"
 _PANE_SHOW = 0x005E7D18  # finder in r0, r1 = 0 hides / 1 shows (pane+0xb7 bit 0)
+# English of issue 28's lake paragraph. One line per pink rule, eight rules.
 _LAKE_BODY = (
-    "第28号\n"
-    "今回の恋愛の聖地は\n"
-    "「湖」に決定しました！\n"
-    "湖面を伝わって流れる空気は\n"
-    "見た目も相まって清涼感抜群。\n"
-    "たまには趣を変え湖畔で\n"
-    "カノジョと過ごすのも\n"
-    "悪くないかもしれません。"
+    "Issue 28\n"
+    "This issue's sacred spot\n"
+    "for lovers is the Lake!\n"
+    "The breeze off the water\n"
+    "is as cool as it looks.\n"
+    "For a change of pace, why\n"
+    "not spend time with your\n"
+    "girlfriend by the lake?"
 ).encode("utf-8") + b"\x00"
-# Issue 28's heated-pool paragraph, with the same issue header as Holy Site.
-# Line breaks are the ones in info.dat.
+# English of issue 28's heated-pool paragraph, with the same issue header
+# as Holy Site. Seven lines, like the info.dat original.
 _FEVER_BODY = (
-    "第28号\n"
-    "一年を通して水着で楽しめる大型\n"
-    "温水プール施設です。流れるプー\n"
-    "ルやウォータースライダーなどの\n"
-    "遊具だけでなく、軽食も楽しむこ\n"
-    "とができ、ここもカップルに人気\n"
-    "の定番スポットとなっています。"
+    "Issue 28\n"
+    "A large heated pool where\n"
+    "you can swim year-round.\n"
+    "Besides a lazy river and\n"
+    "water slides, it serves\n"
+    "snacks, too. It's another\n"
+    "favorite spot for couples."
 ).encode("utf-8") + b"\x00"
-# The pool record names the facility and no station. 「湖」 / 奥十羽野駅 stay
+# The pool record names the facility and no station. Lake / the station stay
 # the lake pair. Five ideographic spaces clear the station line.
-_POOL_SPOT = "温水プール".encode("utf-8") + b"\x00"
+_POOL_SPOT = "Heated Pool".encode("utf-8") + b"\x00"
 _POOL_AREA = ("\u3000" * 5).encode("utf-8") + b"\x00"
 _PLACE_NAMES = _SPOT_NAME + _AREA_NAME + _POOL_SPOT + _POOL_AREA
 ADDR_LAKE_BODY = 0x006E6F42  # vanilla zero pad, after the menu strings
@@ -629,10 +633,17 @@ ADDR_WATCHER_ST17_BEQ = 0x00104890  # beq 0x1048ac
 VANILLA_WATCHER_ST17_BEQ = bytes.fromhex("0500000a")
 ADDR_PARENT_ST1_BEQ = 0x001058B0  # beq 0x1058cc
 VANILLA_PARENT_ST1_BEQ = bytes.fromhex("0500000a")
+# 0x104000..0x106800 is the Communication Settings operator (parent
+# 0x105D84 applies StreetPass via 0x2042DC, SpotPass via 0x2045E0), not a
+# magazine list. Its sites are vanilla since 2026-10-18; the Watcher book
+# opens without them.
 WATCHER_RESTORE_SITES = (
     (ADDR_WATCHER_EXTRA_BNE, VANILLA_WATCHER_EXTRA_BNE),
     (ADDR_WATCHER_ST17_BEQ, VANILLA_WATCHER_ST17_BEQ),
     (ADDR_PARENT_ST1_BEQ, VANILLA_PARENT_ST1_BEQ),
+    (ADDR_PARENT_ST0_BEQ, VANILLA_PARENT_ST0_BEQ),
+    (ADDR_PARENT_MAGLIST_SKIP, VANILLA_PARENT_MAGLIST_SKIP),
+    (ADDR_MAGLIST_CLEAR_LAYOUT, VANILLA_MAGLIST_CLEAR_LAYOUT),
 )
 # MagList command 9/10 is a no-op unless NetDl +0x45/+0x46 (BOSS pump).
 # Merge ret1 never sets those, so the cart worker never runs → ERROR “No data.”
@@ -642,9 +653,6 @@ WATCHER_NOP_SITES = (
     (ADDR_MAGLIST_PUMP_BEQ, VANILLA_MAGLIST_PUMP_BEQ),
     (ADDR_HASROWS_FLAG_BEQ, VANILLA_HASROWS_FLAG_BEQ),
     (ADDR_BINDROWS_FLAG_BEQ, VANILLA_BINDROWS_FLAG_BEQ),
-    (ADDR_PARENT_ST0_BEQ, VANILLA_PARENT_ST0_BEQ),
-    (ADDR_PARENT_MAGLIST_SKIP, VANILLA_PARENT_MAGLIST_SKIP),
-    (ADDR_MAGLIST_CLEAR_LAYOUT, VANILLA_MAGLIST_CLEAR_LAYOUT),
 )
 MAGLIST_WORD_SITES = (
     (ADDR_MAGLIST_CMD9_TAIL, VANILLA_MAGLIST_CMD9_TAIL, PATCHED_MAGLIST_CMD9_TAIL),
@@ -786,10 +794,10 @@ def _area_store(code: bytearray, cave: int, pool_off: int) -> None:
 
 
 def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
-    """Bind Tex_Name and Tex_Place, then draw 「湖」 and the station.
+    """Bind Tex_Name and Tex_Place, then draw Lake and the station.
 
     Entered in place of ``add r1, r5, #0x84``. r8 is the spot widget.
-    Both names use the game font, so 「湖」 matches the AREA line.
+    Both names use the game font, so the SPOT line matches the AREA line.
     Layout lookup tries the has-data group first, then the empty group.
     A miss leaves the pane null; the drawer returns without drawing.
     The store call increments the pane index, so Tex_Name is stored at 0
@@ -858,8 +866,9 @@ def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
     code += _u32(0xE28DD018)  # add sp, sp, #0x18
     code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
     pool = cave + len(code)
-    spot_at = pool + 24
-    station_at = spot_at + len(_SPOT_NAME)
+    # The English names do not fit the 20 bytes left here, so the pool
+    # points at the left-page labels apply_info_menu packs after the sentences.
+    spot_va, station_va, _pool_spot, _pool_area = _place_vas()
     code[bind_fix : bind_fix + 4] = _b_cond(0x0, cave + bind_fix, bind_at)
     code[draw_fix : draw_fix + 4] = _b_cond(0x1, cave + draw_fix, draw_at)
     code[have_fix : have_fix + 4] = _b_cond(0x1, cave + have_fix, have_at)
@@ -876,16 +885,14 @@ def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
     blob += _u32(_AREA_POS_VA)
     blob += _u32(_AREA_NAME_VA)
     blob += _u32(_AREA_PLACE_VA)
-    blob += _u32(spot_at + 0x100000)
-    blob += _u32(station_at + 0x100000)
-    blob += _SPOT_NAME
-    blob += _AREA_NAME
-    # Stop before the gate function's pop at 0x14ECF8.
-    if cave + len(blob) > 0x0014ECF8:
+    blob += _u32(spot_va)
+    blob += _u32(station_va)
+    # Revert restores exactly the vanilla body, so stay inside it.
+    if len(blob) > len(VANILLA_AREA_CAVE_BODY):
         raise ValueError(
-            f"area cave ends @{cave + len(blob):#x}, past the gate pop"
+            f"area cave ends @{cave + len(blob):#x}, past the dead gate body"
         )
-    return blob
+    return blob + b"\x00" * (len(VANILLA_AREA_CAVE_BODY) - len(blob))
 
 
 def _area_store_into(code: bytearray, cave: int, at: int, pool_addr: int) -> None:
@@ -1307,8 +1314,8 @@ def build_bind_marked() -> bytes:
 def build_place_labels() -> bytes:
     """Draw the left-page spot and station for the open row.
 
-    r0 is the left widget. r1 is the menu index. Index 3 draws 温水プール
-    and a blank station. Every other index draws 「湖」 and 奥十羽野駅.
+    r0 is the left widget. r1 is the menu index. Index 3 draws Heated Pool
+    and a blank station. Every other index draws Lake and the station.
     A null widget returns without drawing.
     """
     cave = ADDR_PLACE_LABELS
@@ -1854,6 +1861,9 @@ def apply_map_comments(data: bytearray) -> bool:
         raise ValueError(f"comment cave @{ADDR_COMMENT_CAVE:#x} is not the merge body")
     text = build_comment_text()
     span = ADDR_COMMENT_LIMIT - ADDR_COMMENT_TEXT
+    # First apply writes into vanilla zero pad. Once hooked, the table is ours.
+    if not already and any(data[ADDR_COMMENT_TEXT:ADDR_COMMENT_LIMIT]):
+        raise ValueError(f"comment text @{ADDR_COMMENT_TEXT:#x} is not empty")
     data[ADDR_COMMENT_CAVE : ADDR_COMMENT_CAVE + len(cave)] = cave
     data[ADDR_COMMENT_TEXT : ADDR_COMMENT_LIMIT] = b"\x00" * span
     data[ADDR_COMMENT_TEXT : ADDR_COMMENT_TEXT + len(text)] = text
@@ -2225,7 +2235,7 @@ def apply_patch(data: bytearray) -> bool:
         f"confirm +0x48=1, home lock nop @{ADDR_CONFIRM_INC:#x}/"
         f"{ADDR_CONFIRM_DEC:#x}, DATA kick @{ADDR_DATA_KICK:#x} -> {kick:#x}, "
         f"merge ret1 @{ADDR_MERGE_ENTRY:#x} (no parse / ac:u), "
-        f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} then state 6, "
+        f"StreetPass EULA branch vanilla @{ADDR_MAGLIST_EXTRA:#x}, "
         f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
         f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} extra @{ADDR_WATCHER_EXTRA_CMP:#x} "
         f"then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
@@ -2416,7 +2426,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{ADDR_HASSTATE6_READY:#x}/{ADDR_PREUNPACK_READY:#x}"
         )
         print(
-            f"MagList command 9 @{ADDR_MAGLIST_EXTRA:#x} -> state 6, "
+            f"StreetPass EULA branch vanilla @{ADDR_MAGLIST_EXTRA:#x}, "
             f"parent dismiss @{ADDR_PARENT_AFTER_MAGLIST:#x}, "
             f"Watcher skip layout @{ADDR_WATCHER_ST0_MOV:#x} then MagList @{ADDR_PARENT_AFTER_WATCHER:#x}, "
             f"SaveErase 0x5a564..0x5c1a8 vanilla, "

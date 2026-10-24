@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -56,6 +57,31 @@ def test_wipe_cia_build_dirs_includes_cache():
     body = text.split("def wipe_cia_build_dirs", 1)[1].split("def remove_scratch", 1)[0]
     assert "CACHE" in body
     assert "OUT, RELEASE, CACHE" in body
+
+
+def test_wipe_directory_deletes_past_max_path(tmp_path: Path):
+    """Citra sdmc backups exceed 260 characters and break a plain rmtree.
+
+    Drop wipes out/, release/, and cache/ through the same helper.
+    """
+    if sys.platform != "win32":
+        pytest.skip("MAX_PATH only applies on Windows")
+    root = tmp_path / "repo"
+    for name in ("out", "release", "cache"):
+        folder = root / name
+        # 32-hex id folders, same shape as a Citra Nintendo 3DS save tree.
+        deep = folder / "extdata_backup" / ("pre_NR citra")
+        deep = deep / "sdmc" / "Nintendo 3DS" / ("0" * 32) / ("0" * 32)
+        deep = deep / "title" / "00040000" / "000f4e00" / "data" / "00000001"
+        leaf = deep / "savedata10"
+        cleanup.long_path(deep).mkdir(parents=True, exist_ok=True)
+        cleanup.long_path(leaf).write_bytes(b"save")
+        assert len(str(leaf)) > 260
+
+        cleanup.wipe_directory(folder, root=root)
+
+        assert folder.is_dir() and list(folder.iterdir()) == []
+        assert not cleanup.long_path(leaf).exists()
 
 
 def test_wipe_directory_refuses_repo_root(tmp_path: Path):

@@ -801,13 +801,13 @@
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
           <Dialog>Select debug method</Dialog>
-          <Dialog>1: Select by utensil (chopsticks, etc.)</Dialog>
+          <Dialog>1: Select by utensil type</Dialog>
           <Dialog>2: Select by restaurant menu</Dialog>
-          <Dialog>3: Use pre-7/23 legacy flow</Dialog>
+          <Dialog>3: Use old flow (pre-7/23)</Dialog>
           <Dialog>4: Select by dish ID</Dialog>
           <Dialog>5: Settings</Dialog>
           <Dialog>6</Dialog>
-          <Dialog>Select utensil to use (chopsticks, etc.)</Dialog>
+          <Dialog>Select utensil (chopsticks, etc.)</Dialog>
           <Dialog>Select another</Dialog>
           <Dialog>Chopsticks: Tendon</Dialog>
           <Dialog>Chopsticks: Ramen</Dialog>
@@ -817,14 +817,14 @@
           <Dialog>Spoon: Curry</Dialog>
           <Dialog>Spoon: Stew</Dialog>
           <Dialog>Both hands</Dialog>
-          <Dialog>One hand: partial hold</Dialog>
-          <Dialog>One hand: skewer hold</Dialog>
+          <Dialog>One hand: Partial grip</Dialog>
+          <Dialog>One hand: Skewer</Dialog>
           <Dialog>Straw</Dialog>
           <Dialog>Cup</Dialog>
           <Dialog>Settings Screen</Dialog>
           <Dialog>1: Random behavior</Dialog>
-          <Dialog>2: Awkward stage status</Dialog>
-          <Dialog>3: Girlfriend's Feeling</Dialog>
+          <Dialog>2: Fresh/shy state</Dialog>
+          <Dialog>3: Girlfriend's feeling</Dialog>
           <Dialog>4:</Dialog>
           <Dialog>5:</Dialog>
           <Dialog>Back</Dialog>
@@ -834,9 +834,9 @@
           <Dialog>random =&gt; Fixed to 2</Dialog>
           <Dialog>random =&gt; Fixed to 3</Dialog>
           <Dialog>random =&gt; Fixed to 4</Dialog>
-          <Dialog>Settings updated</Dialog>
-          <Dialog>Set to Awkward stage</Dialog>
-          <Dialog>Set to Not Awkward stage</Dialog>
+          <Dialog>Settings applied</Dialog>
+          <Dialog>Set to: Fresh/shy</Dialog>
+          <Dialog>Set to: Not fresh/shy</Dialog>
           <Dialog>Set Feeling: Low</Dialog>
           <Dialog>Set Feeling: Normal</Dialog>
           <Dialog>Set Feeling: High</Dialog>
@@ -844,31 +844,31 @@
           <Dialog>▲生成選択肢６▲</Dialog>
           <Dialog>Next</Dialog>
           <Dialog>Italian Restaurant</Dialog>
-          <Dialog>Diner</Dialog>
-          <Dialog>Girlfriend's Place</Dialog>
+          <Dialog>Japanese Diner</Dialog>
+          <Dialog>Girlfriend's House</Dialog>
           <Dialog>Curry Shop</Dialog>
           <Dialog>Cake Buffet</Dialog>
-          <Dialog>Chain / WB</Dialog>
-          <Dialog>Chain / Coffee Shop</Dialog>
-          <Dialog>Chain / Dixie's</Dialog>
-          <Dialog>Chain / Dixie's Rival</Dialog>
+          <Dialog>Chain/WB</Dialog>
+          <Dialog>Chain/Coffee Shop</Dialog>
+          <Dialog>Chain/Dixies</Dialog>
+          <Dialog>Chain/Dixies Rival</Dialog>
           <Dialog>Ramen Shop</Dialog>
           <Dialog>Restaurant</Dialog>
           <Dialog>Beach</Dialog>
           <Dialog>School Cafeteria</Dialog>
-          <Dialog>Café</Dialog>
+          <Dialog>Cafe</Dialog>
           <Dialog>Lakeside Restaurant</Dialog>
-          <Dialog>Player's House / Normal</Dialog>
-          <Dialog>Player's House / Sick Visit</Dialog>
+          <Dialog>Player's House/Normal</Dialog>
+          <Dialog>Player's House/Nursing</Dialog>
           <Dialog>Homemade Bento</Dialog>
-          <Dialog>Sushi Bar</Dialog>
+          <Dialog>Sushi Restaurant</Dialog>
           <Dialog>Food Stall</Dialog>
           <Dialog>Yakiniku Restaurant</Dialog>
           <Dialog>Chinese Restaurant</Dialog>
           <Dialog>Japanese Sweets Shop</Dialog>
           <Dialog>Morning</Dialog>
           <Dialog>Soup Spoon</Dialog>
-          <Dialog>One Hand: Holding Everything</Dialog>
+          <Dialog>One Hand: Hold All</Dialog>
           <Dialog>Hundreds: 000</Dialog>
           <Dialog>Hundreds: 100</Dialog>
           <Dialog>Hundreds: 200</Dialog>

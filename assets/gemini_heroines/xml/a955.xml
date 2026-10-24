@@ -65,9 +65,9 @@
         <Dialogs>
           <Dialog>Ask her out today</Dialog>
           <Dialog>Ask her out this weekend</Dialog>
-          <Dialog>Okay, sounds good</Dialog>
+          <Dialog>Yeah, sure.</Dialog>
           <Dialog>Hmm... I can't make it.</Dialog>
-          <Dialog>Don't go.</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -103,9 +103,9 @@
         <Dialogs>
           <Dialog>Ask her out today</Dialog>
           <Dialog>Ask her out this weekend</Dialog>
-          <Dialog>Okay, sounds good</Dialog>
+          <Dialog>Yeah, sure.</Dialog>
           <Dialog>Hmm... I can't make it.</Dialog>
-          <Dialog>Don't go.</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -141,9 +141,9 @@
         <Dialogs>
           <Dialog>Ask her out today</Dialog>
           <Dialog>Ask her out this weekend</Dialog>
-          <Dialog>Okay, sounds good</Dialog>
+          <Dialog>Yeah, sure.</Dialog>
           <Dialog>Hmm... I can't make it.</Dialog>
-          <Dialog>Don't go.</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
