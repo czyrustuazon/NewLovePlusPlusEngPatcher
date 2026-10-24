@@ -399,6 +399,47 @@ def pack_ui(
             remove_scratch(work, label="rebuild_bake_img_work")
 
 
+def _element_bytes(img_path: Path, pkg_id: int, name: str, raw: bytes) -> bytes | None:
+    """Compressed bytes of element ``name`` in package ``pkg_id``, or None."""
+    tools_dir = str(ROOT / "tools" / "nlpp-tools")
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    from img import FileWindow, Image as ImgBin, Package  # noqa: E402
+
+    img = ImgBin(str(img_path))
+    img.parse(False)
+    res = img.entries[pkg_id]
+    if res is None:
+        return None
+    pkg = Package(FileWindow(str(img_path), res.fw.base_offset, res.fw.len()), 0)
+    pkg.parse(False)
+    for elem in pkg.entries:
+        if elem is not None and str(elem.fn) == name:
+            off = elem.fw.base_offset
+            return raw[off : off + elem.fw.len()]
+    return None
+
+
+def unreplaced_slot_skips(pack_report: str | None, vanilla: Path, bake: Path) -> list[str]:
+    """ARCs pack_images left vanilla (over their zlib slot) that no deploy replaced.
+
+    Transfer.arc shipped Japanese this way after the Oct 2026 Zhoumaru update:
+    the pack kept the vanilla element and still reported the package [ok].
+    """
+    from pack_images import SLOT_SKIP_RE  # noqa: E402
+
+    skips = SLOT_SKIP_RE.findall(pack_report or "")
+    if not skips:
+        return []
+    vraw, braw = vanilla.read_bytes(), bake.read_bytes()
+    left = []
+    for pkg, name in skips:
+        pkg_id = int(pkg)
+        if _element_bytes(bake, pkg_id, name, braw) == _element_bytes(vanilla, pkg_id, name, vraw):
+            left.append(f"package {pkg_id:04d} {name}")
+    return left
+
+
 def bake_img_feature_baks(bake: Path) -> list[Path]:
     """Leftover ``bake_img.bin.bak_pre_*`` copies (~680MB each)."""
     return sorted(bake.parent.glob(f"{bake.name}.bak_pre_*"))
@@ -824,6 +865,15 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     sync_trb_overlay()
     cleanup_bake_img_baks(BAKE_IMG)
+
+    left_vanilla = unreplaced_slot_skips(pack_report, vanilla, BAKE_IMG)
+    if left_vanilla:
+        raise SystemExit(
+            "These ARCs did not fit their zlib slot in the PNG pack and no deploy "
+            "replaced them, so they would ship Japanese:\n  "
+            + "\n  ".join(left_vanilla)
+            + "\nShrink their PNG masters until each fits its own slot."
+        )
 
     timer.mark("building name-input code.bin")
     bar.goto("name-input", 0.0)

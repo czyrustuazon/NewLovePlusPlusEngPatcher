@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import fake_img as fi
 import pack_images
 from bclimutil import parse_bclim
@@ -59,6 +61,62 @@ def test_ie_pe_unpack_repack_and_splice(tmp_path: Path):
 
     got = DarcArchive(fi.read_element(fi.read_package(path, 3), "Foo.arc", tmp_path))
     assert got.extract_file(got.find("A.bclim")) == new
+
+
+def _edited_package(tmp_path: Path) -> tuple[Path, Path, bytes]:
+    """Sample img.bin unpacked with Foo.arc's A.bclim changed (same size)."""
+    path = _sample(tmp_path)
+    data = tmp_path / "img_data"
+    pack_images.unpack_packages(path, data, {3})
+    arc_path = pack_images.ensure_package_data(data, 3) / "Foo.arc"
+    darc = DarcArchive.load(arc_path)
+    entry = darc.find("A.bclim")
+    new = bytes([0x11]) * 128 + darc.extract_file(entry)[128:]
+    darc.replace_same_size(entry, new)
+    darc.save(arc_path)
+    return path, data, new
+
+
+def _too_big(*_a, **_k):
+    raise RuntimeError("zopfli 9 > slot 8")
+
+
+def test_arc_over_its_slot_fails_a_direct_repack(tmp_path: Path, monkeypatch):
+    _path, data, _new = _edited_package(tmp_path)
+    monkeypatch.setattr(pack_images, "compress_to_exact_slot_cached", _too_big)
+    with pytest.raises(pack_images.PackError, match="Foo.arc"):
+        pack_images.repack_package_exact_slots(data, 3)
+
+
+def test_pack_reports_an_arc_over_its_slot(tmp_path: Path, monkeypatch):
+    # The pack used to keep the vanilla element and still report "[ok]";
+    # Transfer.arc shipped Japanese. The report now names it for the bake check.
+    _path, data, _new = _edited_package(tmp_path)
+    monkeypatch.setattr(pack_images, "compress_to_exact_slot_cached", _too_big)
+    skips: list[str] = []
+    pack_images.repack_package_exact_slots(data, 3, slot_skips=skips)
+    assert skips == ["Foo.arc"]
+    line = "[slot-skip] package 0003 Foo.arc (left vanilla)"
+    assert pack_images.SLOT_SKIP_RE.findall(line) == [("0003", "Foo.arc")]
+
+
+def test_bake_fails_on_a_slot_skip_no_deploy_replaced(tmp_path: Path):
+    from conftest import TOOLS, load_module
+
+    rebuild = load_module("rebuild_bake_img", TOOLS / "rebuild_bake_img.py")
+    path, data, _new = _edited_package(tmp_path)
+    vanilla = tmp_path / "vanilla.bin"
+    vanilla.write_bytes(path.read_bytes())
+    report = "[ok] package 0003: 1 replaced\n[slot-skip] package 0003 Foo.arc (left vanilla)\n"
+
+    # Nothing replaced Foo.arc: the bake would ship it Japanese.
+    assert rebuild.unreplaced_slot_skips(report, vanilla, path) == ["package 0003 Foo.arc"]
+
+    # A later deploy wrote its own Foo.arc (here: the real exact-slot repack).
+    pack_images.repack_package_exact_slots(data, 3)
+    pack_images.splice_packages_into_img(path, data, [3], path)
+    assert rebuild.unreplaced_slot_skips(report, vanilla, path) == []
+    assert rebuild.unreplaced_slot_skips("[ok] package 0003: 1 replaced", vanilla, path) == []
 
 
 def test_splice_syncs_idx_dec_len_to_grown_pack(tmp_path: Path):
@@ -153,3 +211,29 @@ def test_same_path_splice_preserves_other_packages(tmp_path: Path):
     pack_images.splice_packages_into_img(live, data, [3], live)
     assert fi.read_package(live, 5) == en5
     assert fi.read_package(live, 3) == pkg3
+
+
+def test_encode_os_error_fails_instead_of_skipping(tmp_path: Path, monkeypatch):
+    # A work dir past Windows MAX_PATH lost the written BCLIM; the master was
+    # reported as one [warn] skip and shipped Japanese.
+    import bclimutil
+    from PIL import Image
+
+    orig = tmp_path / "A.bclim"
+    orig.write_bytes(fi.bclim(8, 8))
+    png = tmp_path / "A.png"
+    Image.new("RGBA", (8, 8), (1, 2, 3, 255)).save(png)
+
+    def lost(*_a, **_k):
+        raise FileNotFoundError(2, "No such file or directory")
+
+    monkeypatch.setattr(bclimutil, "png_to_bclim_same_size", lost)
+    with pytest.raises(OSError, match="shorter --work path"):
+        pack_images._convert_one_png(png, orig, tmp_path / "w")
+
+    def bad(*_a, **_k):
+        raise ValueError("size mismatch")
+
+    monkeypatch.setattr(bclimutil, "png_to_bclim_same_size", bad)
+    status, _data, warn = pack_images._convert_one_png(png, orig, tmp_path / "w")
+    assert status == "skip" and "size mismatch" in warn
