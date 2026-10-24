@@ -10,11 +10,17 @@ Sources: desktop NLPP_English_UI_Buttons_only (staged under assets/images/*.chec
 | Myroom Back | **5380** Myroom.arc | common_modoru + C_Com_icon_m{,ON}; ETC1A4 |
 | Album | **4149** Album.arc | Delete / Search / Export / popups + every Zhoumaru Album.check master |
 
-Does not touch SysPopup node/file outside the listed button stems.
+Does not touch SysPopup node/file outside the listed button stems, except
+``Lyt_C_Com_Win01.bclyt``: its ``Tex_Sentence`` pane is made 1024 tall
+(``tall_sentence_pane``). The message box builds its text texture from that
+pane's size rounded up to a power of two (``0x0024E7E0``), so vanilla's 256
+held about 16 lines; the Main Menu localization credits need more
+(``src/patch_title_engpatch_info.py``).
 """
 from __future__ import annotations
 
 import shutil
+import struct
 import sys
 import zlib
 from pathlib import Path
@@ -38,6 +44,11 @@ MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "ui_buttons_en"
 SRC_DESKTOP = Path.home() / "Desktop" / "NLPP_English_UI_Buttons_only" / "graphics"
 ASSETS = ROOT / "assets" / "images"
+
+SENTENCE_LAYOUT = "blyt/Lyt_C_Com_Win01.bclyt"
+SENTENCE_PANE = b"Tex_Sentence"
+SENTENCE_H_VANILLA = 256.0
+SENTENCE_H = 1024.0  # largest 3DS texture side
 
 # stem → asset folder (prefer .check)
 GROUPS: list[dict] = [
@@ -104,6 +115,7 @@ GROUPS: list[dict] = [
             "C_Com_Win_Btn_Yes_Release",
         ],
         "from_live": False,
+        "layouts": {SENTENCE_LAYOUT: "tall_sentence_pane"},
     },
     {
         "pkg": 5380,
@@ -228,6 +240,38 @@ def _patch_arc(
     return bytes(darc.data)
 
 
+def tall_sentence_pane(lyt: bytes) -> bytes:
+    """Raise the message box's Tex_Sentence pic from 256 to SENTENCE_H tall."""
+    out = bytearray(lyt)
+    off = struct.unpack_from("<H", out, 6)[0]
+    hits = 0
+    for _ in range(struct.unpack_from("<I", out, 0x10)[0]):
+        size = struct.unpack_from("<I", out, off + 4)[0]
+        name = bytes(out[off + 12 : off + 28]).rstrip(bytes(1))
+        if out[off : off + 4] == b"pic1" and name == SENTENCE_PANE:
+            h = struct.unpack_from("<f", out, off + 72)[0]
+            if h not in (SENTENCE_H_VANILLA, SENTENCE_H):
+                raise SystemExit(f"Tex_Sentence height {h}, expected {SENTENCE_H_VANILLA}")
+            struct.pack_into("<f", out, off + 72, SENTENCE_H)
+            hits += 1
+        off += size
+    if hits != 1:
+        raise SystemExit(f"Tex_Sentence pic found {hits} times")
+    return bytes(out)
+
+
+def _patch_layouts(arc_bytes: bytes, layouts: dict[str, str]) -> bytes:
+    darc = DarcArchive(bytearray(arc_bytes))
+    for path, fn_name in layouts.items():
+        entry = darc.find(path)
+        if entry is None:
+            raise SystemExit(f"missing {path}")
+        new = globals()[fn_name](bytes(darc.extract_file(entry)))
+        darc.replace_same_size(entry, new)
+        print(f"  OK {path} ({fn_name})", flush=True)
+    return bytes(darc.data)
+
+
 def _write_arc_slot(pkg_blob: bytearray, entry_index: int, tuned: bytes, slot: bytes) -> None:
     entry_off = (entry_index + 1) * Package.ENTRY_SIZE
     _typ, dec_len, _do, _fl, is_cmp, slot_len, cmp_off = Package.parse_entry(
@@ -283,6 +327,8 @@ def _deploy_group(group: dict, pkg_dir: Path, tmp: Path) -> Path:
                     use_dir = ad
                     break
         tuned = _patch_arc(bytes(elem.parsed()), group["stems"], use_dir, tmp)
+        if group.get("layouts"):
+            tuned = _patch_layouts(tuned, group["layouts"])
         tuned2, slot = compress_exact_zopfli(tuned, cmp_len)
         do = zlib.decompressobj()
         got = do.decompress(slot)

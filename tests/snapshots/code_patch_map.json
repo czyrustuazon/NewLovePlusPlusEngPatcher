@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "b25504c611bbc2cdb30fd41d81493d069158afd7a0d10443bf7e005ee064d54d",
+ "final_sha256": "53502afabfec504a6efb2edfb649e2da5fc96d7fd333189b132395fa117c03c5",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -446,14 +446,35 @@
   },
   {
    "name": "apply_engpatch_info",
-   "written_sha256": "65afb29560bda57bd5f3e79c2eb8e128ae41cd386cf6c722890a9a8637178a2b",
+   "written_sha256": "731321c61a391ff04cbfdd4d9f87ea21359b5a84f0c5c4d6cd1f2b28e6181db2",
    "ranges": [
-    "0x0eaa60-0x0eab5c",
-    "0x0eab64-0x0eab80",
+    "0x0eaa60-0x0eab80",
     "0x2c5fb0-0x2c5fb4",
     "0x2c6018-0x2c601c",
     "0x63253c-0x632604",
     "0x70aef0-0x70aef4"
+   ]
+  },
+  {
+   "name": "apply_drawtext_64",
+   "written_sha256": "986f016d24c24dee6c85360e5ae8f5247bb323bc99c648ed6f074174306fd89e",
+   "ranges": [
+    "0x54b980-0x54b998",
+    "0x54ba98-0x54ba9c",
+    "0x54baa0-0x54baa4",
+    "0x54babc-0x54bac4",
+    "0x54bb44-0x54bb48",
+    "0x54bb4c-0x54bb50",
+    "0x54bb58-0x54bb5c",
+    "0x54bd78-0x54bd80"
+   ]
+  },
+  {
+   "name": "apply_syspopup_tall",
+   "written_sha256": "a5eab8d97864d3bb6f20267832d478c9a65973082b9087a326eac9063e74104f",
+   "ranges": [
+    "0x1d94b8-0x1d94bc",
+    "0x1d94c0-0x1d94c4"
    ]
   }
  ]

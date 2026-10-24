@@ -1,4 +1,7 @@
-"""Tapping the Eng Patch badge on the Main Menu opens an INFORMATION box with one OK.
+"""Tapping the Eng Patch badge on the Main Menu shows the localization credits.
+
+The credits are a run of INFORMATION boxes with one OK each; OK on one opens
+the next page (``CREDIT_PAGES``).
 
 The badge (``Pic_EngPatch`` in ``Pts_Copyright``, ``deploy_title_engpatch_en``)
 is a picture, not a button, so the tap is read straight from HID shared memory
@@ -18,9 +21,10 @@ disarmed if it slides off, and the box opens on release. It then returns -1
 The box is ``FUN_00195FA4(*0x008BFA7C, layout, mode, 1, 2, 0, 0, 0, 0, 0)``:
 ``r3 = 1`` is the OK-only button set, and window style 2 shows the
 ``C_Com_Win01_t02`` header (INFORMATION; t01 COMMUNICATION, t03 ERROR, …).
-While it is up the cell's open flag is set, and each tick asks
-``FUN_00196F88(_, handle)``, the same "closed yet?" check the operator uses for
-its own title dialogs (``0x002C5FF8``). Their wait path is not reused: on close
+``mode`` is ``DIALOG_MODE + page``. While a box is up the cell's open flag is
+set, and each tick asks ``FUN_00196F88(_, handle)``, the same "closed yet?"
+check the operator uses for its own title dialogs (``0x002C5FF8``); when it
+closes, the next page opens, until the last. Their wait path is not reused: on close
 it calls ``0x001EED80(hub, 1)``, which replays the hub's intro animation.
 
 Hub taps while the box is up: the hub's touch-down handler (vtable ``+0x28``
@@ -40,14 +44,14 @@ Stale state: the hub-enter path of the same tick (``str r8, [r4, #0x58]`` @
 ``0x002C5FB0``, r8 = 0) also clears the cell, so a box torn down without
 closing (soft reset back to the title) cannot leave the Main Menu locked.
 
-Room: the tap and press tracking sit in the rest of ``FUN_000EA964``'s dead
-body (``patch_spotpass_skip`` stubs its entry; ``patch_camera_defaults_reset``
-has the first part). Opening and polling the box, the enter hook and the
-touch-down guard sit in the dead body of ``CecCheckEula`` (``0x00632534``),
+Room: the tap, press tracking and enter hook sit in the rest of
+``FUN_000EA964``'s dead body (``patch_spotpass_skip`` stubs its entry;
+``patch_camera_defaults_reset`` has the first part). Opening and polling the
+boxes and the touch-down guard sit in the dead body of ``CecCheckEula`` (``0x00632534``),
 which ``patch_eula_agreed`` stubs to ``mov r0, #0; bx lr``.
 
-The sentence is pack ``0x1901`` layout 53 mode 4 = slot 502, right after the
-camera confirm's slot 501. ``append_info_message`` adds it to the TRB
+The pages are pack ``0x1901`` layout 53 modes 4.. = slots 502.., right after
+the camera confirm's slot 501. ``append_info_message`` adds them to the TRB
 (``tools/deploy_name_kanji_trb.py``).
 """
 from __future__ import annotations
@@ -64,7 +68,6 @@ from patch_camera_defaults_reset import (
     bl,
 )
 from patch_eula_agreed import SITES as EULA_SITES
-from patcher_version import PATCHER_RELEASE
 
 NOP = bytes.fromhex("00f020e3")
 
@@ -94,7 +97,7 @@ ADDR_DIALOG_CLOSED = 0x00196F88
 DIALOG_MGR_PTR = 0x008BFA7C  # VA; *ptr is FUN_00195FA4's r0
 HID_TOUCH_PTR = 0x009A1404  # VA of HID object (0x009A13F8) + 0xC
 
-# .data, VA. +0 was touched, +1 armed, +2 box open, +4 handle.
+# .data, VA. +0 was touched, +1 armed, +2 box open, +3 page, +4 handle.
 # ADDR_MENU_CELL (patch_spotpass_embed) uses 0x008A5100..0x008A5124.
 CELL = 0x008A5180
 
@@ -103,13 +106,86 @@ DIALOG_LAYOUT_BASE = 498
 DIALOG_MODE = 4
 DIALOG_BUTTONS_OK = 1
 DIALOG_STYLE_INFORMATION = 2
-MSG_SLOT = DIALOG_LAYOUT_BASE + DIALOG_MODE  # 502
-INFO_TEXT = (
-    "New Love Plus+\n"
-    f"English Patch {PATCHER_RELEASE}\n"
-    "\n"
-    "newloveplus.loc.moe"
+MSG_SLOT = DIALOG_LAYOUT_BASE + DIALOG_MODE  # 502, first page
+# One box per page; OK opens the next. Vanilla boxes in this layout run to
+# 14 lines (they scroll) and 36 characters; pages stay within that.
+CREDITS_TITLE = "Localization Credits"
+PAGE_LINES = 0  # lines per box, title included; 0 = everything in one scrolling box
+# One box draws at most 64 lines: vanilla DrawTextToPane (0x0054B880) only
+# kept 32 lines in its stack table; patch_drawtext_64_lines packs it to 64.
+# The text texture is pane-sized (deploy_ui_buttons_en makes Tex_Sentence
+# 1024 tall); vanilla's 256 held ~16 lines.
+MAX_BOX_LINES = 64
+BLANK_BETWEEN_ROLES = False  # a blank line before every role costs ~20 lines
+LINE_WIDTH = 26  # lines are centred; ~30 (● counted twice) ran past the box edges
+BULLET = "● "  # the game's own list bullet ("● Event log")
+# (role, names); names None = a team heading line.
+CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
+    ("== 2026 Team ==", None),
+    ("Software Engineers", ("zaccken", "Cetaceaqua")),
+    ("UI Texture Overhaul and QA", ("Zhoumaru",)),
+    ("Translation", ("DDMeisterX",)),
+    ("QA Engineers", ("Dragios", "D.", "THE DRIZZLE")),
+    ("Save File Sharing", ("anon",)),
+    ("Knowledge Sharing", ("i need help here...",)),
+    ("Special Thanks", ("lolipop221", "gamebrew.org")),
+    ("== Pioneer Team ==", None),
+    ("Project Coordination", ("Dgrin", "Makein")),
+    ("Original Love Plus (DS)", ("TLWiki group", "jjjewel & team")),
+    ("Translation & Editing", ("Mayne", "DDMeisterX", "Shakkolvan", "Scarymonsters", "Kai", "Oli")),
+    ("Script Integration", ("impeio92", "Keimeow")),
+    (
+        "Hacking & Tools",
+        (
+            "gdkchan", "Demonslayerx8", "MGDanon", "deaknaew", "froid_san", "kiwiz", "Chulio",
+            "Nagato", "Makein", "Zander1995", "Asia81", "internetakias", "ofan", "NCDyson",
+            "Aikin-Ai",
+        ),
+    ),
+    ('"New Script"', ("Bango", "Cozy Translations")),
+    ("Proofreading", ("Bango", "Incolbum")),
+    ("Text & Strings", ("Jaslyn",)),
+    ("Graphics Translation", ("eyenight", "Jaslyn", "Karuta", "Bango")),
+    ("Graphics Editing", ("Kaizerscythe", "Shakkolvan", "Yuuyuun", "bigcookie")),
+    ("Later Passes", ("k7ra", "rinkohot1337")),
+    ("Special Thanks", ("LovePlusProject", "gbatemp.net")),
 )
+
+
+def _width(line: str) -> int:
+    # The box centres each line; ● draws about two letters wide.
+    return len(line) + line.count(BULLET[0])
+
+
+def _name_lines(names: tuple[str, ...]) -> list[str]:
+    """"● name, name, ..." wrapped at LINE_WIDTH without splitting a name."""
+    lines = [BULLET.rstrip()]
+    for i, name in enumerate(names):
+        item = name + ("," if i < len(names) - 1 else "")
+        if _width(lines[-1]) + 1 + len(item) <= LINE_WIDTH or lines[-1] == BULLET.rstrip():
+            lines[-1] += " " + item
+        else:
+            lines.append(item)
+    return lines
+
+
+def _credit_pages() -> tuple[str, ...]:
+    pages: list[list[str]] = [[]]
+    for role, names in CREDITS:
+        block = [role] if names is None else [role, *_name_lines(names)]
+        if PAGE_LINES and pages[-1] and len(pages[-1]) + 1 + len(block) > PAGE_LINES - 1:
+            pages.append([])
+        if pages[-1] and (BLANK_BETWEEN_ROLES or names is None):
+            pages[-1].append("")
+        pages[-1] += block
+    n = len(pages)
+    title = [CREDITS_TITLE, ""] if n == 1 else []
+    return tuple(
+        "\n".join([*(title or [f"{CREDITS_TITLE} ({i}/{n})"]), *p]) for i, p in enumerate(pages, 1)
+    )
+
+
+CREDIT_PAGES = _credit_pages()
 
 ANGLE_H, ANGLE_VR, ANGLE_VL = 0, -90, 90
 # Touch pixels (x0, x1, y0, y1), inclusive, in ANGLE_H / VR / VL order.
@@ -229,6 +305,8 @@ def build_caves() -> tuple[bytes, bytes, dict[str, int]]:
     a.op(0xE5CC2000)  # strb r2, [ip]
     a.op(0xE5DC6002)  # ldrb r6, [ip, #2]  (box open)
     a.op(0xE3560000)  # cmp r6, #0
+    a.op(0x13A01000)  # movne r1, #0
+    a.op(0x15CC1001)  # strbne r1, [ip, #1]  (box open: no arming)
     a.jump_label("poll", cond=0x1)  # bne poll
     a.op(0xE3520000)  # cmp r2, #0
     a.op(0x05CC2001)  # strbeq r2, [ip, #1]  (lifted: disarm)
@@ -239,11 +317,23 @@ def build_caves() -> tuple[bytes, bytes, dict[str, int]]:
     a.op(0xE5CC1001)  # strb r1, [ip, #1]
     a.jump_label("idle")
 
-    # Lifted: open the box if this press was armed the whole way.
+    # Hub enter: replaces str r8, [r4, #0x58] (r8 = 0); forget any old box.
+    a.label("enter")
+    a.op(0xE5848058)  # str r8, [r4, #0x58]
+    a.ldr_lit(12, CELL)  # ldr ip, =CELL
+    a.op(0xE58C8000)  # str r8, [ip]
+    a.op(0xE12FFF1E)  # bx lr
+
+    # Lifted: open page 0 if this press was armed the whole way.
     bb.label("lift")
     bb.op(0xE3500000)  # cmp r0, #0
     bb.op(0x13510000)  # cmpne r1, #0
     bb.jump_label("idle", cond=0x0)  # beq idle
+    bb.op(0xE3A00000)  # mov r0, #0  (page)
+    # r0 = page, ip = CELL.
+    bb.label("open")
+    bb.op(0xE5CC0003)  # strb r0, [ip, #3]
+    bb.op(0xE2806000 | DIALOG_MODE)  # add r6, r0, #mode
     bb.op(0xE3A01000)  # mov r1, #0
     bb.op(0xE52D1004)  # str r1, [sp, #-4]!  (alt-table flag = 0)
     bb.op(0xE3A00000 | DIALOG_STYLE_INFORMATION)  # mov r0, #style
@@ -254,7 +344,7 @@ def build_caves() -> tuple[bytes, bytes, dict[str, int]]:
     bb.ldr_lit(0, DIALOG_MGR_PTR)  # ldr r0, =DIALOG_MGR_PTR
     bb.op(0xE5900000)  # ldr r0, [r0]
     bb.op(0xE3A01000 | DIALOG_LAYOUT)  # mov r1, #layout
-    bb.op(0xE3A02000 | DIALOG_MODE)  # mov r2, #mode
+    bb.op(0xE1A02006)  # mov r2, r6  (mode of this page)
     bb.op(0xE3A03000 | DIALOG_BUTTONS_OK)  # mov r3, #1
     bb.call(ADDR_OPEN_DIALOG)
     bb.op(0xE28DD018)  # add sp, sp, #0x18
@@ -266,29 +356,25 @@ def build_caves() -> tuple[bytes, bytes, dict[str, int]]:
     bb.op(0xE5CC0002)  # strb r0, [ip, #2]
     bb.jump_label("idle")
 
-    # Box open: no arming; clear the flag once the box reports closed.
+    # Box open. Once it reports closed, open the next page.
     bb.label("poll")
-    bb.op(0xE3A00000)  # mov r0, #0
-    bb.op(0xE5CC0001)  # strb r0, [ip, #1]
     bb.op(0xE59C1004)  # ldr r1, [ip, #4]  (handle)
     bb.ldr_lit(0, DIALOG_MGR_PTR)  # ldr r0, =DIALOG_MGR_PTR
     bb.op(0xE5900000)  # ldr r0, [r0]
     bb.call(ADDR_DIALOG_CLOSED)
     bb.op(0xE3500000)  # cmp r0, #0
+    bb.jump_label("idle", cond=0x0)  # beq idle  (still open)
     bb.ldr_lit(12, CELL)  # ldr ip, =CELL
-    bb.op(0x13A00000)  # movne r0, #0
-    bb.op(0x15CC0002)  # strbne r0, [ip, #2]
+    bb.op(0xE3A00000)  # mov r0, #0
+    bb.op(0xE5CC0002)  # strb r0, [ip, #2]
+    bb.op(0xE5DC0003)  # ldrb r0, [ip, #3]  (page)
+    bb.op(0xE2800001)  # add r0, r0, #1
+    bb.op(0xE3500000 | len(CREDIT_PAGES))  # cmp r0, #pages
+    bb.jump_label("open", cond=0x3)  # blo open
 
     bb.label("idle")
     bb.op(0xE3E00000)  # mvn r0, #0  (no row chosen)
     bb.op(0xE8BD8040)  # pop {r6, pc}
-
-    # Hub enter: replaces str r8, [r4, #0x58] (r8 = 0); forget any old box.
-    bb.label("enter")
-    bb.op(0xE5848058)  # str r8, [r4, #0x58]
-    bb.ldr_lit(12, CELL)  # ldr ip, =CELL
-    bb.op(0xE58C8000)  # str r8, [ip]
-    bb.op(0xE12FFF1E)  # bx lr
 
     # Hub touch-down (vtable +0x28): ignored while the box is open.
     bb.label("guard")
@@ -380,5 +466,9 @@ def apply_patch(data: bytearray) -> bool:
 
 
 def append_info_message(data: bytes) -> tuple[bytes, list[str]]:
-    """Add pack 0x1901 slot 502 (the badge text); slot 501 must already exist."""
-    return append_message_slot(data, MSG_SLOT, INFO_TEXT, "Eng Patch info")
+    """Add pack 0x1901 slots 502.. (one per credits page); slot 501 must already exist."""
+    logs: list[str] = []
+    for page, text in enumerate(CREDIT_PAGES):
+        data, page_logs = append_message_slot(data, MSG_SLOT + page, text, f"credits {page + 1}")
+        logs += page_logs
+    return data, logs

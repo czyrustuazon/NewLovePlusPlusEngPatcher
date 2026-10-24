@@ -31,8 +31,8 @@ def test_caves_fit_their_dead_bodies():
     region_a, region_b, entries = info.build_regions()
     assert len(region_a) == info.CAVE_A_END - info.CAVE_A_START
     assert len(region_b) == info.CAVE_B_END - info.CAVE_B_START
-    assert entries["tap"] == info.CAVE_A_START
-    assert info.CAVE_B_START <= entries["enter"] < entries["guard"] < info.CAVE_B_END
+    assert entries["tap"] == info.CAVE_A_START < entries["enter"] < info.CAVE_A_END
+    assert info.CAVE_B_START <= entries["guard"] < info.CAVE_B_END
 
 
 def test_camera_cave_ends_where_this_one_starts():
@@ -49,12 +49,13 @@ def test_tap_replays_the_load_and_passes_a_chosen_row_through():
     assert info.HID_TOUCH_PTR in words and info.CELL in words
 
 
-def test_box_is_information_with_one_ok_and_slot_502():
+def test_boxes_are_information_with_one_ok_from_slot_502():
     _a, blob_b, _e = info.build_caves()
     words = _words(blob_b)
     assert 0xE3A00000 | info.DIALOG_STYLE_INFORMATION in words  # style 2 = INFORMATION
     assert 0xE3A01000 | info.DIALOG_LAYOUT in words
-    assert 0xE3A02000 | info.DIALOG_MODE in words
+    assert 0xE2806000 | info.DIALOG_MODE in words  # add r6, page, #mode
+    assert 0xE3500000 | len(info.CREDIT_PAGES) in words  # cmp page, #pages
     assert 0xE3A03001 in words  # OK only
     assert info.MSG_SLOT == 502 == rst.MSG_SLOT + 1
     targets = _targets(blob_b, info.CAVE_B_START)
@@ -101,9 +102,32 @@ def test_append_info_message_needs_the_camera_slot_first():
     out, logs = info.append_info_message(cam)
     ch = parse_chunks(out)
     u16, count = _sub_u16_off(ch["INDX"], rst.MSG_CAT, rst.MSG_SUB)
-    assert count == info.MSG_SLOT + 1 and "slot 502" in logs[0]
-    idx = struct.unpack_from("<H", ch["INDX"], u16 + 2 * info.MSG_SLOT)[0]
-    start, length, _flag = struct.unpack_from("<IHH", ch["STRI"], idx * 8)
-    assert ch["STRB"][start : start + length].decode() == info.INFO_TEXT
+    assert count == info.MSG_SLOT + len(info.CREDIT_PAGES) and "slot 502" in logs[0]
+    for page, text in enumerate(info.CREDIT_PAGES):
+        idx = struct.unpack_from("<H", ch["INDX"], u16 + 2 * (info.MSG_SLOT + page))[0]
+        start, length, _flag = struct.unpack_from("<IHH", ch["STRI"], idx * 8)
+        assert ch["STRB"][start : start + length].decode() == text
     again, logs = info.append_info_message(out)
-    assert again == out and "already" in logs[0]
+    assert again == out and all("already" in line for line in logs)
+
+
+def test_credit_lines_fit_the_box_width():
+    pages = info.CREDIT_PAGES
+    for n, page in enumerate(pages, 1):
+        lines = page.split("\n")
+        title = "Localization Credits" + ("" if len(pages) == 1 else f" ({n}/{len(pages)})")
+        assert lines[0] == title
+        assert max(map(info._width, lines)) <= info.LINE_WIDTH
+        if info.PAGE_LINES:
+            assert len(lines) <= info.PAGE_LINES
+        assert len(lines) <= info.MAX_BOX_LINES  # DrawTextToPane line table
+
+
+def test_each_role_has_one_bullet_before_its_names():
+    text = "\n".join(info.CREDIT_PAGES)
+    for role, names in info.CREDITS:
+        if names is None:
+            continue
+        assert role + "\n" + info.BULLET + names[0] in text
+    assert text.count(info.BULLET[0]) == sum(1 for _r, n in info.CREDITS if n)
+    assert "\n-" not in text

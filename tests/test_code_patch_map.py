@@ -56,6 +56,12 @@ DATA_WRITERS = {
     "apply_engpatch_info",  # hub vtable slot +0x28 -> its touch-down guard
 }
 
+# Literal-pool words inside .text (floats, not code); exempt from branch decoding.
+LITERAL_WORDS = {
+    0x001D94B8,  # syspopup_tall_text: FUN_001d92f8 V per texel row
+    0x001D94C0,  # syspopup_tall_text: FUN_001d92f8 pane scale per pixel
+}
+
 # Written ranges a step does not check before overwriting. These are dead
 # bodies behind an entry hook that *is* checked. Ratchet: counts may only go
 # down. A new step must check every range it writes.
@@ -106,7 +112,7 @@ def test_patched_branches_stay_in_text(trace):
     bad = []
     for step in trace.steps:
         for w in step.words:
-            if w >= TEXT_END:
+            if w >= TEXT_END or w in LITERAL_WORDS:
                 continue
             word = struct.unpack_from("<I", trace.final, w)[0]
             tgt = branch_target(word, w)

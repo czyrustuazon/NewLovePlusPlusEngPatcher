@@ -31,6 +31,8 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
   20. patch_camera_defaults_reset          # Restore Default asks Yes/No, then unequips all but the Memory Card
   21. patch_title_engpatch_info            # Main Menu Eng Patch badge tap opens an INFORMATION box (OK)
+  22. patch_drawtext_64_lines              # DrawTextToPane lays out 64 lines (credits box), not 32
+  23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -164,6 +166,14 @@ from patch_camera_restore_default import (  # noqa: E402
 from patch_camera_defaults_reset import (  # noqa: E402
     apply_patch as apply_camera_reset,
     is_patched as camera_reset_already,
+)
+from patch_drawtext_64_lines import (  # noqa: E402
+    apply_patch as apply_drawtext_64,
+    is_patched as drawtext_64_already,
+)
+from patch_syspopup_tall_text import (  # noqa: E402
+    apply_patch as apply_syspopup_tall,
+    is_patched as syspopup_tall_already,
 )
 from patch_title_engpatch_info import (  # noqa: E402
     apply_patch as apply_engpatch_info,
@@ -370,6 +380,18 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] title_engpatch_info already applied")
     else:
         apply_engpatch_info(data)
+        steps += 1
+
+    if drawtext_64_already(data):
+        print("[skip] drawtext_64_lines already applied")
+    else:
+        apply_drawtext_64(data)
+        steps += 1
+
+    if syspopup_tall_already(data):
+        print("[skip] syspopup_tall_text already applied")
+    else:
+        apply_syspopup_tall(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

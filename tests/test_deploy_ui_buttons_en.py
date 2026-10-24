@@ -38,10 +38,32 @@ def _arc(stems: list[str], real_size_dir: Path | None = None) -> bytes:
     return fi.darc(files)
 
 
+def _clyt(pane: bytes, height: float) -> bytes:
+    """CLYT with one 0x80-byte pic1: name at +12, height at +72."""
+    pic = bytearray(0x80)
+    pic[0:4] = b"pic1"
+    struct.pack_into("<I", pic, 4, len(pic))
+    pic[12 : 12 + len(pane)] = pane
+    struct.pack_into("<ff", pic, 68, 204.0, height)
+    head = struct.pack("<4sHHIII", b"CLYT", 0xFEFF, 0x14, 0, 0x14 + len(pic), 1)
+    return head + bytes(pic)
+
+
+def _sentence_height(img: Path, tmp: Path) -> float:
+    arc = DarcArchive(fi.read_element(fi.read_package(img, 5259), "SysPopup.arc", tmp))
+    return struct.unpack_from("<f", arc.extract_file(arc.find(ui.SENTENCE_LAYOUT)), 0x14 + 72)[0]
+
+
 def _group_pkg(group: dict) -> bytes:
     elems = [("Other.arc", fi.darc({"timg/x.bclim": fi.bclim(8, 8)}))]
     for arc_name, d in zip(group["arcs"], group["asset_dirs"]):
-        elems.append((arc_name, _arc(group["stems"], d)))
+        arc = _arc(group["stems"], d)
+        if group.get("layouts"):
+            darc = DarcArchive(bytearray(arc))
+            files = {f.name: darc.extract_file(f) for f in darc.files}
+            files[ui.SENTENCE_LAYOUT] = _clyt(ui.SENTENCE_PANE, ui.SENTENCE_H_VANILLA)
+            arc = fi.darc(files)
+        elems.append((arc_name, arc))
     elems.append(("note.txt", NOTE, b"TXT ", False))
     return fi.package(elems)
 
@@ -78,6 +100,16 @@ def test_main_deploys_every_real_group(env, tmp_path: Path):
                 assert got[name] != before[group["pkg"], arc_name][name], f"{group['pkg']} {arc_name} {stem}"
         assert fi.read_element(fi.read_package(env, group["pkg"]), "note.txt", tmp_path) == NOTE
         assert _bclims(env, group["pkg"], "Other.arc", tmp_path) == before[group["pkg"], "Other.arc"]
+    assert _sentence_height(env, tmp_path) == ui.SENTENCE_H
+
+
+def test_tall_sentence_pane_refuses_an_unexpected_layout():
+    with pytest.raises(SystemExit, match="height"):
+        ui.tall_sentence_pane(_clyt(ui.SENTENCE_PANE, 300.0))
+    with pytest.raises(SystemExit, match="found 0"):
+        ui.tall_sentence_pane(_clyt(b"Tex_Other", 256.0))
+    tall = ui.tall_sentence_pane(_clyt(ui.SENTENCE_PANE, 256.0))
+    assert ui.tall_sentence_pane(tall) == tall
 
 
 def test_main_needs_img(env, monkeypatch, tmp_path):
