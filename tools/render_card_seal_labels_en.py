@@ -60,6 +60,11 @@ TEXT_X0, TEXT_X1 = 11, 84
 TEXT_Y0, TEXT_H = 18, 10
 HALO = (255, 255, 255)
 SCALE = 4
+# The two 8-px tile rows the label touches. Their RGB is snapped to steps of 8
+# (ETC1's 5-bit colours) so each ARC zopflis into its fixed slot: T001 / T003
+# were 18 / 10 bytes over and pack_images fails on that.
+POSTER_Y = (16, 32)
+POSTER_STEP = 8
 
 
 def load_vanilla(pkg: int, name: str) -> Image.Image:
@@ -127,7 +132,12 @@ def render_sticker(
 ) -> Image.Image:
     plate = wipe_glyphs(vanilla, jp_end)
     plate.alpha_composite(render_text(en, ink))
-    return plate
+    a = np.asarray(plate).copy()
+    band = a[POSTER_Y[0] : POSTER_Y[1], :, :3].astype(int)
+    a[POSTER_Y[0] : POSTER_Y[1], :, :3] = np.clip(
+        (band + POSTER_STEP // 2) // POSTER_STEP * POSTER_STEP, 0, 255
+    )
+    return Image.fromarray(a, "RGBA")
 
 
 def asset_path(name: str) -> Path:
