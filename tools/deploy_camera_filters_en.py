@@ -17,7 +17,6 @@ from pathlib import Path
 
 import numpy as np
 from PIL import Image
-from scipy import ndimage as ndi
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -65,12 +64,23 @@ def decode(raw: bytes) -> Image.Image:
     return im.convert("RGBA")
 
 
+def _dilate(mask: np.ndarray) -> np.ndarray:
+    """One-pixel 8-connected dilation. Same result as scipy's default structure."""
+    padded = np.pad(mask, 1, constant_values=False)
+    h, w = mask.shape
+    out = np.zeros_like(mask, dtype=bool)
+    for dy in range(3):
+        for dx in range(3):
+            out |= padded[dy : dy + h, dx : dx + w]
+    return out
+
+
 def text_only(master: Image.Image, van: Image.Image, thresh: int, a_lv: int, c_lv: int) -> Image.Image:
     m = np.asarray(master.convert("RGBA"), dtype=np.int16)
     v = np.asarray(van.convert("RGBA"), dtype=np.int16)
     vis = np.maximum(m[..., 3], v[..., 3])[..., None] / 255.0
     d = np.maximum(np.abs(m[..., 3] - v[..., 3]), (np.abs(m[..., :3] - v[..., :3]) * vis).max(-1))
-    changed = ndi.binary_dilation(d > thresh, iterations=1)
+    changed = _dilate(d > thresh)
     out = v.copy()
     t = m[changed].astype(np.float32)
     a_step = 255 / (a_lv - 1)
