@@ -3,15 +3,12 @@
 
 Ghidra ``OptionMenu_BindBtnTextures`` @ 001eb3dc binds these BCLIM names.
 Prior freezes were from trailing NUL after a short zlib stream (same class as
-CESA). Fix: zopfli-compress the patched ARC, then grow uncompressed padding
-with urandom until compressed length == original cmp_len exactly (unused_data=0).
+CESA). Fix: zopfli-compress the patched ARC, then pad the closed stream with
+empty deflate blocks to the original cmp_len exactly (shared exact_zlib).
 """
 from __future__ import annotations
 
-import os
-import struct
 import sys
-import zlib
 from pathlib import Path
 
 import numpy as np
@@ -31,6 +28,7 @@ from bclimutil import (  # noqa: E402
     png_to_bclim_a8_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
@@ -178,209 +176,6 @@ def patch_arc(vanilla_arc: bytes, tmp: Path, cmp_len: int) -> bytes:
     if best[0] > cmp_len:
         raise SystemExit(f"no trial fits slot {cmp_len} (best zopfli={best[0]})")
     return best[1]
-
-
-def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
-    """Zero padding between DARC files only (never inside BCLIM payloads)."""
-    darc = DarcArchive(data)
-    spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
-    gaps: list[tuple[int, int]] = []
-    for (a0, a1), (b0, b1) in zip(spans, spans[1:]):
-        if b0 > a1:
-            gaps.append((a1, b0))
-    if spans and spans[-1][1] < len(data):
-        gaps.append((spans[-1][1], len(data)))
-    safe: list[tuple[int, int]] = []
-    for g0, g1 in gaps:
-        chunk = data[g0:g1]
-        if len(chunk) >= 16 and chunk == b"\x00" * len(chunk):
-            safe.append((g1 - g0, g0))
-    safe.sort(reverse=True)
-    return safe
-
-
-def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
-    """Pad a short zlib stream to exact_len with empty stored blocks."""
-    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
-    strategies = (
-        zlib.Z_DEFAULT_STRATEGY,
-        zlib.Z_FILTERED,
-        zlib.Z_HUFFMAN_ONLY,
-        zlib.Z_RLE,
-        zlib.Z_FIXED,
-    )
-    hdrs = (b"\x78\x9c", b"\x78\xda", b"\x78\x5e", b"\x78\x01")
-
-    def try_body(body: bytes) -> bytes | None:
-        for hdr in hdrs:
-            remain = exact_len - len(hdr) - 4 - len(body)
-            if remain < 5 or remain % 5 != 0:
-                continue
-            n_empty = remain // 5
-            out = (
-                hdr
-                + body
-                + b"\x00\x00\x00\xff\xff" * (n_empty - 1)
-                + b"\x01\x00\x00\xff\xff"
-                + adler
-            )
-            if len(out) != exact_len:
-                continue
-            d = zlib.decompressobj()
-            try:
-                got = d.decompress(out)
-            except zlib.error:
-                continue
-            if got == data and not d.unused_data and d.eof:
-                return out
-        return None
-
-    for level in range(10):
-        co = zlib.compressobj(level, wbits=-15)
-        hit = try_body(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
-        if hit is not None:
-            return hit
-    for level in range(10):
-        for mem in range(1, 10):
-            for strat in strategies:
-                try:
-                    co = zlib.compressobj(level, zlib.DEFLATED, -15, mem, strat)
-                    hit = try_body(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
-                except zlib.error:
-                    continue
-                if hit is not None:
-                    return hit
-    return None
-
-
-def _zopfli(data: bytes) -> bytes:
-    # Block splitting is required to land under the slot. The hang was the
-    # per-byte walk after the search, not this one compress.
-    return zopfli_zlib.compress(data)
-
-
-def compress_exact_stored_prefix(data: bytes, target: int) -> bytes | None:
-    """Zopfli stream padded to target with stored blocks ahead of the deflate data.
-
-    Empty stored blocks cost 5 bytes each and keep the following zopfli blocks
-    byte-aligned. The 0-4 byte remainder comes from moving the first L bytes of
-    data into a stored block and zopfli-compressing data[L:] instead.
-    """
-    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
-    for lead in range(0, 64):
-        z = _zopfli(data[lead:])
-        hdr, raw = z[:2], z[2:-4]
-        stored = (
-            b"\x00" + struct.pack("<HH", lead, lead ^ 0xFFFF) + data[:lead]
-            if lead
-            else b""
-        )
-        remain = target - (len(hdr) + len(stored) + len(raw) + len(adler))
-        print(f"  stored lead={lead} zopfli={len(z)} remain={remain}", flush=True)
-        if remain < 0 or remain % 5:
-            continue
-        out = hdr + b"\x00\x00\x00\xff\xff" * (remain // 5) + stored + raw + adler
-        d = zlib.decompressobj()
-        if d.decompress(out) == data and d.eof and not d.unused_data:
-            return out
-    return None
-
-
-def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
-    """Return (possibly padded uncompressed, zlib stream of len==target)."""
-    slot = compress_exact_empty_blocks(data, target)
-    if slot is not None:
-        print("  empty-block pad", flush=True)
-        return data, slot
-    slot = compress_exact_stored_prefix(data, target)
-    if slot is not None:
-        print("  stored-block pad", flush=True)
-        return data, slot
-
-    runs = interfile_zero_gaps(data)
-    if not runs:
-        raise SystemExit("no gaps and empty-block pad failed")
-    cap = min(sum(sz for sz, _ in runs), 4096)
-    rng = os.urandom(cap)
-    chunks: list[tuple[int, int, bytes]] = []
-    off = 0
-    for sz, po in runs:
-        take = min(sz, cap - off)
-        if take <= 0:
-            break
-        chunks.append((po, take, rng[off : off + take]))
-        off += take
-
-    def apply_prefix(n_bytes: int) -> bytes:
-        t = bytearray(data)
-        left = n_bytes
-        for po, sz, ch in chunks:
-            take = min(left, sz)
-            if take:
-                t[po : po + take] = ch[:take]
-            left -= take
-            if left <= 0:
-                break
-        return bytes(t)
-
-    def consider(n: int) -> tuple[bytes, bytes] | None:
-        cand = apply_prefix(n)
-        stream = _zopfli(cand)
-        print(f"  pad_bytes={n} zopfli={len(stream)}", flush=True)
-        if len(stream) == target:
-            return cand, stream
-        return None
-
-    base = _zopfli(data)
-    print(f"  fast zopfli {len(base)} slot {target}", flush=True)
-    if len(base) == target:
-        return data, base
-    if len(base) > target:
-        raise SystemExit(f"zopfli {len(base)} already exceeds slot {target}")
-
-    lo, hi = 0, cap
-    closest = (len(base), 0)
-    under = (len(base), 0)
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        cand = apply_prefix(mid)
-        stream = _zopfli(cand)
-        print(f"  pad_bytes={mid} zopfli={len(stream)}", flush=True)
-        if len(stream) == target:
-            return cand, stream
-        if abs(len(stream) - target) < abs(closest[0] - target):
-            closest = (len(stream), mid)
-        if len(stream) < target and len(stream) > under[0]:
-            under = (len(stream), mid)
-        if len(stream) < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-
-    # Independent gap fills. A single random prefix often skips the exact length.
-    width = under[1] if under[1] else closest[1]
-    width = max(width, 1)
-    seen: set[int] = set()
-    for attempt in range(48):
-        salt = os.urandom(width)
-        cand = bytearray(data)
-        left = 0
-        for po, sz, _ch in chunks:
-            take = min(sz, width - left)
-            if take <= 0:
-                break
-            cand[po : po + take] = salt[left : left + take]
-            left += take
-        stream = _zopfli(bytes(cand))
-        seen.add(len(stream))
-        if len(stream) == target:
-            print(f"  salt exact attempt={attempt}", flush=True)
-            return bytes(cand), stream
-        if attempt % 8 == 7:
-            print(f"  salt {attempt + 1} last={len(stream)}", flush=True)
-    raise SystemExit(
-        f"could not hit exact zopfli length (closest {closest[0]} at {closest[1]}; saw {sorted(seen)[:12]})"
-    )
 
 
 def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
