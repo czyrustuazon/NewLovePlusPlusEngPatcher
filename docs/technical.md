@@ -1332,6 +1332,13 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 Opening the box is slower than a short popup: `DrawTextToPane` renders every line into the 256×1024 A8 texture on the CPU (Azahar's texture dumping adds more). Hub vtable `+0x28` (touch-down) is guarded while a page is open. Do not route it through the operator's own `+0x58` dialog wait: that path ends in `0x1EED80(hub, 1)`, which replays the hub intro.
 
+**Credits paging (kept, off by default).** Before the single box, the credits were 4 INFORMATION boxes (slots 502–505, ~14 lines each) chained by OK. The code still supports it; set `PAGE_LINES` in `src/patch_title_engpatch_info.py` to a line count (title included) and rebuild both outputs (`code.bin` for the page count in the cave, TRB for the slots). How it works:
+  - `_credit_pages()` splits `CREDITS` at role boundaries so no role's names straddle a box; every page gets the title `Localization Credits (n/N)` (one page = plain title + blank line).
+  - The cave keeps the page in the `.data` cell `+3` (`CELL`, VA `0x8A5180`). Opening page *p* calls `FUN_00195FA4` with mode `DIALOG_MODE + p` = 4 + *p*, i.e. pack `0x1901` slot `502 + p` (layout 53 base 498, table at `0x6C6F5C`). The poll path, on `FUN_00196F88` reporting closed, does page + 1, `cmp r0, #len(CREDIT_PAGES)` and `blo open`; past the last page it goes idle. The page count is baked into that `cmp` immediate, so it must stay ≤ 255 and `code.bin` must be rebuilt whenever the page count changes.
+  - `append_info_message()` appends one TRB slot per page, contiguous after the camera confirm's slot 501 (`tools/deploy_name_kanji_trb.py`). Any other patch that wants slots 503+ collides with paging; take slots after the last credits page instead.
+  - Vanilla Win01 boxes run up to ~16 lines and 36 characters; 14-line pages scroll briefly but fit the vanilla 204×256 texture. With pages ≤ 32 lines, `patch_drawtext_64_lines`, the 1024-tall `Tex_Sentence` and `patch_syspopup_tall_text` are not needed, but they are harmless to keep (the scroll bar fix still helps).
+  - Tests: `test_credit_lines_fit_the_box_width` checks every page's title, width and `PAGE_LINES`; `test_boxes_are_information_with_one_ok_from_slot_502` checks the `cmp #pages`; `test_append_info_message_needs_the_camera_slot_first` checks one slot per page.
+
 Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only fringe **vanishes** on Main Menu even when bake/CIA contain the strip — outline strength is the visibility fix, not “merge into Copyright.”
 
 **Title loop NX abort** when rebinding this Parts tree: **§15.7** (do not treat as a CESA / extra-data / `.rodata` cave crash).

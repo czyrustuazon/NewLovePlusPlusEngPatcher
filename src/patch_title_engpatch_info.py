@@ -1,7 +1,8 @@
 """Tapping the Eng Patch badge on the Main Menu shows the localization credits.
 
-The credits are a run of INFORMATION boxes with one OK each; OK on one opens
-the next page (``CREDIT_PAGES``).
+The credits are one scrolling INFORMATION box with one OK. Paging is kept:
+with ``PAGE_LINES`` > 0 they become a run of boxes and OK on one opens the next
+(``CREDIT_PAGES``; see docs/technical.md "Credits paging").
 
 The badge (``Pic_EngPatch`` in ``Pts_Copyright``, ``deploy_title_engpatch_en``)
 is a picture, not a button, so the tap is read straight from HID shared memory
@@ -111,6 +112,7 @@ MSG_SLOT = DIALOG_LAYOUT_BASE + DIALOG_MODE  # 502, first page
 # 14 lines (they scroll) and 36 characters; pages stay within that.
 CREDITS_TITLE = "Localization Credits"
 PAGE_LINES = 0  # lines per box, title included; 0 = everything in one scrolling box
+# Changing the page count needs both rebuilds: code.bin (cmp #pages) and the TRB (slots).
 # One box draws at most 64 lines: vanilla DrawTextToPane (0x0054B880) only
 # kept 32 lines in its stack table; patch_drawtext_64_lines packs it to 64.
 # The text texture is pane-sized (deploy_ui_buttons_en makes Tex_Sentence
