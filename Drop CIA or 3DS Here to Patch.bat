@@ -151,6 +151,32 @@ echo  Using:
 echo    %PYTHON%
 echo.
 
+REM Installing the patched CIA can cost the player their save if they have no
+REM backup. Asked first so nobody waits through the hash before being sent away.
+REM Preset NLPP_BACKUP_CONFIRMED=1 skips the question for scripted runs.
+if /i not "%NLPP_BACKUP_CONFIRMED%"=="1" (
+  echo Before installing the patched CIA, back up your save and extra data
+  echo ^(extdata^), e.g. with Checkpoint or JKSM on 3DS, or on Azahar:
+  echo     python tools\restore_azahar_extdata.py backup
+  echo Install over the existing game later - do not delete it first.
+  echo.
+  set "BACKUP_ANS="
+  set /p "BACKUP_ANS=Have you backed up your save and extdata? [y/N]: "
+  set "BACKUP_OK="
+  if /i "!BACKUP_ANS!"=="y" set "BACKUP_OK=1"
+  if /i "!BACKUP_ANS!"=="yes" set "BACKUP_OK=1"
+  set "BACKUP_ANS="
+  if not defined BACKUP_OK (
+    echo.
+    echo [cancelled] Back up your save and extdata first, then drop the dump again.
+    echo.
+    pause
+    exit /b 1
+  )
+  set "BACKUP_OK="
+  echo.
+)
+
 REM Do not use FOR /F around '"%PYTHON%" -c "import ...' - cmd treats
 REM 'C:\...\python.exe" -c "import' as the executable name (quote pairing).
 REM Write the unix stamp to a temp file instead (same pattern as SHA-1).
