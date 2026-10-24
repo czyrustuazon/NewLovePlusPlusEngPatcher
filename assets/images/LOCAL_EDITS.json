@@ -396,6 +396,138 @@
       "blob": "12507876d105b23cee668d3d27899b956bcc951d",
       "commit": "4799686",
       "reason": "Web event-card dates shown as MM/DD Update."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text1.png",
+      "blob": "5312efac8d8da9e07db9ccbf3cd4e974204bb245",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text10.png",
+      "blob": "3db747911d5a6749b7119a999ea107fbb0c16b81",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text11.png",
+      "blob": "94f5385aef0c1947f1c92b2c97dfb404831f0910",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text12.png",
+      "blob": "723d4f894b8f952e31e3e839bb9b05fb5a7786f6",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text13.png",
+      "blob": "a71015e68083634957c4c028898f9b18b7514562",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text2.png",
+      "blob": "038f94b99b6fdaf8d5639b4fc578375619af4c10",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text3.png",
+      "blob": "c7d529ef4070e380f21c7e4e3230353bfeaaae8d",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text4.png",
+      "blob": "ecad3f5e1e3115d95261dd975f6c33f9ad558a21",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text5.png",
+      "blob": "f94c42b6f943c1a1d3217759dd68369db914b842",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text6.png",
+      "blob": "4cc8a3e1850b6fdc6a25a3be5b3d3c5e0d36e831",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text7.png",
+      "blob": "89316cdc8b26598781db55a890012b251567f8b9",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text8.png",
+      "blob": "c2370b530af6eadf540f1fb3a94f2b1e10e221e2",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text9.png",
+      "blob": "30529b1e81220fce923ba88ca43b1c3f50a4613d",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert.png",
+      "blob": "2411145d1a607731874ce9744592d03cbae94b83",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert2.png",
+      "blob": "587804c4aa304562656471aef6b493b2502a2e56",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert3.png",
+      "blob": "90ce7169c1c22ac9dbaade048c86afaa6476cccf",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert4.png",
+      "blob": "6ed17c3c8b916f0dd5b94b7932ce8ead0b8322a4",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert5.png",
+      "blob": "8606c2bbdcea7d045a9f5d930c57f9267b15cc3b",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert6.png",
+      "blob": "95349b5b3f53e0968a6fa32e7a8e151af7d33ecb",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_Check.png",
+      "blob": "4beec405b255fe1f99c50dd3e45965e6ceb06145",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_Trans.png",
+      "blob": "e5bea5aa953b804377be23137ec6a32060dc3246",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "NCommonMSel(5).check/timg/Com_M_Sel_Plate_Text06_00_00.png",
+      "blob": "621be50e3005616c550038c3360e1968842f27ef",
+      "commit": "42e842f",
+      "reason": "\"Anywhere Date\" plate: RGB flattened to its (51,51,51) ink (hidden texels were black) and alpha cut to 6 levels so NCommonMSel.arc zopflis into pkg 5243's 2323-byte slot; the d201351 master was 435 bytes over and shipped Japanese. No visible change at 4x."
     }
   ]
 }
