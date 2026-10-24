@@ -282,3 +282,55 @@ def test_gemini_stem_writes_a_separate_file(tmp_path: Path, capsys):
     assert ingest._xml_dialogs(contrib / "xml" / "a001.xml") == dialogs
     assert ingest._dbin_dialogs(contrib / "dbin2" / "script" / "a001.dbin2") == dialogs
     assert ingest._dbin_dialogs(contrib / "dbin2" / "NLP_01" / "a001.dbin2") == dialogs
+
+
+def test_gemini_proofread_applies_onto_the_machine_pass(tmp_path: Path, capsys):
+    """Workbench baseline stays Japanese. Edits land on the Gemini text."""
+    gemini = tmp_path / "gemini"
+    contrib = tmp_path / "script_contrib"
+    scripts = tmp_path / "scripts"
+    dbin_root = tmp_path / "rebuild_dbin2"
+    scripts.mkdir()
+    machine = ["Good morning", "Hello ●▲苗字▲", "stay & put"]
+    machine_xml = XML.replace("○○○○○○○○", machine[0]).replace(
+        "こんにちは●▲苗字▲", machine[1]
+    )
+    xml = gemini / "xml" / "a001.xml"
+    xml.parent.mkdir(parents=True)
+    xml.write_bytes(machine_xml.encode("utf-8"))
+    proposed = ["○○○○○○○○", "Hi ●▲苗字▲", "stay & put"]
+    pack = {
+        "schema": 1,
+        "kind": "nlpp-contrib",
+        "items": [
+            {
+                "kind": "script",
+                "stem": "a001",
+                "dirty": True,
+                "baseline_dialogs": BASE,
+                "dialogs": proposed,
+            }
+        ],
+    }
+    code = ingest.main(
+        [
+            str(_write_pack(tmp_path, pack)),
+            "--apply",
+            "--scripts",
+            str(scripts),
+            "--dbin-root",
+            str(dbin_root),
+            "--gemini-root",
+            str(gemini),
+            "--contrib-root",
+            str(contrib),
+        ]
+    )
+    assert code == 0
+    out = capsys.readouterr().out
+    assert "conflict 0" in out
+    merged = ingest._xml_dialogs(contrib / "xml" / "a001.xml")
+    assert merged[0] == "Good morning"
+    assert merged[1] == "Hi ●▲苗字▲"
+    assert merged[2] == "stay & put"
+    assert xml.read_bytes() == machine_xml.encode("utf-8")

@@ -266,7 +266,9 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
         warnings = _line_warnings(old, new)
         if live == new:
             action = "already"
-        elif live == old or force:
+        elif live == old or force or plan.separate:
+            # A Gemini stem's repo text is the machine pass, not the Japanese
+            # baseline the workbench exports. A proofread still applies.
             action = "apply"
         else:
             action = "conflict"
