@@ -34,7 +34,6 @@ from unicorn.arm_const import (  # noqa: E402
 
 VA = 0x100000
 GET_STR = 0x006C0D4C
-COPY = 0x001317DC  # FUN_000317dc strncpy
 RANGES_VA = 0x007A484E
 EXCLUDED_VA = 0x007A4986
 STRINGS = 0x10000000
@@ -75,9 +74,8 @@ class Matcher:
         uc.mem_map(0x7A4000, 0x1000)
         uc.mem_write(RANGES_VA, b"".join(struct.pack("<HH", lo, hi) for lo, hi in ranges))
         uc.mem_write(EXCLUDED_VA, struct.pack(f"<{len(excl)}H", *excl))
-        for stub in (GET_STR, COPY):
-            uc.mem_map(stub & ~0xFFF, 0x1000)
-            uc.mem_write(stub, bytes.fromhex("1eff2fe1"))  # bx lr
+        uc.mem_map(GET_STR & ~0xFFF, 0x1000)
+        uc.mem_write(GET_STR, bytes.fromhex("1eff2fe1"))  # bx lr
         uc.mem_map(STRINGS, 0x100000)
         self.ptr = {}
         at = STRINGS
@@ -91,13 +89,6 @@ class Matcher:
         uc.mem_map(RETURN, 0x1000)
         self.calls = 0
         uc.hook_add(UC_HOOK_CODE, self._get_str, begin=GET_STR, end=GET_STR)
-        uc.hook_add(UC_HOOK_CODE, self._copy, begin=COPY, end=COPY)
-
-    def _copy(self, uc, _addr, _size, _data):
-        """strncpy(dst, src, n): stop at NUL, pad with zeros."""
-        dst, src, n = (uc.reg_read(r) for r in (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2))
-        raw = bytes(uc.mem_read(src, n)).split(b"\0", 1)[0][:n]
-        uc.mem_write(dst, raw + b"\0" * (n - len(raw)))
 
     def _get_str(self, uc, _addr, _size, _data):
         pack, slot, one = (uc.reg_read(r) for r in (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2))
@@ -131,23 +122,6 @@ class Matcher:
         self._run("nlpp_call_list", name, [NAME, mode, flag, OUT])
         count, ids = self.out()
         return ids[:count]
-
-    def typed(self, name, mode: int = 1) -> tuple[int, str]:
-        """(reading ID or -1, row text) for the typed-name row."""
-        buf = OUT + 0x1400  # NAME is OUT + 0x1000
-        self.uc.mem_write(buf - 4, b"\xEE" * 0x28)
-        ret = self._run("nlpp_call_typed", name, [NAME, mode, buf])
-        guard_lo, guard_hi = self.uc.mem_read(buf - 4, 4), self.uc.mem_read(buf + 32, 4)
-        assert guard_lo == b"\xEE" * 4 and guard_hi == b"\xEE" * 4, "row text overran its 0x20 buffer"
-        text = bytes(self.uc.mem_read(buf, 32)).split(b"\0", 1)[0].decode("utf-8")
-        return struct.unpack("<i", struct.pack("<I", ret))[0], text
-
-    def pick(self, row: str, n: int) -> bytes:
-        """What the tap handler saves as the Called name (n = copy limit)."""
-        dst = OUT + 0x1800
-        self.uc.mem_write(dst, b"\xEE" * 0x48)
-        self._run("nlpp_call_pick", row, [dst, NAME, n])  # row text at NAME
-        return bytes(self.uc.mem_read(dst, n + 4))
 
 
 DICT = {
@@ -233,51 +207,16 @@ def test_list_caps_at_ten():
     assert len(Matcher(many).suggest("Ta")) == 10
 
 
-LONG = {20: "Yuuji", 21: "Kouno", 22: "Ono", 23: "Oono", 24: "Gorou"}
+def test_unknown_name_lists_nothing(m):
+    """No reading and no suggestion: the Called list stays empty."""
+    assert m.suggest("Zack") == []
 
 
-def test_typed_row_borrows_a_long_vowel_reading():
-    m = Matcher(LONG)
-    # Row keeps the typed text (casing too); she says ゆうじ.
-    assert m.typed("YUji") == (20, "YUji")
-    assert m.typed("Kono") == (21, "Kono")
-    assert m.typed("Goro") == (24, "Goro")
-
-
-def test_typed_row_long_vowel_match_takes_the_first_id():
-    # Ono and Oono collapse alike; the exact lookup runs first, so this only
-    # decides names that match neither literally.
-    assert Matcher(LONG).typed("Ooono")[0] == 22
-
-
-def test_typed_row_without_reading_is_marked():
-    m = Matcher(LONG)
-    assert m.typed("Zack") == (-1, "Zack *")
-    assert m.typed("Bob-chan") == (-1, "Bob-chan *")
-
-
-def test_typed_row_marker_fits_the_buffer():
-    ret, text = Matcher(LONG).typed("X" * 40)
-    assert ret == -1 and text == "X" * 29 + " *"
-
-
-def test_typed_row_non_ascii_has_no_reading():
-    assert Matcher(LONG).typed("あきこ") == (-1, "あきこ *")
-
-
-@pytest.mark.parametrize("n", [0x3F, 0x1F])  # Call01 / Call02 copy limits
-def test_pick_drops_the_marker(n):
-    m = Matcher(LONG)
-
-    def saved(row: str) -> bytes:
-        return m.pick(row, n).split(b"\0", 1)[0]
-
-    assert saved("Zack *") == b"Zack"
-    assert saved("YUji") == b"YUji"
-    assert saved("Akiko") == b"Akiko"
-    assert saved("*") == b"*"
-    assert saved("") == b""
-    assert m.pick("A" * 40, n)[n : n + 4] == b"\xEE" * 4, "copy wrote past n"
+def test_long_vowel_spelling_is_a_suggestion():
+    # Yuji is one letter from Yuuji: listed, not an exact match.
+    m = Matcher({20: "Yuuji", 22: "Ono", 23: "Oono"})
+    assert m.exact("Yuji")[0] == 0
+    assert m.suggest("Yuji") == [20]
 
 
 def test_blob_is_built_from_current_source():

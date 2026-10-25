@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "503691047ae090b9cbc0ec371d9f686022ad50ce64f266a7c445bac9e3e33f70",
+ "final_sha256": "487d7f500630cf1b531e69ffd06fb38f4b433efce86efea05dba81fd0a6f9629",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -153,17 +153,12 @@
   },
   {
    "name": "apply_call_romaji",
-   "written_sha256": "18556a5539b6f43a5c953484f0ff857b0cbb1a287a8d803b16416215c8c2442e",
+   "written_sha256": "529f6dc408d6c096a56c27887c90cdd77471c363d7c3c5dee5e3e3a045754e87",
    "ranges": [
-    "0x147b3c-0x147dd0",
-    "0x147e04-0x147f84",
+    "0x147b3c-0x147ddc",
+    "0x147e04-0x147e28",
     "0x148f44-0x148f80",
-    "0x148f84-0x149328",
-    "0x1f1a9c-0x1f1aa0",
-    "0x1f1d20-0x1f1d24",
-    "0x23e4bc-0x23e4c0",
-    "0x23e73c-0x23e740",
-    "0x68fee4-0x68ff50"
+    "0x148f84-0x149314"
    ]
   },
   {

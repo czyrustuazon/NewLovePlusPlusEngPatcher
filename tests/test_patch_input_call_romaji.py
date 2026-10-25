@@ -22,37 +22,26 @@ def code(monkeypatch) -> bytearray:
         data[start:end] = b"\x5a" * (end - start)
         regions[start] = (end, hashlib.sha256(bytes(data[start:end])).hexdigest())
     monkeypatch.setattr(cr, "MATCH_REGIONS", regions)
-    for site, orig in (
-        (cr.SITE_MISS01, cr.ORIG_MISS01),
-        (cr.SITE_MISS02, cr.ORIG_MISS02),
-        (cr.SITE_PICK01, cr.ORIG_PICK01),
-        (cr.SITE_PICK02, cr.ORIG_PICK02),
-    ):
-        data[site : site + 4] = orig
     return data
 
 
-def test_apply_patch_writes_matcher_cave_and_hooks(code, capsys):
-    base = cr.cave_addr()
-    blob, labs = cr.build_blob(base=base)
+def test_apply_patch_writes_matcher(code, capsys):
+    before = bytes(code)
     assert cr.apply_patch(code) is True
     assert len(code) == TEXT_PAGE_END
     assert cr.is_patched(code)
-    assert bytes(code[base : base + len(blob)]) == blob
     for start, piece in cr.MATCH_PIECES:
         assert bytes(code[start : start + len(piece)]) == piece
-    assert bytes(code[cr.SITE_MISS01 : cr.SITE_MISS01 + 4]) == cr.b_cond(0, cr.SITE_MISS01, labs["typed01"])
-    assert bytes(code[cr.SITE_PICK02 : cr.SITE_PICK02 + 4]) == cr.bl(cr.SITE_PICK02, cr.NLPP_CALL_PICK)
+    # Nothing outside the lookup bodies changes: a miss takes the vanilla
+    # branch to the suggestion list, and the tap handlers keep their strncpy.
+    written = bytearray(before)
+    for start, piece in cr.MATCH_PIECES:
+        written[start : start + len(piece)] = piece
+    assert bytes(code) == bytes(written)
     assert "romaji matcher" in capsys.readouterr().out
     # Second run is a no-op.
     assert cr.apply_patch(code) is False
     assert "already patched" in capsys.readouterr().out
-
-
-def test_apply_patch_rejects_cave_over_commu_header(code, monkeypatch):
-    monkeypatch.setattr(cr, "ADDR_COMMU_HEADER_CAVE", cr.cave_addr())
-    with pytest.raises(ValueError, match="overlaps commu header"):
-        cr.apply_patch(code)
 
 
 def test_apply_patch_rejects_region_table_drift(code, monkeypatch):
@@ -77,26 +66,9 @@ def test_apply_patch_rejects_non_vanilla_body(code):
         cr.apply_patch(code)
 
 
-def test_apply_patch_rejects_unexpected_called_list_code(code):
-    code[cr.SITE_PICK01] ^= 0xFF
-    with pytest.raises(ValueError, match="unexpected Called list code"):
-        cr.apply_patch(code)
-
-
-def test_apply_patch_rejects_dirty_cave(code):
-    code[cr.cave_addr() + 4] = 1
-    with pytest.raises(ValueError, match="not empty pad"):
-        cr.apply_patch(code)
-
-
-def test_assemble_rejects_unknown_item():
-    with pytest.raises(ValueError):
-        cr._assemble(0x1000, [("bogus",)])
-
-
 def test_main_dry_run_and_apply_hint(capsys):
     assert cr.main(["--dry-run"]) == 0
     out = capsys.readouterr().out
-    assert "call-romaji" in out and "matcher 0x147b3c" in out
+    assert "matcher 0x147b3c" in out
     with pytest.raises(SystemExit, match="deploy_name_input_en"):
         cr.main([])

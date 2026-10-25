@@ -27,9 +27,6 @@ typedef unsigned int u32;
 /* FUN_005c0d4c: (pack, slot, 1) -> NUL-terminated UTF-8 string or 0. */
 typedef const char *(*get_str_fn)(u32 pack, u32 slot, u32 one);
 #define GET_STR ((get_str_fn)0x006C0D4Cu)
-/* FUN_000317dc: the strncpy the Call01 / Call02 tap handlers use. */
-typedef void (*copy_fn)(char *dst, const char *src, u32 n);
-#define COPY ((copy_fn)0x001317DCu)
 /* Seven inclusive (lo, hi) ID ranges in pack 0x7200 (FUN_00147b3c pool). */
 #define RANGES ((const volatile u16 *)0x007A484Eu)
 #define RANGE_COUNT 7
@@ -49,12 +46,6 @@ typedef void (*copy_fn)(char *dst, const char *src, u32 n);
 /* scan kinds */
 #define FUZZY 0
 #define EXACT 1
-#define LOOSE 2 /* exact after collapse(): Yuji finds ゆうじ "Yuuji" */
-
-/* Typed names with no reading are listed with this suffix; the tap handler
- * strips it before the name is saved (nlpp_call_pick). */
-#define NO_VOICE " *"
-#define TYPED_MAX 32 /* Call02's text slot and the stack buffer hold 0x20 */
 
 /* Lower-case ASCII letters only. ō / é fold to o / e; other non-ASCII and
  * punctuation (Shin'ichi, Kyō-chan) are dropped. Returns -1 if too long. */
@@ -187,25 +178,9 @@ static u32 hash(const char *t)
     return h;
 }
 
-/* Long vowels as one letter, in place: uu -> u, ou / oo -> o. Returns the
- * new length. Only for LOOSE: Ono / Oono are different readings. */
-static int collapse(char *t)
-{
-    int i, n = 0;
-    for (i = 0; t[i]; i++) {
-        if (n && t[n - 1] == t[i] && (t[i] == 'u' || t[i] == 'o'))
-            continue;
-        if (n && t[n - 1] == 'o' && t[i] == 'u')
-            continue;
-        t[n++] = t[i];
-    }
-    t[n] = 0;
-    return n;
-}
-
-/* Fills out[0] = count, out[1..] = IDs, best first (at most keep). EXACT /
- * LOOSE: only readings equal to the typed name; FUZZY: suggestions without
- * the exact reading. */
+/* Fills out[0] = count, out[1..] = IDs, best first (at most keep). EXACT:
+ * only readings equal to the typed name; FUZZY: suggestions without the
+ * exact reading. */
 static void scan(const char *name, u32 mode, int kind, int *out, int keep)
 {
     char q[MAXLEN], t[MAXLEN];
@@ -217,8 +192,6 @@ static void scan(const char *name, u32 mode, int kind, int *out, int keep)
     n = query(name, q);
     if (!n)
         return;
-    if (kind == LOOSE)
-        n = collapse(q);
     for (r = 0; r < RANGE_COUNT; r++) {
         u32 id, hi = RANGES[2 * r + 1];
         for (id = RANGES[2 * r]; id <= hi; id++) {
@@ -233,12 +206,10 @@ static void scan(const char *name, u32 mode, int kind, int *out, int keep)
             m = normalize(s, t);
             if (m <= 0)
                 continue;
-            if (kind == LOOSE)
-                m = collapse(t);
             if (m == n && same(q, t, n))
-                v = kind != FUZZY ? SCORE_EXACT : 0;
+                v = kind == EXACT ? SCORE_EXACT : 0;
             else
-                v = kind != FUZZY ? 0 : score(q, n, t, m);
+                v = kind == EXACT ? 0 : score(q, n, t, m);
             if (!v)
                 continue;
             h = hash(t);
@@ -288,36 +259,4 @@ int nlpp_call_exact(const char *name, u32 mode, int *out)
 void nlpp_call_list(const char *name, u32 mode, u32 flag, int *out)
 {
     scan(name, mode >= 3 ? 1 : mode, flag != 0 ? EXACT : FUZZY, out, KEEP);
-}
-
-/* Typed-name row (exact lookup missed; called from the patch cave). Returns
- * the reading ID of a long-vowel match (YUji -> 550 ゆうじ "Yuuji") so she
- * says it while the row keeps the typed text, else -1. Writes the row text to
- * buf (TYPED_MAX bytes): the name, plus NO_VOICE when there is no reading. */
-int nlpp_call_typed(const char *name, u32 mode, char *buf)
-{
-    int out[2], i = 0, j;
-    scan(name, mode >= 3 ? 1 : mode, LOOSE, out, 1);
-    while (name[i] && i < TYPED_MAX - (int)sizeof(NO_VOICE)) {
-        buf[i] = name[i];
-        i++;
-    }
-    if (!out[0])
-        for (j = 0; NO_VOICE[j]; j++)
-            buf[i++] = NO_VOICE[j];
-    buf[i] = 0;
-    return out[0] ? out[1] : -1;
-}
-
-/* Replaces the tap handlers' copy of a row's text into the Called name
- * (0x23e73c Call01, 0x1f1d20 Call02): the same strncpy, then NO_VOICE is
- * dropped so the saved name and dialogue never show it. */
-void nlpp_call_pick(char *dst, const char *src, u32 n)
-{
-    int len = 0;
-    COPY(dst, src, n);
-    while (len < (int)n && dst[len])
-        len++;
-    if (len >= 2 && dst[len - 2] == NO_VOICE[0] && dst[len - 1] == NO_VOICE[1])
-        dst[len - 2] = 0;
 }

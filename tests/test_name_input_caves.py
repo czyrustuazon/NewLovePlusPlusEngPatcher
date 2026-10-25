@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+
 import pytest
 
 from conftest import SRC, load_module
@@ -48,8 +50,6 @@ def test_name_input_caves_are_inside_text_rx():
     assert romaji.ADDR_CAVE + len(blob) <= end
     sc = strcat_raw.cave_addr()
     assert sc + len(strcat_raw.build_blob(base=sc)) <= end
-    cr = call_romaji.cave_addr()
-    assert cr + len(call_romaji.build_blob()[0]) <= end
     assert cave_map.ADDR_CHUNK_WALK_CAVE < cave_map.ADDR_CHUNK_WALK_LIMIT <= end
     assert cave_map.OLD_RODATA_SHARED_PAD >= end
     assert cave_map.OLD_RODATA_ROMAJI_CAVE >= end
@@ -71,10 +71,6 @@ def test_name_input_caves_do_not_overlap():
         (
             strcat_raw.cave_addr(),
             strcat_raw.cave_addr() + len(strcat_raw.build_blob(base=strcat_raw.cave_addr())),
-        ),
-        (
-            call_romaji.cave_addr(),
-            call_romaji.cave_addr() + len(call_romaji.build_blob()[0]),
         ),
     ]
     for i, (a0, a1) in enumerate(ranges):
@@ -299,13 +295,6 @@ def test_strcat_raw_on_vanilla(vanilla_code):
     assert bytes(data[cave : cave + len(blob)]) == blob
 
 
-def test_call_romaji_cave_fits_after_strcat():
-    cave = call_romaji.cave_addr()
-    blob, labs = call_romaji.build_blob(base=cave)
-    assert cave + len(blob) <= cave_map.ADDR_COMMU_HEADER_CAVE
-    assert labs["typed01"] == cave
-
-
 def test_call_romaji_matcher_fits_dead_lookup_bodies():
     """The compiled matcher overwrites FUN_00147b3c / FUN_00147e04 / FUN_00148f44
     from their entries, and stays inside each body."""
@@ -317,71 +306,25 @@ def test_call_romaji_matcher_fits_dead_lookup_bodies():
     assert regions[0x00147E04][0] == 0x001480A8
 
 
-def _b_target(word: bytes, here: int) -> int:
-    imm = int.from_bytes(word, "little") & 0xFFFFFF
-    if imm & 0x800000:
-        imm -= 0x1000000
-    return here + 8 + (imm << 2)
-
-
-def test_call_romaji_no_match_shows_typed_name():
-    """Exact lookup failed + non-empty name → nlpp_call_typed gives the row's
-    reading ID (long-vowel match or -1) and text ("Zack *"), count 1, then the
-    candidate-0 tail with r1 = that text.
-
-    The ID must come from nlpp_call_typed: the slot otherwise holds 0 (pack
-    0x7200 slot 0, Aizawa) or a stale ID, and the heroine would say that
-    reading for a typed name.
-    """
-    from capstone import CS_ARCH_ARM, CS_MODE_ARM, Cs
-
-    md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
-    cave = call_romaji.cave_addr()
-    blob, labs = call_romaji.build_blob(base=cave)
-    typed = f"bl #{call_romaji.NLPP_CALL_TYPED:#x}"
-    expected = {
-        "01": [
-            "ldr r0, [sp, #0x168]", "cmp r0, #0", f"beq #{call_romaji.MISS01_SKIP:#x}",
-            "ldrb r1, [r0]", "cmp r1, #0", f"beq #{call_romaji.MISS01_SKIP:#x}",
-            "mov r1, #1", "add r2, sp, #0x10c", typed,
-            "str r0, [r6, #0x394]",
-            "add r1, sp, #0x10c", "mov r7, #1", f"b #{call_romaji.CALL01_DRAW0:#x}",
-        ],
-        "02": [
-            "ldr r0, [sp, #0x168]", "cmp r0, #0", f"beq #{call_romaji.MISS02_SKIP:#x}",
-            "ldrb r1, [r0]", "cmp r1, #0", f"beq #{call_romaji.MISS02_SKIP:#x}",
-            "ldr r1, [r7, #0x2c]", "add r2, sp, #0x110", typed,
-            "add ip, r7, #0x200", "strh r0, [ip, #0x34]",
-            "add r1, sp, #0x110", "mov r6, #1", f"b #{call_romaji.CALL02_DRAW0:#x}",
-        ],
-    }
-    for n, want in expected.items():
-        at = labs["typed" + n]
-        code = blob[at - cave : at - cave + 4 * len(want)]
-        got = [f"{i.mnemonic} {i.op_str}" for i in md.disasm(code, at)]
-        assert got == want, n
-
-
 @pytest.mark.local_data
 def test_call_romaji_hooks_vanilla(vanilla_code):
-    cave = call_romaji.cave_addr()
-    blob, _labs = call_romaji.build_blob(base=cave)
+    """Only the lookup bodies change. A failed exact lookup keeps the vanilla
+    branch (0x23e4bc / 0x1f1a9c) straight to the suggestion list, so a name
+    with no reading or suggestion leaves the list empty."""
     data = bytearray(vanilla_code)
-    if data[call_romaji.SITE_MISS01 : call_romaji.SITE_MISS01 + 4] != call_romaji.ORIG_MISS01:
-        pytest.skip("code.bin call-list site is not vanilla")
-    if data[strcat_raw.ADDR : strcat_raw.ADDR + 8] == strcat_raw.VANILLA_HEAD:
-        strcat_raw.apply_patch(data)
+    if not all(
+        hashlib.sha256(bytes(data[start:end])).hexdigest() == sha
+        for start, (end, sha) in call_romaji.MATCH_REGIONS.items()
+    ):
+        pytest.skip("code.bin lookup bodies are not vanilla")
     call_romaji.apply_patch(data)
     assert call_romaji.is_patched(data)
-    assert bytes(data[cave : cave + len(blob)]) == blob
+    written = bytearray(vanilla_code)
     for start, piece in call_romaji.MATCH_PIECES:
-        assert bytes(data[start : start + len(piece)]) == piece
-    for site, typed in ((call_romaji.SITE_MISS01, "typed01"), (call_romaji.SITE_MISS02, "typed02")):
-        assert data[site + 3] == 0x0A  # still beq
-        assert _b_target(bytes(data[site : site + 4]), site) == _labs[typed]
-    for site in (call_romaji.SITE_PICK01, call_romaji.SITE_PICK02):
-        assert data[site + 3] == 0xEB  # still bl
-        assert _b_target(bytes(data[site : site + 4]), site) == call_romaji.NLPP_CALL_PICK
+        written[start : start + len(piece)] = piece
+    assert data == written
+    for miss, skip in ((0x0023E4BC, "2300000a"), (0x001F1A9C, "2400000a")):
+        assert data[miss : miss + 4].hex() == skip
     # No other caller of the replaced lookups (FUN_00148f44 / FUN_00147808 are
     # only reached from inside them).
     assert call_romaji.apply_patch(data) is False
