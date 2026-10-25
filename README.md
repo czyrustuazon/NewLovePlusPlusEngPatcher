@@ -239,6 +239,17 @@ Deploy scripts mirror into Azahar LayeredFS by default when that mod `img.bin` e
 ### Known issues
 
 - **Boop / network install:** Installing the patched CIA over the network with Boop does not work. Copy `out/NewLovePlusPlus-EN.cia` to the SD card and install with FBI, or open the CIA in Azahar/Citra.
+- **Love Plus mode voice-hint bubbles are not translated:** see below.
+
+#### Voice-hint bubbles (Love Plus mode)
+
+<img src="docs/images/voice-hint-bubbles.png" alt="Voice-hint bubbles around the heroine in Love Plus mode: ヒマだね, 遊ぼう, 好きですか？, あのさ, 選んで, お話しよう" width="369">
+
+When the mic is open in Love Plus mode, bubbles like ヒマだね, 遊ぼう and お話しよう float around her. They tell you what you can say to her. The screenshot shows the unpatched game. The English patch writes each bubble in romaji, so ヒマだね reads "Hima da ne" and お話しよう reads "Ohanashi shiyou". You can read what to say, but the bubbles aren't translated into English. I have no plans to translate them, so you need some basic Japanese to know what you're saying.
+
+The reason is the voice-to-text engine. Each bubble is tied to a Japanese reading, and that reading is the only thing the game listens for. The bubbles live in `img.bin` package 4073 (`keyword_stringu_*.lmb`). Each one is paired, row for row, with a katakana reading in `keyword_strings_*.lmb`, and the mic matches your speech against that katakana. An English bubble would tell you what she means but not what to say. Accepting English speech would mean changing the recognizer's vocabulary, which is the voice-to-text side of the game.
+
+I might come back to this later. For now I'm focusing on translation and bug fixes.
 
 ---
 
