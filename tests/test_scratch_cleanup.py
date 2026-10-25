@@ -233,3 +233,181 @@ def test_rebuild_cleanup_scratch_skips_when_keep_work(monkeypatch):
     assert called["n"] == 0
     rebuild.cleanup_rebuild_scratch(keep_work=False)
     assert called["n"] == 1
+
+
+def test_is_reparse_dir_plain_dir_symlink_and_junction_error(tmp_path: Path, monkeypatch):
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    assert cleanup.is_reparse_dir(plain) is False
+    monkeypatch.setattr(Path, "is_symlink", lambda self: self.name == "link")
+    assert cleanup.is_reparse_dir(tmp_path / "link") is True
+
+    def broken(self):
+        raise OSError("no junction info")
+
+    monkeypatch.setattr(Path, "is_junction", broken, raising=False)
+    assert cleanup.is_reparse_dir(plain) is False
+
+
+def _fake_reparse(monkeypatch, *names: str) -> None:
+    """Treat dirs with these names as junctions; unlink on them fails like a real dir."""
+    monkeypatch.setattr(cleanup, "is_reparse_dir", lambda p: p.name in names)
+
+
+def test_wipe_directory_handles_junction_file_and_nested_romfs(tmp_path: Path, monkeypatch, capsys):
+    root = tmp_path / "repo"
+    missing = root / "fresh"
+    cleanup.wipe_directory(missing, root=root)
+    assert missing.is_dir() and "created empty" in capsys.readouterr().out
+
+    _fake_reparse(monkeypatch, "junction", "romfs")
+    junction = root / "junction"
+    junction.mkdir()
+    cleanup.wipe_directory(junction, root=root)  # unlink fails on a dir -> rmdir
+    assert junction.is_dir() and list(junction.iterdir()) == []
+
+    as_file = root / "as_file"
+    as_file.write_bytes(b"x")
+    cleanup.wipe_directory(as_file, root=root)
+    assert as_file.is_dir()
+
+    inst = root / "inst"
+    (inst / "romfs").mkdir(parents=True)
+    (inst / "save.bin").write_bytes(b"s")
+    cleanup.wipe_directory(inst, root=root)
+    assert inst.is_dir() and list(inst.iterdir()) == []
+
+
+def test_wipe_directory_reports_delete_failures(tmp_path: Path, monkeypatch):
+    root = tmp_path / "repo"
+    target = root / "out"
+    target.mkdir(parents=True)
+
+    def denied(_p):
+        raise OSError("denied")
+
+    monkeypatch.setattr(cleanup, "rmtree", denied)
+    with pytest.raises(SystemExit, match="out/: denied"):
+        cleanup.wipe_directory(target, root=root)
+    monkeypatch.setattr(cleanup, "rmtree", lambda _p: None)
+    with pytest.raises(SystemExit, match="still exists"):
+        cleanup.wipe_directory(target, root=root)
+
+    monkeypatch.setattr(cleanup, "rmtree", cleanup.shutil.rmtree)
+    monkeypatch.setattr(Path, "iterdir", lambda self: iter([self / "ghost"]))
+    with pytest.raises(SystemExit, match="not empty: ghost"):
+        cleanup.wipe_directory(target, root=root)
+
+
+def test_park_outside_copies_a_directory(tmp_path: Path):
+    parent = tmp_path / "cache"
+    src = parent / "romfs_dump"
+    src.mkdir(parents=True)
+    (src / "a.bin").write_bytes(b"a")
+    parked = cleanup.park_outside(src, parent)
+    assert (parked / "a.bin").read_bytes() == b"a"
+    cleanup.shutil.rmtree(parked.parent)
+
+
+def test_wipe_cia_build_dirs_parks_rom_and_wipes_all(tmp_path: Path, monkeypatch):
+    import nlpp_paths
+
+    root = tmp_path / "repo"
+    dirs = {name: root / name.lower() for name in ("CACHE", "OUT", "RELEASE")}
+    for name, d in dirs.items():
+        (d / "junk").mkdir(parents=True)
+        monkeypatch.setattr(nlpp_paths, name, d)
+    monkeypatch.setattr(nlpp_paths, "ROOT", root)
+    rom = dirs["RELEASE"] / "game.3ds"
+    rom.write_bytes(b"rom")
+
+    parked = cleanup.wipe_cia_build_dirs(rom)
+    assert parked is not None and parked.read_bytes() == b"rom"
+    for d in dirs.values():
+        assert d.is_dir() and list(d.iterdir()) == []
+    assert cleanup.wipe_cia_build_dirs(tmp_path / "gone.3ds") is None
+    cleanup.shutil.rmtree(parked.parent)
+
+
+def test_remove_scratch_edge_cases(tmp_path: Path, monkeypatch, capsys):
+    cleanup.remove_scratch(None)
+
+    def stat_fails(self):
+        raise OSError("stat")
+
+    with monkeypatch.context() as m:
+        m.setattr(Path, "exists", stat_fails)
+        cleanup.remove_scratch(tmp_path / "x")
+
+    _fake_reparse(monkeypatch, "junction", "romfs")
+    junction = tmp_path / "junction"
+    junction.mkdir()
+    cleanup.remove_scratch(junction, label="jn")  # unlink fails on a dir -> rmdir
+    assert not junction.exists()
+
+    work = tmp_path / "work"
+    (work / "romfs" / "keep").mkdir(parents=True)  # non-empty: rmdir fails too, ignored
+    cleanup.remove_scratch(work)
+    assert "removing" in capsys.readouterr().out
+
+    with monkeypatch.context() as m:
+        m.setattr(Path, "is_file", lambda self: False)
+        m.setattr(Path, "is_dir", lambda self: False)
+        f = tmp_path / "odd"
+        f.write_bytes(b"o")
+        cleanup.remove_scratch(f)  # neither file nor dir: left alone
+    assert f.exists()
+
+    def boom(_p):
+        raise OSError("busy")
+
+    monkeypatch.setattr(cleanup, "is_reparse_dir", boom)
+    cleanup.remove_scratch(f, label="odd")
+    assert "warning: odd: busy" in capsys.readouterr().out
+
+
+def test_long_path_windows_forms(monkeypatch):
+    """Pure string rewrite, so it runs on Linux CI too with sys.platform faked."""
+    monkeypatch.setattr(cleanup.sys, "platform", "win32")
+    resolved = {
+        r"C:\out": r"C:\repo\out",
+        "rel": r"\\?\C:\already",
+        "share": r"\\server\share\out",
+    }
+
+    def fake_resolve(self):
+        if str(self) == "gone":
+            raise OSError("offline")
+        return Path(resolved[str(self)])
+
+    monkeypatch.setattr(Path, "resolve", fake_resolve)
+    assert str(cleanup.long_path(Path(r"\\?\C:\x"))) == r"\\?\C:\x"
+    assert str(cleanup.long_path(Path(r"C:\out"))) == r"\\?\C:\repo\out"
+    assert str(cleanup.long_path(Path("rel"))) == r"\\?\C:\already"
+    assert str(cleanup.long_path(Path("share"))) == r"\\?\UNC\server\share\out"
+    assert str(cleanup.long_path(Path("gone"))) == r"\\?\gone"
+
+
+def test_is_reparse_dir_without_is_junction(tmp_path: Path, monkeypatch):
+    """Py3.10/3.11 path: Windows asks GetFileAttributesW; elsewhere it is False."""
+    monkeypatch.setattr(Path, "is_junction", None, raising=False)
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    monkeypatch.setattr(cleanup.sys, "platform", "linux")
+    assert cleanup.is_reparse_dir(plain) is False
+    monkeypatch.setattr(cleanup.sys, "platform", "win32")
+    # Real kernel32 call on Windows; no ctypes.windll on Linux -> False.
+    assert cleanup.is_reparse_dir(plain) is False
+
+
+def test_wipe_cia_build_dirs_keeps_rom_outside_the_wiped_trees(tmp_path: Path, monkeypatch):
+    import nlpp_paths
+
+    root = tmp_path / "repo"
+    for name in ("CACHE", "OUT", "RELEASE"):
+        monkeypatch.setattr(nlpp_paths, name, root / name.lower())
+    monkeypatch.setattr(nlpp_paths, "ROOT", root)
+    rom = tmp_path / "desktop.3ds"
+    rom.write_bytes(b"rom")
+    assert cleanup.wipe_cia_build_dirs(rom) is None
+    assert rom.read_bytes() == b"rom"

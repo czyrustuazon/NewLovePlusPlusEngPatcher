@@ -250,3 +250,8 @@ def test_deploy_group_errors(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(ui, "_write_arc_slot", clobber_note)
     with pytest.raises(SystemExit, match="non-target changed: t.txt"):
         ui._deploy_group(group, pkg_dir, tmp_path)
+
+
+def test_patch_layouts_rejects_missing_layout():
+    with pytest.raises(SystemExit, match="missing blyt/gone.bclyt"):
+        ui._patch_layouts(fi.darc({"blyt/x.bclyt": b"x"}), {"blyt/gone.bclyt": "_tall_sentence_pane"})

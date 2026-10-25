@@ -134,6 +134,22 @@ def test_unexpected_layout_fails():
         raise AssertionError("moved a non-vanilla pane")
 
 
+def test_layout_shape_errors():
+    with pytest.raises(ValueError, match="bad CLYT"):
+        list(clock._sections(b"FLYT" + bytes(16)))
+    with pytest.raises(ValueError, match="missing panes"):
+        clock.move_panes(_clyt([_pane(b"pan1", "Other", 0.0)]), {"Gone": (0.0, 1.0)})
+    txl = _txl(["a.bclim", "b.bclim", "c.bclim"])
+    no_map = bytearray(_mat("M", 0))
+    struct.pack_into("<I", no_map, 16 + 0x30, 0)
+    with pytest.raises(ValueError, match="has no texMap"):
+        clock.rebind_textures(_clyt([txl, bytes(no_map)]), {"M": ("a.bclim", "b.bclim")})
+    with pytest.raises(ValueError, match="uses c.bclim"):
+        clock.rebind_textures(_clyt([txl, _mat("M", 2)]), {"M": ("a.bclim", "b.bclim")})
+    with pytest.raises(ValueError, match="missing materials"):
+        clock.rebind_textures(_clyt([txl, _mat("Other", 0)]), {"M": ("a.bclim", "b.bclim")})
+
+
 def test_slash_matches_digit_rows():
     im = clock.paint_slash()
     assert im.size == (16, 16)

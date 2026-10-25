@@ -458,3 +458,8 @@ def test_find_ui_png_edge_cases(tmp_path: Path, monkeypatch):
 
     monkeypatch.setattr(deploy_common, "fit_png_to_canvas", boom)
     assert deploy_common.find_ui_png(("X.check",), "Clear", (16, 16)) is None
+
+
+def test_render_menu_label_too_long():
+    with pytest.raises(RuntimeError, match="cannot fit"):
+        deploy_common.render_menu_label(16, 16, "Far too long for this row")

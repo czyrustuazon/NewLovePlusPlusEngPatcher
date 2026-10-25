@@ -251,3 +251,33 @@ def test_cia_inject_still_requires_existing_pack_dirs(tmp_path: Path):
         _write(eng, f"{pack}/t001.dbin2")
     with pytest.raises(script_inject.ScriptInjectError, match="missing script pack folder"):
         script_inject.inject_scripts(tmp_path / "romfs", eng, create_dirs=False)
+
+
+def test_stem_manifests_read_once_with_folder_and_legacy_fallbacks(tmp_path: Path, monkeypatch):
+    gem = tmp_path / "gemini"
+    _write(gem, "dbin2/script/a001.dbin2")
+    _write(gem, "xml/k002.xml")
+    _write(gem, "xml/t003.xml")  # not a Nene / Rinko stem
+    (gem / "stems.json").write_text('{"stems": ["a900"]}', encoding="utf-8")
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_ROOT", gem)
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem / "dbin2")
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_MANIFEST", gem / "stems.json")
+    monkeypatch.setattr(script_inject, "_gemini_nene_stems", None)
+    assert script_inject.gemini_nene_stems() == {"a900", "a001", "k002"}
+    (gem / "stems.json").write_text("not json", encoding="utf-8")
+    assert script_inject.gemini_nene_stems() == {"a900", "a001", "k002"}  # cached
+    monkeypatch.setattr(script_inject, "_gemini_nene_stems", None)
+    assert script_inject.gemini_nene_stems() == {"a001", "k002"}
+
+    legacy = tmp_path / "legacy"
+    _write(legacy, "a050.dbin2")
+    manifest = tmp_path / "stems.json"
+    manifest.write_text('{"stems": ["k001"]}', encoding="utf-8")
+    monkeypatch.setattr(script_inject, "COMMUNITY_MANIFEST", manifest)
+    monkeypatch.setattr(script_inject, "LEGACY_NLPPATCH_SCRIPT", legacy)
+    monkeypatch.setattr(script_inject, "_community_stems", None)
+    assert script_inject.community_stems() == {"k001"}
+    assert script_inject.nlppatch_stems() == {"k001"}
+    manifest.write_text('{"stems": 5}', encoding="utf-8")  # not a list
+    monkeypatch.setattr(script_inject, "_community_stems", None)
+    assert script_inject.community_stems() == {"a050"}
