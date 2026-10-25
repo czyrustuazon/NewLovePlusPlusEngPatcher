@@ -130,7 +130,7 @@ def test_cleanup_package_unpack_keeps_new_blob(tmp_path: Path):
     assert (img_data / "new_0090").read_bytes() == b"patched"
 
 
-def test_cleanup_out_dir_quiet_skips_already_clean_line(
+def test_cleanup_out_dir_prints_no_summary_line(
     tmp_path: Path, monkeypatch, capsys
 ):
     monkeypatch.setattr(patch_cia, "ROOT", tmp_path)
@@ -138,9 +138,13 @@ def test_cleanup_out_dir_quiet_skips_already_clean_line(
     out.mkdir()
     cia = out / "NewLovePlusPlus-EN.cia"
     cia.write_bytes(b"cia")
-    patch_cia.cleanup_out_dir(out_cia=cia, quiet=True)
+    (out / "scratch").mkdir()
+    patch_cia.cleanup_out_dir(out_cia=cia)
     captured = capsys.readouterr().out
+    assert "out/ kept" not in captured
     assert "already clean" not in captured
+    assert cia.is_file()
+    assert not (out / "scratch").exists()
 
 
 def test_rebuild_cleans_scratch_by_default():

@@ -455,7 +455,7 @@ def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
     """Wipe deploy/pack temps under out/ after each rebuild step."""
     if keep_work:
         return
-    cleanup_out_dir(out_cia=OUT_CIA, quiet=True)
+    cleanup_out_dir(out_cia=OUT_CIA)
 
 
 def format_rebuild_ok_lines(

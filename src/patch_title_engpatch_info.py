@@ -149,7 +149,7 @@ CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
         ),
     ),
     (" ", None),
-    ('["New Script"]', ("Bango", "Cozy Translations")),
+    ('[New Script]', ("Bango", "Cozy Translations")),
     (" ", None),
     ("[Proofreading]", ("Bango", "Incolbum")),
     (" ", None),

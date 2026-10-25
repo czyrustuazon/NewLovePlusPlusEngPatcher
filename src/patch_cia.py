@@ -2314,7 +2314,6 @@ def cleanup_out_dir(
     *,
     out_cia: Path,
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
-    quiet: bool = False,
 ) -> None:
     """Wipe EngPatcher out/ except CIA(s), numbered install folders, log.txt, backups."""
     out_root = (ROOT / "out").resolve()
@@ -2355,7 +2354,6 @@ def cleanup_out_dir(
         except OSError:
             pass
 
-    removed = 0
     for child in list(out_root.iterdir()):
         try:
             resolved = child.resolve()
@@ -2379,21 +2377,8 @@ def cleanup_out_dir(
                     child.unlink()
                 except FileNotFoundError:
                     pass
-            removed += 1
         except OSError as exc:
             print(f"[cleanup] warning: {child.name}: {exc}")
-    if removed:
-        print(
-            f"[cleanup] out/ kept: the CIA, {OUT_LAYEREDFS_PREFIX}/, "
-            f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/ "
-            f"({removed} other item(s) removed)"
-        )
-    elif not quiet:
-        print(
-            "[cleanup] out/ already clean "
-            f"(the CIA + {OUT_LAYEREDFS_PREFIX} + {OUT_NOT_BOTH_NAME} "
-            f"+ {OUT_LOG_NAME} + extdata_backup)"
-        )
 
 
 def build_parser() -> argparse.ArgumentParser:
