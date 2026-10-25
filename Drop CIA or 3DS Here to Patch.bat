@@ -161,7 +161,7 @@ if /i not "%NLPP_BACKUP_CONFIRMED%"=="1" (
   echo Install over the existing game later - do not delete it first.
   echo.
   set "BACKUP_ANS="
-  set /p "BACKUP_ANS=Have you backed up your save and extdata? [y/N]: "
+  set /p "BACKUP_ANS=Have you backed up your New Love Plus+ save and extdata? [y/N]: "
   set "BACKUP_OK="
   if /i "!BACKUP_ANS!"=="y" set "BACKUP_OK=1"
   if /i "!BACKUP_ANS!"=="yes" set "BACKUP_OK=1"
