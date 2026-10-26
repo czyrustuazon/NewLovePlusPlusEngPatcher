@@ -19,6 +19,8 @@ from conftest import ROOT, SRC, TOOLS
 # a real break.
 OPTIONAL_DEPS = {
     "mcp",  # tools/ab_mcp_server.py (A/B Azahar MCP server)
+    "scipy",  # tools/cut_minigame_*.py (offline master cutters, not the bake)
+    "cv2",  # tools/cut_minigame_*.py
 }
 
 PROBE = r"""

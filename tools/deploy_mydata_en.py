@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """EN My Data home: header (5575) + menu buttons (5380).
 
-To-Do List / Status are rendered. Item List / My Camera use the Zhoumaru
-masters ``Myroom.check/timg/mcmn_tex_{item,camera}_RGBA4.png`` (flat gray
-ink, same canvas as the BCLIM). Patches live packages so prior Mail/Myroom
+All four buttons use the Zhoumaru masters
+``Myroom.check/timg/mcmn_tex_{todo,status,item,camera}_RGBA4.png`` (flat gray
+ink like vanilla, same canvas as the BCLIM). Patches live packages so prior Mail/Myroom
 EN stays intact.
 """
 from __future__ import annotations
@@ -40,8 +40,15 @@ MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "mydata_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 INK = (70, 110, 160)
-# Zhoumaru Myroom.check masters (flat gray ink). To-Do / Status stay rendered.
-ZHOUMARU_BUTTONS = frozenset({"mcmn_tex_item_RGBA4", "mcmn_tex_camera_RGBA4"})
+# Zhoumaru Myroom.check masters (flat gray ink, as vanilla).
+ZHOUMARU_BUTTONS = frozenset(
+    {
+        "mcmn_tex_todo_RGBA4",
+        "mcmn_tex_status_RGBA4",
+        "mcmn_tex_item_RGBA4",
+        "mcmn_tex_camera_RGBA4",
+    }
+)
 
 JOBS: list[tuple[int, list[tuple[str, str]], str]] = [
     # (pkg, labels, source)  source: "live" | "vanilla"

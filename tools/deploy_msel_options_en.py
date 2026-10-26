@@ -3,15 +3,12 @@
 
 Ghidra ``OptionMenu_BindBtnTextures`` @ 001eb3dc binds these BCLIM names.
 Prior freezes were from trailing NUL after a short zlib stream (same class as
-CESA). Fix: zopfli-compress the patched ARC, then grow uncompressed padding
-with urandom until compressed length == original cmp_len exactly (unused_data=0).
+CESA). Fix: zopfli-compress the patched ARC, then pad the closed stream with
+empty deflate blocks to the original cmp_len exactly (shared exact_zlib).
 """
 from __future__ import annotations
 
-import os
-import struct
 import sys
-import zlib
 from pathlib import Path
 
 import numpy as np
@@ -31,6 +28,7 @@ from bclimutil import (  # noqa: E402
     png_to_bclim_a8_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
+from exact_zlib import compress_exact_zopfli  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
@@ -178,166 +176,6 @@ def patch_arc(vanilla_arc: bytes, tmp: Path, cmp_len: int) -> bytes:
     if best[0] > cmp_len:
         raise SystemExit(f"no trial fits slot {cmp_len} (best zopfli={best[0]})")
     return best[1]
-
-
-def interfile_zero_gaps(data: bytes) -> list[tuple[int, int]]:
-    """Zero padding between DARC files only (never inside BCLIM payloads)."""
-    darc = DarcArchive(data)
-    spans = sorted((e.offset, e.offset + e.length) for e in darc.files)
-    gaps: list[tuple[int, int]] = []
-    for (a0, a1), (b0, b1) in zip(spans, spans[1:]):
-        if b0 > a1:
-            gaps.append((a1, b0))
-    if spans and spans[-1][1] < len(data):
-        gaps.append((spans[-1][1], len(data)))
-    safe: list[tuple[int, int]] = []
-    for g0, g1 in gaps:
-        chunk = data[g0:g1]
-        if len(chunk) >= 16 and chunk == b"\x00" * len(chunk):
-            safe.append((g1 - g0, g0))
-    safe.sort(reverse=True)
-    return safe
-
-
-def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
-    """Pad a short zlib stream to exact_len with empty stored blocks."""
-    adler = struct.pack(">I", zlib.adler32(data) & 0xFFFFFFFF)
-    strategies = (
-        zlib.Z_DEFAULT_STRATEGY,
-        zlib.Z_FILTERED,
-        zlib.Z_HUFFMAN_ONLY,
-        zlib.Z_RLE,
-        zlib.Z_FIXED,
-    )
-    hdrs = (b"\x78\x9c", b"\x78\xda", b"\x78\x5e", b"\x78\x01")
-
-    def try_body(body: bytes) -> bytes | None:
-        for hdr in hdrs:
-            remain = exact_len - len(hdr) - 4 - len(body)
-            if remain < 5 or remain % 5 != 0:
-                continue
-            n_empty = remain // 5
-            out = (
-                hdr
-                + body
-                + b"\x00\x00\x00\xff\xff" * (n_empty - 1)
-                + b"\x01\x00\x00\xff\xff"
-                + adler
-            )
-            if len(out) != exact_len:
-                continue
-            d = zlib.decompressobj()
-            try:
-                got = d.decompress(out)
-            except zlib.error:
-                continue
-            if got == data and not d.unused_data and d.eof:
-                return out
-        return None
-
-    for level in range(10):
-        co = zlib.compressobj(level, wbits=-15)
-        hit = try_body(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
-        if hit is not None:
-            return hit
-    for level in range(10):
-        for mem in range(1, 10):
-            for strat in strategies:
-                try:
-                    co = zlib.compressobj(level, zlib.DEFLATED, -15, mem, strat)
-                    hit = try_body(co.compress(data) + co.flush(zlib.Z_SYNC_FLUSH))
-                except zlib.error:
-                    continue
-                if hit is not None:
-                    return hit
-    return None
-
-
-def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
-    """Return (possibly padded uncompressed, zlib stream of len==target)."""
-    base_z = len(zopfli_zlib.compress(data))
-    if base_z > target:
-        raise SystemExit(f"zopfli {base_z} already exceeds slot {target}")
-    if base_z == target:
-        slot = zopfli_zlib.compress(data)
-        return data, slot
-
-    # Prefer empty-block pad when under by a lot (gap pad can't always grow enough).
-    if target - base_z >= 64:
-        slot = compress_exact_empty_blocks(data, target)
-        if slot is not None:
-            print(f"  empty-block pad (zopfli was {base_z})", flush=True)
-            return data, slot
-
-    runs = interfile_zero_gaps(data)
-    if not runs:
-        slot = compress_exact_empty_blocks(data, target)
-        if slot is None:
-            raise SystemExit("no gaps and empty-block pad failed")
-        return data, slot
-    cap = sum(sz for sz, _ in runs)
-    rng = os.urandom(cap)
-    chunks: list[tuple[int, int, bytes]] = []
-    off = 0
-    for sz, po in runs:
-        chunks.append((po, sz, rng[off : off + sz]))
-        off += sz
-
-    def apply_prefix(n_bytes: int) -> bytes:
-        t = bytearray(data)
-        left = n_bytes
-        for po, sz, ch in chunks:
-            take = min(left, sz)
-            if take:
-                t[po : po + take] = ch[:take]
-            left -= take
-            if left <= 0:
-                break
-        return bytes(t)
-
-    lo, hi = 0, cap
-    hit: bytes | None = None
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        cand = apply_prefix(mid)
-        cl = len(zopfli_zlib.compress(cand))
-        print(f"  pad_bytes={mid} zopfli={cl}")
-        if cl == target:
-            hit = cand
-            break
-        if cl < target:
-            lo = mid + 1
-        else:
-            hi = mid - 1
-
-    if hit is None:
-        t = bytearray(apply_prefix(max(hi, 0)))
-        for po, sz, ch in chunks:
-            for i in range(sz):
-                if t[po + i] != 0:
-                    continue
-                t[po + i] = ch[i]
-                cl = len(zopfli_zlib.compress(bytes(t)))
-                if cl == target:
-                    hit = bytes(t)
-                    break
-                if cl > target:
-                    t[po + i] = 0
-            if hit is not None:
-                break
-        if hit is None:
-            slot = compress_exact_empty_blocks(data, target)
-            if slot is not None:
-                print("  fallback empty-block on unpadded ARC", flush=True)
-                return data, slot
-            raise SystemExit("could not hit exact zopfli length")
-
-    slot = zopfli_zlib.compress(hit)
-    do = zlib.decompressobj()
-    got = do.decompress(slot)
-    if got != hit or do.unused_data or not do.eof:
-        raise SystemExit("exact stream verify failed")
-    return hit, slot
 
 
 def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:

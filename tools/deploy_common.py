@@ -27,6 +27,14 @@ from nlpp_paths import (  # noqa: E402
 UI_FONT = ROOT / "assets" / "fonts" / "MPLUS1p-Regular.ttf"
 # NLPPPATCH Heisei Gothic — MultiWin white bars (Heart to Heart, Communication).
 HEISEI_W5 = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "df-heiseigothic-w5.ttc"
+# Zhoumaru menu-row lettering (game_text_twinbe, optn_tex_option*): medium
+# Helvetica-like sans. Arimo (OFL, Arial metrics) on its wght axis.
+MENU_FONT = ROOT / "assets" / "fonts" / "Arimo[wght].ttf"
+# 550 matches Skip Mode / Display / TwinBee+ by eye; 700 read as bold in-game.
+MENU_WEIGHT = 550
+# Zhoumaru row ink; caps are ~11 px tall on those 18 px strips.
+MENU_INK = (47, 47, 47)
+MENU_CAP_PX = 11
 HEADER_INK = (68, 68, 68)
 # Same start size as Girlfriend Comm. `render_header_aa` (gh ~12 on 192×16).
 HEADER_CORE_PX = 15
@@ -44,6 +52,10 @@ __all__ = [
     "TEXTRESOURCE",
     "UI_FONT",
     "HEISEI_W5",
+    "MENU_FONT",
+    "MENU_WEIGHT",
+    "MENU_INK",
+    "MENU_CAP_PX",
     "HEADER_INK",
     "HEADER_CORE_PX",
     "HEADER_STRIP_H",
@@ -51,6 +63,7 @@ __all__ = [
     "img_backup_path",
     "iter_deploy_targets",
     "maybe_backup_img",
+    "render_menu_label",
     "require_vanilla_img",
     "resolve_img_paths",
     "resolve_resident_trb",
@@ -118,6 +131,48 @@ def render_header_aa(w: int, h: int, text: str, *, max_size: int | None = None):
         rgb = Image.new("RGB", (w, h), HEADER_INK)
         return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
     raise RuntimeError(f"cannot fit header {text!r} into {w}x{h}")
+
+
+def render_menu_label(
+    w: int,
+    h: int,
+    text: str,
+    *,
+    ink: tuple[int, int, int] = MENU_INK,
+    cap_px: int = MENU_CAP_PX,
+    weight: int = MENU_WEIGHT,
+):
+    """Zhoumaru menu-row style (TwinBee+ / Sound), centered, tracked -3%.
+
+    Shrinks the cap height until ``text`` fits ``w``.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    scale = 4
+    for cap in range(cap_px, 6, -1):
+        # Arimo cap height is 0.688 em.
+        f = ImageFont.truetype(str(MENU_FONT), size=round(cap * scale / 0.688))
+        f.set_variation_by_axes([weight])
+        track = -0.03 * f.size
+        advances = [f.getlength(ch) + track for ch in text]
+        tw = sum(advances) - track
+        if tw > w * scale - 4 * scale:
+            continue
+        big = Image.new("RGBA", (w * scale, h * scale), (0, 0, 0, 0))
+        dr = ImageDraw.Draw(big)
+        top = dr.textbbox((0, 0), "H", font=f)
+        x = (w * scale - tw) / 2
+        y = (h * scale - (top[3] - top[1])) / 2 - top[1]
+        for ch, adv in zip(text, advances):
+            dr.text((x, y), ch, font=f, fill=ink + (255,))
+            x += adv
+        # Flat ink RGB like the Zhoumaru rows; only alpha is anti-aliased.
+        # BOX, not LANCZOS: ringing left faint alpha haze around the glyphs.
+        alpha = big.getchannel("A").resize((w, h), Image.Resampling.BOX)
+        out = Image.new("RGBA", (w, h), ink + (0,))
+        out.putalpha(alpha)
+        return out
+    raise RuntimeError(f"cannot fit {text!r} in {w}x{h}")
 
 
 def resolve_img_paths() -> tuple[Path, Path]:

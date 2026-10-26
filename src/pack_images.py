@@ -41,6 +41,10 @@ PE = NLPP_TOOLS / "bin" / "pe"
 DEFAULT_IMG_BIN = (
     ROOT.parent / "New Love Plus Plus" / "extracted" / "romfs" / "img.bin"
 )
+# Report line for an ARC left vanilla because it did not fit its zlib slot.
+# rebuild_bake_img fails the bake unless a later deploy replaced that element.
+SLOT_SKIP_RE = re.compile(r"^\[slot-skip\] package (\d+) (\S+)", re.M)
+
 SKIP_DIR_RE = re.compile(r"(timg\s*-\s*copy|__pycache__|\.git)", re.I)
 SKIP_PNG_RE = re.compile(r"(\(2\)|_jpn|_bak|copy)", re.I)
 _CPU = os.cpu_count() or 4
@@ -319,6 +323,13 @@ def convert_png_to_bclim(
                     cache.put_bclim(png_bytes, orig_bytes, encoded)
                 return produced
             raise PackError(reason)
+        except OSError as exc:
+            # Not a bad master: the work path. A work dir past Windows MAX_PATH
+            # (260) lost the written BCLIM and silently left masters Japanese.
+            raise OSError(
+                f"{png.name}: could not write/read {produced} ({len(str(produced))} chars): "
+                f"{exc}. Use a shorter --work path."
+            ) from exc
         except Exception as exc:
             raise PackError(f"same-size BCLIM encode failed for {png.name}: {exc}") from exc
 
@@ -506,6 +517,7 @@ def repack_package(
     *,
     fine_tune: bool = False,
     cache: ImgPackCache | None = None,
+    slot_skips: list[str] | None = None,
 ) -> Path:
     """Write new_XXXX keeping original PACK layout / compressed slot sizes.
 
@@ -514,7 +526,7 @@ def repack_package(
     so we splice exact-length zlib back into the original package bytes.
     """
     return repack_package_exact_slots(
-        img_data, index, fine_tune=fine_tune, cache=cache
+        img_data, index, fine_tune=fine_tune, cache=cache, slot_skips=slot_skips
     )
 
 
@@ -524,7 +536,10 @@ def repack_package_exact_slots(
     *,
     fine_tune: bool = False,
     cache: ImgPackCache | None = None,
+    slot_skips: list[str] | None = None,
 ) -> Path:
+    """``slot_skips`` collects ARCs that overflow their slot and stay vanilla;
+    without it an overflow raises PackError."""
     if str(NLPP_TOOLS) not in sys.path:
         sys.path.insert(0, str(NLPP_TOOLS))
     from img import Package, FileWindow  # type: ignore
@@ -582,13 +597,18 @@ def repack_package_exact_slots(
                     cache=cache,
                 )
             except Exception as exc:
-                # Don't abort the whole UI pack for one stubborn ARC — leave
-                # the vanilla compressed element so other packages still ship.
-                print(
-                    f"[exact-zlib] SKIP {index:04d} {elem.fn}: {exc} "
-                    f"(leaving Japanese/vanilla for this element)",
-                    flush=True,
+                msg = (
+                    f"package {index:04d} {elem.fn}: does not fit its "
+                    f"{slot_len}-byte zlib slot ({exc})"
                 )
+                if slot_skips is None:
+                    raise PackError(f"{msg}; shrink its PNG masters") from exc
+                # Kept vanilla. Some deploys rebuild their package from vanilla
+                # anyway (camera 5322-5326, MSel menus 5240-5244). Transfer.arc
+                # shipped Japanese this way under an [ok] report, so the bake
+                # checks every skip was replaced (rebuild_bake_img).
+                print(f"[exact-zlib] SLOT-SKIP {msg}; left vanilla", flush=True)
+                slot_skips.append(str(elem.fn))
                 continue
             blob[off : off + slot_len] = slot
             changed += 1
@@ -863,11 +883,20 @@ def _process_one_package(
                 f"({pkg_ok} png, {pkg_skip} skip)…",
                 flush=True,
             )
+            slot_skips: list[str] = []
             repack_package(
-                img_data_p, index, fine_tune=fine_tune, cache=pack_cache
+                img_data_p,
+                index,
+                fine_tune=fine_tune,
+                cache=pack_cache,
+                slot_skips=slot_skips,
             )
             report.append(
                 f"[ok] package {index:04d}: {pkg_ok} replaced, {pkg_skip} skipped"
+                + (f", {len(slot_skips)} ARC(s) over slot" if slot_skips else "")
+            )
+            report.extend(
+                f"[slot-skip] package {index:04d} {fn} (left vanilla)" for fn in slot_skips
             )
         else:
             report.append(f"[skip] package {index:04d}: nothing replaced")

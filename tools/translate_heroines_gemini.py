@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Feed untranslated Nene / Rinko text to Gemini and write EN XML / SMS.
 
-Default model is Gemini 3.1 Pro Preview (quality; price no object). Game
+Default model is Gemini 4 Argon (quality; price no object). Game
 control tokens (player/heroine name wrappers, wait marks) are sentinel-
 protected so the model cannot drop them.
 
@@ -61,7 +61,7 @@ SMS_PACK = ROOT.parent / "sms_pack"
 
 HEROINE_PREFIX = {"nene": "a", "rinko": "k"}
 PREFIX_HEROINE = {"a": "nene", "k": "rinko"}
-SMS_STEM = {"nene": "maildic_n", "rinko": "maildic_r"}
+SMS_STEM = {"nene": "maildic_n", "rinko": "maildic_r", "manaka": "maildic_m"}
 
 
 @dataclass
@@ -245,7 +245,11 @@ def collect_jobs(args: argparse.Namespace) -> list[Job]:
             )
         jobs.extend(collect_script_jobs(vanilla, heroines))
     if args.source in ("sms", "all"):
-        jobs.extend(collect_sms_jobs(heroines))
+        # Manaka has no a*/k* scripts here, but her maildic is part of SMS.
+        sms_who = list(heroines)
+        if "manaka" not in sms_who:
+            sms_who.append("manaka")
+        jobs.extend(collect_sms_jobs(sms_who))
     return jobs
 
 
@@ -575,11 +579,16 @@ def cmd_run(args: argparse.Namespace) -> int:
                         _safe_print(f"  errors: {errors[:6]}")
 
     if sms_jobs:
-        d, e = translate_sms_unique(client, model, sms_jobs, mapping, args)
-        translated_lines += d
-        failed_lines += e
-        save_json(map_path, {"translations": mapping})
-        write_sms_xml(heroines_from_arg(args.heroine), mapping, out / "sms")
+        by_heroine: dict[str, list[Job]] = {}
+        for job in sms_jobs:
+            by_heroine.setdefault(job.heroine, []).append(job)
+        for heroine, group in by_heroine.items():
+            print(f"[sms] {heroine}: {len(group)} lines", flush=True)
+            d, e = translate_sms_unique(client, model, group, mapping, args)
+            translated_lines += d
+            failed_lines += e
+            save_json(map_path, {"translations": mapping})
+        write_sms_xml(list(by_heroine), mapping, out / "sms")
 
     save_json(map_path, {"translations": mapping})
     save_json(out / "rejected.json", rejected)

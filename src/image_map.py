@@ -28,10 +28,18 @@ IMAGE_MAP: dict[str, tuple[int, str]] = {
     "dateeditcom": (4198, "DateEditCom.arc"),
     "dateeditmaskedit": (4199, "DateEditMaskEdit.arc"),
     "dlc": (4200, "DLC.arc"),
+    # Business Card field-label stickers (名前 / 呼ばれ方 / 出身地 / 呼び方 /
+    # カノジョの名前). One sticker per package; tools/render_card_seal_labels_en.py.
+    "excardcommont000": (4315, "ExCardCommonT000.arc"),
+    "excardcommont001": (4316, "ExCardCommonT001.arc"),
+    "excardcommont002": (4317, "ExCardCommonT002.arc"),
+    "excardcommont003": (4318, "ExCardCommonT003.arc"),
+    "excardcommont004": (4319, "ExCardCommonT004.arc"),
     "fileselect": (5152, "FileSelect.arc"),
     "gallery_common": (5153, "Gallery_Common.arc"),
     "gameinfo": (5188, "GameInfo.arc"),
     "girlstalk": (5189, "GirlsTalk.arc"),
+    "hv_bg": (19, "HV_BG.arc"),  # school-hallway status window (廊下 sign, stats panel)
     "inputctexture": (5190, "InputCTexture.arc"),
     "inputntexture": (5190, "InputNTexture.arc"),
     # Boot / intro UI (CESA warning, name entry, etc.)

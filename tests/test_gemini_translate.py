@@ -80,6 +80,18 @@ def test_parse_items_json_wrapper():
     assert gt.parse_items_json(raw)[2] == "Hi @@M0@@"
 
 
+def test_prompt_asks_for_the_most_natural_english():
+    assert "into English as naturally as possible" in gt.SYSTEM_PROMPT
+    items = gt.prepare_items(["おはよう"])
+    user = gt.build_user_prompt(items, heroine="nene")
+    assert "into English as naturally as possible" in user
+    assert "laid-back third-year senpai" in user
+    rinko = gt.build_user_prompt(items, heroine="rinko")
+    assert "quiet first-year bookworm" in rinko
+    manaka = gt.build_user_prompt(items, heroine="manaka")
+    assert "bright second-year tennis player" in manaka
+
+
 def test_load_gemini_key_from_dotenv(tmp_path: Path, monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)

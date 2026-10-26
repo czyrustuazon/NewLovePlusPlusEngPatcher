@@ -1,0 +1,533 @@
+{
+  "_about": "UI PNGs under assets/images/*.check that EngPatcher edited after the Zhoumaru import (7ce3dd3). A new Zhoumaru drop must not overwrite these; tests/test_local_ui_edits.py fails if one changes. See .cursor/rules/zhoumaru-ui-pack.mdc 'Importing a new Zhoumaru drop'.",
+  "edits": [
+    {
+      "path": "CameraSetting.check/timg/CamSet_Alert01.png",
+      "blob": "94f594060f4f82005429f82a1d387792858e8c89",
+      "commit": "2fb71c8",
+      "reason": "Re-rendered: Zhoumaru read \"During in Photo Mode, special effects can still be changed.\" (tools/render_camset_alert_en.py)."
+    },
+    {
+      "path": "Common02Icon.check/timg/C_Com_icon_Setting.png",
+      "blob": "24d3fa43bb540eadb64e78ddf8b81da8744d1acf",
+      "commit": "cec133b",
+      "reason": "Re-rendered \"Select\": the camera tab means set/choose; Zhoumaru's \"Settings\" (later \"Apply\") reads wrong."
+    },
+    {
+      "path": "Common02Icon.check/timg/C_Com_icon_SettingON.png",
+      "blob": "a5fc38a6b0116e0a578fa1ef30444cb2ffa76044",
+      "commit": "cec133b",
+      "reason": "Re-rendered \"Select\": the camera tab means set/choose; Zhoumaru's \"Settings\" (later \"Apply\") reads wrong."
+    },
+    {
+      "path": "Commu_Option.check/timg/Commu_Op_Text02.png",
+      "blob": "3571c0a88513a407c19d3401ceb1815fa6e57ad2",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Commu_Option.check/timg/Commu_Op_Text04.png",
+      "blob": "27f4eaf14f7157170eec270bd473f38f87224943",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "FileSelect.check/timg/D_Select_data03.png",
+      "blob": "c50860e7fa858b2d1bfe59ec569947928d9e812d",
+      "commit": "f694f16",
+      "reason": "Select Data D-Duration renamed to Dating on the post-game sheet."
+    },
+    {
+      "path": "GirlsTalk.check/GirlsTalk/timg/Gallery_txt05.png",
+      "blob": "f54b111afdc9e468bd0d4f3511052c2581f003f6",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "GirlsTalk.check/GirlsTalk/timg/Gallery_txt06.png",
+      "blob": "eca4292f5296ac809552371c32b0f7573df6d532",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Clear_Off.png",
+      "blob": "1f266170a3cef5d03e7b72182422c598dd20433c",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Clear_On.png",
+      "blob": "c92f943a6f3509cd93b62119e20defd11906ff7e",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text01.png",
+      "blob": "367c4237862f2e194c80380797167a28eee97a10",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text02.png",
+      "blob": "b7451a7bc96577fe507f1c0a31d93ec88642af4f",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text03.png",
+      "blob": "4e802049f165620dce8b71e7d0fbc7010665111b",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text04.png",
+      "blob": "b2c8256d84def47868d961a4037875dd4fd7c403",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text05.png",
+      "blob": "6cf91fefd500865b3c10bee4ea63210ff3a527a4",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text06.png",
+      "blob": "b0247f1ab21261871958c57cad0eec49d382b807",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputCTexture.check/InputCTexture/timg/Profile_Btn_Com01_Text07.png",
+      "blob": "048e7cf1eba660b9a433250f34a9d338f61b64c0",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Clear_Off.png",
+      "blob": "1f266170a3cef5d03e7b72182422c598dd20433c",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Clear_On.png",
+      "blob": "c92f943a6f3509cd93b62119e20defd11906ff7e",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text01.png",
+      "blob": "367c4237862f2e194c80380797167a28eee97a10",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text02.png",
+      "blob": "b7451a7bc96577fe507f1c0a31d93ec88642af4f",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text03.png",
+      "blob": "4e802049f165620dce8b71e7d0fbc7010665111b",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text04.png",
+      "blob": "b2c8256d84def47868d961a4037875dd4fd7c403",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text05.png",
+      "blob": "6cf91fefd500865b3c10bee4ea63210ff3a527a4",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text06.png",
+      "blob": "b0247f1ab21261871958c57cad0eec49d382b807",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "InputNTexture.check/InputNTexture/timg/Profile_Btn_Com01_Text07.png",
+      "blob": "048e7cf1eba660b9a433250f34a9d338f61b64c0",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/com_black_00.png",
+      "blob": "bde456ab81c3a6932156ba2934b33f6ddb241004",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_111_win.png",
+      "blob": "1f89783614b340b5d834018753d73a16e28aa9ea",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_01.png",
+      "blob": "915c3b521aa43c2e0bf5e0e8319e59d027295dea",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_02.png",
+      "blob": "eea4318c45f23c517e25c04f4bc0403fbf9aa5ba",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_03.png",
+      "blob": "95df9389cc7ad427cc996d11856d06a25db0703e",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_04.png",
+      "blob": "5bcd130bba0a0d0063f008e743517975e336206b",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_05.png",
+      "blob": "d28655a994b360cce5f98adb6c2b030be1fe6df6",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_06.png",
+      "blob": "a7c5dfad58439b661fcd0bc7e1b522c0c78d281d",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_07.png",
+      "blob": "f87552a655d8aa36ea90e1d278c5bceed52f3054",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_ehhect.png",
+      "blob": "b695b8d0e383aef3743119492961993168e0194b",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro111.check/timg/in_q_shadow.png",
+      "blob": "c29978f4a48d86ea4dc0344afa81fe06f58f68e7",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro203.check/timg/203_win_base3.png",
+      "blob": "6361e4cc6226cff1c8372540557b3fd423f26390",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro203.check/timg/203_win_base5.png",
+      "blob": "bb1bc4a1fa21f848dfe35f6d18069c96865a3097",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro203.check/timg/203_win_base8.png",
+      "blob": "6d6e6c999bf315387cf0eecb7a76fd9446afa233",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro203.check/timg/com_black_00.png",
+      "blob": "bde456ab81c3a6932156ba2934b33f6ddb241004",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro203.check/timg/in_304_sc.png",
+      "blob": "d8fcf94dbb9c7bf1336f197dc169a49acd242977",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro304.check/timg/304_win_base.png",
+      "blob": "55eaca76d1805395a4607c4404da5306b196c825",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro304.check/timg/com_black_00.png",
+      "blob": "bde456ab81c3a6932156ba2934b33f6ddb241004",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Intro304.check/timg/in_304_sc.png",
+      "blob": "d8fcf94dbb9c7bf1336f197dc169a49acd242977",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "MyroomBack.check/timg/common_modoru_RGBA4.png",
+      "blob": "78bcce7fd1661e007300e4131ba9009c302b5e3b",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "MyroomHeader.check/timg/album_top_tex.png",
+      "blob": "3c3ee357d2d25769489a6201f85feb670c241b62",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "MyroomHeader.check/timg/mydata_toptex_RGBA4.png",
+      "blob": "1e39a3e8f9b45bf66a56f2106d8addd8fb2d4c26",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "NCommon.check/timg/Com_MultiWin_W01_Text02_01_04.png",
+      "blob": "425901f17996ff2f01b832219dda066c5d567122",
+      "commit": "cb9d469",
+      "reason": "\"Drama Gallery\" bar; Zhoumaru's newer master says \"Youth Story\"."
+    },
+    {
+      "path": "NCommonMSel(7).check/timg/Com_M_Sel_Plate_Text04_01_01.png",
+      "blob": "e13729f032bcdc66f973db068ca15b0a1237a902",
+      "commit": "c2cd3ed",
+      "reason": "Heart to Heart plate wording; deploy_msel_menus_en.py also font-renders this stem (SKIP_UI_PNG)."
+    },
+    {
+      "path": "Option06.check/timg/Opt_Time_tex2.png",
+      "blob": "41a35f54d45a5298e9b1d6b8296a8fbbb463f055",
+      "commit": "7ac0b46",
+      "reason": "Clock date order shown as US MM / DD / YYYY."
+    },
+    {
+      "path": "Quest.check/Quest/Que_Txt02b.png",
+      "blob": "879cc46e7687376969b3873f802857b6e29fb74c",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Title.check/timg/Eng_Patch.png",
+      "blob": "52583ab5d5d7450f3f78bddecba4ccc9e9cba125",
+      "commit": "cec133b",
+      "reason": "EngPatch badge (ours, not Zhoumaru): version + site URL."
+    },
+    {
+      "path": "Title.check/timg/Title_menu_word.png",
+      "blob": "1a05a5624efc457c03bf53a08e1694f67aeb93ff",
+      "commit": "cef17ef",
+      "reason": "Gray \"Main Menu\" re-encoded; the Zhoumaru dump has swizzled RGB (technical.md §15.1.1)."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Spot_Mark02.png",
+      "blob": "65cb09950b9f93d719c2fab624c91f087b288c17",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Spot_Mark04.png",
+      "blob": "3eb2e871b2bacccc25817e7bd85396918dc2ab30",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit03_Logo.png",
+      "blob": "25bcbf47a70b292baa67beb25acfee92ca955e1e",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit03_Pnl.png",
+      "blob": "5f417daadf957413fcd058e61bdd71eba03c3468",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit04_Logo.png",
+      "blob": "3a9677fd44e6e2b0821fa1da2a972c92a9e24888",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit05_Logo.png",
+      "blob": "25bcbf47a70b292baa67beb25acfee92ca955e1e",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit05_Pnl.png",
+      "blob": "c75763568cde333a3f239c527f1a268084c3bc51",
+      "commit": "8dda5e3",
+      "reason": "English Towano Watcher banners and spot badges."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit06_Logo.png",
+      "blob": "fcc484d4f0c93fb5c89a498a0fa55db0b273be69",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit07_Logo1.png",
+      "blob": "5efd3c55f384d8d035efaa08ae8d0425aea33fff",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "TownGuide.check/timg/Mag_Tit08_Logo1.png",
+      "blob": "7d3cedbd765d95e837e3f4c230102cdb89b5369c",
+      "commit": "1082419",
+      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+    },
+    {
+      "path": "Web.check/timg/Web_Pnl_Wea.png",
+      "blob": "b29e40d0614147c7f0588103e43ffc477926ccba",
+      "commit": "1bdad1d",
+      "reason": "Web weather week and forecast refit to the panel."
+    },
+    {
+      "path": "Web.check/timg/Web_Txt_Date.png",
+      "blob": "12507876d105b23cee668d3d27899b956bcc951d",
+      "commit": "4799686",
+      "reason": "Web event-card dates shown as MM/DD Update."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text1.png",
+      "blob": "5312efac8d8da9e07db9ccbf3cd4e974204bb245",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text10.png",
+      "blob": "3db747911d5a6749b7119a999ea107fbb0c16b81",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text11.png",
+      "blob": "94f5385aef0c1947f1c92b2c97dfb404831f0910",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text12.png",
+      "blob": "723d4f894b8f952e31e3e839bb9b05fb5a7786f6",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text13.png",
+      "blob": "a71015e68083634957c4c028898f9b18b7514562",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text2.png",
+      "blob": "038f94b99b6fdaf8d5639b4fc578375619af4c10",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text3.png",
+      "blob": "c7d529ef4070e380f21c7e4e3230353bfeaaae8d",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text4.png",
+      "blob": "ecad3f5e1e3115d95261dd975f6c33f9ad558a21",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text5.png",
+      "blob": "f94c42b6f943c1a1d3217759dd68369db914b842",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text6.png",
+      "blob": "4cc8a3e1850b6fdc6a25a3be5b3d3c5e0d36e831",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text7.png",
+      "blob": "89316cdc8b26598781db55a890012b251567f8b9",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text8.png",
+      "blob": "c2370b530af6eadf540f1fb3a94f2b1e10e221e2",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text9.png",
+      "blob": "30529b1e81220fce923ba88ca43b1c3f50a4613d",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert.png",
+      "blob": "2411145d1a607731874ce9744592d03cbae94b83",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert2.png",
+      "blob": "587804c4aa304562656471aef6b493b2502a2e56",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert3.png",
+      "blob": "90ce7169c1c22ac9dbaade048c86afaa6476cccf",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert4.png",
+      "blob": "6ed17c3c8b916f0dd5b94b7932ce8ead0b8322a4",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert5.png",
+      "blob": "8606c2bbdcea7d045a9f5d930c57f9267b15cc3b",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_alert6.png",
+      "blob": "95349b5b3f53e0968a6fa32e7a8e151af7d33ecb",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_Check.png",
+      "blob": "4beec405b255fe1f99c50dd3e45965e6ceb06145",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "Transfer.check/timg/Trans_text_Trans.png",
+      "blob": "e5bea5aa953b804377be23137ec6a32060dc3246",
+      "commit": "42e842f",
+      "reason": "Hidden (alpha 0) texels set from black to the ink colour so Transfer.arc zopflis into its 111239-byte slot; the d201351 masters were 2841 bytes over and shipped Japanese. No visible change."
+    },
+    {
+      "path": "NCommonMSel(5).check/timg/Com_M_Sel_Plate_Text06_00_00.png",
+      "blob": "621be50e3005616c550038c3360e1968842f27ef",
+      "commit": "42e842f",
+      "reason": "\"Anywhere Date\" plate: RGB flattened to its (51,51,51) ink (hidden texels were black) and alpha cut to 6 levels so NCommonMSel.arc zopflis into pkg 5243's 2323-byte slot; the d201351 master was 435 bytes over and shipped Japanese. No visible change at 4x."
+    }
+  ]
+}

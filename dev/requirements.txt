@@ -9,4 +9,4 @@ PyYAML>=6.0
 # openai>=1.0.0
 
 # Optional: Gemini MT for tools/translate_heroines_gemini.py
-# google-genai>=1.40.0
+# google-genai>=2.30.1

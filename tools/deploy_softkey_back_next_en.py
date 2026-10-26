@@ -165,11 +165,11 @@ def main() -> int:
     tmp = OUT / "_fit"
     tmp.mkdir(parents=True, exist_ok=True)
 
-    # Vanilla first — live may already be fat from Confirm / prior packs.
-    bases: list[tuple[str, Path]] = []
+    # Live first: a vanilla base drops every other NCommonIcon master
+    # (Yes/No/Cancel/Delete/Zoom…) that pack_images put in 5238.
+    bases: list[tuple[str, Path]] = [("live", MOD_IMG)]
     if VANILLA.is_file() and VANILLA.resolve() != MOD_IMG.resolve():
         bases.append(("vanilla", VANILLA))
-    bases.append(("live", MOD_IMG))
 
     tuned: bytes | None = None
     slot: bytes | None = None

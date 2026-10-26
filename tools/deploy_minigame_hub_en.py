@@ -14,7 +14,8 @@ Zhoumaru:
   ``Myroom.check/timg/game_text_kanfu_RGBA4.png`` → Yie Ar Kung-Fu+
 
 ``game_text_puzzle`` Zhoumaru is mis-painted ``Subarudama`` (すばる≠ぱずる) —
-re-render ``Puzzle-dama`` to match TRB.
+re-render ``Puzzle-dama`` (``render_menu_label``, same lettering as the rows) to
+match TRB.
 
 Patch *live* packages so Schedule / Options / Map / WEB / My Data EN stay.
 Bake last-writer after ``deploy_web_hub_en.py``.
@@ -42,11 +43,11 @@ from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     AZAHAR_INSTANCES,
-    chrome_font,
     find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     render_header_aa,
+    render_menu_label,
     resolve_img_paths,
 )
 
@@ -57,10 +58,6 @@ OUT = ROOT / "out" / "minigame_hub_en"
 # Zhoumaru dump says Subarudama — wrong for ぱずるだま / Puzzle-dama.
 SKIP_UI_PNG = frozenset({"game_text_puzzle_RGBA4"})
 
-# Match TwinBee+ / Yie Ar Kung-Fu+ Zhoumaru rows (ink 47, ~12px cores).
-GAME_TEXT_INK = (47, 47, 47)
-GAME_TEXT_CORE_PX = 17
-
 # (pkg, asset folder, path, EN fallback)
 JOBS: list[tuple[int, str, str, str]] = [
     (5575, "MyroomHeader.check", "timg/game_text_title_RGBA4.bclim", "Mini-Game"),
@@ -68,45 +65,6 @@ JOBS: list[tuple[int, str, str, str]] = [
     (5380, "Myroom.check", "timg/game_text_twinbe_RGBA4.bclim", "TwinBee+"),
     (5380, "Myroom.check", "timg/game_text_kanfu_RGBA4.bclim", "Yie Ar Kung-Fu+"),
 ]
-
-
-def render_game_text_row(w: int, h: int, text: str) -> Image.Image:
-    """Darker, chunkier row label matching Zhoumaru TwinBee+/Kung-Fu+ pills.
-
-    ``render_header_aa`` uses HEADER_INK (68) and a 15px cap — too light/small
-    next to the Mini-game masters. Paint Heisei at 2×, hard-threshold, nearest
-    down so cores sit near 12px like ``game_text_twinbe``.
-    """
-    import numpy as np
-    from PIL import ImageDraw
-
-    top = min(GAME_TEXT_CORE_PX, h + 2)
-    for size in range(top, 7, -1):
-        scale = 2
-        big = Image.new("L", (w * scale, h * scale), 0)
-        dr = ImageDraw.Draw(big)
-        f = chrome_font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > w * scale - 4:
-            continue
-        x = (w * scale - tw) // 2 - b[0]
-        y = (h * scale - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        ba = np.where(np.array(big) >= 140, 255, 0).astype(np.uint8)
-        a = np.array(
-            Image.fromarray(ba, "L").resize((w, h), Image.Resampling.NEAREST)
-        )
-        # Light fringe so ETC1A4 matches Zhoumaru mid-alpha buckets.
-        soft = np.array(
-            Image.fromarray(ba, "L")
-            .resize((w, h), Image.Resampling.BILINEAR)
-            .point(lambda p: int(p * 0.55) if p < 255 else 255)
-        )
-        a = np.maximum(a, soft).astype(np.uint8)
-        rgb = Image.new("RGB", (w, h), GAME_TEXT_INK)
-        return Image.merge("RGBA", (*rgb.split(), Image.fromarray(a, "L")))
-    raise RuntimeError(f"cannot fit game-text {text!r} into {w}x{h}")
 
 
 def _zero_all_darc_pads(data: bytes) -> bytes:
@@ -158,7 +116,7 @@ def _deploy_targets() -> list[Path]:
 
 def _rgba_for(folder: str, stem: str, en: str, w: int, h: int) -> tuple[Image.Image, str]:
     if stem in SKIP_UI_PNG:
-        return render_game_text_row(w, h, en), f"render_game_text:{en}"
+        return render_menu_label(w, h, en), f"render menu:{en}"
     master = find_ui_png((folder,), stem, (w, h))
     if master is not None:
         return Image.open(master).convert("RGBA"), str(master.relative_to(ROOT))

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import struct
+
 from conftest import SRC, load_module
 
 sp = load_module("patch_spotpass_embed", SRC / "patch_spotpass_embed.py")
@@ -278,8 +280,8 @@ def test_area_name_cave_draws_station_into_tex_place():
     cave = sp.build_area_cave()
     assert len(cave) == len(sp.VANILLA_AREA_CAVE_BODY)
     assert sp.ADDR_AREA_CAVE + len(cave) <= sp.ADDR_AREA_CAVE_LIMIT
-    assert cave.endswith("奥十羽野駅".encode("utf-8") + b"\x00")
-    assert "湖".encode("utf-8") + b"\x00" in cave
+    spot_va, station_va, _pool_spot, _pool_area = sp._place_vas()
+    assert struct.pack("<II", spot_va, station_va) in cave
     data = _vanilla_blob()
     assert sp.apply_patch(data) is True
     assert data[sp.ADDR_AREA_DRAW : sp.ADDR_AREA_DRAW + 4] == sp._bl(

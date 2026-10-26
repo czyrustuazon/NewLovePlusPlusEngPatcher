@@ -76,17 +76,45 @@ def pad_to_size(blob: bytes, size: int, pad: bytes = b"\xff") -> bytes:
     return blob + pad * (size - len(blob))
 
 
-def texts_from_dictionary_xml(path: Path | str) -> list[str]:
-    """Read maildic_*.xml / *.en.xml produced by the legacy NLP dumper.
+def _entry_text(jt: ET.Element) -> str:
+    return (jt.text or "").replace("\r\n", "\n").replace("\r", "\n")
 
-    That XML pairs (junk_key_or_count, empty) with (strlen_or_flags, text).
-    We take every odd <Entry>'s JapaneseText body in order — index-aligned with
-    the real MDC record list (not the broken hex attributes).
+
+def texts_from_dictionary_xml(
+    path: Path | str, base: list[MdcEntry] | None = None
+) -> list[str]:
+    """Read maildic_*.xml / *.en.xml in MDC record order.
+
+    Two layouts exist:
+
+    * One <Entry> per MDC record in record order, ``hex`` = the record key
+      (translate_sms_en.py, Gemini SMS, workbench). Needs ``base``; keys repeat
+      across records, so entries match by position and each key is checked.
+    * The legacy NLP dumper, which pairs (junk_key_or_count, empty) with
+      (strlen_or_flags, text). Every odd <Entry>'s body in order is
+      index-aligned with the MDC records; its hex attributes are broken.
     """
     root = ET.parse(path).getroot()
     if root.tag != "Dictionary":
         raise ValueError(f"{path}: expected <Dictionary>, got <{root.tag}>")
     entries = list(root.findall("Entry"))
+    if base is not None and len(entries) == len(base):
+        # Keys repeat across records, so match by position and check each key.
+        texts: list[str] = []
+        for i, (entry, rec) in enumerate(zip(entries, base)):
+            jt = entry.find("JapaneseText")
+            if jt is None:
+                raise ValueError(f"{path}: Entry {i} missing JapaneseText")
+            try:
+                key = int(jt.get("hex") or "", 16)
+            except ValueError:
+                raise ValueError(f"{path}: Entry {i} has no usable hex key") from None
+            if key != rec.key:
+                raise ValueError(
+                    f"{path}: Entry {i} hex {key:#018x} != MDC key {rec.key:#018x}"
+                )
+            texts.append(_entry_text(jt))
+        return texts
     if len(entries) % 2:
         raise ValueError(f"{path}: odd Entry count {len(entries)}")
     texts: list[str] = []
@@ -94,7 +122,7 @@ def texts_from_dictionary_xml(path: Path | str) -> list[str]:
         jt = entries[i].find("JapaneseText")
         if jt is None:
             raise ValueError(f"{path}: Entry {i} missing JapaneseText")
-        texts.append((jt.text or "").replace("\r\n", "\n").replace("\r", "\n"))
+        texts.append(_entry_text(jt))
     return texts
 
 

@@ -59,8 +59,8 @@ Examples that are **not** a generic Japanese name: `ごしゅじんさま` (Gosh
 
 - Hepburn is **generated** (revised): `ん` + vowel/y → `n'`; `っ` doubles the next consonant; youon (`きゃ` → `kya`, `しょ` → `sho`).
 - Title case on the whole reading (`Manaka`, `Shin'ichi`). This is a lookup aid, not an in-game string.
-- In-game Profile input still uses the gojūon / romaji stack in `code.bin` (§17). Matching a **呼ばれ方** candidate depends on the hiragana reading landing in pack 0x7100.
-- **TODO:** keep Hepburn on the translated kana grid / name field, but associate each tap with its hiragana so Siren still says whitelist names (`akiko` on screen → stored `あきこ` → `0x7100`). Tracked in `docs/technical.md` §17.6 item 6. Today insert is romaji-only, so English Called names display and are not spoken.
+- The **Called** list matches the typed romaji against pack **0x7200** (exact + fuzzy suggestions) and stores the reading ID, so she can say a listed name (`Akiko` → 4780). A typed name with no reading or suggestion leaves the list empty (`docs/technical.md` §17.8).
+- **TODO:** a gojūon tap still writes the Hepburn display string. Siren still needs the hiragana reading in pack **0x7100** (`akiko` on screen → stored `あきこ`). Tracked in `docs/technical.md` §17.6 item 6.
 
 ## Quick “can she say this?”
 

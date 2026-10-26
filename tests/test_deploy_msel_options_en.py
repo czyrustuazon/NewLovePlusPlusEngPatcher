@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+import zlib
 from pathlib import Path
 
 import fake_img as fi
@@ -86,3 +87,43 @@ def test_main_splices_options_pkg(tmp_path: Path, monkeypatch):
         fi.read_element(fi.read_package(img, msel.PKG), SIBLING, tmp_path)
         == before_sibling
     )
+
+
+def test_uses_shared_exact_zlib():
+    # 10-20 regression: a private copy of the exact-slot search went random and
+    # untested. Keep this script on the shared, tested helper.
+    import exact_zlib
+
+    assert msel.compress_exact_zopfli is exact_zlib.compress_exact_zopfli
+
+
+def test_exact_slot_is_deterministic_for_tight_zopfli_undershoot():
+    """Gold-rebuild miss: zopfli 18830 vs slot 18977 (147 B under) on 5245.
+
+    The urandom gap-salt search missed every exact length. Every undershoot
+    from a few bytes up must hit exactly, leave the ARC untouched, and give the
+    same stream on every run.
+    """
+    import zopfli.zlib as zopfli_zlib
+
+    rng = random.Random(18977)
+    files = {}
+    for stem in _stems():
+        # Mostly-flat A8 plates with sparse glyph noise: compressible like the
+        # real masters, so the slot is zopfli-tight rather than roomy.
+        pix = bytearray(64 * 64)
+        for i in rng.sample(range(len(pix)), 600):
+            pix[i] = rng.randrange(256)
+        files[f"timg/{stem}.bclim"] = fi.bclim(8, 8, 1, pixels=bytes(pix))
+    arc = fi.darc(files)
+    base = len(zopfli_zlib.compress(arc))
+    for under in (5, 6, 7, 8, 9, 37, 146, 147, 148):
+        target = base + under
+        tuned, slot = msel.compress_exact_zopfli(arc, target)
+        again = msel.compress_exact_zopfli(arc, target)
+        assert tuned == arc
+        assert len(slot) == target
+        assert again == (tuned, slot)
+        d = zlib.decompressobj()
+        assert d.decompress(slot) == arc
+        assert d.eof and d.unused_data == b""

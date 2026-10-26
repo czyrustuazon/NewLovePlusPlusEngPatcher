@@ -14,20 +14,20 @@ Fansite import: `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md`. Volunteer kit copy: `
 
 ---
 
-## Headline numbers (2026-09-20)
+## Headline numbers (2026-10-23)
 
 | Bucket | EN / total | % | Notes |
 |--------|------------|---|--------|
-| **Dialogue scripts** (`script` pack) | 326 / 578 | **56.4%** | One `.dbin2` per script ID |
-| **SMS / phone** (`maildic_*.mdc`) | 0 / 1822 | **0%** | JP in gold bake (audit) |
-| **Scripts + SMS combined** | 326 / 2400 | **13.6%** | Use for “all spoken + phone text” rollup |
-| **Main TRB** (`textresource_jpn.trb`) | 24872 / 25346 STRI | **98.1%** | Machine pass, unreviewed |
-| **UI PNG masters** (chrome, site `images_ui`) | **562** in **25 / 25** folders | — | `ui_png_masters_total` (was 461) |
-| **UI PNG masters** (full `IMAGE_MAP`) | **1745** in **95 / 95** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
+| **Dialogue scripts** (`script` pack) | 522 / 578 | **90.3%** of files with lines. The fansite bar adds the 56 empty stubs as their own segment and reads **100%** | Community layer + Gemini machine pass. 56 files are empty retail stubs |
+| **SMS / phone** (`maildic_*.mdc`) | 1822 / 1822 | **100%** | Gemini machine pass. Still JP in the gold bake until `--include-sms` |
+| **Scripts + SMS combined** | 2344 / 2400 | **97.7%** of entries with text. The fansite bar adds the same 56 empty script files and reads **100%** | Spoken files + phone messages. Gemini rows are unreviewed |
+| **Main TRB** (`textresource_jpn.trb`) | 25333 / 25346 STRI | **99.9%** | Last 13 are quiz kanji and stay Japanese |
+| **UI PNG masters** (chrome, site `images_ui`) | **564** in **25 / 25** folders | — | `ui_png_masters_total` (was 562 on 2026-09-20, 461 before that) |
+| **UI PNG masters** (full `IMAGE_MAP`) | **1765** in **101 / 101** folders | — | What gold bake packs. `intro111` / `intro203` / `intro304` are sparse, not empty |
 
-PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend TRB 98% into a single “translation done” headline.
+PNG counts are **English masters present** (deduped by stem under `assets/images/`, prefer `.check`). Not a percent of every BCLIM in vanilla `img.bin`. Do not blend the TRB percent into a single “translation done” headline. The last 13 system-text slots are quiz kanji and stay Japanese.
 
-Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. The combined patch is higher because Manaka (`t*`) and common (`p*`) are 100%.
+Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Reviewed coverage on top of that is Manaka and common at 100% plus 48 Nene and 48 Rinko. The Gemini rows below are a machine pass, not proofread.
 
 ---
 
@@ -37,10 +37,10 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 |-------|--------|------------|---|--------|
 | Manaka | `t*` | 175 / 175 | 100% | `rebuild_dbin2/` |
 | Common | `p*` | 55 / 55 | 100% | `rebuild_dbin2/` |
-| Rinko | `k*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
-| Nene | `a*` | 48 / 174 | 27.6% | `vendor/NLPPPATCH/.../*.dbin2` |
+| Rinko | `k*` | 146 / 174 | 83.9% | 48 community + 98 Gemini XML (`assets/gemini_heroines/xml/`). 28 empty stubs |
+| Nene | `a*` | 146 / 174 | 83.9% | 48 community + 98 Gemini dbin2. Optional Drop inject. 28 empty stubs |
 
-**Not injected from XML:** Rinko/Nene — community layer in `rebuild_dbin2` / JP ROM until promoted. (`scripts_deferred/` removed 2026-09-03.)
+**Inject:** community Nene/Rinko always. Gemini Nene only when Drop opts in (`NLPP_INCLUDE_GEMINI_NENE=1`). Gemini Rinko XML is archived and not injected yet. (`scripts_deferred/` removed 2026-09-03.)
 
 **Inject policy:** `src/script_inject.py` → `resolve_script_source()` (used by `patch_cia.py`).
 
@@ -48,11 +48,11 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 
 ## SMS / phone text (`img.bin` package **92**)
 
-| Heroine | File | Messages | EN (bake) |
-|---------|------|----------|-----------|
-| Manaka | `maildic_m.mdc` | 599 | 0 |
-| Nene | `maildic_n.mdc` | 634 | 0 |
-| Rinko | `maildic_r.mdc` | 589 | 0 |
+| Heroine | File | Messages | EN (Gemini, unreviewed) | EN (bake) |
+|---------|------|----------|--------------------------|------------|
+| Manaka | `maildic_m.mdc` | 599 | 599 | 0 |
+| Nene | `maildic_n.mdc` | 634 | 634 | 0 |
+| Rinko | `maildic_r.mdc` | 589 | 589 | 0 |
 
 - **Deploy EN:** `tools/deploy_sms_maildic_en.py` (needs `assets/sms_en/maildic_{m,n,r}.en.xml`)
 - **Restore JP:** `tools/restore_sms_maildic_jpn.py`
@@ -64,7 +64,7 @@ Legacy **NLPPPATCH “28%”** = **169 / 578** script files (~29%) **alone**. Th
 
 | File | Role |
 |------|------|
-| `release/textresource/textresource_jpn.trb` | Main STRI table (98%+ EN) |
+| `release/textresource/textresource_jpn.trb` | Main STRI table (99.9% EN) |
 | `assets/textresource/translations.json` | 24k+ JP→EN keys (rebuild source) |
 | `release/romfs_overlay/.../textresource_resident_jpn.trb` | Date/time + name fragments (`patch_names.py`) |
 
@@ -88,8 +88,8 @@ Chrome folder list: `progress_metrics.json` → `images_ui.ui_folder_keys` (25 k
 
 1. **Main game** — horizontal bars: Manaka, Rinko, Nene, Common, Total (script pack)
 2. **Phone / SMS** — separate panel: `maildic_m` / `maildic_n` / `maildic_r`
-3. **Rollup** — scripts + SMS message count (13.6% today)
-4. **System strings** — TRB 98.1% (+ optional INDX category drill-down)
-5. **UI textures** — chrome table from `images_ui.by_folder` (**562**); prose may also mention the full mapped pack (**1745** in **95 of 95**)
+3. **Rollup** — scripts + SMS message count (97.7% today; Gemini segments stay unreviewed)
+4. **System strings** — TRB 99.9%. The last 13 slots are single kanji a study quiz asks you to read, so they stay Japanese. A quoted Japanese word inside an English quiz prompt stays too. The player-name token, `・`, and `ー` are already English and are not leftover text.
+5. **UI textures** — chrome table from `images_ui.by_folder` (**564**); prose may also mention the full mapped pack (**1765** in **101 of 101**)
 
 Do **not** show resident TRB fragment % as “translation progress” (mostly JP date/time building blocks by design).

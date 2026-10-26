@@ -41,12 +41,20 @@ from deploy_common import AZAHAR_INSTANCES, UI_FONT, iter_deploy_targets, resolv
 MOD_IMG, _VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "commu_settings_header_en"
 PKG = 5241
-# Plate matches the Communication header (MPLUS, gh ~13). The row matches
-# Name Card / Heart to Heart (Geomanist, gh 18).
 # Plate is drawn as RGBA on the white bar. White glyphs match the bar and vanish.
-# Vanilla ink is dark gray (~70). The menu row is an alpha mask, so it stays white.
+# Vanilla ink is dark gray. Gallery headers sit on the same cap line (y=8,
+# about 15px). This title is longer, so the Zhoumaru button glyphs are fit
+# to that bar instead of the smaller MPLUS line.
 PLATE_INK = (51, 51, 51)
-PLATE = ("Com_M_Sel_Plate_Text04_04_00", "Communication Settings", 13, UI_FONT, 0, PLATE_INK)
+PLATE_MASTER = (
+    ROOT
+    / "assets"
+    / "images"
+    / "NCommonMSel(7).check"
+    / "timg"
+    / "Com_M_Sel_Btn_Text04_04_00.png"
+)
+PLATE = ("Com_M_Sel_Plate_Text04_04_00", "Communication Settings", 14, UI_FONT, 0, PLATE_INK)
 ROW_FONT = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "Geomanist-Regular.ttf"
 BUTTON = ("Com_M_Sel_Btn_Text04_04_00", "Communication Settings", 18, ROW_FONT, 0, (255, 255, 255))
 LABELS = (PLATE, BUTTON)
@@ -76,6 +84,41 @@ def _ink_blocks(rgba: Image.Image, ink: tuple[int, int, int]) -> Image.Image:
                 arr[by : by + 4, bx : bx + 4, 1] = ink[1]
                 arr[by : by + 4, bx : bx + 4, 2] = ink[2]
     return Image.fromarray(arr, "RGBA")
+
+
+def render_gallery_plate(w: int, h: int, max_gh: int) -> Image.Image:
+    """Scale the Zhoumaru 'Communication Settings' button onto the header bar.
+
+    Gallery plates share a cap line at y=8. The title is wider than those
+    bars, so the glyphs keep that cap height and tighten just enough to fit.
+    """
+    src = np.array(Image.open(PLATE_MASTER).convert("RGBA"))
+    a = src[:, :, 3]
+    ys, xs = np.where(a > 20)
+    if len(ys) == 0:
+        raise RuntimeError(f"empty plate master {PLATE_MASTER}")
+    glyph = a[int(ys.min()) : int(ys.max()) + 1, int(xs.min()) : int(xs.max()) + 1]
+    max_w = w - 8
+    nw = max_w
+    nh = max(8, int(round(glyph.shape[0] * (max_gh / glyph.shape[0]))))
+    if nh > h - 2:
+        nh = h - 2
+    ga = np.array(
+        Image.fromarray(glyph, "L").resize((nw, nh), Image.Resampling.LANCZOS)
+    )
+    ga = np.clip(np.round(ga.astype(np.float32) / 16.0) * 16.0, 0, 255).astype(np.uint8)
+    canvas = np.zeros((h, w), np.uint8)
+    y = 8
+    if y + nh > h - 1:
+        y = max(1, h - nh - 1)
+    x = (w - nw) // 2
+    canvas[y : y + nh, x : x + nw] = ga
+    rgba = np.zeros((h, w, 4), np.uint8)
+    rgba[:, :, 0] = PLATE_INK[0]
+    rgba[:, :, 1] = PLATE_INK[1]
+    rgba[:, :, 2] = PLATE_INK[2]
+    rgba[:, :, 3] = canvas
+    return _ink_blocks(Image.fromarray(rgba, "RGBA"), PLATE_INK)
 
 
 def render_label(
@@ -150,7 +193,10 @@ def main() -> None:
         _pix, w, h, fmt, _ft = parse_bclim(orig.read_bytes())
         if fmt != 0xB:
             raise SystemExit(f"{stem} fmt {fmt:#x}, expected ETC1A4")
-        rgba = render_label(text, w, h, max_gh, font_path, index, ink)
+        if stem == PLATE[0]:
+            rgba = render_gallery_plate(w, h, max_gh)
+        else:
+            rgba = render_label(text, w, h, max_gh, font_path, index, ink)
         rgba.save(png)
         rgba.save(OUT / f"{stem}.png")
         darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))

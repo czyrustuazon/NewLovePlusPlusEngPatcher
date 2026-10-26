@@ -242,6 +242,50 @@ def test_baseline_name_kanji_dry_run_filters_without_rebuild(
     assert name_kanji.main(["--dry-run"]) == 0
 
 
+def test_baseline_name_kanji_rebuilds_and_deploys(tmp_path: Path, monkeypatch, capsys):
+    """Every TRB pass runs in order; deploy backs up the old LayeredFS TRB once."""
+    trb = tmp_path / "v" / "textresource_jpn.trb"
+    trb.parent.mkdir()
+    trb.write_bytes(b"trb")
+    (trb.parent / "textresource_config.trb").write_bytes(b"cfg")
+    azahar = tmp_path / "azahar"
+    azahar.mkdir()
+    (azahar / "textresource_jpn.trb").write_bytes(b"old")
+    monkeypatch.setattr(name_kanji, "ROOT", tmp_path)
+    monkeypatch.setattr(name_kanji, "AZAHAR_DIR", azahar)
+    monkeypatch.setattr(name_kanji, "find_vanilla_main_trb", lambda: trb)
+    monkeypatch.setattr(name_kanji, "load_translations", lambda _p: {"冬": "Winter"})
+    monkeypatch.setattr(name_kanji, "load_lookup", lambda _p: {})
+    monkeypatch.setattr(name_kanji, "rebuild_trb", lambda raw, m, lk: (raw + b"+r", "stats"))
+
+    def step(tag):
+        return lambda data, *_a: (data + tag.encode(), [tag])
+
+    for fn in (
+        "apply_shared_serial_passwords",
+        "apply_weather_weekdays",
+        "apply_called_readings",
+        "apply_honorific_suffixes",
+        "append_confirm_message",
+        "append_info_message",
+    ):
+        monkeypatch.setattr(name_kanji, fn, step(fn[:5]))
+    monkeypatch.setattr(name_kanji, "update_config_size", lambda raw, n: raw + str(n).encode())
+
+    assert name_kanji.main(["--deploy-azahar"]) == 0
+    out = tmp_path / "out" / "textresource_jpn_namekanji.trb"
+    assert out.read_bytes() == b"trb+rapplyapplyapplyapplyappenappen"
+    assert (azahar / "textresource_jpn.trb").read_bytes() == out.read_bytes()
+    assert (azahar / "textresource_jpn.trb.bak_pre_namekanji").read_bytes() == b"old"
+    assert (azahar / "textresource_config.trb").read_bytes() == b"cfg" + str(0xC0000).encode()
+    log = capsys.readouterr().out
+    assert "password apply" in log and "Eng Patch info appen" in log
+
+    # A second deploy keeps the first backup.
+    assert name_kanji.main(["--deploy-azahar"]) == 0
+    assert (azahar / "textresource_jpn.trb.bak_pre_namekanji").read_bytes() == b"old"
+
+
 def test_baseline_name_kanji_resolve_errors(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(name_kanji, "find_vanilla_main_trb", lambda: None)
     with pytest.raises(SystemExit, match="missing vanilla textresource_jpn"):

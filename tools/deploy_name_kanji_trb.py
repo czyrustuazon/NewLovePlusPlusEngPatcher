@@ -21,6 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from nlpp_paths import find_vanilla_main_trb  # noqa: E402
+from patch_called_readings import apply_called_readings, apply_honorific_suffixes  # noqa: E402
+from patch_camera_defaults_reset import append_confirm_message  # noqa: E402
+from patch_title_engpatch_info import append_info_message  # noqa: E402
 from patch_password_serials import apply_shared_serial_passwords  # noqa: E402
 from patch_weather_weekdays import apply_weather_weekdays  # noqa: E402
 from patch_textresource import (  # noqa: E402
@@ -90,6 +93,17 @@ def main(argv: list[str] | None = None) -> int:
     rebuilt, day_logs = apply_weather_weekdays(rebuilt)
     for line in day_logs:
         print(f"[name-kanji-trb] weekday {line}", flush=True)
+    rebuilt, reading_logs = apply_called_readings(rebuilt, vanilla_trb.read_bytes(), lookup)
+    print(f"[name-kanji-trb] Called readings: {len(reading_logs)} rewritten as Hepburn", flush=True)
+    rebuilt, suffix_logs = apply_honorific_suffixes(rebuilt, vanilla_trb.read_bytes(), lookup)
+    for line in suffix_logs:
+        print(f"[name-kanji-trb] honorific {line}", flush=True)
+    rebuilt, confirm_logs = append_confirm_message(rebuilt)
+    for line in confirm_logs:
+        print(f"[name-kanji-trb] camera confirm {line}", flush=True)
+    rebuilt, info_logs = append_info_message(rebuilt)
+    for line in info_logs:
+        print(f"[name-kanji-trb] Eng Patch info {line}", flush=True)
     out = ROOT / "out" / "textresource_jpn_namekanji.trb"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(rebuilt)

@@ -3,6 +3,7 @@
 | File | License | Role |
 |------|---------|------|
 | `MPLUS1p-Regular.ttf` | SIL OFL 1.1 (`OFL.txt`) | Default font for `deploy_*_en.py` glyph renders |
+| `Arimo[wght].ttf` | SIL OFL 1.1 (`Arimo-OFL.txt`) | `MENU_FONT` at wght 550: matches Zhoumaru's in-room menu rows (Mail categories, Wallpaper, Puzzle-dama); Love Plus pill uses 700 like Youth Story |
 | `reference/nlppatch-2025/` | Game / commercial (reference) | JP UI fonts from NLPPPATCH Graphics pack — see `reference/README.md` |
 | `PixelifySans.ttf` | OFL (Google Fonts) | Optional / editor |
 | `PressStart2P.ttf` | OFL (Google Fonts) | Optional / editor |

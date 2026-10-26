@@ -1,4 +1,7 @@
 {
+ "patch_camera_defaults_reset.build_cave": "c043e6f74bb2f7bc0d71f9e21d900e3afb3f8da55e09d30b2be6a13d8e9edb48",
+ "patch_camera_defaults_reset.build_region": "553c2399f22e659760a85f47a982366d18fc57cc30d1278f3265f14b42962805",
+ "patch_camera_restore_default.build_cave": "a6b3a259c963ee2b82a8befa9da7bcacefbb83920d586fc32b3a346dcdec9deb",
  "patch_chunk_walk_guard.build_cave": "8522b3f1e83073ea9d1cf29577e611519497232439a343a1a04f703d6f588d51",
  "patch_chunk_walk_guard.build_clyt_cave": "1f9b4f19331f3f2d080f44add8516730202ede671657a3e3a712e2d275961d92",
  "patch_chunk_walk_guard.build_field_cave": "c9c74c1e18260978fa1dfd208e45413a6baa7e2df6624ccf4c8da90f99a6d33e",
@@ -35,7 +38,6 @@
  "patch_code.assemble_clear": "7345d304ec4020dd612bfa3f7bca6b67fab50e27aa91f005261502521a411710",
  "patch_code.assemble_set_name": "01ca5e2b9e6d4b4b6d590d0250041430c164985318342146c5ce034bf7384ef2",
  "patch_commu_settings_header.build_cave": "8662aa43c1810f9adf6d0357d3f47823959d2a8baf20d44651d0afd0eec12ca1",
- "patch_input_call_romaji.build_blob": "27ccbedec9ee2a3e8666841a50825b70c85c626df09bbac862542aef71542eb7",
  "patch_input_candmode_fillflag_reset.build_cave": "6586f049b6e8bed49a0fcf6c0060719ed88bac99a8cdefcf512431a5df4818fb",
  "patch_input_pane_registry_nullguard.build_cave": "2b8cbfe411f8e0d7247669e4d1b658f035a2241225f3d16f94fe7165fcfdb620",
  "patch_input_romaji.assemble_trampoline": "15c8350fcc04910165d7c5374459d14ee8885e7d42268da437c9a85f270831f1",
@@ -46,7 +48,7 @@
  "patch_message_speed.build_talk_cap_cave": "a779a41dc55eb231574b68691f6bada599f92ceb2efddde454f9fbb73a5bfb3f",
  "patch_profile_birthday.build_month_table": "805f6995a76ad2afeaaf8ef853c7edcc817e01ecd7356cbfa6da4caddc9b2b6f",
  "patch_profile_birthday.build_window": "1178cfbee91f3788004938dce7dade47b23a9138c0e4570ff615f1205f24cbad",
- "patch_spotpass_embed.build_area_cave": "aebb68703fa5ba991497f955c5c17a56a4fbd0cc2b66ccef1f0352013bba9f3d",
+ "patch_spotpass_embed.build_area_cave": "a307eafb0e399db8d9257b4416ae286f389728c277e36fe321f7b00435c20db6",
  "patch_spotpass_embed.build_back_finish": "8aa5e10fa462c14c7676cd987bafa31e6902d675e95fe355106dc51ea0e9c27b",
  "patch_spotpass_embed.build_bind_marked": "9462a08582b69546f03f9651e856956d28006e716f1920b17f2d64f329693a90",
  "patch_spotpass_embed.build_child_cave": "f9c1dfa64040d518a0f1d73ed21bb3924227b95fb50da1a16aac2f88a38727ca",
@@ -60,11 +62,13 @@
  "patch_spotpass_embed.build_menu_text": "5be85fd2b9fbaeacf430ed67498b00178e82f7f2a304589207bac5be4c7f0220",
  "patch_spotpass_embed.build_newflag_cave": "007f34a6c3441b0240da53f253e513b959105da2d8803255e1856aa48f48db47",
  "patch_spotpass_embed.build_page_block": "6664644f691cf0362897697e045286f173f767b7c00c52e8f63a24068c04c99e",
- "patch_spotpass_embed.build_place_labels": "0e78b4302060f9c03d7ddd259c8d58010fa42df0caba3907f340eef08fffd9a2",
+ "patch_spotpass_embed.build_place_labels": "f9e2a738f13f7a6fbb5b64a1b7589bec47995dbb9484785e6bd532050c3dc8b5",
  "patch_spotpass_embed.build_slot_cave": "f220415052b1f6bdbdd42e1a3d251c3b6c46b7a762620585bd8e0579f05498af",
  "patch_spotpass_embed.build_worker_cave": "9766fe1a739898a06e843ff1e6fbbda0a1e9e18da2ddb2d3605f84d14d7c3f3a",
  "patch_spotpass_skip.build_state0_hide": "e5d2bd728f77a1586bed1935c9695bb84f7599c59a6afcfa646a7ff211273001",
  "patch_spotpass_skip.build_title_dismiss_stub": "9259837529bb682a38b3fd39166c2dc46010b5869349b787268d2f678081109d",
  "patch_spotpass_skip.build_title_lock_release": "7bb011d0cb9a5cab4d2dad6dad6d213e97f1e5d5523093f50932017223f5a9c7",
- "patch_spotpass_skip.build_title_mgr_release": "1da9898b7d75a099b514a64f7f8168aed38445d244ca82050a3faed463001d36"
+ "patch_spotpass_skip.build_title_mgr_release": "1da9898b7d75a099b514a64f7f8168aed38445d244ca82050a3faed463001d36",
+ "patch_title_engpatch_info.build_caves": "2b9aa9352f8cb2e645f952d8813ed4c1e795579506a9a129c870ebafe35f6eac",
+ "patch_title_engpatch_info.build_regions": "741185af611759bda2b1ca3ed3f939ee7b7a07514d67f19d858426758fec4f7f"
 }

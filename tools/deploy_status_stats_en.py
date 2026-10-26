@@ -2,7 +2,11 @@
 """EN boyfriend-power / status stat labels.
 
 KareshiPower.arc pkg 5501 — ``stat_tex_{undo,chisiki,kanse,miryoku}``
-ScdStatus.arc pkg 5255 — ``Scd_Status_Tit_{M,K,S,C}`` (Mv/Kw/Sn/Cm)
+ScdStatus.arc pkg 5255 — ``Scd_Status_Tit_{M,K,S,C}`` (Mv/Kw/Sn/Cm) colored
+pills + ``Scd_Result_Rich_Text`` (所持リッチ：) + ``Scd_Result_Btn_Exchange_Text``.
+
+Packages are rebuilt from vanilla, so every Zhoumaru ``.check`` master is
+listed here. Masters win; the render is only a fallback for ETC1A4 stems.
 """
 from __future__ import annotations
 
@@ -19,13 +23,18 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
-from bclimutil import parse_bclim, png_to_bclim_etc1a4_same_size  # noqa: E402
+from bclimutil import (  # noqa: E402
+    parse_bclim,
+    png_to_bclim_etc1a4_same_size,
+    png_to_bclim_same_size,
+)
 from darcutil import DarcArchive  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
     UI_FONT,
+    find_ui_png,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -40,9 +49,9 @@ PKG_LABELS: list[tuple[int, list[tuple[str, str]]]] = [
     (
         5501,
         [
-            # 32x14 — "Knowledge" won't fit at readable size; "Intel" matches TRB meaning.
+            # Zhoumaru masters; 32x14 fits "Intel." (TRB meaning), not "Knowledge".
             ("timg/stat_tex_undo.bclim", "Fitness"),
-            ("timg/stat_tex_chisiki.bclim", "Intel"),
+            ("timg/stat_tex_chisiki.bclim", "Intel."),
             ("timg/stat_tex_kanse.bclim", "Sense"),
             ("timg/stat_tex_miryoku.bclim", "Charm"),
         ],
@@ -50,14 +59,18 @@ PKG_LABELS: list[tuple[int, list[tuple[str, str]]]] = [
     (
         5255,
         [
-            # Hearts: Mv=運動, Kw=知識, Sn=感性, Cm=魅力 — 52x28 has room for full words.
+            # Colored pills Mv=運動, Kw=知識, Sn=感性, Cm=魅力 (Zhoumaru keeps the color).
             ("timg/Scd_Status_Tit_M.bclim", "Fitness"),
-            ("timg/Scd_Status_Tit_K.bclim", "Knowledge"),
+            ("timg/Scd_Status_Tit_K.bclim", "Intel."),
             ("timg/Scd_Status_Tit_S.bclim", "Sense"),
             ("timg/Scd_Status_Tit_C.bclim", "Charm"),
+            # Zhoumaru-only (no render fallback): fmt 8 / fmt 2.
+            ("timg/Scd_Result_Rich_Text.bclim", "Owned Rich:"),  # 所持リッチ：
+            ("timg/Scd_Result_Btn_Exchange_Text.bclim", "G-Coin Exchange"),
         ],
     ),
 ]
+UI_PNG_FOLDERS = {5501: ("KareshiPower.check",), 5255: ("ScdStatus.check",)}
 INK = (40, 40, 40)
 
 
@@ -194,16 +207,30 @@ def patch_pkg(pkg_id: int, labels: list[tuple[str, str]]) -> None:
             raise SystemExit(f"missing {path}")
         raw_b = darc.extract_file(entry)
         _pix, w, h, fmt, _ = parse_bclim(raw_b)
-        if fmt != 0xB:
-            raise SystemExit(f"{path} fmt {fmt} not ETC1A4")
-        rgba = render_label(w, h, en)
+        stem = Path(path).stem
+        master = find_ui_png(UI_PNG_FOLDERS[pkg_id], stem, (w, h))
+        if master is not None:
+            with Image.open(master) as im:
+                rgba = im.convert("RGBA")
+            if rgba.size != (w, h):
+                rgba = rgba.resize((w, h), Image.Resampling.LANCZOS)
+            src = master.name
+        elif fmt == 0xB:
+            rgba = render_label(w, h, en)
+            src = "render"
+        else:
+            raise SystemExit(f"{path} fmt {fmt}: no Zhoumaru master and no render path")
         png = tmp / "t.png"
         orig = tmp / "o.bclim"
         rgba.save(png)
-        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        rgba.save(OUT / f"{stem}_en.png")
         orig.write_bytes(raw_b)
-        darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
-        print(f"OK {path} -> {en!r} ({w}x{h})", flush=True)
+        encode = png_to_bclim_etc1a4_same_size if fmt == 0xB else png_to_bclim_same_size
+        new = encode(png, orig)
+        if len(new) != len(raw_b):
+            raise SystemExit(f"{path} size change {len(raw_b)} -> {len(new)}")
+        darc.replace_same_size(entry, new)
+        print(f"OK {path} -> {en!r} ({w}x{h} fmt {fmt}, {src})", flush=True)
 
     tuned, slot = compress_exact_with_gap_tune(bytes(darc.data), cmp_len)
     do = zlib.decompressobj()

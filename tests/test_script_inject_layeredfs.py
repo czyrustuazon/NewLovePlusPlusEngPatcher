@@ -73,7 +73,72 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"community-k"
 
 
-def test_a_stem_speaker_becomes_anegasaki(tmp_path: Path, monkeypatch):
+def test_gemini_rinko_opt_in_overrides_community_k(tmp_path: Path, monkeypatch):
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    _write(eng, "script/t002.dbin2", b"manaka-script")
+    _write(eng, "script/k001.dbin2", b"community-k")
+
+    gem = tmp_path / "gemini_dbin2"
+    _write(gem, "script/k001.dbin2", b"gemini-k001")
+    _write(gem, "NLP_01/k001.dbin2", b"gemini-k001-nlp")
+
+    contrib = tmp_path / "script_contrib"
+    _write(contrib, "script/k001.dbin2", b"human-k001")
+
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"k001"})
+    monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"k001"})
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", contrib)
+    monkeypatch.setenv("NLPP_INCLUDE_GEMINI_NENE", "1")
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+    assert (romfs / "script/bin/script/k001.dbin2").read_bytes() == b"human-k001"
+    assert (romfs / "script/bin/NLP_01/k001.dbin2").read_bytes() == b"gemini-k001-nlp"
+    assert (gem / "script/k001.dbin2").read_bytes() == b"gemini-k001"
+
+
+def test_contrib_file_ships_without_gemini_and_wins_over_it(
+    tmp_path: Path, monkeypatch
+):
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    _write(eng, "script/t002.dbin2", b"manaka-script")
+    _write(eng, "script/a900.dbin2", b"community-a900")
+
+    gem = tmp_path / "gemini_dbin2"
+    _write(gem, "script/a900.dbin2", b"gemini-a900")
+    _write(gem, "script/a901.dbin2", b"gemini-a901")
+    _write(gem, "NLP_01/a901.dbin2", b"gemini-a901-nlp")
+
+    contrib = tmp_path / "script_contrib"
+    _write(contrib, "script/a900.dbin2", b"human-a900")
+    _write(contrib, "script/a901.dbin2", b"human-a901")
+    _write(contrib, "NLP_01/a901.dbin2", b"human-a901-nlp")
+
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900"})
+    monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"a900", "a901"})
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", contrib)
+    monkeypatch.delenv("NLPP_INCLUDE_GEMINI_NENE", raising=False)
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+    assert (romfs / "script/bin/script/a900.dbin2").read_bytes() == b"human-a900"
+    assert (romfs / "script/bin/script/a901.dbin2").read_bytes() == b"human-a901"
+    assert (romfs / "script/bin/NLP_01/a901.dbin2").read_bytes() == b"human-a901-nlp"
+
+    monkeypatch.setenv("NLPP_INCLUDE_GEMINI_NENE", "1")
+    romfs_on = tmp_path / "romfs-on"
+    script_inject.inject_scripts(romfs_on, eng, create_dirs=True)
+    assert (romfs_on / "script/bin/script/a900.dbin2").read_bytes() == b"human-a900"
+    assert (romfs_on / "script/bin/script/a901.dbin2").read_bytes() == b"human-a901"
+
+
+def test_nene_speaker_becomes_anegasaki_on_every_stem(tmp_path: Path, monkeypatch):
     import patch_names as names
 
     def _script(dialogs: list[str]) -> bytes:
@@ -105,12 +170,12 @@ def test_a_stem_speaker_becomes_anegasaki(tmp_path: Path, monkeypatch):
     _, _, common = names.parse_dbin2(
         (romfs / "script/bin/script/p004.dbin2").read_bytes()
     )
-    assert common[0].sdl2.dialogs == ["姉ヶ崎", "See ▲Anegasaki＊▲"]
+    assert common[0].sdl2.dialogs == ["Anegasaki", "See ▲Anegasaki＊▲"]
     _, _, rinko = names.parse_dbin2(
         (romfs / "script/bin/script/p011.dbin2").read_bytes()
     )
     assert rinko[0].sdl2.dialogs == [
-        "Kobayaka",
+        "Kobayakawa",
         "Hi ▲Kobayaka＊▲",
         "▲Takane＊＊▲",
         "Takane",
@@ -157,7 +222,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     _, _, kept = names.parse_dbin2((eng / "a001.dbin2").read_bytes())
     assert kept[0].sdl2.dialogs == ["Anegasaki", "Hello ▲Anegasaki＊▲"]
     _, _, patched = names.parse_dbin2((eng / "k050.dbin2").read_bytes())
-    assert patched[0].sdl2.dialogs == ["姉ヶ崎", "See ▲Anegasaki＊▲"]
+    assert patched[0].sdl2.dialogs == ["Anegasaki", "See ▲Anegasaki＊▲"]
     _, _, copied = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "a050.dbin2").read_bytes()
     )
@@ -167,7 +232,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     )
     assert pack[0].sdl2.dialogs == ["▲Anegasaki＊▲"]
     _, _, rinko = names.parse_dbin2((eng / "p010.dbin2").read_bytes())
-    assert rinko[0].sdl2.dialogs == ["Kobayaka", "See ▲Kobayaka＊▲", "▲Takane＊＊▲"]
+    assert rinko[0].sdl2.dialogs == ["Kobayakawa", "See ▲Kobayaka＊▲", "▲Takane＊＊▲"]
     _, _, manaka = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "t010.dbin2").read_bytes()
     )
@@ -175,7 +240,7 @@ def test_vanilla_scripts_overlay_nene_marker_only(tmp_path: Path):
     _, _, copied_r = names.parse_dbin2(
         (romfs / "script" / "bin" / "script" / "k010.dbin2").read_bytes()
     )
-    assert copied_r[0].sdl2.dialogs == ["Kobayaka", "▲Kobayaka＊▲"]
+    assert copied_r[0].sdl2.dialogs == ["Kobayakawa", "▲Kobayaka＊▲"]
     assert not (romfs / "script" / "bin" / "script" / "a099.dbin2").exists()
     assert not (romfs / "script" / "bin" / "script" / "k099.dbin2").exists()
 
@@ -186,3 +251,33 @@ def test_cia_inject_still_requires_existing_pack_dirs(tmp_path: Path):
         _write(eng, f"{pack}/t001.dbin2")
     with pytest.raises(script_inject.ScriptInjectError, match="missing script pack folder"):
         script_inject.inject_scripts(tmp_path / "romfs", eng, create_dirs=False)
+
+
+def test_stem_manifests_read_once_with_folder_and_legacy_fallbacks(tmp_path: Path, monkeypatch):
+    gem = tmp_path / "gemini"
+    _write(gem, "dbin2/script/a001.dbin2")
+    _write(gem, "xml/k002.xml")
+    _write(gem, "xml/t003.xml")  # not a Nene / Rinko stem
+    (gem / "stems.json").write_text('{"stems": ["a900"]}', encoding="utf-8")
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_ROOT", gem)
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem / "dbin2")
+    monkeypatch.setattr(script_inject, "GEMINI_NENE_MANIFEST", gem / "stems.json")
+    monkeypatch.setattr(script_inject, "_gemini_nene_stems", None)
+    assert script_inject.gemini_nene_stems() == {"a900", "a001", "k002"}
+    (gem / "stems.json").write_text("not json", encoding="utf-8")
+    assert script_inject.gemini_nene_stems() == {"a900", "a001", "k002"}  # cached
+    monkeypatch.setattr(script_inject, "_gemini_nene_stems", None)
+    assert script_inject.gemini_nene_stems() == {"a001", "k002"}
+
+    legacy = tmp_path / "legacy"
+    _write(legacy, "a050.dbin2")
+    manifest = tmp_path / "stems.json"
+    manifest.write_text('{"stems": ["k001"]}', encoding="utf-8")
+    monkeypatch.setattr(script_inject, "COMMUNITY_MANIFEST", manifest)
+    monkeypatch.setattr(script_inject, "LEGACY_NLPPATCH_SCRIPT", legacy)
+    monkeypatch.setattr(script_inject, "_community_stems", None)
+    assert script_inject.community_stems() == {"k001"}
+    assert script_inject.nlppatch_stems() == {"k001"}
+    manifest.write_text('{"stems": 5}', encoding="utf-8")  # not a list
+    monkeypatch.setattr(script_inject, "_community_stems", None)
+    assert script_inject.community_stems() == {"a050"}

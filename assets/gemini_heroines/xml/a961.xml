@@ -36,11 +36,11 @@
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Friends &amp; Others</Dialog>
+          <Dialog>Friend / Other</Dialog>
           <Dialog>Family</Dialog>
           <Dialog>Other</Dialog>
-          <Dialog>Select from List</Dialog>
-          <Dialog>[DEBUG] Register as Boyfriend's Face</Dialog>
+          <Dialog>Pick from List</Dialog>
+          <Dialog>[DEBUG] Register as BF's Face</Dialog>
           <Dialog>▲紹介友達名▲</Dialog>
         </Dialogs>
       </SDL2>
@@ -216,8 +216,8 @@
           <Dialog>Friend</Dialog>
           <Dialog>Family</Dialog>
           <Dialog>Other</Dialog>
-          <Dialog>Select from List</Dialog>
-          <Dialog>[DEBUG] Register as Boyfriend's Face</Dialog>
+          <Dialog>Pick from List</Dialog>
+          <Dialog>[DEBUG] Register as BF's Face</Dialog>
           <Dialog>▲紹介友達名▲</Dialog>
           <Dialog>Celebrity</Dialog>
           <Dialog>Father</Dialog>
@@ -238,9 +238,9 @@
           <Dialog>Loud</Dialog>
           <Dialog>Serious</Dialog>
           <Dialog>Funny</Dialog>
-          <Dialog>Dirty-minded</Dialog>
+          <Dialog>Pervy</Dialog>
           <Dialog>Register</Dialog>
-          <Dialog>Redo</Dialog>
+          <Dialog>Start Over</Dialog>
           <Dialog>○</Dialog>
           <Dialog>×</Dialog>
         </Dialogs>
@@ -302,10 +302,10 @@
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>How long have you been dating？</Dialog>
-          <Dialog>What do you like about your boyfriend？</Dialog>
-          <Dialog>Anything good happen lately？</Dialog>
-          <Dialog>Got anything on your mind？</Dialog>
+          <Dialog>How long have you dated？</Dialog>
+          <Dialog>What do you like about him？</Dialog>
+          <Dialog>What made you happy lately？</Dialog>
+          <Dialog>Any worries？</Dialog>
           <Dialog>What are your hobbies？</Dialog>
           <Dialog>What's your favorite food？</Dialog>
           <Dialog>How old are you？</Dialog>
@@ -526,20 +526,20 @@
         <Dialogs>
           <Dialog>○</Dialog>
           <Dialog>×</Dialog>
-          <Dialog>Nice to meet you.</Dialog>
-          <Dialog>Nope</Dialog>
+          <Dialog>Nice to meet you</Dialog>
+          <Dialog>That's wrong</Dialog>
           <Dialog>Type A</Dialog>
           <Dialog>Type B</Dialog>
           <Dialog>Type O</Dialog>
           <Dialog>Type AB</Dialog>
           <Dialog>Passionate</Dialog>
-          <Dialog>Laid-back</Dialog>
+          <Dialog>Sloppy</Dialog>
           <Dialog>Airheaded</Dialog>
           <Dialog>Meticulous</Dialog>
-          <Dialog>Wild</Dialog>
+          <Dialog>Out there</Dialog>
           <Dialog>Selfish</Dialog>
-          <Dialog>Introduce to someone else</Dialog>
-          <Dialog>Finish</Dialog>
+          <Dialog>Introduce someone else</Dialog>
+          <Dialog>Finish up</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

@@ -77,6 +77,8 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_softkey_defaults_en.py",  # 5238 初期設定 → Restore Default
     "deploy_card_side_btn_en.py",  # 5238 last-writer: 表面/裏面 → Front Side / Back Side
     "deploy_display_settings_en.py",
+    "deploy_clock_date_order_en.py",  # 5248 clock date MM / DD / YYYY
+    "deploy_header_clock_ampm_en.py",  # 5402 home header HH:MM AM/PM
     "deploy_optionpassword_en.py",  # 5251 Pass_Win01 (unique pkg; after Options chrome)
     # sound_settings is a subset of display_settings — skip by default
     "deploy_profile_en.py",
@@ -105,11 +107,14 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_map_hub_en.py",  # 5380+5575 Map / City Viewer / City Voice (after schedule+options)
     "deploy_web_hub_en.py",  # 5380 WEB TOWANO.NET / Towano Watcher pills (after map hub)
     "deploy_minigame_hub_en.py",  # 5380+5575 Mini-Game / Puzzle-dama / TwinBee+ / Yie Ar Kung-Fu+
+    "deploy_minigame_textures_en.py",  # l2mgtex mini-game screens: 95/94 hold-sideways, 117/125/120 Puzzle-dama card, logo, names
     # Hub main-menu rows + Eng Patch badge (Title.arc) — replaces labels-only deploy.
     "deploy_title_engpatch_en.py",
     "deploy_watcher_issue28_en.py",  # 5265 holy-site lake paragraph, right page only
     "deploy_web_weather_en.py",  # 5316 Weekly title + day panes
     "deploy_web_event_date_en.py",  # 5316 event-card date is MM/DD plus a smaller Update
+    "deploy_camera_filters_en.py",  # 5322-5326 camera buttons + filter names (overflow pack_images' slots)
+    "deploy_voice_keywords_en.py",  # 4073 Love Plus mode voice-hint bubbles in romaji
     "deploy_cesa_en.py",
 ]
 
@@ -395,6 +400,47 @@ def pack_ui(
             remove_scratch(work, label="rebuild_bake_img_work")
 
 
+def _element_bytes(img_path: Path, pkg_id: int, name: str, raw: bytes) -> bytes | None:
+    """Compressed bytes of element ``name`` in package ``pkg_id``, or None."""
+    tools_dir = str(ROOT / "tools" / "nlpp-tools")
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    from img import FileWindow, Image as ImgBin, Package  # noqa: E402
+
+    img = ImgBin(str(img_path))
+    img.parse(False)
+    res = img.entries[pkg_id]
+    if res is None:
+        return None
+    pkg = Package(FileWindow(str(img_path), res.fw.base_offset, res.fw.len()), 0)
+    pkg.parse(False)
+    for elem in pkg.entries:
+        if elem is not None and str(elem.fn) == name:
+            off = elem.fw.base_offset
+            return raw[off : off + elem.fw.len()]
+    return None
+
+
+def unreplaced_slot_skips(pack_report: str | None, vanilla: Path, bake: Path) -> list[str]:
+    """ARCs pack_images left vanilla (over their zlib slot) that no deploy replaced.
+
+    Transfer.arc shipped Japanese this way after the Oct 2026 Zhoumaru update:
+    the pack kept the vanilla element and still reported the package [ok].
+    """
+    from pack_images import SLOT_SKIP_RE  # noqa: E402
+
+    skips = SLOT_SKIP_RE.findall(pack_report or "")
+    if not skips:
+        return []
+    vraw, braw = vanilla.read_bytes(), bake.read_bytes()
+    left = []
+    for pkg, name in skips:
+        pkg_id = int(pkg)
+        if _element_bytes(bake, pkg_id, name, braw) == _element_bytes(vanilla, pkg_id, name, vraw):
+            left.append(f"package {pkg_id:04d} {name}")
+    return left
+
+
 def bake_img_feature_baks(bake: Path) -> list[Path]:
     """Leftover ``bake_img.bin.bak_pre_*`` copies (~680MB each)."""
     return sorted(bake.parent.glob(f"{bake.name}.bak_pre_*"))
@@ -410,7 +456,7 @@ def cleanup_rebuild_scratch(*, keep_work: bool) -> None:
     """Wipe deploy/pack temps under out/ after each rebuild step."""
     if keep_work:
         return
-    cleanup_out_dir(out_cia=OUT_CIA, quiet=True)
+    cleanup_out_dir(out_cia=OUT_CIA)
 
 
 def format_rebuild_ok_lines(
@@ -820,6 +866,15 @@ def _main_rebuild(args: argparse.Namespace, timer: RunTimer) -> int:
 
     sync_trb_overlay()
     cleanup_bake_img_baks(BAKE_IMG)
+
+    left_vanilla = unreplaced_slot_skips(pack_report, vanilla, BAKE_IMG)
+    if left_vanilla:
+        raise SystemExit(
+            "These ARCs did not fit their zlib slot in the PNG pack and no deploy "
+            "replaced them, so they would ship Japanese:\n  "
+            + "\n  ".join(left_vanilla)
+            + "\nShrink their PNG masters until each fits its own slot."
+        )
 
     timer.mark("building name-input code.bin")
     bar.goto("name-input", 0.0)

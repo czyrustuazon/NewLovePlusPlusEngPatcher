@@ -350,9 +350,10 @@ def ensure_romfs_dir(romfs_bin: Path, romfs_dir: Path, reuse: Path | None) -> Pa
     return romfs_dir
 
 
-# Layered inject: Manaka t* + EngPatcher p* + NLPPPATCH ~28% + optional Gemini Nene
-# (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE).
-from script_inject import resolve_script_source  # noqa: E402
+# Layered inject: Manaka t* + EngPatcher p* + community ~28% + optional Gemini
+# Nene/Rinko (see script_inject.py / NLPP_INCLUDE_GEMINI_NENE). The same flag
+# also splices Gemini SMS into a copy of img.bin. Contributor files win.
+from script_inject import CONTRIB_DBIN, resolve_script_source  # noqa: E402
 
 
 def inject_dbin2(romfs_dir: Path, dbin_root: Path) -> int:
@@ -979,6 +980,37 @@ def _require_name_input_for_ui(args: argparse.Namespace) -> None:
         )
 
 
+GEMINI_SMS_IMG = "img_gemini_sms.bin"
+
+
+def _apply_gemini_sms(img: Path, work: Path) -> Path:
+    """Splice Gemini SMS into a copy of img.bin. Leaves the bake and XML alone.
+
+    A file in assets/sms_contrib/ replaces that heroine's Gemini dictionary.
+    """
+    if not _env_flag("NLPP_INCLUDE_GEMINI_NENE"):
+        return img
+    sms_dir = ROOT / "assets" / "gemini_heroines" / "sms"
+    if not (sms_dir / "maildic_m.en.xml").is_file():
+        raise PatchError(f"Gemini SMS missing: {sms_dir}")
+    dest = work / GEMINI_SMS_IMG
+    print(f"[sms] copying {img.name} and splicing Gemini SMS")
+    shutil.copy2(img, dest)
+    script = ROOT / "tools" / "deploy_sms_maildic_en.py"
+    _run(
+        [
+            sys.executable,
+            str(script),
+            "--img",
+            str(dest),
+            "--en-dir",
+            str(sms_dir),
+            "--no-backup",
+        ]
+    )
+    return dest
+
+
 def pack_ui_images(args: argparse.Namespace, work: Path) -> Path:
     """Inject gold bake, or pack assets/images into cache/new_img.bin."""
     from pack_images import PackError, pack_images
@@ -1516,7 +1548,7 @@ def build_patch_summary(
         lines.append(
             _summary_line(
                 "OK",
-                "Gemini Nene dialogue",
+                "Gemini Nene, Rinko, and SMS",
                 "machine pass, unreviewed (assets/gemini_heroines)",
             )
         )
@@ -1524,10 +1556,21 @@ def build_patch_summary(
         lines.append(
             _summary_line(
                 "SKIPPED",
-                "Gemini Nene dialogue",
-                "community Nene/Rinko layer only",
+                "Gemini Nene, Rinko, and SMS",
+                "community Nene/Rinko layer, Japanese SMS",
             )
         )
+
+    if CONTRIB_DBIN.is_dir():
+        contrib_stems = {path.stem for path in CONTRIB_DBIN.glob("*/*.dbin2")}
+        if contrib_stems:
+            lines.append(
+                _summary_line(
+                    "OK",
+                    "Contributor dialogue",
+                    f"{len(contrib_stems)} script(s) from assets/script_contrib",
+                )
+            )
 
     if layeredfs_only:
         lines.append(
@@ -1600,16 +1643,19 @@ def build_patch_summary(
                 "needs gold bake img.bin",
             )
         )
-    elif packed_img is not None and packed_img.is_file():
-        kind = (
-            "gold bake"
-            if packed_img.resolve() == DEFAULT_BAKE_IMG.resolve()
-            else "packed img"
-        )
+    elif packed_img is not None:
+        # Injection hard-fails, so a packed img here was injected. The Gemini
+        # SMS copy lives in the work dir, which cleanup deletes before this.
+        if packed_img.name == GEMINI_SMS_IMG:
+            kind = "gold bake + Gemini SMS"
+        elif packed_img.resolve() == DEFAULT_BAKE_IMG.resolve():
+            kind = "gold bake"
+        else:
+            kind = "packed img"
         lines.append(
             _summary_line("OK", "UI img.bin (menus / chrome)", f"{kind}: {packed_img}")
         )
-        if eng_patch is None:
+        if eng_patch is None and packed_img.is_file():
             try:
                 eng_patch = _title_pkg_has_eng_patch(packed_img)
             except Exception:  # noqa: BLE001 — summary must not crash the run
@@ -1898,7 +1944,7 @@ def cmd_patch(args: argparse.Namespace) -> int:
     print(f"work:   {work}")
     print(f"output: {out_cia}")
     if _env_flag("NLPP_INCLUDE_GEMINI_NENE"):
-        print("gemini: Nene machine pass ON (assets/gemini_heroines/dbin2)")
+        print("gemini: Nene, Rinko, and SMS machine pass ON (assets/gemini_heroines)")
     print()
 
     try:
@@ -1960,14 +2006,20 @@ def _cmd_patch_body_impl(
 
     packed_img: Path | None = None
     layered_img: Path | None = None
+    eng_patch: bool | None = None
     if args.with_images and not args.no_images:
         # Hard-fail on image errors. Swallowing PatchError and continuing
         # scripts-only ships name-input code.bin + vanilla JP menus / no Eng
         # Patch badge — the Sep 2026 Desktop CIA regression.
         timer.mark("resolving / packing UI img.bin")
         tick("UI images", 0.0)
-        packed_img = pack_ui_images(args, work)
+        packed_img = _apply_gemini_sms(pack_ui_images(args, work), work)
         layered_img = packed_img
+        # Probe now: cleanup may delete a work-dir copy before the summary.
+        try:
+            eng_patch = _title_pkg_has_eng_patch(packed_img)
+        except Exception:  # noqa: BLE001 — summary must not crash the run
+            eng_patch = None
         timer.mark("UI img.bin ready")
         _require_name_input_for_ui(args)
     elif args.no_images:
@@ -2030,6 +2082,7 @@ def _cmd_patch_body_impl(
             romfs_overlay=romfs_overlay,
             args=args,
             layeredfs_only=True,
+            eng_patch=eng_patch,
             elapsed=elapsed,
             started_at=started_at,
         )
@@ -2083,6 +2136,7 @@ def _cmd_patch_body_impl(
         romfs_overlay=romfs_overlay,
         args=args,
         layeredfs_only=False,
+        eng_patch=eng_patch,
         elapsed=elapsed,
         started_at=started_at,
         title_ver=title_ver,
@@ -2260,7 +2314,6 @@ def cleanup_out_dir(
     *,
     out_cia: Path,
     extra_keep: list[Path] | tuple[Path, ...] | None = None,
-    quiet: bool = False,
 ) -> None:
     """Wipe EngPatcher out/ except CIA(s), numbered install folders, log.txt, backups."""
     out_root = (ROOT / "out").resolve()
@@ -2301,7 +2354,6 @@ def cleanup_out_dir(
         except OSError:
             pass
 
-    removed = 0
     for child in list(out_root.iterdir()):
         try:
             resolved = child.resolve()
@@ -2325,21 +2377,8 @@ def cleanup_out_dir(
                     child.unlink()
                 except FileNotFoundError:
                     pass
-            removed += 1
         except OSError as exc:
             print(f"[cleanup] warning: {child.name}: {exc}")
-    if removed:
-        print(
-            f"[cleanup] out/ kept: the CIA, {OUT_LAYEREDFS_PREFIX}/, "
-            f"{OUT_NOT_BOTH_NAME}, {OUT_LOG_NAME}, extdata_backup/ "
-            f"({removed} other item(s) removed)"
-        )
-    elif not quiet:
-        print(
-            "[cleanup] out/ already clean "
-            f"(the CIA + {OUT_LAYEREDFS_PREFIX} + {OUT_NOT_BOTH_NAME} "
-            f"+ {OUT_LOG_NAME} + extdata_backup)"
-        )
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -2490,8 +2529,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--include-gemini-nene",
         action="store_true",
-        help="Inject optional Gemini machine-pass Nene a* from "
-        "assets/gemini_heroines/dbin2 (or set NLPP_INCLUDE_GEMINI_NENE=1)",
+        help="Inject optional Gemini Nene a*, Rinko k*, and SMS from "
+        "assets/gemini_heroines (or set NLPP_INCLUDE_GEMINI_NENE=1)",
     )
     p.add_argument(
         "--name-img",
