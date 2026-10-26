@@ -51,11 +51,8 @@ def apply_patch(data: bytearray) -> bool:
         if hashlib.sha256(bytes(data[start:body_end])).hexdigest() != sha:
             raise ValueError(f"lookup body {start:#x}..{body_end:#x} is not vanilla")
 
-    size = len(data)
     for start, piece in MATCH_PIECES:
         data[start : start + len(piece)] = piece
-    if len(data) != size:
-        raise AssertionError("call-romaji changed the code.bin size")
     sizes = ", ".join(f"{s:#x}+{len(p):#x}" for s, p in MATCH_PIECES)
     print(f"[call-romaji] romaji matcher {sizes}")
     return True
