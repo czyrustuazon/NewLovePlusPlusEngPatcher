@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "e1941304559438e175e0088dbb0cc93ea0dca2a875f78e9e7e8c9437c50f135d",
+ "final_sha256": "77366e796f460aa39ce9128083892d3a896602fa531b12f46b9b812720c2769f",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -383,8 +383,10 @@
   },
   {
    "name": "apply_weather_day_text",
-   "written_sha256": "1ff81b5784a52a3eed332ad00b7d7631587cbb1bcc1132aeaae81f1e96ad3176",
+   "written_sha256": "f06175f80029b1b1397ec8a5cad091aa6b5ca43b27ac3dc6df173cac65599b95",
    "ranges": [
+    "0x1ffbf8-0x1ffbfc",
+    "0x1ffcd0-0x1ffcd4",
     "0x1ffdd0-0x1ffdd8",
     "0x1ffddc-0x1ffde4"
    ]

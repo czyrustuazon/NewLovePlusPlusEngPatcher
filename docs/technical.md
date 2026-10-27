@@ -884,6 +884,12 @@ Data select **Last Saved** is not a `%4d/…` format. File `0x00057940` sprintf'
 
 The patch also reorders three dates whose screens are not identified yet: `0x0036a4e8` and `0x0036ea04` (`"%4d/%2d/%2d"`, 12 bytes, too short). Their `add r2, pc` becomes `ldr r2, [pc]` with the same offset, and the old string's first word now points to `"%02d/%02d/%4d"` right after the birthday month table in the SpotPass pad. At `0x0021c0c4` (`"%4d/%02d/%02d"`) the three getter calls are reordered and the format is rewritten in place. Not changed: TRB 6047 `%4d/%02d/%02d %s %s` (pack `0x3103`, trip photos) and TRB 24547 `%04d/%02d/%02d` (pack `0x9d02` slot 4, `CardTradeUIOperator` @ `0x0024df58`).
 
+**Web weather dates in ASCII (2026-10-27)**
+
+The weather string builder at file `0x005cc680` is the only code that reads TRB packs `0xD000`–`0xD002`. It builds every date out of vanilla full-width pieces: formats `%s%s／%s%s` and `%s%s／%s%s～%s%s／%s%s` (`0xD000` slots 0–1), weekdays (`0xD001`: bare `日`… in slots 0–6 for the forecast row, `（日）`… in slots 7–13 for today, which `translations.json` made `Ｓｕｎ`…), and digits `０`–`３１` (`0xD002`, tens and ones for dates, whole numbers for the day pills). Full-width glyphs are one em wide, so `１０／２０` and `Ｔｕｅ` drew with a gap after every character. `src/patch_weather_weekdays.py` (run by `deploy_name_kanji_trb.py`) appends ASCII rows and retargets only these INDX slots: `%s%s/%s%s`, `…-…`, `Su`…`Sa`, `Sun`…`Sat`, `0`–`31`. The vanilla STRI rows stay, because the day counter and the month unit share them.
+
+The setter at `0x001ff868` also sets each text object's per-glyph spacing (`+0x178`, added to every advance in the draw at `0x0054b880`). It is -3 px for `Txt_Week` (the `10/21-10/27` range) and -2 px for `Txt_Week_%02d` (the day pills). That tightened the em-wide digits, but ASCII digits overlap at -3, and at -2 the first digit of `31` was clipped. `src/patch_weather_day_text.py` sets both to 0 (`0x001ffbf8`, `0x001ffcd0`: `mvn r0, #n` → `mov r0, #0`), next to its 64×28 `Txt_Day` capture. Months and days below 10 keep a leading zero (`09/05`) because the builder always looks up a tens digit.
+
 **Do not**
 
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”
