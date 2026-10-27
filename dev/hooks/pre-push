@@ -8,26 +8,16 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 PY=python
 command -v "$PY" >/dev/null 2>&1 || PY=python3
 
-echo "[pre-push] ruff (hard errors)"
-"$PY" -m ruff check --select E9,F63,F7,F82 src tools tests || {
-    echo "[pre-push] ruff failed (pip install -r dev/requirements-dev.txt)"
-    exit 1
-}
-
-echo "[pre-push] pytest (with coverage)"
-"$PY" -m coverage run -m pytest tests/ -q -x -rs -p no:cacheprovider -m "not local_data" || {
-    echo "[pre-push] tests failed; push aborted (pip install -r dev/requirements-dev.txt)"
+# The CI steps on a clean clone of HEAD: no game dumps or untracked files,
+# so coverage matches GitHub (pip install -r dev/requirements-dev.txt).
+echo "[pre-push] CI checks (dev/ci_local.py)"
+"$PY" dev/ci_local.py || {
+    echo "[pre-push] CI checks failed; push aborted"
     exit 1
 }
 
 echo "[pre-push] pytest (local data: vanilla game dumps, Azahar fork)"
 "$PY" -m pytest tests/ -q -x -rs -p no:cacheprovider -m local_data || {
     echo "[pre-push] tests failed; push aborted"
-    exit 1
-}
-
-echo "[pre-push] coverage ratchet"
-"$PY" dev/check_coverage.py || {
-    echo "[pre-push] coverage dropped; push aborted"
     exit 1
 }
