@@ -26,6 +26,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   14. patch_weather_day_text               # weekly day names captured at 64×28
   15. patch_profile_birthday               # confirm sheet "June 23" (not "6Month23 Day(s)")
   16. patch_web_event_date                 # event-card digits stay in the MM/DD slots
+  16b. patch_save_slot_date                # data-select Last Saved prints MM/DD/YYYY
   17. patch_speaker_spacing                # short talk speaker names: no extra letter spacing
   18. patch_eula_agreed                    # StreetPass on without the offline terms-of-use check
   19. patch_camera_restore_default         # My Camera list shows the Restore Default softkey
@@ -151,6 +152,10 @@ from patch_profile_birthday import (  # noqa: E402
 from patch_web_event_date import (  # noqa: E402
     apply_patch as apply_web_event_date,
     is_patched as web_event_date_already,
+)
+from patch_save_slot_date import (  # noqa: E402
+    apply_patch as apply_save_slot_date,
+    is_patched as save_slot_date_already,
 )
 from patch_speaker_spacing import (  # noqa: E402
     apply_patch as apply_speaker_spacing,
@@ -355,6 +360,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] web_event_date already applied")
     else:
         apply_web_event_date(data)
+        steps += 1
+
+    if save_slot_date_already(data):
+        print("[skip] save_slot_date already applied")
+    else:
+        apply_save_slot_date(data)
         steps += 1
 
     if speaker_spacing_already(data):

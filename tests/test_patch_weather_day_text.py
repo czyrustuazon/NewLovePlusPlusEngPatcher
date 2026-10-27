@@ -1,4 +1,5 @@
-"""Weekly weather day names use the same 64×28 capture as today's Mon."""
+"""Weekly weather day names use the same 64×28 capture as today's Mon;
+the week range and day numbers drop vanilla's negative glyph spacing."""
 
 from __future__ import annotations
 
@@ -25,7 +26,18 @@ def test_day_capture_matches_today_mon():
     assert words[0x001FFDD4] == 0xE3A01020  # mov r1, #0x20
     assert words[0x001FFDDC] == 0xE3A0001C  # mov r0, #0x1c
     assert words[0x001FFDE0] == 0xE1CD3CB0  # strh r3, [sp, #0xc0]
+    assert words[0x001FFBF8] == 0xE3A00000  # mov r0, #0 (Txt_Week spacing)
+    assert words[0x001FFCD0] == 0xE3A00000  # mov r0, #0 (Txt_Week_NN spacing)
     assert day.apply_patch(data) is False
+
+
+def test_week_spacing_applies_over_earlier_capture_patch():
+    data = _image()
+    for off, _old, new in day._SITES[:4]:
+        struct.pack_into("<I", data, off, new)
+    assert not day.is_patched(data)
+    assert day.apply_patch(data) is True
+    assert day.is_patched(data)
 
 
 def test_day_capture_refuses_unexpected_bytes():

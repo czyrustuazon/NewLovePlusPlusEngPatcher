@@ -14,14 +14,17 @@ cr = load_module("patch_called_readings", SRC / "patch_called_readings.py")
     [
         ("あきこ", "Akiko"),
         ("しんいち", "Shinichi"),
-        ("かとう", "Kato"),
-        ("おおたけ", "Otake"),
-        ("ゆうき", "Yuki"),
+        ("かとう", "Katou"),
+        ("おおたけ", "Ootake"),
+        ("ゆうき", "Yuuki"),
+        ("ゆき", "Yuki"),
+        ("りゅうじ", "Ryuuji"),
         ("はっとり", "Hattori"),
         ("まっちゃん", "Matchan"),
-        ("じゅんいちろう", "Junichiro"),
-        ("きょー", "Kyo"),
-        ("ろっしー", "Rosshi"),
+        ("じゅんいちろう", "Junichirou"),
+        ("きょー", "Kyou"),
+        ("ろっしー", "Rosshii"),
+        ("あー", "Aa"),
         ("ふぁみ", "Fami"),
         ("こんの", "Konno"),
         ("いいづか", "Iizuka"),
@@ -36,9 +39,10 @@ def test_hepburn(kana, romaji):
 @pytest.mark.parametrize(
     "current,kana,fix",
     [
-        ("Kato", "かとう", False),  # curated style kept
+        ("Kato", "かとう", True),  # drops the long vowel: Katou
         ("Kudou", "くどう", False),
         ("Junichirou", "じゅんいちろう", False),
+        ("Ayuu", "あゆ", True),  # adds one
         ("sea", "うみ", True),  # dialogue meaning of the same word
         ("Leo", "れお", True),
         ("OOTake", "おおたけ", True),

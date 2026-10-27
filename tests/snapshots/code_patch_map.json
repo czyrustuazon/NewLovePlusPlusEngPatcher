@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "487d7f500630cf1b531e69ffd06fb38f4b433efce86efea05dba81fd0a6f9629",
+ "final_sha256": "77366e796f460aa39ce9128083892d3a896602fa531b12f46b9b812720c2769f",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -153,12 +153,14 @@
   },
   {
    "name": "apply_call_romaji",
-   "written_sha256": "529f6dc408d6c096a56c27887c90cdd77471c363d7c3c5dee5e3e3a045754e87",
+   "written_sha256": "4685b06d73c6ae2ca1fbb3268e3da90fe38cfaa15cb97f30f9126ddb494e7e43",
    "ranges": [
-    "0x147b3c-0x147ddc",
-    "0x147e04-0x147e28",
+    "0x147b3c-0x147dc8",
+    "0x147dcc-0x147de0",
+    "0x147e04-0x147f08",
     "0x148f44-0x148f80",
-    "0x148f84-0x149314"
+    "0x148f84-0x1490d0",
+    "0x1490d4-0x14937c"
    ]
   },
   {
@@ -381,8 +383,10 @@
   },
   {
    "name": "apply_weather_day_text",
-   "written_sha256": "1ff81b5784a52a3eed332ad00b7d7631587cbb1bcc1132aeaae81f1e96ad3176",
+   "written_sha256": "f06175f80029b1b1397ec8a5cad091aa6b5ca43b27ac3dc6df173cac65599b95",
    "ranges": [
+    "0x1ffbf8-0x1ffbfc",
+    "0x1ffcd0-0x1ffcd4",
     "0x1ffdd0-0x1ffdd8",
     "0x1ffddc-0x1ffde4"
    ]
@@ -403,6 +407,27 @@
     "0x6fc47c-0x6fc490",
     "0x6fc494-0x6fc49c",
     "0x6fc4a0-0x6fc4a8"
+   ]
+  },
+  {
+   "name": "apply_save_slot_date",
+   "written_sha256": "75ce79825bf45f94565d2f95c8d048ce0ee811dfc1d874a31fbc3629fb354f32",
+   "ranges": [
+    "0x057940-0x057950",
+    "0x05f3a8-0x05f3b0",
+    "0x05f3b4-0x05f3bc",
+    "0x21c0c8-0x21c0cc",
+    "0x21c0d4-0x21c0d8",
+    "0x21c0e0-0x21c0e4",
+    "0x21c1ac-0x21c1b8",
+    "0x36a4e8-0x36a4f0",
+    "0x36a4f8-0x36a500",
+    "0x36a818-0x36a81c",
+    "0x36ea04-0x36ea08",
+    "0x36ea0c-0x36ea10",
+    "0x36ea14-0x36ea1c",
+    "0x36ebf4-0x36ebf8",
+    "0x6fc4ac-0x6fc4bc"
    ]
   },
   {
