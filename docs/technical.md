@@ -878,6 +878,12 @@ The atlas boxes are the JP fields. Top box `(10, 24)` is 姓 → **Last Name**. 
 
 The birthday value is the DrawText at file `0x00350254` (pane index 5). Vanilla sprintf's the month byte, strcat's TRB slot `0x3f` (`月` → `Month`), then the day byte and slot `0x3e` (`日` → ` Day(s)`), so June 23 reads `6Month23 Day(s)`. `patch_profile_birthday.py` overwrites that stretch and writes `June 23` into the same 24-byte buffer. The shared `月` / `日` tokens stay. The year-month-day sprintfs at `0x0021620c` and `0x00228910` stay.
 
+**Save dates MM/DD/YYYY (2026-10-27)**
+
+Data select **Last Saved** is not a `%4d/…` format. File `0x00057940` sprintf's `"%d%s%d%s%d"` into the slot buffer at `+0xf0` with year, TRB `0x100` slot `0xd` (`/`), month, `/`, day, so it reads `2026/7/23` (no padding). The day / month / year getters are `0x733280` / `0x733428` / `0x7333d0`. `patch_save_slot_date.py` only reorders the stacked args to month, `/`, day, `/`, year, so the result is `7/23/2026`. `0x0005f3a8` is the same `%d%s%d%s%d` date and gets the same swap.
+
+The patch also reorders three dates whose screens are not identified yet: `0x0036a4e8` and `0x0036ea04` (`"%4d/%2d/%2d"`, 12 bytes, too short). Their `add r2, pc` becomes `ldr r2, [pc]` with the same offset, and the old string's first word now points to `"%02d/%02d/%4d"` right after the birthday month table in the SpotPass pad. At `0x0021c0c4` (`"%4d/%02d/%02d"`) the three getter calls are reordered and the format is rewritten in place. Not changed: TRB 6047 `%4d/%02d/%02d %s %s` (pack `0x3103`, trip photos) and TRB 24547 `%04d/%02d/%02d` (pack `0x9d02` slot 4, `CardTradeUIOperator` @ `0x0024df58`).
+
 **Do not**
 
 1. Crush Call/atlas glyphs to 1-bit “because chroma cannot AA.”

@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "36efb9ff6d96789e5163e25b418f67e69d927534898297a407bd065d00b23bf8",
+ "final_sha256": "e1941304559438e175e0088dbb0cc93ea0dca2a875f78e9e7e8c9437c50f135d",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -405,6 +405,27 @@
     "0x6fc47c-0x6fc490",
     "0x6fc494-0x6fc49c",
     "0x6fc4a0-0x6fc4a8"
+   ]
+  },
+  {
+   "name": "apply_save_slot_date",
+   "written_sha256": "75ce79825bf45f94565d2f95c8d048ce0ee811dfc1d874a31fbc3629fb354f32",
+   "ranges": [
+    "0x057940-0x057950",
+    "0x05f3a8-0x05f3b0",
+    "0x05f3b4-0x05f3bc",
+    "0x21c0c8-0x21c0cc",
+    "0x21c0d4-0x21c0d8",
+    "0x21c0e0-0x21c0e4",
+    "0x21c1ac-0x21c1b8",
+    "0x36a4e8-0x36a4f0",
+    "0x36a4f8-0x36a500",
+    "0x36a818-0x36a81c",
+    "0x36ea04-0x36ea08",
+    "0x36ea0c-0x36ea10",
+    "0x36ea14-0x36ea1c",
+    "0x36ebf4-0x36ebf8",
+    "0x6fc4ac-0x6fc4bc"
    ]
   },
   {
