@@ -3,7 +3,7 @@
 
 Screen: Data Management → Delete Save Data
   pkg 4187:
-    RGB565 DD_Data_Txt_Big01/02 — Delete Play / Gallery Data
+    LA8 DD_Data_Txt_Big01/02 — Delete Play / All Gallery Data
     RGBA4444 DD_data02..05 — save summary sheet
       (データ更新 / 名前 / 呼ばれ方 / HN / 誕生日 / 血液型 / 出身地 / 経過日数
        → Last Saved / Full Name / Called As / Username / Birthday /
@@ -29,7 +29,7 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 from bclimutil import (  # noqa: E402
     parse_bclim,
     png_to_bclim_etc1a4_same_size,
-    png_to_bclim_rgb565_same_size,
+    png_to_bclim_la8_same_size,
     png_to_bclim_rgba4444_same_size,
 )
 from darcutil import DarcArchive  # noqa: E402
@@ -52,16 +52,10 @@ FONT = UI_FONT
 PKG_BUTTONS = 4187
 PKG_HEADER = 5237
 
-# Match vanilla chroma: green key + cyan glyph (+ yellow fringe in JP).
-BG = (57, 161, 0)
-INK = (57, 186, 238)
-FRINGE = (255, 226, 0)
-
-BUTTON_LABELS = [
-    ("timg/DD_Data_Txt_Big01.bclim", "Delete Play Data"),
-    # Shorter than "Delete All Gallery Data" — 152px strip + outline stays readable.
-    ("timg/DD_Data_Txt_Big02.bclim", "Delete Gallery Data"),
-]
+# fmt 3 is LA8 (stored A, L). Read as RGB565 the transparent background
+# looks green and the grey ink looks cyan; the old 1-bit "cyan on green key"
+# render came from that misread. Zhoumaru's masters are clean grey-on-halo.
+BUTTON_STEMS = ("DD_Data_Txt_Big01", "DD_Data_Txt_Big02")
 HEADER_LABELS = [
     ("timg/Com_MultiWin_W01_Text05_01_00.bclim", "Delete Save Data"),
 ]
@@ -157,48 +151,6 @@ def compress_exact_with_gap_tune(data: bytes, exact_len: int) -> tuple[bytes, by
     raise SystemExit("could not build exact zlib stream with gap tune")
 
 
-def render_button_label(w: int, h: int, text: str) -> Image.Image:
-    """Solid cyan glyphs on green key — no yellow fringe / no AA greys.
-
-    Vanilla uses cyan ink on green chroma; the UI remaps cyan → readable dark
-    text. Soft AA + yellow fringe was remapping to pale outlined mush.
-    """
-    import numpy as np
-
-    for size in range(min(13, h + 1), 7, -1):
-        scale = 4
-        mw, mh = w * scale, h * scale
-        mask = Image.new("L", (mw, mh), 0)
-        dr = ImageDraw.Draw(mask)
-        f = font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > mw - 6:
-            continue
-        x = (mw - tw) // 2 - b[0]
-        y = (mh - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        m = np.array(mask)
-        m = (m >= 140).astype(np.uint8) * 255
-        # Slight dilate at hi-res for stroke weight, then nearest downscale.
-        pad = np.pad(m, 1, mode="constant")
-        dil = np.zeros_like(m)
-        for dy in (-1, 0, 1):
-            for dx in (-1, 0, 1):
-                dil = np.maximum(
-                    dil, pad[1 + dy : 1 + dy + mh, 1 + dx : 1 + dx + mw]
-                )
-        small = Image.fromarray(dil.astype(np.uint8), "L").resize(
-            (w, h), Image.Resampling.NEAREST
-        )
-        g = np.array(small) >= 128
-        out = np.empty((h, w, 3), dtype=np.uint8)
-        out[:, :] = BG
-        out[g] = INK
-        return Image.fromarray(out, "RGB")
-    raise RuntimeError(f"cannot fit {text!r} into {w}x{h}")
-
-
 def render_header_label(w: int, h: int, text: str) -> Image.Image:
     """White alpha text for MultiWin ETC1A4 header strip."""
     for size in range(min(15, h + 2), 7, -1):
@@ -254,39 +206,35 @@ def patch_pkg(
         png = tmp / f"{pkg_id}_{Path(path).stem}.png"
         orig = tmp / f"{pkg_id}_{Path(path).stem}.bclim"
         orig.write_bytes(raw)
-        if kind == "buttons":
-            if fmt != 3:
-                raise SystemExit(f"{path} fmt {fmt} not RGB565")
-            candidates = [en]
-            if path.endswith("Big02.bclim"):
-                candidates += ["Delete Gallery Data", "Delete All Gallery"]
-            rgb = None
-            used = en
-            last_err: Exception | None = None
-            for cand in candidates:
-                try:
-                    rgb = render_button_label(w, h, cand)
-                    used = cand
-                    break
-                except Exception as exc:  # noqa: BLE001
-                    last_err = exc
-            if rgb is None:
-                raise SystemExit(f"cannot render {path}: {last_err}")
-            rgb.save(png)
-            new = png_to_bclim_rgb565_same_size(png, orig)
-            rgb.save(OUT / f"{Path(path).stem}_en.png")
-            print(f"  OK {path} -> {used!r}", flush=True)
-        else:
-            if fmt != 0xB:
+        if fmt != 0xB:
                 raise SystemExit(f"{path} fmt {fmt:#x} not ETC1A4")
-            rgba = render_header_label(w, h, en)
-            rgba.save(png)
-            new = png_to_bclim_etc1a4_same_size(png, orig)
-            rgba.save(OUT / f"{Path(path).stem}_en.png")
-            print(f"  OK {path} -> {en!r}", flush=True)
+        rgba = render_header_label(w, h, en)
+        rgba.save(png)
+        new = png_to_bclim_etc1a4_same_size(png, orig)
+        rgba.save(OUT / f"{Path(path).stem}_en.png")
+        print(f"  OK {path} -> {en!r}", flush=True)
         darc.replace_same_size(entry, new)
 
     if kind == "buttons":
+        for stem in BUTTON_STEMS:
+            path = f"timg/{stem}.bclim"
+            entry = darc.find(path) or darc.find(f"{stem}.bclim")
+            if entry is None:
+                raise SystemExit(f"missing {path}")
+            raw = darc.extract_file(entry)
+            _pix, w, h, fmt, _ft = parse_bclim(raw)
+            if fmt != 3:
+                raise SystemExit(f"{path} fmt {fmt} not LA8")
+            master = find_ui_png(SHEET_FOLDERS, stem, (w, h))
+            if master is None:
+                raise SystemExit(
+                    f"missing Zhoumaru master {stem}.png under DataDelete.check "
+                    f"(need {w}x{h})"
+                )
+            orig = tmp / f"{pkg_id}_{stem}.bclim"
+            orig.write_bytes(raw)
+            darc.replace_same_size(entry, png_to_bclim_la8_same_size(master, orig))
+            print(f"  OK {path} <- {master.relative_to(ROOT)} LA8", flush=True)
         for stem in SHEET_STEMS:
             path = f"timg/{stem}.bclim"
             entry = darc.find(path) or darc.find(f"{stem}.bclim")
@@ -364,7 +312,7 @@ def main() -> None:
         pkg_id=PKG_BUTTONS,
         pkg_dir=pkg_dir,
         tmp=tmp,
-        labels=BUTTON_LABELS,
+        labels=[],
         kind="buttons",
     )
     patch_pkg(
