@@ -1417,7 +1417,8 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 | Drop CIA polls CI then rebuild; hard-stop without bake | Prevents silent “scripts-only” CIAs that look partially EN (§15.5) |
 | `fetch_release_bake.py --best-effort` + `try_fetch_gold()` | 404 / missing Release → exit 1 quietly; bat falls back to local rebuild |
 | `try_fetch_gold(expected_sha=…)` | Release body `engpatcher_sha:` must match `.nlpp_main_sha` (zip-synced trees only; git checkouts skip). Mismatch or missing → exit 1 → local rebuild. `--any-sha` / `NLPP_GOLD_ANY_SHA=1` accepts it |
-| `fetch_main_tree.py` prune | Deletes files listed in the previous `.nlpp_main_files` manifest that the new `main` zipball no longer has. User-added files and protected dirs are never touched; the first sync (no manifest) prunes nothing |
+| `fetch_main_tree.py` mirror | Zip-synced trees match `main` the way git sees them: a file not in the zipball and not ignored by its `.gitignore` files (or a local one such as `.ruff_cache/.gitignore`) is deleted, on the first sync too, so Release-zip leftovers go. Ignored paths (downloaded `tools/*`, `paths.local.*`, dumps) and protected dirs are kept. A forced sync into a git checkout only prunes the previous manifest, never untracked work. A zipball without `.gitignore` is refused |
+| `.nlpp_main_files` hashes | One SHA-256 per synced file. When `.nlpp_main_sha` already matches `main`, Drop still hashes the tree (~3 s) and resyncs on any edited, missing or extra file, so a damaged tree heals without a reinstall. Older bare-path manifests count as drift and resync once |
 | `pytest` suite under `tests/` (§15.6) | Guards gold-bake resolution, fetch fallback, bat workflow strings |
 
 ### 15.3 Clone / first-drop checklist
