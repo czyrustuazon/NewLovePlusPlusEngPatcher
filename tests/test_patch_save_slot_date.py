@@ -77,3 +77,15 @@ def test_last_saved_keeps_separator_format():
     words = [new.hex() for _at, _old, new in date.SITES["dsel_last_saved"]]
     assert words == ["0c008de5", "40018de8", "08608de5", "0930a0e1"]
     assert "%d%s%d%s%d" % (7, "/", 23, "/", 2026) == "7/23/2026"
+
+
+def test_rot_imm_rejects_a_non_immediate():
+    assert date._rot_imm(0xFF000000) == 0x4FF
+    with pytest.raises(ValueError):
+        date._rot_imm(0x101)
+
+
+def test_format_room_refuses_a_format_past_the_pad(monkeypatch):
+    monkeypatch.setattr(date, "FORMAT", b"x" * (date.FORMAT_SLOT + 1))
+    with pytest.raises(ValueError):
+        date._format_room()
