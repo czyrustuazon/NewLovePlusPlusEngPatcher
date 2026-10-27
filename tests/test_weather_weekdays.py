@@ -1,4 +1,4 @@
-"""Forecast day names are S M T W Th F Sa, not the shared kanji glosses."""
+"""Weather dates and day names are ASCII, not full-width or the shared kanji glosses."""
 
 from __future__ import annotations
 
@@ -14,7 +14,17 @@ if str(SRC) not in sys.path:
 from nlpp_paths import find_vanilla_main_trb
 from patch_password_serials import _sub_u16_off
 from patch_textresource import LOOKUP_PATH, dump_entries, load_lookup, parse_chunks
-from patch_weather_weekdays import WEEKDAY_CAT, WEEKDAY_LABELS, WEEKDAY_SUB, apply_weather_weekdays
+from patch_weather_weekdays import (
+    DATE_FORMATS,
+    DIGIT_LABELS,
+    DIGIT_SUB,
+    FORMAT_SUB,
+    TODAY_LABELS,
+    WEEKDAY_CAT,
+    WEEKDAY_LABELS,
+    WEEKDAY_SUB,
+    apply_weather_weekdays,
+)
 
 VANILLA = find_vanilla_main_trb() or (
     ROOT.parent
@@ -27,8 +37,8 @@ VANILLA = find_vanilla_main_trb() or (
 )
 
 
-def _slot_stri(indx: bytes, slot: int) -> int:
-    u16, _count = _sub_u16_off(indx, WEEKDAY_CAT, WEEKDAY_SUB)
+def _slot_stri(indx: bytes, slot: int, sub: int = WEEKDAY_SUB) -> int:
+    u16, _count = _sub_u16_off(indx, WEEKDAY_CAT, sub)
     return struct.unpack_from("<H", indx, u16 + slot * 2)[0]
 
 
@@ -40,23 +50,28 @@ def test_weekday_slots_become_short_labels_and_shared_kanji_stay():
     before = dump_entries(vanilla, lookup)
     patched, logs = apply_weather_weekdays(vanilla)
     assert patched != vanilla
-    assert any("-> S " in line for line in logs)
+    assert any("-> Su " in line for line in logs)
 
     chunks = parse_chunks(patched)
+    vanilla_indx = parse_chunks(vanilla)["INDX"]
     entries = dump_entries(patched, lookup)
-    old_slots = []
-    for slot, label in enumerate(WEEKDAY_LABELS):
-        old = _slot_stri(parse_chunks(vanilla)["INDX"], slot)
-        old_slots.append(old)
-        idx = _slot_stri(chunks["INDX"], slot)
+    rows = (
+        [(FORMAT_SUB, i, s) for i, s in enumerate(DATE_FORMATS)]
+        + [(WEEKDAY_SUB, i, s) for i, s in enumerate(WEEKDAY_LABELS)]
+        + [(WEEKDAY_SUB, 7 + i, s) for i, s in enumerate(TODAY_LABELS)]
+        + [(DIGIT_SUB, i, s) for i, s in enumerate(DIGIT_LABELS)]
+    )
+    for sub, slot, label in rows:
+        old = _slot_stri(vanilla_indx, slot, sub)
+        idx = _slot_stri(chunks["INDX"], slot, sub)
         assert idx != old
         assert entries[idx]["text"] == label
         assert entries[idx]["flag"] == 1
+        # The shared vanilla row keeps its text for its other users.
         assert before[old]["text"] == entries[old]["text"]
 
-    # Parenthesized （日）… stay on their original rows.
-    for slot in range(7, 14):
-        assert _slot_stri(chunks["INDX"], slot) == _slot_stri(parse_chunks(vanilla)["INDX"], slot)
+    assert entries[_slot_stri(chunks["INDX"], 9)]["text"] == "Tue"
+    assert entries[_slot_stri(chunks["INDX"], 20, DIGIT_SUB)]["text"] == "20"
 
     again, logs2 = apply_weather_weekdays(patched)
     assert again == patched

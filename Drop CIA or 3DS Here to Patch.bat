@@ -37,8 +37,9 @@ if not defined PYTHON (
   exit /b 1
 )
 
-REM Best-effort: overlay tip of EngPatcher main ^(no git^). Release-zip users
-REM stay current. Offline / 404 keeps the local tree. .git checkouts skip.
+REM Best-effort: mirror tip of EngPatcher main ^(no git^). Release-zip users
+REM stay current; files main dropped or the user edited are reset. Ignored
+REM paths are kept. Offline / 404 keeps the local tree. .git checkouts skip.
 REM   NLPP_SKIP_SOURCE_FETCH=1   skip
 REM   NLPP_FORCE_SOURCE_FETCH=1  sync even with .git
 REM   NLPP_SOURCE_REPO=owner/repo

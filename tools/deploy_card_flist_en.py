@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""EN for Card.arc friend-list sort header (受信日時) — exact-zopfli pkg 4152."""
+"""EN for Card.arc friend-list sort header (受信日時) — Zhoumaru LA8, pkg 4152."""
 from __future__ import annotations
 
 import os
@@ -8,21 +8,17 @@ import sys
 import zlib
 from pathlib import Path
 
-import numpy as np
-from PIL import Image, ImageDraw, ImageFont
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "tools"))
 sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
-from bclimutil import parse_bclim, png_to_bclim_rgb565_same_size  # noqa: E402
+from bclimutil import parse_bclim, png_to_bclim_la8_same_size  # noqa: E402
 from darcutil import DarcArchive  # noqa: E402
 from img import ARC, FileWindow, Image as ImgBin, Package  # noqa: E402
 from pack_images import PackError, splice_packages_into_img  # noqa: E402
 
 from deploy_common import (  # noqa: E402
-    UI_FONT,
     maybe_backup_img,
     iter_deploy_targets,
     resolve_img_paths,
@@ -32,36 +28,14 @@ MOD_IMG, VANILLA = resolve_img_paths()
 
 OUT = ROOT / "out" / "card_flist_en"
 PKG = 4152
-REF_FONTS = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025"
-# Heisei Gothic P-face (index 1) matches vanilla chrome; MPLUS is OFL fallback.
-CHROME_FONTS: list[tuple[Path, int]] = [
-    (REF_FONTS / "df-heiseigothic-w5.ttc", 1),
-    (REF_FONTS / "df-heiseigothic-w7.ttc", 1),
-    (REF_FONTS / "df-heiseigothic-w9.ttc", 1),
-    (UI_FONT, 0),
-]
-# Yellow is chroma-keyed on this grey window. Profile/DataDelete: the UI
-# remaps *cyan* ink → dark readable text. Vanilla purple and CESA-black both
-# remapped to a pale ghost here.
-BG = (255, 226, 0)
-INK = (49, 157, 255)  # same cyan family as Profile Call / DataDelete
-# 受信日時 — "Received" alone was too vague and chroma-smeared to yellow.
+MASTERS = ROOT / "assets" / "images" / "Card.check" / "timg"
+# fmt 3 is LA8 (stored A, L), not RGB565. Read as 565, L=255/A=0 looks
+# "yellow" and dark opaque ink looks "cyan", which is where the old hard-cyan
+# 1-bit render came from. Zhoumaru's master is already clean grey-on-halo
+# like Name and Friend / Lock beside it.
 LABELS = [
-    ("timg/Flist_Txt03.bclim", "Received Date"),
+    ("timg/Flist_Txt03.bclim", MASTERS / "Flist_Txt03.png"),
 ]
-
-
-def font(size: int) -> ImageFont.FreeTypeFont:
-    last: Exception | None = None
-    for path, idx in CHROME_FONTS:
-        if not path.is_file():
-            continue
-        try:
-            return ImageFont.truetype(str(path), size=size, index=idx)
-        except OSError as exc:
-            last = exc
-            continue
-    raise SystemExit(f"no chrome font loaded: {last}")
 
 
 def all_interfile_gaps(data: bytes) -> list[tuple[int, int]]:
@@ -160,40 +134,6 @@ def compress_exact_with_gap_tune(data: bytes, exact_len: int) -> tuple[bytes, by
     raise SystemExit("could not build exact zlib stream with gap tune")
 
 
-def _hard_cyan(mask: np.ndarray) -> Image.Image:
-    """Binary cyan on yellow. Any mix toward yellow keys out on this pane."""
-    out = np.empty((*mask.shape, 3), dtype=np.uint8)
-    out[:, :] = BG
-    out[mask] = INK
-    return Image.fromarray(out, "RGB")
-
-
-def render_flist_label(w: int, h: int, text: str) -> Image.Image:
-    """Heisei W5 hard cyan — ~200 ink px. Zhoumaru/W9 fills were ~600 (vanilla ~144).
-
-    Soft ramps ghost on this chroma key; extra fill remaps to a black slab.
-    """
-    for size in range(11, 7, -1):
-        scale = 4
-        mw, mh = w * scale, h * scale
-        mask = Image.new("L", (mw, mh), 0)
-        dr = ImageDraw.Draw(mask)
-        f = font(size * scale)
-        b = dr.textbbox((0, 0), text, font=f)
-        tw, th = b[2] - b[0], b[3] - b[1]
-        if tw > mw - 8 or th > mh - 4:
-            continue
-        x = (mw - tw) // 2 - b[0]
-        y = (mh - th) // 2 - b[1]
-        dr.text((x, y), text, font=f, fill=255)
-        cov = (
-            np.array(mask.resize((w, h), Image.Resampling.LANCZOS), dtype=np.float32)
-            / 255.0
-        )
-        return _hard_cyan(cov >= 0.45)
-    raise RuntimeError(f"cannot fit {text!r}")
-
-
 def main() -> None:
     if not MOD_IMG.is_file():
         raise SystemExit(f"missing {MOD_IMG}")
@@ -227,23 +167,19 @@ def main() -> None:
         print(f"Card.arc base={base_name} dec={len(arc_elem.parsed())} slot={cmp_len}", flush=True)
 
         darc = DarcArchive(bytearray(arc_elem.parsed()))
-        for path, en in LABELS:
+        for path, master in LABELS:
             entry = darc.find(path) or darc.find(Path(path).name)
             if entry is None:
                 raise SystemExit(f"missing {path}")
             raw = darc.extract_file(entry)
-            _pix, w, h, fmt, _ft = parse_bclim(raw)
+            _pix, _w, _h, fmt, _ft = parse_bclim(raw)
             if fmt != 3:
-                raise SystemExit(f"{path} fmt {fmt} not RGB565")
-            rgb = render_flist_label(w, h, en)
-            png = tmp / "t.png"
+                raise SystemExit(f"{path} fmt {fmt} not LA8")
             orig = tmp / "o.bclim"
-            rgb.save(png)
             orig.write_bytes(raw)
-            new = png_to_bclim_rgb565_same_size(png, orig)
+            new = png_to_bclim_la8_same_size(master, orig)
             darc.replace_same_size(entry, new)
-            rgb.save(OUT / f"{Path(path).stem}_en.png")
-            print(f"OK {path} -> {en!r} font=HeiseiGothic", flush=True)
+            print(f"OK {path} <- {master.name} LA8", flush=True)
 
         patched = bytes(darc.data)
         try:

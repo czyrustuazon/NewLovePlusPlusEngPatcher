@@ -15,6 +15,11 @@
  * everything) and typos against a reading's beginning ("Taro" listed Tanoe,
  * Tamotsu, Tanokura); names are typed in full.
  *
+ * Readings spell long vowels out (Ryuuji, Satou, Oono). A typed name that
+ * differs from a reading only in vowel length (Ryuji, Sato, Ohno, Oki) lists
+ * it first, at any length. It is never an exact match: vowel length tells
+ * names apart (Yuki / Yuuki, Ono / Oono).
+ *
  * Freestanding ARM (armv6k, ARM state). No globals, no libc: game data and
  * the TRB getter are fixed VAs. Built by tools/build_call_romaji_match.py
  * into src/call_romaji_match_blob.py; never edit the blob by hand.
@@ -39,6 +44,7 @@ typedef const char *(*get_str_fn)(u32 pack, u32 slot, u32 one);
 #define KEEP 10    /* Call01 / Call02 draw at most 10 rows */
 
 #define SCORE_EXACT 1000
+#define SCORE_LENGTH 600
 #define SCORE_PREFIX 500
 #define SCORE_TYPO 400
 #define SCORE_LONGER 300
@@ -98,6 +104,29 @@ static int same(const char *a, const char *b, int n)
         if (a[i] != b[i])
             return 0;
     return 1;
+}
+
+static int vowel(char c)
+{
+    return c == 'a' || c == 'i' || c == 'u' || c == 'e' || c == 'o';
+}
+
+/* A normalized name without vowel length: a doubled vowel, ou, and oh
+ * before a consonant or the end (Ohno) count once. */
+__attribute__((noinline)) static int fold(const char *s, char *out)
+{
+    int n = 0;
+    char c;
+    while ((c = *s++)) {
+        char p = n ? out[n - 1] : 0;
+        if (p == 'o' && (c == 'u' || (c == 'h' && !vowel(*s) && *s != 'y')))
+            continue;
+        if (c == p && vowel(c))
+            continue;
+        out[n++] = c;
+    }
+    out[n] = 0;
+    return n;
 }
 
 static int excluded(u32 mode, u32 id)
@@ -183,15 +212,16 @@ static u32 hash(const char *t)
  * exact reading. */
 static void scan(const char *name, u32 mode, int kind, int *out, int keep)
 {
-    char q[MAXLEN], t[MAXLEN];
+    char q[MAXLEN], t[MAXLEN], fq[MAXLEN], ft[MAXLEN];
     int ids[KEEP], scores[KEEP];
     u32 hashes[KEEP];
-    int n, m, r, i, k = 0;
+    int n, m, fn, r, i, k = 0;
     out[0] = 0;
     out[1] = -1;
     n = query(name, q);
     if (!n)
         return;
+    fn = fold(q, fq);
     for (r = 0; r < RANGE_COUNT; r++) {
         u32 id, hi = RANGES[2 * r + 1];
         for (id = RANGES[2 * r]; id <= hi; id++) {
@@ -208,8 +238,12 @@ static void scan(const char *name, u32 mode, int kind, int *out, int keep)
                 continue;
             if (m == n && same(q, t, n))
                 v = kind == EXACT ? SCORE_EXACT : 0;
+            else if (kind == EXACT)
+                v = 0;
+            else if (fold(t, ft) == fn && same(fq, ft, fn))
+                v = SCORE_LENGTH - (m > n ? m - n : n - m);
             else
-                v = kind == EXACT ? 0 : score(q, n, t, m);
+                v = score(q, n, t, m);
             if (!v)
                 continue;
             h = hash(t);

@@ -54,9 +54,12 @@ step better than anything worth rewriting here.
 ```
 pip install -r dev/requirements-dev.txt
 python dev/install_hooks.py      # one time: runs the checks below on every push
-python -m coverage run -m pytest tests/ -m "not local_data"
-python dev/check_coverage.py     # coverage ratchet (CI runs it too)
+python dev/ci_local.py           # the GitHub Test workflow on a clean clone of HEAD
 ```
+
+`dev/ci_local.py` clones HEAD to a temp dir, so game dumps, `cache/` and untracked
+files are not there, the same as on CI. An in-tree `coverage run` + `check_coverage.py`
+can pass while CI fails: tests that find local dumps run here and skip there.
 
 - **Fixing a bug? Add a test that fails without your fix.** Put the specific cause in it
   (the address, byte pattern, or call order). A comment explains a crash; a test stops it
@@ -65,8 +68,8 @@ python dev/check_coverage.py     # coverage ratchet (CI runs it too)
   `tests/test_every_module_tested.py` fails otherwise.
 - **Coverage only goes up (goal: 100%).** `dev/check_coverage.py` fails if a file drops
   below its floor in `tests/snapshots/coverage_floor.json`, or if a new file is under
-  100%. After adding tests, run `python dev/check_coverage.py --update` and commit the
-  raised floors. See what is missing with `python -m coverage report -m --include=<file>`
+  100%. After adding tests, commit them, run `python dev/ci_local.py --update-floors` and
+  commit the raised floors (in-tree `--update` can raise floors above what CI reaches). See what is missing with `python -m coverage report -m --include=<file>`
   (or `python -m coverage html`, then open `htmlcov/index.html`).
 - **Tests that need vanilla game dumps or the Azahar fork** get
   `@pytest.mark.local_data`. They still run locally, but coverage leaves them out,

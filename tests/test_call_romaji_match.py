@@ -219,6 +219,19 @@ def test_long_vowel_spelling_is_a_suggestion():
     assert m.suggest("Yuji") == [20]
 
 
+def test_vowel_length_lists_first_at_any_length():
+    m = Matcher({30: "Ryuuji", 31: "Ryuki", 32: "Ryuji", 33: "Ooki", 34: "Okita", 35: "Oono", 36: "Satou", 37: "Kouhei"})
+    # Never exact: Ryuji (りゅじ) and Ryuuji are different readings.
+    assert m.exact("Ryuuji")[1] == (1, [30])
+    assert m.exact("Satou")[1] == (1, [36])
+    assert m.exact("Sato")[0] == 0
+    assert m.suggest("Sato") == [36]
+    assert m.suggest("Ryuji")[0] == 30
+    assert m.suggest("Oki")[0] == 33  # 3 letters: no typo matches, still listed
+    assert m.suggest("Ohno") == [35]
+    assert m.suggest("Kohei") == [37]  # oh before a vowel is a syllable
+
+
 def test_blob_is_built_from_current_source():
     src = (SRC / "call_romaji_match.c").read_bytes().replace(b"\r\n", b"\n")
     assert hashlib.sha256(src).hexdigest() == blob.SOURCE_SHA256, (
@@ -259,4 +272,8 @@ def test_real_dictionary_akiko():
     assert mm.exact("Akiko", mode=1)[1] == (1, [4780])
     assert 4780 in mm.suggest("Akko", mode=1)
     assert 4780 in mm.suggest("Akikko", mode=1)
+    # Long vowels are spelled out; the short spelling lists them first.
+    assert readings[mm.exact("Ryuuji", mode=1)[1][1][0]] == "Ryuuji"
+    assert readings[mm.suggest("Ryuji", mode=1)[0]] == "Ryuuji"
+    assert {readings[i] for i in mm.suggest("Yoko", mode=1)[:3]} == {"Youko", "Yokoo", "Youkou"}
     assert mm.calls > 0

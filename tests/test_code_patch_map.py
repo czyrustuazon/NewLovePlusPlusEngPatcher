@@ -52,6 +52,7 @@ DATA_WRITERS = {
     "apply_spotpass_embed",
     "apply_password_uribo",
     "apply_profile_birthday",
+    "apply_save_slot_date",  # MM/DD/YYYY format after the birthday months
     "apply_speaker_spacing",
     "apply_engpatch_info",  # hub vtable slot +0x28 -> its touch-down guard
 }
