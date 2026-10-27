@@ -9,7 +9,8 @@ Others came out as OOTake, Kuni masa, HaruYuki, or with a Cyrillic о.
 
 This pass rewrites a reading with Hepburn generated from the vanilla kana
 when the current text is not a clean Title-case name or does not spell that
-kana. Curated readings that do (Kato for かとう, Kudou for くどう) stay.
+kana, long vowels included: curated Kato for かとう becomes Katou, so every
+reading spells its vowel length the same way (Kudou, Yuuki, Ryuuji).
 Only entries used by packs 0x71xx / 0x72xx alone are touched: quiz answers
 (さくら in 0xa000), forms of address (ハニー in 0x202) and the 0x70xx
 name-input keyboard share some strings and keep their text.
@@ -62,8 +63,11 @@ def _hira(s: str) -> str:
 
 
 def hepburn(kana: str) -> str:
-    """Hepburn in the curated style: no macrons or apostrophes, おう → o,
-    うう → u, ー dropped, っ doubles the next consonant, Title case."""
+    """Hepburn with long vowels spelled out: no macrons or apostrophes,
+    おう → ou, おお → oo, うう → uu, ー repeats the vowel before it (o → ou),
+    っ doubles the next consonant, Title case. Vowel length tells names
+    apart (ゆき Yuki / ゆうき Yuuki, さと Sato / さとう Satou), so a reading
+    never drops it."""
     s = _hira(kana)
     syl: list[str] = []
     i = 0
@@ -87,28 +91,20 @@ def hepburn(kana: str) -> str:
     out = ""
     for k, part in enumerate(syl):
         if part == "ー":
+            if out and out[-1] in "aiueo":
+                out += "u" if out[-1] == "o" else out[-1]
             continue
         if part == "っ":
             nxt = next((p for p in syl[k + 1 :] if p not in ("っ", "ー")), "")
             if nxt[:1] and nxt[0] not in "aiueon":
                 out += "t" if nxt.startswith("ch") else nxt[0]
             continue
-        if out and part in ("u", "o") and out[-1] == "o":
-            continue  # おう / おお -> o
-        if out and part == "u" and out[-1] == "u":
-            continue  # うう -> u
         out += part
     return out[:1].upper() + out[1:]
 
 
-def _loose(s: str) -> str:
-    s = re.sub(r"[^a-z]", "", s.lower())
-    s = re.sub(r"o[uo]", "o", s)
-    return s.replace("uu", "u")
-
-
 def needs_fix(current: str, kana: str) -> bool:
-    return not CLEAN_RE.fullmatch(current) or _loose(current) != _loose(hepburn(kana))
+    return not CLEAN_RE.fullmatch(current) or current.lower() != hepburn(kana).lower()
 
 
 def _pack_slots(indx: bytes) -> dict[int, list[int]]:

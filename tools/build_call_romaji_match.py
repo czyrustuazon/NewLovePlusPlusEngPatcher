@@ -33,7 +33,7 @@ VA = 0x00100000  # code.bin file offset 0 is VA 0x100000
 # (name, file start, file end, sections). The first section sits at start.
 REGIONS = (
     ("A", 0x00147B3C, 0x00147E04, ("nlpp_call_exact", "normalize", "same", "distance")),
-    ("B", 0x00147E04, 0x001480A8, ("nlpp_call_list",)),
+    ("B", 0x00147E04, 0x001480A8, ("nlpp_call_list", "fold")),
     ("C", 0x00148F44, 0x001493F0, ("scan",)),
 )
 CFLAGS = (
