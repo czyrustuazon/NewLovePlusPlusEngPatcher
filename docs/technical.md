@@ -1548,6 +1548,18 @@ python -m pytest tests/ -v
 
 GitHub Actions: `.github/workflows/test.yml` on push/PR to **`main` only** (not Bleeding-Edge / ticket branches).
 
+**Local vs CI coverage (2026-10-27).** `dev/check_coverage.py` passing in the working tree does not mean CI passes. Tests that find vanilla dumps (`extracted/`, `cache/vanilla_from_rom/`, `release/bake_img.bin`) but are not marked `local_data` (e.g. `test_deploy_msel_comm_battle_en.py`: "no vanilla img.bin") run here and skip on CI. Untracked files are present here and absent on CI. Both make local coverage higher, so a floor can pass locally and fail on GitHub. NLPP-035 hit this: `patch_called_readings.py` (35.58% < floor 38%; only `local_data` tests covered `plan` / `apply_*`) and the new `patch_save_slot_date.py` (95.24%, new files need 100%). The installed `.git/hooks/pre-push` was also an older copy without the coverage step.
+
+Use `python dev/ci_local.py` (also what `dev/hooks/pre-push` runs). It clones HEAD into a temp dir, drops `NLPP_*` / `AZAHAR_*`, points `APPDATA` at an empty dir, and runs the workflow's steps in order. It checks committed code only. Raise floors with `python dev/ci_local.py --update-floors`, not an in-tree `check_coverage.py --update`. After pulling hook changes, run `python dev/install_hooks.py --force`.
+
+Gaps `ci_local.py` does not close:
+
+| Gap | Effect | Mitigation |
+|-----|--------|------------|
+| OS: CI is Ubuntu, local is Windows (no WSL on the dev box) | `os.name` / `sys.platform` branches cover different lines | `SLACK` in `dev/check_coverage.py` keeps those files' floors a few points low |
+| Toolchain on `PATH` (e.g. clang for `test_call_romaji_match.py`, which skips unless the version matches the blob's) | A test can run on one side and skip on the other | None yet; keep such code covered by tests that need no toolchain |
+| Python / dependency versions (`>=` pins in `dev/requirements-dev.txt`) | Different Pillow / coverage behavior | None yet; CI prints its versions in "Verify Python" |
+
 **Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify, individual `deploy_*` texture splices.
 
 ### 15.7 Title hub loop — prefetch abort PC 0 (2026-09-18)
