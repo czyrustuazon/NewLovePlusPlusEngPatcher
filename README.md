@@ -360,6 +360,7 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | **DDMeisterX** | Manaka (`t*`) + everyday / player (`p*`) routes, and the early Rinko/Nene community layer (48 reviewed scripts each; see note below) |
 | **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
 | **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
+| **Lieutenant Dan** | Proofreading |
 | **i need help here...** | Knowledge sharing |
 | **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
 
