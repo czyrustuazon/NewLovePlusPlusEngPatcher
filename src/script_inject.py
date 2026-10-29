@@ -35,6 +35,7 @@ import shutil
 import sys
 from pathlib import Path
 
+import dialog_wrap
 import patch_names
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -155,10 +156,11 @@ def _copy_script(src: Path, dest: Path) -> None:
     """Copy one script. Nickname markers track the live surname slots.
 
     Exact 姉ヶ崎, 高嶺, and 小早川 nameplates become Anegasaki, Takane, and
-    Kobayakawa on every route.
+    Kobayakawa on every route. English lines the game would cut mid-word
+    are re-flowed at spaces (``dialog_wrap``).
     """
     raw = src.read_bytes()
-    patched = _rewrite_base_script(raw, stem=src.stem)
+    patched = dialog_wrap.wrap_dbin2(_rewrite_base_script(raw, stem=src.stem))
     if patched == raw:
         shutil.copy2(src, dest)
         return
