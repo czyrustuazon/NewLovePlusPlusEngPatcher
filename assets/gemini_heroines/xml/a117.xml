@@ -1806,8 +1806,8 @@ Right into the climax...</Dialog>
 ahead of you？ Alright,
 I'll just take my time...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Guess ● better
-speed up a bit...)</Dialog>
+          <Dialog>(Maybe I should hurry
+up a bit too...)</Dialog>
           <Dialog>Oh, I'm a little bit ahead.
 Hehe...</Dialog>
         </Dialogs>
@@ -1852,8 +1852,8 @@ Hehe...</Dialog>
           <Dialog>Hmm... Are you a pretty
 slow reader？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Guess ● better
-speed up a bit...)</Dialog>
+          <Dialog>(Maybe I should hurry
+up a bit too...)</Dialog>
           <Dialog>I see, I see. Well,
 keep at it, young man.</Dialog>
         </Dialogs>
@@ -1899,8 +1899,8 @@ keep at it, young man.</Dialog>
 a little ahead. Alright,
 gotta keep at it...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Guess ● better
-speed up a bit...)</Dialog>
+          <Dialog>(Maybe I should hurry
+up a bit too...)</Dialog>
           <Dialog>Oh, Nene-chan takes the lead!</Dialog>
         </Dialogs>
       </SDL2>
@@ -3461,14 +3461,14 @@ he'd never show up.</Dialog>
           <Dialog>Hehe, super smart and kind of
 mean... I can totally see why
 girls love him.</Dialog>
-          <Dialog>I know. Kind of like you,
-●.</Dialog>
+          <Dialog>I get it. He's kind of
+like me, right？</Dialog>
           <Dialog>Girls always love
 brooding guys, huh？</Dialog>
           <Dialog>I bet he's the real
 killer, though？</Dialog>
-          <Dialog>I know. Kind of like you,
-●.</Dialog>
+          <Dialog>I get it. He's kind of
+like me, right？</Dialog>
           <Dialog>Is that so？ Hmm... well,
 that was pretty cute,
 so I'll let it slide.</Dialog>
@@ -5134,9 +5134,9 @@ I'm already reading the
 next one. And this one is
 a whopping 1,500 pages!</Dialog>
           <Dialog>W-Whoa...</Dialog>
-          <Dialog>(Maybe ● should buckle 
-down and read Mouryou no Hako, 
-too...)</Dialog>
+          <Dialog>(Maybe I should do my best
+and try reading 'Box of
+Goblins' too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

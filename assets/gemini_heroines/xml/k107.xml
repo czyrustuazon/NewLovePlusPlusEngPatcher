@@ -176,7 +176,7 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>You do？</Dialog>
           <Dialog>You totally do. Some people are just like that—they go to someone's house and act like part of the family in five seconds flat.</Dialog>
-          <Dialog>Do I really look that relaxed, ●...</Dialog>
+          <Dialog>Do I really look that comfortable...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1152,7 +1152,7 @@
           <Dialog>Lining up a bunch of stuffed animals isn't really my thing.</Dialog>
           <Dialog>Don't tell me you're hiding them all in the closet？</Dialog>
           <Dialog>Huh？ What's that supposed to mean？</Dialog>
-          <Dialog>Like once ●'s gone home, you take them out and cuddle them.</Dialog>
+          <Dialog>Like you take them out and cuddle them after I go home, or something.</Dialog>
           <Dialog>You have way too much imagination. Honestly, I worry about you.</Dialog>
           <Dialog>(Now she's worried about me.)</Dialog>
         </Dialogs>
@@ -1206,7 +1206,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>It really is a little hard to relax with you in my room.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Makes ● feel kinda antsy, too.</Dialog>
+          <Dialog>I feel kind of restless myself, you know.</Dialog>
           <Dialog>Though it's kind of exciting, too.</Dialog>
           <Dialog>Huh.</Dialog>
           <Dialog>And yet, as soon as you go home, it goes right back to being my usual room all at once.</Dialog>
@@ -1335,9 +1335,9 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, I see. Now I feel kinda bad.</Dialog>
           <Dialog>It's fine. I can make it your usual spot instead.</Dialog>
-          <Dialog>●'s usual spot？</Dialog>
+          <Dialog>My usual spot？</Dialog>
           <Dialog>Yeah. Doesn't that sound kinda nice？</Dialog>
-          <Dialog>(In ▲小早川＊▲'s room, ●'s usual spot, huh...)</Dialog>
+          <Dialog>(My own usual spot in ▲小早川＊▲'s room, huh.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3813,8 +3813,9 @@ you know. ...No complaining, then.</Dialog>
           <Dialog>Man, that was fun.
 How about you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Of course, ● had fun too.
-Better head home soon, though.</Dialog>
+          <Dialog>Of course, me too.
+I should probably head
+home soon, though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4174,8 +4175,8 @@ your room.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>You do？</Dialog>
           <Dialog>Yeah. I wonder why, though？</Dialog>
-          <Dialog>Well... Because it's ●'s
-room.</Dialog>
+          <Dialog>Well... that's because
+it's my room.</Dialog>
           <Dialog>Oh, I know. It's because it's
 not all that clean!</Dialog>
           <Dialog>(...Not sure I should be
@@ -7331,8 +7332,8 @@ and waited？</Dialog>
           <Dialog>Um... This feels kind of
 weird, doesn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, yeah. ● was
-pretty restless, too.</Dialog>
+          <Dialog>Haha, yeah. I couldn't
+really relax, either.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

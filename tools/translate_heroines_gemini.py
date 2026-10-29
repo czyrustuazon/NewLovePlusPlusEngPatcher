@@ -10,6 +10,7 @@ protected so the model cannot drop them.
   python tools/translate_heroines_gemini.py run --dry-run
   python tools/translate_heroines_gemini.py run --heroine nene --limit 20
   python tools/translate_heroines_gemini.py run --write-xml
+  python tools/translate_heroines_gemini.py fix-pronoun --dry-run
 
 Default output is ``assets/gemini_heroines/`` (git-tracked). Gold inject still
 needs ``--write-xml`` into ``assets/scripts/`` plus rebuild + stems.json.
@@ -23,8 +24,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import threading
+import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass
@@ -38,6 +41,7 @@ sys.path.insert(0, str(TOOLS))
 
 from gemini_translate import (  # noqa: E402
     DEFAULT_GEMINI_MODEL,
+    PRONOUN,
     TranslateResult,
     has_japanese,
     load_gemini_api_key,
@@ -49,7 +53,7 @@ from gemini_translate import (  # noqa: E402
     translate_prepared,
 )
 from nlpp_paths import find_vanilla_script_dir  # noqa: E402
-from patch_names import parse_dbin2  # noqa: E402
+from patch_names import build_dbin2, parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml, xml_to_entries  # noqa: E402
 
 OUT_DEFAULT = ROOT / "assets" / "gemini_heroines"
@@ -99,9 +103,23 @@ def load_json(path: Path) -> dict:
     return data if isinstance(data, dict) else {}
 
 
-def save_json(path: Path, data: object) -> None:
+def save_json(path: Path, data: object, *, attempts: int = 5) -> None:
+    """Write via a temp file and swap it in.
+
+    translations.json is ~7 MB and rewritten after every script. On Windows an
+    editor or scanner holding it open made a direct write fail with EINVAL.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    for attempt in range(attempts):
+        try:
+            os.replace(tmp, path)
+            return
+        except OSError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(0.5 * (attempt + 1))
 
 
 def load_translation_map(path: Path) -> dict[str, str]:
@@ -612,6 +630,156 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0 if failed_lines == 0 else 1
 
 
+def pronoun_targets(xml_dir: Path, heroines: list[str]) -> dict[str, list[tuple[int, int]]]:
+    """Gemini lines whose English still has ● (the player's "I", shown as 俺/僕)."""
+    out: dict[str, list[tuple[int, int]]] = {}
+    for heroine in heroines:
+        for xml in sorted(xml_dir.glob(f"{HEROINE_PREFIX[heroine]}*.xml")):
+            _k, _u, entries = xml_to_entries(xml)
+            rows = [(ei, di) for ei, di, text in flatten_dialogs(entries) if PRONOUN in text]
+            if rows:
+                out[xml.stem] = rows
+    return out
+
+
+def fix_pronoun_stem(
+    client,
+    model: str,
+    stem: str,
+    rows: list[tuple[int, int]],
+    vanilla_dir: Path,
+    xml_dir: Path,
+    args: argparse.Namespace,
+) -> tuple[str, list, list[TranslateResult], list[str]]:
+    """Re-translate ``rows`` from the JP; the rest of the stem is scene context."""
+    key, unknown, entries = xml_to_entries(xml_dir / f"{stem}.xml")
+    jp_rows = flatten_dialogs(_load_vanilla_script(vanilla_dir, stem)[2])
+    en_rows = flatten_dialogs(entries)
+    if [r[:2] for r in jp_rows] != [r[:2] for r in en_rows]:
+        raise ValueError(f"{stem}: XML and vanilla dialogs do not line up")
+    want = set(rows)
+    texts: list[str] = []
+    need: list[bool] = []
+    for (ei, di, jp), (_e, _d, en) in zip(jp_rows, en_rows):
+        hit = (ei, di) in want and needs_translation(jp)
+        texts.append(jp if hit else en)
+        need.append(hit)
+    items = prepare_items(texts, need)
+    results = translate_prepared(
+        client,
+        model,
+        items,
+        heroine=PREFIX_HEROINE.get(stem[:1], "common"),
+        context=(
+            f"Script {stem}. These lines were translated before with ● left in. "
+            'Translate ● as "I" / "me" / "my". Neighbor lines are scene context.'
+        ),
+        temperature=args.temperature,
+        thinking_level=args.thinking,
+        repair=not args.no_repair,
+        chunk_size=max(1, args.batch_size),
+    )
+    return stem, [key, unknown, entries, jp_rows], results, [
+        r.error for r in results if r.english is None and items[r.index].need
+    ]
+
+
+def apply_pronoun_results(
+    stem: str,
+    parsed: list,
+    results: list[TranslateResult],
+    rows: list[tuple[int, int]],
+    xml_dir: Path,
+    dbin_dir: Path,
+    mapping: dict[str, str],
+) -> tuple[int, list[dict]]:
+    """Write fixed lines to the XML and to every pack slot the stem ships in."""
+    key, unknown, entries, jp_rows = parsed
+    want = set(rows)
+    fixed = 0
+    rejected: list[dict] = []
+    for idx, (ei, di, jp) in enumerate(jp_rows):
+        if (ei, di) not in want:
+            continue
+        if not needs_translation(jp):
+            # Pronoun-only line such as ●？ — nothing for the model to translate.
+            english = jp.replace(PRONOUN, "Me")
+        else:
+            english = results[idx].english
+        if english is None:
+            rejected.append({"stem": stem, "jp": jp, "error": results[idx].error})
+            continue
+        entries[ei].sdl2.dialogs[di] = english
+        if needs_translation(jp):
+            mapping[jp] = english
+        fixed += 1
+    (xml_dir / f"{stem}.xml").write_text(entries_to_xml(key, unknown, entries), encoding="utf-8")
+    blob = build_dbin2(key, unknown, entries)
+    for slot in sorted(dbin_dir.glob(f"*/{stem}.dbin2")):
+        slot.write_bytes(blob)
+    return fixed, rejected
+
+
+def cmd_fix_pronoun(args: argparse.Namespace) -> int:
+    out = Path(args.out)
+    xml_dir = out / "xml"
+    targets = pronoun_targets(xml_dir, heroines_from_arg(args.heroine))
+    if args.limit:
+        kept: dict[str, list[tuple[int, int]]] = {}
+        for stem, rows in targets.items():
+            if sum(len(r) for r in kept.values()) >= args.limit:
+                break
+            kept[stem] = rows
+        targets = kept
+    total = sum(len(r) for r in targets.values())
+    print(f"lines with ●: {total} in {len(targets)} scripts  model={load_gemini_model(args.model)}")
+    if args.dry_run:
+        for stem, rows in list(targets.items())[:20]:
+            print(f"  {stem}: {len(rows)} lines")
+        print("dry-run: no API calls")
+        return 0
+    if not targets:
+        return 0
+    vanilla = Path(args.vanilla_script) if args.vanilla_script else find_vanilla_script_dir()
+    if vanilla is None or not vanilla.is_dir():
+        raise SystemExit("vanilla script dir required (--vanilla-script)")
+    client = make_gemini_client(load_gemini_api_key(args.api_key))
+    model = load_gemini_model(args.model)
+    map_path = out / "translations.json"
+    mapping = load_translation_map(map_path)
+    rejected: list[dict] = []
+    fixed = 0
+    finished = 0
+    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
+        futs = {
+            pool.submit(
+                fix_pronoun_stem, client, model, stem, rows, vanilla, xml_dir, args
+            ): stem
+            for stem, rows in targets.items()
+        }
+        for fut in as_completed(futs):
+            stem = futs[fut]
+            finished += 1
+            try:
+                stem, parsed, results, errors = fut.result()
+            except Exception as exc:  # noqa: BLE001 — one script must not kill the run
+                print(f"[pronoun] {stem} failed: {exc!r}", flush=True)
+                rejected.append({"stem": stem, "error": repr(exc)})
+                continue
+            n, bad = apply_pronoun_results(
+                stem, parsed, results, targets[stem], xml_dir, out / "dbin2", mapping
+            )
+            fixed += n
+            rejected.extend(bad)
+            save_json(map_path, {"translations": mapping})
+            print(f"[pronoun] {finished}/{len(targets)} {stem} fixed={n} rejected={len(bad)}")
+            if errors:
+                _safe_print(f"  errors: {errors[:6]}")
+    save_json(out / "pronoun_rejected.json", rejected)
+    print(f"done: fixed={fixed} rejected={len(rejected)} (re-run to retry the rejected)")
+    return 0 if not rejected else 1
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -664,6 +832,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="copy translated XML into assets/scripts/ for rebuild / inject",
     )
     p_run.set_defaults(func=cmd_run)
+
+    p_fix = sub.add_parser(
+        "fix-pronoun",
+        help='re-translate Gemini lines that kept ● (the player\'s "I") in --out xml/dbin2',
+    )
+    add_common(p_fix)
+    p_fix.add_argument("--dry-run", action="store_true", help="count lines; no API")
+    p_fix.add_argument("--limit", type=int, default=0, help="cap lines (keeps whole scripts)")
+    p_fix.add_argument("--batch-size", type=int, default=40)
+    p_fix.add_argument("--workers", type=int, default=2)
+    p_fix.add_argument("--temperature", type=float, default=0.4)
+    p_fix.add_argument("--thinking", default="HIGH")
+    p_fix.add_argument("--no-repair", action="store_true")
+    p_fix.set_defaults(func=cmd_fix_pronoun)
     return ap
 
 

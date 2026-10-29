@@ -331,7 +331,7 @@
           <Dialog>You, obviously. Who else is there？</Dialog>
           <Dialog>Isn't the dad usually supposed to do that sort of thing？</Dialog>
           <Dialog>Yeah, well, my dad's not really cut out for it... so I figured you'd at least be passable.</Dialog>
-          <Dialog>...I wouldn't want to intrude on your family time, so ● will pass on that.</Dialog>
+          <Dialog>...I'd feel bad intruding on your family time, so I'll pass.</Dialog>
           <Dialog>Come on, I was counting on you. I know you'd make the best punching bag... I mean, demon!</Dialog>
           <Dialog>(Wait, wasn't I just "passable" a second ago？)</Dialog>
         </Dialogs>
@@ -456,9 +456,9 @@ Planning to hibernate or
 something？</Dialog>
           <Dialog>Come on, there's no resisting
 how cozy a kotatsu is.</Dialog>
-          <Dialog>● can't argue with that.
-Throw in some mandarins and
-it'd be perfect.</Dialog>
+          <Dialog>I have to agree with you
+there. Add some mandarins
+and it'd be perfect.</Dialog>
           <Dialog>I'm more of a hot cocoa
 person, myself.</Dialog>
           <Dialog>Coming in from the cold and
@@ -1325,8 +1325,7 @@ likes it.</Dialog>
           <Dialog>Well, I'm sure he'll like
 that, but as for me... I
 haven't decided yet.</Dialog>
-          <Dialog>So... are you asking ●
-for advice？</Dialog>
+          <Dialog>So... you want my advice？</Dialog>
           <Dialog>As if. I'm going to decide
 with my mom.</Dialog>
           <Dialog>Aw, man.</Dialog>
@@ -1543,7 +1542,7 @@ A lot of people are dressed
 pretty lightly.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Ugh... Here we go.</Dialog>
-          <Dialog>Come on... ● just thought
+          <Dialog>What...？ I was just thinking
 about getting a few more
 summer clothes, that's all.</Dialog>
           <Dialog>Hmm... Wearing less is fine,
@@ -2011,8 +2010,8 @@ usual.</Dialog>
           <Dialog>True, I guess... Oh, right,
 I'd go on lots of dates with
 you, too. How's that？</Dialog>
-          <Dialog>Fine by ●, sure...
-though nobody gave ● the
+          <Dialog>Sounds great to me, but...
+it's not like I have the
 power to make it happen.</Dialog>
           <Dialog>...Fair point. Ugh, I
 buttered you up for nothing.</Dialog>
@@ -2722,7 +2721,7 @@ snow this year？</Dialog>
           <Dialog>Even if it does snow, I don't
 know if we'll get a lot.</Dialog>
           <Dialog>Give me a straight answer.</Dialog>
-          <Dialog>Quit asking ● already.</Dialog>
+          <Dialog>Don't ask me, seriously.</Dialog>
           <Dialog>Quit copying me already.</Dialog>
           <Dialog>Haha, sorry.</Dialog>
           <Dialog>...Geez.</Dialog>
@@ -2921,7 +2920,7 @@ know if we'll get a lot.</Dialog>
           <Dialog>I actually liked those celebrity talent shows. You know, where they'd do the tablecloth pull and stuff.</Dialog>
           <Dialog>Oh yeah, I remember those.</Dialog>
           <Dialog>...Hey, wanna try it at your place sometime？ I feel like I could actually pull it off.</Dialog>
-          <Dialog>...Why at ●'s place？</Dialog>
+          <Dialog>...Why at my place？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3115,11 +3114,11 @@ know if we'll get a lot.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well, it is still February.</Dialog>
           <Dialog>Calling it the "start of spring" in the dead of winter... There isn't even a hint of spring yet.</Dialog>
-          <Dialog>Don't look at ●. That's just what it's always been called.</Dialog>
+          <Dialog>Even if you complain to me, all I can tell you is that's what it's always been called.</Dialog>
           <Dialog>I know that already.</Dialog>
           <Dialog>...Come to think of it, the start of spring means those strong first spring winds are coming...</Dialog>
           <Dialog>......Oh, really.</Dialog>
-          <Dialog>Hm？ Did ● say something weird？</Dialog>
+          <Dialog>Hm？ Did I say something weird？</Dialog>
           <Dialog>Oh, so you aren't thinking about the wind blowing skirts up.</Dialog>
           <Dialog>No, I'm not！</Dialog>
           <Dialog>Really？ Well, since I'm such a nice girlfriend, I'll take your word for it.</Dialog>
@@ -3219,7 +3218,7 @@ know if we'll get a lot.</Dialog>
           <Dialog>I doubt that'll happen. Spring's gotta be right around the corner... probably.</Dialog>
           <Dialog>Right around the corner, huh.</Dialog>
           <Dialog>Hey, spring, where are you... Not like calling out for it is gonna make it show up.</Dialog>
-          <Dialog>If calling for it worked, ● would be calling out too.</Dialog>
+          <Dialog>If calling out for it actually worked, I'd be calling for it too.</Dialog>
           <Dialog>...Ah.</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>Look, over there. I found some plum buds. I thought spring was still a long way off, but it really is getting closer.</Dialog>
@@ -3326,7 +3325,7 @@ know if we'll get a lot.</Dialog>
           <Dialog>What kind of association is that...</Dialog>
           <Dialog>I'm kidding, obviously. Besides, day or night doesn't really matter when you're a couple, right？</Dialog>
           <Dialog>If I want to see you, you'll come see me whether it's day or night, won't you？</Dialog>
-          <Dialog>Huh!? ● have to be on standby 24/7...？</Dialog>
+          <Dialog>What!? Am I on call 24/7...？</Dialog>
           <Dialog>I just mean I'd like you to feel that way. I'm not gonna call you out in the middle of the night.</Dialog>
           <Dialog>(I hope so...)</Dialog>
         </Dialogs>
@@ -3664,7 +3663,7 @@ know if we'll get a lot.</Dialog>
           <Dialog>Hmm. Well, good luck with that.</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>Going to be one of those guys who makes his own bento？</Dialog>
-          <Dialog>(Wait, it's ● making it!?)</Dialog>
+          <Dialog>(I'm the one making it!?)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4400,8 +4399,8 @@ anyway.</Dialog>
           <Dialog>Well, I guess it's fine, then.</Dialog>
           <Dialog>When hot days drag on like
 this, it really wipes you out.</Dialog>
-          <Dialog>Can't even sleep at night either, ●.
-Makes me want to turn on the AC.</Dialog>
+          <Dialog>It's too hot for me to sleep at night,
+too. I keep wanting to turn on the AC.</Dialog>
           <Dialog>Right？ If you look at the calendar, though,
 it's already autumn. The first day of fall.</Dialog>
           <Dialog>And yet it's still this muggy.
@@ -5023,7 +5022,7 @@ Something like that？</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>What's wrong？</Dialog>
           <Dialog>I'd rather have a hand warmer. My own personal warmer. You don't mind, right？</Dialog>
-          <Dialog>Sure, sure. If ● can warm you up, use me all you want.</Dialog>
+          <Dialog>Sure, sure. If I'm good enough for you, use me to warm up all you like.</Dialog>
           <Dialog>Hehe.</Dialog>
         </Dialogs>
       </SDL2>
@@ -5117,7 +5116,7 @@ Something like that？</Dialog>
           <Dialog>As if. Besides, they say guys have a lower tolerance for pain anyway.</Dialog>
           <Dialog>Sure, it hurts, but I'm not gonna cry in front of people.</Dialog>
           <Dialog>Hmm？</Dialog>
-          <Dialog>Besides, ● got used to pain thanks to all your kicks, ▲小早川＊▲.</Dialog>
+          <Dialog>Besides, I'm already used to pain thanks to your kicks, ▲小早川＊▲.</Dialog>
           <Dialog>Then want me to give you one more before the shot？</Dialog>
           <Dialog>...I'll pass, thanks.</Dialog>
         </Dialogs>
@@ -5323,7 +5322,7 @@ Something like that？</Dialog>
           <Dialog>I really hate getting rid of books, though. Every single one has memories attached to it.</Dialog>
           <Dialog>I see.</Dialog>
           <Dialog>So even when I try to pick which ones to get rid of, I get nostalgic and end up reading them.</Dialog>
-          <Dialog>Oh, I know the feeling. ● do that all the time, too.</Dialog>
+          <Dialog>Oh, I totally get that. I do that all the time, too.</Dialog>
           <Dialog>Right？ Just the other day, I started sorting them in the morning, and before I knew it, it was evening.</Dialog>
           <Dialog>(At this rate, I doubt she'll finish before the year's over...)</Dialog>
         </Dialogs>

@@ -68,7 +68,7 @@ List is alphabetical (`a…` then `k…` then `p…` then `t…`). Fully English
 
 - Keep nickname / player-name tokens exactly: e.g. `▲高嶺＊＊▲`, `▲主人公＊▲`.
 - Keep control marks **`※`** and **`▼`** — removing them blocks Save.
-- Keep **`●`** when present in the reference.
+- Translate **`●`** as I / me / my. It is the player's word for "I"; left in, the game shows 俺 or 僕.
 - Leave placeholder-only lines (`○○○`) and punctuation-only lines alone.
 - Image replacements: **PNG**, **exact same pixel size**.
 - Scripts badge **`N left · total`** = lines still needing work (not “N done”).

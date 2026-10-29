@@ -424,10 +424,9 @@ more energetic.
 If I remember right...)</Dialog>
           <Dialog>Lady Nene？</Dialog>
           <Dialog>Eh...？</Dialog>
-          <Dialog>You told me to call
-you that, remember？
-And you said you'd make
-● your servant.</Dialog>
+          <Dialog>You told me to call you
+that, remember？ And that
+you'd make me your servant.</Dialog>
           <Dialog>...Did I？ I forgot all about
 stuff from that long ago.</Dialog>
           <Dialog>You know, 'All hail
@@ -475,8 +474,8 @@ like an adult...)</Dialog>
           <Dialog>(But she looks so lonely...)</Dialog>
           <Dialog>But you know...</Dialog>
           <Dialog>？</Dialog>
-          <Dialog>● really liked that
-Lady Nene, too, you know.</Dialog>
+          <Dialog>I really liked that
+Lady Nene too, though.</Dialog>
           <Dialog>Huh... Liked？</Dialog>
           <Dialog>Yeah, you were cute,
 a little cool, and fun.
@@ -971,14 +970,13 @@ and tell you not to go...</Dialog>
           <Dialog>To the battlefield,
 of course. ...Leaving me,
 your fiancée, behind.</Dialog>
-          <Dialog>Fiancée!? Wait, ●,
-when did you put on
-a military uniform...</Dialog>
+          <Dialog>Fiancée!? Wait, when did I
+put on a military uniform...</Dialog>
           <Dialog>Ugh... so suddenly...
 I'm not emotionally
 prepared for this yet.</Dialog>
-          <Dialog>Right... ● is deploying
-to the front lines now...</Dialog>
+          <Dialog>Right... I'm about to head
+off to war, aren't I...</Dialog>
           <Dialog>...*Sniff*...</Dialog>
           <Dialog>...Don't cry, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Just thinking I won't see
@@ -1030,8 +1028,8 @@ before I go.</Dialog>
 that's it.</Dialog>
           <Dialog>...Hehe, you're treating me
 like a child...</Dialog>
-          <Dialog>For ●, it's pretty much
-the same thing.</Dialog>
+          <Dialog>It's pretty much the same
+thing to me.</Dialog>
           <Dialog>Jeez, you're awful.</Dialog>
           <Dialog>...Yeah. That face is
 definitely much better.</Dialog>
@@ -1825,19 +1823,18 @@ is the Shogun anyway?)</Dialog>
           <Dialog>This is troubling... In that case,
 your own preference will do.
 Tell me.</Dialog>
-          <Dialog>●'s type?
-Are you sure that's okay?</Dialog>
+          <Dialog>My type？ Are you sure
+that's good enough？</Dialog>
           <Dialog>A rare male opinion is better
 than nothing. Here, what about
 Lady Takane-no-koji or
 Lady Kobayakawa, for example?</Dialog>
           <Dialog>Teehee.</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>(●'s type...
-That's obvious!)</Dialog>
+          <Dialog>(My type... Isn't that
+obvious!)</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>●'s type is...
-Lady Nene!</Dialog>
+          <Dialog>My type is... Lady Nene!</Dialog>
           <Dialog>......Huh?</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>......W-What are you saying?!
@@ -1847,8 +1844,8 @@ Lady Nene!</Dialog>
 consequences, I assume? The crime
 of mocking me, Lady Nene,
 is a heavy one.</Dialog>
-          <Dialog>I'm not mocking you!
-● really likes you.</Dialog>
+          <Dialog>I am not mocking you!
+I truly do love you.</Dialog>
           <Dialog>Wha-!</Dialog>
           <Dialog>Wow, so bold...</Dialog>
           <Dialog>Woo-hoo! Go you!</Dialog>
@@ -2440,21 +2437,21 @@ Before they come back.</Dialog>
           <Dialog>I guess they never
 accepted me. They said I
 wasn't good enough for you...</Dialog>
-          <Dialog>● isn't good enough
-for ▲姉ヶ崎＊▲？ Who'd say
-something so selfish？</Dialog>
+          <Dialog>You, not good enough for me,
+▲姉ヶ崎＊▲？ Who's got the nerve
+to say something like that？</Dialog>
           <Dialog>Everyone. Everyone in
 the whole world.</Dialog>
           <Dialog>...The world？</Dialog>
           <Dialog>Yeah, the whole world is
 our enemy now.</Dialog>
-          <Dialog>The whole world is against
-●... Why did it come
-to this...</Dialog>
+          <Dialog>The whole world is my...
+How did it come to this...</Dialog>
           <Dialog>I guess it's my fault
 for being so big.</Dialog>
-          <Dialog>No way... ● would never
-break up with ▲姉ヶ崎＊▲!</Dialog>
+          <Dialog>No way... I have no
+intention of breaking up
+with you, ▲姉ヶ崎＊▲!</Dialog>
           <Dialog>Yeah, me neither.</Dialog>
           <Dialog>Let's run away together!!</Dialog>
           <Dialog>I can't. I'm tied up so tight
@@ -2466,8 +2463,8 @@ You have to run away on your own.</Dialog>
           <Dialog>You're in much more danger
 than I am right now.
 They execute traitors, you know.</Dialog>
-          <Dialog>I don't care! ● would never
-abandon ▲姉ヶ崎＊▲!</Dialog>
+          <Dialog>As if I care! I'm never
+abandoning you, ▲姉ヶ崎＊▲!</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
           <Dialog>...Just hearing you say that
 is enough. You've made me
@@ -2491,17 +2488,18 @@ they'll spare your life.</Dialog>
 They're too worked up to listen
 to reason right now... Run.</Dialog>
           <Dialog>I'll help you escape. Ready？</Dialog>
-          <Dialog>Huh？ Wait, ● can't just
-do this alone...</Dialog>
+          <Dialog>Huh？ Wait, I can't just
+leave by myself...</Dialog>
           <Dialog>Fuu...!</Dialog>
           <Dialog>Whoa, the wind...!</Dialog>
           <Dialog>Thank you for everything~!</Dialog>
           <Dialog>▲姉ヶ崎＊▲～！</Dialog>
           <Dialog>▲姉ヶ崎＊▲----!!</Dialog>
-          <Dialog>Huh!? This is... ●'s room...</Dialog>
+          <Dialog>Huh!? This is... my room...</Dialog>
           <Dialog>………………。</Dialog>
-          <Dialog>Even if the whole world turns on you,
-● will always be on ▲姉ヶ崎＊▲'s side!</Dialog>
+          <Dialog>Even if the whole world
+turns against us, I'm on
+your side, ▲姉ヶ崎＊▲!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2832,7 +2830,8 @@ the wedding venue, after all.</Dialog>
           <Dialog>It's always been my dream to come to
 this country for my honeymoon.
 Thanks for making it come true, darling▼</Dialog>
-          <Dialog>A honeymoon... For ● and ▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>A honeymoon... Mine and
+▲姉ヶ崎＊▲'s...</Dialog>
           <Dialog>What's wrong, darling？</Dialog>
           <Dialog>Nothing, it's just suddenly
 starting to feel real...</Dialog>
@@ -3480,7 +3479,7 @@ showers tonight.</Dialog>
 Why is she on TV...)</Dialog>
           <Dialog>ＡＤ</Dialog>
           <Dialog>Producer!</Dialog>
-          <Dialog>...Hm? ...Wait, ●!?</Dialog>
+          <Dialog>...Hm？ ...Wait, me!?</Dialog>
           <Dialog>This is no time to zone 
 out! If our ratings drop 
 below 1% today, we're 
@@ -3526,10 +3525,9 @@ your leg that high...</Dialog>
 lifted her leg, they shot
 right up! We broke 5%
 for a second!</Dialog>
-          <Dialog>...I see, so that's a tactic...
-No, no, I can't use ●'s
-girlfriend for something
-like that...</Dialog>
+          <Dialog>...I see, so that's one
+way... No, no, I can't make
+my girlfriend do that...</Dialog>
           <Dialog>Whoa, it dropped to 1.1%!
 Producer!!</Dialog>
           <Dialog>...No! I can't do that!</Dialog>
@@ -4090,8 +4088,8 @@ brush it off like nothing!</Dialog>
           <Dialog>No! I can't believe you took
 our date so lightly...
 I can't take this...!!</Dialog>
-          <Dialog>What!? No, that's not what
-● meant...</Dialog>
+          <Dialog>Whaaat!? Come on, that's
+not how I meant it...</Dialog>
           <Dialog>Ugh, the poison...!</Dialog>
           <Dialog>Whoa, ▲姉ヶ崎＊▲!</Dialog>
           <Dialog>Ooh, I shall not leave this
@@ -4702,9 +4700,9 @@ It's dangerous, you know？</Dialog>
 to me calling you that？</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>Hehe.▼</Dialog>
-          <Dialog>(Oh right... ● and ▲姉ヶ崎＊▲
-are right in the middle of
-our newlywed life...)</Dialog>
+          <Dialog>(Right... Right now I'm in
+the middle of newlywed life
+with ▲姉ヶ崎＊▲...)</Dialog>
           <Dialog>Ah, the pot is... Hot!</Dialog>
           <Dialog>Honey!? Are you okay？
 Let me see.</Dialog>
@@ -4726,9 +4724,9 @@ need to cool it with water.</Dialog>
           <Dialog>Sorry, I'll really help now.</Dialog>
           <Dialog>Please do, honey.▼</Dialog>
           <Dialog>（▲姉ヶ崎＊▲……）</Dialog>
-          <Dialog>(With such a cute and sweet
-wife... ● must be the
-happiest guy in the world!)</Dialog>
+          <Dialog>(Having such a cute, sweet
+wife... I'm the luckiest
+guy in the world!)</Dialog>
           <Dialog>Yeah, I think this is about
 right... Hey？</Dialog>
           <Dialog>Could you give this
@@ -4749,10 +4747,10 @@ it on purpose, aren't you.</Dialog>
 it's dangerous, right？</Dialog>
           <Dialog>True.</Dialog>
           <Dialog>How does it taste, dear？</Dialog>
-          <Dialog>Delicious! ●'s wife
-is the absolute best!</Dialog>
-          <Dialog>Delicious!
-●'s wife is the best!</Dialog>
+          <Dialog>Delicious! My wife is
+the best!</Dialog>
+          <Dialog>Delicious! My wife is
+the best!</Dialog>
           <Dialog>Really？ Did you actually
 taste it properly？</Dialog>
           <Dialog>I did, I did! But I want to
@@ -4772,11 +4770,12 @@ It'll be weady weal soon, okay~？</Dialog>
           <Dialog>Hahaha...</Dialog>
           <Dialog>Hehehe...</Dialog>
           <Dialog>Ahaha... ▲姉ヶ崎＊▲~▼</Dialog>
-          <Dialog>...Nn... Huh, this is
-●'s room. Then, was that...
+          <Dialog>...Mm... Huh, this is my
+room. Then that was...
 a dream？</Dialog>
-          <Dialog>Goo goo... Is ● acting
-too spoiled with ▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>'Goo goo'... Maybe I let
+▲姉ヶ崎＊▲ spoil me too
+much...</Dialog>
           <Dialog>But, that was fun...</Dialog>
           <Dialog>(I just need to touch
 her earlobe...)</Dialog>
@@ -5721,9 +5720,9 @@ my neck wrong...</Dialog>
           <Dialog>Scared of what？</Dialog>
           <Dialog>No, it's nothing!</Dialog>
           <Dialog>Hehe, you're weird.</Dialog>
-          <Dialog>(I wonder how long it's been
-since ● and I washed up
-on this island...)</Dialog>
+          <Dialog>(How long has it been since
+we washed ashore on this
+island...)</Dialog>
           <Dialog>(At first we were both just
 confused, but as expected,
 ▲姉ヶ崎＊▲ was the first to adapt
@@ -5778,8 +5777,8 @@ cleared up.</Dialog>
 island, I don't have to
 worry about you going
 somewhere else.</Dialog>
-          <Dialog>● isn't planning on
-going anywhere...</Dialog>
+          <Dialog>I'm not planning on going
+anywhere...</Dialog>
           <Dialog>I know. It's just my own
 silly delusion.</Dialog>
           <Dialog>I'd suddenly get anxious for
@@ -5791,19 +5790,19 @@ day... It kept me up at night...</Dialog>
 that I get scared thinking
 about what I'd do if you
 were gone.</Dialog>
-          <Dialog>● isn't going anywhere.</Dialog>
-          <Dialog>Can't you trust ●？</Dialog>
+          <Dialog>I won't disappear on you.</Dialog>
+          <Dialog>Don't you trust me？</Dialog>
           <Dialog>It's not that... I guess I
 just don't have much
 confidence in myself.</Dialog>
-          <Dialog>If you say that, then ●
-is the same... ▲姉ヶ崎＊▲...
-▲姉ヶ崎＊▲ is the best girlfriend
-● could ask for.</Dialog>
-          <Dialog>So don't say you lack
-confidence. No matter where
-we are or who's around,
-● only has eyes for ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>I could say the same about
+myself... ▲姉ヶ崎＊▲...
+▲姉ヶ崎＊▲, you're the
+girlfriend I'm so proud of.</Dialog>
+          <Dialog>So don't say you have no
+confidence. Wherever we are,
+whoever's around, you're the
+only one for me, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Yeah... Thank you...
 Jeez, stop it.</Dialog>
           <Dialog>I really wouldn't mind

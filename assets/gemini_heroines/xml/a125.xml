@@ -94,8 +94,8 @@ Now I'm curious...</Dialog>
           <Dialog>I am too! But since it's
 a food truck, I haven't
 been able to find it at all.</Dialog>
-          <Dialog>Then maybe ● should
-try looking for it？</Dialog>
+          <Dialog>Want me to try looking
+for it, then？</Dialog>
           <Dialog>Really？ Thank you!
 If you find it, let's eat
 some together, okay♪</Dialog>
@@ -205,9 +205,9 @@ I'm so happy!</Dialog>
 so eat whichever you like.</Dialog>
           <Dialog>Yay! Don't mind if
 I do, then♪</Dialog>
-          <Dialog>● tried picking ones
-▲姉ヶ崎＊▲ might like...
-How are they？</Dialog>
+          <Dialog>I did my best to pick ones
+you'd like, ▲姉ヶ崎＊▲...
+How is it？</Dialog>
           <Dialog>...Delicious! No worries.
 Looks like you know my taste
 really well, ▼</Dialog>
@@ -284,8 +284,8 @@ moving all around town.</Dialog>
           <Dialog>Sounds pretty whimsical...</Dialog>
           <Dialog>Ah, I'd really love to try
 their crepes too...</Dialog>
-          <Dialog>Then maybe ● should
-look for it too.</Dialog>
+          <Dialog>Guess I'll try looking
+for it too, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -388,8 +388,8 @@ right over.</Dialog>
 from the rumors.</Dialog>
           <Dialog>Whoa, it really is!
 It's just like I imagined!</Dialog>
-          <Dialog>Man, ● can't resist
-this smell.</Dialog>
+          <Dialog>Man, I just can't get
+enough of this smell.</Dialog>
           <Dialog>Hehe... I guess that counts
 as dumplings over flowers？</Dialog>
           <Dialog>Anyway, let's hurry up
@@ -486,12 +486,12 @@ no one knows when or where
 it'll be. That kind of thing
 just makes you even more
 curious, doesn't it？</Dialog>
-          <Dialog>Yeah. ●'m getting
+          <Dialog>Yeah. Now I'm getting
 curious, too.</Dialog>
           <Dialog>Then I'll text you if I
 spot it. Let's eat together♪</Dialog>
-          <Dialog>Got it. ●'ll let you
-know if I spot it, too.</Dialog>
+          <Dialog>Got it. I'll let you know
+if I spot it, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -669,8 +669,8 @@ really are so many!</Dialog>
           <Dialog>Yeah. Say, what comes to
 mind when you think of
 autumn foods？</Dialog>
-          <Dialog>●'d say... saury,
-matsutake, persimmons,
+          <Dialog>For me... saury, matsutake
+mushrooms, persimmons,
 chestnuts...</Dialog>
           <Dialog>Yes, exactly!
 For me, chestnuts were
@@ -899,9 +899,8 @@ somewhere, though.</Dialog>
           <Dialog>Are they really, I wonder？
 Ah... now I'm really craving
 roasted sweet potato.</Dialog>
-          <Dialog>●'m craving some too.
-Maybe I'll buy one next
-time I see the truck.</Dialog>
+          <Dialog>Me too. Maybe I'll buy some
+next time I see one.</Dialog>
           <Dialog>Then get some for me too,
 okay？ Heheh♪</Dialog>
         </Dialogs>
@@ -1080,9 +1079,9 @@ She even took a picture!
 She said, "They've been around
 a lot lately, so anyone can
 snap a photo"...</Dialog>
-          <Dialog>Huh... If you can really see
-them, ● would kind of
-like to see one too.</Dialog>
+          <Dialog>Huh... Well, if they're
+really out there, I'd kind
+of like to see one too.</Dialog>
           <Dialog>Me too. Let's report back
 if either of us spots one!</Dialog>
           <Dialog>(A UFO, huh...)</Dialog>
@@ -1168,8 +1167,8 @@ the photographic evidence.</Dialog>
           <Dialog>No way, really？
 ...Wait, what!?
 Something's actually in this!</Dialog>
-          <Dialog>See？ That's the UFO
-● saw.</Dialog>
+          <Dialog>Told you, that's the UFO
+I saw.</Dialog>
           <Dialog>Amazing! Can I make a copy
 of this？ I have to show
 my friend!</Dialog>
@@ -1253,8 +1252,8 @@ about Towassie？</Dialog>
           <Dialog>Towassie？ Um... you mean that
 giant creature rumored to live
 in Lake Towano, right？</Dialog>
-          <Dialog>Oh, so you do know about it？
-● only heard about it
+          <Dialog>Oh, so you already knew？
+I only heard about it
 recently.</Dialog>
           <Dialog>I think it's pretty famous
 around here. A lot of people
@@ -1357,7 +1356,7 @@ photo, huh？</Dialog>
           <Dialog>It's a huge scoop! Here, can
 you tell what this is？</Dialog>
           <Dialog>...Wait, could this be!?</Dialog>
-          <Dialog>Yep, Towassie! ● saw it
+          <Dialog>Yep, Towassie! I saw it
 with my own two eyes!</Dialog>
           <Dialog>Wow, amazing! So Towassie
 really is real! I totally
@@ -1437,7 +1436,7 @@ finals, huh？</Dialog>
           <Dialog>Not really, but I set a goal
 and got ready a bit, I guess？
 Why don't you set one too？</Dialog>
-          <Dialog>I see. Well, ●...</Dialog>
+          <Dialog>I see. Well then, I'll...</Dialog>
           <Dialog>Aim for 1st in the grade</Dialog>
           <Dialog>Aim for top 10 in the grade</Dialog>
           <Dialog>Aim for top 100 in the grade</Dialog>
@@ -2346,8 +2345,8 @@ Congratulations!</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>What!?
 You actually took first place...？</Dialog>
-          <Dialog>Guess I can do it if I try,
-●...</Dialog>
+          <Dialog>Guess I really can do it
+when I try...</Dialog>
           <Dialog>You put in so much effort,
 didn't you？ Good job!</Dialog>
         </Dialogs>
@@ -2775,8 +2774,7 @@ aiming a bit too high, huh...</Dialog>
           <Dialog>And you worked so hard,
 too...</Dialog>
           <Dialog>Well, it just means everyone
-besides ● was working
-hard, too.</Dialog>
+else is working hard, too.</Dialog>
           <Dialog>That's true. I really like
 that humble side of you,
 though▼</Dialog>
@@ -3617,7 +3615,7 @@ Castle"!</Dialog>
 nowhere startled me, but...
 I'm still curious. Wanna go
 check it out again？</Dialog>
-          <Dialog>● don't mind,
+          <Dialog>I mean, I don't mind,
 but...</Dialog>
           <Dialog>Thanks! Shall we get going,
 then？</Dialog>
@@ -3954,9 +3952,8 @@ actually lives here...</Dialog>
           <Dialog>I suppose...</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>...Wait, what？</Dialog>
-          <Dialog>Huh？ ●？
-I didn't say anything,
-though.</Dialog>
+          <Dialog>Huh？ Me？
+I didn't say anything.</Dialog>
           <Dialog>Really？ But...</Dialog>
           <Dialog>Ah...</Dialog>
           <Dialog>See？ You hear it, right？</Dialog>
@@ -4388,8 +4385,8 @@ cost a thing, right？</Dialog>
           <Dialog>Too good to be true,
 I guess. Too bad.</Dialog>
           <Dialog>…………。</Dialog>
-          <Dialog>(Guess I'll keep what
-● saw to myself...)</Dialog>
+          <Dialog>(Guess I'll keep quiet about
+what I saw...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

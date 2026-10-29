@@ -191,13 +191,14 @@ something, though...</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>▲主人公＊▲, what's up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●'s just wandering around.
+          <Dialog>I'm just wandering around,
+nothing to do.
 You too, ▲姉ヶ崎＊▲？</Dialog>
           <Dialog>Nope, a teacher gave me an errand.
 I'm on my way to grab some
 lab equipment for chemistry.</Dialog>
-          <Dialog>Huh, sounds heavy.
-●'ll come with you.</Dialog>
+          <Dialog>Oh, isn't that heavy？
+I'll come with you.</Dialog>
           <Dialog>Are you sure...？ Well, maybe
 I will take you up on that.
 Sorry during your break.</Dialog>
@@ -593,10 +594,10 @@ barely see it from here.</Dialog>
 without seeing your face？
 By your outline, or maybe
 just your vibe.</Dialog>
-          <Dialog>...Ah, yeah. I guess it's
-the same for ●, too.
-When we meet up, I can spot
-▲姉ヶ崎＊▲ from way off.</Dialog>
+          <Dialog>...Oh, right. Maybe I'm the
+same. When we meet up, I can
+tell it's ▲姉ヶ崎＊▲ even
+from far away.</Dialog>
           <Dialog>Really？ That makes me
 happy▼</Dialog>
         </Dialogs>
@@ -1013,8 +1014,8 @@ playing dumb. Hehe.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>▲主人公＊▲. Doing research？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●'s just returning a
-book. What about ▲姉ヶ崎＊▲？</Dialog>
+          <Dialog>I'm just returning a book.
+What about you, ▲姉ヶ崎＊▲？</Dialog>
           <Dialog>I'm in hiding.</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>The drama finale was yesterday.
@@ -1681,8 +1682,8 @@ you'd get tired right away.</Dialog>
           <Dialog>Now you've said it! With my sweet
 boyfriend escorting me, I'll make
 it all the way to the top, you know!</Dialog>
-          <Dialog>(...Wait, isn't ●
-the one working hard？)</Dialog>
+          <Dialog>(...Wait, so I'm the one
+doing all the work？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2361,8 +2362,8 @@ Got any recommendations？</Dialog>
 I'd have told you by now.</Dialog>
           <Dialog>True enough... Guess I'll have
 to venture into new territory.</Dialog>
-          <Dialog>Yeah. If you find a good one,
-let ● know too.</Dialog>
+          <Dialog>Yeah. If you find a good
+one, let me know too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2647,10 +2648,10 @@ to see your face.
 How should I put it...
 It's not like I had
 any real reason for it...</Dialog>
-          <Dialog>I see. That's fine,
-you don't need a reason.
-●'s happy to see
-▲姉ヶ崎＊▲'s face, too.</Dialog>
+          <Dialog>I see. You don't need a
+reason, though. I'm happy
+just seeing ▲姉ヶ崎＊▲'s
+face, too.</Dialog>
           <Dialog>...Yeah, thanks.
 Well, I'm off, okay？</Dialog>
         </Dialogs>
@@ -3042,7 +3043,7 @@ What's wrong？</Dialog>
           <Dialog>A friend of mine dropped
 her contact lens.</Dialog>
           <Dialog>Right here？
-Want ● to help too？</Dialog>
+Want me to help？</Dialog>
           <Dialog>Thanks. It might already be
 too late, but she won't give up
 till she sees it for herself.</Dialog>
@@ -3244,8 +3245,9 @@ the manager always relies on ▲姉ヶ崎＊▲.</Dialog>
 right back, so be a good boy
 and wait for me, okay？</Dialog>
           <Dialog>All right~</Dialog>
-          <Dialog>(...Wait, why'd I just nod along？
-That's ● for you...)</Dialog>
+          <Dialog>(...Wait, why am I just
+nodding along like that？
+Man, I swear...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3570,7 +3572,7 @@ that really carries some weight...)</Dialog>
           <Dialog>Spill something？</Dialog>
           <Dialog>Yeah, a customer knocked over their
 water and got it all over themselves.</Dialog>
-          <Dialog>Uh-oh. Want ● to help too？</Dialog>
+          <Dialog>Uh-oh. Should I go help？</Dialog>
           <Dialog>No, I'm fine. Sorry for the fuss~!</Dialog>
           <Dialog>(▲姉ヶ崎＊▲ is always so quick
 on her feet at times like this...)</Dialog>
@@ -3762,8 +3764,8 @@ of this display？</Dialog>
           <Dialog>Yeah, looks good, doesn't it？</Dialog>
           <Dialog>Geez, you don't sound
 like you mean it at all.</Dialog>
-          <Dialog>That's not true! It's great,
-really. ●Rave reviews!</Dialog>
+          <Dialog>That's not true! It's really
+good. Two thumbs up from me!</Dialog>
           <Dialog>Geez, now you're just
 laying it on thick.</Dialog>
           <Dialog>(What am I even supposed
@@ -5212,7 +5214,7 @@ That sounds good too.</Dialog>
           <Dialog>I'm in the mood for the
 cafeteria today. How about you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● would like that too.</Dialog>
+          <Dialog>Sounds good to me, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6351,8 +6353,8 @@ wake you.</Dialog>
           <Dialog>Wait... What was I saying!？</Dialog>
           <Dialog>Don't worry, my lips are
 sealed. I won't tell a soul.</Dialog>
-          <Dialog>(I didn't say anything weird,
-did I, ●...？)</Dialog>
+          <Dialog>(I didn't say anything
+weird, did I...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6843,9 +6845,9 @@ I've got seconds ready, too!</Dialog>
 turned out perfectly.
 How is it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Getting to eat this well
-first thing in the morning...
-● is one lucky guy!</Dialog>
+          <Dialog>Getting to eat a meal this
+good first thing in the
+morning... I'm one lucky guy!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6998,7 +7000,7 @@ Then let's walk home together.</Dialog>
           <Dialog>Of course. And, you know,
 I was thinking maybe I could
 cook dinner at your place tonight.</Dialog>
-          <Dialog>At ●'s place？</Dialog>
+          <Dialog>At my place？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7410,8 +7412,7 @@ the ingredients.</Dialog>
           <Dialog>Did we buy a bit too much？
 It looks like it'll be tough
 carrying it all back.</Dialog>
-          <Dialog>Don't worry,
-leave it to ●.</Dialog>
+          <Dialog>It's fine, leave it to me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

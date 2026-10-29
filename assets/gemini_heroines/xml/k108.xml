@@ -126,8 +126,8 @@ food. Let's dig in!</Dialog>
           <Dialog>How's it look？ Hope I got
 that restaurant taste right.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's full of your favorites,
-●. Let's dig in!</Dialog>
+          <Dialog>It's all my favorites!
+Let's dig in!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1185,12 +1185,12 @@ handles it pretty smoothly.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, what should ● get？</Dialog>
+          <Dialog>Let's see, what should I get？</Dialog>
           <Dialog>Menu 1</Dialog>
           <Dialog>Menu 2</Dialog>
           <Dialog>Menu 3</Dialog>
           <Dialog>Let her pick</Dialog>
-          <Dialog>● will go with ▲生成選択肢１▲.
+          <Dialog>I'm getting ▲生成選択肢１▲.
 What about you, ▲小早川＊▲？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1515,7 +1515,7 @@ That sounds good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● really like your current hairstyle. I hope you keep it like that for a while.</Dialog>
+          <Dialog>I really like how your hair is now. I was hoping you'd keep it like this for a while.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2335,7 +2335,7 @@ picking clothes by color？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I like bright, warm colors on you, ●.</Dialog>
+          <Dialog>I like bright, warm colors.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2620,7 +2620,7 @@ picking clothes by color？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, how about calling me something other than ●？</Dialog>
+          <Dialog>Hey, want to try calling me something else？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3861,8 +3861,7 @@ Feels like I can pull it off.</Dialog>
           <Dialog>Is this one...
 really gonna be okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think... it'll look fine
-on you, ●.</Dialog>
+          <Dialog>I... think it'll be okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

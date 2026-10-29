@@ -14,8 +14,9 @@ files or onto ``rebuild_dbin2``. The merged script goes to
   python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 
 Nickname tokens (``▲…▲``, including an unclosed ``▲``) must keep the same
-multiset as the baseline. A drop in ``※`` or ``▼`` is rejected. A ``●`` count
-change is a warning. Circle and punctuation placeholders are locked.
+multiset as the baseline. A drop in ``※`` or ``▼`` is rejected. ``●`` is the
+player's "I" (shown as 俺/僕), so a translated line that still has it is a
+warning. Circle and punctuation placeholders are locked.
 """
 from __future__ import annotations
 
@@ -189,10 +190,10 @@ def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str],
             errors.append(f"{mark} count dropped {old} -> {new}")
         elif new > old:
             warnings.append(f"{mark} count rose {old} -> {new}")
-    old_bullets = _mark_count(baseline, "●")
-    new_bullets = _mark_count(proposed, "●")
-    if old_bullets != new_bullets:
-        warnings.append(f"● count {old_bullets} -> {new_bullets}")
+    # ● is the player's "I" (the game shows 俺/僕), so a translated line drops it.
+    kept = [i for i, (old, new) in enumerate(zip(baseline, proposed)) if old != new and "●" in new]
+    if kept:
+        warnings.append(f"● left in translated line(s) {kept[:8]}: shows as 俺/僕; write I / me / my")
     for index, (old, new) in enumerate(zip(baseline, proposed)):
         if old != new and LOCKED_RE.fullmatch(old):
             errors.append(f"line {index} is a locked placeholder")

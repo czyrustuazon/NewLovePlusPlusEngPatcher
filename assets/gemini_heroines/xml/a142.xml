@@ -78,10 +78,10 @@ Nobody seems to care for it,
 so I might water it mornings.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh, a flower bed...</Dialog>
-          <Dialog>● can help too</Dialog>
+          <Dialog>I'll help too</Dialog>
           <Dialog>Good luck</Dialog>
-          <Dialog>If you want,
-● can help out too.</Dialog>
+          <Dialog>I can help out too,
+if you like.</Dialog>
           <Dialog>Are you sure？ In that case,
 could you help for a week？
 I'll ask the school to take
@@ -338,7 +338,7 @@ I've been looking for it,
 but I can't find it anywhere.</Dialog>
           <Dialog>Want me to help you look？</Dialog>
           <Dialog>Maybe you should give up...</Dialog>
-          <Dialog>● can help you look, too.
+          <Dialog>Want me to help you look？
 What kind of eraser is it？</Dialog>
           <Dialog>Well... it's tanuki-shaped...
 and it's still brand new.
@@ -480,8 +480,8 @@ Anyway, thank you.</Dialog>
 that tanuki eraser？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Nope.</Dialog>
-          <Dialog>I see... Sorry ● 
-couldn't help either.</Dialog>
+          <Dialog>I see... Sorry I couldn't
+be of more help.</Dialog>
           <Dialog>Don't worry about that. 
 Thanks for helping me look.</Dialog>
         </Dialogs>
@@ -563,10 +563,10 @@ Apparently someone called
 out tomorrow last-minute.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Tomorrow, huh...</Dialog>
-          <Dialog>Should ● cover？</Dialog>
+          <Dialog>Want me to cover it？</Dialog>
           <Dialog>That sounds rough.</Dialog>
-          <Dialog>If you're okay with it, 
-should ● cover tomorrow？</Dialog>
+          <Dialog>If you don't mind having me,
+want me to cover tomorrow？</Dialog>
           <Dialog>Really？ In that case, 
 could I ask you to？ 
 I'm counting on you!</Dialog>
@@ -1145,10 +1145,10 @@ there's a bin right here.</Dialog>
 this week "Clean-up Week."
 I can pick up trash around Dixie's
 before my shift. What do you think？</Dialog>
-          <Dialog>I'll help you, ●</Dialog>
+          <Dialog>I'll do it too</Dialog>
           <Dialog>You sure work hard</Dialog>
-          <Dialog>That sounds great. Maybe I'll
-join in with you, ●.</Dialog>
+          <Dialog>That's a great idea. Maybe
+I'll do it with you.</Dialog>
           <Dialog>Are you sure you want to say that？
 It's every day for a whole week,
 you know？</Dialog>
@@ -1412,9 +1412,8 @@ asked me to make some handouts,
 but there's just so much.</Dialog>
           <Dialog>I'll help</Dialog>
           <Dialog>That sounds rough</Dialog>
-          <Dialog>●'ll help too.
-They shouldn't be dumping
-this on students anyway.</Dialog>
+          <Dialog>I'll help you out. They really
+shouldn't dump that on a student.</Dialog>
           <Dialog>Thanks! Sorry about this,
 but you're a real lifesaver.</Dialog>
           <Dialog>What should we do？
@@ -1783,8 +1782,8 @@ I'll be counting on you again.</Dialog>
           <Dialog>Guess your customer service
 didn't improve all that much...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry... I guess ●
-didn't try hard enough.</Dialog>
+          <Dialog>Sorry... Guess I just didn't
+try hard enough.</Dialog>
           <Dialog>Mm... nah, you can always
 learn on the job.
 Keep giving it your best, okay？</Dialog>
@@ -2431,8 +2430,8 @@ care of everything.</Dialog>
           <Dialog>I can come on walks with you</Dialog>
           <Dialog>You'll manage</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If it's for walks, ● can
-come along too.</Dialog>
+          <Dialog>If it's just walking the dog,
+I can tag along with you.</Dialog>
           <Dialog>Oh no... I'd feel bad asking
 that of you.</Dialog>
           <Dialog>Don't worry about it. I'd worry
@@ -3523,10 +3522,10 @@ the new menu ideas, they asked
 if I could make prototypes.
 And within a week, too.</Dialog>
           <Dialog>…………。</Dialog>
-          <Dialog>I'll help you too, ●</Dialog>
+          <Dialog>I'll help you out</Dialog>
           <Dialog>That sounds rough...</Dialog>
-          <Dialog>That sounds rough. If it's okay
-with you, ●, I'll help out.</Dialog>
+          <Dialog>That sounds rough. If there's
+anything I can do, I'll help.</Dialog>
           <Dialog>...If you say that, I might
 actually take you up on it, you know？</Dialog>
           <Dialog>Of course, I don't mind at all.</Dialog>
@@ -3660,9 +3659,8 @@ of all ▲姉ヶ崎＊▲'s hard work.</Dialog>
 thanks to you.
 Thank you so much for
 sticking with me all week.</Dialog>
-          <Dialog>Well, ● got to eat
-tons of delicious food,
-so I was pretty lucky.</Dialog>
+          <Dialog>Hey, I was the lucky one getting
+to eat all that great food.</Dialog>
           <Dialog>Next time you help me out,
 maybe I'll make you a nice
 home-cooked meal as thanks？</Dialog>
@@ -3833,7 +3831,7 @@ I kind of get that.</Dialog>
 good night every day？
 Not forever, just...
 for a week, to start.</Dialog>
-          <Dialog>●？ Are you sure？</Dialog>
+          <Dialog>Me？ Are you sure？</Dialog>
           <Dialog>I don't know about that...</Dialog>
           <Dialog>Are you really sure
 it's okay if I text you？</Dialog>
@@ -4073,8 +4071,8 @@ to her！)</Dialog>
           <Dialog>▲姉ヶ崎＊▲。</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
-          <Dialog>Are you alone？ If you'd like,
-you could come with ●...</Dialog>
+          <Dialog>On your own？ If you want,
+we could walk together...</Dialog>
           <Dialog>Ah... Sorry, I'm kind of
 in a rush right now. See you！</Dialog>
           <Dialog>Too bad...</Dialog>
@@ -6216,8 +6214,8 @@ Well, see you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah... I don't think
-that's ●'s.</Dialog>
+          <Dialog>Oh... I don't think
+that's mine.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Huh？ Really...？
 Sorry about that.</Dialog>
@@ -6325,8 +6323,8 @@ spacing out.</Dialog>
           <Dialog>Don't mention it.
 I'm in a rush though,
 so I'll be going.</Dialog>
-          <Dialog>Right, ● has to get
-going too! See you.</Dialog>
+          <Dialog>Oh right, I've gotta get
+going too! See ya.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6501,7 +6499,7 @@ Bye-bye.</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, really？ Ah... sorry,
-though. ●'s in a rush.</Dialog>
+though. I'm in a rush.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>I see... Well, see you later.</Dialog>
         </Dialogs>
@@ -6549,8 +6547,8 @@ out of her way to say hi...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah... right, ● needs
-to head to the next class.</Dialog>
+          <Dialog>Oh, right... I need to head
+to my next classroom.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Me too. Well, see you.</Dialog>
           <Dialog>Yeah.</Dialog>
@@ -6760,8 +6758,8 @@ I should get going.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Here. Sorry, ●,
-I've gotta run.</Dialog>
+          <Dialog>Here you go. Anyway, I'm in
+a hurry, so I gotta run.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Ah... yeah, thank you.</Dialog>
         </Dialogs>
@@ -8252,8 +8250,9 @@ they get along really well？</Dialog>
           <Dialog>Well, yeah, pretty much.
 Everyone gets along great.</Dialog>
           <Dialog>Everyone？ What about you？</Dialog>
-          <Dialog>●... I don't know. 
-I don't think I'm that close, though...</Dialog>
+          <Dialog>Me？ I'm not so sure...
+I don't think I'm that close
+with them, though...</Dialog>
           <Dialog>I see... Then that's fine, I guess？</Dialog>
           <Dialog>？ What's fine？</Dialog>
           <Dialog>Hehe, never you mind！</Dialog>
@@ -9348,8 +9347,8 @@ Seriously, that's not true.</Dialog>
           <Dialog>Yeah, I got a bit worried, 
 but... If you say so, 
 then I'm okay.</Dialog>
-          <Dialog>You're okay with someone 
-like ●'s opinion？</Dialog>
+          <Dialog>Does my opinion really
+mean that much？</Dialog>
           <Dialog>It has to be your opinion, 
 or it means nothing.</Dialog>
           <Dialog>What do you mean by that？</Dialog>
@@ -9844,8 +9843,7 @@ What are you doing
 all the way out here？</Dialog>
           <Dialog>Well... um... 
 What about you？</Dialog>
-          <Dialog>● was just 
-passing through, though.</Dialog>
+          <Dialog>Me？ I was just passing by.</Dialog>
           <Dialog>I see, I see.
 Guess I am too, kind of.</Dialog>
           <Dialog>Really？ It looked like
@@ -10408,9 +10406,9 @@ stuff like this too.)</Dialog>
 you here.</Dialog>
           <Dialog>Yeah. Are you out
 shopping too？</Dialog>
-          <Dialog>● was just passing by.
-Are ▲姉ヶ崎＊▲ looking to
-buy something？</Dialog>
+          <Dialog>I was just passing by.
+Are you buying something,
+▲姉ヶ崎＊▲？</Dialog>
           <Dialog>Yeah, just seeing if I can
 find a nice skirt.</Dialog>
           <Dialog>Huh. Do you come here
@@ -11633,8 +11631,8 @@ Sunday？</Dialog>
 Sunday...</Dialog>
           <Dialog>I see. Maybe we should pick
 another day, then.</Dialog>
-          <Dialog>Sorry, it's because of
-●'s schedule.</Dialog>
+          <Dialog>Sorry you have to work
+around my schedule.</Dialog>
           <Dialog>No, don't worry about it.
 See you later, then.</Dialog>
           <Dialog>(Hope I didn't cause her

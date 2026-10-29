@@ -1223,13 +1223,13 @@ a ton, so...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, what should ● get...？</Dialog>
+          <Dialog>Hmm, what should I get...</Dialog>
           <Dialog>Menu 1</Dialog>
           <Dialog>Menu 2</Dialog>
           <Dialog>Menu 3</Dialog>
           <Dialog>I'll leave it to you.</Dialog>
-          <Dialog>●'ll have the ▲生成選択肢１▲,
-what about you, ▲姉ヶ崎＊▲？</Dialog>
+          <Dialog>I'll go with ▲生成選択肢１▲.
+What about you, ▲姉ヶ崎＊▲？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2234,8 +2234,7 @@ do you like, by the way？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think ●
-prefers dresses.</Dialog>
+          <Dialog>I think I like dresses.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2408,8 +2407,8 @@ I think.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Bright, cool colors sound
-good to ●, I guess.</Dialog>
+          <Dialog>I think bright, cool colors
+would be nice.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2559,8 +2558,7 @@ different from what I like.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● likes cute styles,
-I guess.</Dialog>
+          <Dialog>I think I like the cute look.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2693,8 +2691,8 @@ it up, then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, how about changing
-what you call ●？</Dialog>
+          <Dialog>Hey, want to try calling me
+something else？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3327,8 +3325,8 @@ the way it is.</Dialog>
           <Dialog>What kind of style would look
 good...？ Which one do you like？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Going by ●'s taste...
-Yeah, probably around here.</Dialog>
+          <Dialog>Going by what I like...
+Let's see, maybe around here.</Dialog>
           <Dialog>Cute styles page</Dialog>
           <Dialog>Refined styles page</Dialog>
           <Dialog>Casual styles page</Dialog>
@@ -3365,7 +3363,8 @@ Yeah, probably around here.</Dialog>
           <Dialog>Want to pick from around here？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Sure. Let me know what you think.</Dialog>
-          <Dialog>Sure, if you're okay with ●'s.</Dialog>
+          <Dialog>Sure, if you don't mind
+my opinion.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3794,8 +3793,8 @@ hair color too？</Dialog>
           <Dialog>Not necessarily, but I've
 got to consider it. That's
 all part of the style, right？</Dialog>
-          <Dialog>Got it. Then ●'ll
-think about it with you.</Dialog>
+          <Dialog>I see. Well, I'll help you
+think about it, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4153,7 +4152,7 @@ Hey, you try some too？</Dialog>
 Now you've got me wanting
 to try some too.</Dialog>
           <Dialog>Sure, want a bite？</Dialog>
-          <Dialog>This is ●'s, though.</Dialog>
+          <Dialog>This one's all mine.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

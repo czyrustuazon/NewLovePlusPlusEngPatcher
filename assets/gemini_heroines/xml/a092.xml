@@ -389,7 +389,7 @@ time, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello... it's ●.</Dialog>
+          <Dialog>Hello... It's me.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>What's wrong... you sound
 kind of down. Any trouble？</Dialog>
@@ -529,8 +529,7 @@ Yeah, I understand.</Dialog>
           <Dialog>Now my schedule is wide
 open. It can't be helped,
 but I'm a bit lonely...</Dialog>
-          <Dialog>This is all ●'s fault.
-I'm sorry.</Dialog>
+          <Dialog>It's my fault. I'm sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
