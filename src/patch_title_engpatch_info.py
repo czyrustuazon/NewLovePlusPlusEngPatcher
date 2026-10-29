@@ -124,7 +124,7 @@ BULLET = ""  # names line prefix; the game's "● " bullet looked busy
 # (role, names); names None = a team heading line; ("", None) = one blank line.
 CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
     ("== 2026 Team ==", None),
-    ("[Software Engineers]", ("zaccken", "Cetaceaqua")),
+    ("[Developers]", ("zaccken", "Cetaceaqua")),
     (" ", None),
     ("[UI Texture Overhaul]", ("Zhoumaru",)),
     (" ", None),
@@ -136,33 +136,30 @@ CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
     (" ", None),
     ("[Original Love Plus (DS)]", ("TLWiki group", "jjjewel & team")),
     (" ", None),
-    # Translation, proofreading, and text & strings share one heading.
+    # Translation, proofreading, text & strings, new script, and later passes.
     (
         "[Translation & Editing]",
         (
             "Mayne", "DDMeisterX", "Shakkolvan", "Scarymonsters", "Kai", "Oli",
-            "Bango", "Incolbum", "Jaslyn",
+            "Bango", "Incolbum", "Jaslyn", "Cozy Translations", "k7ra", "rinkohot1337",
         ),
     ),
     (" ", None),
-    ("[Script Integration]", ("impeio92", "Keimeow")),
-    (" ", None),
+    # Hacking & tools plus script integration.
     (
         "[Hacking & Tools]",
         (
             "gdkchan", "Demonslayerx8", "MGDanon", "deaknaew", "froid_san", "kiwiz", "Chulio",
             "Nagato", "Makein", "Zander1995", "Asia81", "internetakias", "ofan", "NCDyson",
-            "Aikin-Ai",
+            "Aikin-Ai", "impeio92", "Keimeow",
         ),
     ),
     (" ", None),
-    ('[New Script]', ("Bango", "Cozy Translations")),
-    (" ", None),
-    ("[Graphics Translation]", ("eyenight", "Jaslyn", "Karuta", "Bango")),
-    (" ", None),
-    ("[Graphics Editing]", ("Kaizerscythe", "Shakkolvan", "Yuuyuun", "bigcookie")),
-    (" ", None),
-    ("[Later Passes]", ("k7ra", "rinkohot1337")),
+    # Graphics translation and graphics editing.
+    (
+        "[Graphics]",
+        ("eyenight", "Jaslyn", "Karuta", "Bango", "Kaizerscythe", "Shakkolvan", "Yuuyuun", "bigcookie"),
+    ),
 )
 
 
