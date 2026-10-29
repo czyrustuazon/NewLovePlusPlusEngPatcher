@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""EN To-Do submenu: header (5575) + List/History buttons (Quest 5253)."""
+"""EN To-Do submenu: List/History buttons and labels (Quest 5253).
+
+The To-Do headers on MyroomHeader 5575 belong to deploy_schedule_header_en,
+which packs the Zhoumaru masters. A blue render here used to repaint them
+(jagged ETC1A4 text) whenever this script ran after it.
+"""
 from __future__ import annotations
 
 import os
@@ -19,7 +24,6 @@ sys.path.insert(0, str(ROOT / "tools" / "nlpp-tools"))
 
 from bclimutil import (  # noqa: E402
     parse_bclim,
-    png_to_bclim_etc1a4_same_size,
     png_to_bclim_rgba4444_same_size,
     png_to_bclim_same_size,
 )
@@ -39,17 +43,6 @@ MOD_IMG, VANILLA = resolve_img_paths()
 OUT = ROOT / "out" / "todo_en"
 FONT = UI_FONT  # bundled OFL (assets/fonts/MPLUS1p-Regular.ttf)
 INK = (70, 110, 160)
-
-# Header variants in MyroomHeader (ETC1A4)
-HEADER_PKG = 5575
-HEADER_LABELS = [
-    ("timg/mydata_toptex_01.bclim", "To-Do List"),  # ToDo 一覧
-    ("timg/mydata_toptex_02.bclim", "To-Do List"),  # ToDoリスト (also used as title)
-    ("timg/mydata_toptex_03.bclim", "History"),  # ToDo履歴
-    ("timg/mydata_toptex_04.bclim", "Status"),  # ステータス
-    ("timg/mydata_toptex_05.bclim", "Item List"),  # アイテム一覧
-    ("timg/mydata_toptex_06.bclim", "My Camera"),  # マイカメラ
-]
 
 # Quest top select buttons + History points row (RGBA4444). Rebuilt from
 # vanilla, so every Quest.check master is packed here; labels below are
@@ -234,48 +227,6 @@ def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
     return compress_exact_with_gap_tune(data, target)
 
 
-def patch_etc1_labels(
-    vanilla_arc: bytes, labels: list[tuple[str, str]], tmp: Path, cmp_len: int
-) -> bytes:
-    trials: list[tuple[bool, int | None]] = [
-        (False, None),
-        (True, None),
-        (True, 13),
-        (True, 12),
-        (True, 11),
-        (True, 10),
-    ]
-    best: tuple[int, bytes] | None = None
-    for hard, max_size in trials:
-        darc = DarcArchive(bytearray(vanilla_arc))
-        for path, en in labels:
-            entry = darc.find(path) or darc.find(Path(path).name)
-            if entry is None:
-                raise SystemExit(f"missing {path}")
-            raw_b = darc.extract_file(entry)
-            _pix, w, h, fmt, _ = parse_bclim(raw_b)
-            if fmt != 0xB:
-                raise SystemExit(f"{path} fmt {fmt}")
-            rgba = render_label(w, h, en, hard=hard, max_size=max_size)
-            png = tmp / "t.png"
-            orig = tmp / "o.bclim"
-            rgba.save(png)
-            rgba.save(OUT / f"{Path(path).stem}_en.png")
-            orig.write_bytes(raw_b)
-            darc.replace_same_size(entry, png_to_bclim_etc1a4_same_size(png, orig))
-        patched = bytes(darc.data)
-        z = len(zopfli_zlib.compress(patched))
-        print(f"  trial hard={hard} max_size={max_size}: zopfli={z}", flush=True)
-        if best is None or z < best[0]:
-            best = (z, patched)
-        if z <= cmp_len:
-            return patched
-    assert best is not None
-    if best[0] > cmp_len:
-        raise SystemExit(f"no trial fits slot {cmp_len}")
-    return best[1]
-
-
 def pack_quest_masters(darc: DarcArchive, tmp: Path) -> set[str]:
     packed = set()
     for png in sorted(QUEST_MASTERS.glob("*.png")):
@@ -385,24 +336,8 @@ def main() -> None:
     bak = maybe_backup_img(MOD_IMG, "todo")
     OUT.mkdir(parents=True, exist_ok=True)
 
-    # Headers from live (keeps My Data / Mail headers)
-    raw = MOD_IMG.read_bytes()
-    img = ImgBin(str(MOD_IMG))
-    img.parse(False)
-    res = img.entries[HEADER_PKG]
     tmp_pkg = OUT / "img_data"
     tmp_pkg.mkdir(parents=True, exist_ok=True)
-    src = tmp_pkg / f"{HEADER_PKG:04d}"
-    src.write_bytes(raw[res.fw.base_offset : res.fw.base_offset + res.fw.len()])
-    pkg = Package(FileWindow(str(src)), 0)
-    pkg.parse(False)
-    arc = next(e for e in pkg.entries if isinstance(e, ARC))
-    cmp = arc.fw.len()
-    print(f"pkg {HEADER_PKG} headers slot={cmp}", flush=True)
-    tmp = OUT / "_fit_hdr"
-    tmp.mkdir(parents=True, exist_ok=True)
-    patched = patch_etc1_labels(arc.parsed(), HEADER_LABELS, tmp, cmp)
-    splice_pkg(HEADER_PKG, MOD_IMG, patched, cmp)
 
     # Quest buttons from vanilla
     vraw = VANILLA.read_bytes()

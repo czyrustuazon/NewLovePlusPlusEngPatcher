@@ -72,6 +72,21 @@ def test_mail_home_no_longer_writes_the_header():
     assert not hasattr(home, "HEADER_LABELS")
 
 
+def test_todo_no_longer_writes_the_header():
+    """5575 To-Do headers are Zhoumaru masters from deploy_schedule_header_en.
+
+    deploy_todo_en's blue ETC1A4 render repainted them ("History" / "To-Do List"
+    looked deep fried) whenever it ran after the schedule header step.
+    """
+    todo = load_module("deploy_todo_en", TOOLS / "deploy_todo_en.py")
+    assert not hasattr(todo, "HEADER_LABELS")
+    assert not hasattr(todo, "patch_etc1_labels")
+    sched = load_module("deploy_schedule_header_en", TOOLS / "deploy_schedule_header_en.py")
+    owned = {Path(p).stem for p, _en in sched.LABELS}
+    assert {f"mydata_toptex_0{i}" for i in range(1, 7)} <= owned
+    assert not owned & sched.SKIP_UI_PNG & {f"mydata_toptex_0{i}" for i in range(1, 7)}
+
+
 def test_album_4149_lists_every_master():
     ui = load_module("deploy_ui_buttons_en", TOOLS / "deploy_ui_buttons_en.py")
     group = next(g for g in ui.GROUPS if g["pkg"] == 4149)
