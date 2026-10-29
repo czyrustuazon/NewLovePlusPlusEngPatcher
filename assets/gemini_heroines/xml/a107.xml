@@ -187,7 +187,7 @@ anything in mind.</Dialog>
           <Dialog>Honestly, me neither.
 Just being like this
 makes me happy...</Dialog>
-          <Dialog>Yeah... ● do too.</Dialog>
+          <Dialog>Yeah... me too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -338,9 +338,10 @@ It's fun! Want to see？</Dialog>
           <Dialog>▲主人公＊▲. What were you like
 as a kid？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● don't really remember.
-Just a normal boy, I guess？
-Weren't you pretty wild, ▲姉ヶ崎＊▲？</Dialog>
+          <Dialog>I don't remember that much.
+Just a normal kid, I guess？
+Weren't you a little rowdy,
+▲姉ヶ崎＊▲？</Dialog>
           <Dialog>Did I... mention that before？
 Yeah, kind of like
 a neighborhood kid boss.</Dialog>
@@ -609,9 +610,8 @@ the end of the world,
 how would you spend
 what's left？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, ●'d want to
-keep things just like
-this, I guess.</Dialog>
+          <Dialog>Hmm, I think I'd want to
+stay just like this.</Dialog>
           <Dialog>...Jeez, look at you,
 being all smooth.</Dialog>
           <Dialog>▲姉ヶ崎＊▲,
@@ -898,13 +898,13 @@ I wonder...</Dialog>
           <Dialog>I do sometimes.
 And whenever that happens,
 I think about you.</Dialog>
-          <Dialog>About ●？</Dialog>
+          <Dialog>About me？</Dialog>
           <Dialog>Yup. And wouldn't you know
 it, the loneliness fades
 and I sleep like a baby.</Dialog>
-          <Dialog>(If ● started thinking
-about ▲姉ヶ崎＊▲, I don't think
-I'd get any sleep...)</Dialog>
+          <Dialog>(If I started thinking about
+▲姉ヶ崎＊▲, I don't think
+I'd be able to sleep...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1405,8 +1405,8 @@ I totally let my guard down.</Dialog>
           <Dialog>Oh, well that's good then.</Dialog>
           <Dialog>Fufu. Feels like we've
 been together for decades.</Dialog>
-          <Dialog>(Decades...？ But ● are
-only in high school...)</Dialog>
+          <Dialog>(Decades...？ We're still
+in high school, though.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2713,8 +2713,7 @@ a friend from school.</Dialog>
 Things have been unsafe
 lately, so be careful, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Did ● really look
-that suspicious？)</Dialog>
+          <Dialog>(Did I look that suspicious？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3208,9 +3207,9 @@ well, you know.</Dialog>
           <Dialog>Oh, gotcha...
 Say no more. Next time, then!</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(A school friend, huh.
-I wonder if she knows
-about ● too.)</Dialog>
+          <Dialog>(A friend from school, huh.
+Wonder if she knows about me,
+too.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4024,8 +4023,7 @@ I'll walk you downstairs.</Dialog>
           <Dialog>Am I the only one... 
 who wants to stay 
 together a little longer？</Dialog>
-          <Dialog>● was thinking the 
-exact same thing.</Dialog>
+          <Dialog>I was thinking the same thing.</Dialog>
           <Dialog>Sorry, I should head home 
 for today.</Dialog>
         </Dialogs>
@@ -4269,8 +4267,8 @@ home.</Dialog>
           <Dialog>It makes me want to say, 
 'I'm home, ▼'</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Then ● should say, 
-'Welcome home,' huh.</Dialog>
+          <Dialog>Then I guess I'd say,
+'Welcome home.'</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4329,14 +4327,14 @@ home.</Dialog>
 It's not my room, but it 
 feels so relaxing.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's 'cause ● is 
-right next to you.</Dialog>
+          <Dialog>Well, that's because I'm
+right next to you, right？</Dialog>
           <Dialog>Hey now, don't get 
 cocky. ...Though you 
 might actually be right.</Dialog>
-          <Dialog>Having ▲姉ヶ崎＊▲ right beside 
-● always gives me 
-energy.</Dialog>
+          <Dialog>Having you next to me
+always perks me up,
+▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Am I your daily vitamin？ 
 One tablet a day, 
 don't forget.</Dialog>
@@ -5145,9 +5143,9 @@ I didn't notice？)</Dialog>
           <Dialog>Why do I feel so at home here？
 Maybe I'm just weird.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, not at all.
-Though you really do look
-right at home in the room, ●.</Dialog>
+          <Dialog>Haha, there's nothing weird
+about it. Though you really do
+fit right into my room.</Dialog>
           <Dialog>Can you relax
 next to me, too？</Dialog>
           <Dialog>Yeah. I mean, I'm still
@@ -5404,8 +5402,8 @@ wanting to feed it.</Dialog>
           <Dialog>Yeah, like wanting to feed
 animals at the zoo.</Dialog>
           <Dialog>And a growing boyfriend, too.</Dialog>
-          <Dialog>(So to ●, I'm the same
-as a stray cat...？)</Dialog>
+          <Dialog>(So I'm on the same level
+as a stray cat...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6222,7 +6220,7 @@ I think I might be a fan now.</Dialog>
           <Dialog>You know, I'd really love 
 to watch a movie.</Dialog>
           <Dialog>Sounds good</Dialog>
-          <Dialog>●'m not really feeling it...</Dialog>
+          <Dialog>I'm not really in the mood...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6271,8 +6269,9 @@ No, it's fine. Don't worry.</Dialog>
           <Dialog>Time always flies with you. 
 It's funny, isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● feel the same. 
-But I really should head home.</Dialog>
+          <Dialog>Same for me.
+Still, it's probably about
+time to head home.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

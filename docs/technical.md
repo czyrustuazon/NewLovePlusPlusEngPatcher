@@ -2447,7 +2447,7 @@ Pack **schema `1`**. Edit UI behavior in EngPatcher templates, then re-export (d
 |------|----------|
 | Nickname tokens `▲…＊…▲` (incl. unclosed forms) | Warn / confirm on save; ingest errors if multiset changes |
 | Control marks `※`, `▼` | **Hard block** save if count drops vs baseline; ingest rejects |
-| `●` bullets | Scripts warn if count changes |
+| `●` (player's "I", shown as 俺/僕) | Translate as I / me / my; ingest warns if a translated line keeps it |
 | Lone `ー` / `・` | Not counted as “needs JP” (katakana block false positive) |
 | Punct-only / circle placeholders `○○○` | Locked / skip “needs work” |
 | SMS UTF-8 length | Cap 254 bytes (+NUL slot); Strings kit blocks oversize |

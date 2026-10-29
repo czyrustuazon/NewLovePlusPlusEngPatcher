@@ -56,7 +56,7 @@
           <Dialog>▲小早川＊▲. Just taking a walk, I guess.</Dialog>
           <Dialog>Hmm. So basically, you're just wandering around aimlessly.</Dialog>
           <Dialog>Well, I'm gonna get going.</Dialog>
-          <Dialog>Yeah. ● might wander around a little longer before heading home.</Dialog>
+          <Dialog>Yeah. I'm gonna wander around a little longer before heading home.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -491,7 +491,7 @@
           <Dialog>Oh, good timing. Do you know if the swimming school here has a good reputation？</Dialog>
           <Dialog>A good reputation？ No idea... Why？</Dialog>
           <Dialog>My little brother says he wants to take lessons. I got stuck scouting the place out, so I'll pass the job on to you.</Dialog>
-          <Dialog>That's too big a job for me. ● think I'll pass.</Dialog>
+          <Dialog>That's a little too much responsibility for me. I'll pass.</Dialog>
           <Dialog>No need to be so modest. Anyway, I'm counting on you.</Dialog>
           <Dialog>(She says that, but still...)</Dialog>
         </Dialogs>
@@ -817,7 +817,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Whoa... What are you doing here？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲小早川＊▲! ● was surprised too, you know. What are you up to？</Dialog>
+          <Dialog>▲小早川＊▲! You surprised me too. What are you up to？</Dialog>
           <Dialog>Nothing really. Just passing through. Were you interested in today's event？</Dialog>
           <Dialog>Hmm... Kind of yes, kind of no.</Dialog>
           <Dialog>So you were just bored and wandered over？ Well, too bad—I'm busy, so I can't keep you company. See ya.</Dialog>
@@ -1764,7 +1764,7 @@ don't have time to chat.</Dialog>
           <Dialog>Whenever I have errands around here, I take a peek inside. Sometimes they have cute cat stuff.</Dialog>
           <Dialog>I see. Did you find anything good today？</Dialog>
           <Dialog>I didn't really see much today. And I don't have time to look around carefully anyway.</Dialog>
-          <Dialog>In that case, ● can keep an eye out for you too.</Dialog>
+          <Dialog>Then I'll keep an eye out for you too.</Dialog>
           <Dialog>Hehe, thanks. I'll count on you.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1902,7 +1902,7 @@ don't have time to chat.</Dialog>
           <Dialog>If you want to go in, just go right on in.</Dialog>
           <Dialog>It's not like I'm dying to go in or anything... Didn't you have somewhere to be, ▲小早川＊▲？</Dialog>
           <Dialog>Oh, right, I did. Jeez... it's your fault for hanging around such a weird place.</Dialog>
-          <Dialog>(It's not like ● stopped you...)</Dialog>
+          <Dialog>(I wasn't the one holding you up...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2755,8 +2755,8 @@ come by yourself？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>A friend invited me. Says
 she's scouting for a date.</Dialog>
-          <Dialog>Huh. ● should scout it
-out too.</Dialog>
+          <Dialog>Huh. I'd like to do some
+scouting myself.</Dialog>
           <Dialog>No can do today. It's just us
 girls planning a date from a
 girl's perspective.</Dialog>
@@ -2970,7 +2970,7 @@ will join you when she's free.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hey. All by yourself？</Dialog>
           <Dialog>Just for now. I'm meeting up with a friend soon. What about you？</Dialog>
-          <Dialog>● had some free time, so I thought I'd grab some tea.</Dialog>
+          <Dialog>I had some free time, so I figured I'd grab some tea.</Dialog>
           <Dialog>You could just drink that at home.</Dialog>
           <Dialog>It tastes different from when I make it myself.</Dialog>
           <Dialog>Huh. Well, whatever makes you happy. Enjoy yourself.</Dialog>
@@ -3424,7 +3424,7 @@ will join you when she's free.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>▲小早川＊▲, good timing. I was just about to go get something to eat. Wanna join me？</Dialog>
           <Dialog>Too bad... I just ate a little while ago.</Dialog>
-          <Dialog>Then how about ● get a meal, and you just have tea and dessert, ▲小早川＊▲...</Dialog>
+          <Dialog>Then I'll eat, and you could just have some tea and dessert, ▲小早川＊▲...</Dialog>
           <Dialog>Sorry, I promised I'd head over to a friend's house right now.</Dialog>
           <Dialog>Oh, okay... Guess I'll give up on that, then.</Dialog>
           <Dialog>Sorry. Maybe next time.</Dialog>
@@ -3547,9 +3547,9 @@ will join you when she's free.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What do you mean, what am I doing here...? What about you？</Dialog>
           <Dialog>Geez. I asked first, so the rule is you have to answer first.</Dialog>
-          <Dialog>● just... came out for a walk!</Dialog>
+          <Dialog>I'm... out for a walk!</Dialog>
           <Dialog>So in other words, you've got nothing to do. As for me... Crap! I'm gonna be late. See ya!</Dialog>
-          <Dialog>（And she didn't even answer the question ● asked...）</Dialog>
+          <Dialog>(And she didn't even answer my question...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3888,7 +3888,7 @@ will join you when she's free.</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
           <Dialog>Hehe... For some reason, I had a feeling I'd run into you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh. ● kind of had a feeling like that, too.</Dialog>
+          <Dialog>Oh yeah？ I kinda had a feeling I would too.</Dialog>
           <Dialog>Really？ Since when were you such a smooth talker？</Dialog>
           <Dialog>Are you okay on time？</Dialog>
           <Dialog>Oh, I have to get going... Bye-bye.</Dialog>

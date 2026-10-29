@@ -34,7 +34,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's ●. Can you tell？</Dialog>
+          <Dialog>It's me. Do you know who it is？</Dialog>
           <Dialog>Of course I do. What is it？</Dialog>
         </Dialogs>
       </SDL2>
@@ -72,7 +72,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello, it's Rinko.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's ●.</Dialog>
+          <Dialog>Hello？ Hey, it's me.</Dialog>
           <Dialog>Hehe. Did you want to talk to me？</Dialog>
         </Dialogs>
       </SDL2>
@@ -110,7 +110,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's ●. Is now a good time？</Dialog>
+          <Dialog>Hello？ It's me. Is now a good time？</Dialog>
           <Dialog>Sure, I guess.</Dialog>
         </Dialogs>
       </SDL2>
@@ -148,7 +148,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲小早川＊▲？　●。</Dialog>
+          <Dialog>▲小早川＊▲？　Me。</Dialog>
           <Dialog>I'm glad you called. What's up？</Dialog>
         </Dialogs>
       </SDL2>
@@ -186,7 +186,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes. Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's ●. Can you talk right now？</Dialog>
+          <Dialog>Hello？ It's me. Can you talk right now？</Dialog>
           <Dialog>Sure. What is it？</Dialog>
         </Dialogs>
       </SDL2>
@@ -224,7 +224,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's ●. Is now a good time？</Dialog>
+          <Dialog>Hey, it's me. Got a minute？</Dialog>
           <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
@@ -262,7 +262,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes, this is Rinko.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, it's ●.</Dialog>
+          <Dialog>Hey, it's me.</Dialog>
           <Dialog>Did something happen？</Dialog>
         </Dialogs>
       </SDL2>
@@ -300,7 +300,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Um, it's ●.</Dialog>
+          <Dialog>Um, it's me.</Dialog>
           <Dialog>What's wrong？</Dialog>
         </Dialogs>
       </SDL2>
@@ -338,7 +338,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Um... It's ●.</Dialog>
+          <Dialog>Uh... it's me.</Dialog>
           <Dialog>...And？</Dialog>
         </Dialogs>
       </SDL2>
@@ -376,7 +376,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's ●. Can you talk？</Dialog>
+          <Dialog>It's me. Can you talk？</Dialog>
           <Dialog>Yes...</Dialog>
         </Dialogs>
       </SDL2>
@@ -414,7 +414,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Um... It's ●.</Dialog>
+          <Dialog>Um... it's me.</Dialog>
           <Dialog>Do you need something？</Dialog>
         </Dialogs>
       </SDL2>
@@ -452,7 +452,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, it's ●.</Dialog>
+          <Dialog>Yeah, it's me.</Dialog>
           <Dialog>What？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1280,7 +1280,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I probably won't care about class at all that day. I'm blaming you for that.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●？ Well, I'm glad you're looking forward to it, anyway.</Dialog>
+          <Dialog>Me？ Well, I'm glad you're looking forward to it, at least.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2329,8 +2329,8 @@ if you're late.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yay. Sorry for being so
 selfish, okay？ ...Hehe.</Dialog>
-          <Dialog>It's fine, ● want to
-see you too.</Dialog>
+          <Dialog>It's fine. I want to see
+you too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2377,8 +2377,9 @@ at ▲デート場所▲.</Dialog>
           <Dialog>Got it, I'll be waiting...
 Though I really wanted to
 see you right now.</Dialog>
-          <Dialog>Sorry. ● won't keep you
-waiting. See you later.</Dialog>
+          <Dialog>Sorry. I'll make sure I don't
+keep you waiting. See you
+later, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3027,7 +3028,7 @@ it another time.</Dialog>
           <Dialog>You know, for asking me out on a date.</Dialog>
           <Dialog>We're dating, aren't we？ That's only natural.</Dialog>
           <Dialog>Still, it's a little different from a regular date. So... yeah.</Dialog>
-          <Dialog>I see. Well, if you're happy, then ● am too.</Dialog>
+          <Dialog>I see. Well, if it made you happy, I'm happy too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3088,7 +3089,7 @@ it another time.</Dialog>
           <Dialog>You asked me out on a date, didn't you？</Dialog>
           <Dialog>Well sure, I'm your boyfriend.</Dialog>
           <Dialog>Even so, it felt special compared to usual. ...It made me happy.</Dialog>
-          <Dialog>Hearing you say that, ● am happy too.</Dialog>
+          <Dialog>Hearing you say that makes me happy too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3149,7 +3150,7 @@ it another time.</Dialog>
           <Dialog>You asked me out on a date, right？ So, thank you.</Dialog>
           <Dialog>It's totally normal for a guy to ask his girlfriend out.</Dialog>
           <Dialog>Still, this next date feels special to me, not just like any other date... So I'm happy.</Dialog>
-          <Dialog>Thanks. ● feel the same way, so thank you too.</Dialog>
+          <Dialog>Thanks. I'm happy too, so let me thank you right back.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3507,7 +3508,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Scared of what？</Dialog>
           <Dialog>For our date, obviously.</Dialog>
-          <Dialog>In that case, ● would have to agree.</Dialog>
+          <Dialog>I feel the same way, then.</Dialog>
           <Dialog>Not being able to wait like this is what makes the actual date even more exciting, though.</Dialog>
           <Dialog>Maybe so.</Dialog>
         </Dialogs>
@@ -3623,7 +3624,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Is that so？</Dialog>
           <Dialog>I hate when it rains, 'cause it makes my mood feel all gloomy too.</Dialog>
-          <Dialog>Maybe the rain clouds won't stand a chance against the energy you and ● have, and they'll just blow away! Haha!</Dialog>
+          <Dialog>With our combined power, we'll blow those rain clouds right away on the day of our date! Haha!</Dialog>
           <Dialog>...Are you being serious？ That's so corny.</Dialog>
           <Dialog>(...Damn it.)</Dialog>
         </Dialogs>
@@ -3889,7 +3890,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I'm really looking forward to our date tomorrow. Hehe.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● can't wait either.</Dialog>
+          <Dialog>Me too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3970,7 +3971,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I've been excited all morning. What about you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, ● feel the same way.</Dialog>
+          <Dialog>Yeah, same here.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3997,7 +3998,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Maybe we should've scheduled our next date a little sooner.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. ● can't wait either.</Dialog>
+          <Dialog>Yeah. I can't wait either.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4024,7 +4025,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I wish the day of our date would hurry up and get here. Having to wait is stressing me out.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(● just hope she doesn't take that stress out on me.)</Dialog>
+          <Dialog>(I just hope she doesn't take that stress out on me.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4815,7 +4816,7 @@ it another time.</Dialog>
           <Dialog>You're just overthinking it. It's all in your head.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>You think so？ ...I hope you're right.</Dialog>
-          <Dialog>● will try to be a little more careful too.</Dialog>
+          <Dialog>I'll try to be a little more careful, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4991,7 +4992,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Tell me what you thought first, ▲小早川＊▲.</Dialog>
           <Dialog>For me... it wasn't bad. Actually, not bad at all.</Dialog>
-          <Dialog>So that means you liked it. ● did too.</Dialog>
+          <Dialog>So that means it was good, huh？ Same for me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5077,7 +5078,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>You know, I feel really happy right now.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● felt the same way. It's all thanks to you, ▲小早川＊▲.</Dialog>
+          <Dialog>Same here. And it's all thanks to you, ▲小早川＊▲.</Dialog>
           <Dialog>Right back at you. Anyway, it's because the date was so great.</Dialog>
           <Dialog>Yeah. We really had a great time.</Dialog>
         </Dialogs>
@@ -5121,7 +5122,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>My heart's been racing ever since I got home.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● feel the same way. That date really was the best.</Dialog>
+          <Dialog>Mine too. That date really was the best.</Dialog>
           <Dialog>Really, it made me feel so happy. Thanks.</Dialog>
           <Dialog>Let's make the next date even better.</Dialog>
         </Dialogs>
@@ -5228,7 +5229,7 @@ it another time.</Dialog>
           <Dialog>If every day were like this, that'd be amazing.</Dialog>
           <Dialog>Haha. This kind of thing is special because it's only once in a while.</Dialog>
           <Dialog>I know that. I just meant that's how much fun I had!</Dialog>
-          <Dialog>▲小早川＊▲... ● should be the one thanking you.</Dialog>
+          <Dialog>▲小早川＊▲... I'm the one who should be thanking you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5287,7 +5288,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Thanks？</Dialog>
           <Dialog>Yeah. Because our date was extra fun.</Dialog>
-          <Dialog>Then ● have to thank you too, ▲小早川＊▲.</Dialog>
+          <Dialog>Then I should be thanking you too, ▲小早川＊▲.</Dialog>
           <Dialog>No way! I'm saying it first. Thanks for such a special time... Hehe.</Dialog>
           <Dialog>(Man... That makes me blush a little.)</Dialog>
         </Dialogs>
@@ -5568,7 +5569,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I feel like there's still a trace of you lingering in my room.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ Something ● left behind？</Dialog>
+          <Dialog>Huh？ Of me？</Dialog>
           <Dialog>More like your presence, or your vibe... Anyway, it feels nice!</Dialog>
           <Dialog>It feels nice, huh... Good to know.</Dialog>
         </Dialogs>
@@ -6004,7 +6005,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hey... I suddenly felt like hearing your voice.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Really？ ● was hoping to hear your voice too, ▲小早川＊▲.</Dialog>
+          <Dialog>I see. I was just thinking I wanted to hear your voice too, ▲小早川＊▲.</Dialog>
           <Dialog>Must be telepathy, huh？ Hmm.</Dialog>
           <Dialog>Yeah, maybe something like that.</Dialog>
         </Dialogs>
@@ -6092,7 +6093,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hehe...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？ Did ● say something weird？</Dialog>
+          <Dialog>What's up？ Did I say something weird？</Dialog>
           <Dialog>Nope. I'm just happy I got to hear your voice.</Dialog>
           <Dialog>▲小早川＊▲... I see.</Dialog>
         </Dialogs>
@@ -6138,7 +6139,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah, it's fine. I'm awake.</Dialog>
           <Dialog>I called because I couldn't sleep. But now that I'm hearing your voice, I feel like I might be able to.</Dialog>
-          <Dialog>So ● work as a lullaby now, huh？ Haha.</Dialog>
+          <Dialog>So my voice works like a lullaby, huh？ Haha.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6446,7 +6447,7 @@ it another time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Did something happen to tire you out that much？</Dialog>
           <Dialog>Just a bunch of stuff. I'm a busy girl, you know. Anyway, good night.</Dialog>
-          <Dialog>Yeah, good night. ● should get to bed soon, too.</Dialog>
+          <Dialog>Yeah, good night. I should get to bed early too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6796,7 +6797,7 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Haven't you been slacking off on committee duty lately？ Make sure you show up.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Have I...？ When am ● on duty next？</Dialog>
+          <Dialog>Have I...? When am I on duty next？</Dialog>
           <Dialog>*Sigh*... I knew it. Just make sure you come, okay？ I'm there too, after all.</Dialog>
           <Dialog>Yeah, got it. I'll be more careful.</Dialog>
         </Dialogs>
@@ -6990,13 +6991,13 @@ it another time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, ▲小早川＊▲. It's ●.</Dialog>
+          <Dialog>Oh, ▲小早川＊▲. It's me.</Dialog>
           <Dialog>What？ I'm mad at you right now, you know.</Dialog>
           <Dialog>As I thought...</Dialog>
-          <Dialog>● was in the wrong.</Dialog>
+          <Dialog>It was my fault</Dialog>
           <Dialog>Aren't we both guilty
 of that, though？</Dialog>
-          <Dialog>● wasn't in the wrong.</Dialog>
+          <Dialog>It's not my fault, is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7056,10 +7057,11 @@ of that, though？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry, ● was in the wrong.</Dialog>
+          <Dialog>I'm sorry, it was my fault.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Oh, you're actually apologizing？</Dialog>
-          <Dialog>Of course—● was the one in the wrong. I'm sorry.</Dialog>
+          <Dialog>Well, it was my fault,
+wasn't it？ I'm sorry.</Dialog>
           <Dialog>...That makes me feel
 stupid for being mad
 all by myself.</Dialog>
@@ -7128,16 +7130,16 @@ better mood now...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● think we're both
-in the wrong here.</Dialog>
+          <Dialog>I think we're both to
+blame here.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Well, yeah, I guess.</Dialog>
           <Dialog>Then let's just make up
 already.</Dialog>
           <Dialog>What's with that...?
 Quit acting so grown-up.</Dialog>
-          <Dialog>Well, ● happen to be
-more grown-up than you.</Dialog>
+          <Dialog>Well, I am more grown-up
+than you.</Dialog>
           <Dialog>Shut up, old man. ...Fine,
 whatever. We're good now.</Dialog>
           <Dialog>(Looks like she's in a
@@ -7201,15 +7203,15 @@ better mood now...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Thinking it over, ●
-wasn't in the wrong
-here, right？</Dialog>
+          <Dialog>I thought about it, and
+I'm not at fault here,
+am I？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>So you're saying it's
 my fault, then？</Dialog>
-          <Dialog>Not saying that, but...
-● shouldn't take all
-the blame, either.</Dialog>
+          <Dialog>I'm not saying that,
+but... it's not fair if
+I take all the blame.</Dialog>
           <Dialog>...Well, I guess I might've
 been a little selfish too.</Dialog>
           <Dialog>There's no point staying
@@ -7539,8 +7541,8 @@ another time's fine. Bye.</Dialog>
           <Dialog>Voicemail</Dialog>
           <Dialog>End of message playback.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Maybe ● should give
-her a call later.)</Dialog>
+          <Dialog>(Maybe I'll give her a
+call myself later.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7623,8 +7625,8 @@ even pick up...</Dialog>
           <Dialog>Voicemail</Dialog>
           <Dialog>End of message playback.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Maybe ● should ask
-her out instead...)</Dialog>
+          <Dialog>(Maybe I'll call her back
+and ask her out myself...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

@@ -228,7 +228,9 @@
           <Dialog>Hey, want to check it out after work？</Dialog>
           <Dialog>Oho, scouting out the enemy, huh？</Dialog>
           <Dialog>Not really, but... Well, maybe. I just can't help being curious.</Dialog>
-          <Dialog>Yeah. I'm curious what kind of place it is too, ●, so let's go!</Dialog>
+          <Dialog>Yeah, I'm curious what the
+place is like too. Let's go
+check it out!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1131,9 +1133,9 @@ It's full of our memories.</Dialog>
 like that.</Dialog>
           <Dialog>You're right, I'm sorry...</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>（The place full of memories
-for ● and me might
-disappear, huh...）</Dialog>
+          <Dialog>(So the place full of our
+memories might disappear,
+huh...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1611,8 +1613,7 @@ hear you. Please stop.</Dialog>
 Let's clean this up
 right away.</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>Want me to help too,
-●？</Dialog>
+          <Dialog>Should I help out too？</Dialog>
           <Dialog>We'll be fine. Could you
 take Table 7？ They're waiting
 to order.</Dialog>
@@ -2259,13 +2260,13 @@ the same kind of work.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>What do you plan to do？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● might not even make 
-the cut, honestly. 
-▲姉ヶ崎＊▲ definitely will, though.</Dialog>
+          <Dialog>I don't even know if I'll
+make the cut. You're a
+shoo-in though, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>It'd be great if ● made 
-the cut too, so we could go 
-to the same store together.</Dialog>
+          <Dialog>It'd be great if I made the
+cut too and we could go to
+the same store.</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>I really wouldn't want us 
 to be separated.</Dialog>
@@ -3108,9 +3109,9 @@ job in this economy, I'm...
 *sigh*... Well, do your best
 until we close, okay？</Dialog>
           <Dialog>…………。</Dialog>
-          <Dialog>(Didn't make the cut, huh...
-Well, with only ●,
-I guess it makes sense...)</Dialog>
+          <Dialog>(Didn't make it, huh...
+Well, at my level, I guess
+that's no surprise...)</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
           <Dialog>▲姉ヶ崎＊▲。</Dialog>
@@ -3119,10 +3120,11 @@ Looking a little down there.</Dialog>
           <Dialog>Yeah, that transfer selection...
 I didn't make it.</Dialog>
           <Dialog>...Eh？</Dialog>
-          <Dialog>Sorry... If ● got chosen,
-we could've kept working together
-at Dixie's... Wait, what about ▲姉ヶ崎＊▲？
-You made it, right？</Dialog>
+          <Dialog>Sorry... If I'd made it too,
+we could've kept working at
+Dixie's together... Oh, what
+about you, ▲姉ヶ崎＊▲？
+You got picked, right？</Dialog>
           <Dialog>Yeah, that's what they said.
 Said if I want to, I can work
 at the Towano branch.</Dialog>
@@ -3407,9 +3409,9 @@ right off the bat, too... Huh,
 did I get that mixed up？</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>O-oh, it's nothing. ●,
-my break's almost over, so I'm
-heading back. See ya.</Dialog>
+          <Dialog>O-Oh, it's nothing. My
+break's almost over, so I'm
+gonna head back. See ya.</Dialog>
           <Dialog>See ya~</Dialog>
           <Dialog>(▲姉ヶ崎＊▲... Did you take
 the transfer offer？)</Dialog>
@@ -3660,9 +3662,9 @@ like I couldn't explain it...</Dialog>
           <Dialog>I'm sorry. I hate not being
 able to work together, too...
 That part really is true, okay？</Dialog>
-          <Dialog>Yeah, you're right... It really
-just comes down to wishing ●
-could've made the cut too.</Dialog>
+          <Dialog>Yeah, I know... If I'd just
+made the cut, we wouldn't
+even have this problem.</Dialog>
           <Dialog>No, I should have been honest
 about what I was thinking
 the whole time...</Dialog>
@@ -3682,7 +3684,8 @@ didn't want us working apart.</Dialog>
 same way about that. Because
 that part really is true.</Dialog>
           <Dialog>▲姉ヶ崎＊▲……。</Dialog>
-          <Dialog>(● needs to grow up...)</Dialog>
+          <Dialog>(I've gotta be more mature
+about this...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3951,8 +3954,8 @@ we have left here...)</Dialog>
           <Dialog>What's up, Boss？</Dialog>
           <Dialog>Hey, uh... how do I place
 an order in this case again？</Dialog>
-          <Dialog>Huh？ Even if you ask ●,
-I've got no idea...</Dialog>
+          <Dialog>Huh？ Uh, even if you ask me,
+I wouldn't know...</Dialog>
           <Dialog>Eeeh？ Guess you're no help...
 Oh, there she is! Nene-kuun!</Dialog>
           <Dialog>Anegasaki</Dialog>
@@ -4383,7 +4386,7 @@ her older sister, didn't you？</Dialog>
           <Dialog>Jeez, don't say weird things
 like that.</Dialog>
           <Dialog>Haha... Um, my name is
-●, ▲苗字▲▲名前▲.</Dialog>
+▲苗字▲▲名前▲.</Dialog>
           <Dialog>I hear all about you from Nene-
 chan. So there's no need to be
 so stiff, okay？</Dialog>
@@ -4556,16 +4559,18 @@ much! Goodbye!</Dialog>
           <Dialog>Haaah... That really caught me
 off guard.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● too... But I don't think
-I've ever seen ▲姉ヶ崎＊▲
-so flustered before.</Dialog>
+          <Dialog>Me too... Though I think
+that's the first time I've
+seen you that flustered,
+▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Oh, hush. But... thinking about
 it, it's the local supermarket,
 so it's almost weird we haven't
 run into her until now.</Dialog>
-          <Dialog>True. But your mom didn't even
-ask my name, so how did she
-know right away that ● was...</Dialog>
+          <Dialog>True. Still, your mom didn't
+even ask my name, so how'd
+she know right away that,
+uh, you know, I...</Dialog>
           <Dialog>...was my boyfriend, you mean？</Dialog>
           <Dialog>Yep.</Dialog>
           <Dialog>Well... we are mother and
@@ -4985,8 +4990,8 @@ be good practice for the future.</Dialog>
           <Dialog>That's why
 I don't want to switch to
 a different part-time job.</Dialog>
-          <Dialog>Is that how it was...
-I'm sorry, ●...</Dialog>
+          <Dialog>So that's why...
+I'm sorry, I...</Dialog>
           <Dialog>I'm the one who didn't say
 anything. You didn't do
 anything wrong.</Dialog>
@@ -5129,30 +5134,28 @@ works at Dixie's.)</Dialog>
           <Dialog>About those selections
 for Dixie's...</Dialog>
           <Dialog>Ah... yeah. What is it？</Dialog>
-          <Dialog>● want to try
-pushing myself harder.</Dialog>
+          <Dialog>I think I'm gonna try
+working even harder.</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>You said you wanted us
-to work together, so it'd
-be pathetic if we couldn't
-just because of ●.
-But there's no way I want
-to get in the way of
-▲姉ヶ崎＊▲'s goals, either.</Dialog>
+          <Dialog>You said you wanted to work
+together, and it's pathetic
+if we can't just because of
+me. And I definitely don't
+want to get in the way of
+your goals, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>I'm really happy, but...
 are you pushing yourself
 too hard？</Dialog>
-          <Dialog>Even if it is, ● want
-to do this.
-I'll ask the manager.
-If he says no... I'll still
-give it everything I've got
-right to the end.</Dialog>
+          <Dialog>Even if I am, it's what I
+want to do. I'll ask the
+manager. Even if he says
+no... I'll do everything I
+can right up to the end.</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
-          <Dialog>● want to take this
+          <Dialog>I want to try taking my work
 seriously too, just like
-▲姉ヶ崎＊▲.</Dialog>
+you, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Thank you...</Dialog>
         </Dialogs>
       </SDL2>
@@ -5504,9 +5507,9 @@ your time.</Dialog>
           <Dialog>Yeah. So what is it？
 I'm pretty busy, so...</Dialog>
           <Dialog>Right. It's about the
-selection... Is there any
-way ● could work at
-the Towano store too？</Dialog>
+transfer selection... Is
+there any way I could work
+at the Towano branch too？</Dialog>
           <Dialog>Huh？ But that's already
 been decided... That kind
 of puts me in a spot.</Dialog>
@@ -5530,10 +5533,10 @@ only exception.</Dialog>
 case, though. Honestly, I've
 been asking her to do work
 way beyond a part-timer.</Dialog>
-          <Dialog>Then... for example, if I
-can work as well as
-Anegasaki-san, could
-● be chosen too？</Dialog>
+          <Dialog>Then... if I could handle
+the work as well as
+Anegasaki-san, could I get
+picked too？</Dialog>
           <Dialog>Well, I suppose you could
 say that, but...</Dialog>
           <Dialog>Please!</Dialog>
@@ -6561,7 +6564,7 @@ Geez, you're exaggerating.</Dialog>
           <Dialog>That was delicious.</Dialog>
           <Dialog>You're very welcome!</Dialog>
           <Dialog>Well, I'll do the dishes.</Dialog>
-          <Dialog>Oh, ● will help too.</Dialog>
+          <Dialog>Oh, I'll help too.</Dialog>
           <Dialog>Oh, don't worry about that.</Dialog>
           <Dialog>But you treated me
 to such a nice meal...</Dialog>
@@ -8198,8 +8201,8 @@ cover it.</Dialog>
           <Dialog>Well then—</Dialog>
           <Dialog>Oh, Mom's home...
 Is it really that late already？</Dialog>
-          <Dialog>Right, then maybe I should
-head home soon, ●—</Dialog>
+          <Dialog>I see. Then I should
+probably head home soon—</Dialog>
           <Dialog>Nene's Mom</Dialog>
           <Dialog>Hello there!
 Studying for work again today？</Dialog>
@@ -9849,7 +9852,7 @@ house with my grandkids... right？</Dialog>
           <Dialog>Thanks for dinner tonight.</Dialog>
           <Dialog>You're very welcome.
 Sorry about Mom.</Dialog>
-          <Dialog>● was fun too, though？</Dialog>
+          <Dialog>I had fun too, you know？</Dialog>
           <Dialog>Really？ She wasn't annoying？</Dialog>
           <Dialog>Really. Plus, it seemed like
 she took a liking to me, you know？</Dialog>
@@ -10245,9 +10248,9 @@ fell through...)</Dialog>
           <Dialog>So, about that Dixie's
 selection...</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>The manager said...
-about ●'s spot on the
-team... it's been called off.</Dialog>
+          <Dialog>About me making the cut...
+The manager said... it
+fell through.</Dialog>
           <Dialog>Wait...... what!?</Dialog>
           <Dialog>Sorry...</Dialog>
           <Dialog>No way... Why？</Dialog>
@@ -10406,8 +10409,8 @@ Alright, let's do this!)</Dialog>
 Towano store after all.</Dialog>
           <Dialog>Why...？</Dialog>
           <Dialog>…………。</Dialog>
-          <Dialog>That's... because of
-●, isn't it？</Dialog>
+          <Dialog>That's... because of me,
+isn't it？</Dialog>
           <Dialog>It's not your fault.</Dialog>
           <Dialog>It's not your fault...
 But...</Dialog>
@@ -10746,8 +10749,8 @@ out of the blue like this.</Dialog>
 fell through.</Dialog>
           <Dialog>Good grief... is it really
 that big of a deal？</Dialog>
-          <Dialog>But it's ●'s fault
-that ▲姉ヶ崎＊▲ had to...</Dialog>
+          <Dialog>But because of me,
+even ▲姉ヶ崎＊▲...</Dialog>
           <Dialog>I see...</Dialog>
           <Dialog>She's been that way
 ever since she was little.
@@ -10779,9 +10782,8 @@ Things might get tough
 sometimes, but please keep
 looking out for each other, okay？</Dialog>
           <Dialog>Okay！</Dialog>
-          <Dialog>(●'s job, huh...
-I need to step up
-and do it right.)</Dialog>
+          <Dialog>(My job, huh...
+I've gotta do it right.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10956,26 +10958,26 @@ today.</Dialog>
           <Dialog>▲姉ヶ崎＊▲, you really need
 to go to the Towano store.</Dialog>
           <Dialog>Like I said, that's—</Dialog>
-          <Dialog>As for time together,
-● will make it work.
-Even with different jobs,
-we can meet by the convenience
-store, just so we can be
-together as much as possible.</Dialog>
+          <Dialog>If it's about our time
+together, I'll make it work.
+Even at different jobs, I
+can work at a convenience
+store nearby so we get every
+bit of time together we can.</Dialog>
           <Dialog>▲主人公＊▲……。</Dialog>
           <Dialog>I'll come see you at school
 all the time, and we can go
 on way more dates, okay？</Dialog>
           <Dialog>Thank you... But really,
 I should be the one—</Dialog>
-          <Dialog>● might be younger
-and not that reliable,
-but making sure ▲姉ヶ崎＊▲
-doesn't cry is
-●'s job, I think...</Dialog>
+          <Dialog>I'm younger than you and
+maybe not the most reliable,
+but I think making sure you
+don't cry is my job,
+▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Yeah... I understand...</Dialog>
           <Dialog>I love you... I really love you.</Dialog>
-          <Dialog>● too...</Dialog>
+          <Dialog>I love you too...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -12074,9 +12076,8 @@ your all, it really is fun.</Dialog>
           <Dialog>And best of all, we get to
 keep working here together.
 Right where I met you.</Dialog>
-          <Dialog>Yeah... In the place full
-of memories for ●
-and you.</Dialog>
+          <Dialog>Yeah... Right here in the
+place full of our memories.</Dialog>
           <Dialog>Hey...
 I love you...</Dialog>
         </Dialogs>

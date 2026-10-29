@@ -53,7 +53,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Aren't there a lot of couples out today？ ...All over each other like that. It's embarrassing just watching.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If we do the same thing, ●, it won't feel embarrassing, right？</Dialog>
+          <Dialog>If we did the same thing, it wouldn't be embarrassing, right？</Dialog>
           <Dialog>Oh, great idea!</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>It was a joke, obviously. Too bad for you.</Dialog>
@@ -165,7 +165,7 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, those two？ I see them around a lot.</Dialog>
           <Dialog>They live in my neighborhood, and they're always so close.</Dialog>
-          <Dialog>Then should we follow their lead, ●？</Dialog>
+          <Dialog>Then want to follow their lead？</Dialog>
           <Dialog>That's not why I brought it up, but... for that couple's sake, I'll allow it.</Dialog>
         </Dialogs>
       </SDL2>
@@ -601,8 +601,8 @@ embarrassing, but...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>How was it？</Dialog>
           <Dialog>It's nice once in a while... maybe.</Dialog>
-          <Dialog>Haha, that's good. Actually,
-● started getting embarrassed
+          <Dialog>Haha, I'm glad. Actually,
+I started getting embarrassed
 halfway through, too.</Dialog>
           <Dialog>I might be in a bit of a
 romantic mood right now.
@@ -1397,8 +1397,9 @@ commercialism.</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>I thought that was the kind
 of answer you expected.</Dialog>
-          <Dialog>● thought it was pretty
-good, so that's a little...</Dialog>
+          <Dialog>I actually thought it was
+pretty good, so that's a
+bit much...</Dialog>
           <Dialog>I know, I'm kidding. I
 thought it was good too.</Dialog>
         </Dialogs>
@@ -1453,8 +1454,8 @@ thought it was good too.</Dialog>
           <Dialog>The closing band! They were
 really great, weren't they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● thought so too. So you
-liked them too, ▲小早川＊▲？</Dialog>
+          <Dialog>I thought so too.
+So you liked them, ▲小早川＊▲？</Dialog>
           <Dialog>They just do their own
 thing. I like how they don't
 care what anyone thinks.</Dialog>
@@ -2025,8 +2026,8 @@ your foot, didn't I？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>It's fine. Ferris wheels
 are pretty cramped... Hehe.</Dialog>
-          <Dialog>？ Did ● say
-something funny？</Dialog>
+          <Dialog>？ Did I say something
+funny？</Dialog>
           <Dialog>Nope. Being in here... close
 enough for our feet to touch
 like this is kinda nice.</Dialog>
@@ -2397,7 +2398,7 @@ from here？</Dialog>
           <Dialog>Mm, just a little.</Dialog>
           <Dialog>That's rare for you. Want to head home？</Dialog>
           <Dialog>I'm fine. We came all this way to see the parade, so it'd be a waste.</Dialog>
-          <Dialog>True, but if you get sleepy, ● can lend you a shoulder.</Dialog>
+          <Dialog>True, but if you get sleepy, you can lean on my shoulder.</Dialog>
           <Dialog>...Mhm, thanks.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2823,8 +2824,7 @@ from here？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well, it's that kind of atmosphere.</Dialog>
           <Dialog>...That's not what I'm getting at.</Dialog>
-          <Dialog>Should we just head out
-then, ●？</Dialog>
+          <Dialog>Should we head out, then？</Dialog>
           <Dialog>That's not it... Come on,
 take a hint already.</Dialog>
           <Dialog>(This is hard...)</Dialog>
@@ -3618,7 +3618,7 @@ something？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I don't... do well with crowds...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Everyone's dead serious here, ●. Casuals like us don't stand a chance.</Dialog>
+          <Dialog>Everyone's so intense here, we don't stand a chance against them.</Dialog>
           <Dialog>Yeah, it's definitely not somewhere you just drop by for sightseeing. I had fun, though, so it's fine.</Dialog>
           <Dialog>I wonder if it gets even more fun once you're a regular？</Dialog>
           <Dialog>Maybe, but... I think I'll pass. I've got too many hobbies keeping me busy as it is.</Dialog>
@@ -3793,7 +3793,7 @@ something？</Dialog>
           <Dialog>Being like this kind of puts you in a romantic mood, doesn't it？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Does it？ I was picturing a giant monster destroying the Bay Bridge.</Dialog>
-          <Dialog>Come on... You and ● are a couple, so couldn't you be a little more...</Dialog>
+          <Dialog>Come on... We're a couple, so couldn't you at least...</Dialog>
           <Dialog>Then want to try doing couple stuff？ Like leaning on your shoulder, or linking arms. You'd just get embarrassed anyway.</Dialog>
           <Dialog>That goes for both of us.</Dialog>
           <Dialog>Hehe, who knows.</Dialog>
@@ -4695,7 +4695,7 @@ dreamer or a realist here...)</Dialog>
 up front, you'll get splashed.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Getting splashed a little is part of the fun of a dolphin show.</Dialog>
-          <Dialog>All right, then you too, ●!</Dialog>
+          <Dialog>Alright, then me too!</Dialog>
           <Dialog>Whoa！ ？</Dialog>
           <Dialog>Geez, look at you.</Dialog>
           <Dialog>When did you get out of the way, ▲小早川＊▲？</Dialog>
@@ -4822,7 +4822,7 @@ up front, you'll get splashed.</Dialog>
           <Dialog>Now if only this place would tone it down a little.</Dialog>
           <Dialog>Really？ It's pretty quiet, though.</Dialog>
           <Dialog>Not the noise, the vibe. It just screams "date spot," you know？</Dialog>
-          <Dialog>(Well, we're on a date right now too, ●...)</Dialog>
+          <Dialog>(Well, we're on a date here too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6631,7 +6631,7 @@ up front, you'll get splashed.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah, watching it makes me feel kinda ferocious myself...</Dialog>
           <Dialog>Your stomach is growling at lion food... Seriously？</Dialog>
-          <Dialog>I couldn't help it... Hey, ●'s a real carnivore, you know! ...Just kidding.</Dialog>
+          <Dialog>I couldn't help it... Come on, I'm a carnivore at heart! ...Just kidding.</Dialog>
           <Dialog>Aw, look how cute the baby lion is♪</Dialog>
           <Dialog>……。</Dialog>
         </Dialogs>
@@ -7232,8 +7232,9 @@ smash this poor thing, right？</Dialog>
           <Dialog>What were they thinking,
 seriously？ Doing that to
 such a cute little guy...</Dialog>
-          <Dialog>(● thinks ▲小早川＊▲ is
-way cuter right now.)</Dialog>
+          <Dialog>(I think ▲小早川＊▲ is even
+cuter when she gets like
+this.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7292,8 +7293,8 @@ from head to toe.</Dialog>
           <Dialog>Just sit back and relax.
 Today, we're causing a paradigm
 shift in the fashion scene.</Dialog>
-          <Dialog>(What kind of outfit is
-● gonna get put in...？)</Dialog>
+          <Dialog>(Just what kind of outfit
+is she gonna put me in...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7806,8 +7807,8 @@ personal darts. Might even be
 custom-made.</Dialog>
           <Dialog>Huh, I didn't know that
 was a thing...</Dialog>
-          <Dialog>Should we get some made
-for ourselves too, ●？</Dialog>
+          <Dialog>Want to get some made for
+ourselves too？</Dialog>
           <Dialog>Sounds fun. I want ones that
 make noise, so it'll feel like
 a bullseye wherever they hit.</Dialog>
@@ -8942,9 +8943,8 @@ How does it feel being
 called "Young Lady," ▲小早川＊▲？</Dialog>
           <Dialog>I don't know what to tell you.
 I'm not a "Young Lady."</Dialog>
-          <Dialog>Well, you could say the same
-about ● being
-the "Master."</Dialog>
+          <Dialog>If you put it that way,
+I'm not a "Master" either.</Dialog>
           <Dialog>......？
 Wait, if you're the Master of
 the house and I'm the Young
@@ -9626,7 +9626,7 @@ country. It's fascinating.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hm？ The scenery here？</Dialog>
           <Dialog>Yeah. It doesn't quite feel real—not that I'd go so far as to call it magical or anything.</Dialog>
-          <Dialog>True... So ● and I are characters in a storybook, huh.</Dialog>
+          <Dialog>True... Does that make us characters in the picture book, then？</Dialog>
           <Dialog>Right. A princess... and her servant.</Dialog>
           <Dialog>…………。</Dialog>
         </Dialogs>
@@ -10166,7 +10166,7 @@ country. It's fascinating.</Dialog>
           <Dialog>Well, when you think of waterfalls, you think of people training under them, right？</Dialog>
           <Dialog>You think so？ Wouldn't that be a much fiercer waterfall？ The kind where, like, logs come tumbling down from the top.</Dialog>
           <Dialog>And then with one flash of a kick, the log splits right in two!</Dialog>
-          <Dialog>You don't need to go splitting any logs in two, ●!</Dialog>
+          <Dialog>You don't need to split me in two!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10225,7 +10225,7 @@ country. It's fascinating.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hey, don't get too close to the edge. It's dangerous.</Dialog>
           <Dialog>You're such a worrywart. You're gonna get old fast.</Dialog>
-          <Dialog>It's not that ● worry too much—you're just way too reckless, ▲小早川＊▲.</Dialog>
+          <Dialog>It's not that I'm a worrywart, you're just way too reckless, ▲小早川＊▲.</Dialog>
           <Dialog>Well, I've always got you right here next to me. That's why I feel safe enough to do stuff like this.</Dialog>
           <Dialog>(I'm happy to hear that, but talk about pressure...)</Dialog>
         </Dialogs>
@@ -10510,7 +10510,7 @@ country. It's fascinating.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Sometimes you see people at the sports center rink who are crazy good at skating, right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, ● saw someone like that too. Wonder if they're a pro or something.</Dialog>
+          <Dialog>I've seen them too. Maybe they're competitive skaters or something.</Dialog>
           <Dialog>Probably. I wonder how long it takes to get that good.</Dialog>
           <Dialog>You're pretty athletic too, ▲小早川＊▲. Maybe you could get there if you practiced？</Dialog>
           <Dialog>I'm not a big fan of the word "practice." Besides, if I'm skating all seriously by myself, you can hardly call it a date. Would you really want that？</Dialog>
@@ -10824,7 +10824,7 @@ weird ideas, are you？</Dialog>
           <Dialog>I was just wondering if lifting
 weights here would make you
 look like the guy on that poster.</Dialog>
-          <Dialog>Are you trying to turn ●
+          <Dialog>Are you trying to turn me
 into a bodybuilder？</Dialog>
           <Dialog>...No good？ Hmm, too bad.
 Thought it'd be fun, though.</Dialog>

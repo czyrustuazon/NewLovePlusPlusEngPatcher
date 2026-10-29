@@ -893,7 +893,7 @@ or not...</Dialog>
 which side I was on, but...</Dialog>
           <Dialog>I see.</Dialog>
           <Dialog>I'm on... your side.</Dialog>
-          <Dialog>●'s side？</Dialog>
+          <Dialog>My side？</Dialog>
           <Dialog>It means I'm fine with either.</Dialog>
           <Dialog>(...Huh？)</Dialog>
         </Dialogs>
@@ -1122,10 +1122,9 @@ great housewife, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>You... think so? What do
 you consider a good
 housewife?</Dialog>
-          <Dialog>I think you're great,
-●. You really think
-things through and manage
-well.</Dialog>
+          <Dialog>I think it's great, putting
+all that thought into how
+you budget things.</Dialog>
           <Dialog>I see, yeah! In that case,
 I guess things are fine as
 they are...</Dialog>
@@ -1868,9 +1867,8 @@ fairytale trope.</Dialog>
           <Dialog>Right？ So I'm good.
 I don't want to let go of
 the happiness I have now.</Dialog>
-          <Dialog>Yeah, me too, ●.
-I hope things stay just
-like this forever.</Dialog>
+          <Dialog>Yeah, me too. I hope things
+stay just like this forever.</Dialog>
           <Dialog>Hehe, right？</Dialog>
         </Dialogs>
       </SDL2>
@@ -2869,8 +2867,8 @@ thinking about how wild girls'
 imaginations can be.</Dialog>
           <Dialog>It is, you know？ Like,
 if you and I were adults...</Dialog>
-          <Dialog>If ● and ▲姉ヶ崎＊▲
-were adults...</Dialog>
+          <Dialog>If ▲姉ヶ崎＊▲ and I were
+adults...</Dialog>
           <Dialog>I'll tell you the rest
 when we're adults.▼</Dialog>
           <Dialog>(I wonder what she was
@@ -3186,9 +3184,8 @@ see the manager like that.</Dialog>
 but... I feel bad for the
 customer, so I'll talk
 to the manager.</Dialog>
-          <Dialog>Yeah. I'll help you out
-too if anything happens,
-●.</Dialog>
+          <Dialog>Yeah, if anything comes up,
+I'll help out too.</Dialog>
           <Dialog>Thanks. I'll be fine.</Dialog>
         </Dialogs>
       </SDL2>
@@ -4372,7 +4369,7 @@ where we first met.</Dialog>
           <Dialog>▲姉ヶ崎＊▲……。</Dialog>
           <Dialog>Right？</Dialog>
           <Dialog>Yeah. I wonder if there's
-anything ● can do to help.</Dialog>
+anything we can do.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4489,8 +4486,8 @@ difficult, too.</Dialog>
           <Dialog>Hmm, it really is hard to
 figure out how to make
 customers happy.</Dialog>
-          <Dialog>● would be perfectly
-happy with just ▲姉ヶ崎＊▲'s smile.
+          <Dialog>I think your smile is more
+than enough, ▲姉ヶ崎＊▲.
 Plus, it's free.</Dialog>
           <Dialog>That won't work. I can only
 show my best smile to you,
@@ -4612,9 +4609,9 @@ for the kids？</Dialog>
 a shoulder massage ticket？</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>Um... I was joking.</Dialog>
-          <Dialog>A shoulder massage ticket
-from ▲姉ヶ崎＊▲ sounds great.
-● would like one, too.</Dialog>
+          <Dialog>Hey, a shoulder massage
+ticket from ▲姉ヶ崎＊▲ sounds
+great. I want one too.</Dialog>
           <Dialog>You don't need a ticket.</Dialog>
           <Dialog>My face is my ticket？</Dialog>
           <Dialog>Jeez, don't push your luck.</Dialog>
@@ -5050,7 +5047,7 @@ it would have been fine.</Dialog>
 right？</Dialog>
           <Dialog>There are funny horror movies, 
 right？</Dialog>
-          <Dialog>I don't really get it, ●...</Dialog>
+          <Dialog>I don't really get that...</Dialog>
           <Dialog>Really？ That's strange...</Dialog>
         </Dialogs>
       </SDL2>
@@ -5568,8 +5565,7 @@ too, ▲姉ヶ崎＊▲？</Dialog>
           <Dialog>Hey, don't be jealous.
 I've got my very own hero,
 so I'm perfectly happy♪</Dialog>
-          <Dialog>...Are you talking about
-●？</Dialog>
+          <Dialog>...Do you mean me？</Dialog>
           <Dialog>If I'm ever in a pinch,
 you'll come flying, right？</Dialog>
           <Dialog>Haha, leave it to me!</Dialog>
@@ -6775,7 +6771,7 @@ for advice, though.</Dialog>
           <Dialog>But listening to her, it
 wasn't really about me.
 It was about us.</Dialog>
-          <Dialog>Huh？ ● and I？</Dialog>
+          <Dialog>Huh？ Us？</Dialog>
           <Dialog>She said we're her ideal
 couple. She's jealous of how
 natural we are together.</Dialog>
@@ -6873,9 +6869,9 @@ being our normal selves...</Dialog>
           <Dialog>Remember that underclassman
 who asked me for love advice？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The one who called ●
-and me an ideal couple？
-You're still advising her？</Dialog>
+          <Dialog>The one who said we're her
+ideal couple？ So you're
+still giving her advice.</Dialog>
           <Dialog>Yeah. It turns out they're
 not actually dating yet.</Dialog>
           <Dialog>Huh？ But I thought she said
@@ -7100,14 +7096,15 @@ Looks like she came to school.</Dialog>
 Now ▲姉ヶ崎＊▲ can relax too.</Dialog>
           <Dialog>I ended up making you
 worry too, didn't I.</Dialog>
-          <Dialog>It doesn't matter to ●,
-as long as ▲姉ヶ崎＊▲ is happy.</Dialog>
+          <Dialog>I don't mind. As long as
+you're doing okay, ▲姉ヶ崎＊▲,
+that's all I care about.</Dialog>
           <Dialog>Ah, you always say such
 sweet things so casually.</Dialog>
           <Dialog>...Oh right, I told her you
 were worried too, and she said
 she'd find a guy just like you.</Dialog>
-          <Dialog>A boyfriend like ●...？</Dialog>
+          <Dialog>A boyfriend like me...？</Dialog>
           <Dialog>You're quite the ladies' man？
 But too bad. There's no other
 boyfriend like you, ▼.</Dialog>
@@ -7330,8 +7327,8 @@ right away.</Dialog>
           <Dialog>I won't give up after just
 three days!
 ...Probably.</Dialog>
-          <Dialog>I wonder if it'd be fun
-if ● joined me.</Dialog>
+          <Dialog>Maybe it'd be fun if I
+joined you.</Dialog>
           <Dialog>The two of us？ Hmm...</Dialog>
           <Dialog>Oh, is that a no？</Dialog>
           <Dialog>It's just... I don't think
@@ -7867,8 +7864,8 @@ are you？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>I'm not reading it anymore,
 so don't worry. Sorry.</Dialog>
-          <Dialog>● is fine, but wasn't it
-way harder for ▲姉ヶ崎＊▲？</Dialog>
+          <Dialog>I don't mind, but wasn't it
+way harder on you, ▲姉ヶ崎＊▲？</Dialog>
           <Dialog>Everyone in class got worried.
 It was so hard to clear up
 the misunderstanding.</Dialog>
@@ -7999,7 +7996,7 @@ taken care of relatives' kids？</Dialog>
           <Dialog>...Hmm？</Dialog>
           <Dialog>My boyfriend acts like a kid
 sometimes, after all.</Dialog>
-          <Dialog>(Hmm... ●!?)</Dialog>
+          <Dialog>(Huh... Wait, me!?)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8097,7 +8094,7 @@ sometimes, after all.</Dialog>
           <Dialog>What did you want to be when
 you grew up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●？ I don't really remember.
+          <Dialog>Me？ I don't really remember.
 What about you, ▲姉ヶ崎＊▲？</Dialog>
           <Dialog>For me, a kindergarten teacher.
 Didn't you look up to your
@@ -8447,8 +8444,8 @@ you know？</Dialog>
 can say is "you know？",
 I might just want to run a
 restaurant again.</Dialog>
-          <Dialog>(Does that mean ● would
-be the restaurant boss...？)</Dialog>
+          <Dialog>(Does that mean I'd be the
+chef at her restaurant...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9308,7 +9305,7 @@ It defeats the purpose.</Dialog>
           <Dialog>Eating too much instant ramen
 unbalances your diet, right？
 That's not good for you.</Dialog>
-          <Dialog>So you did it for ●...</Dialog>
+          <Dialog>Wait, so you did it for me...</Dialog>
           <Dialog>At first, yeah. But it turned
 into a joke recipe halfway
 through. Sorry about that.</Dialog>
@@ -9851,9 +9848,9 @@ around to look, but I
 held myself back.</Dialog>
           <Dialog>They were so cute.
 So innocent. Hehehe.</Dialog>
-          <Dialog>...Even now, seeing you in
-casual clothes is still a
-fresh sight for ●, ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>...Seeing you in casual
+clothes still feels fresh
+to me too, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Oh, feeling competitive？
 I've spotted another cute
 boy right here!</Dialog>
@@ -9983,8 +9980,7 @@ That was so cute, too.</Dialog>
 your big sis will listen!'</Dialog>
           <Dialog>I hope they're still getting
 along next time they come in.</Dialog>
-          <Dialog>(● can't afford to lose
-to them!)</Dialog>
+          <Dialog>(I can't let them beat me!)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10112,8 +10108,8 @@ a movie？</Dialog>
           <Dialog>Yeah. That kind of frustration
 might actually be important
 in romance.</Dialog>
-          <Dialog>● is still frustrated now,
-though.</Dialog>
+          <Dialog>I still feel frustrated
+even now, though.</Dialog>
           <Dialog>Hm, like what？</Dialog>
           <Dialog>Like how I wish we could be
 together more, all the time.</Dialog>
@@ -10347,8 +10343,7 @@ more oblivious？</Dialog>
           <Dialog>It's true, you can be
 pretty oblivious
 sometimes too.</Dialog>
-          <Dialog>Wait, ●？
-Really？</Dialog>
+          <Dialog>Huh, me？ Really？</Dialog>
           <Dialog>Just sometimes, okay？</Dialog>
           <Dialog>(...Huh？ We're still
 talking about the
@@ -10456,9 +10451,9 @@ definitely better with
 the cold.</Dialog>
           <Dialog>Because we wear skirts
 even in winter？</Dialog>
-          <Dialog>Yeah. Bare legs in the
-dead of winter is totally
-impossible for ●.</Dialog>
+          <Dialog>Yeah. Going bare-legged in
+the dead of winter？ There's
+no way I could do that.</Dialog>
           <Dialog>I'm sure guys would be
 fine if they tried it.
 It's just a matter of
@@ -10469,8 +10464,8 @@ that...</Dialog>
           <Dialog>Hm? Is something wrong?</Dialog>
           <Dialog>I just imagined you in
 a skirt for a second.</Dialog>
-          <Dialog>(Ugh... Now ●'s
-imagining it too.)</Dialog>
+          <Dialog>(Ugh... Now I just pictured
+it too.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10612,9 +10607,8 @@ been crying.</Dialog>
           <Dialog>Right. I can't let you
 see me with a face like
 that, can I？</Dialog>
-          <Dialog>● doesn't mind what
-kind of face ▲姉ヶ崎＊▲
-makes, you know？</Dialog>
+          <Dialog>I don't mind what your face
+looks like, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Jeez... I don't know if
 I should be happy about
 that or not.</Dialog>
@@ -10878,9 +10872,9 @@ Before you know it. Like with
 food preferences and stuff.</Dialog>
           <Dialog>Exactly. So, what about you？
 What are you bad with？</Dialog>
-          <Dialog>●'s weak points...
-Let's see, ▲姉ヶ崎＊▲'s sad face？
-Just kidding！</Dialog>
+          <Dialog>Things I can't handle...
+Hmm, seeing ▲姉ヶ崎＊▲ look sad？
+Just kidding!</Dialog>
           <Dialog>Hey now, don't get
 carried away♪</Dialog>
           <Dialog>(I was being serious,
@@ -11667,7 +11661,7 @@ turn black.</Dialog>
           <Dialog>Oh right, putting something
 red in the entryway boosts
 work luck. Wanna try it？</Dialog>
-          <Dialog>●？</Dialog>
+          <Dialog>Me？</Dialog>
           <Dialog>Yeah, a man's gotta work,
 right？</Dialog>
           <Dialog>By work, do you mean
@@ -11677,9 +11671,9 @@ schoolers, I guess it
 means studying. What even
 is work luck? Like getting
 promoted?</Dialog>
-          <Dialog>Getting promoted...
-Like ● becoming a store
-manager, or class rep...</Dialog>
+          <Dialog>Promoted... Like me becoming
+the store manager, or class
+rep...</Dialog>
           <Dialog>...That doesn't sound
 very exciting.</Dialog>
           <Dialog>(Yeah, tell me about it...)</Dialog>
@@ -11766,7 +11760,7 @@ very exciting.</Dialog>
 bento made for him, what
 kind would make him happy?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A bento? ●, are you...</Dialog>
+          <Dialog>A bento？ Well, I'd...</Dialog>
           <Dialog>Ah, sorry, sorry. It's about
 a friend. She asked me for
 advice on making a bento
@@ -12290,8 +12284,8 @@ if you forgot, you know？</Dialog>
 thinking about a lot.
 What's your ideal family？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A family, huh...
-As long as ● has ▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>A family, huh... As long as
+I'm with you, ▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Hey, that's cheating.
 Give me a real answer.</Dialog>
           <Dialog>But it's the truth...
@@ -12299,9 +12293,9 @@ Well, I guess a family where
 I can feel at ease.</Dialog>
           <Dialog>I definitely agree that
 feeling at ease is a must.</Dialog>
-          <Dialog>I'm telling you, ●
-can relax as long as
-▲姉ヶ崎＊▲ is around.</Dialog>
+          <Dialog>That's what I'm saying!
+As long as I'm with you,
+▲姉ヶ崎＊▲, I feel at ease.</Dialog>
           <Dialog>Jeez, there you go again.</Dialog>
           <Dialog>Because it's true.</Dialog>
           <Dialog>I know, thank you.
@@ -13196,9 +13190,9 @@ to brainstorm sweets?!</Dialog>
 a class. I'm just sitting 
 in for a bit. It's like a 
 trial experience.</Dialog>
-          <Dialog>Still, going as far as 
-studying it, ●... 
-I really respect you, ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>Even so, I really admire you
+for going that far to study
+it, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>It's really not that big 
 of a deal. You're 
 exaggerating.</Dialog>

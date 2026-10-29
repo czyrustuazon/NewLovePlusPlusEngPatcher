@@ -466,10 +466,9 @@ Shall we go, then？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Maybe I got here a bit early...
 Wait, ▲姉ヶ崎＊▲'s already here.)</Dialog>
-          <Dialog>(Waiting for ●...
-Seeing ▲姉ヶ崎＊▲ like this is
-kind of nice.
-I'll watch for a bit.)</Dialog>
+          <Dialog>(▲姉ヶ崎＊▲ waiting for me, huh...
+That's kinda nice. I'll watch
+her for a bit.)</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Hey! What are you doing？</Dialog>
           <Dialog>Uh, observing my girlfriend.</Dialog>
@@ -939,7 +938,7 @@ didn't I？</Dialog>
 I was gonna lecture you,
 but I just can't...</Dialog>
           <Dialog>(Do I really look that
-pathetic, ●？)</Dialog>
+pathetic？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1190,7 +1189,7 @@ of UV rays is the same, you know.</Dialog>
           <Dialog>Ah, sorry. 
 I just got a little startled.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(● was startled too...)</Dialog>
+          <Dialog>(That startled me, too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1340,8 +1339,8 @@ so it really is chilly...</Dialog>
           <Dialog>Yeah, I'm team cat, 
 curling up in a kotatsu. 
 How about you？ Team dog？</Dialog>
-          <Dialog>●？ ● would rather... 
-be in the kotatsu with ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>Me？ I'd... rather curl up in
+a kotatsu with you, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Geez, smooth talker. 
 ...Still, full marks for that answer.</Dialog>
         </Dialogs>
@@ -1558,7 +1557,7 @@ other guys looking anyway.)</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>The wind blew my 
 handkerchief right away...</Dialog>
-          <Dialog>●'ll go get it.</Dialog>
+          <Dialog>I'll go get it for you.</Dialog>
           <Dialog>Hah, hah... 
 Here, I found it.</Dialog>
           <Dialog>Sorry, you worked up a sweat. 
@@ -3668,8 +3667,7 @@ mine with you.</Dialog>
           <Dialog>Hey, you'll get soaked.
 Come on, get under.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Thanks. Let ●
-hold the umbrella.</Dialog>
+          <Dialog>Thanks. I'll hold the umbrella.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3753,7 +3751,7 @@ isn't so bad after all.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● has an umbrella,
+          <Dialog>I brought an umbrella,
 so let's share.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Sorry about that.
@@ -4604,8 +4602,8 @@ lunch by yours truly▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>In that case, wanna come
-over to ●'s place？</Dialog>
+          <Dialog>Hey, wanna come over
+to my place, then？</Dialog>
           <Dialog>How about here？</Dialog>
         </Dialogs>
       </SDL2>
@@ -5538,8 +5536,7 @@ getting late anyway, you know？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Wanna come over
-to ●'s place？</Dialog>
+          <Dialog>Wanna come over to my place？</Dialog>
           <Dialog>How about here？</Dialog>
         </Dialogs>
       </SDL2>
@@ -5996,9 +5993,9 @@ all red.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Wanna come to ●'s place？
-I thought it'd be nice if
-we stayed together longer.</Dialog>
+          <Dialog>Wanna come over to my place？
+I was hoping we could stay
+together a little longer.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6659,8 +6656,7 @@ normal from today, okay？</Dialog>
           <Dialog>Hey. We're all good now,
 right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, ● thinks we did,
-but...</Dialog>
+          <Dialog>I think we are, at least...</Dialog>
           <Dialog>I've already forgiven you.
 Will you forgive me, too？</Dialog>
           <Dialog>Ah, of course.</Dialog>
@@ -6706,8 +6702,8 @@ Will you forgive me, too？</Dialog>
           <Dialog>I was really happy we could
 make up today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● too. I'm definitely
-done with fighting.</Dialog>
+          <Dialog>Me too. I've had more than
+enough of fighting.</Dialog>
           <Dialog>Let's get even closer from
 now on, okay？</Dialog>
           <Dialog>Yeah. That sounds good.</Dialog>

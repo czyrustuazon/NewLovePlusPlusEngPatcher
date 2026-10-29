@@ -805,9 +805,9 @@ say something... What？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Huh？ What're you...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲小早川＊▲？ ● was just
-wandering around and ended
-up here. What about you？</Dialog>
+          <Dialog>▲小早川＊▲？ I was just wandering
+around and ended up here.
+What about you？</Dialog>
           <Dialog>...Never mind.</Dialog>
           <Dialog>Well, that's suspicious.</Dialog>
           <Dialog>...I wanted to practice
@@ -1596,11 +1596,10 @@ something, right？</Dialog>
           <Dialog>I heard they've got some
 weird ones, too. Makes you
 curious, right？</Dialog>
-          <Dialog>●'ll pass.</Dialog>
+          <Dialog>I'm not, really.</Dialog>
           <Dialog>Well, I am. So be my guinea
 pig, okay？</Dialog>
-          <Dialog>(So ●'m the poison
-taster...)</Dialog>
+          <Dialog>(So I'm the taste tester...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2291,7 +2290,9 @@ as busy as me？</Dialog>
           <Dialog>What？ Do you need something？</Dialog>
           <Dialog>...That's cold. Are you mad about something？</Dialog>
           <Dialog>I don't have much time left. If it's nothing important, talk to me later.</Dialog>
-          <Dialog>Wait, did something happen？ If there's anything ● can do--</Dialog>
+          <Dialog>Huh, did something happen？
+If there's anything I can
+do to help—</Dialog>
           <Dialog>Geez, stop making a fuss. I forgot my homework and have to get it done fast.</Dialog>
           <Dialog>Oh, is that all... Good luck.</Dialog>
         </Dialogs>
@@ -2521,7 +2522,8 @@ as busy as me？</Dialog>
           <Dialog>Oh, you want to hear？ A new book by Fumiko Mido is coming out.</Dialog>
           <Dialog>...Who？</Dialog>
           <Dialog>Fumiko Mido! A giant of the shojo manga world! If you don't know her work, you're missing out on 80% of life.</Dialog>
-          <Dialog>(Does that mean ● only enjoys the other 20% of life...)</Dialog>
+          <Dialog>(So I'm only enjoying 20%
+of my life...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3212,7 +3214,7 @@ as busy as me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah... I think they mentioned something about that.</Dialog>
           <Dialog>They asked me to put a list together, but... I don't really know much about it.</Dialog>
-          <Dialog>Got it. I'll help you out, ●.</Dialog>
+          <Dialog>Got it, I'll help you out.</Dialog>
           <Dialog>Yes! Nothing like having a boyfriend you can count on.</Dialog>
           <Dialog>(When she's this happy about it, there's no way I couldn't help.)</Dialog>
         </Dialogs>
@@ -4442,7 +4444,7 @@ comfortable this way.</Dialog>
           <Dialog>It's raining.
 What're you gonna do？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Don't ask ●...
+          <Dialog>Don't ask me...
 Come on, let's go.</Dialog>
         </Dialogs>
       </SDL2>
@@ -4519,8 +4521,9 @@ forward to it, okay.</Dialog>
           <Dialog>...Our date, obviously!
 Are you making me say it
 on purpose？</Dialog>
-          <Dialog>It's not like that.
-Yeah, ● can't wait either.</Dialog>
+          <Dialog>Nothing like that.
+Yeah, I'm looking forward
+to it, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4692,8 +4695,7 @@ late？</Dialog>
           <Dialog>Sorry... My alarm didn't
 go off...</Dialog>
           <Dialog>Don't give me excuses!</Dialog>
-          <Dialog>(...Well, it really is on
-●, after all.)</Dialog>
+          <Dialog>(...Well, it is my fault.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4736,9 +4738,9 @@ go off...</Dialog>
           <Dialog>Huh？ Do we need our English
 dictionaries today？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Don't ask ●...
-If you forgot yours, I can
-lend you mine.</Dialog>
+          <Dialog>Don't ask me...
+If you forgot yours,
+I can lend you mine.</Dialog>
           <Dialog>Hehe, thanks.
 Sorry about that.</Dialog>
           <Dialog>(Why can't she just ask me
@@ -5291,8 +5293,8 @@ Time to dig in!</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hmm... That was alright.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I thought ● was
-pretty good, though.</Dialog>
+          <Dialog>I thought it was pretty
+good, though.</Dialog>
           <Dialog>Hmph. Guess you don't need
 my lunches anymore, then.</Dialog>
           <Dialog>No, I still need those.</Dialog>
@@ -6283,7 +6285,7 @@ thing in the morning？</Dialog>
 was thinking of crawling
 under the covers with you.</Dialog>
           <Dialog>▲小早川＊▲？ You came here
-to wake ● up... right？</Dialog>
+to wake me up... right？</Dialog>
           <Dialog>Well, you looked so comfy
 sleeping all by yourself.
 It's not fair.</Dialog>
@@ -6548,7 +6550,9 @@ you.</Dialog>
           <Dialog>Look who woke up at just the right time.</Dialog>
           <Dialog>▲小早川＊▲？ Did you come wake me up？</Dialog>
           <Dialog>I made you breakfast, too. The rice is freshly cooked, so let's eat.</Dialog>
-          <Dialog>Whoa, thanks! Did you make a Japanese breakfast because you knew ●'d like it？</Dialog>
+          <Dialog>Whoa! Thanks. Did you make
+Japanese-style breakfast
+just for me？</Dialog>
           <Dialog>Pretty much... Come on, stop grinning like that and get up already.</Dialog>
           <Dialog>(Best morning ever!)</Dialog>
         </Dialogs>
@@ -6740,7 +6744,9 @@ you.</Dialog>
           <Dialog>So the smell of food is what finally wakes you up. You're so predictable.</Dialog>
           <Dialog>▲小早川＊▲. Did you make breakfast for me？</Dialog>
           <Dialog>Pretty much. Western-style is what you like, right？</Dialog>
-          <Dialog>You made it the way ●'d like it, huh. That's really sweet of you, ▲小早川＊▲...</Dialog>
+          <Dialog>You made what I like？
+That's so sweet of you,
+▲小早川＊▲...</Dialog>
           <Dialog>Hehe, aren't you glad you have such a thoughtful girlfriend？</Dialog>
           <Dialog>(She's the best girlfriend ever!)</Dialog>
         </Dialogs>
@@ -7359,7 +7365,9 @@ you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Understood.</Dialog>
           <Dialog>That's everything, right？ Hope we didn't forget anything.</Dialog>
-          <Dialog>If we did, ● can run out and get it. Come on, let's head back.</Dialog>
+          <Dialog>If we did, I'll run out and
+buy it. Come on, let's head
+home.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7875,7 +7883,7 @@ you.</Dialog>
           <Dialog>I knew you'd say that. There's nothing wrong with it.</Dialog>
           <Dialog>I didn't say there was. What kind of stuff do you write in it？</Dialog>
           <Dialog>Take a guess.</Dialog>
-          <Dialog>Hmm, is it all about ●!？</Dialog>
+          <Dialog>Hmm... Is it about me！？</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>Bullseye？</Dialog>
           <Dialog>Idiot.</Dialog>

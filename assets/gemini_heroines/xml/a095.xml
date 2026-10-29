@@ -517,8 +517,8 @@ we've still got time.</Dialog>
           <Dialog>I want to stay together longer,
 but I guess we can't.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Same here, ●...
-but we should head back soon.</Dialog>
+          <Dialog>I do too... but we should
+head home soon.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -849,7 +849,7 @@ you pick, okay？</Dialog>
           <Dialog>Where do you wanna go？
 Tell me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Then how about ●...？</Dialog>
+          <Dialog>In that case, I...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -929,7 +929,7 @@ Could you pick for us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●'ll pick, okay？</Dialog>
+          <Dialog>I'll pick, okay？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Go right ahead.</Dialog>
         </Dialogs>
@@ -1324,8 +1324,7 @@ You choose, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The one ●
-wants to see is...</Dialog>
+          <Dialog>The one I want to see is...</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Which one？ Did you think
 about what I'd like, too？</Dialog>
@@ -2568,8 +2567,7 @@ somewhere else, too？</Dialog>
 stopped. We still have time,
 right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha. ●'s watch
-stopped, too.</Dialog>
+          <Dialog>Haha. My watch stopped, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2664,8 +2662,8 @@ a little longer, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●, I want to stay
-with ▲姉ヶ崎＊▲ a bit longer.</Dialog>
+          <Dialog>I want to stay with you
+a little longer, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Look at you, being sweet.
 Well... I guess I'll keep

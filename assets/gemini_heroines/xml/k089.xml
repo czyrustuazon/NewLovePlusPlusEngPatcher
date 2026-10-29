@@ -39,7 +39,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hello？ It's Rinko.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, ●.</Dialog>
+          <Dialog>Hello, it's me.</Dialog>
           <Dialog>Hehe. I had a feeling you'd call.</Dialog>
           <Dialog>Oh yeah？ Anyway, listen...</Dialog>
         </Dialogs>
@@ -84,7 +84,7 @@
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, ▲小早川＊▲？
-It's ●.</Dialog>
+It's me.</Dialog>
           <Dialog>Rinko here. What's up？</Dialog>
           <Dialog>Yeah, listen...</Dialog>
         </Dialogs>
@@ -128,7 +128,7 @@ It's ●.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Uh, it's ●...</Dialog>
+          <Dialog>Oh, it's me...</Dialog>
           <Dialog>I know. What is it？</Dialog>
           <Dialog>Um, listen...</Dialog>
         </Dialogs>
@@ -964,7 +964,7 @@ Not like I care anyway.</Dialog>
 I'll be looking forward to it.
 See you there.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, same here, ●.
+          <Dialog>Yeah, me too.
 See you later.</Dialog>
         </Dialogs>
       </SDL2>

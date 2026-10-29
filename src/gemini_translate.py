@@ -2,7 +2,12 @@
 
 Preserves game control tokens by swapping them for ASCII sentinels before the
 API call and restoring + validating them afterwards. A dropped ``▲…▲``,
-``※``, ``▼``, or ``●`` is treated as a failed translation.
+``※``, or ``▼`` is treated as a failed translation.
+
+``●`` is not a marker. The game fills it with the player's first-person
+pronoun (resident ``●`` key; values 俺 / 僕), so English that keeps it shows
+"俺 was in the wrong". It is translated as I / me / my like any word, and an
+English line that still has ``●`` is rejected.
 """
 from __future__ import annotations
 
@@ -31,11 +36,13 @@ SKIP_LINE_RE = re.compile(
 # Complete ▲…▲ tokens, then control glyphs, then printf / {n} placeholders.
 MARKER_RE = re.compile(
     r"▲[^▲]+▲"
-    r"|[※▼●]"
+    r"|[※▼]"
     r"|%(?:\d+\$)?[-+#0 ]*\d*(?:\.\d+)?[sdifuxXcs]"
     r"|\{[^{}]+\}"
 )
 SENTINEL_RE = re.compile(r"@@M(\d+)@@")
+# Player's first-person pronoun (俺 / 僕 at run time). Translated, not kept.
+PRONOUN = "●"
 
 HEROINE_VOICES = {
     "nene": (
@@ -69,6 +76,7 @@ Output rules:
 - Prefer fullwidth ？ for questions (matches existing EN scripts). Prefer ASCII letters.
 - Game names: 高嶺/愛花=Takane/Manaka, 小早川/凛子=Kobayakawa/Rinko, 姉ヶ崎/寧々=Anegasaki/Nene, とわの/トワノ=Towano.
 - Do NOT replace name/player tokens with English names — sentinels already cover ▲主人公＊▲ / ▲高嶺＊＊▲ / ▲小早川＊▲ / ▲姉ヶ崎＊▲.
+- ● is the player character's word for "I" (the game shows 俺 or 僕 there). Translate it as I / me / my / myself, whatever the sentence needs. Never write ● in the English.
 - Never leave Japanese kana/kanji unless a proper noun has no English form.
 - Do not wrap the whole string in extra quotes.
 - Leave placeholder-only lines (○○○) untranslated if they slip through — copy the source.
@@ -329,6 +337,8 @@ def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
             error="dropped_marker",
             missing_markers=missing,
         )
+    if PRONOUN in en:
+        return TranslateResult(item.index, item.source, None, error="kept_pronoun")
     jp_left = len(JP_RE.findall(strip_markers(en)))
     if jp_left > max(2, len(en) // 4):
         return TranslateResult(item.index, item.source, None, error="still_japanese")
@@ -531,11 +541,13 @@ def _translate_prepared_once(
             }
             for it in failed
         ]
-        repair_user = (
-            f"Heroine/route: {heroine}. The previous English dropped game markers.\n"
-            "Re-translate. Copy every @@Mn@@ sentinel into t. Return JSON items.\n"
-            + json.dumps(repair_payload, ensure_ascii=False)
-        )
+        notes = [f"Heroine/route: {heroine}. The previous English broke a rule (see bad)."]
+        if any(results[it.index].error == "kept_pronoun" for it in failed):
+            notes.append(
+                'bad=kept_pronoun: ● means "I". Write I / me / my / myself instead; no ● in t.'
+            )
+        notes.append("Re-translate. Copy every @@Mn@@ sentinel into t. Return JSON items.")
+        repair_user = "\n".join(notes) + "\n" + json.dumps(repair_payload, ensure_ascii=False)
         raw2 = gemini_generate_json(
             client,
             model,

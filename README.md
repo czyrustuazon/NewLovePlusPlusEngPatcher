@@ -474,7 +474,7 @@ A browser workbench so translators can help **without Python**: [czyrustuazon/nl
 3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
-Keep nickname tokens (`▲高嶺＊＊▲`), `※`, `▼`, and `●` unchanged. Image replacements must match original width × height.
+Keep nickname tokens (`▲高嶺＊＊▲`), `※`, and `▼` unchanged. Translate `●`: it is the player's "I" (the game shows 俺 or 僕 there), so write I / me / my. Image replacements must match original width × height.
 
 **What’s in each tab (sources):** see **`docs/technical.md` §20.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompts: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md` (contribute pages), `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md` (progress numbers).
 

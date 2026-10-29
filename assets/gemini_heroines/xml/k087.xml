@@ -345,8 +345,8 @@ See you later, then.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes, what is it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's ●.
-Hey, can you meet up now？</Dialog>
+          <Dialog>Hello, it's me. Hey, can we
+meet up right now？</Dialog>
           <Dialog>Sure, I don't mind.
 I'm pretty free right now.</Dialog>
           <Dialog>Great. How about
@@ -593,8 +593,8 @@ time.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yes？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲小早川＊▲？ It's ●.
-Can we meet up right now？</Dialog>
+          <Dialog>▲小早川＊▲？ It's me. Think we
+could meet up right now？</Dialog>
           <Dialog>I can't.</Dialog>
           <Dialog>...You can't, huh.</Dialog>
           <Dialog>Beating around the bush is
@@ -658,8 +658,8 @@ mood...)</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●. I was wondering
-if we could meet up now.</Dialog>
+          <Dialog>It's me. I was wondering if
+we could meet right now.</Dialog>
           <Dialog>Not yet.</Dialog>
           <Dialog>...Are you busy？</Dialog>
           <Dialog>Yeah. I'm very busy. I'm
@@ -1009,7 +1009,7 @@ I can make it work.</Dialog>
 girlfriend went and asked
 you out. Fine, forget it.</Dialog>
           <Dialog>I wanted to see you too,
-●... See you later？</Dialog>
+though... See you later？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

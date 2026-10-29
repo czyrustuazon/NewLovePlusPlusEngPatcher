@@ -16,12 +16,33 @@ def test_protect_restore_player_and_control_markers():
     protected, markers = gt.protect_markers(src)
     assert "▲" not in protected
     assert "※" not in protected
-    assert markers == ["▲主人公＊▲", "※", "▼", "●"]
+    assert markers == ["▲主人公＊▲", "※", "▼"]
+    assert "●" in protected  # the pronoun goes to the model as a word
     model_out = "Morning, " + "".join(f"@@M{i}@@" for i in range(len(markers)))
     restored = gt.restore_markers(model_out, markers)
     ok, missing = gt.markers_preserved(src, restored)
     assert ok, missing
-    assert restored == "Morning, ▲主人公＊▲※▼●"
+    assert restored == "Morning, ▲主人公＊▲※▼"
+
+
+def test_kept_pronoun_is_rejected_and_repaired_as_i(monkeypatch):
+    item = gt.prepare_items(["●が悪かったよ"])[0]
+    assert gt.finalize_item(item, "● was in the wrong.").error == "kept_pronoun"
+    assert gt.finalize_item(item, "I was in the wrong.").english == "I was in the wrong."
+    assert '● is the player character\'s word for "I"' in gt.SYSTEM_PROMPT
+
+    prompts: list[str] = []
+
+    def fake_gen(client, model, user, **kwargs):
+        prompts.append(user)
+        text = "● was in the wrong." if len(prompts) == 1 else "I was in the wrong."
+        return json.dumps({"items": [{"i": 0, "t": text}]}, ensure_ascii=False)
+
+    monkeypatch.setattr(gt, "gemini_generate_json", fake_gen)
+    monkeypatch.setattr(gt.time, "sleep", lambda s: None)
+    results = gt.translate_prepared(None, "model", [item], heroine="rinko")
+    assert results[0].english == "I was in the wrong."
+    assert 'bad=kept_pronoun: ● means "I"' in prompts[1]
 
 
 def test_dropped_marker_is_rejected():

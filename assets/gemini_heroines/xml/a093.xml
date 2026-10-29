@@ -240,7 +240,7 @@ I changed the length.</Dialog>
 length would be nice,
 but what about you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●...</Dialog>
+          <Dialog>Well, I...</Dialog>
           <Dialog>It's good, I like it！</Dialog>
           <Dialog>It's a little iffy...</Dialog>
         </Dialogs>
@@ -978,7 +978,7 @@ and ask: what do you think?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What do I think...?</Dialog>
           <Dialog>It's too cute!</Dialog>
-          <Dialog>I can't tell you, ●.</Dialog>
+          <Dialog>I'd rather not say.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1366,7 +1366,7 @@ isn't it？</Dialog>
           <Dialog>...Is it a little too casual？
 Do you dislike this look？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●Well...</Dialog>
+          <Dialog>Well, I...</Dialog>
           <Dialog>I think it's nice.</Dialog>
           <Dialog>I might... not like it.</Dialog>
           <Dialog>I don't mind.</Dialog>
@@ -2007,7 +2007,7 @@ of changing my clothes for
 a change of pace... What do
 you think of my fashion？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>As for ●...</Dialog>
+          <Dialog>Personally...</Dialog>
           <Dialog>I like your current clothes.</Dialog>
           <Dialog>A change would be nice.</Dialog>
           <Dialog>I'm not really interested.</Dialog>
@@ -2151,8 +2151,7 @@ closer to your ideal？</Dialog>
           <Dialog>That's...</Dialog>
           <Dialog>It's getting closer.</Dialog>
           <Dialog>It might be a bit further.</Dialog>
-          <Dialog>Sorry, even ●
-isn't sure.</Dialog>
+          <Dialog>Sorry, even I don't know.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2197,9 +2196,8 @@ the one I'm wearing today？
 I hope you do...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>My outfit, huh...</Dialog>
-          <Dialog>● likes it.</Dialog>
-          <Dialog>It's not really
-●'s style...</Dialog>
+          <Dialog>I like it.</Dialog>
+          <Dialog>Not quite my taste...</Dialog>
           <Dialog>I don't really love it
 or hate it.</Dialog>
         </Dialogs>
@@ -2247,7 +2245,7 @@ move in are nice, but...
 What does my boyfriend
 think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●？</Dialog>
+          <Dialog>Me？</Dialog>
           <Dialog>I like it.</Dialog>
           <Dialog>I'm not so sure about it...</Dialog>
           <Dialog>You should wear
@@ -2295,7 +2293,7 @@ what you like.</Dialog>
 dressed like this？ I want
 to match your tastes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>As for ●'s tastes...</Dialog>
+          <Dialog>As far as my tastes go...</Dialog>
           <Dialog>It's totally fine.</Dialog>
           <Dialog>I don't know about that...</Dialog>
           <Dialog>I can't decide.</Dialog>

@@ -97,7 +97,7 @@
           <Dialog>Hm？ What about the notebook？</Dialog>
           <Dialog>Take it to the staff room.
 Within a week.</Dialog>
-          <Dialog>...Why me, ●？</Dialog>
+          <Dialog>...Why me？</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>Oh well, sure</Dialog>
           <Dialog>Do it yourself</Dialog>
@@ -1029,12 +1029,12 @@ her music...)</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yeah. So don't slack off on your committee duties.</Dialog>
           <Dialog>Yeah, I know</Dialog>
-          <Dialog>● wasn't scheduled for duty, though...</Dialog>
+          <Dialog>Pretty sure I'm not on duty...</Dialog>
           <Dialog>I know, you don't have to tell me.</Dialog>
           <Dialog>Then it's fine.</Dialog>
           <Dialog>Haha, just leave it to me.</Dialog>
           <Dialog>Where's all that confidence coming from？ Makes no sense.</Dialog>
-          <Dialog>● wasn't scheduled for duty that week, though...</Dialog>
+          <Dialog>Pretty sure I'm not on duty during that week...</Dialog>
           <Dialog>...So while I'm busy working, you're just gonna slack off by yourself.</Dialog>
           <Dialog>(What am I supposed to say to that...)</Dialog>
         </Dialogs>
@@ -1259,11 +1259,11 @@ her music...)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>With a text？</Dialog>
           <Dialog>Sure, sounds fun</Dialog>
-          <Dialog>Why do ● have to...</Dialog>
+          <Dialog>Why me...</Dialog>
           <Dialog>Sure, sounds fun. Will a text really be enough to wake you up, though？</Dialog>
           <Dialog>Who knows？</Dialog>
           <Dialog>("Who knows," she says...)</Dialog>
-          <Dialog>Why do ● have to...？ Wouldn't it be faster to have your family wake you up？</Dialog>
+          <Dialog>Why me...? Wouldn't it be faster to just have your family wake you up？</Dialog>
           <Dialog>...I suppose so.</Dialog>
           <Dialog>(？ Is she in a bad mood？ )</Dialog>
         </Dialogs>
@@ -3336,7 +3336,7 @@ teacher's. What a pain.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Good work to you too, ▲小早川＊▲. I think everyone's going to like these.</Dialog>
           <Dialog>They're just as good as anything you'd see in a real store.</Dialog>
-          <Dialog>That's all thanks to your good taste, ●. Haha.</Dialog>
+          <Dialog>All thanks to my good taste, haha.</Dialog>
           <Dialog>Huh？ What are you talking about？</Dialog>
           <Dialog>(Maybe I got a little carried away... Still, I'm glad we did this.)</Dialog>
         </Dialogs>
@@ -3382,7 +3382,7 @@ teacher's. What a pain.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yes...</Dialog>
           <Dialog>That's because you slacked off. *sigh*...</Dialog>
-          <Dialog>(She's right... ● have to take responsibility for this...)</Dialog>
+          <Dialog>(She's right... It really is my fault...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3532,9 +3532,9 @@ probably feel awkward.</Dialog>
           <Dialog>That's how it is. Anyway, as
 long as we can kill some time
 at the park or wherever, it's fine.</Dialog>
-          <Dialog>▲小早川＊▲, you think ●
-always have free time, huh？
-Well, not necessarily.</Dialog>
+          <Dialog>You think I'm always free,
+don't you, ▲小早川＊▲？
+That's not always true.</Dialog>
           <Dialog>Oh, really... Fine, then
 I won't ask you.</Dialog>
           <Dialog>(Huh...？ Why is she
@@ -4294,9 +4294,8 @@ go talk to ▲姉ヶ崎＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, right. ●,
-I actually needed to talk
-to ▲小早川＊▲...</Dialog>
+          <Dialog>Oh, right. I actually needed
+to see you, ▲小早川＊▲...</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What？ You could've just
 said so sooner.</Dialog>
@@ -4428,8 +4427,7 @@ See you later, then.</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>You caught me off guard,
-so I panicked...
-Anyway, ●I'll get going.</Dialog>
+that's all... Anyway, I gotta go.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Huh...？ Oh, okay.</Dialog>
           <Dialog>See you.</Dialog>
@@ -4774,7 +4772,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● kinda need to get going.</Dialog>
+          <Dialog>I kind of need to get going.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I'm not exactly free either, you know.</Dialog>
           <Dialog>Gotcha. See you later!</Dialog>
@@ -4883,7 +4881,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you don't need anything, I'm gonna go. ●... have someone to see.</Dialog>
+          <Dialog>If you don't need anything, I'm gonna head out. I've got someone I need to see.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Oh. Boring...</Dialog>
           <Dialog>Sorry... See you later.</Dialog>
@@ -4916,7 +4914,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>"Not really"...？ Well, ● have someone to see, so I'm gonna go.</Dialog>
+          <Dialog>"Not really"...？ Well, I've got someone to see, so I'm heading out.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Why don't you hurry up and go？</Dialog>
           <Dialog>Right... See ya.</Dialog>
@@ -5102,7 +5100,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, ● better get going then.</Dialog>
+          <Dialog>Well, I'm gonna head out, then.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Go right ahead. Bye.</Dialog>
           <Dialog>Whoa...</Dialog>
@@ -5211,7 +5209,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I didn't notice you... What's up？ ● was just looking for a friend.</Dialog>
+          <Dialog>I didn't notice you... What's up？ I was actually on my way to see someone, though.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Fine, sorry to bother you. Bye.</Dialog>
           <Dialog>Sorry.</Dialog>
@@ -5244,7 +5242,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you need something？ ● had to go talk to a friend...</Dialog>
+          <Dialog>Did you need something？ I have someone I need to talk to...</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...As if I'd ever need anything from you. Idiot.</Dialog>
           <Dialog>Right... See you, then. Sorry.</Dialog>
@@ -5415,7 +5413,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry, I didn't see you. Anyway, ● gotta hurry.</Dialog>
+          <Dialog>Sorry, I didn't see you there. Anyway, I'm in a hurry, so I gotta go.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...What's your deal？ Just go, then.</Dialog>
         </Dialogs>
@@ -5581,7 +5579,7 @@ something to ask ▲小早川＊▲.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry! Anyway, ● gotta hurry, so I'm off.</Dialog>
+          <Dialog>Sorry! Anyway, I'm in a rush, so I gotta go.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Watch where you're going.</Dialog>
         </Dialogs>
@@ -5883,8 +5881,8 @@ a pretty nice face, huh...)</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Isn't that normal for you？
 Bye.</Dialog>
-          <Dialog>Hey, it's not like ●
-always space out, you know.</Dialog>
+          <Dialog>Hey, it's not like I'm
+spacing out all the time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6255,8 +6253,8 @@ or anything.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's up？ Need something
-from ●？</Dialog>
+          <Dialog>What's up？ Did you need
+something from me？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>No, I won't get bored of you.</Dialog>
           <Dialog>...Well, yeah, figured.</Dialog>
@@ -6319,8 +6317,8 @@ from ●？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's up？ Don't tell me you
-needed something from ●.</Dialog>
+          <Dialog>What's up？ Don't tell me
+you had business with me.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>It's nothing like that.</Dialog>
           <Dialog>Haha, yeah, figured.</Dialog>
@@ -6353,8 +6351,8 @@ business with you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, ● gotta get going.
-Got somewhere to be.</Dialog>
+          <Dialog>Anyway, I've got somewhere
+I need to be.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Oh, okay... See ya.</Dialog>
         </Dialogs>
@@ -7788,7 +7786,7 @@ Got somewhere to be.</Dialog>
           <Dialog>Curious about what？</Dialog>
           <Dialog>...Well, the guys and girls there seem to get along pretty well.</Dialog>
           <Dialog>You know, mingling like that... Don't you have something going on too？</Dialog>
-          <Dialog>Hard to say... I don't think there's much of that for ●, though...</Dialog>
+          <Dialog>Hard to say... I don't think there's really anything like that going on with me, though...</Dialog>
           <Dialog>Hmm, I see.</Dialog>
           <Dialog>Why do you ask？</Dialog>
           <Dialog>Nothing. Never mind.</Dialog>
@@ -8159,7 +8157,7 @@ Got somewhere to be.</Dialog>
           <Dialog>W-What...？</Dialog>
           <Dialog>Nothing. Aren't you the one getting weird ideas here？</Dialog>
           <Dialog>Inviting a helpless underclassman to your room and all...</Dialog>
-          <Dialog>Huh？ No, ● just—!</Dialog>
+          <Dialog>Huh？ No, you've got it wrong, I was just—!</Dialog>
           <Dialog>Hehe, look at you panic. I'm just kidding.</Dialog>
           <Dialog>Visiting an upperclassman's place does sound kind of fun, though.</Dialog>
         </Dialogs>
@@ -9196,7 +9194,7 @@ Got somewhere to be.</Dialog>
           <Dialog>▲主人公＊▲。</Dialog>
           <Dialog>I knew it was ▲小早川＊▲. Hey.</Dialog>
           <Dialog>What are you doing in a place like this？</Dialog>
-          <Dialog>Just browsing around... Oh, come on, ●, I'm on the library committee! I came to appreciate some books.</Dialog>
+          <Dialog>Just browsing around... Oh, right, I'm on the library committee, remember! I came to appreciate some books.</Dialog>
           <Dialog>Oh, really. Huh.</Dialog>
           <Dialog>What about you, ▲小早川＊▲？</Dialog>
           <Dialog>Same here. There's a book I'm looking for. They have a good selection here.</Dialog>
@@ -9552,7 +9550,7 @@ Got somewhere to be.</Dialog>
           <Dialog>Ow!</Dialog>
           <Dialog>Bye.</Dialog>
           <Dialog>Hey, ▲小早川＊▲!</Dialog>
-          <Dialog>（She seemed kind of flustered... Did ● do something wrong...？）</Dialog>
+          <Dialog>(She seemed kind of flustered... Did I do something wrong...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9808,12 +9806,12 @@ Got somewhere to be.</Dialog>
           <Dialog>I was just kind of spacing out.</Dialog>
           <Dialog>Haha, what's that about？ Even you have moments like that, ▲小早川＊▲.</Dialog>
           <Dialog>What's wrong with that？ It's nice to just take it easy sometimes.</Dialog>
-          <Dialog>Maybe so. It looks pretty nice, so ● think I'll join you.</Dialog>
+          <Dialog>Yeah, maybe. Looks kind of nice, actually, so I'll join you.</Dialog>
           <Dialog>Join me？ I'm not doing anything, you know.</Dialog>
-          <Dialog>Come on, ● want to space out too.</Dialog>
+          <Dialog>Come on, let me space out too.</Dialog>
           <Dialog>Hehe, what's with that？</Dialog>
           <Dialog>I wonder why. I feel so relaxed next to you.</Dialog>
-          <Dialog>Really？ ● think I feel the same way when I'm with you, ▲小早川＊▲.</Dialog>
+          <Dialog>Yeah？ I think I feel the same way when I'm with you, ▲小早川＊▲.</Dialog>
           <Dialog>I see...</Dialog>
           <Dialog>…………。</Dialog>
           <Dialog>Say...</Dialog>
@@ -10937,9 +10935,9 @@ home...? She was still in her
 uniform at the convenience store...)</Dialog>
           <Dialog>(Does this have something to do
 with her crying on the roof...?)</Dialog>
-          <Dialog>(Still, if she came all the way
-to the library, maybe she's
-counting on ●...)</Dialog>
+          <Dialog>(Even so, for her to come all
+the way to the library... Could
+she be turning to me for help...？)</Dialog>
           <Dialog>(Am I overthinking it？ ...Still,
 though...)</Dialog>
           <Dialog>All right, I'll ask her out.</Dialog>
@@ -10958,7 +10956,8 @@ again... Did something happen？</Dialog>
           <Dialog>Nothing in particular, why？</Dialog>
           <Dialog>(Something definitely happened
 to her, didn't it...)</Dialog>
-          <Dialog>(If she really is relying on ●...)</Dialog>
+          <Dialog>(If she really is coming to
+me for help...)</Dialog>
           <Dialog>All right, I'll ask her out</Dialog>
           <Dialog>Maybe I'm wrong</Dialog>
           <Dialog>(Yeah, maybe I'm wrong...)</Dialog>
@@ -10969,7 +10968,7 @@ to her, didn't it...)</Dialog>
           <Dialog>...Why？</Dialog>
           <Dialog>Well, uh... How about we go on a date or something？</Dialog>
           <Dialog>A... a date...? Between who and who？</Dialog>
-          <Dialog>▲小早川＊▲ and... ●？</Dialog>
+          <Dialog>▲小早川＊▲ and... me？</Dialog>
           <Dialog>...What are you talking about？ Are you stupid...?</Dialog>
           <Dialog>R-Right... Yeah, I figured.</Dialog>
           <Dialog>……。</Dialog>
@@ -11284,7 +11283,7 @@ Rinko</Dialog>
           <Dialog>Huh？ Oh, sorry...</Dialog>
           <Dialog>……。</Dialog>
           <Dialog>Um... are you mad？</Dialog>
-          <Dialog>I'm not mad. You needed something from ●, right？</Dialog>
+          <Dialog>I'm not mad. You needed something from me, right？</Dialog>
           <Dialog>Yeah... Hey, let's go somewhere on Sunday, okay？</Dialog>
           <Dialog>Yeah, go ahead.</Dialog>
           <Dialog>Yeah... That's all.</Dialog>
@@ -11703,8 +11702,9 @@ I guess.</Dialog>
           <Dialog>Haha, tough critic.</Dialog>
           <Dialog>Well... I still don't know
 much about dating, anyway.</Dialog>
-          <Dialog>Same goes for ●. Well,
-I'll do my best from now on.</Dialog>
+          <Dialog>Same goes for me. Well,
+I'll do my best from here
+on out.</Dialog>
           <Dialog>Yeah. Also, you know...
 when couples go on a date...</Dialog>
           <Dialog>Hm？</Dialog>

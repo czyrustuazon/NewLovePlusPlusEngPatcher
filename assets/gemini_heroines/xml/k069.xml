@@ -98,7 +98,7 @@
           <Dialog>...Eh？</Dialog>
           <Dialog>Huh？ ...Is that not what you meant？</Dialog>
           <Dialog>...I see. You meant little kids.</Dialog>
-          <Dialog>What are you talking about？ Did ● get the wrong idea again？</Dialog>
+          <Dialog>What are you talking about？ Did I get the wrong idea again？</Dialog>
           <Dialog>...Well, never mind.</Dialog>
           <Dialog>Don't just settle it in your own head. That's weird.</Dialog>
         </Dialogs>
@@ -233,9 +233,9 @@
           <Dialog>Apparently, when you're walking side by side on a date, being short makes you really self-conscious.</Dialog>
           <Dialog>▲小早川＊▲. Does that sort of thing bother you？</Dialog>
           <Dialog>Like I said, it's not about me. It's about someone I know.</Dialog>
-          <Dialog>● can't really see why that's something to worry about, though.</Dialog>
+          <Dialog>I don't really get why that would bother anyone, though.</Dialog>
           <Dialog>You know, like the difference in your stride when you walk.</Dialog>
-          <Dialog>● always try to keep pace with ▲小早川＊▲, though. Was I walking too fast...？</Dialog>
+          <Dialog>I always try to match your pace, ▲小早川＊▲, but was I walking too fast...？</Dialog>
           <Dialog>You match my pace...？ Oh, I didn't realize.</Dialog>
           <Dialog>So I really don't think you need to worry about that.</Dialog>
           <Dialog>I see... I'll pass that on to this person I know.</Dialog>
@@ -515,7 +515,7 @@
           <Dialog>Being carried like a princess... I wonder what that feels like. ...Uh, never mind, forget I said that.</Dialog>
           <Dialog>So you are curious about it？</Dialog>
           <Dialog>Well, I am a girl, after all... Not that I'm asking you to do it or anything.</Dialog>
-          <Dialog>Why not？ If you want, ● can do it for you anytime.</Dialog>
+          <Dialog>Why not？ If you want me to, I'll do it for you anytime, you know？</Dialog>
           <Dialog>That's just... embarrassing.</Dialog>
           <Dialog>Wouldn't it be fine if no one's watching？</Dialog>
           <Dialog>Yeah, then maybe... Wait, why am I getting swept up in this too...？ Ugh, you're an idiot.</Dialog>
@@ -1057,7 +1057,7 @@
           <Dialog>...Yeah. Mom said... we should all plan the trip together as a family today.</Dialog>
           <Dialog>Really？ That's great.</Dialog>
           <Dialog>Yeah. I'll let you know how it goes later.</Dialog>
-          <Dialog>You don't have to worry about ●. I hope you get to go on that trip.</Dialog>
+          <Dialog>You don't need to worry about me. I hope you get to go on that trip.</Dialog>
           <Dialog>...Mhm, thanks.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1187,7 +1187,7 @@
           <Dialog>I've been wondering lately... What am I gonna be doing ten years from now？</Dialog>
           <Dialog>Before, I couldn't care less about the future... but lately it's been on my mind.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Could that be thanks to ●？</Dialog>
+          <Dialog>Could that be thanks to me？</Dialog>
           <Dialog>Don't flatter yourself. ...Though you might've had a little influence on it.</Dialog>
           <Dialog>▲小早川＊▲ ten years from now, huh. Think you'll be an office worker or something？ ...Nah, I can't see it.</Dialog>
           <Dialog>What do you mean by that？</Dialog>
@@ -1413,7 +1413,7 @@
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Forget about me in ten years—what do you think you'll be doing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●, huh... Playing it safe as an office worker, maybe？</Dialog>
+          <Dialog>Me, huh... Playing it safe as an office worker, maybe？</Dialog>
           <Dialog>Nothing wrong with that, I guess. Don't you have any bigger dreams？ That's the exact kind of thing that makes you sound like an old man.</Dialog>
           <Dialog>A dream, huh... If I have a warm, happy family, I think that alone would be enough for me.</Dialog>
           <Dialog>...Yeah, I kinda get that.</Dialog>
@@ -2012,8 +2012,8 @@ yet.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's okay. When we go to a
-show, ● will protect you.</Dialog>
+          <Dialog>Don't worry. When we go to a
+concert, I'll protect you.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Okay. Um, when we do,
 would it be okay if I held
@@ -2035,14 +2035,13 @@ grew taller, right？</Dialog>
           <Dialog>Well... You know, when I'm
 walking with my boyfriend...
 we'd match better, right？</Dialog>
-          <Dialog>Huh？ ● thought you were
-totally fine just the way
-you are, ▲小早川＊▲.</Dialog>
+          <Dialog>Huh？ I think you're totally
+fine just the way you are
+right now, ▲小早川＊▲.</Dialog>
           <Dialog>Oh... I see.</Dialog>
-          <Dialog>You don't need to push
-yourself to match ●.
-You're fine just as you are,
-▲小早川＊▲.</Dialog>
+          <Dialog>You don't have to force
+yourself to match me. You're
+fine as you are, ▲小早川＊▲.</Dialog>
           <Dialog>...Thanks. That makes me
 feel a little better.</Dialog>
         </Dialogs>
