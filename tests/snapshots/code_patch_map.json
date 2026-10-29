@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "77366e796f460aa39ce9128083892d3a896602fa531b12f46b9b812720c2769f",
+ "final_sha256": "6ff1fcfce62f7f22b3761834288967d4c54eca43af3c6ef5d1a29f29d9ee41f4",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -507,6 +507,13 @@
     "0x1d8ff4-0x1d8ff8",
     "0x1d93a0-0x1d93a4",
     "0x1d93b4-0x1d93bc"
+   ]
+  },
+  {
+   "name": "apply_bonus_digits",
+   "written_sha256": "0f4fef3434ae271b5409b0392c336f59e40b1c088c858ea95e5a0d9e6237077a",
+   "ranges": [
+    "0x56f9e4-0x56f9e8"
    ]
   }
  ]
