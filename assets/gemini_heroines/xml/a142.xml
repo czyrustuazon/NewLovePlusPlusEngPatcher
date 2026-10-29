@@ -130,11 +130,11 @@ I'll be rooting for you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Come to think of it,
-I'm supposed to tend to
-the flowers with ▲姉ヶ崎＊▲...</Dialog>
-          <Dialog>Guess I'm tending the
-flowers with ▲姉ヶ崎＊▲ today, too...</Dialog>
+          <Dialog>Come to think of it, I'm supposed
+to tend the flower bed with
+▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>Guess I'll tend the flower bed
+with ▲姉ヶ崎＊▲ again today...</Dialog>
           <Dialog>Head there right away</Dialog>
           <Dialog>Take my time</Dialog>
           <Dialog>Take a little detour first</Dialog>
@@ -1732,9 +1732,9 @@ customer service today, too...)</Dialog>
           <Dialog>Good work! I think you've
 really gotten the hang of it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think I've gotten more
-confident myself.
-It's all thanks to ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>I feel a bit more confident
+myself. It's all thanks to you,
+▲姉ヶ崎＊▲.</Dialog>
           <Dialog>That wraps up our training!
 If you ever have questions,
 feel free to ask anytime.</Dialog>
@@ -3284,8 +3284,8 @@ from the sidelines.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Come to think of it, I was supposed
 to go eat with ▲姉ヶ崎＊▲...</Dialog>
-          <Dialog>Right, I was supposed to go
-eat with ▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>Oh right, I was supposed to
+go eat with ▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Now then...</Dialog>
           <Dialog>Head there right away</Dialog>
           <Dialog>Take my time</Dialog>
@@ -3587,10 +3587,12 @@ Hang in there.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Come to think of it, I was supposed
-to taste-test ▲姉ヶ崎＊▲'s prototypes...</Dialog>
-          <Dialog>Right, I was supposed to taste-test
-▲姉ヶ崎＊▲'s prototypes...</Dialog>
+          <Dialog>Come to think of it, I'm supposed
+to taste-test ▲姉ヶ崎＊▲'s
+prototypes...</Dialog>
+          <Dialog>Oh right, I'm supposed to
+taste-test ▲姉ヶ崎＊▲'s
+prototypes...</Dialog>
           <Dialog>Now then...</Dialog>
           <Dialog>Head there right away</Dialog>
           <Dialog>Take my time</Dialog>
@@ -4527,14 +4529,14 @@ stopping you. See you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Um, I actually needed 
-to see ▲高嶺＊＊▲, but...</Dialog>
+          <Dialog>Um, I actually needed to
+see ▲高嶺＊＊▲...</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Oh... Did I interrupt 
 something？ Bye-bye.</Dialog>
           <Dialog>Sorry! Catch you later!</Dialog>
-          <Dialog>Um, I actually needed 
-to see ▲小早川＊▲, but...</Dialog>
+          <Dialog>Um, I actually needed to
+see ▲小早川＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4808,11 +4810,11 @@ You startled me...</Dialog>
           <Dialog>I couldn't help calling out, 
 but were you in the middle 
 of something？</Dialog>
-          <Dialog>I needed to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I needed to see ▲姉ヶ崎＊▲</Dialog>
+          <Dialog>Need to see ▲高嶺＊＊▲</Dialog>
+          <Dialog>Need to see ▲姉ヶ崎＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>(Wait, isn't that ▲小早川＊▲？)</Dialog>
-          <Dialog>I needed to see ▲小早川＊▲</Dialog>
+          <Dialog>Need to see ▲小早川＊▲</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4938,8 +4940,8 @@ Next time, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Good timing... 
-I actually needed to see ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>Good timing... I actually
+needed to see you, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>You needed to see me？</Dialog>
           <Dialog>Got it, thanks.</Dialog>
@@ -5154,12 +5156,12 @@ Oh, it's just ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Aw, you make it sound 
 like you're disappointed 
 it's me... That hurts.</Dialog>
-          <Dialog>I needed to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I needed to see ▲姉ヶ崎＊▲</Dialog>
+          <Dialog>Need to see ▲高嶺＊＊▲</Dialog>
+          <Dialog>Need to see ▲姉ヶ崎＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>(Where's ▲小早川＊▲ going, 
 I wonder？)</Dialog>
-          <Dialog>I needed to see ▲小早川＊▲</Dialog>
+          <Dialog>Need to see ▲小早川＊▲</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5286,7 +5288,8 @@ the trouble of saying hi.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I was looking for ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>I was actually looking for you,
+▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Geez, you should've just told
 me that sooner! What's up？</Dialog>
@@ -5503,11 +5506,11 @@ to call out to her？)</Dialog>
           <Dialog>What do you mean 'what's up'？
 I just saw you. Am I not
 allowed to say hi？</Dialog>
-          <Dialog>I need to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I need to see ▲姉ヶ崎＊▲</Dialog>
+          <Dialog>Need to see ▲高嶺＊＊▲</Dialog>
+          <Dialog>Need to see ▲姉ヶ崎＊▲</Dialog>
           <Dialog>Walk away</Dialog>
           <Dialog>(Oh, it's ▲小早川＊▲.)</Dialog>
-          <Dialog>I need to see ▲小早川＊▲</Dialog>
+          <Dialog>Need to see ▲小早川＊▲</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5926,8 +5929,8 @@ really okay...</Dialog>
           <Dialog>...Ah, I'm fine.
 I wasn't paying attention
 either, sorry, okay？ Bye.</Dialog>
-          <Dialog>I'm glad ▲姉ヶ崎＊▲ wasn't
-hurt... Well, see you.</Dialog>
+          <Dialog>I'm just glad you're not hurt,
+▲姉ヶ崎＊▲... See you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8838,8 +8841,8 @@ It's really nothing.</Dialog>
           <Dialog>(What was that about,
 ▲姉ヶ崎＊▲？)</Dialog>
           <Dialog>Oh. Is that all？</Dialog>
-          <Dialog>Yeah. I talk with
-▲姉ヶ崎＊▲ way more.</Dialog>
+          <Dialog>Pretty much. I talk to you
+way more, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Fufu, is that so？ Mhm.</Dialog>
           <Dialog>(▲姉ヶ崎＊▲ looks pretty
 happy about that.)</Dialog>
@@ -9033,8 +9036,8 @@ it's a problem.</Dialog>
           <Dialog>(What's gotten into
 ▲姉ヶ崎＊▲？)</Dialog>
           <Dialog>Wait, really？</Dialog>
-          <Dialog>We get along, but I'm
-closer with ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>We get along fine, but I think
+I'm closer with you, ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>I see. Fufu,
 that's fine then.</Dialog>
         </Dialogs>
@@ -9230,8 +9233,8 @@ I'm not gonna lose.</Dialog>
 ▲姉ヶ崎＊▲？)</Dialog>
           <Dialog>Oh... That's a bit of 
 a letdown.</Dialog>
-          <Dialog>I talk to ▲姉ヶ崎＊▲ 
-way more, anyway.</Dialog>
+          <Dialog>I talk to you a lot more,
+▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Is that so... 
 Yeah, you're right. Hehe.</Dialog>
         </Dialogs>

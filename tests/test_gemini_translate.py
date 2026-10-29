@@ -148,3 +148,13 @@ def test_entries_to_xml_roundtrip(tmp_path: Path):
     assert got[0].sdl2.dialogs[1] == "おはよう、▲主人公＊▲※\n二行目"
     assert "▲主人公＊▲" in xml_text
     assert "※" in xml_text
+
+
+def test_optional_markers_may_be_dropped_and_others_may_not():
+    item = gt.prepare_items(["▲小早川＊▲、ショートが似合うよ※"])[0]
+    her = frozenset({"▲小早川＊▲"})
+    said_you = "You look best with short hair.@@M1@@"
+    assert gt.finalize_item(item, said_you, her).english == "You look best with short hair.※"
+    assert gt.finalize_item(item, said_you).error == "dropped_marker"
+    dropped_wait = gt.finalize_item(item, "You look best with short hair.", her)
+    assert dropped_wait.error == "dropped_marker" and dropped_wait.missing_markers == ["※"]

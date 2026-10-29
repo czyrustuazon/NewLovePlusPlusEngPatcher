@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -630,19 +631,84 @@ def cmd_run(args: argparse.Namespace) -> int:
     return 0 if failed_lines == 0 else 1
 
 
-def pronoun_targets(xml_dir: Path, heroines: list[str]) -> dict[str, list[tuple[int, int]]]:
-    """Gemini lines whose English still has ● (the player's "I", shown as 俺/僕)."""
+@dataclass(frozen=True)
+class FixPass:
+    """A targeted redo of Gemini lines picked by ``select``."""
+
+    tag: str  # log prefix; rejects go to <tag>_rejected.json
+    what: str  # "lines with ●"
+    context: str  # instruction for the model, after "Script <stem>."
+    optional_markers: frozenset[str] = frozenset()
+
+
+# The heroine's name markers. The player picks the nickname they become.
+HEROINE_MARKERS = frozenset(
+    {"▲高嶺＊＊▲", "▲小早川＊▲", "▲姉ヶ崎＊▲", "▲Takane＊＊▲", "▲Kobayaka＊▲", "▲Anegasaki＊▲"}
+)
+_HER = "(?:" + "|".join(re.escape(m) for m in sorted(HEROINE_MARKERS)) + ")"
+# Her name used as a subject, possessive, or object ("Kobayaka-san looks great").
+_HER_THIRD_RE = re.compile(
+    _HER + r"(?:'s\b|\s+(?:is|was|looks|has|had|does|did|seems|likes|wants|will|would|can|could"
+    r"|should|isn't|wasn't|doesn't|didn't|won't|can't|gets|got|makes|must|might|feels|thinks|knows)\b)"
+    r"|\b(?:for|with|to|about|like|than|and|at|from|see|make|let|give|tell|ask|thank|help)\s+" + _HER
+)
+# ▲小早川＊▲は？ ("And you?") came out as "What about Kobayakawa？", which has
+# no "you" to mark it as spoken.
+_WHAT_ABOUT_HER_RE = re.compile(r"^\W*(?:what|how)\s+about\s+" + _HER + r"\W*$", re.IGNORECASE)
+_SPOKEN_RE = re.compile(r"\b(?:you|your|I|me|my|we)\b")
+
+PRONOUN_PASS = FixPass(
+    "pronoun",
+    "lines with ●",
+    'These lines were translated before with ● left in. Translate ● as "I" / "me" / "my".',
+)
+ADDRESS_PASS = FixPass(
+    "address",
+    "spoken lines that name the heroine in the third person",
+    "Japanese uses the listener's name where English says \"you\". When the heroine is the "
+    "one being spoken to, write you / your instead of her name sentinel. Keep her name only "
+    "as a direct address (\"Hey, <name>,\") or when the speaker talks about her to someone "
+    "else. Use casual, natural spoken English, not stiff or formal wording.",
+    HEROINE_MARKERS,
+)
+
+
+def needs_pronoun_fix(text: str) -> bool:
+    return PRONOUN in text
+
+
+def names_heroine_to_her_face(text: str) -> bool:
+    """A spoken line (not inner monologue) that uses her name as "she" / "her"."""
+    flat = " ".join(part.strip() for part in text.split("\n"))
+    if flat.lstrip().startswith(("(", "（")):
+        return False
+    if _WHAT_ABOUT_HER_RE.match(flat):
+        return True
+    return bool(_HER_THIRD_RE.search(flat) and _SPOKEN_RE.search(flat))
+
+
+def fix_targets(xml_dir: Path, heroines: list[str], select) -> dict[str, list[tuple[int, int]]]:
     out: dict[str, list[tuple[int, int]]] = {}
     for heroine in heroines:
         for xml in sorted(xml_dir.glob(f"{HEROINE_PREFIX[heroine]}*.xml")):
             _k, _u, entries = xml_to_entries(xml)
-            rows = [(ei, di) for ei, di, text in flatten_dialogs(entries) if PRONOUN in text]
+            rows = [(ei, di) for ei, di, text in flatten_dialogs(entries) if select(text)]
             if rows:
                 out[xml.stem] = rows
     return out
 
 
-def fix_pronoun_stem(
+def pronoun_targets(xml_dir: Path, heroines: list[str]) -> dict[str, list[tuple[int, int]]]:
+    """Gemini lines whose English still has ● (the player's "I", shown as 俺/僕)."""
+    return fix_targets(xml_dir, heroines, needs_pronoun_fix)
+
+
+def address_targets(xml_dir: Path, heroines: list[str]) -> dict[str, list[tuple[int, int]]]:
+    """Gemini lines that say "Kobayaka-san looks great" where English says "you look great"."""
+    return fix_targets(xml_dir, heroines, names_heroine_to_her_face)
+
+
+def fix_stem(
     client,
     model: str,
     stem: str,
@@ -650,6 +716,7 @@ def fix_pronoun_stem(
     vanilla_dir: Path,
     xml_dir: Path,
     args: argparse.Namespace,
+    fix: FixPass,
 ) -> tuple[str, list, list[TranslateResult], list[str]]:
     """Re-translate ``rows`` from the JP; the rest of the stem is scene context."""
     key, unknown, entries = xml_to_entries(xml_dir / f"{stem}.xml")
@@ -670,21 +737,19 @@ def fix_pronoun_stem(
         model,
         items,
         heroine=PREFIX_HEROINE.get(stem[:1], "common"),
-        context=(
-            f"Script {stem}. These lines were translated before with ● left in. "
-            'Translate ● as "I" / "me" / "my". Neighbor lines are scene context.'
-        ),
+        context=f"Script {stem}. {fix.context} Neighbor lines are scene context.",
         temperature=args.temperature,
         thinking_level=args.thinking,
         repair=not args.no_repair,
         chunk_size=max(1, args.batch_size),
+        optional_markers=fix.optional_markers,
     )
     return stem, [key, unknown, entries, jp_rows], results, [
         r.error for r in results if r.english is None and items[r.index].need
     ]
 
 
-def apply_pronoun_results(
+def apply_fix_results(
     stem: str,
     parsed: list,
     results: list[TranslateResult],
@@ -702,6 +767,8 @@ def apply_pronoun_results(
         if (ei, di) not in want:
             continue
         if not needs_translation(jp):
+            if PRONOUN not in jp:
+                continue
             # Pronoun-only line such as ●？ — nothing for the model to translate.
             english = jp.replace(PRONOUN, "Me")
         else:
@@ -720,10 +787,9 @@ def apply_pronoun_results(
     return fixed, rejected
 
 
-def cmd_fix_pronoun(args: argparse.Namespace) -> int:
+def run_fix(args: argparse.Namespace, fix: FixPass, targets: dict[str, list[tuple[int, int]]]) -> int:
     out = Path(args.out)
     xml_dir = out / "xml"
-    targets = pronoun_targets(xml_dir, heroines_from_arg(args.heroine))
     if args.limit:
         kept: dict[str, list[tuple[int, int]]] = {}
         for stem, rows in targets.items():
@@ -732,7 +798,7 @@ def cmd_fix_pronoun(args: argparse.Namespace) -> int:
             kept[stem] = rows
         targets = kept
     total = sum(len(r) for r in targets.values())
-    print(f"lines with ●: {total} in {len(targets)} scripts  model={load_gemini_model(args.model)}")
+    print(f"{fix.what}: {total} in {len(targets)} scripts  model={load_gemini_model(args.model)}")
     if args.dry_run:
         for stem, rows in list(targets.items())[:20]:
             print(f"  {stem}: {len(rows)} lines")
@@ -752,9 +818,7 @@ def cmd_fix_pronoun(args: argparse.Namespace) -> int:
     finished = 0
     with ThreadPoolExecutor(max_workers=max(1, args.workers)) as pool:
         futs = {
-            pool.submit(
-                fix_pronoun_stem, client, model, stem, rows, vanilla, xml_dir, args
-            ): stem
+            pool.submit(fix_stem, client, model, stem, rows, vanilla, xml_dir, args, fix): stem
             for stem, rows in targets.items()
         }
         for fut in as_completed(futs):
@@ -763,21 +827,31 @@ def cmd_fix_pronoun(args: argparse.Namespace) -> int:
             try:
                 stem, parsed, results, errors = fut.result()
             except Exception as exc:  # noqa: BLE001 — one script must not kill the run
-                print(f"[pronoun] {stem} failed: {exc!r}", flush=True)
+                print(f"[{fix.tag}] {stem} failed: {exc!r}", flush=True)
                 rejected.append({"stem": stem, "error": repr(exc)})
                 continue
-            n, bad = apply_pronoun_results(
+            n, bad = apply_fix_results(
                 stem, parsed, results, targets[stem], xml_dir, out / "dbin2", mapping
             )
             fixed += n
             rejected.extend(bad)
             save_json(map_path, {"translations": mapping})
-            print(f"[pronoun] {finished}/{len(targets)} {stem} fixed={n} rejected={len(bad)}")
+            print(f"[{fix.tag}] {finished}/{len(targets)} {stem} fixed={n} rejected={len(bad)}")
             if errors:
                 _safe_print(f"  errors: {errors[:6]}")
-    save_json(out / "pronoun_rejected.json", rejected)
+    save_json(out / f"{fix.tag}_rejected.json", rejected)
     print(f"done: fixed={fixed} rejected={len(rejected)} (re-run to retry the rejected)")
     return 0 if not rejected else 1
+
+
+def cmd_fix_pronoun(args: argparse.Namespace) -> int:
+    targets = pronoun_targets(Path(args.out) / "xml", heroines_from_arg(args.heroine))
+    return run_fix(args, PRONOUN_PASS, targets)
+
+
+def cmd_fix_address(args: argparse.Namespace) -> int:
+    targets = address_targets(Path(args.out) / "xml", heroines_from_arg(args.heroine))
+    return run_fix(args, ADDRESS_PASS, targets)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -833,19 +907,22 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_run.set_defaults(func=cmd_run)
 
-    p_fix = sub.add_parser(
-        "fix-pronoun",
-        help='re-translate Gemini lines that kept ● (the player\'s "I") in --out xml/dbin2',
-    )
-    add_common(p_fix)
-    p_fix.add_argument("--dry-run", action="store_true", help="count lines; no API")
-    p_fix.add_argument("--limit", type=int, default=0, help="cap lines (keeps whole scripts)")
-    p_fix.add_argument("--batch-size", type=int, default=40)
-    p_fix.add_argument("--workers", type=int, default=2)
-    p_fix.add_argument("--temperature", type=float, default=0.4)
-    p_fix.add_argument("--thinking", default="HIGH")
-    p_fix.add_argument("--no-repair", action="store_true")
-    p_fix.set_defaults(func=cmd_fix_pronoun)
+    for name, func, help_text in (
+        ("fix-pronoun", cmd_fix_pronoun,
+         're-translate Gemini lines that kept ● (the player\'s "I") in --out xml/dbin2'),
+        ("fix-address", cmd_fix_address,
+         'redo spoken lines that name the heroine where English says "you"'),
+    ):
+        p_fix = sub.add_parser(name, help=help_text)
+        add_common(p_fix)
+        p_fix.add_argument("--dry-run", action="store_true", help="count lines; no API")
+        p_fix.add_argument("--limit", type=int, default=0, help="cap lines (keeps whole scripts)")
+        p_fix.add_argument("--batch-size", type=int, default=40)
+        p_fix.add_argument("--workers", type=int, default=2)
+        p_fix.add_argument("--temperature", type=float, default=0.4)
+        p_fix.add_argument("--thinking", default="HIGH")
+        p_fix.add_argument("--no-repair", action="store_true")
+        p_fix.set_defaults(func=func)
     return ap
 
 

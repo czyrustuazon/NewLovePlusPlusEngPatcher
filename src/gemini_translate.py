@@ -313,7 +313,12 @@ def build_user_prompt(
     return "\n".join(header)
 
 
-def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
+def finalize_item(
+    item: TranslateItem,
+    raw_en: str | None,
+    optional_markers: frozenset[str] = frozenset(),
+) -> TranslateResult:
+    """``optional_markers`` may be dropped (a heroine's name said as "you")."""
     if not item.need:
         return TranslateResult(item.index, item.source, item.source)
     if raw_en is None:
@@ -328,8 +333,9 @@ def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
             error="leftover_sentinel",
             missing_markers=[f"@@M{n}@@" for n in leftover],
         )
-    ok, missing = markers_preserved(item.source, en)
-    if not ok:
+    _ok, missing = markers_preserved(item.source, en)
+    missing = [m for m in missing if m not in optional_markers]
+    if missing:
         return TranslateResult(
             item.index,
             item.source,
@@ -510,6 +516,7 @@ def _translate_prepared_once(
     temperature: float = 0.4,
     thinking_level: str = "HIGH",
     repair: bool = True,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> dict[int, TranslateResult]:
     results: dict[int, TranslateResult] = {}
     if not targets:
@@ -525,7 +532,7 @@ def _translate_prepared_once(
     by_i = parse_items_json(raw)
     failed: list[TranslateItem] = []
     for it in targets:
-        res = finalize_item(it, by_i.get(it.index))
+        res = finalize_item(it, by_i.get(it.index), optional_markers)
         if res.english is None:
             failed.append(it)
         results[it.index] = res
@@ -557,7 +564,7 @@ def _translate_prepared_once(
         )
         by_i2 = parse_items_json(raw2)
         for it in failed:
-            results[it.index] = finalize_item(it, by_i2.get(it.index))
+            results[it.index] = finalize_item(it, by_i2.get(it.index), optional_markers)
     return results
 
 
@@ -573,6 +580,7 @@ def translate_prepared(
     repair: bool = True,
     chunk_size: int = 40,
     context_pad: int = 16,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> list[TranslateResult]:
     needed = [it for it in items if it.need]
     results: dict[int, TranslateResult] = {}
@@ -597,6 +605,7 @@ def translate_prepared(
             temperature=temperature,
             thinking_level=thinking_level,
             repair=repair,
+            optional_markers=optional_markers,
         )
         results.update(part)
 
