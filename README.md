@@ -1,8 +1,8 @@
-# NewLovePlusPlusEngPatcher
+# New Love Plus+ English Patch (2026)
 
-One-click English patcher for **New Love Plus+** (3DS), plus the finished translation assets it ships.
+One-click English patcher for **New Love Plus+** (New Love Plus Plus) on the Nintendo 3DS. This is the current patch. The 2017 [NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) repo is the old 28% release, not this build.
 
-Fansite & community hub: [newloveplus.loc.moe](https://newloveplus.loc.moe)
+Project site: [New Love Plus+ English patch](https://newloveplus.loc.moe)
 
 Translation work-in-progress lives elsewhere ([Makein/NLPPGit](https://github.com/Makein/NLPPGit), localization project) and in the **volunteer HTML workbench** (see [Volunteer localization workbench](#volunteer-localization-workbench)). This repo holds **completed** scripts/images, HTML *templates*, and a toolchain that turns an official **CIA or .3ds/.cci** dump into a playable English **CIA**.
 
