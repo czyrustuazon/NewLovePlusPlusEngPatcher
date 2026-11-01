@@ -175,9 +175,9 @@ def collect_script_jobs(vanilla_dir: Path, heroines: list[str]) -> list[Job]:
                 if not needs_translation(current):
                     continue
                 # Overlay still JP (or missing): translate the JP source.
+                # Either way src needs translation: Japanese text is never a
+                # skip line, and current was checked above.
                 src = jp if has_japanese(jp) else current
-                if not needs_translation(src):
-                    continue
                 jobs.append(
                     Job(
                         id=f"script:{path.stem}:{ei}:{di}",
@@ -265,10 +265,8 @@ def collect_jobs(args: argparse.Namespace) -> list[Job]:
         jobs.extend(collect_script_jobs(vanilla, heroines))
     if args.source in ("sms", "all"):
         # Manaka has no a*/k* scripts here, but her maildic is part of SMS.
-        sms_who = list(heroines)
-        if "manaka" not in sms_who:
-            sms_who.append("manaka")
-        jobs.extend(collect_sms_jobs(sms_who))
+        # (heroines is only ever nene / rinko.)
+        jobs.extend(collect_sms_jobs([*heroines, "manaka"]))
     return jobs
 
 

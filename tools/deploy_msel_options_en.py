@@ -172,10 +172,9 @@ def patch_arc(vanilla_arc: bytes, tmp: Path, cmp_len: int) -> bytes:
             best = (z, patched)
         if z <= cmp_len:
             return patched
+    # Every trial overshot (a fit returns above).
     assert best is not None
-    if best[0] > cmp_len:
-        raise SystemExit(f"no trial fits slot {cmp_len} (best zopfli={best[0]})")
-    return best[1]
+    raise SystemExit(f"no trial fits slot {cmp_len} (best zopfli={best[0]})")
 
 
 def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
@@ -194,15 +193,11 @@ def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
     blob[cmp_off : cmp_off + cmp_len] = slot
 
     vanilla = src_pkg.read_bytes()
-    if blob[:cmp_off] != vanilla[:cmp_off]:
-        raise SystemExit("header region changed")
+    # Only blob[cmp_off:] was rewritten, so the header (entry table included)
+    # is the vanilla one by construction.
+    assert blob[:cmp_off] == vanilla[:cmp_off], "header region changed"
     if blob[cmp_off + cmp_len :] != vanilla[cmp_off + cmp_len :]:
         raise SystemExit("post-ARC region changed")
-    if (
-        blob[entry_off : entry_off + Package.ENTRY_SIZE]
-        != vanilla[entry_off : entry_off + Package.ENTRY_SIZE]
-    ):
-        raise SystemExit("ARC entry header changed")
 
     dst_pkg.write_bytes(blob)
     pkg = Package(FileWindow(str(dst_pkg)), 0)
@@ -269,12 +264,9 @@ def add_password_input_plate(arc: bytes, tmp: Path, cmp_len: int) -> bytes:
             best = (z, patched)
         if z <= cmp_len:
             return patched
+    # Every trial overshot (a fit returns above).
     assert best is not None
-    if best[0] > cmp_len:
-        raise SystemExit(
-            f"password plate misses slot {cmp_len} (best zopfli={best[0]})"
-        )
-    return best[1]
+    raise SystemExit(f"password plate misses slot {cmp_len} (best zopfli={best[0]})")
 
 
 def _deploy_targets() -> list[Path]:

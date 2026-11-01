@@ -745,8 +745,8 @@ def write_layeredfs(
             shutil.copy2(chosen, dest / src.name)
             count += 1
             pack_injected += 1
-            if tag != "jp":
-                pack_layers[tag] = pack_layers.get(tag, 0) + 1
+            # A chosen source is never tagged "jp" (that comes with None).
+            pack_layers[tag] = pack_layers.get(tag, 0) + 1
         skipped = len(files) - pack_injected
         layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
         note = f" ({layer_note})" if layer_note else ""

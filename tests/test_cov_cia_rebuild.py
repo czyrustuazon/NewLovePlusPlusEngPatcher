@@ -840,8 +840,7 @@ def test_smoke_stop_and_run(monkeypatch, tmp_path: Path):
     seed = tmp_path / "seed"
     (seed / "sdmc").mkdir(parents=True)
     (seed / "sdmc" / "a.txt").write_bytes(b"a")
-    (seed / "nand").mkdir()
-    (seed / "nand" / "b.txt").write_bytes(b"b")
+    # No nand/ in the seed: only sdmc/ is copied.
     work = tmp_path / "smoke_work"
     work.mkdir()
     (work / "old.txt").write_bytes(b"old")
@@ -1702,6 +1701,12 @@ def test_bake_helpers(monkeypatch, tmp_path: Path):
     monkeypatch.setattr(bake.subprocess, "Popen", lambda *a, **k: _Pipe(2, ["bad\n"]))
     with pytest.raises(subprocess.CalledProcessError):
         bake.run(["cmd"], on_line=lambda _s: None)
+    # Pinned status without a line callback; a failure with no output.
+    monkeypatch.setattr(bake.subprocess, "Popen", lambda *a, **k: _Pipe())
+    bake.run(["cmd"])
+    monkeypatch.setattr(bake.subprocess, "Popen", lambda *a, **k: _Pipe(3, ["\n"]))  # blank output only
+    with pytest.raises(subprocess.CalledProcessError):
+        bake.run(["cmd"])
     monkeypatch.setattr(bake, "live", type("Off", (), {"active": False})())
 
     bake.TEXTRESOURCE.mkdir(parents=True)
@@ -1748,6 +1753,9 @@ def test_bake_helpers(monkeypatch, tmp_path: Path):
     bake.rebuild_main_trb()
     assert (bake.TEXTRESOURCE / "translations.json").is_file()
     assert (bake.TEXTRESOURCE / "textresource_resident_jpn.trb").read_bytes() == b"res"
+    bake.rebuild_main_trb()
+    # The committed translations.json itself: nothing to sync first.
+    monkeypatch.setattr(bake, "require_translations_json", lambda: bake.TRANSLATIONS_JSON)
     bake.rebuild_main_trb()
 
     vanilla = tmp_path / "vanilla.bin"
@@ -1940,6 +1948,16 @@ def test_bake_name_input_and_rebuild(monkeypatch, tmp_path: Path):
     bake.CACHE_NEW_IMG.write_bytes(b"seed")
     assert bake._main_rebuild(_bake_ns(skip_pack=True, vanilla=vanilla, keep_work=False), _btimer()) == 0
     assert bake.BAKE_IMG.is_file() and not bake.CACHE_NEW_IMG.exists()
+
+    # Keep the PNG-pack seed, no vanilla TRB found, and no log written.
+    bake.BAKE_IMG.unlink()
+    bake.CACHE_NEW_IMG.write_bytes(b"seed")
+    with monkeypatch.context() as m:
+        m.setattr(bake, "find_vanilla_main_trb", lambda: None)
+        m.setattr(bake, "write_rebuild_log", lambda *a, **k: None)
+        assert bake._main_rebuild(_bake_ns(skip_pack=True, vanilla=vanilla, keep_work=True), _btimer()) == 0
+    assert bake.CACHE_NEW_IMG.exists()
+    bake.CACHE_NEW_IMG.unlink()
 
     bake.BAKE_IMG.unlink()
     with pytest.raises(SystemExit, match="no bake"):
@@ -2336,6 +2354,8 @@ def test_cia_code_images_and_summary(monkeypatch, tmp_path: Path):
     tools.blz_out = 32
     assert patch_cia.inject_exefs_code(exefs, work, bigger).is_file()
     tools.blz_out = 16
+    # BLZ output that lands exactly on the stock slot: no growth warning.
+    assert patch_cia.inject_exefs_code(exefs, work, bigger).is_file()
     assert patch_cia.patch_exefs_smdh(exefs, work, region_lock=1).is_file()
     hdr = work / "parts_hdr"
     # rebuild a header the way the fake splitter does
@@ -2481,6 +2501,14 @@ def test_cia_code_images_and_summary(monkeypatch, tmp_path: Path):
         work,
     )
     assert got == fresh.resolve()
+    # Gold bake present but a repack is asked for; scratch is removed after.
+    patch_cia.DEFAULT_BAKE_IMG.parent.mkdir(parents=True, exist_ok=True)
+    patch_cia.DEFAULT_BAKE_IMG.write_bytes(b"gold")
+    got = patch_cia.pack_ui_images(
+        _ns(images=str(tmp_path), packed_img=str(fresh), repack_images=True, keep_work=False, img_bin=str(src_img)),
+        work,
+    )
+    assert got == fresh.resolve() and not (work / "img_work").exists()
     monkeypatch.setattr(pack_images, "pack_images", lambda *_a, **_k: (_ for _ in ()).throw(pack_images.PackError("no")))
     with pytest.raises(patch_cia.PatchError, match="image packing"):
         patch_cia.pack_ui_images(_ns(images=str(tmp_path), packed_img=str(tmp_path / "other.img"), repack_images=True, keep_work=False), work)
@@ -2742,6 +2770,29 @@ def test_cia_rebuild_and_main(monkeypatch, tmp_path: Path):
         packed_img=None,
         romfs_overlay=None,
     )
+    # Link into a fresh work dir; then reuse an existing tree; then copy.
+    for sub_work, link, mode in (
+        ("link2", True, "none"),
+        ("reuse2", False, "tree"),
+        ("copy2", False, "stale"),
+        ("copy3", False, "none"),
+    ):
+        romfs_work = work / sub_work / "romfs"
+        if mode == "tree":
+            for pack in patch_cia.PACKS:
+                (romfs_work / "script" / "bin" / pack).mkdir(parents=True)
+        elif mode == "stale":
+            romfs_work.mkdir(parents=True)  # not a script tree: replaced
+        patch_cia.rebuild_patched_cia(
+            _ns(romfs=str(reuse), link_romfs=link, keep_work=True),
+            rom_in=rom,
+            kind="cia",
+            dbin_root=dbin,
+            work=work / sub_work,
+            out_cia=tmp_path / f"{sub_work}.cia",
+            packed_img=None,
+            romfs_overlay=None,
+        )
     with pytest.raises(patch_cia.PatchError, match="not both"):
         patch_cia.rebuild_patched_cia(
             _ns(inject_code=str(code), patch_code=True, cxi=str(cxi)),
@@ -3122,6 +3173,17 @@ def test_cia_leftover_edges(monkeypatch, tmp_path: Path, capsys):
         == 0
     )
     assert sub.is_file()
+
+    # A packed img that is not the gold bake is named in the summary.
+    monkeypatch.setattr(patch_cia, "DEFAULT_BAKE_IMG", tmp_path / "gold-elsewhere.img")
+    sub2 = patch_cia.ROOT / "out" / "subcia2" / "game.cia"
+    args = _ns(with_images=True, no_images=False, skip_hash=True, keep_work=True, no_log=True,
+               layeredfs_out=str(tmp_path / "lfs3"))
+    assert patch_cia._cmd_patch_body(args, rom, "cia", dbin, work, sub2, _timer()) == 0
+    # Neither --with-images nor --no-images: images are just not touched.
+    args = _ns(with_images=False, no_images=False, skip_hash=True, keep_work=True, no_log=True,
+               layeredfs_out=str(tmp_path / "lfs4"))
+    assert patch_cia._cmd_patch_body(args, rom, "cia", dbin, work, sub2, _timer()) == 0
 
     def fail_rebuild(_args, **_kwargs):
         raise patch_cia.PatchError("rebuild")

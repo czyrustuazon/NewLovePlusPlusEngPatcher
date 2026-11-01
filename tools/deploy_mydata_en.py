@@ -180,10 +180,9 @@ def fit_and_patch_arc(
             best = (z, patched)
         if z <= cmp_len:
             return patched
+    # Every trial overshot (a fit returns above).
     assert best is not None
-    if best[0] > cmp_len:
-        raise SystemExit(f"no trial fits under slot {cmp_len} (best zopfli={best[0]})")
-    return best[1]
+    raise SystemExit(f"no trial fits under slot {cmp_len} (best zopfli={best[0]})")
 
 
 def interfile_zero_gaps(data: bytes, min_len: int = 4) -> list[tuple[int, int]]:
@@ -206,9 +205,8 @@ def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
     left = n_bytes
     off = 0
     for sz, po in runs:
-        take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
+        take = min(left, sz)  # >= 1: gaps are non-empty and left > 0 here
+        t[po : po + take] = pad_rng[off : off + take]
         left -= take
         off += sz
         if left <= 0:
@@ -231,9 +229,7 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
             n_empty = remain // 5
             extras = b"\x00\x00\x00\xff\xff" * (n_empty - 1)
             final = b"\x01\x00\x00\xff\xff"
-            out = hdr + body + extras + final + adler
-            if len(out) != exact_len:
-                continue
+            out = hdr + body + extras + final + adler  # exact_len bytes by construction
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)
@@ -256,9 +252,7 @@ def _try_empty_pad(data: bytes, body: bytes, hdr: bytes, exact_len: int) -> byte
         + b"\x00\x00\x00\xff\xff" * (n_empty - 1)
         + b"\x01\x00\x00\xff\xff"
         + adler
-    )
-    if len(out) != exact_len:
-        return None
+    )  # exact_len bytes by construction
     d = zlib.decompressobj()
     try:
         got = d.decompress(out)

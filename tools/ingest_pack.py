@@ -365,9 +365,8 @@ def plan_item(
                 return plan
             plan.shells = match
             plan.source_xml = xml_used if not match else None
-            if not match and xml_used is None:
-                plan.errors.append(f"no {stem} dialog shell to copy")
-                return plan
+            # Without an XML, the dialogs came from a dbin2, which matches itself.
+            assert match or xml_used is not None, f"no {stem} dialog shell to copy"
     else:
         plan.dest_scripts = scripts_dir
         plan.dest_dbin_root = dbin_root

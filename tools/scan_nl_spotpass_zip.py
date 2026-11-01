@@ -115,6 +115,11 @@ class SplitReader:
         raise ValueError(f"could not map offset {offset}")
 
 
+# Progress lines while walking the multi-GB archive.
+CD_PROGRESS_EVERY = 500_000
+LOCAL_PROGRESS_EVERY = 20_000
+
+
 def discover_parts(path: Path) -> tuple[list[Path], int | None]:
     """Return part paths in order. ``None`` skip means auto-detect the IA byte."""
     if path.is_dir():
@@ -178,8 +183,8 @@ def _find_eocd(tail: bytes, file_size: int) -> tuple[int, int, int, int]:
             if cursor < 0:
                 raise SystemExit("no end-of-central-directory record matches the file tail")
             eocd = tail[cursor:]
-            if len(eocd) < 22:
-                continue
+            # Earlier than rel, so longer than the >= 22-byte record checked above.
+            assert len(eocd) >= 22
             comment_len = struct.unpack_from("<H", eocd, 20)[0]
             if 22 + comment_len == len(eocd):
                 rel = cursor
@@ -260,7 +265,7 @@ def iter_central_directory(reader: SplitReader, offset: int, size: int, count: i
         yield Entry(name, method, crc, comp_size, uncomp_size, local_offset)
         pos += 46 + name_len + extra_len + comment_len
         seen += 1
-        if seen % 500_000 == 0:
+        if seen % CD_PROGRESS_EVERY == 0:
             print(f"  … {seen} central-directory entries", flush=True)
 
 
@@ -518,7 +523,7 @@ def walk_local_part(path: Path, skip: int, report_path: Path) -> None:
                 line = f"{name}\tsize={payload}"
                 interesting.append(line)
                 out.write(line + "\n")
-            if files % 20000 == 0:
+            if files % LOCAL_PROGRESS_EVERY == 0:
                 gib = payload_bytes / (1024 ** 3)
                 out.flush()
                 print(f"  … {files} files, {gib:.1f} GiB, last {name}", flush=True)

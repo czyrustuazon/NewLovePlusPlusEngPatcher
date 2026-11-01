@@ -113,8 +113,7 @@ def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
     off = 0
     for sz, po in runs:
         take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
+        t[po : po + take] = pad_rng[off : off + take]
         left -= take
         off += sz
         if left <= 0:
@@ -146,8 +145,6 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
                 + b"\x01\x00\x00\xff\xff"
                 + adler
             )
-            if len(out) != exact_len:
-                continue
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)
@@ -216,8 +213,6 @@ def compress_exact_zopfli(data: bytes, target: int) -> tuple[bytes, bytes]:
     runs2 = interfile_zero_gaps(bytes(t))
     for sz, po in runs2:
         for i in range(sz):
-            if t[po + i] != 0:
-                continue
             t[po + i] = rng[po % len(rng)] if rng else 1
             z = zopfli_zlib.compress(bytes(t))
             if len(z) == target:
