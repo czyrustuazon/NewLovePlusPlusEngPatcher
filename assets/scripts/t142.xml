@@ -11173,19 +11173,16 @@ her...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Huh？ I wonder why are you 
-standing still over there, 
-▲Takane＊＊▲...)</Dialog>
-          <Dialog>(It looks like you're 
-searching for something. 
-It's kinda hard to approach 
-you like this...)</Dialog>
-          <Dialog>(Entering that store and 
-leaving it 3 times... 
-What exactly are you doing 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>(Mmm, I wonder what I 
-should do...)</Dialog>
+          <Dialog>(Huh... Isn't that
+▲Takane＊＊▲ over there...？)</Dialog>
+          <Dialog>(She seems worried about
+being seen... It's kinda
+hard to call out to her...)</Dialog>
+          <Dialog>(In and out of that store
+3 times now... What on earth
+is ▲Takane＊＊▲ doing？)</Dialog>
+          <Dialog>(Then again, what am I
+even doing...)</Dialog>
           <Dialog>Let's join her</Dialog>
           <Dialog>Go home</Dialog>
           <Dialog>(Welp, I can't do 
@@ -11204,15 +11201,13 @@ I...</Dialog>
 See you.</Dialog>
           <Dialog>(There she goes... What was 
 that about？)</Dialog>
-          <Dialog>(Huh... There she is again. 
-What are you doing, 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>(It seems she's still 
-doing the same as before...)</Dialog>
-          <Dialog>(Entering the store and 
-leaving it 3 times... 
-What exactly are you doing, 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>(Huh... ▲Takane＊＊▲ is
+here again...)</Dialog>
+          <Dialog>(She still seems worried
+about being seen...)</Dialog>
+          <Dialog>(In and out of the store
+3 times again... What is
+▲Takane＊＊▲ really doing？)</Dialog>
           <Dialog>Let's ask her</Dialog>
           <Dialog>Go home</Dialog>
           <Dialog>(Mmm, it seems like I 
@@ -11244,8 +11239,8 @@ is...</Dialog>
 if we eat quickly we can 
 make it home in time. 
 Sounds about right？</Dialog>
-          <Dialog>Hehe... Yes, let's stop 
-a for little while.</Dialog>
+          <Dialog>Hehe... Okay, let's stop
+for a little while.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
