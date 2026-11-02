@@ -339,7 +339,7 @@ I'm going home.</Dialog>
 Hey, if you'd like, wanna go
 hang out somewhere？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●Well...</Dialog>
+          <Dialog>I...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -387,8 +387,7 @@ hang out somewhere？</Dialog>
           <Dialog>Really？ Yay!
 I know it was short notice.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm always free for you,
-●.
+          <Dialog>Anytime works for me.
 So, where should we go？</Dialog>
         </Dialogs>
       </SDL2>
@@ -813,8 +812,8 @@ He's all mine.</Dialog>
 I'm sure I heard
 her voice, though...？)</Dialog>
           <Dialog>▲姉ヶ崎＊▲. Where were you？
-You kept calling out
-for ●, didn't you？</Dialog>
+You called for me a bunch
+of times, right？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>？ No, I only called
 for you once？</Dialog>
@@ -1009,8 +1008,8 @@ you know...)</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Hey, sounds like those girls
 are gossiping about you？</Dialog>
-          <Dialog>It's not about ●,
-it's about ▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>They're talking about you,
+▲姉ヶ崎＊▲, not me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1340,8 +1339,8 @@ handkerchief？</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Sorry to keep you waiting!
 Isn't this handkerchief yours？</Dialog>
-          <Dialog>Ah, that's it! How did you
-know it was ●'s？</Dialog>
+          <Dialog>Oh, that's it! I'm impressed
+you knew it was mine.</Dialog>
           <Dialog>Because I've memorized ev-er-y
 single thing of yours.</Dialog>
           <Dialog>(I wonder if that's true...)</Dialog>
@@ -2409,9 +2408,9 @@ and have some fun!</Dialog>
           <Dialog>Whoops...</Dialog>
           <Dialog>Businessman</Dialog>
           <Dialog>Excuse me.</Dialog>
-          <Dialog>I wonder if ● will wear
-a suit and work like that
-someday, too...</Dialog>
+          <Dialog>I wonder if I'll end up
+working in a suit like
+that someday...</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Why do you say that like
 it's such a bummer？</Dialog>
@@ -2460,9 +2459,8 @@ looking forward to it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Looks like there are other
-couples besides ●
-and me.</Dialog>
+          <Dialog>There's another couple
+here besides us.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Yeah. But isn't their
 distance a little awkward？

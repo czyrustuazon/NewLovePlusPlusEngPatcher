@@ -2,7 +2,12 @@
 
 Preserves game control tokens by swapping them for ASCII sentinels before the
 API call and restoring + validating them afterwards. A dropped ``▲…▲``,
-``※``, ``▼``, or ``●`` is treated as a failed translation.
+``※``, or ``▼`` is treated as a failed translation.
+
+``●`` is not a marker. The game fills it with the player's first-person
+pronoun (resident ``●`` key; values 俺 / 僕), so English that keeps it shows
+"俺 was in the wrong". It is translated as I / me / my like any word, and an
+English line that still has ``●`` is rejected.
 """
 from __future__ import annotations
 
@@ -31,11 +36,13 @@ SKIP_LINE_RE = re.compile(
 # Complete ▲…▲ tokens, then control glyphs, then printf / {n} placeholders.
 MARKER_RE = re.compile(
     r"▲[^▲]+▲"
-    r"|[※▼●]"
+    r"|[※▼]"
     r"|%(?:\d+\$)?[-+#0 ]*\d*(?:\.\d+)?[sdifuxXcs]"
     r"|\{[^{}]+\}"
 )
 SENTINEL_RE = re.compile(r"@@M(\d+)@@")
+# Player's first-person pronoun (俺 / 僕 at run time). Translated, not kept.
+PRONOUN = "●"
 
 HEROINE_VOICES = {
     "nene": (
@@ -69,6 +76,7 @@ Output rules:
 - Prefer fullwidth ？ for questions (matches existing EN scripts). Prefer ASCII letters.
 - Game names: 高嶺/愛花=Takane/Manaka, 小早川/凛子=Kobayakawa/Rinko, 姉ヶ崎/寧々=Anegasaki/Nene, とわの/トワノ=Towano.
 - Do NOT replace name/player tokens with English names — sentinels already cover ▲主人公＊▲ / ▲高嶺＊＊▲ / ▲小早川＊▲ / ▲姉ヶ崎＊▲.
+- ● is the player character's word for "I" (the game shows 俺 or 僕 there). Translate it as I / me / my / myself, whatever the sentence needs. Never write ● in the English.
 - Never leave Japanese kana/kanji unless a proper noun has no English form.
 - Do not wrap the whole string in extra quotes.
 - Leave placeholder-only lines (○○○) untranslated if they slip through — copy the source.
@@ -305,7 +313,12 @@ def build_user_prompt(
     return "\n".join(header)
 
 
-def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
+def finalize_item(
+    item: TranslateItem,
+    raw_en: str | None,
+    optional_markers: frozenset[str] = frozenset(),
+) -> TranslateResult:
+    """``optional_markers`` may be dropped (a heroine's name said as "you")."""
     if not item.need:
         return TranslateResult(item.index, item.source, item.source)
     if raw_en is None:
@@ -320,8 +333,9 @@ def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
             error="leftover_sentinel",
             missing_markers=[f"@@M{n}@@" for n in leftover],
         )
-    ok, missing = markers_preserved(item.source, en)
-    if not ok:
+    _ok, missing = markers_preserved(item.source, en)
+    missing = [m for m in missing if m not in optional_markers]
+    if missing:
         return TranslateResult(
             item.index,
             item.source,
@@ -329,6 +343,8 @@ def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
             error="dropped_marker",
             missing_markers=missing,
         )
+    if PRONOUN in en:
+        return TranslateResult(item.index, item.source, None, error="kept_pronoun")
     jp_left = len(JP_RE.findall(strip_markers(en)))
     if jp_left > max(2, len(en) // 4):
         return TranslateResult(item.index, item.source, None, error="still_japanese")
@@ -438,8 +454,7 @@ def gemini_generate_json(
     if config is None:
         config = types.GenerateContentConfig(**config_kwargs)
 
-    last_exc: BaseException | None = None
-    for attempt in range(8):
+    for attempt in range(7):
         try:
             response = client.models.generate_content(
                 model=model,
@@ -448,8 +463,7 @@ def gemini_generate_json(
             )
             return _extract_response_text(response)
         except Exception as exc:  # noqa: BLE001 — retry Gemini quota / transport
-            last_exc = exc
-            if not _is_retryable_api_error(exc) or attempt == 7:
+            if not _is_retryable_api_error(exc):
                 raise
             if "PerDay" in str(exc) or "per_day" in str(exc):
                 raise
@@ -459,7 +473,13 @@ def gemini_generate_json(
                 flush=True,
             )
             time.sleep(delay)
-    raise last_exc or RuntimeError("gemini_generate_json failed")
+    # Eighth and last try: any error goes to the caller.
+    response = client.models.generate_content(
+        model=model,
+        contents=user,
+        config=config,
+    )
+    return _extract_response_text(response)
 
 
 def _context_window(
@@ -500,6 +520,7 @@ def _translate_prepared_once(
     temperature: float = 0.4,
     thinking_level: str = "HIGH",
     repair: bool = True,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> dict[int, TranslateResult]:
     results: dict[int, TranslateResult] = {}
     if not targets:
@@ -515,7 +536,7 @@ def _translate_prepared_once(
     by_i = parse_items_json(raw)
     failed: list[TranslateItem] = []
     for it in targets:
-        res = finalize_item(it, by_i.get(it.index))
+        res = finalize_item(it, by_i.get(it.index), optional_markers)
         if res.english is None:
             failed.append(it)
         results[it.index] = res
@@ -531,11 +552,13 @@ def _translate_prepared_once(
             }
             for it in failed
         ]
-        repair_user = (
-            f"Heroine/route: {heroine}. The previous English dropped game markers.\n"
-            "Re-translate. Copy every @@Mn@@ sentinel into t. Return JSON items.\n"
-            + json.dumps(repair_payload, ensure_ascii=False)
-        )
+        notes = [f"Heroine/route: {heroine}. The previous English broke a rule (see bad)."]
+        if any(results[it.index].error == "kept_pronoun" for it in failed):
+            notes.append(
+                'bad=kept_pronoun: ● means "I". Write I / me / my / myself instead; no ● in t.'
+            )
+        notes.append("Re-translate. Copy every @@Mn@@ sentinel into t. Return JSON items.")
+        repair_user = "\n".join(notes) + "\n" + json.dumps(repair_payload, ensure_ascii=False)
         raw2 = gemini_generate_json(
             client,
             model,
@@ -545,7 +568,7 @@ def _translate_prepared_once(
         )
         by_i2 = parse_items_json(raw2)
         for it in failed:
-            results[it.index] = finalize_item(it, by_i2.get(it.index))
+            results[it.index] = finalize_item(it, by_i2.get(it.index), optional_markers)
     return results
 
 
@@ -561,6 +584,7 @@ def translate_prepared(
     repair: bool = True,
     chunk_size: int = 40,
     context_pad: int = 16,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> list[TranslateResult]:
     needed = [it for it in items if it.need]
     results: dict[int, TranslateResult] = {}
@@ -585,6 +609,7 @@ def translate_prepared(
             temperature=temperature,
             thinking_level=thinking_level,
             repair=repair,
+            optional_markers=optional_markers,
         )
         results.update(part)
 

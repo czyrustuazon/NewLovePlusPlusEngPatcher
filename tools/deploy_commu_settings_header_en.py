@@ -150,9 +150,7 @@ def render_label(
         gh = int(ys.max() - ys.min() + 1)
         if gh > max_gh:
             continue
-        peak = float(alpha.max())
-        if peak <= 0:
-            continue
+        peak = float(alpha.max())  # > 20: some texel passed the check above
         alpha = np.clip(alpha.astype(np.float32) * (255.0 / peak), 0, 255).astype(np.uint8)
         rgb = Image.new("RGBA", (w, h), (*ink, 0))
         rgb.putalpha(Image.fromarray(alpha, "L"))

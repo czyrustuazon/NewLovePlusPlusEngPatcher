@@ -274,9 +274,6 @@ def translate(args: argparse.Namespace) -> int:
         entries = parse_entries(path)
         en_entries = apply_map(entries, mapping)
         still_jp = sum(1 for _, t in en_entries if t and JP_RE.search(t))
-        stem = path.stem.replace(".roundtrip", "")
-        if stem.endswith(".roundtrip"):
-            stem = stem[: -len(".roundtrip")]
         # path.stem for maildic_m.roundtrip.xml is maildic_m.roundtrip
         stem = path.name.split(".")[0]
         xml_out = out_dir / f"{stem}.en.xml"

@@ -178,7 +178,7 @@ def test_token_drop_and_locked_line_and_mark_drop_reject(tmp_path: Path, capsys)
     assert "nothing written" in out
 
 
-def test_bullet_change_warns_and_still_applies(tmp_path: Path, capsys):
+def test_pronoun_translated_away_applies_without_a_warning(tmp_path: Path, capsys):
     scripts, dbin_root, _xml = _layout(tmp_path)
     dialogs = ["○○○○○○○○", "Hello ▲苗字▲", "stay & put"]
     pack = _write_pack(tmp_path, _pack(BASE, dialogs))
@@ -187,8 +187,14 @@ def test_bullet_change_warns_and_still_applies(tmp_path: Path, capsys):
     )
     out = capsys.readouterr().out
     assert code == 0
-    assert "● count 1 -> 0" in out
+    assert "●" not in out
     assert ingest._dbin_dialogs(dbin_root / "script" / "p001.dbin2")[1] == "Hello ▲苗字▲"
+
+
+def test_pronoun_left_in_a_translated_line_warns():
+    errors, warnings = ingest._validate_pair(BASE, ["○○○○○○○○", "Hello ●▲苗字▲", "stay & put"])
+    assert not errors
+    assert warnings == ["● left in translated line(s) [1]: shows as 俺/僕; write I / me / my"]
 
 
 def test_dbin_only_stem_gains_an_xml_source(tmp_path: Path):

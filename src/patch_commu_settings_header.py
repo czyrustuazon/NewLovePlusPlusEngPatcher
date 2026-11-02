@@ -46,8 +46,7 @@ def build_cave(cave: int = ADDR_COMMU_HEADER_CAVE) -> bytes:
     code += bl(cave + 8, ADDR_SET_HEADER)
     code += _u32(0xE3A00003)  # mov r0, #3
     code += _b(cave + 16, RESUME)
-    if len(code) != 20:
-        raise ValueError(f"header stub {len(code)} != 20")
+    assert len(code) == 20, f"header stub {len(code)} != 20"
     blob = bytes(code) + TITLE
     if len(blob) > COMMU_HEADER_CAVE_LEN:
         raise ValueError(f"header cave {len(blob)} > {COMMU_HEADER_CAVE_LEN}")

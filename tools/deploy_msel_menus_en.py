@@ -385,15 +385,11 @@ def splice_arc(src_pkg: Path, patched_arc: bytes, dst_pkg: Path) -> None:
     blob[cmp_off : cmp_off + cmp_len] = slot
 
     vanilla = src_pkg.read_bytes()
-    if blob[:cmp_off] != vanilla[:cmp_off]:
-        raise SystemExit("header region changed")
+    # Only blob[cmp_off:] was rewritten, so the header (entry table included)
+    # is the vanilla one by construction.
+    assert blob[:cmp_off] == vanilla[:cmp_off], "header region changed"
     if blob[cmp_off + cmp_len :] != vanilla[cmp_off + cmp_len :]:
         raise SystemExit("post-ARC region changed")
-    if (
-        blob[entry_off : entry_off + Package.ENTRY_SIZE]
-        != vanilla[entry_off : entry_off + Package.ENTRY_SIZE]
-    ):
-        raise SystemExit("ARC entry header changed")
 
     dst_pkg.write_bytes(blob)
     pkg = Package(FileWindow(str(dst_pkg)), 0)

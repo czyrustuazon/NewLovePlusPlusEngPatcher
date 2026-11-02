@@ -26,8 +26,8 @@ FLOOR_FILE = Path("tests") / "snapshots" / "coverage_floor.json"
 # Same order and arguments as .github/workflows/test.yml.
 STEPS = [
     ("Lint (ruff hard errors)", ["-m", "ruff", "check", "--select", "E9,F63,F7,F82", "src", "tools", "tests"]),
-    ("Run unit tests (with coverage)", ["-m", "coverage", "run", "-m", "pytest", "tests/", "-q", "-rs", "-m", "not local_data"]),
-    ("Run local-data tests (skip without vanilla dumps)", ["-m", "pytest", "tests/", "-q", "-rs", "-m", "local_data"]),
+    ("Run unit tests (with coverage)", ["-m", "coverage", "run", "-m", "pytest", "tests/", "-v", "-rs", "-m", "not local_data"]),
+    ("Run local-data tests (skip without vanilla dumps)", ["-m", "pytest", "tests/", "-v", "-rs", "-m", "local_data"]),
     ("Coverage report", ["-m", "coverage", "report", "--skip-covered", "--sort=cover"]),
     ("Coverage ratchet", ["dev/check_coverage.py"]),
 ]

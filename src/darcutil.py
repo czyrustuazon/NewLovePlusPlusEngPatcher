@@ -286,8 +286,7 @@ class DarcArchive:
                 data_start,
             )
         )
-        if len(out) < table_offset:
-            out.extend(b"\x00" * (table_offset - len(out)))
+        # The 0x1C-byte header ends at table_offset (0x1C): no pad needed.
 
         for i, name_off in enumerate(name_offsets):
             raw_name = name_off & 0x00FFFFFF
