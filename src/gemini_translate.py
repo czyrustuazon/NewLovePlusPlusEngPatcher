@@ -313,7 +313,12 @@ def build_user_prompt(
     return "\n".join(header)
 
 
-def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
+def finalize_item(
+    item: TranslateItem,
+    raw_en: str | None,
+    optional_markers: frozenset[str] = frozenset(),
+) -> TranslateResult:
+    """``optional_markers`` may be dropped (a heroine's name said as "you")."""
     if not item.need:
         return TranslateResult(item.index, item.source, item.source)
     if raw_en is None:
@@ -328,8 +333,9 @@ def finalize_item(item: TranslateItem, raw_en: str | None) -> TranslateResult:
             error="leftover_sentinel",
             missing_markers=[f"@@M{n}@@" for n in leftover],
         )
-    ok, missing = markers_preserved(item.source, en)
-    if not ok:
+    _ok, missing = markers_preserved(item.source, en)
+    missing = [m for m in missing if m not in optional_markers]
+    if missing:
         return TranslateResult(
             item.index,
             item.source,
@@ -448,8 +454,7 @@ def gemini_generate_json(
     if config is None:
         config = types.GenerateContentConfig(**config_kwargs)
 
-    last_exc: BaseException | None = None
-    for attempt in range(8):
+    for attempt in range(7):
         try:
             response = client.models.generate_content(
                 model=model,
@@ -458,8 +463,7 @@ def gemini_generate_json(
             )
             return _extract_response_text(response)
         except Exception as exc:  # noqa: BLE001 — retry Gemini quota / transport
-            last_exc = exc
-            if not _is_retryable_api_error(exc) or attempt == 7:
+            if not _is_retryable_api_error(exc):
                 raise
             if "PerDay" in str(exc) or "per_day" in str(exc):
                 raise
@@ -469,7 +473,13 @@ def gemini_generate_json(
                 flush=True,
             )
             time.sleep(delay)
-    raise last_exc or RuntimeError("gemini_generate_json failed")
+    # Eighth and last try: any error goes to the caller.
+    response = client.models.generate_content(
+        model=model,
+        contents=user,
+        config=config,
+    )
+    return _extract_response_text(response)
 
 
 def _context_window(
@@ -510,6 +520,7 @@ def _translate_prepared_once(
     temperature: float = 0.4,
     thinking_level: str = "HIGH",
     repair: bool = True,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> dict[int, TranslateResult]:
     results: dict[int, TranslateResult] = {}
     if not targets:
@@ -525,7 +536,7 @@ def _translate_prepared_once(
     by_i = parse_items_json(raw)
     failed: list[TranslateItem] = []
     for it in targets:
-        res = finalize_item(it, by_i.get(it.index))
+        res = finalize_item(it, by_i.get(it.index), optional_markers)
         if res.english is None:
             failed.append(it)
         results[it.index] = res
@@ -557,7 +568,7 @@ def _translate_prepared_once(
         )
         by_i2 = parse_items_json(raw2)
         for it in failed:
-            results[it.index] = finalize_item(it, by_i2.get(it.index))
+            results[it.index] = finalize_item(it, by_i2.get(it.index), optional_markers)
     return results
 
 
@@ -573,6 +584,7 @@ def translate_prepared(
     repair: bool = True,
     chunk_size: int = 40,
     context_pad: int = 16,
+    optional_markers: frozenset[str] = frozenset(),
 ) -> list[TranslateResult]:
     needed = [it for it in items if it.need]
     results: dict[int, TranslateResult] = {}
@@ -597,6 +609,7 @@ def translate_prepared(
             temperature=temperature,
             thinking_level=thinking_level,
             repair=repair,
+            optional_markers=optional_markers,
         )
         results.update(part)
 

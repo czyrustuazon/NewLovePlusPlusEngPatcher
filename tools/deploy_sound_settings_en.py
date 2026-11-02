@@ -112,8 +112,6 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
                 + b"\x01\x00\x00\xff\xff"
                 + adler
             )
-            if len(out) != exact_len:
-                continue
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)

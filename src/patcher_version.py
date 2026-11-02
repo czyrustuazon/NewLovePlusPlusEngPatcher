@@ -29,9 +29,9 @@ if str(ROOT / "src") not in sys.path:
 
 from image_map import normalize_folder_key, resolve_folder  # noqa: E402
 
-PATCHER_RELEASE = "v1.0.0-rc5.1"
+PATCHER_RELEASE = "v1.0.0-rc5.2"
 # makerom -ver. Vanilla NLPP is 0. Increase on each RC → main merge.
-CIA_TITLE_VERSION = 6
+CIA_TITLE_VERSION = 7
 BAKE_STAMP = ROOT / "release" / "bake_stamp.txt"
 ENG_PATCH_LINE = f"Eng Patch {PATCHER_RELEASE}"
 ASSETS_IMAGES = ROOT / "assets" / "images"

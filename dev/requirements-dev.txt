@@ -5,3 +5,5 @@ coverage[toml]>=7.10
 ruff>=0.14.0
 capstone>=5.0.0  # tests/test_patch_profile_birthday.py ARM disasm checks
 unicorn>=2.0.0  # tests/test_call_romaji_match.py runs the compiled Called matcher
+opencv-python-headless>=4.8  # tests/test_cov_minigame_cutters.py (tools/cut_minigame_*.py)
+scipy>=1.10  # tests/test_cov_minigame_cutters.py

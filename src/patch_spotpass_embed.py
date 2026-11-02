@@ -888,18 +888,16 @@ def build_area_cave(cave: int = ADDR_AREA_CAVE) -> bytes:
     blob += _u32(spot_va)
     blob += _u32(station_va)
     # Revert restores exactly the vanilla body, so stay inside it.
-    if len(blob) > len(VANILLA_AREA_CAVE_BODY):
-        raise ValueError(
-            f"area cave ends @{cave + len(blob):#x}, past the dead gate body"
-        )
+    assert len(blob) <= len(VANILLA_AREA_CAVE_BODY), (
+        f"area cave ends @{cave + len(blob):#x}, past the dead gate body"
+    )
     return blob + b"\x00" * (len(VANILLA_AREA_CAVE_BODY) - len(blob))
 
 
 def _area_store_into(code: bytearray, cave: int, at: int, pool_addr: int) -> None:
     chunk = bytearray()
     _area_store(chunk, cave + at, pool_addr - (cave + at))
-    if len(chunk) != 9 * 4:
-        raise ValueError(f"store block {len(chunk)} != 36")
+    assert len(chunk) == 9 * 4, f"store block {len(chunk)} != 36"
     code[at : at + len(chunk)] = chunk
 
 
@@ -985,10 +983,9 @@ def build_info_menu_cave(cave: int = ADDR_MENU_LIST_CAVE) -> bytes:
     blob += _u32(_INFO_POS_VA)
     blob += _u32(_INFO_TEX_VA)
     blob += _u32(ADDR_MENU_CELL + 0x100000)
-    if cave + len(blob) > ADDR_MENU_LIST_LIMIT:
-        raise ValueError(
-            f"info menu cave ends @{cave + len(blob):#x}, past {ADDR_MENU_LIST_LIMIT:#x}"
-        )
+    assert cave + len(blob) <= ADDR_MENU_LIST_LIMIT, (
+        f"info menu cave ends @{cave + len(blob):#x}, past {ADDR_MENU_LIST_LIMIT:#x}"
+    )
     return blob
 
 
@@ -998,8 +995,7 @@ def menu_choice(banner: int) -> bytes:
     for index, line in MENU_FILLED:
         rows.append(("> " if index == banner else "  ") + line)
     raw = ("\n".join(rows)).encode("utf-8") + b"\x00"
-    if len(raw) > MENU_STRIDE:
-        raise ValueError(f"menu choice {banner} is {len(raw)} bytes")
+    assert len(raw) <= MENU_STRIDE, f"menu choice {banner} is {len(raw)} bytes"
     return raw + b"\x00" * (MENU_STRIDE - len(raw))
 
 
@@ -1012,8 +1008,7 @@ def build_menu_text() -> bytes:
     blob = bytearray()
     for i in range(MENU_SLOT_COUNT):
         blob += filled.get(i, b"\x00" * MENU_STRIDE)
-    if len(blob) != MENU_SLOT_COUNT * MENU_STRIDE:
-        raise ValueError("menu text stride drifted")
+    assert len(blob) == MENU_SLOT_COUNT * MENU_STRIDE, "menu text stride drifted"
     blob += b"\x00"  # empty string while an article is open
     blob += _SHEET_NAME
     blob += _SHEET_PART
@@ -1119,11 +1114,10 @@ def build_menu_arrow_cave(menu_cave: bytes) -> tuple[bytes, int]:
     code += _u32(base)
     code += _u32(name)
     del empty
-    if cave + len(code) > ADDR_MENU_ARROW_LIMIT:
-        raise ValueError(
-            f"menu arrow cave ends @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_ARROW_LIMIT:#x}"
-        )
+    assert cave + len(code) <= ADDR_MENU_ARROW_LIMIT, (
+        f"menu arrow cave ends @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_ARROW_LIMIT:#x}"
+    )
     return bytes(code), paint_at
 
 
@@ -1148,8 +1142,7 @@ def build_back_choice(at: int) -> bytes:
     code += _b_cond(0, here(), ADDR_BACK_LEAVE_CONT)
     code += _bl(here(), ADDR_PAGE_BLOCK)
     code += _b(here(), 0x004DCCF0)
-    if len(code) != 28:
-        raise ValueError(f"back choice is {len(code)} bytes, the arrow tail has 28")
+    assert len(code) == 28, f"back choice is {len(code)} bytes, the arrow tail has 28"
     return bytes(code)
 
 
@@ -1187,12 +1180,10 @@ def build_menu_open_cave(menu_cave: bytes) -> bytes:
     code += _u32(0xE5840018)  # str r0, [r4, #0x18]
     code += _bl(at(), bind_marked_addr())
     code += _u32(0xE8BD8010)  # pop {r4, pc}
-    if len(code) != 10 * 4:
-        raise ValueError(f"menu prep is {len(code)} bytes, sheet bl assumes 40")
+    assert len(code) == 10 * 4, f"menu prep is {len(code)} bytes, sheet bl assumes 40"
     code += _u32(0xE12FFF1E)  # bx lr  arrow's old hide call returns
     # r4 = cell, r5 = index. Store the empty string, then a sentence.
-    if at() != sentence_pick_addr():
-        raise ValueError("sentence picker is not where the pad calls it")
+    assert at() == sentence_pick_addr(), "sentence picker is not where the pad calls it"
     code += _u32(0xE594000C)  # ldr r0, [r4, #0xc]
     code += _u32(0xE5840000)  # str r0, [r4]
     code += _u32(0xE3550001)  # cmp r5, #1
@@ -1203,27 +1194,22 @@ def build_menu_open_cave(menu_cave: bytes) -> bytes:
     code += _u32(0x05840000)  # streq r0, [r4]
     code += _u32(0xE12FFF1E)  # bx lr
     code += _u32(0xE8BD8070)  # pop {r4, r5, r6, pc}
-    if at() - 4 != sheet_frame_addr():
-        raise ValueError("pad return is not the pop")
-    if at() != ADDR_PLACE_LABELS:
-        raise ValueError(
-            f"place labels @{at():#x}, expected {ADDR_PLACE_LABELS:#x}"
-        )
+    assert at() - 4 == sheet_frame_addr(), "pad return is not the pop"
+    assert at() == ADDR_PLACE_LABELS, (
+        f"place labels @{at():#x}, expected {ADDR_PLACE_LABELS:#x}"
+    )
     code += build_place_labels()
-    if at() != bind_marked_addr():
-        raise ValueError(
-            f"banner bind @{at():#x}, expected {bind_marked_addr():#x}"
-        )
+    assert at() == bind_marked_addr(), (
+        f"banner bind @{at():#x}, expected {bind_marked_addr():#x}"
+    )
     code += build_bind_marked()
-    if at() != back_finish_addr():
-        raise ValueError(
-            f"back finish @{at():#x}, expected {back_finish_addr():#x}"
-        )
+    assert at() == back_finish_addr(), (
+        f"back finish @{at():#x}, expected {back_finish_addr():#x}"
+    )
     code += build_back_finish()
     # Cover the old picture-hide cave so it cannot run.
     gap = ADDR_MENU_OPEN_LIMIT - at()
-    if gap < 0:
-        raise ValueError(f"menu open cave ends @{at():#x}, past {ADDR_MENU_OPEN_LIMIT:#x}")
+    assert gap >= 0, f"menu open cave ends @{at():#x}, past {ADDR_MENU_OPEN_LIMIT:#x}"
     code += b"\x00" * gap
     pool = ADDR_MENU_ARROW  # filled in once the arrow cave's pool is known
     # The arrow builder places the pool at the end of its own bytes. Match it.
@@ -1231,11 +1217,10 @@ def build_menu_open_cave(menu_cave: bytes) -> bytes:
     pool = ADDR_MENU_ARROW + len(arrow) - 12
     code[prep_cell : prep_cell + 4] = _ldr_pc(cave + prep_cell, pool, 4)
     code[prep_base : prep_base + 4] = _ldr_pc(cave + prep_base, pool + 4, 0)
-    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
-        raise ValueError(
-            f"menu open cave ends @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
-        )
+    assert cave + len(code) <= ADDR_MENU_OPEN_LIMIT, (
+        f"menu open cave ends @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1271,13 +1256,11 @@ def build_back_finish() -> bytes:
     code += _u32(0xE3510801)  # cmp r1, #0x10000
     code += _b_cond(0, at(), 0x004DCD3C)
     code += _b(at(), ADDR_ARROW_POLL)
-    if len(code) != 16:
-        raise ValueError(f"back finish is {len(code)} bytes, the open cave has 16")
-    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
-        raise ValueError(
-            f"back finish ends @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
-        )
+    assert len(code) == 16, f"back finish is {len(code)} bytes, the open cave has 16"
+    assert cave + len(code) <= ADDR_MENU_OPEN_LIMIT, (
+        f"back finish ends @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1303,11 +1286,10 @@ def build_bind_marked() -> bytes:
     code += _u32(0xE3A02000)  # mov r2, #0
     code += _bl(at(), ADDR_TITLE_BIND_FN)
     code += _u32(0xE8BD8011)  # pop {r0, r4, pc}
-    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
-        raise ValueError(
-            f"banner bind ends @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
-        )
+    assert cave + len(code) <= ADDR_MENU_OPEN_LIMIT, (
+        f"banner bind ends @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1359,11 +1341,10 @@ def build_place_labels() -> bytes:
     code += _u32(pool_spot)
     code += _u32(area)
     code += _u32(pool_area)
-    if cave + len(code) > ADDR_MENU_OPEN_LIMIT:
-        raise ValueError(
-            f"place labels end @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_OPEN_LIMIT:#x}"
-        )
+    assert cave + len(code) <= ADDR_MENU_OPEN_LIMIT, (
+        f"place labels end @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_OPEN_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1385,11 +1366,10 @@ def build_menu_back_stub(_paint_at: int) -> bytes:
     code += _u32(0xE3A01000)  # mov r1, #0
     code += _bl(here + len(code), _AREA_LOOKUP)
     code += _u32(0xE8BD8000)  # pop {pc}
-    if here + len(code) > ADDR_MENU_IDLE_POLL_LIMIT:
-        raise ValueError(
-            f"menu group retry ends @{here + len(code):#x}, "
-            f"past {ADDR_MENU_IDLE_POLL_LIMIT:#x}"
-        )
+    assert here + len(code) <= ADDR_MENU_IDLE_POLL_LIMIT, (
+        f"menu group retry ends @{here + len(code):#x}, "
+        f"past {ADDR_MENU_IDLE_POLL_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1441,17 +1421,15 @@ def build_menu_pad_cave() -> bytes:
     code += _bl(at(), _INFO_DRAW)
     code += _b(at(), sheet_frame_addr())
     pool = 104
-    if len(code) > pool:
-        raise ValueError(f"menu pad body is {len(code)} bytes, literal is at {pool}")
+    assert len(code) <= pool, f"menu pad body is {len(code)} bytes, literal is at {pool}"
     code += b"\x00" * (pool - len(code))
     code[cell_fix : cell_fix + 4] = _ldr_pc(cave + cell_fix, cave + pool, 4)
     code[same_fix : same_fix + 4] = _b_cond(0, cave + same_fix, sheet_frame_addr())
     code[ready_fix : ready_fix + 4] = _b_cond(0, cave + ready_fix, sheet_frame_addr())
     code += _u32(ADDR_MENU_CELL + 0x100000)
-    if len(code) != MENU_PAD_LEN:
-        raise ValueError(
-            f"menu pad cave is {len(code)} bytes, move cave assumes {MENU_PAD_LEN}"
-        )
+    assert len(code) == MENU_PAD_LEN, (
+        f"menu pad cave is {len(code)} bytes, move cave assumes {MENU_PAD_LEN}"
+    )
     return bytes(code)
 
 
@@ -1485,24 +1463,20 @@ def build_menu_move_cave(cave: int | None = None) -> bytes:
     pool = cave + len(code)
     code[pool_fix : pool_fix + 4] = _ldr_pc(cave + pool_fix, pool, 0)
     code += _u32(0x009A13F8)
-    if len(code) != 32:
-        raise ValueError(f"HID reader is {len(code)} bytes, poll trampoline assumes 32")
+    assert len(code) == 32, f"HID reader is {len(code)} bytes, poll trampoline assumes 32"
     # Runs from the steady book path. Does the A poll, then the load it replaced.
     code += _u32(0xE92D4000)  # push {lr}
     code += _bl(cave + len(code), ADDR_MENU_PAD)
     code += _u32(0xE5D40088)  # ldrb r0, [r4, #0x88]
     code += _u32(0xE8BD8000)  # pop {pc}
     move_len = ADDR_MENU_PAD_LIMIT - ADDR_MENU_PAD - MENU_PAD_LEN
-    if len(code) > move_len:
-        raise ValueError(f"menu move cave is {len(code)} bytes, slot is {move_len}")
+    assert len(code) <= move_len, f"menu move cave is {len(code)} bytes, slot is {move_len}"
     code += b"\x00" * (move_len - len(code))
-    if len(code) != move_len:
-        raise ValueError(f"menu move cave is {len(code)} bytes, slot is {move_len}")
-    if cave + len(code) > ADDR_MENU_PAD_LIMIT:
-        raise ValueError(
-            f"menu move cave ends @{cave + len(code):#x}, "
-            f"past {ADDR_MENU_PAD_LIMIT:#x}"
-        )
+    assert len(code) == move_len, f"menu move cave is {len(code)} bytes, slot is {move_len}"
+    assert cave + len(code) <= ADDR_MENU_PAD_LIMIT, (
+        f"menu move cave ends @{cave + len(code):#x}, "
+        f"past {ADDR_MENU_PAD_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1510,8 +1484,7 @@ def menu_control_blob() -> bytes:
     pad = build_menu_pad_cave()
     move = build_menu_move_cave(ADDR_MENU_PAD + len(pad))
     blob = pad + move
-    if len(blob) != ADDR_MENU_PAD_LIMIT - ADDR_MENU_PAD:
-        raise ValueError(f"menu controls are {len(blob)} bytes, slot is 156")
+    assert len(blob) == ADDR_MENU_PAD_LIMIT - ADDR_MENU_PAD, f"menu controls are {len(blob)} bytes, slot is 156"
     return blob
 
 
@@ -1530,11 +1503,10 @@ def build_page_block() -> bytes:
     code += _bl(here + len(code), _INFO_DRAW)
     code += _u32(0xE3E00000)  # mvn r0, #0
     code += _u32(0xE8BD8000)  # pop {pc}
-    if here + len(code) > ADDR_PAGE_BLOCK_LIMIT:
-        raise ValueError(
-            f"page block ends @{here + len(code):#x}, "
-            f"past {ADDR_PAGE_BLOCK_LIMIT:#x}"
-        )
+    assert here + len(code) <= ADDR_PAGE_BLOCK_LIMIT, (
+        f"page block ends @{here + len(code):#x}, "
+        f"past {ADDR_PAGE_BLOCK_LIMIT:#x}"
+    )
     return bytes(code)
 
 
@@ -1544,8 +1516,7 @@ def apply_info_menu(data: bytearray) -> None:
     text = build_menu_text()
     data[ADDR_MENU_LIST_STR : ADDR_MENU_LIST_STR + len(text)] = text
     sentences = _article_blob()
-    if len(sentences) > _SENTENCE_ROOM:
-        raise ValueError(f"sentences are {len(sentences)} bytes, room is {_SENTENCE_ROOM}")
+    assert len(sentences) <= _SENTENCE_ROOM, f"sentences are {len(sentences)} bytes, room is {_SENTENCE_ROOM}"
     there = bytes(data[ADDR_LAKE_BODY : ADDR_LAKE_BODY + len(sentences)])
     articles = _LAKE_BODY + _FEVER_BODY
     previous = (
@@ -1561,11 +1532,10 @@ def apply_info_menu(data: bytearray) -> None:
     data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(arrow)] = arrow
     choice_at = ADDR_MENU_ARROW + len(arrow)
     choice = build_back_choice(choice_at)
-    if choice_at + len(choice) != ADDR_MENU_ARROW_LIMIT:
-        raise ValueError(
-            f"back choice ends @{choice_at + len(choice):#x}, "
-            f"limit is {ADDR_MENU_ARROW_LIMIT:#x}"
-        )
+    assert choice_at + len(choice) == ADDR_MENU_ARROW_LIMIT, (
+        f"back choice ends @{choice_at + len(choice):#x}, "
+        f"limit is {ADDR_MENU_ARROW_LIMIT:#x}"
+    )
     data[choice_at : choice_at + len(choice)] = choice
     data[ADDR_BACK_SET : ADDR_BACK_SET + 4] = _b_cond(1, ADDR_BACK_SET, choice_at)
     data[ADDR_BACK_LEAVE : ADDR_BACK_LEAVE + 4] = _b(ADDR_BACK_LEAVE, ADDR_ARROW_LATCH)
@@ -1609,8 +1579,9 @@ def apply_info_menu(data: bytearray) -> None:
         data[cell + 36 : cell + 40] = _u32(lake_body_va())
         data[cell + 40 : cell + 44] = _u32(fever_body_va())
     back = build_menu_back_stub(paint_at)
-    if len(data) >= ADDR_MENU_IDLE_POLL + len(back):
-        data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = back
+    # The article sentences above already sit past the idle poll.
+    assert len(data) >= ADDR_MENU_IDLE_POLL + len(back), "code.bin ends before the idle poll"
+    data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = back
     data[ADDR_ARROW_IDLE : ADDR_ARROW_IDLE + 4] = _b_cond(
         0, ADDR_ARROW_IDLE, back_finish_addr()
     )
@@ -1680,17 +1651,14 @@ def build_worker_cave(cave: int = ADDR_WORKER_CAVE) -> bytes:
     code += _u32(0xE5850060)  # str r0, [r5, #0x60]
     code += _u32(0xE3500000)  # cmp r0, #0
     code += _u32(0x15805078)  # strne r5, [r0, #0x78]
-    if len(code) != skip:
-        raise ValueError(f"worker cave skip {len(code)} != {skip}")
+    assert len(code) == skip, f"worker cave skip {len(code)} != {skip}"
     code += _u32(0xE1A00005)  # mov r0, r5
     code += _b(cave + len(code), ADDR_BOOK_CTOR_RESUME)
-    if len(code) != pool_global:
-        raise ValueError(f"worker cave code {len(code)} != {pool_global}")
+    assert len(code) == pool_global, f"worker cave code {len(code)} != {pool_global}"
     code += _u32(ADDR_WORKER_GLOBAL)
     code += _u32(ADDR_SESSION_RET)
     code += _u32(ADDR_UI_ROOT)
-    if cave + len(code) > ADDR_CHILD_CAVE:
-        raise ValueError(f"worker cave ends @{cave + len(code):#x}")
+    assert cave + len(code) <= ADDR_CHILD_CAVE, f"worker cave ends @{cave + len(code):#x}"
     return bytes(code)
 
 
@@ -1709,10 +1677,8 @@ def build_child_cave(cave: int = ADDR_CHILD_CAVE) -> bytes:
     code += _u32(0xE12FFF1E)  # bx lr
     while len(code) < 88:
         code += ARM_NOP
-    if len(code) != 88:
-        raise ValueError(f"child cave {len(code)} != 88")
-    if cave + len(code) > ADDR_STATE6_LIMIT:
-        raise ValueError(f"child cave ends @{cave + len(code):#x}")
+    assert len(code) == 88, f"child cave {len(code)} != 88"
+    assert cave + len(code) <= ADDR_STATE6_LIMIT, f"child cave ends @{cave + len(code):#x}"
     return bytes(code)
 
 
@@ -1742,8 +1708,7 @@ def build_slot_cave(cave: int = ADDR_ISSUE_CAVE) -> bytes:
     code += bytes.fromhex("078081e0")  # add r8, r1, r7
     code += _u32(0xE3500000)  # cmp r0, #0
     code += _b(cave + len(code), ADDR_SLOT_RESUME)
-    if cave + len(code) > 0x00609330:
-        raise ValueError(f"slot cave ends @{cave + len(code):#x}")
+    assert cave + len(code) <= 0x00609330, f"slot cave ends @{cave + len(code):#x}"
     return bytes(code)
 
 
@@ -1777,11 +1742,10 @@ def build_comment_text() -> bytes:
         struct.pack_into("<HHI", table, i * 8, place, 0, str_at + len(strings) + 0x100000)
         strings += text
     blob = bytes(table) + bytes(strings)
-    if ADDR_COMMENT_TEXT + len(blob) > ADDR_COMMENT_LIMIT:
-        raise ValueError(
-            f"comments end @{ADDR_COMMENT_TEXT + len(blob):#x}, "
-            f"room ends @{ADDR_COMMENT_LIMIT:#x}"
-        )
+    assert ADDR_COMMENT_TEXT + len(blob) <= ADDR_COMMENT_LIMIT, (
+        f"comments end @{ADDR_COMMENT_TEXT + len(blob):#x}, "
+        f"room ends @{ADDR_COMMENT_LIMIT:#x}"
+    )
     return blob
 
 
@@ -1795,8 +1759,7 @@ def build_comment_cave() -> bytes:
     slots 6..9 repeat the first four. The bounded copy stores the NUL.
     The last word of the hole stays the vanilla instruction after ``pop``.
     """
-    if ADDR_COMMENT_TEXT < ADDR_LAKE_BODY + len(_article_blob()):
-        raise ValueError("comment text overlaps the article sentences")
+    assert ADDR_COMMENT_TEXT >= ADDR_LAKE_BODY + len(_article_blob()), "comment text overlaps the article sentences"
     c = ADDR_COMMENT_CAVE
     # Pool sits at word 17. The ldr is word 10: pc is cave+48, pool is cave+68.
     pool_at = c + 17 * 4
@@ -1822,12 +1785,10 @@ def build_comment_cave() -> bytes:
         ADDR_COMMENT_TEXT + 0x100000,
     ]
     cave = b"".join(_u32(w) for w in words) + VANILLA_COMMENT_HOLE[-4:]
-    if len(cave) != len(VANILLA_COMMENT_HOLE):
-        raise ValueError(
-            f"comment cave {len(cave):#x} != hole {len(VANILLA_COMMENT_HOLE):#x}"
-        )
-    if c + len(cave) > ADDR_MERGE_AC:
-        raise ValueError("comment cave reaches the ac:u site")
+    assert len(cave) == len(VANILLA_COMMENT_HOLE), (
+        f"comment cave {len(cave):#x} != hole {len(VANILLA_COMMENT_HOLE):#x}"
+    )
+    assert c + len(cave) <= ADDR_MERGE_AC, "comment cave reaches the ac:u site"
     return cave
 
 
@@ -1924,8 +1885,7 @@ def build_newflag_cave(base: int = ADDR_NEWFLAG) -> bytes:
     """Always return 1 so the tick enters apply (boot skip hides the nag)."""
     del base
     blob = _u32(0xE3A00001) + _u32(0xE12FFF1E)  # mov r0, #1; bx lr
-    if len(blob) != 0x08:
-        raise ValueError(f"newflag cave {len(blob):#x} != 0x08")
+    assert len(blob) == 0x08, f"newflag cave {len(blob):#x} != 0x08"
     return blob
 
 
@@ -1960,8 +1920,7 @@ def build_memcpy_cave(
         + _u32(payload_va)
         + _u32(size)
     )
-    if len(blob) != 0x44:
-        raise ValueError(f"memcpy cave {len(blob):#x} != 0x44")
+    assert len(blob) == 0x44, f"memcpy cave {len(blob):#x} != 0x44"
     return blob
 
 
@@ -1991,8 +1950,7 @@ def build_data_kick_cave(addr: int) -> bytes:
         + _u32(0xE1A00000)  # nop
         + _u32(0xE12FFF1E)  # bx lr
     )
-    if len(blob) != 0x24:
-        raise ValueError(f"data-kick cave {len(blob):#x} != 0x24")
+    assert len(blob) == 0x24, f"data-kick cave {len(blob):#x} != 0x24"
     return blob
 
 
@@ -2001,8 +1959,7 @@ def build_function_blob(base: int = ADDR_NEWFLAG) -> bytes:
     memcpy = build_memcpy_cave(base + len(newflag))
     kick = build_data_kick_cave(base + len(newflag) + len(memcpy))
     blob = newflag + memcpy + kick
-    if len(blob) > NEWFLAG_LEN:
-        raise ValueError(f"SpotPass stubs {len(blob):#x} > {NEWFLAG_LEN:#x}")
+    assert len(blob) <= NEWFLAG_LEN, f"SpotPass stubs {len(blob):#x} > {NEWFLAG_LEN:#x}"
     return blob + b"\x00" * (NEWFLAG_LEN - len(blob))
 
 
@@ -2339,10 +2296,9 @@ def revert_patch(data: bytearray) -> bool:
     data[ADDR_ARROW_STEP + 4 : ADDR_ARROW_STEP + 8] = VANILLA_ARROW_CMN
     _arrow, paint_at = build_menu_arrow_cave(build_info_menu_cave())
     back = build_menu_back_stub(paint_at)
-    if len(data) >= ADDR_MENU_IDLE_POLL + len(back):
-        data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = b"\x00" * len(
-            back
-        )
+    # Revert needs the payload at ADDR_SPOTPASS_PAYLOAD, past the idle poll.
+    assert len(data) >= ADDR_MENU_IDLE_POLL + len(back), "code.bin ends before the idle poll"
+    data[ADDR_MENU_IDLE_POLL : ADDR_MENU_IDLE_POLL + len(back)] = b"\x00" * len(back)
     for addr, vanilla, _patched in ARROW_EDGE:
         data[addr : addr + 4] = bytes.fromhex(vanilla)
     data[ADDR_MENU_ARROW : ADDR_MENU_ARROW + len(VANILLA_MENU_ARROW_BODY)] = (

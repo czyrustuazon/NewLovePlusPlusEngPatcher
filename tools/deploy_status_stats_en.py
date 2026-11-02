@@ -120,8 +120,7 @@ def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
     off = 0
     for sz, po in runs:
         take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
+        t[po : po + take] = pad_rng[off : off + take]
         left -= take
         off += sz
         if left <= 0:
@@ -149,8 +148,6 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
                 + b"\x01\x00\x00\xff\xff"
                 + adler
             )
-            if len(out) != exact_len:
-                continue
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)
