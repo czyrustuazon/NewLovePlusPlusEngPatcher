@@ -135,8 +135,13 @@ def test_patcher_validate_flags_xml_japanese_and_placeholders(tmp_path: Path, mo
 
     (scripts / "p011.xml").unlink()
     _xml(scripts / "p011.xml", ["Hello there."])
-    monkeypatch.setattr(sys, "stdout", sys.__stdout__)
+    # Not sys.__stdout__: its OS handle is invalid when pytest runs without a
+    # console (WinError 6 on IDE-launched Windows runs).
+    utf8_out = io.TextIOWrapper(io.BytesIO(), encoding="utf-8")
+    monkeypatch.setattr(sys, "stdout", utf8_out)
     assert patcher.cmd_validate(argparse.Namespace()) == 0
+    utf8_out.flush()
+    assert "[review] t010.xml" in utf8_out.buffer.getvalue().decode("utf-8")
 
 
 def test_patcher_dialogs_and_build(tmp_path: Path, monkeypatch, capsys):
