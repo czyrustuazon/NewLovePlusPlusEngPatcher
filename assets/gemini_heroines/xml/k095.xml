@@ -1219,7 +1219,7 @@ whatever you want to see.</Dialog>
 good stuff. Which one should
 we watch？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>For ●, let's see...</Dialog>
+          <Dialog>If it's up to me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1305,7 +1305,7 @@ you like.</Dialog>
           <Dialog>Which one do you wanna see？
 Pick whichever you like.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●Well...</Dialog>
+          <Dialog>I'd go with...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1333,8 +1333,7 @@ Pick whichever you like.</Dialog>
           <Dialog>Which one do you wanna see？
 I bet you'll pick that one.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>●？ What ●
-would want to see is...</Dialog>
+          <Dialog>Me？ What I want to see is...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1557,7 +1556,7 @@ see another movie...</Dialog>
           <Dialog>Now I feel like seeing
 something else, too.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● do too. Let's do that.</Dialog>
+          <Dialog>Me too. Let's do that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1797,7 +1796,7 @@ I was expecting.</Dialog>
           <Dialog>Hey... I'm getting hungry.
 Want to go grab some lunch？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● was getting hungry too.
+          <Dialog>I was getting hungry too.
 Let's go.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1826,8 +1825,8 @@ Let's go.</Dialog>
           <Dialog>Let's go get lunch. I've
 been starving for a while.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● was getting hungry too.
-Let's head out, then.</Dialog>
+          <Dialog>I was getting hungry too.
+Let's go, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2273,7 +2272,8 @@ I'm a little tired.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I'm starting to get hungry. Let's stop somewhere to eat.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, ● could eat too. Let's go.</Dialog>
+          <Dialog>I'm hungry too.
+Let's go, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

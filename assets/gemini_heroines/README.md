@@ -31,4 +31,18 @@ Rebuild from XML (maintainer):
 python tools/rebuild_dbin2_from_xml.py --glob "a*.xml" --xml-dir assets/gemini_heroines/xml
 ```
 
+Lines that kept `●` (the player's "I", which the game shows as 俺/僕) are redone from the Japanese and written back into `xml/` and every `dbin2/` pack slot the stem ships in. Failures go to `pronoun_rejected.json`; run it again to retry them:
+
+```bash
+python tools/translate_heroines_gemini.py fix-pronoun --dry-run
+python tools/translate_heroines_gemini.py fix-pronoun --workers 4
+```
+
+Japanese uses the listener's name where English says "you". With a nickname such as "Takane-san", a line spoken to her face read "Takane-san looks great". `fix-address` redoes spoken lines that use her name marker as "she" / "her" (not inner monologue in parentheses). It may drop her marker for "you" and keeps it as a direct address. Failures go to `address_rejected.json`:
+
+```bash
+python tools/translate_heroines_gemini.py fix-address --dry-run
+python tools/translate_heroines_gemini.py fix-address --workers 4
+```
+
 Nene and Rinko stay a **machine pass** until a stem is listed in `proofread.json`. Phone text is `sms/maildic_{m,n,r}.en.xml` and ships with the same Drop yes.

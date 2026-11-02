@@ -35,6 +35,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   22. patch_drawtext_64_lines              # DrawTextToPane lays out 64 lines (credits box), not 32
   23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
   24. patch_syspopup_scroll_bar            # message box scroll ends at the last line; bar spans the text
+  25. patch_bonus_digits                   # BONUS! popup Riches amounts in ASCII digits (50, not ５ ０)
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -180,6 +181,10 @@ from patch_drawtext_64_lines import (  # noqa: E402
 from patch_syspopup_scroll_bar import (  # noqa: E402
     apply_patch as apply_syspopup_scroll,
     is_patched as syspopup_scroll_already,
+)
+from patch_bonus_digits import (  # noqa: E402
+    apply_patch as apply_bonus_digits,
+    is_patched as bonus_digits_already,
 )
 from patch_syspopup_tall_text import (  # noqa: E402
     apply_patch as apply_syspopup_tall,
@@ -414,6 +419,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] syspopup_scroll_bar already applied")
     else:
         apply_syspopup_scroll(data)
+        steps += 1
+
+    if bonus_digits_already(data):
+        print("[skip] bonus_digits already applied")
+    else:
+        apply_bonus_digits(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
