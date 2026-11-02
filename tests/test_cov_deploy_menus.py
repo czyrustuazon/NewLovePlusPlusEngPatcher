@@ -1097,6 +1097,11 @@ def test_msel_menus_render_fit_and_splice(tmp_path, monkeypatch):
     assert enc[:4] != b"" and len(enc) == len(etc)
     a8_out = msel.make_en_bclim(a8, "Menu", tmp_path, hard=False, salt=0.0, stem="SomeStem")
     assert len(a8_out) == len(a8)
+    # Native-size Zhoumaru master on a soft trial keeps its AA alpha.
+    png = solid_png(tmp_path / "native" / "plate.png", 12, 12, (40, 40, 40, 50))
+    native = msel.make_en_bclim(a8, "Menu", tmp_path, hard=False, salt=0.0, stem="SomeStem")
+    assert len(native) == len(a8)
+    assert Image.open(tmp_path / "t.png").getchannel("A").getextrema() == (50, 50)
     monkeypatch.setattr(msel, "find_ui_png", lambda *a, **k: None)
     skip = msel.make_en_bclim(
         noise_bclim(180, 32, 1, seed=6),
