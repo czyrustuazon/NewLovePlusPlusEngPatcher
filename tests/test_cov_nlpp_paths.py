@@ -70,6 +70,12 @@ def test_azahar_user_dir_falls_back_to_home(empty, monkeypatch):
     assert paths.azahar_user_dir() == (empty / "home" / "AppData" / "Roaming" / "Azahar").resolve()
 
 
+def test_azahar_user_dir_uses_appdata(empty, monkeypatch):
+    # Windows always has APPDATA; Linux CI does not, so set it here.
+    monkeypatch.setenv("APPDATA", str(empty / "appdata"))
+    assert paths.azahar_user_dir() == (empty / "appdata" / "Azahar").resolve()
+
+
 def test_windows_drive_roots(monkeypatch):
     monkeypatch.setattr(paths, "os", SimpleNamespace(name="posix", environ=os.environ))
     assert paths._windows_drive_roots() == []
