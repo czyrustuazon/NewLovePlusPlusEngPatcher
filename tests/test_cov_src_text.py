@@ -813,15 +813,17 @@ class _Raw:
         return 1
 
 
+def _term_size(monkeypatch, fn) -> None:
+    """Stub live_status's shutil only. Patching the real shutil also hits
+    pytest's own terminal writer under -v (INTERNALERROR in CI)."""
+    monkeypatch.setattr(live, "shutil", types.SimpleNamespace(get_terminal_size=fn))
+
+
 def _pin(monkeypatch, *, cols: int = 100, rows: int = 24):
     monkeypatch.delenv("NO_COLOR", raising=False)
     monkeypatch.delenv("NLPP_PLAIN_LOG", raising=False)
     monkeypatch.setattr(live, "enable_vt", lambda: True)
-    monkeypatch.setattr(
-        live.shutil,
-        "get_terminal_size",
-        lambda fallback=(80, 24): os.terminal_size((cols, rows)),
-    )
+    _term_size(monkeypatch, lambda fallback=(80, 24): os.terminal_size((cols, rows)))
     raw = _Raw()
     monkeypatch.setattr(sys, "stdout", raw)
     status = live.LiveStatus()
@@ -1045,18 +1047,10 @@ def test_live_acquire_release_and_status_line(monkeypatch, capsys):
     status._jobs.clear()
     assert status._status_line(80) == ""
     status._paint_body()
-    monkeypatch.setattr(
-        live.shutil,
-        "get_terminal_size",
-        lambda fallback=(80, 24): os.terminal_size((80, 4)),
-    )
+    _term_size(monkeypatch, lambda fallback=(80, 24): os.terminal_size((80, 4)))
     status._owner = types.SimpleNamespace(label="job", elapsed_str=lambda: "1s")
     status._paint_body()
-    monkeypatch.setattr(
-        live.shutil,
-        "get_terminal_size",
-        lambda fallback=(80, 24): os.terminal_size((80, 24)),
-    )
+    _term_size(monkeypatch, lambda fallback=(80, 24): os.terminal_size((80, 24)))
     status._anchored = True
     status._pin_rows = 3
     status._paint_body()
@@ -1081,7 +1075,7 @@ def test_live_acquire_release_and_status_line(monkeypatch, capsys):
     def _boom_size(fallback=(80, 24)):
         raise ValueError("size")
 
-    monkeypatch.setattr(live.shutil, "get_terminal_size", _boom_size)
+    _term_size(monkeypatch, _boom_size)
     status._paint_unlocked()
     raw.flush_error = False
 
