@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 import types
 from pathlib import Path
 
@@ -32,6 +33,17 @@ def test_gemini_last_attempt_succeeds(monkeypatch):
                 raise RuntimeError("503 UNAVAILABLE")
             return types.SimpleNamespace(text='{"items":[]}')
 
+    # CI has no google-genai; stub the config types the call builds.
+    google = types.ModuleType("google")
+    genai = types.ModuleType("google.genai")
+    gtypes = types.ModuleType("google.genai.types")
+    gtypes.GenerateContentConfig = dict
+    gtypes.ThinkingConfig = dict
+    google.genai = genai
+    genai.types = gtypes
+    monkeypatch.setitem(sys.modules, "google", google)
+    monkeypatch.setitem(sys.modules, "google.genai", genai)
+    monkeypatch.setitem(sys.modules, "google.genai.types", gtypes)
     monkeypatch.setattr(gt.time, "sleep", lambda _s: None)
     out = gt.gemini_generate_json(types.SimpleNamespace(models=Models()), "m", "{}")
     assert out == '{"items":[]}' and calls["n"] == 8
