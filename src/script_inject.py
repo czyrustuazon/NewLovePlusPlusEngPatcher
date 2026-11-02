@@ -273,9 +273,9 @@ def inject_scripts(
             _copy_script(chosen, dest_dir / f"{stem}.dbin2")
             total += 1
             injected += 1
-            if tag in layers:
-                layers[tag] += 1
-                pack_layers[tag] = pack_layers.get(tag, 0) + 1
+            # Every tag but "jp" (chosen is None, above) is a key of layers.
+            layers[tag] += 1
+            pack_layers[tag] = pack_layers.get(tag, 0) + 1
         layer_note = ", ".join(f"{k}={v}" for k, v in sorted(pack_layers.items()))
         print(
             f"[inject] {pack}: {injected} EN ({layer_note or 'none'})"

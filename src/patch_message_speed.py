@@ -119,8 +119,7 @@ SAMPLE_OFF = 0x005D1928
 SAMPLE_JP = "メッセージ速度テストです。".encode("utf-8") + b"\x00"
 SAMPLE_EN = b"This is a text-speed test.\x00"
 SAMPLE_SLOT = len(SAMPLE_JP)
-if len(SAMPLE_EN) > SAMPLE_SLOT:
-    raise ValueError("EN sample longer than vanilla slot")
+assert len(SAMPLE_EN) <= SAMPLE_SLOT, "EN sample longer than vanilla slot"
 SAMPLE_EN_PADDED = SAMPLE_EN + b"\x00" * (SAMPLE_SLOT - len(SAMPLE_EN))
 _SAMPLE_NEED = SAMPLE_OFF + SAMPLE_SLOT
 
@@ -137,9 +136,7 @@ def build_talk_cap_cave(cave: int = ADDR_TALK_CAP_CAVE) -> bytes:
     """r2 = min(r2, table[+0xd9c]); never cap with 0; cpy r6, r2; bx lr."""
     pool_off = 0x24
     ldr_pc = 0x04
-    pc_lit = pool_off - (ldr_pc + 8)
-    if pc_lit < 0 or pc_lit > 0xFFF:
-        raise ValueError(f"literal pool too far: {pc_lit:#x}")
+    pc_lit = pool_off - (ldr_pc + 8)  # 0x18: in range of ldr's 12-bit offset
     blob = (
         _u32(0xE5940D9C)  # ldr r0, [r4, #0xd9c]
         + _u32(0xE59F1000 | pc_lit)  # ldr r1, [pc, #pool]

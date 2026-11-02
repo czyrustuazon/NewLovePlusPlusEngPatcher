@@ -11,10 +11,7 @@ from pathlib import Path
 
 from conftest import ROOT, SRC, TOOLS
 
-UNTESTED = {
-    "deploy_bleeding_edge_name_input",
-    "deploy_sound_settings_en",
-}
+UNTESTED: set[str] = set()
 
 
 def _modules() -> list[str]:

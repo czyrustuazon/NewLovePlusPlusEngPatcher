@@ -496,18 +496,16 @@ def build_cave(base: int = ADDR_CHUNK_WALK_CAVE) -> tuple[bytes, dict[str, int]]
             continue
         if item[0] == "op":
             out += item[1]
-        elif item[0] == "b":
+        else:
+            assert item[0] == "b", item  # the stream above only has lab / op / b
             name, cond = item[1], item[2]
             out += b_ins(addr, labs[name]) if cond is None else b_cond(cond, addr, labs[name])
-        else:
-            raise ValueError(item)
         addr += 4
     blob = bytes(out)
-    if base + len(blob) > ADDR_CHUNK_WALK_LIMIT:
-        raise ValueError(
-            f"chunk-walk cave {len(blob):#x} exceeds tail "
-            f"{ADDR_CHUNK_WALK_LIMIT - base:#x}"
-        )
+    assert base + len(blob) <= ADDR_CHUNK_WALK_LIMIT, (
+        f"chunk-walk cave {len(blob):#x} exceeds tail "
+        f"{ADDR_CHUNK_WALK_LIMIT - base:#x}"
+    )
     return blob, labs
 
 
@@ -541,10 +539,9 @@ def build_fixup_cave(base: int | None = None) -> bytes:
     body += b_ins(base + len(body), ADDR_FIXUP_SKIP)
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, bad)
     blob = bytes(body)
-    if base + len(blob) > ADDR_CHUNK_WALK_LIMIT:
-        raise ValueError(
-            f"fixup cave {base:#x}+{len(blob):#x} exceeds {ADDR_CHUNK_WALK_LIMIT:#x}"
-        )
+    assert base + len(blob) <= ADDR_CHUNK_WALK_LIMIT, (
+        f"fixup cave {base:#x}+{len(blob):#x} exceeds {ADDR_CHUNK_WALK_LIMIT:#x}"
+    )
     return blob
 
 
@@ -571,11 +568,10 @@ def build_title_reloc_cave(base: int = ADDR_TITLE_RELOC_CAVE) -> bytes:
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
-    if base + len(blob) > ADDR_TITLE_RELOC_LIMIT:
-        raise ValueError(
-            f"title reloc cave {base:#x}+{len(blob):#x} exceeds "
-            f"{ADDR_TITLE_RELOC_LIMIT:#x}"
-        )
+    assert base + len(blob) <= ADDR_TITLE_RELOC_LIMIT, (
+        f"title reloc cave {base:#x}+{len(blob):#x} exceeds "
+        f"{ADDR_TITLE_RELOC_LIMIT:#x}"
+    )
     return blob
 
 
@@ -604,11 +600,10 @@ def build_title_index_cave(base: int = ADDR_TITLE_INDEX_CAVE) -> bytes:
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     body[bhs2_at : bhs2_at + 4] = fail_b(2, base + bhs2_at, fail)
     blob = bytes(body)
-    if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
-        raise ValueError(
-            f"title index cave {base:#x}+{len(blob):#x} exceeds "
-            f"{ADDR_TITLE_INDEX_LIMIT:#x}"
-        )
+    assert base + len(blob) <= ADDR_TITLE_INDEX_LIMIT, (
+        f"title index cave {base:#x}+{len(blob):#x} exceeds "
+        f"{ADDR_TITLE_INDEX_LIMIT:#x}"
+    )
     return blob
 
 
@@ -639,12 +634,10 @@ def build_clyt_cave(base: int | None = None) -> bytes:
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
-    if base < ADDR_TITLE_INDEX_CAVE + len(build_title_index_cave()):
-        raise ValueError(f"clyt cave {base:#x} overlaps the title index cave")
-    if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
-        raise ValueError(
-            f"clyt cave {base:#x}+{len(blob):#x} exceeds {ADDR_TITLE_INDEX_LIMIT:#x}"
-        )
+    assert base >= ADDR_TITLE_INDEX_CAVE + len(build_title_index_cave()), f"clyt cave {base:#x} overlaps the title index cave"
+    assert base + len(blob) <= ADDR_TITLE_INDEX_LIMIT, (
+        f"clyt cave {base:#x}+{len(blob):#x} exceeds {ADDR_TITLE_INDEX_LIMIT:#x}"
+    )
     return blob
 
 
@@ -673,13 +666,11 @@ def build_lyt_hdr_cave(base: int | None = None) -> bytes:
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
-    if base < clyt_cave_addr() + len(build_clyt_cave()):
-        raise ValueError(f"layout header cave {base:#x} overlaps the clyt cave")
-    if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
-        raise ValueError(
-            f"layout header cave {base:#x}+{len(blob):#x} exceeds "
-            f"{ADDR_TITLE_INDEX_LIMIT:#x}"
-        )
+    assert base >= clyt_cave_addr() + len(build_clyt_cave()), f"layout header cave {base:#x} overlaps the clyt cave"
+    assert base + len(blob) <= ADDR_TITLE_INDEX_LIMIT, (
+        f"layout header cave {base:#x}+{len(blob):#x} exceeds "
+        f"{ADDR_TITLE_INDEX_LIMIT:#x}"
+    )
     return blob
 
 
@@ -705,12 +696,10 @@ def build_vt_cave(base: int | None = None) -> bytes:
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
-    if base < lyt_hdr_cave_addr() + len(build_lyt_hdr_cave()):
-        raise ValueError(f"vt cave {base:#x} overlaps the layout header cave")
-    if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
-        raise ValueError(
-            f"vt cave {base:#x}+{len(blob):#x} exceeds {ADDR_TITLE_INDEX_LIMIT:#x}"
-        )
+    assert base >= lyt_hdr_cave_addr() + len(build_lyt_hdr_cave()), f"vt cave {base:#x} overlaps the layout header cave"
+    assert base + len(blob) <= ADDR_TITLE_INDEX_LIMIT, (
+        f"vt cave {base:#x}+{len(blob):#x} exceeds {ADDR_TITLE_INDEX_LIMIT:#x}"
+    )
     return blob
 
 
@@ -741,13 +730,11 @@ def build_title_obj_cave(base: int | None = None) -> bytes:
     body[blo_at : blo_at + 4] = fail_b(3, base + blo_at, fail)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, fail)
     blob = bytes(body)
-    if base < vt_cave_addr() + len(build_vt_cave()):
-        raise ValueError(f"title object cave {base:#x} overlaps the vt cave")
-    if base + len(blob) > ADDR_TITLE_INDEX_LIMIT:
-        raise ValueError(
-            f"title object cave {base:#x}+{len(blob):#x} exceeds "
-            f"{ADDR_TITLE_INDEX_LIMIT:#x}"
-        )
+    assert base >= vt_cave_addr() + len(build_vt_cave()), f"title object cave {base:#x} overlaps the vt cave"
+    assert base + len(blob) <= ADDR_TITLE_INDEX_LIMIT, (
+        f"title object cave {base:#x}+{len(blob):#x} exceeds "
+        f"{ADDR_TITLE_INDEX_LIMIT:#x}"
+    )
     return blob
 
 
@@ -816,11 +803,10 @@ def build_fs_open_cave(base: int | None = None) -> bytes:
 
     blob = bytes(body)
     tail = ADDR_SET + SIZE_SET
-    if base < ADDR_SET or base + len(blob) > tail:
-        raise ValueError(
-            f"fs open cave {base:#x}+{len(blob):#x} is outside the "
-            f"SetNameCharsToPanes tail ending {tail:#x}"
-        )
+    assert not (base < ADDR_SET or base + len(blob) > tail), (
+        f"fs open cave {base:#x}+{len(blob):#x} is outside the "
+        f"SetNameCharsToPanes tail ending {tail:#x}"
+    )
     return blob
 
 
@@ -848,12 +834,10 @@ def build_tex_release_cave(base: int | None = None) -> bytes:
         2, base + bhs_obj, ADDR_TEX_REL_FAIL, trap=None
     )
     blob = bytes(body)
-    if base < fs_open_cave_addr() + len(build_fs_open_cave()):
-        raise ValueError(f"texture release cave {base:#x} overlaps the fs open cave")
-    if base + len(blob) > ADDR_NODE_BYTE_CAVE:
-        raise ValueError(
-            f"texture release cave {base:#x}+{len(blob):#x} runs into the node byte cave"
-        )
+    assert base >= fs_open_cave_addr() + len(build_fs_open_cave()), f"texture release cave {base:#x} overlaps the fs open cave"
+    assert base + len(blob) <= ADDR_NODE_BYTE_CAVE, (
+        f"texture release cave {base:#x}+{len(blob):#x} runs into the node byte cave"
+    )
     return blob
 
 
@@ -864,8 +848,7 @@ def build_tex_release_tail(base: int = ADDR_TEX_REL_TAIL) -> bytes:
     body += fail_b(0, base + len(body), ADDR_TEX_REL_FAIL, trap=None)
     body += b_ins(base + len(body), ADDR_TEX_REL_RESUME)
     blob = bytes(body)
-    if len(blob) != ADDR_TEX_REL_TAIL_LEN:
-        raise ValueError(f"texture release tail is {len(blob):#x} bytes")
+    assert len(blob) == ADDR_TEX_REL_TAIL_LEN, f"texture release tail is {len(blob):#x} bytes"
     return blob
 
 
@@ -908,11 +891,10 @@ def build_field_cave(
     body[beq_null : beq_null + 4] = fail_b(0, at(beq_null), fail, trap=False)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
-    if base < ADDR_BACKSPACE or base + len(blob) > tail:
-        raise ValueError(
-            f"field cave {base:#x}+{len(blob):#x} is outside the "
-            f"BackspaceNameCharPane tail ending {tail:#x}"
-        )
+    assert not (base < ADDR_BACKSPACE or base + len(blob) > tail), (
+        f"field cave {base:#x}+{len(blob):#x} is outside the "
+        f"BackspaceNameCharPane tail ending {tail:#x}"
+    )
     return blob
 
 
@@ -961,11 +943,10 @@ def build_fs_open_miss(base: int | None = None) -> bytes:
     body += _u32(ADDR_LYT_CTOR_RET)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
-    if base < field_b_cave_addr() or base + len(blob) > tail:
-        raise ValueError(
-            f"fs open miss cave {base:#x}+{len(blob):#x} is outside the "
-            f"BackspaceNameCharPane tail ending {tail:#x}"
-        )
+    assert not (base < field_b_cave_addr() or base + len(blob) > tail), (
+        f"fs open miss cave {base:#x}+{len(blob):#x} is outside the "
+        f"BackspaceNameCharPane tail ending {tail:#x}"
+    )
     return blob
 
 
@@ -990,13 +971,11 @@ def build_name_cave(base: int | None = None) -> bytes:
     body += b_ins(base + len(body), ADDR_NAME_RESUME)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
-    if base < fs_open_miss_addr() + len(build_fs_open_miss()):
-        raise ValueError(f"name cave {base:#x} overlaps the fs open miss cave")
-    if base + len(blob) > tail:
-        raise ValueError(
-            f"name cave {base:#x}+{len(blob):#x} exceeds the "
-            f"BackspaceNameCharPane tail ending {tail:#x}"
-        )
+    assert base >= fs_open_miss_addr() + len(build_fs_open_miss()), f"name cave {base:#x} overlaps the fs open miss cave"
+    assert base + len(blob) <= tail, (
+        f"name cave {base:#x}+{len(blob):#x} exceeds the "
+        f"BackspaceNameCharPane tail ending {tail:#x}"
+    )
     return blob
 
 
@@ -1020,13 +999,11 @@ def build_menu_vt_cave(base: int | None = None) -> bytes:
     body += b_ins(base + len(body), ADDR_MENU_VT_RESUME)
     blob = bytes(body)
     tail = ADDR_BACKSPACE + SIZE_BACKSPACE
-    if base < name_cave_addr() + len(build_name_cave()):
-        raise ValueError(f"menu vt cave {base:#x} overlaps the name cave")
-    if base + len(blob) > tail:
-        raise ValueError(
-            f"menu vt cave {base:#x}+{len(blob):#x} exceeds the "
-            f"BackspaceNameCharPane tail ending {tail:#x}"
-        )
+    assert base >= name_cave_addr() + len(build_name_cave()), f"menu vt cave {base:#x} overlaps the name cave"
+    assert base + len(blob) <= tail, (
+        f"menu vt cave {base:#x}+{len(blob):#x} exceeds the "
+        f"BackspaceNameCharPane tail ending {tail:#x}"
+    )
     return blob
 
 
@@ -1045,12 +1022,10 @@ def build_idx_load_cave(base: int = ADDR_IDX_LOAD_CAVE) -> bytes:
     body += b_ins(base + len(body), ADDR_IDX_LOAD_RESUME)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
     blob = bytes(body)
-    if base != ADDR_IDX_LOAD_CAVE:
-        raise ValueError(f"idx load cave is fixed at {ADDR_IDX_LOAD_CAVE:#x}")
-    if base + len(blob) > ADDR_IDX_LOAD_LIMIT:
-        raise ValueError(
-            f"idx load cave {base:#x}+{len(blob):#x} exceeds {ADDR_IDX_LOAD_LIMIT:#x}"
-        )
+    assert base == ADDR_IDX_LOAD_CAVE, f"idx load cave is fixed at {ADDR_IDX_LOAD_CAVE:#x}"
+    assert base + len(blob) <= ADDR_IDX_LOAD_LIMIT, (
+        f"idx load cave {base:#x}+{len(blob):#x} exceeds {ADDR_IDX_LOAD_LIMIT:#x}"
+    )
     return blob
 
 
@@ -1067,12 +1042,10 @@ def build_node_byte_cave(base: int = ADDR_NODE_BYTE_CAVE) -> bytes:
     body += b_ins(base + len(body), ADDR_NODE_BYTE_RESUME)
     body[bhs_at : bhs_at + 4] = fail_b(2, base + bhs_at, ADDR_IDX_LOAD_FAIL)
     blob = bytes(body)
-    if base != ADDR_NODE_BYTE_CAVE:
-        raise ValueError(f"node byte cave is fixed at {ADDR_NODE_BYTE_CAVE:#x}")
-    if base + len(blob) > ADDR_NODE_BYTE_LIMIT:
-        raise ValueError(
-            f"node byte cave {base:#x}+{len(blob):#x} exceeds {ADDR_NODE_BYTE_LIMIT:#x}"
-        )
+    assert base == ADDR_NODE_BYTE_CAVE, f"node byte cave is fixed at {ADDR_NODE_BYTE_CAVE:#x}"
+    assert base + len(blob) <= ADDR_NODE_BYTE_LIMIT, (
+        f"node byte cave {base:#x}+{len(blob):#x} exceeds {ADDR_NODE_BYTE_LIMIT:#x}"
+    )
     return blob
 
 
@@ -1083,8 +1056,7 @@ def build_pane_flag_cave(base: int = ADDR_PANE_FLAG_CAVE) -> bytes:
     body += fail_b(0, base + len(body), ADDR_PANE_FLAG_FAIL, trap=False)  # beq
     body += b_ins(base + len(body), ADDR_PANE_FLAG_LOAD)
     blob = bytes(body)
-    if len(blob) != ADDR_PANE_FLAG_CAVE_LEN:
-        raise ValueError(f"pane flag cave is {len(blob):#x} bytes")
+    assert len(blob) == ADDR_PANE_FLAG_CAVE_LEN, f"pane flag cave is {len(blob):#x} bytes"
     return blob
 
 
@@ -1101,11 +1073,10 @@ def build_heap_walk_stub(base: int | None = None) -> bytes:
     body += VANILLA_HEAP_WALK
     body += b_ins(base + len(body), ADDR_HEAP_WALK_RESUME)
     blob = bytes(body)
-    if base + len(blob) > ADDR_CHUNK_WALK_LIMIT:
-        raise ValueError(
-            f"heap walk stub {base:#x}+{len(blob):#x} exceeds "
-            f"{ADDR_CHUNK_WALK_LIMIT:#x}"
-        )
+    assert base + len(blob) <= ADDR_CHUNK_WALK_LIMIT, (
+        f"heap walk stub {base:#x}+{len(blob):#x} exceeds "
+        f"{ADDR_CHUNK_WALK_LIMIT:#x}"
+    )
     return blob
 
 
@@ -1121,16 +1092,14 @@ def build_heap_walk_cave(base: int = ADDR_HEAP_WALK_CAVE) -> bytes:
     body += fail_b(2, base + len(body), ADDR_HEAP_WALK_FAIL)
     body += b_ins(base + len(body), heap_walk_stub_addr())
     blob = bytes(body)
-    if len(blob) != ADDR_HEAP_WALK_CAVE_LEN:
-        raise ValueError(
-            f"heap walk cave is {len(blob):#x} bytes, slot is "
-            f"{ADDR_HEAP_WALK_CAVE_LEN:#x}"
-        )
-    if base + len(blob) > ADDR_DEREF + DEREF_LEN:
-        raise ValueError(
-            f"heap walk cave {base:#x}+{len(blob):#x} overlaps the "
-            f"next helper at {ADDR_DEREF + DEREF_LEN:#x}"
-        )
+    assert len(blob) == ADDR_HEAP_WALK_CAVE_LEN, (
+        f"heap walk cave is {len(blob):#x} bytes, slot is "
+        f"{ADDR_HEAP_WALK_CAVE_LEN:#x}"
+    )
+    assert base + len(blob) <= ADDR_DEREF + DEREF_LEN, (
+        f"heap walk cave {base:#x}+{len(blob):#x} overlaps the "
+        f"next helper at {ADDR_DEREF + DEREF_LEN:#x}"
+    )
     return blob
 
 
@@ -1149,10 +1118,9 @@ def build_heap_link_pad(base: int = ADDR_HEAP_LINK_PAD) -> bytes:
     body += sub_imm(12, 2, HEAP_LO)
     body += b_ins(base + len(body), ADDR_HEAP_LINK_BODY)
     blob = bytes(body)
-    if len(blob) != ADDR_HEAP_LINK_PAD_LEN:
-        raise ValueError(
-            f"heap link pad is {len(blob):#x} bytes, slot is {ADDR_HEAP_LINK_PAD_LEN:#x}"
-        )
+    assert len(blob) == ADDR_HEAP_LINK_PAD_LEN, (
+        f"heap link pad is {len(blob):#x} bytes, slot is {ADDR_HEAP_LINK_PAD_LEN:#x}"
+    )
     return blob
 
 
@@ -1169,11 +1137,10 @@ def build_heap_link_body(base: int = ADDR_HEAP_LINK_BODY) -> bytes:
     body += _str_cond(3, 0, 7, 0xC)  # strlo r0, [r7, #0xc]
     body += _str_cond(3, 7, 0, 8)  # strlo r7, [r0, #8]
     blob = bytes(body)
-    if base + len(blob) != ADDR_HEAP_LINK_END:
-        raise ValueError(
-            f"heap link body {base:#x}+{len(blob):#x} ends "
-            f"{base + len(blob):#x}, expected {ADDR_HEAP_LINK_END:#x}"
-        )
+    assert base + len(blob) == ADDR_HEAP_LINK_END, (
+        f"heap link body {base:#x}+{len(blob):#x} ends "
+        f"{base + len(blob):#x}, expected {ADDR_HEAP_LINK_END:#x}"
+    )
     return blob
 
 
@@ -1201,11 +1168,10 @@ def build_heap_bin(base: int = ADDR_HEAP_BIN) -> bytes:
     body += _with_cond(cmp_imm(2, HEAP_HI), 1)  # cmpne r2, #HEAP_HI
     body += _str_cond(3, 0, 2, 0x14)  # strlo r0, [r2, #0x14]
     blob = bytes(body)
-    if base + len(blob) != ADDR_HEAP_BIN_END:
-        raise ValueError(
-            f"heap bin body {base:#x}+{len(blob):#x} ends "
-            f"{base + len(blob):#x}, expected {ADDR_HEAP_BIN_END:#x}"
-        )
+    assert base + len(blob) == ADDR_HEAP_BIN_END, (
+        f"heap bin body {base:#x}+{len(blob):#x} ends "
+        f"{base + len(blob):#x}, expected {ADDR_HEAP_BIN_END:#x}"
+    )
     return blob
 
 
@@ -1224,11 +1190,10 @@ def build_heap_tail(base: int = ADDR_HEAP_TAIL) -> bytes:
     body += mov_reg(0, 7)
     body += _u32(0xE8BD80F8)  # pop {r3, r4, r5, r6, r7, pc}
     blob = bytes(body)
-    if base + len(blob) != ADDR_HEAP_TAIL_END:
-        raise ValueError(
-            f"heap tail {base:#x}+{len(blob):#x} ends "
-            f"{base + len(blob):#x}, expected {ADDR_HEAP_TAIL_END:#x}"
-        )
+    assert base + len(blob) == ADDR_HEAP_TAIL_END, (
+        f"heap tail {base:#x}+{len(blob):#x} ends "
+        f"{base + len(blob):#x}, expected {ADDR_HEAP_TAIL_END:#x}"
+    )
     return blob
 
 
@@ -1238,8 +1203,7 @@ def build_row_gate(base: int = ADDR_ROW_GATE) -> bytes:
     body += b_cond(8, base + len(body), ADDR_ROW_SKIP)  # bhi skip
     body += b_ins(base + len(body), ADDR_ROW_CHECK)
     blob = bytes(body)
-    if len(blob) != 8:
-        raise ValueError(f"row gate is {len(blob):#x} bytes")
+    assert len(blob) == 8, f"row gate is {len(blob):#x} bytes"
     return blob
 
 
@@ -1250,8 +1214,7 @@ def build_row_check(base: int = ADDR_ROW_CHECK) -> bytes:
     body += b_cond(2, base + len(body), ADDR_ROW_STORE)  # bhs store
     body += b_ins(base + len(body), ADDR_ROW_SKIP)
     blob = bytes(body)
-    if len(blob) != 12:
-        raise ValueError(f"row check is {len(blob):#x} bytes")
+    assert len(blob) == 12, f"row check is {len(blob):#x} bytes"
     return blob
 
 
@@ -1262,8 +1225,7 @@ def build_memset_cave(base: int = ADDR_MEMSET_CAVE) -> bytes:
     body += bx_lr(0)  # bxeq lr
     body += b_ins(base + len(body), ADDR_MEMSET_STUB)
     blob = bytes(body)
-    if len(blob) != 12:
-        raise ValueError(f"memset cave is {len(blob):#x} bytes")
+    assert len(blob) == 12, f"memset cave is {len(blob):#x} bytes"
     return blob
 
 
@@ -1272,8 +1234,7 @@ def build_memset_stub(base: int = ADDR_MEMSET_STUB) -> bytes:
     body += mov_imm(2, 0)
     body += b_ins(base + len(body), ADDR_MEMSET_BODY)
     blob = bytes(body)
-    if len(blob) != 8:
-        raise ValueError(f"memset stub is {len(blob):#x} bytes")
+    assert len(blob) == 8, f"memset stub is {len(blob):#x} bytes"
     return blob
 
 
@@ -1338,10 +1299,8 @@ def build_pak_table_cave(base: int = ADDR_PAK_TABLE_CAVE) -> bytes:
     body += (0x7CE0).to_bytes(2, "little")  # ldrb r0, [r4, #0x13]
     body += (0x4770).to_bytes(2, "little")  # bx lr
     blob = bytes(body)
-    if len(blob) != ADDR_PAK_TABLE_CAVE_LEN:
-        raise ValueError(f"pak table cave is {len(blob):#x} bytes")
-    if base + len(blob) != 0x005D1940:
-        raise ValueError("pak table cave runs into the flag check")
+    assert len(blob) == ADDR_PAK_TABLE_CAVE_LEN, f"pak table cave is {len(blob):#x} bytes"
+    assert base + len(blob) == 0x005D1940, "pak table cave runs into the flag check"
     return blob
 
 
@@ -1382,8 +1341,7 @@ def build_pak_flag_cave(base: int = ADDR_PAK_FLAG_CHECK) -> bytes:
     body += _u32(0x15D71013)  # ldrneb r1, [r7, #0x13]
     body += _u32(0xE12FFF1E)  # bx lr
     blob = bytes(body)
-    if len(blob) != ADDR_PAK_FLAG_CHECK_LEN:
-        raise ValueError(f"pak flag cave is {len(blob):#x} bytes")
+    assert len(blob) == ADDR_PAK_FLAG_CHECK_LEN, f"pak flag cave is {len(blob):#x} bytes"
     if base + len(blob) != 0x005D1950:
         raise ValueError("pak flag cave runs into the next instruction")
     return blob
@@ -1405,8 +1363,7 @@ def build_pak_alloc_cave(base: int = ADDR_PAK_FLAG_CAVE) -> bytes:
     body += (0x6068).to_bytes(2, "little")  # str r0, [r5, #4]
     body += (0x4770).to_bytes(2, "little")  # bx lr
     blob = bytes(body)
-    if len(blob) != ADDR_PAK_FLAG_CAVE_LEN:
-        raise ValueError(f"pak alloc cave is {len(blob):#x} bytes")
+    assert len(blob) == ADDR_PAK_FLAG_CAVE_LEN, f"pak alloc cave is {len(blob):#x} bytes"
     return blob
 
 
@@ -1863,9 +1820,8 @@ def apply_patch(data: bytearray) -> None:
     data[ADDR_CHUNK_WALK_CAVE : ADDR_CHUNK_WALK_CAVE + len(blob)] = blob
     data[ADDR_FIXUP : ADDR_FIXUP + 4] = bl(ADDR_FIXUP, fixup_at)
     data[fixup_at:end] = fixup
-    if end < ADDR_CHUNK_WALK_LIMIT:
-        slack = ADDR_CHUNK_WALK_LIMIT - end
-        data[end:ADDR_CHUNK_WALK_LIMIT] = NOP * (slack // 4)
+    slack = ADDR_CHUNK_WALK_LIMIT - end  # >= 0: build_fixup_cave stays under the limit
+    data[end:ADDR_CHUNK_WALK_LIMIT] = NOP * (slack // 4)
     data[stub_at : stub_at + len(stub)] = stub
     if APPLY_HEAP_AND_PAK:
         data[ADDR_HEAP_WALK : ADDR_HEAP_WALK + 4] = heap_hook

@@ -454,8 +454,7 @@ def gemini_generate_json(
     if config is None:
         config = types.GenerateContentConfig(**config_kwargs)
 
-    last_exc: BaseException | None = None
-    for attempt in range(8):
+    for attempt in range(7):
         try:
             response = client.models.generate_content(
                 model=model,
@@ -464,8 +463,7 @@ def gemini_generate_json(
             )
             return _extract_response_text(response)
         except Exception as exc:  # noqa: BLE001 — retry Gemini quota / transport
-            last_exc = exc
-            if not _is_retryable_api_error(exc) or attempt == 7:
+            if not _is_retryable_api_error(exc):
                 raise
             if "PerDay" in str(exc) or "per_day" in str(exc):
                 raise
@@ -475,7 +473,13 @@ def gemini_generate_json(
                 flush=True,
             )
             time.sleep(delay)
-    raise last_exc or RuntimeError("gemini_generate_json failed")
+    # Eighth and last try: any error goes to the caller.
+    response = client.models.generate_content(
+        model=model,
+        contents=user,
+        config=config,
+    )
+    return _extract_response_text(response)
 
 
 def _context_window(

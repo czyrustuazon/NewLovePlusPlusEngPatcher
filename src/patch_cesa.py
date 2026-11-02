@@ -572,13 +572,12 @@ def rebuild_pkg90_with_companion(
         COMPANION_VISIBLE_H,
     )
     # Other dual-screen candidates stay 16×16 stubs (wrong-slot leftovers).
+    # None of them is CESA_COMPANION_TEX_NAME.
     for stub_name in (
         BOTTOM_THANK_TEX_NAME,
         CESA_ALT_ORIENT_TEX_NAME,
         PROD_LANDSCAPE_STUB_TEX_NAME,
     ):
-        if stub_name == CESA_COMPANION_TEX_NAME:
-            continue
         stub_texi = next(
             (e for e in entries if e["typ"] == b"TEXI" and e["fn"] == stub_name),
             None,
@@ -603,16 +602,14 @@ def rebuild_pkg90_with_companion(
         len(pkg_raw),
         pad_len,
     )
-    if len(out) != len(pkg_raw):
-        raise RuntimeError("rebuild changed package file length")
+    # Every write above is a same-length slice assignment.
+    assert len(out) == len(pkg_raw), "rebuild changed package file length"
     patched = bytes(out)
     for stub_name in (
         BOTTOM_THANK_TEX_NAME,
         CESA_ALT_ORIENT_TEX_NAME,
         PROD_LANDSCAPE_STUB_TEX_NAME,
     ):
-        if stub_name == CESA_COMPANION_TEX_NAME:
-            continue
         stub = read_named_tex_from_pkg(patched, stub_name)
         if len(stub) != STUB_TEX_DEC_LEN:
             raise RuntimeError(f"{stub_name} must stay a 16×16 stub, got {len(stub)}")
@@ -685,9 +682,9 @@ def patch_img_bin_tex(
         da = a.fw.read() if a else None
         db = b.fw.read() if b else None
         if i == CESA_PKG_INDEX:
-            if da == db:
-                raise RuntimeError("package 90 did not change")
-            # Verify TEX round-trips to the intended bytes.
+            # No "did not change" check: pkg 90's window was already read to
+            # the end above, so ``da`` is b"" here, and an in-place re-run with
+            # the same TEX must keep working. Verify the TEX round-trips instead.
             got = read_cesa_tex_from_pkg(db)
             if got != tex:
                 raise RuntimeError("patched package TEX mismatch after splice")

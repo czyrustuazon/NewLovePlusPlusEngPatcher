@@ -25,7 +25,7 @@ Before hunting strings, re-extracting packages, or inventing a new “global tex
 - Global MakeStr hook and full `img.bin` rewrite are banned — see §11.
 - **Never** `splice_packages_into_img(bak, …, live MOD)` — copies bak over the whole LayeredFS img and wipes later EN packages (§12.5.1).
 - **Main Menu hub rows** (ゲームスタート / オプション / …) = `Title.arc` pkg **5261** `Title_btn02_t01..t06` — **not** NCommonMSel Text02–05 (those are submenus). See §15.
-- Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests **§15.6**; title-loop NX abort **§15.7**).
+- Gold bake / clone pitfalls and fixes: **§15** (acquisition workflow **§15.5**; unit tests / coverage ratchet **§15.6**; title-loop NX abort **§15.7**).
 - Cold PNG-pack / exact-zlib speedup (empty-block-before-zopfli + `--pkg-workers` + zopfli pad; roughly 40 minutes to 2 hours, depending on hardware): **§12.5.3**.
 
 - **Boot CESA warning** (pkg **90** TEX, not Zhoumaru / not `IMAGE_MAP`): `tools/render_cesa_en.py` 2× masks + companion `logo_white` blurb, then `deploy_cesa_en.py` — **§12.7**.
@@ -1569,7 +1569,37 @@ Gaps `ci_local.py` does not close:
 | Toolchain on `PATH` (e.g. clang for `test_call_romaji_match.py`, which skips unless the version matches the blob's) | A test can run on one side and skip on the other | None yet; keep such code covered by tests that need no toolchain |
 | Python / dependency versions (`>=` pins in `dev/requirements-dev.txt`) | Different Pillow / coverage behavior | None yet; CI prints its versions in "Verify Python" |
 
-**Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify, individual `deploy_*` texture splices.
+**Out of scope for unit tests** (integration / manual): full PNG pack, CIA rebuild via makerom, per-screen Azahar verify. `deploy_*` splices are covered offline with `tests/fake_img.py` (tiny PACK/DARC/BCLIM blobs); that is not a substitute for looking at the screen.
+
+#### 15.6.1 Coverage ratchet — 100% line and branch (2026-10-31)
+
+`dev/check_coverage.py` + `tests/snapshots/coverage_floor.json`: line **and** branch coverage of `src/` and `tools/` (omit vendored `tools/nlpp-tools/*`). Every file is at 100%, so the floor file holds only `_total` (99 = 100 minus `SLACK`). A file without a floor must stay at 100%: any new uncovered line or branch fails CI.
+
+Measured with `python -m coverage run -m pytest tests/ -m "not local_data"` (same marker as GitHub Actions): **100.00%** (31 047 statements, 9 674 branches, 159 files). The `local_data` suite (vanilla dumps) still passes on its own.
+
+How the last 9% was closed (2026-10-30 → 31):
+
+| Area | How |
+|------|-----|
+| Mini-game cutters `tools/cut_minigame_*.py` | `opencv-python-headless` + `scipy` are in `dev/requirements-dev.txt`. `tests/test_cov_minigame_cutters.py` fakes the img.bin reader and l2mgtex (raw = PIL image), uses the committed mockups, writes masters to `tmp_path`. |
+| ARM caves (`patch_input_*`, password, lyt, message speed, CESA, SpotPass, chunk walk, camera / Eng Patch info) | A zero bytearray the size of code.bin with only the checked sites filled. Vanilla body SHA-256 checks are monkeypatched to the synthetic bytes. SpotPass skip: flip one byte at every address constant and check each predicate rejects it. |
+| `pack_images` ProcessPool | An in-process executor stand-in, so the status queue, drain thread and result loop run under coverage. |
+| `exact_zlib` / deploy copies of it | A fake zopfli whose length follows the gap salt; a body that decodes to the wrong data uses an Adler-32 collision (`00 02 00` vs `01 00 01`). |
+| Platform branches (`os.name`, `sys.platform`, `ctypes.windll`) | Faked in both directions, so Windows and Ubuntu runs cover the same lines. |
+
+Production changes made only where a branch could not be reached. Each was checked to keep behavior:
+
+- **Invariants of the code builders** (fixed ARM blob lengths, cave-end limits on constant code) are `assert`s, not `if …: raise ValueError`: `patch_spotpass_embed`, `patch_chunk_walk_guard`, `patch_commu_settings_header`, `patch_profile_birthday`, `patch_message_speed`, `patch_cesa`. Nothing runs Python with `-O`, so they still fire. Checks on **input bytes** (unexpected site, occupied cave) stay `ValueError` / `SystemExit` and have tests.
+- **Provably dead checks removed**: re-checking `len(out) == exact_len` after building exactly that length (exact_zlib and the 12 deploy copies); `if take:` around a slice assignment that is a no-op at 0; "nonzero byte" skips inside loops over all-zero gap runs; `best[0] > slot` after a loop that returns on any fit (`deploy_mydata_en`, `deploy_msel_options_en`, `deploy_profile_en`); `encode_imm12`'s rotate-back compare (identical on 278k values incl. all 4096 encodable ones); header / entry checks after writing only `blob[cmp_off:]`.
+- `exact_zlib.pad_closed_zlib_stream` keeps every verification, folded into one `ok` expression. Fuzzed against the old version: identical on 24 000 cases.
+- `scan_nl_spotpass_zip`: progress intervals are `CD_PROGRESS_EVERY` / `LOCAL_PROGRESS_EVERY` (same values) so tests can lower them.
+- `patch_cesa.patch_img_bin_tex`: the "package 90 did not change" check could never fire (pkg 90's `FileWindow` was already read to the end, so `da == b""`). It is removed, not fixed: making it live would fail an in-place re-run with the same TEX.
+
+Remaining risk: the ratchet has only been run on Windows here. CI is Ubuntu; platform branches are faked both ways, but a Linux-only miss would show as "new files must be at 100%". Fix it with a test, not a floor (a floor on a file at 100% locally fails the Windows run).
+
+**Hang under coverage (do not rediscover).** `patch_cia.cmd_patch(..., include_gemini_nene=True)` sets `NLPP_INCLUDE_GEMINI_NENE=1` on `os.environ`. A later `monkeypatch.delenv` records that `1` as the original and **restores it at teardown**. Later `inject_scripts` then walks the real Gemini `a*`/`k*` tree and `dialog_wrap`s every file with the coverage tracer — looks like a freeze at ~90% of the suite (`test_script_inject_layeredfs`). Record the env as unset **before** `cmd_patch` (`monkeypatch.delenv` at the start of the test), then `os.environ.pop` after the assert. `NLPP_PLAIN_LOG=1` on `RunTimer` tests so a TTY does not pin `sys.stdout` for the rest of the process.
+
+Raise floors the CI-equivalent way: `python dev/ci_local.py --update-floors` (or an in-tree `coverage run` with `-m "not local_data"` then `python dev/check_coverage.py --update` only when you know dumps did not inflate the numbers).
 
 ### 15.7 Title hub loop — prefetch abort PC 0 (2026-09-18)
 
