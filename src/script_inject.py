@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -151,14 +152,72 @@ def _rewrite_base_script(data: bytes, *, stem: str = "") -> bytes:
     return patch_names.rewrite_manaka_surname_speakers(data)
 
 
+# The dialog renderer ends a line at an ASCII "!" that is not part of a "!" run or
+# followed by "?": the "!" and everything after it are not drawn ("Hey! Over here."
+# shows "Hey", "A?!B" shows "A?"). "!?", "!!", "!!!?" and "!!!!" draw, and those
+# are the forms the vanilla script uses (3,631 "!?", no "?!"). ASCII "~" draws as
+# an overline. Seen on Azahar 2026-11-02 with p000 probes.
+_MARK_RUN = re.compile(r"[!?！？]+")
+_ASCII_RUN_OK = re.compile(r"!+\?|!{2,}")
+_TO_ASCII = str.maketrans("！？", "!?")
+_TO_FULL = str.maketrans("!?", "！？")
+
+
+def _fix_mark_run(match: re.Match[str]) -> str:
+    run = match.group()
+    if "!" not in run and "！" not in run:
+        return run
+    ascii_run = run.translate(_TO_ASCII)
+    # House order is "!?", the vanilla order (no "?!" in the Japanese script).
+    # Longer runs ("？！？") keep the order they were written in.
+    if ascii_run == "?!":
+        ascii_run = "!?"
+    if _ASCII_RUN_OK.fullmatch(ascii_run):
+        return ascii_run
+    return ascii_run.translate(_TO_FULL)
+
+
+def display_punct(text: str) -> str:
+    """Make one dialog's exclamation runs drawable, keeping their order.
+
+    A two-mark "?!" becomes "!?" (the vanilla order). A run the vanilla script also
+    uses ("!?", "!!", "!!!?", "!!!!") is written in ASCII like the vanilla text.
+    Any other run with a "!" (a lone "!") becomes full-width. ASCII "~" becomes "～".
+    """
+    return _MARK_RUN.sub(_fix_mark_run, text).replace("~", "～")
+
+
+def normalize_display_punct(data: bytes) -> bytes:
+    """Apply ``display_punct`` to every dialog in a DBN2 script.
+
+    Anything that is not a DBN2 script is returned unchanged, and so is a
+    script with nothing to change.
+    """
+    if len(data) < 4 or data[:4] != b"DBN2":
+        return data
+    key, unknown, entries = patch_names.parse_dbin2(data)
+    changed = False
+    for entry in entries:
+        dialogs = entry.sdl2.dialogs
+        for i, text in enumerate(dialogs):
+            new = display_punct(text)
+            if new != text:
+                dialogs[i] = new
+                changed = True
+    if not changed:
+        return data
+    return patch_names.build_dbin2(key, unknown, entries)
+
+
 def _copy_script(src: Path, dest: Path) -> None:
-    """Copy one script. Nickname markers track the live surname slots.
+    """Copy one English script. Nickname markers track the live surname slots.
 
     Exact 姉ヶ崎, 高嶺, and 小早川 nameplates become Anegasaki, Takane, and
-    Kobayakawa on every route.
+    Kobayakawa on every route. Exclamation runs and ~ go through ``display_punct``.
+    Vanilla Japanese overlays do not come through here.
     """
     raw = src.read_bytes()
-    patched = _rewrite_base_script(raw, stem=src.stem)
+    patched = normalize_display_punct(_rewrite_base_script(raw, stem=src.stem))
     if patched == raw:
         shutil.copy2(src, dest)
         return

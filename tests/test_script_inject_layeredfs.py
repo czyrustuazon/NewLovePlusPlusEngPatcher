@@ -9,6 +9,13 @@ import pytest
 import script_inject
 
 
+@pytest.fixture(autouse=True)
+def _no_repo_contrib(tmp_path: Path, monkeypatch):
+    # Reviewed scripts in assets/script_contrib/ would otherwise join every inject
+    # here and change the counts. Tests that need contributor files set their own.
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", tmp_path / "no_contrib")
+
+
 def _write(root: Path, rel: str, payload: bytes = b"EN") -> None:
     path = root / rel
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -281,3 +288,99 @@ def test_stem_manifests_read_once_with_folder_and_legacy_fallbacks(tmp_path: Pat
     manifest.write_text('{"stems": 5}', encoding="utf-8")  # not a list
     monkeypatch.setattr(script_inject, "_community_stems", None)
     assert script_inject.community_stems() == {"a050"}
+
+
+def _punct_script(dialogs: list[str]) -> bytes:
+    import patch_names as names
+
+    sdl2 = names.SDL2Data(key=2, unknown=[], dialogs=dialogs)
+    return names.build_dbin2(1, 0, [names.DbinEntry(0, 0, sdl2)])
+
+
+def test_english_inject_makes_exclamation_runs_drawable(tmp_path: Path, monkeypatch):
+    # The renderer ends a dialog at a lone ASCII "!" ("Hey! Over here." drew as
+    # "Hey") and at "?!" ("A?!B" drew as "A?"). Vanilla "!?"-style runs draw, and
+    # "?!" takes the vanilla "!?" order.
+    import patch_names as names
+
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    (eng / "script" / "k071.dbin2").parent.mkdir(parents=True, exist_ok=True)
+    (eng / "script" / "k071.dbin2").write_bytes(
+        _punct_script(
+            ["Kobayakawa", "Hey! Over here.", "Don't go~", "What!?", "Ugh!!", "Huh?!"]
+        )
+    )
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"k071"})
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+
+    _, _, entries = names.parse_dbin2(
+        (romfs / "script/bin/script/k071.dbin2").read_bytes()
+    )
+    assert entries[0].sdl2.dialogs == [
+        "Kobayakawa",
+        "Hey！ Over here.",
+        "Don't go～",
+        "What!?",
+        "Ugh!!",
+        "Huh!?",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Wait!", "Wait！"),
+        ("Wait！", "Wait！"),
+        ("What!?", "What!?"),
+        ("What！？", "What!?"),
+        ("What!？", "What!?"),
+        ("No!!", "No!!"),
+        ("No！！", "No!!"),
+        ("No!!!!", "No!!!!"),
+        ("Eh!!!?", "Eh!!!?"),
+        ("Eh！！？", "Eh!!?"),
+        ("Huh?!", "Huh!?"),
+        ("Huh？!", "Huh!?"),
+        ("Huh？！", "Huh!?"),
+        ("Eh？！？", "Eh？！？"),
+        ("Eh！？！？", "Eh！？！？"),
+        ("Eh?!?", "Eh？！？"),
+        ("Really？？？", "Really？？？"),
+        ("Fine? Okay.", "Fine? Okay."),
+        ("Nyaa~", "Nyaa～"),
+    ],
+)
+def test_display_punct_runs(text: str, expected: str):
+    assert script_inject.display_punct(text) == expected
+
+
+def test_normalize_display_punct_leaves_clean_and_non_dbin2_bytes_alone():
+    clean = _punct_script(["Takane", "Hello？ See you！"])
+    assert script_inject.normalize_display_punct(clean) is clean
+    assert script_inject.normalize_display_punct(b"EN") == b"EN"
+    assert script_inject.normalize_display_punct(b"") == b""
+
+
+def test_vanilla_overlay_keeps_japanese_ascii_bang(tmp_path: Path):
+    # Vanilla Japanese scripts use "!?" and "!!" on purpose; only English layers
+    # go through the display-punctuation swap.
+    import patch_names as names
+
+    vanilla = tmp_path / "vanilla"
+    (vanilla / "script").mkdir(parents=True)
+    (vanilla / "script" / "k010.dbin2").write_bytes(
+        _punct_script(["小早川", "えっ!?　▲小早川＊▲"])
+    )
+    romfs = tmp_path / "romfs"
+    (romfs / "script" / "bin" / "script").mkdir(parents=True)
+
+    script_inject.apply_nene_marker_to_romfs(romfs, vanilla)
+
+    _, _, copied = names.parse_dbin2(
+        (romfs / "script/bin/script/k010.dbin2").read_bytes()
+    )
+    assert copied[0].sdl2.dialogs == ["Kobayakawa", "えっ!?　▲Kobayaka＊▲"]
