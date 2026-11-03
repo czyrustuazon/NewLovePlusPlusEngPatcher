@@ -15245,9 +15245,10 @@ chance.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Well then... I'll believe 
-you if you say "I'm in 
-love with Manaka".</Dialog>
+          <Dialog>Well then... I'll believe
+you if you say "Manaka,
+aishiteru yo" (I love you,
+Manaka).</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -15298,8 +15299,9 @@ love with Manaka".</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What I want you to say is 
-"I love Manaka", okay？</Dialog>
+          <Dialog>What I want to hear is
+"Manaka, aishiteru yo"
+(I love you, Manaka), okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

@@ -66,10 +66,9 @@ terrible？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving, right？ 
-That's not a good 
-prospect.</Dialog>
+          <Dialog>You turned off the power
+without saving, right？
+I can see right through you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -231,9 +230,10 @@ this？ This is my limit.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say "I won't do it anymore, 
-please forgive me". Say it 
-with your heart.</Dialog>
+          <Dialog>Say "Mou shimasen, yurushite
+kudasai" (I won't do it
+again, please forgive me).
+Say it from the heart.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -253,11 +253,11 @@ with your heart.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The way to apologize is 
-saying "I won't do it 
-anymore, please forgive 
-me". Then... I'll believe 
-in you again.</Dialog>
+          <Dialog>To apologize, say "Mou
+shimasen, yurushite kudasai"
+(I won't do it again, please
+forgive me). Then... I'll
+trust you again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -277,10 +277,10 @@ in you again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Until you say "I won't do 
-it anymore, please forgive 
-me", I won't forgive you, 
-understand？</Dialog>
+          <Dialog>Until you say "Mou shimasen,
+yurushite kudasai" (I won't
+do it again, please forgive
+me), I won't forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -364,9 +364,9 @@ understand？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>"I won't do it anymore, 
-please forgive me"... 
-Don't make me say it again.</Dialog>
+          <Dialog>"Mou shimasen, yurushite
+kudasai."... Don't make me
+say it over and over.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -386,8 +386,9 @@ Don't make me say it again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Listen well. "I won't do it 
-anymore, please forgive me".</Dialog>
+          <Dialog>Listen carefully. "Mou
+shimasen, yurushite
+kudasai."</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -407,9 +408,9 @@ anymore, please forgive me".</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>"I won't do it anymore, 
-please forgive me". 
-Can you say it？</Dialog>
+          <Dialog>"Mou shimasen, yurushite
+kudasai." You can say it,
+right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -493,8 +494,8 @@ more time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can believe that... 
-Yes, I forgive you.</Dialog>
+          <Dialog>I didn't see that coming...
+Okay, I forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -514,8 +515,8 @@ Yes, I forgive you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh... that's unfair. 
-You know, I forgive you...</Dialog>
+          <Dialog>Huh... no fair. You know
+I'll forgive you for that...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -663,9 +664,8 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay then, we'll finish 
-this chat with this part. 
-Right？</Dialog>
+          <Dialog>Okay then, let's leave it
+at that. All right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -706,9 +706,8 @@ any more...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So, you're choosing to 
-keep silent and say 
-nothing...</Dialog>
+          <Dialog>If you just stay quiet, I
+won't know what you mean...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -728,8 +727,8 @@ nothing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...You're making a 
-comparison？ I won't lose.</Dialog>
+          <Dialog>...A contest of patience？
+I won't lose.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -816,9 +815,10 @@ again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you want me to forgive 
-you... "I love Manaka the 
-most". Now you say it.</Dialog>
+          <Dialog>If you want me to forgive
+you... "Manaka ga ichiban
+daisuki" (I love Manaka the
+most). Declare it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -838,9 +838,10 @@ most". Now you say it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you say "I love Manaka 
-the most"？ Then I will 
-forgive you...</Dialog>
+          <Dialog>Will you say "Manaka ga
+ichiban daisuki" (I love
+Manaka the most)？ If you
+do, then I'll...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -860,9 +861,10 @@ forgive you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>"I love Manaka the most". 
-I can't forgive you 
-unless you say me that.</Dialog>
+          <Dialog>"Manaka ga ichiban daisuki"
+(I love Manaka the most).
+I can't forgive you unless
+you say at least that much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1031,8 +1033,8 @@ time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't you want to say 
-another thing？</Dialog>
+          <Dialog>Do you really not want to
+say it that much？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1093,9 +1095,9 @@ what you are saying...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad... I was wondering 
-what would you do if I 
-didn't chastise you.</Dialog>
+          <Dialog>Thank goodness... I was
+worried you wouldn't say
+it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1136,8 +1138,9 @@ me glad.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But now that's not enough. 
-Say "I like you" 3 times.</Dialog>
+          <Dialog>But that's not enough yet.
+Say "Suki da yo" (I love
+you) three times.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1161,9 +1164,9 @@ Say "I like you" 3 times.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Next... Say "I like you" 
-3 times. Then I'll accept 
-your apology.</Dialog>
+          <Dialog>Next... say "Suki da yo"
+(I love you) three times.
+Then we're done.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1183,9 +1186,9 @@ your apology.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now, if you say "I like 
-you" 3 times, I'll really 
-forgive you.</Dialog>
+          <Dialog>Now, if you say "Suki da yo"
+(I love you) three times,
+I'll really forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1205,8 +1208,8 @@ forgive you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'll get angrier next 
-time, okay？</Dialog>
+          <Dialog>Even I get angry
+sometimes, you know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1348,7 +1351,7 @@ me something silly...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I was excited.</Dialog>
+          <Dialog>...My heart's pounding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1368,8 +1371,9 @@ me something silly...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes... let me tell you, 
-but... I'm shy.</Dialog>
+          <Dialog>Yeah... I made you say it,
+but... this kind of thing
+is embarrassing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1470,7 +1474,7 @@ part of our memories.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's not nice...</Dialog>
+          <Dialog>Just own up to it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1511,8 +1515,8 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...You won't do it again, 
-will you？</Dialog>
+          <Dialog>...You're not getting
+defiant on me, are you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1532,10 +1536,10 @@ will you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you're really pondering 
-on it... I want you to say 
-a lot of words of love to 
-prove you're serious.</Dialog>
+          <Dialog>If you're really sorry...
+prove you're serious by
+saying lots of words of
+love.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1555,8 +1559,9 @@ prove you're serious.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The word I want you to 
-say is "I love you".</Dialog>
+          <Dialog>The words I want to hear
+are "aishiteru"
+(I love you).</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1576,9 +1581,9 @@ say is "I love you".</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I would like for you 
-to say "I'm sorry" a lot, 
-okay？</Dialog>
+          <Dialog>Um... How about you say
+"gomen nasai" (I'm sorry)
+lots of times？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1598,8 +1603,9 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay then... Say "I will 
-never cheat".</Dialog>
+          <Dialog>Okay then... declare
+"zettai uwaki wa shimasen"
+(I'll never cheat on you).</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1659,8 +1665,8 @@ never cheat".</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... That way, my 
-feelings can't reach you.</Dialog>
+          <Dialog>Hmm... Your feelings aren't
+reaching me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1680,7 +1686,7 @@ feelings can't reach you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was so close！</Dialog>
+          <Dialog>Hang in there！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1742,9 +1748,8 @@ record！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you're thinking about 
-it, express those feelings 
-of repentance.</Dialog>
+          <Dialog>If you're sorry, show me
+with a written apology.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1784,8 +1789,8 @@ of repentance.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You can write beautiful 
-things.</Dialog>
+          <Dialog>Your handwriting looks
+nice and neat.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1805,7 +1810,7 @@ things.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I have to write it down 
+          <Dialog>You have to write it
 carefully.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1826,7 +1831,7 @@ carefully.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Please write it down！</Dialog>
+          <Dialog>Write it properly！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1846,8 +1851,8 @@ carefully.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm really loving it. 
-It was really good♪</Dialog>
+          <Dialog>You really put your heart
+into it. I'm glad♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1888,10 +1893,10 @@ record！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you've reflected on it, 
-can you stare at my eyes？ 
-If you can't then you're 
-not being honest.</Dialog>
+          <Dialog>If you're really sorry, can
+you keep looking into my
+eyes？ No looking away or
+moving.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2033,9 +2038,9 @@ a new record♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm ready to give up. 
-You're going to reflect on 
-it, aren't you？</Dialog>
+          <Dialog>Geez, giving up already...？
+You'd better be properly
+sorry, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2055,8 +2060,8 @@ it, aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay... I'll forgive you 
-his time.</Dialog>
+          <Dialog>Okay... I'll forgive you
+this time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
