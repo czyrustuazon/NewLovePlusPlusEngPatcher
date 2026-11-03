@@ -62,9 +62,9 @@ you need to be punished.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But if you say "Manaka 
-Gomennasai" (I'm sorry, 
-Manaka.), I'll forgive you.</Dialog>
+          <Dialog>But if you say "Manaka
+gomen nasai" (I'm sorry,
+Manaka), I'll forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -106,8 +106,8 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say "Manaka Gomennasai." 
-(I'm sorry, Manaka...)</Dialog>
+          <Dialog>Say "Manaka gomen nasai"
+(I'm sorry, Manaka).</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -350,10 +350,10 @@ Gotta do it properly！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Seems like you turned off 
-power without saving... 
-I can't let you go like 
-this.</Dialog>
+          <Dialog>You turned off the power
+without saving again...
+I can't overlook it
+anymore.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -396,11 +396,10 @@ be punished.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've told you that turning 
-off power without saving 
-is not good. I shouldn't 
-forgive you this time, 
-right？</Dialog>
+          <Dialog>I told you not to turn off
+the power without saving！
+I won't forgive you this
+time, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -420,10 +419,10 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you don't say "Suki, 
-Suki, Daisuki," (I love 
-you, love you, love you.) 
-I won't meet you.</Dialog>
+          <Dialog>If you don't say "Suki,
+suki, daisuki" (I love you,
+I love you, I really love
+you), I won't see you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -443,11 +442,11 @@ I won't meet you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, can you say "Suki, 
-Suki, Daisuki" (I love 
-you, love you, love you.)？ 
-If you don't, I won't 
-meet you.</Dialog>
+          <Dialog>Hey, will you say "Suki,
+suki, daisuki" (I love you,
+I love you, I really love
+you)？ If you don't, I won't
+see you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -467,10 +466,11 @@ meet you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you say "Suki, Suki, 
-Daisuki" (I love you, love 
-you, love you.)？ If not, I 
-won't meet you.</Dialog>
+          <Dialog>Will you say "Suki, suki,
+daisuki" (I love you, I
+love you, I really love
+you)？ If not, I won't see
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -490,7 +490,7 @@ won't meet you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, not yet？</Dialog>
+          <Dialog>Hey, still nothing？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -550,8 +550,8 @@ won't meet you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's "Suki, Suki, Daisuki" 
-You already heard, right？</Dialog>
+          <Dialog>It's "Suki, suki, daisuki."
+You heard me, right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -571,8 +571,9 @@ You already heard, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say it again. "Suki, Suki, 
-Daisuki." Hey, I beg you.</Dialog>
+          <Dialog>I'll say it again. "Suki,
+suki, daisuki." Come on,
+please.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -592,8 +593,8 @@ Daisuki." Hey, I beg you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>"Suki, Suki, Daisuki." Can 
-you remember it？</Dialog>
+          <Dialog>"Suki, suki, daisuki." Got
+it now？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -988,10 +989,10 @@ without saving.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you want me to forgive 
-you... say "Kimi wo 
-ichiban aishiteru" (I love 
-you the most.) now.</Dialog>
+          <Dialog>If you want me to forgive
+you... say "Kimi wo ichiban
+aishiteru" (I love you the
+most).</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1011,9 +1012,9 @@ you the most.) now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you say "Kimi wo 
-ichiban aishiteru" (I love 
-you the most.)？ If you do, 
+          <Dialog>Will you say "Kimi wo
+ichiban aishiteru" (I love
+you the most)？ If you do,
 I'll forgive you...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1034,10 +1035,10 @@ I'll forgive you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you don't say "Kimi wo 
-ichiban aishiteru," 
-(I love you the most.) 
-I won't forgive you.</Dialog>
+          <Dialog>If you don't say "Kimi wo
+ichiban aishiteru" (I love
+you the most), I won't
+forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1302,8 +1303,8 @@ then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Next, say "Aishiteru" 
-(I love you.) 3 times.</Dialog>
+          <Dialog>Next, say "aishiteru"
+(I love you) three times.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1323,9 +1324,9 @@ then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now, I want you to say 
-"Aishiteru" (I love you.) 
-3 times.</Dialog>
+          <Dialog>Now, I want you to say
+"aishiteru" (I love you)
+three times.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1345,9 +1346,9 @@ then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Next. This time, say 
-"Aishiteru" (I love you.) 
-3 times.</Dialog>
+          <Dialog>Next. This time, say
+"aishiteru" (I love you)
+three times.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1593,9 +1594,10 @@ delete them, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Never do that again, okay？ 
-Don't let everything I did 
-for you vanish like that.</Dialog>
+          <Dialog>Never do that again, okay？
+Don't erase the things you
+did for me like they never
+happened.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1657,7 +1659,7 @@ to me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...What an idiot. I really 
+          <Dialog>...Idiot. I really
 thought I could trust you.</Dialog>
         </Dialogs>
       </SDL2>
