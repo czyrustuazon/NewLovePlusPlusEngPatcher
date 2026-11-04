@@ -1,0 +1,5427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="1871861563" Unknown="48">
+  <Entries>
+    <Entry Unknown0="2310927601" Unknown1="742744219">
+      <SDL2 Key="1932693348">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37879</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37880</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37881</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37882</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37883</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, why did you decide to
+go out with Rinko？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Why do you ask？</Dialog>
+          <Dialog>It just popped into my head.
+What do you like about
+Rinko？ ...I wondered.</Dialog>
+          <Dialog>Let's see... You're cheeky,
+you're not honest with
+yourself, you're stubborn...</Dialog>
+          <Dialog>...Hey. I'm asking what you
+LIKE about me？</Dialog>
+          <Dialog>Silly. That's what's cute
+about
+▲小早川＊▲.
+It's endearing.</Dialog>
+          <Dialog>Hmm... Weird taste！</Dialog>
+          <Dialog>Harsh. A boyfriend gets hurt
+when you badmouth his
+girlfriend, you know？</Dialog>
+          <Dialog>What's that？ Idiot!?</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3808443735" Unknown1="1854588638">
+      <SDL2 Key="1932693348">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37884</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37885</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37886</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37887</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37888</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37889</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>I asked you this before,
+but...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah, what？</Dialog>
+          <Dialog>About why you decided to go
+out with Rinko...</Dialog>
+          <Dialog>...Yeah.</Dialog>
+          <Dialog>Don't you have a simpler
+reason？ Come on！ Like
+"you're cute～" or "you're
+pretty～"？</Dialog>
+          <Dialog>Oh！ Your eyes are cute,
+right？</Dialog>
+          <Dialog>My eyes...？</Dialog>
+          <Dialog>Yeah. Your eyelashes are
+long and curl up naturally.</Dialog>
+          <Dialog>Huh, when did you get to
+study me that closely？</Dialog>
+          <Dialog>Um, let's see... when we
+kiss？</Dialog>
+          <Dialog>Idiot！ You're supposed to
+close your eyes then！</Dialog>
+          <Dialog>Sorry...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="541565850" Unknown1="3169847589">
+      <SDL2 Key="1932693348">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37890</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37891</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37892</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37893</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37894</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>What does it mean to fall
+for someone？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Where's this coming from？</Dialog>
+          <Dialog>Well... I was just thinking
+it's hard to explain.</Dialog>
+          <Dialog>Let's see... Isn't it about
+treasuring the other person,
+that kind of thing？</Dialog>
+          <Dialog>That's not what Rinko
+means... It's more...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Why it has to be that one
+person.</Dialog>
+          <Dialog>When you put it that way...</Dialog>
+          <Dialog>Nobody else will do, right？
+What kind of mental wiring
+causes that？</Dialog>
+          <Dialog>(She's thinking about
+complicated stuff.)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2041439457" Unknown1="389369995">
+      <SDL2 Key="2472654542">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37895</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37896</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37897</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37898</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>37899</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37900</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37901</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>37902</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, is falling for someone
+just human instinct after
+all？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Continuing from before？
+What do you mean？</Dialog>
+          <Dialog>Like, DNA humans pass down
+to keep the species going？</Dialog>
+          <Dialog>That's one answer, but for
+▲小早川＊▲
+and me...</Dialog>
+          <Dialog>Coincidence？</Dialog>
+          <Dialog>...Normally you'd call it
+fate...</Dialog>
+          <Dialog>What, you mean it was
+decided from the start？ No
+way. Rinko chose you
+herself.</Dialog>
+          <Dialog>▲小早川＊▲...</Dialog>
+          <Dialog>...More importantly, what's
+your answer to my question？</Dialog>
+          <Dialog>I got to hear how
+▲小早川＊▲ feels,
+so I'm satisfied. Forget the
+complicated stuff.</Dialog>
+          <Dialog>...I'll let it go at that...
+but I'm not convinced...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3555732807" Unknown1="1266333390">
+      <SDL2 Key="1530083733">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37903</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37904</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37905</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37906</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37907</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37908</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, it's almost here,
+right？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Is something coming up？</Dialog>
+          <Dialog>No, nothing.</Dialog>
+          <Dialog>If you don't know, that's
+better for me anyway...</Dialog>
+          <Dialog>What？ Now I'm curious...</Dialog>
+          <Dialog>Surprises are pretty nice,
+right？</Dialog>
+          <Dialog>If it's something good,
+sure.</Dialog>
+          <Dialog>Probably something good.</Dialog>
+          <Dialog>What is it？ I'm curious...</Dialog>
+          <Dialog>Now, now. You'll find out
+soon！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="272061322" Unknown1="3017865493">
+      <SDL2 Key="1530083733">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37909</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37910</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37911</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37912</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37913</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37914</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Is there anything you want？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Hmm, I want knowledge, I
+want to be athletic, and I'd
+like some style and charm
+too.</Dialog>
+          <Dialog>What's that...？</Dialog>
+          <Dialog>...Never mind.</Dialog>
+          <Dialog>Not that kind of thing. Like
+CDs, books... THINGS.</Dialog>
+          <Dialog>Hmm... Like what？ Nothing
+comes to mind...</Dialog>
+          <Dialog>That's a problem. Think
+about it properly.</Dialog>
+          <Dialog>Let's see... a kiss from
+▲小早川＊▲？</Dialog>
+          <Dialog>...Perv.</Dialog>
+          <Dialog>I'll ask again, so think it
+over properly by then.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1771934929" Unknown1="438648955">
+      <SDL2 Key="1530083733">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37915</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37916</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37917</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37918</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37919</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>So, did you think about what
+you want？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Ah, I totally forgot！</Dialog>
+          <Dialog>Geez, want a kick!? There
+must be at least one thing
+you want...</Dialog>
+          <Dialog>Well, I've got
+▲小早川＊▲
+as my girlfriend now.</Dialog>
+          <Dialog>So I feel kind of
+satisfied...</Dialog>
+          <Dialog>Hehe... Well. I kind of get
+how you feel？</Dialog>
+          <Dialog>Then what would make you
+happy to get from your
+girlfriend？</Dialog>
+          <Dialog>Anything from my girlfriend
+would make me happy,
+wouldn't it？</Dialog>
+          <Dialog>Hmm... No complaints later,
+okay？</Dialog>
+          <Dialog>Hm？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3286293815" Unknown1="1483384510">
+      <SDL2 Key="1530083733">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37920</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37921</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37922</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37923</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>37924</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37925</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37926</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, just asking.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>Your birthday's coming up
+soon, isn't it？</Dialog>
+          <Dialog>Oh... right！ I totally
+forgot...</Dialog>
+          <Dialog>At least remember your own
+birthday.</Dialog>
+          <Dialog>Got plans for your
+birthday？ Like family
+around a cake going "Happy
+birthday"？</Dialog>
+          <Dialog>Nope. I'm too old for
+birthday parties.</Dialog>
+          <Dialog>I see. But isn't it nice to
+have your birthday
+celebrated？</Dialog>
+          <Dialog>Sure, it'd be nice.
+Especially from my
+girlfriend.</Dialog>
+          <Dialog>Hmm. Then I'll think about
+it. Hehe.</Dialog>
+          <Dialog>Thanks！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2573178" Unknown1="2295392517">
+      <SDL2 Key="2070110689">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37927</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37928</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37929</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37930</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37931</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's been hot lately.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>It really feels like
+summer！</Dialog>
+          <Dialog>Yeah... August's almost
+here. I seriously hate it.</Dialog>
+          <Dialog>You don't like the heat,
+right？</Dialog>
+          <Dialog>Well... that's part of it？</Dialog>
+          <Dialog>Hm...？</Dialog>
+          <Dialog>Sigh... it's almost here.
+It'll be August...</Dialog>
+          <Dialog>......</Dialog>
+          <Dialog>Speaking of August, that's
+▲小早川＊▲'s
+birthday.</Dialog>
+          <Dialog>Oh, is it？ I wasn't
+interested, so I forgot. I
+see, I see～</Dialog>
+          <Dialog>(▲小早川＊▲'s
+birthday... What should I
+do？)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1502446785" Unknown1="3809816683">
+      <SDL2 Key="2070110689">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37932</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37933</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37934</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37935</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37936</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37937</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37938</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Soon Rinko's going to be a
+year older too, huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yep.</Dialog>
+          <Dialog>One more step up the stairs
+to adulthood.</Dialog>
+          <Dialog>But isn't it a little sad,
+me getting a year older？</Dialog>
+          <Dialog>Nope, not at all.</Dialog>
+          <Dialog>Oh, right... You're a
+lolicon, aren't you？</Dialog>
+          <Dialog>I am not！</Dialog>
+          <Dialog>Hmm... Well, jokes aside.</Dialog>
+          <Dialog>You'd prefer a grown-up,
+beautiful woman, right？</Dialog>
+          <Dialog>To me,
+▲小早川＊▲
+just as she is is the best.</Dialog>
+          <Dialog>Hmm... Oh, okay...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3016805671" Unknown1="526030510">
+      <SDL2 Key="2070110689">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37939</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37940</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37941</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37942</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37943</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37944</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Almost here... Hehe.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Your birthday, right？</Dialog>
+          <Dialog>Yep！</Dialog>
+          <Dialog>Maybe for girls it's a more
+special day than I think？</Dialog>
+          <Dialog>Until now, when my family
+celebrated, Rinko was just
+like, "Huh."</Dialog>
+          <Dialog>But this year's a special
+birthday！ Woo-hoo！</Dialog>
+          <Dialog>It's a birthday I get to
+spend with my boyfriend.</Dialog>
+          <Dialog>If you're that excited, it's
+a little bit of pressure...</Dialog>
+          <Dialog>Exactly？ I'm putting on a
+little pressure so you don't
+bail at the last minute.</Dialog>
+          <Dialog>Don't worry！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4028068714" Unknown1="2814433781">
+      <SDL2 Key="2070110689">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37945</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37946</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37947</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37948</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37949</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37950</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey... this might be the
+first time Rinko's ever
+looked forward to her
+birthday.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Then I'd better work hard to
+make
+▲小早川＊▲
+happy.</Dialog>
+          <Dialog>Thanks.</Dialog>
+          <Dialog>Oh right. If there's
+anything you want, I'll take
+requests？</Dialog>
+          <Dialog>A present...</Dialog>
+          <Dialog>Just having the person I
+love say "happy birthday" is
+enough.</Dialog>
+          <Dialog>Yeah？ But thinking up a
+present for someone you love
+is fun, you know.</Dialog>
+          <Dialog>Well, sure, but...</Dialog>
+          <Dialog>For Rinko, a birthday where
+she's not alone is the best
+present.</Dialog>
+          <Dialog>I see...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1232975025" Unknown1="3288670299">
+      <SDL2 Key="2912061275">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37951</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37952</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37953</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37954</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37955</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37956</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Do you know what day is
+coming up？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What was it？</Dialog>
+          <Dialog>Don't tell me you forgot？</Dialog>
+          <Dialog>No... um... so, what day was
+it？</Dialog>
+          <Dialog>Sigh... Typical...</Dialog>
+          <Dialog>Are you mad？</Dialog>
+          <Dialog>I'm not mad？</Dialog>
+          <Dialog>I'm just exasperated you
+forgot a day that matters to
+both of us.</Dialog>
+          <Dialog>Oh... The day
+▲小早川＊▲
+and I started going out...</Dialog>
+          <Dialog>Too late！</Dialog>
+          <Dialog>(It's already been a
+year...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2747333911" Unknown1="105547422">
+      <SDL2 Key="2912061275">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37957</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37958</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37959</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37960</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37961</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37962</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>A lot happened this year,
+huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah... I wonder how many of
+▲小早川＊▲'s
+kicks I took this year...？</Dialog>
+          <Dialog>Thwack!!</Dialog>
+          <Dialog>Ow!!</Dialog>
+          <Dialog>That makes 100. Congrats！</Dialog>
+          <Dialog>...Jokes aside. Having
+▲小早川＊▲
+by my side feels totally
+natural now...</Dialog>
+          <Dialog>I get that too. But Rinko
+still gets butterflies when
+we're together, you know？</Dialog>
+          <Dialog>Me too. I still get nervous
+when we kiss and stuff...</Dialog>
+          <Dialog>...Yeah.</Dialog>
+          <Dialog>Want more butterflies？
+Should we kiss right here？</Dialog>
+          <Dialog>Don't push your luck！ Want
+number 101？</Dialog>
+          <Dialog>Sorry...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3758580570" Unknown1="1555089893">
+      <SDL2 Key="1701059106">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37963</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37964</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>37965</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37966</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37967</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37968</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>37969</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37970</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Our one-year anniversary's
+getting close.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Looking back, a year goes by
+fast...</Dialog>
+          <Dialog>How do you feel about Rinko
+now？ Has it changed？ Maybe
+you've cooled off a
+little...</Dialog>
+          <Dialog>Not one bit. I've loved
+▲小早川＊▲
+the whole time.</Dialog>
+          <Dialog>Really！ Hehe...</Dialog>
+          <Dialog>What about you,
+▲小早川＊▲？
+Have you changed？</Dialog>
+          <Dialog>Rinko has changed, I think？</Dialog>
+          <Dialog>Huh... Seriously？</Dialog>
+          <Dialog>Rinko loves you way, waaay
+more than when we started.
+So Rinko wins.</Dialog>
+          <Dialog>...Can't it be a tie？</Dialog>
+          <Dialog>No！</Dialog>
+          <Dialog>(I'm really loved...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="963486881" Unknown1="4160032843">
+      <SDL2 Key="1701059106">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37971</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37972</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37973</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37974</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37975</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37976</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, thanks for staying with
+Rinko for a whole year.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Where's this coming from？</Dialog>
+          <Dialog>I mean, putting up with
+someone like me for a whole
+year.</Dialog>
+          <Dialog>I haven't been putting up
+with anything？</Dialog>
+          <Dialog>But Rinko's selfish, and
+short-tempered...</Dialog>
+          <Dialog>Sure, you're like that
+sometimes, but I've never
+once hated it.</Dialog>
+          <Dialog>Thanks. Hehe.</Dialog>
+          <Dialog>Next year, I want to talk
+like this again, about how
+another year passed...</Dialog>
+          <Dialog>Not just next year. The year
+after, and forever...</Dialog>
+          <Dialog>Yeah. Forever and ever...
+okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2477845767" Unknown1="758740622">
+      <SDL2 Key="1701059106">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37977</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37978</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37979</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37980</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37981</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Why did you go out with
+Rinko？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Why all of a sudden？</Dialog>
+          <Dialog>Because Rinko's not girly at
+all, right？</Dialog>
+          <Dialog>Maybe I kind of forced you
+to say yes back then...</Dialog>
+          <Dialog>No way.</Dialog>
+          <Dialog>Really？</Dialog>
+          <Dialog>Of course. I'm glad it's
+▲小早川＊▲.</Dialog>
+          <Dialog>Rinko's glad she got a good
+boyfriend too, so remember
+that.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3505853258" Unknown1="1436793301">
+      <SDL2 Key="1701059106">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37982</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37983</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37984</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37985</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37986</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37987</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37988</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>917504</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Straight up, what do you
+like about Rinko？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What？ All of a sudden...</Dialog>
+          <Dialog>I figured you'd like someone
+more mature. Rinko's kind of
+childish, right？</Dialog>
+          <Dialog>That's not true.</Dialog>
+          <Dialog>Or is it because you're a
+lolicon？</Dialog>
+          <Dialog>I am not！</Dialog>
+          <Dialog>Then what do you like？</Dialog>
+          <Dialog>That you're not honest,
+you're childish, you're
+selfish...</Dialog>
+          <Dialog>What's that？ Said like
+that, Rinko sounds like a
+total brat!?</Dialog>
+          <Dialog>Not at all. You're my
+beloved girlfriend.</Dialog>
+          <Dialog>Why do you say stuff like
+that out of nowhere...</Dialog>
+          <Dialog>See, that's the cute part.
+Did you notice？</Dialog>
+          <Dialog>Idiot...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="693982353" Unknown1="4041605179">
+      <SDL2 Key="1701059106">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37989</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37990</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37991</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37992</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37993</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37994</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Liking someone...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>...Huh？</Dialog>
+          <Dialog>When does liking someone
+start, I wonder？</Dialog>
+          <Dialog>Hmm... I've never thought
+about it.</Dialog>
+          <Dialog>At first, they're just one
+of countless passersby.</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>And before you know it,
+they're the one person
+nobody else can replace...</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>Strange, isn't it...？</Dialog>
+          <Dialog>Yeah... But we fell for each
+other, didn't we...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2208341495" Unknown1="841574014">
+      <SDL2 Key="2241081741">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37995</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37996</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37997</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37998</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>37999</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38000</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>When you fall for someone,
+you get more worries, huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's up, all of a sudden？</Dialog>
+          <Dialog>Isn't that kind of a pain？</Dialog>
+          <Dialog>There are lots of good
+things too, like being happy
+together, right？</Dialog>
+          <Dialog>But you get selfish,
+anxious, jealous. Doesn't
+the other person find that
+annoying？</Dialog>
+          <Dialog>Maybe that happens, but...</Dialog>
+          <Dialog>Rinko would hate being like
+that...</Dialog>
+          <Dialog>But I wonder why... if you
+got selfish, or jealous over
+me...</Dialog>
+          <Dialog>...Rinko would probably be
+happy...</Dialog>
+          <Dialog>(▲小早川＊▲...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3236365114" Unknown1="278112709">
+      <SDL2 Key="2241081741">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38001</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38002</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38003</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38004</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38005</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, isn't it coming up
+soon？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What is...？</Dialog>
+          <Dialog>Huh, you forgot？</Dialog>
+          <Dialog>Did I promise something？</Dialog>
+          <Dialog>Figures... They say you get
+forgetful when you get
+older.</Dialog>
+          <Dialog>Sorry...</Dialog>
+          <Dialog>Why are you apologizing？</Dialog>
+          <Dialog>No reason... So, what's
+coming up？</Dialog>
+          <Dialog>Who knows？ I gave you a
+hint just now, so think
+hard.</Dialog>
+          <Dialog>A hint？ Hmmm...？？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="424494209" Unknown1="4225167403">
+      <SDL2 Key="2241081741">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38006</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38007</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38008</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38009</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38010</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38011</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Is there anything you want
+right now？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I'd like my allowance raised
+a little？</Dialog>
+          <Dialog>...Then talk to your mom
+about that？</Dialog>
+          <Dialog>Not that kind of thing. CDs,
+books... THINGS.</Dialog>
+          <Dialog>Let's see... Oh！ I'm
+suddenly craving potato
+chips！</Dialog>
+          <Dialog>Buy them and eat them
+yourself！</Dialog>
+          <Dialog>You're so hard to shop
+for... So plain, or no
+particular tastes, or...</Dialog>
+          <Dialog>If I had to say... a kiss
+from
+▲小早川＊▲？</Dialog>
+          <Dialog>Sigh... I don't even have
+the energy to kick you right
+now...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1938853351" Unknown1="3071891054">
+      <SDL2 Key="2241081741">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38012</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38013</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38014</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38015</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38016</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38017</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>38018</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Continuing from last time,
+did you think about what you
+want？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Ah！ I totally forgot...</Dialog>
+          <Dialog>You're no fun...</Dialog>
+          <Dialog>Are you giving me
+something？</Dialog>
+          <Dialog>N-No, that's not it.</Dialog>
+          <Dialog>A girl in my class asked me
+what would be good to give a
+guy as a present...</Dialog>
+          <Dialog>You know. Since Rinko does
+have a boyfriend.</Dialog>
+          <Dialog>Let's see... With presents,
+isn't it the thought that
+counts, more than the
+thing？</Dialog>
+          <Dialog>What's that, so corny.
+...Well, if that's fine with
+you, it's fine with Rinko...</Dialog>
+          <Dialog>Hm？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2966893354" Unknown1="260282805">
+      <SDL2 Key="2241081741">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38019</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38020</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38021</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38022</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38023</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38024</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh, I just suddenly
+remembered.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>Isn't your birthday coming
+up soon？</Dialog>
+          <Dialog>...Oh right, my birthday's
+coming up.</Dialog>
+          <Dialog>So？ Any plans？</Dialog>
+          <Dialog>Plans are TBD.</Dialog>
+          <Dialog>What's that mean？</Dialog>
+          <Dialog>Won't you spend it with me,
+▲小早川＊▲？</Dialog>
+          <Dialog>Wh-What...</Dialog>
+          <Dialog>Hehe, kidding. You can look
+forward to it, I guess？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="155022449" Unknown1="4240891931">
+      <SDL2 Key="1298510932">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38025</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38026</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38027</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38028</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38029</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38030</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38031</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Ahh... August's almost
+here...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Feels like summer's really
+here.</Dialog>
+          <Dialog>August, huh...</Dialog>
+          <Dialog>Hahaha, I know！ It's coming
+up soon.</Dialog>
+          <Dialog>...Wh-What is？</Dialog>
+          <Dialog>▲小早川＊▲'s
+birthday！</Dialog>
+          <Dialog>Hmm.</Dialog>
+          <Dialog>Huh, did you forget？</Dialog>
+          <Dialog>Not really. I just don't
+think much of it being my
+birthday.</Dialog>
+          <Dialog>But maybe there's a
+surprise？</Dialog>
+          <Dialog>That's still a secret.</Dialog>
+          <Dialog>Huh. Then I'll honestly look
+forward to it.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1669381591" Unknown1="3188278878">
+      <SDL2 Key="2106972862">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38032</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38033</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38034</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38035</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38036</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38037</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey？ Do you remember your
+birthdays from when you were
+little？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Why？</Dialog>
+          <Dialog>Rinko... only remembers the
+bad ones.</Dialog>
+          <Dialog>Bad ones？</Dialog>
+          <Dialog>Like Dad not being home on
+my birthday because of
+work...</Dialog>
+          <Dialog>I see... That's lonely.</Dialog>
+          <Dialog>Birthdays make you more
+sentimental than usual.</Dialog>
+          <Dialog>That might be true.</Dialog>
+          <Dialog>So I figured if I just spent
+it like a normal day, I
+wouldn't make sad
+memories...</Dialog>
+          <Dialog>...From now on, let's make
+happy memories, then.</Dialog>
+          <Dialog>Look at you, acting all
+cool！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2697405210" Unknown1="1685293477">
+      <SDL2 Key="2106972862">
+        <Unknown>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38038</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38039</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38040</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38041</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38042</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>It's almost here.</Dialog>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Rinko's birthday？</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>Huh, you actually remember？</Dialog>
+          <Dialog>We talked about it the other
+day. I won't forget！</Dialog>
+          <Dialog>Getting my hopes up too much
+is kind of scary, though...</Dialog>
+          <Dialog>It'll be fine！</Dialog>
+          <Dialog>Then I'll hope just a tiny
+bit.</Dialog>
+          <Dialog>Leave it to me.</Dialog>
+          <Dialog>So I can rest easy, like I'm
+aboard a sinking ship？</Dialog>
+          <Dialog>(That's wrong in several
+ways...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4180501601" Unknown1="3484864523">
+      <SDL2 Key="2106972862">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38043</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38044</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38045</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38046</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38047</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38048</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Can't wait～</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>The present？</Dialog>
+          <Dialog>The birthday first. Though
+the present too, kind of...</Dialog>
+          <Dialog>The present, huh...</Dialog>
+          <Dialog>What, what？</Dialog>
+          <Dialog>That's...</Dialog>
+          <Dialog>Oh, no, never mind. I have
+to save the fun for the
+moment itself.</Dialog>
+          <Dialog>Fair enough.</Dialog>
+          <Dialog>Besides, what I'm really
+looking forward to isn't the
+present. It's having someone
+to spend it with.</Dialog>
+          <Dialog>▲小早川＊▲...</Dialog>
+          <Dialog>I wish my birthday would
+hurry up.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1399893447" Unknown1="2247702094">
+      <SDL2 Key="2646938138">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38049</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38050</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38051</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38052</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38053</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38054</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>You know what day is coming
+up, right？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What was it？</Dialog>
+          <Dialog>Don't tell me something
+impossible like you forgot？</Dialog>
+          <Dialog>Um... it's THAT, right？</Dialog>
+          <Dialog>And what is THAT？</Dialog>
+          <Dialog>It seems to have slipped my
+mind...</Dialog>
+          <Dialog>Well, Rinko seems to have
+forgotten who YOU are！</Dialog>
+          <Dialog>Don't be that mad...</Dialog>
+          <Dialog>Sigh... To think I've been
+going out with a guy like
+this for a whole year...</Dialog>
+          <Dialog>Oh... The day
+▲小早川＊▲
+and I started going out...</Dialog>
+          <Dialog>Too late！</Dialog>
+          <Dialog>(It's already been a
+year...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2427966218" Unknown1="2103671189">
+      <SDL2 Key="2646938138">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38055</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38056</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38057</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38058</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38059</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38060</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>A year of going out, and
+somehow we've gotten along,
+huh？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah... still lovey-dovey,
+right？</Dialog>
+          <Dialog>Lovey-dovey... Aren't you
+embarrassed saying that？</Dialog>
+          <Dialog>You've been my girlfriend a
+year. Aren't you used to it
+by now？</Dialog>
+          <Dialog>I'm not used to it... Is it
+weird that I still get
+butterflies with you？</Dialog>
+          <Dialog>I don't think it's weird. I
+get them too.</Dialog>
+          <Dialog>Huh, like when？</Dialog>
+          <Dialog>My heart's always pounding,
+wondering when you'll blow
+up...</Dialog>
+          <Dialog>What!? That does it！</Dialog>
+          <Dialog>Kidding. My heart pounds
+whenever I'm with
+▲小早川＊▲.
+Walking home, on dates...</Dialog>
+          <Dialog>Smooth talker！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3910997073" Unknown1="3500589307">
+      <SDL2 Key="1469486561">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38061</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38062</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38063</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38064</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38065</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38066</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>We've been going out a year
+now...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>Do you love Rinko？</Dialog>
+          <Dialog>...What about you,
+▲小早川＊▲？</Dialog>
+          <Dialog>Rinko asked first！</Dialog>
+          <Dialog>Well, fine. Then let's
+answer at the same time？
+Okay？</Dialog>
+          <Dialog>Okay. Ready...</Dialog>
+          <Dialog>I love you！</Dialog>
+          <Dialog>I love, love, loooove you！</Dialog>
+          <Dialog>See, Rinko wins！</Dialog>
+          <Dialog>No fair！</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1130388919" Unknown1="2464753214">
+      <SDL2 Key="1469486561">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38067</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38068</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38069</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38070</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38071</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38072</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's almost a year since we
+started going out, huh？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Looking back, a year goes by
+fast...</Dialog>
+          <Dialog>Are you thinking, "I can't
+believe I lasted a year with
+this one"？</Dialog>
+          <Dialog>What？ It's only been a
+year. We're just getting
+started.</Dialog>
+          <Dialog>I see... Yeah, I guess so.</Dialog>
+          <Dialog>What about you,
+▲小早川＊▲？</Dialog>
+          <Dialog>Thanks to Rinko's patience,
+I'd say.</Dialog>
+          <Dialog>Harsh...</Dialog>
+          <Dialog>If I weren't holding back, I
+might say "I want to live
+with you." Would that be
+okay？</Dialog>
+          <Dialog>Huh...？</Dialog>
+          <Dialog>That kind of future wouldn't
+be bad...</Dialog>
+          <Dialog>(Someday...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2158478330" Unknown1="1918003589">
+      <SDL2 Key="1469486561">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38073</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38074</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38075</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38076</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38077</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38078</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, um？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>I think about this
+sometimes, you know？</Dialog>
+          <Dialog>...？</Dialog>
+          <Dialog>...Was Rinko really the
+right one for you？</Dialog>
+          <Dialog>What a weird thing to ask...</Dialog>
+          <Dialog>Because Rinko's selfish, and
+she always makes you
+worry...</Dialog>
+          <Dialog>That's not true. All of that
+is part of what makes
+▲小早川＊▲.</Dialog>
+          <Dialog>Really...？</Dialog>
+          <Dialog>Yeah, really...</Dialog>
+          <Dialog>I see... Okay.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3641508929" Unknown1="429371627">
+      <SDL2 Key="1469486561">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38079</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38080</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38081</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38082</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38083</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38084</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38085</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>917504</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Can I ask again？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Ask what？</Dialog>
+          <Dialog>You don't mind having Rinko
+as your girlfriend？</Dialog>
+          <Dialog>You know without asking...</Dialog>
+          <Dialog>But I get anxious.</Dialog>
+          <Dialog>...It has to be
+▲小早川＊▲.
+Nobody else.</Dialog>
+          <Dialog>Really？</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>Really, really？</Dialog>
+          <Dialog>Really.</Dialog>
+          <Dialog>Do you... love Rinko？</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>Thank goodness...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="860900775" Unknown1="3520599598">
+      <SDL2 Key="2009512779">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38086</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38087</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38088</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38089</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>38090</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38091</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Why do you think people fall
+for each other？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I wonder. I've never thought
+about it.</Dialog>
+          <Dialog>They meet by some incredible
+chance, and before they know
+it, they love each other...</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>The odds of a relationship
+like this happening are
+astronomical, right？</Dialog>
+          <Dialog>Maybe so.</Dialog>
+          <Dialog>I don't believe in fate or
+destiny... but I want to
+give myself credit for
+falling for you.</Dialog>
+          <Dialog>▲小早川＊▲...</Dialog>
+          <Dialog>Out of astronomical odds, I
+drew you...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1889006570" Unknown1="1765955957">
+      <SDL2 Key="1066946082">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38092</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38093</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38094</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38095</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38096</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38097</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>In a book I read a long time
+ago...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah？</Dialog>
+          <Dialog>It said people fall for each
+other because humans are
+programmed that way.</Dialog>
+          <Dialog>Programmed？ You mean in our
+genes？</Dialog>
+          <Dialog>Yeah. But Rinko feels like
+that's not all.</Dialog>
+          <Dialog>Then what else？</Dialog>
+          <Dialog>I don't know.</Dialog>
+          <Dialog>Oh...</Dialog>
+          <Dialog>But I want to figure it out
+from here on...</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>I think if I'm with you,
+I'll figure it out...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3388814385" Unknown1="344432859">
+      <SDL2 Key="1066946082">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38098</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38099</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38100</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38101</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38102</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38103</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's almost here.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>...What is？</Dialog>
+          <Dialog>Don't tell me you forgot？</Dialog>
+          <Dialog>Did I promise something？</Dialog>
+          <Dialog>No, it's not that.</Dialog>
+          <Dialog>Sorry...</Dialog>
+          <Dialog>You don't have to
+apologize！</Dialog>
+          <Dialog>That actually helps Rinko
+out.</Dialog>
+          <Dialog>How？</Dialog>
+          <Dialog>Well, you'll find out soon,
+so look forward to it.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="591429015" Unknown1="3603432990">
+      <SDL2 Key="1066946082">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38104</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38105</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38106</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38107</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38108</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38109</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey？ Is there anything you
+want right now？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Why all of a sudden？</Dialog>
+          <Dialog>Um... You know！ I was
+thinking of getting my dad a
+present.</Dialog>
+          <Dialog>Your dad... A tie, to play
+it safe？</Dialog>
+          <Dialog>A tie... Well, that might
+help.</Dialog>
+          <Dialog>Then is there anything YOU
+want right now？</Dialog>
+          <Dialog>Something I want？</Dialog>
+          <Dialog>Yeah, anything. Just tell
+me？</Dialog>
+          <Dialog>Nothing comes to mind right
+now... I'll think about it.</Dialog>
+          <Dialog>Okay. Please do.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1619518426" Unknown1="2352105829">
+      <SDL2 Key="1066946082">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38110</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38111</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38112</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38113</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38114</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Oh... about the present
+thing I asked about...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Sorry... I totally forgot...</Dialog>
+          <Dialog>Aww, that's mean...</Dialog>
+          <Dialog>But I don't think there's
+anything I really want right
+now...</Dialog>
+          <Dialog>Really...？ Nothing you
+really want, huh...</Dialog>
+          <Dialog>Right now my life with
+▲小早川＊▲ is all
+I need, or something！</Dialog>
+          <Dialog>Hmm... That makes me happy,
+but it doesn't help...</Dialog>
+          <Dialog>？</Dialog>
+          <Dialog>Sigh...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3119326241" Unknown1="662147275">
+      <SDL2 Key="795979497">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38115</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38116</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38117</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38118</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38119</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38120</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>38121</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38122</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, isn't your birthday
+coming up？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>You remembered. Oh yeah, it
+is.</Dialog>
+          <Dialog>Well... I'm your girlfriend.</Dialog>
+          <Dialog>Hey, hey, has a girl ever
+celebrated your birthday
+before？</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>Huh...!? I see... So a
+girl has celebrated it
+before...</Dialog>
+          <Dialog>At a grade school class
+party, though...</Dialog>
+          <Dialog>...Oh.</Dialog>
+          <Dialog>Mad？</Dialog>
+          <Dialog>Geez. But then, Rinko's the
+first girl you'll spend your
+birthday with？</Dialog>
+          <Dialog>Well, I guess so.</Dialog>
+          <Dialog>I see, hehe. Can't wait for
+your birthday.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="321940871" Unknown1="498660878">
+      <SDL2 Key="1336005956">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38123</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38124</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38125</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38126</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38127</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, it's almost August,
+huh？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>No wonder it's hot.</Dialog>
+          <Dialog>August, you know...</Dialog>
+          <Dialog>Oh！ It's almost
+▲小早川＊▲'s
+birthday, right？</Dialog>
+          <Dialog>You remembered？</Dialog>
+          <Dialog>I thought maybe you'd
+forgotten.</Dialog>
+          <Dialog>No way. It's my girlfriend's
+birthday.</Dialog>
+          <Dialog>Hehe, thanks. Then can I
+start looking forward to
+it？</Dialog>
+          <Dialog>Of course.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1350013898" Unknown1="1696741717">
+      <SDL2 Key="966954614">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38128</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38129</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38130</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38131</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38132</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38133</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>I keep staring at the
+calendar every day.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Because your birthday's
+coming？</Dialog>
+          <Dialog>Yeah. For Rinko, birthdays
+have been lonely days since
+she was little.</Dialog>
+          <Dialog>Having someone celebrate it
+with me was my dream...</Dialog>
+          <Dialog>I see...</Dialog>
+          <Dialog>No, it's okay now, see？ I
+have my boyfriend.</Dialog>
+          <Dialog>Yeah. Next year, and the
+year after, let's celebrate
+together.</Dialog>
+          <Dialog>Thanks. For making Rinko's
+dream come true...</Dialog>
+          <Dialog>Save that for your actual
+birthday, okay？</Dialog>
+          <Dialog>Okay...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2849887249" Unknown1="3362226363">
+      <SDL2 Key="1508025793">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38134</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38135</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38136</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38137</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38138</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>A birthday means one step
+closer to being a grown-up,
+huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah. I wonder how much more
+grown-up a year makes you.</Dialog>
+          <Dialog>Is Rinko still childish？</Dialog>
+          <Dialog>You're not a grown-up, but
+sometimes... you suddenly
+seem grown-up...</Dialog>
+          <Dialog>But you mean I'm usually
+childish, right？</Dialog>
+          <Dialog>Well, you're younger...</Dialog>
+          <Dialog>Geez, age doesn't matter.</Dialog>
+          <Dialog>...But whatever your age,
+▲小早川＊▲
+will always be cute to me.</Dialog>
+          <Dialog>I see... Thanks.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="52436343" Unknown1="178841342">
+      <SDL2 Key="1508025793">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38139</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38140</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38141</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38142</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38143</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>It's almost here, you know？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>I haven't forgotten. Your
+birthday, right？</Dialog>
+          <Dialog>I didn't think you'd forget,
+but I figured I'd check,
+just in case.</Dialog>
+          <Dialog>I'd never forget.</Dialog>
+          <Dialog>Oh right. Anything you
+want？</Dialog>
+          <Dialog>A present？</Dialog>
+          <Dialog>I wanted it to be a
+surprise, but if there's
+something you want, that'd
+be better, right？</Dialog>
+          <Dialog>For Rinko... a birthday with
+the person she loves. That's
+the best present.</Dialog>
+          <Dialog>I figured you'd say that.</Dialog>
+          <Dialog>So... stay by my side,
+okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1080525754" Unknown1="1511139653">
+      <SDL2 Key="1139039987">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38144</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38145</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38146</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38147</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38148</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38149</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>What's coming up soon？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Is something coming up？</Dialog>
+          <Dialog>Don't tell me... you
+forgot？</Dialog>
+          <Dialog>Sorry...</Dialog>
+          <Dialog>...You really forgot？</Dialog>
+          <Dialog>Huh...？ I think it's kind
+of coming back to me.</Dialog>
+          <Dialog>Liar！</Dialog>
+          <Dialog>Sorry, forgive me...</Dialog>
+          <Dialog>Soon it'll be... since you
+started going out with
+Rinko...</Dialog>
+          <Dialog>Oh！ It's already been a
+year？</Dialog>
+          <Dialog>Hmph！</Dialog>
+          <Dialog>(Time sure flies...)</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2580399105" Unknown1="2975297707">
+      <SDL2 Key="3956825239">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38150</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38151</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38152</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38153</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38154</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38155</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>851968</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>This year went by in a
+flash. How was it？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>It was a happy year.</Dialog>
+          <Dialog>Hehe... Same for Rinko, you
+know？</Dialog>
+          <Dialog>Before I knew it,
+▲小早川＊▲
+became a natural part of my
+life.</Dialog>
+          <Dialog>Oh, I get that. Like water,
+or air...</Dialog>
+          <Dialog>We've both become that for
+each other, huh.</Dialog>
+          <Dialog>If Rinko suddenly
+disappeared, what would
+happen to you？</Dialog>
+          <Dialog>I couldn't breathe. I'd be
+gasping in agony...</Dialog>
+          <Dialog>Then Rinko will save you.</Dialog>
+          <Dialog>With mouth-to-mouth？</Dialog>
+          <Dialog>Geez, idiot...！ Always
+joking around.</Dialog>
+          <Dialog>Hahaha...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4077915495" Unknown1="4053325550">
+      <SDL2 Key="489128930">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38156</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38157</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38158</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38159</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38160</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38161</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>A year feels long, but it's
+short, huh.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah. You changed this year
+too, didn't you,
+▲小早川＊▲？</Dialog>
+          <Dialog>I changed？ I love you way,
+way more than before.</Dialog>
+          <Dialog>Me too... wait, no, no. I
+mean, like... you got
+kinder.</Dialog>
+          <Dialog>Maybe？ Hehe.</Dialog>
+          <Dialog>When we first met, you were
+all, "Yeah, I'm contrary.
+Got a problem？"</Dialog>
+          <Dialog>Geez, who cares about
+that...</Dialog>
+          <Dialog>Sorry, sorry！</Dialog>
+          <Dialog>Maybe I've gotten a little
+more honest about how I
+feel？</Dialog>
+          <Dialog>That's a good thing.</Dialog>
+          <Dialog>I'm still a little contrary,
+though. Just a little.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="811053994" Unknown1="1224874293">
+      <SDL2 Key="4113120548">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38162</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38163</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38164</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38165</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>524288</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38166</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>38167</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>589824</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>655360</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>38168</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>720896</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>786432</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Kobayakawa</Dialog>
+          <Dialog>Hey, thanks for being with
+me this whole year...</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Same here.</Dialog>
+          <Dialog>Since going out with you,
+Rinko's grown a little, I
+think...</Dialog>
+          <Dialog>Yeah, I think so.</Dialog>
+          <Dialog>I can accept things that are
+different from what I
+think...</Dialog>
+          <Dialog>And I think I've gotten a
+little more honest...</Dialog>
+          <Dialog>It'd be nice if we both keep
+growing from here on.</Dialog>
+          <Dialog>Yeah. Rinko's going to be an
+even better girlfriend... so
+stay by her side forever.</Dialog>
+          <Dialog>Me too. Next year, the year
+after, forever, I want to be
+by
+▲小早川＊▲'s
+side.</Dialog>
+          <Dialog>Keep being Rinko's wonderful
+boyfriend from now on too...</Dialog>
+          <Dialog>Yeah. Here's to us, from now
+on.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>
