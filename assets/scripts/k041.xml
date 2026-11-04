@@ -39,10 +39,9 @@ don't think that's okay.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>You shut the power off without
-saving again？ Maybe I should
-give you some punishment for
-your crime...</Dialog>
+          <Dialog>You turned the power off
+without saving again？ A
+crime deserves punishment...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -170,8 +169,8 @@ I'll forgive you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Next time, make sure you've
-saved it before you shut the
+          <Dialog>Next time, make sure you
+save before turning the
 power off...</Dialog>
         </Dialogs>
       </SDL2>
@@ -281,7 +280,7 @@ that sad？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>You turned off the power
 without saving again？ I
-misjudged you.</Dialog>
+expected better of you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -369,9 +368,10 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I can't forgive you this time.
-I told you not to turn off the
-power without saving, right？</Dialog>
+          <Dialog>That's it, I'm not forgiving
+you. I told you not to turn
+the power off without
+saving！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -503,7 +503,8 @@ you)？ Then you're forgiven.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Can't you just say it!?</Dialog>
+          <Dialog>Hurry up and say it
+already！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -897,9 +898,9 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I can't bring myself to
-forgive that kind of behavior,
-can I...？</Dialog>
+          <Dialog>With that attitude, I can't
+bring myself to forgive
+you...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -919,9 +920,10 @@ can I...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>How many times have you turned
-off the power without saving
-now？ I'm shocked...</Dialog>
+          <Dialog>How many times is this now,
+turning the power off
+without saving？
+Unbelievable...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1197,8 +1199,8 @@ it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I know you don't want to say
-it. I understand.</Dialog>
+          <Dialog>Not planning to say it, huh.
+I get it, loud and clear.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1279,7 +1281,7 @@ it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Really？ Really!?</Dialog>
+          <Dialog>Really, really？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1566,8 +1568,7 @@ you can erase and redo.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>You will never do this again,
-right？</Dialog>
+          <Dialog>Never do this again, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
