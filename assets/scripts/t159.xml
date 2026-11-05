@@ -17,7 +17,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I already have plans...</Dialog>
+          <Dialog>I already have plans then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -58,7 +58,7 @@ is that okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Understood.</Dialog>
+          <Dialog>Got it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
