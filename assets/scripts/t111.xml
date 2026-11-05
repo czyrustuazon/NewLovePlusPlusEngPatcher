@@ -17,8 +17,8 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to know more about 
-you.</Dialog>
+          <Dialog>I want to get to know you
+properly all over again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -58,7 +58,8 @@ you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What does your name mean？</Dialog>
+          <Dialog>What meaning was put into
+your name, I wonder？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -78,9 +79,9 @@ you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I won't forget your 
-birthday. Don't forget 
-about mine, okay？</Dialog>
+          <Dialog>I won't forget your
+birthday. Remember mine too,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -100,8 +101,8 @@ about mine, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My blood type is A, so 
-we're compatible...？ Hehe.</Dialog>
+          <Dialog>My blood type is A, so our
+compatibility is... Hehe？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -121,7 +122,8 @@ we're compatible...？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Let me check how to read it.</Dialog>
+          <Dialog>Let me check how it's read,
+too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -141,9 +143,9 @@ we're compatible...？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What kind of place is your 
-hometown？ Someday... 
-I want you to take me.</Dialog>
+          <Dialog>What's your hometown like？
+Someday... I'd like you to
+take me there.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -163,9 +165,8 @@ I want you to take me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Please, tell me your 
-handle name. It's like a 
-nickname...</Dialog>
+          <Dialog>Tell me your handle name.
+It's like a nickname.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -185,8 +186,7 @@ nickname...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How do you want me to call 
-you？</Dialog>
+          <Dialog>What should I call you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -206,8 +206,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sounds good. Well then, 
-I'll call you that way.</Dialog>
+          <Dialog>Okay. Then I'll call you
+that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -227,7 +227,7 @@ I'll call you that way.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How do you want to call me？</Dialog>
+          <Dialog>What will you call me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -247,9 +247,8 @@ I'll call you that way.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Okay. I'm just happy 
-you will be calling for 
-me.</Dialog>
+          <Dialog>...Okay. Just hearing you
+call me that makes me happy.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -269,9 +268,8 @@ me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you sure？ Please 
-confirm it until you're 
-sure.</Dialog>
+          <Dialog>Is everything correct？
+Check carefully.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -291,9 +289,9 @@ sure.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, that sounds perfect. 
-I want to know more about 
-you from now on.</Dialog>
+          <Dialog>Yes, perfect. From now on, I
+want to get to know you even
+more deeply.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -333,17 +331,18 @@ you from now on.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, this game syncs with 
-the clock inside your 3DS. 
-Make sure you have it set 
-correctly.</Dialog>
-          <Dialog>If the time is wrong, 
-turn off the power once 
-and set the clock of the 
-3DS system.</Dialog>
-          <Dialog>Once you start the game 
-you can't change it. 
-Please, be careful.</Dialog>
+          <Dialog>Um, this game runs on the
+clock of your Nintendo 3DS
+system. So please make sure
+the time is correct before
+you start.</Dialog>
+          <Dialog>If the time is off, turn the
+power off once and set the
+3DS system clock correctly.</Dialog>
+          <Dialog>Once you start, you can't
+change the in-game time
+afterward. Please be
+careful.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -363,10 +362,11 @@ Please, be careful.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now, set the time that 
-suits your lifestyle. 
-If you aren't sure, you 
-can change between them.</Dialog>
+          <Dialog>Now, please set this game's
+time to match your daily
+life. If your schedule
+really doesn't line up, you
+can offset it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -406,9 +406,8 @@ can change between them.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you for working so 
-hard. This completes the 
-clock settings.</Dialog>
+          <Dialog>Thank you. The clock setup
+is complete.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

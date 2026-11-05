@@ -32,13 +32,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That reminds, I was 
-thinking about buying 
-clothes. Can you tag along 
-with me？</Dialog>
+          <Dialog>Oh right, I was thinking of
+buying clothes. Will you
+come with me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Clothes, huh...？</Dialog>
-          <Dialog>Let's go</Dialog>
+          <Dialog>Clothes, huh...</Dialog>
+          <Dialog>Sure, I'll come</Dialog>
           <Dialog>Not today</Dialog>
         </Dialogs>
       </SDL2>
@@ -74,13 +73,12 @@ with me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, you know, I'd like to 
-buy clothes... I'd be 
-happy if you could come 
-with me.</Dialog>
+          <Dialog>Ah, hey. I want to buy
+clothes... I'd be happy if
+you came with me.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Clothes, huh...</Dialog>
-          <Dialog>Let's go</Dialog>
+          <Dialog>Sure, I'll come</Dialog>
           <Dialog>Do something else？</Dialog>
         </Dialogs>
       </SDL2>
@@ -116,13 +114,14 @@ with me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, since we're on a date, 
-why don't we go shopping？ 
-I want to go see clothes.</Dialog>
+          <Dialog>Hey, it's the middle of our
+date, but want to go
+shopping？ I want to look at
+clothes.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right...</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Sounds good</Dialog>
-          <Dialog>I don't feel like going</Dialog>
+          <Dialog>I'm not in the mood</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -142,7 +141,7 @@ I want to go see clothes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you very much.</Dialog>
+          <Dialog>Yay, thank you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -177,11 +176,11 @@ I want to go see clothes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ Where are we 
-going？</Dialog>
-          <Dialog>Boutique</Dialog>
-          <Dialog>Accessory shop</Dialog>
-          <Dialog>Cosmetics shop</Dialog>
+          <Dialog>I see... Then where shall we
+go？</Dialog>
+          <Dialog>Let's go to a boutique</Dialog>
+          <Dialog>An accessory shop</Dialog>
+          <Dialog>A cosmetics shop</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -226,15 +225,14 @@ going？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I get lost among all the 
-options... What do you 
-think will look good？</Dialog>
+          <Dialog>I can't decide... What kind
+do you think would be good？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, since you're asking...</Dialog>
+          <Dialog>Hmm. Then...</Dialog>
           <Dialog>Something cute</Dialog>
           <Dialog>Something neat</Dialog>
           <Dialog>Something casual</Dialog>
-          <Dialog>Something sexy</Dialog>
+          <Dialog>Try something sexy</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -254,8 +252,8 @@ think will look good？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I get it, then I'll 
-choose...</Dialog>
+          <Dialog>...Got it, I'll go pick some
+out.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -275,8 +273,8 @@ choose...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about this...？ I think 
-it's good.</Dialog>
+          <Dialog>How's this... I think it's
+nice.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -296,8 +294,8 @@ it's good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about this？ I think 
-this suits me...</Dialog>
+          <Dialog>How about this？ I think it
+suits me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -317,8 +315,7 @@ this suits me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like this, but what do 
-you think？</Dialog>
+          <Dialog>I like it, what about you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -338,9 +335,9 @@ you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>And this？ I'm not too sure 
-about it, but I wonder if 
-it will make you happy...</Dialog>
+          <Dialog>This？ I'm not confident,
+but I thought you might like
+it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -360,8 +357,8 @@ it will make you happy...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... This is a little 
-different... isn't it？</Dialog>
+          <Dialog>Hmm... not quite right... or
+is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -381,8 +378,8 @@ different... isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm not feeling like usual, 
-but what do you think？</Dialog>
+          <Dialog>It's not my usual style, but
+what do you think？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -407,9 +404,9 @@ but what do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, lemme see...</Dialog>
-          <Dialog>It suits you</Dialog>
-          <Dialog>Another one</Dialog>
+          <Dialog>Hmm...</Dialog>
+          <Dialog>It really suits you</Dialog>
+          <Dialog>Let's see others</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -436,7 +433,7 @@ but what do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
           <Dialog>It's perfect</Dialog>
-          <Dialog>Isn't there another？</Dialog>
+          <Dialog>Any others？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -472,11 +469,10 @@ but what do you think？</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(I have to decide soon...)</Dialog>
-          <Dialog>I feel...</Dialog>
+          <Dialog>From what I've seen...</Dialog>
           <Dialog>The first was the best</Dialog>
-          <Dialog>The previous clothes 
-were good</Dialog>
-          <Dialog>Those clothes are the best</Dialog>
+          <Dialog>The one before was nice</Dialog>
+          <Dialog>That one's the best</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -496,8 +492,8 @@ were good</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then, it's decided. I also 
-thought this was good♪　
+          <Dialog>Then it's decided. I thought
+this one was good too♪
 Thank you.</Dialog>
         </Dialogs>
       </SDL2>
@@ -518,9 +514,8 @@ Thank you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you think so？ If you 
-say so, I'll take the 
-plunge and buy it.</Dialog>
+          <Dialog>Really？ If you say so, I'll
+go for it and buy it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
