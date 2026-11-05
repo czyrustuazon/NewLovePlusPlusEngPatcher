@@ -109,37 +109,38 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What does it mean to have 
-a relationship？</Dialog>
+          <Dialog>Hey, what does it mean to be
+in a relationship, I
+wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's with that kind of 
-question？</Dialog>
-          <Dialog>You see, I've changed since 
-we started dating, but I 
-wonder how you see me now. 
-It feels like I'm the only 
-one who worries.</Dialog>
-          <Dialog>You're still you. I don't 
-think you've changed at all 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>Well... since we started
+dating, I've changed, but I
+was wondering about you.
+Because it's frustrating if
+it's only me.</Dialog>
+          <Dialog>▲高嶺＊＊▲
+is
+▲高嶺＊＊▲.
+I don't think I've changed
+either.</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>You've been so kind and 
-beautiful, ever since the 
-first time I met you.</Dialog>
-          <Dialog>...You're so unfair. 
-...But, thank you. It's 
-better than being told 
-that I've changed.</Dialog>
-          <Dialog>I see, then what do you 
-think about me？</Dialog>
-          <Dialog>Do you want me to say 
-it？ You have not changed. 
-You're still so nice.</Dialog>
-          <Dialog>Even though you can hear 
-me... Oh, I don't know 
-anymore.</Dialog>
-          <Dialog>(I wanted to hear you say 
-it again.)</Dialog>
+          <Dialog>You've been kind and
+beautiful ever since we
+first met.</Dialog>
+          <Dialog>...Geez, that's unfair.
+...But thank you. That's
+better than being told I've
+changed.</Dialog>
+          <Dialog>I see. Then, what about me？</Dialog>
+          <Dialog>Geez, you're making me say
+it？ ...You haven't changed
+either. Always wonderful.</Dialog>
+          <Dialog>You heard me just fine...
+Geez, hmph.</Dialog>
+          <Dialog>(I wanted to hear it again.
+No luck, huh.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -238,35 +239,34 @@ it again.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I was talking 
-with a friend before, 
-right？ We were talking 
-about what does it mean to 
-have a relationship？</Dialog>
+          <Dialog>You know？ I was talking
+with friends before. About
+what being in a relationship
+means.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you mean？ ...Hmm？</Dialog>
-          <Dialog>Everyone was making sounds 
-like they were disgusted. 
-It's hard to put into 
-words.</Dialog>
-          <Dialog>I think I might know why. 
-So, did you get your 
-answer？</Dialog>
-          <Dialog>Yes. It's my own answer, 
-though. It's to be the 
-closest to the one you like.</Dialog>
-          <Dialog>I can be closer to you than 
-anyone else. That kind of 
-thing is what I believe.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>... Then, everyone was 
-laughing at me.</Dialog>
-          <Dialog>Eh！ Did you tell that to 
-everyone？</Dialog>
-          <Dialog>Yes. But you know, I wish 
-you could forget what I 
-told you about now...</Dialog>
-          <Dialog>(I can't do that...)</Dialog>
+          <Dialog>What it means？ ...Hmm.</Dialog>
+          <Dialog>Everyone groaned just like
+that. We said it's hard to
+put into words.</Dialog>
+          <Dialog>Could be. So, did you find
+an answer？</Dialog>
+          <Dialog>Yes. It's just my own
+answer, though. ...Being the
+closest one to the person
+you love.</Dialog>
+          <Dialog>Being closer to you than
+anyone else. That's what it
+is... I think.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>...And then everyone teased
+me.</Dialog>
+          <Dialog>Whoa！ You told everyone
+that？</Dialog>
+          <Dialog>Y-Yes. But I asked them to
+forget it right away, so
+it's fine...</Dialog>
+          <Dialog>(There's no way that's
+fine...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -350,25 +350,22 @@ told you about now...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you think it means 
-to be dating？</Dialog>
+          <Dialog>What does dating mean, I
+wonder？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What's wrong with your 
-face？ Alright, I'll think 
-about the meaning with 
-you.</Dialog>
-          <Dialog>Hmm... It could be like 
-never letting you go？</Dialog>
-          <Dialog>I see, then we can 
-monopolize each other.</Dialog>
-          <Dialog>Who knows, do you think 
-that's true？</Dialog>
-          <Dialog>Emm, it's not that！？</Dialog>
-          <Dialog>...I'm kidding.</Dialog>
+          <Dialog>What's wrong, with that
+serious face？ Okay, I'll
+think about it with you.</Dialog>
+          <Dialog>Hmm... maybe it means having
+you all to myself？</Dialog>
+          <Dialog>I see, so we get to have
+each other all to ourselves.</Dialog>
+          <Dialog>Hmm, I wonder about that？</Dialog>
+          <Dialog>Huh, that's not it!?</Dialog>
+          <Dialog>...Just kidding.</Dialog>
           <Dialog>Manaka will always be 
 yours▼</Dialog>
-          <Dialog>(Yes, I'll never let you 
-go...)</Dialog>
+          <Dialog>(Phew...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -448,24 +445,24 @@ go...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do girls usually 
-have on their minds？</Dialog>
+          <Dialog>What do girls usually think
+about？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What's wrong？ That was too 
+          <Dialog>What's wrong？ All of a
 sudden.</Dialog>
-          <Dialog>I'm a little curious 
-about it.</Dialog>
-          <Dialog>Hehe... What about boys？</Dialog>
-          <Dialog>That is, well...</Dialog>
+          <Dialog>I'm just a little curious.</Dialog>
+          <Dialog>Hmm... What about boys？</Dialog>
+          <Dialog>That's... well...</Dialog>
           <Dialog>....</Dialog>
           <Dialog>... Pervert.</Dialog>
-          <Dialog>Huh！？ I didn't say 
+          <Dialog>Huh!? I didn't say 
 anything！</Dialog>
-          <Dialog>I'm kidding. Why did you 
-panic that much？</Dialog>
-          <Dialog>(I didn't know you could 
-tease someone 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Geez, I'm kidding. Don't
+panic like that？</Dialog>
+          <Dialog>(When did
+▲高嶺＊＊▲
+learn
+tricks like this...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -574,35 +571,35 @@ tease someone
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you know what girls 
-have on their minds？</Dialog>
+          <Dialog>Hey, what do girls think
+about？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What's wrong？ What... 
-Did something happened？</Dialog>
-          <Dialog>There was a girl from my 
-class who started crying 
-the other day.</Dialog>
-          <Dialog>Do you know if she was 
-sad...？</Dialog>
-          <Dialog>I do wonder. Maybe she had 
-a lack of sleep or was too 
-nervous... I don't know.</Dialog>
-          <Dialog>Oh, I see... But, I'm a 
-little worried.</Dialog>
-          <Dialog>I'm worried about that 
-too. And I was wondering if 
-such things happen to you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Me？ I'm probably fine. 
-Even if... if I suddenly 
-feel sad sometimes... you 
+          <Dialog>What's wrong？ Did
+something... happen？</Dialog>
+          <Dialog>The other day, a girl
+started crying in the middle
+of class.</Dialog>
+          <Dialog>I wonder if something sad
+happened...？</Dialog>
+          <Dialog>Who knows. By break time she
+was fine again... I just
+don't get it.</Dialog>
+          <Dialog>I see... But that's
+worrying.</Dialog>
+          <Dialog>That's worrying too, but for
+me, I was more curious
+whether that ever happens to
+you, ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Me？ I'll probably be fine.
+Even if I suddenly feel
+sad... I've got... you
 know？</Dialog>
-          <Dialog>Huh？ What do you mean？</Dialog>
+          <Dialog>Huh？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>...Yup！ I think it's okay 
-after all.</Dialog>
-          <Dialog>(Huh？ What's that mean？？)</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>...Yeah！ I think I'll be
+fine after all.</Dialog>
+          <Dialog>(？？？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -672,23 +669,21 @@ after all.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do girls usually 
-think？</Dialog>
-          <Dialog>Takane</Dialog>
-          <Dialog>Girls？ Not me？ Is there 
-another girl you care 
+          <Dialog>What do girls usually think
 about？</Dialog>
-          <Dialog>No！ It's not like that！</Dialog>
+          <Dialog>Takane</Dialog>
+          <Dialog>Girls？ Not me？ ...Is there
+a girl you're interested
+in？</Dialog>
+          <Dialog>No, no！ That's not it！</Dialog>
           <Dialog>...Hehe！</Dialog>
-          <Dialog>Huh！？　
-▲Takane＊＊▲...</Dialog>
-          <Dialog>I'm sorry. I'm just 
-thinking about you so 
-much and I said something 
-like that.</Dialog>
-          <Dialog>To answer your question... 
-Are you alright？</Dialog>
-          <Dialog>Of course！</Dialog>
+          <Dialog>!? ▲高嶺＊＊▲～...</Dialog>
+          <Dialog>Sorry. I think about you so
+much that I wanted to tease
+you like that.</Dialog>
+          <Dialog>The answer to your
+question... Is that good？</Dialog>
+          <Dialog>It's good！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -778,31 +773,29 @@ Are you alright？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲？ 
-Your face is red, are you 
-okay？</Dialog>
+          <Dialog>▲高嶺＊＊▲？ Your face is
+a little red, are you okay？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, my heart is beating 
-so fast.</Dialog>
-          <Dialog>It might be a fever... 
-Let me touch your 
-forehead---</Dialog>
-          <Dialog>Kyaa！</Dialog>
+          <Dialog>Yes, my heart's pounding.</Dialog>
+          <Dialog>Maybe you have a fever...
+Let me feel your
+forehead――</Dialog>
+          <Dialog>Eek！</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>It's because you're the 
-one who makes my heart 
-beat.</Dialog>
-          <Dialog>Did I do something wrong？</Dialog>
+          <Dialog>You're the cause of my heart
+pounding.</Dialog>
+          <Dialog>Did I do something？</Dialog>
           <Dialog>No. Sometimes when I 
 think of you... This is 
 what happens.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Usually, it's when I'm 
-alone. Sometimes when I 
-look at my face... Hey, 
-how can I fix it？　</Dialog>
-          <Dialog>(I want to help you, but I 
-don't wish for that...)</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>It usually happens when I'm
+alone. But sometimes when I
+look at your face... Hey,
+how do I make it stop？</Dialog>
+          <Dialog>(Part of me wants it to
+stop, and part of me
+doesn't...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -882,28 +875,24 @@ don't wish for that...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, ▲Takane＊＊▲. 
-When do you feel nervous？</Dialog>
+          <Dialog>When does your heart race,
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Nervous？ Well...</Dialog>
-          <Dialog>When you and I meet at 
-school... I wonder.</Dialog>
-          <Dialog>With me？</Dialog>
-          <Dialog>Yes. When I see you in 
-the distance and then 
-you notice me. That's when 
-our eyes lock, right？</Dialog>
-          <Dialog>I was truly happy when 
-that happened... After 
-that you laughed a 
-little... I really liked 
-that.</Dialog>
+          <Dialog>Heart race？ Let's see...</Dialog>
+          <Dialog>When our eyes meet at
+school... I think.</Dialog>
+          <Dialog>Me？</Dialog>
+          <Dialog>Yes. I spot you far away,
+and then you notice me. And
+then our eyes meet, right？</Dialog>
+          <Dialog>That's when my heart
+races... And then you smile
+at me a little... I really
+love that.</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>...And I just went and 
-told you that. Please just 
-forget about it, okay？</Dialog>
-          <Dialog>(Hey now, that's too much 
-to ask！)</Dialog>
+          <Dialog>...I said it. Forget that,
+okay？</Dialog>
+          <Dialog>(No way I can do that！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1011,35 +1000,32 @@ to ask！)</Dialog>
 suspension bridge effect 
 is？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If I recall correctly, it's 
-when the brain 
-misunderstands between the 
-fear of crossing a 
-suspension bridge and love.</Dialog>
+          <Dialog>That thing where your brain
+mistakes the fear of
+crossing a suspension bridge
+for the thrill of love？</Dialog>
           <Dialog>Right. But I wonder if 
 love is so simple that you 
 could fall in love with 
 someone based on that.</Dialog>
-          <Dialog>It would be a bit 
-disappointing if it's 
-true.</Dialog>
-          <Dialog>Yes, I'd be disappointed 
-too. I want love to be more 
-sacred.</Dialog>
-          <Dialog>When I first saw you, my 
-heart was beating fast, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>... Really？</Dialog>
-          <Dialog>Of course. How about you 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>It's more than just the 
-first time...</Dialog>
+          <Dialog>If it's true, that's a
+little disappointing.</Dialog>
+          <Dialog>Yes, me too. I want it to be
+something more sacred.</Dialog>
+          <Dialog>When I first saw you,
+▲高嶺＊＊▲,
+my heart was pounding...</Dialog>
+          <Dialog>...Really？</Dialog>
+          <Dialog>Of course. What about you,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Not just the first time...</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Even now, when I see you, 
-I suddenly feel nervous. 
-I want romance to be such 
-a wonderful thing...</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>Even now, when our eyes
+meet, my heart suddenly
+jumps. I want love to be
+something wonderful like
+this...</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1131,36 +1117,37 @@ a wonderful thing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't you feel like time 
-feels short when we're 
+          <Dialog>Don't you feel like time
+goes by fast when we're
 together？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, that's something I 
-constantly feel.</Dialog>
-          <Dialog>Yes, so I was thinking 
-about it. About the 
-reason.</Dialog>
-          <Dialog>As expected from you！ 
-Tell me why, please, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Elementary, dear 
-Watson-kun. Perhaps it's 
-because I'm so excited 
+          <Dialog>Yeah, sometimes it feels
+like it's over in a flash.</Dialog>
+          <Dialog>Yes. So I thought about why.</Dialog>
+          <Dialog>That's
+▲高嶺＊＊▲
+for you！
+Tell me.</Dialog>
+          <Dialog>Elementary, my dear Watson.
+Maybe it's because our
+hearts are always racing
 when we're together.</Dialog>
-          <Dialog>The heartbeat means having 
-a high heart rate. And 
-time flows faster than 
-usual when it's just the 
-two of us.</Dialog>
-          <Dialog>That's an interesting 
+          <Dialog>A racing heart means a high
+heart rate. Animals with
+fast heart rates, like mice,
+have short lifespans,
+right？ So when we're
+together, time really flows
+faster than usual.</Dialog>
+          <Dialog>Haha, interesting
 hypothesis.</Dialog>
-          <Dialog>Therefore, feeling that 
-time is short means we're 
-both excited... That's why 
-we get along nicely, right？</Dialog>
-          <Dialog>And now there's no point 
-in feeling time is shorter. 
-I'm disappointed.</Dialog>
+          <Dialog>So if time feels short, our
+hearts are racing... which
+means we're close. Right？</Dialog>
+          <Dialog>I see. Then I guess time
+feeling short can't be
+helped. A little sad,
+though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1260,31 +1247,30 @@ I'm disappointed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*Phew*</Dialog>
+          <Dialog>*Sigh*...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>No, it's nothing. I'm 
-alright. But... your 
-smell...</Dialog>
-          <Dialog>Emm, my smell？</Dialog>
-          <Dialog>Yes. When I was with you, 
-I suddenly became 
-conscious of you smell, 
-and I got nervous...</Dialog>
-          <Dialog>You always smells good. 
-But... What about me 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>I like your smell.</Dialog>
-          <Dialog>Well, then it's okay. 
-Here, you can smell me！</Dialog>
-          <Dialog>Geez！ Don't make it sound 
-like people are just dogs.</Dialog>
+          <Dialog>No, nothing. I'm fine. It's
+just... your scent...</Dialog>
+          <Dialog>Huh, mine？</Dialog>
+          <Dialog>Yes... When we're together,
+if I suddenly notice your
+scent, my heart starts
+racing...</Dialog>
+          <Dialog>You always smell nice,
+▲高嶺＊＊▲,
+but... my smell？</Dialog>
+          <Dialog>I like it.</Dialog>
+          <Dialog>Well, then I guess it's
+fine. Here, sniff all you
+want！</Dialog>
+          <Dialog>Eek！ Geez, don't make me
+sound like a puppy.</Dialog>
           <Dialog>Haha, sorry, sorry.</Dialog>
-          <Dialog>Huh？ When you surprised 
-me that way, it seems 
-like I stopped feeling 
-nervous.</Dialog>
-          <Dialog>(...Similar to hiccups.)</Dialog>
+          <Dialog>Huh？ The surprise seems to
+have stopped my heart
+racing.</Dialog>
+          <Dialog>(...Like hiccups.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1379,27 +1365,28 @@ nervous.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I was really 
-nervous the other day.</Dialog>
+          <Dialog>The other day, my heart was
+really racing.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, what happened？</Dialog>
-          <Dialog>You were talking to 
-another girl.</Dialog>
-          <Dialog>Eh！？ Really？</Dialog>
-          <Dialog>And it looked like you 
-were having fun...</Dialog>
+          <Dialog>Because you were talking
+with another girl.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>You looked like you were
+having so much fun...</Dialog>
           <Dialog>It's a misunderstanding！</Dialog>
-          <Dialog>I know, I'm just a little 
-jealous. But...</Dialog>
-          <Dialog>... But？</Dialog>
-          <Dialog>If you make me jealous 
-too much, I might make 
-you nervous too, okay？</Dialog>
-          <Dialog>That means... You get 
-along with other guys？ 
-...I don't like that 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Okay.</Dialog>
+          <Dialog>I know. I'm just being
+jealous on my own. But...</Dialog>
+          <Dialog>...But？</Dialog>
+          <Dialog>If you make me too jealous,
+I might make your heart race
+in return？</Dialog>
+          <Dialog>You, getting close to other
+guys,
+▲高嶺＊＊▲...
+I don't need that kind of
+heart racing！</Dialog>
+          <Dialog>Okay～.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1477,29 +1464,27 @@ along with other guys？
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did my fashion sense 
-changed recently？</Dialog>
+          <Dialog>Lately, my friends keep
+asking if my taste in
+fashion has changed.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I think so... Does 
-that make you happy？</Dialog>
-          <Dialog>Yup. I haven't really 
-thought about fashion that 
-much... It's fresh to hear 
-I've changed.</Dialog>
-          <Dialog>I see, I also liked you 
-fashion sense when we 
-first met, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Thank you. But you know, 
-I really want you to see 
-me in various ways... 
-I'm kidding.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Hehe, so be prepared for 
-it！</Dialog>
-          <Dialog>(I'm really glad you 
-changed a little because of 
-me, ▲Takane＊＊▲.)</Dialog>
+          <Dialog>Really... You seem happy
+about it？</Dialog>
+          <Dialog>Yes. I never cared that much
+about fashion before... so
+being told I've changed
+feels new.</Dialog>
+          <Dialog>I see. I liked how you were
+when we met too,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Thank you. But I want you to
+see all different sides of
+me... Just saying.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>Hehe, so be ready！</Dialog>
+          <Dialog>(It's amazing that
+▲高嶺＊＊▲
+would change for me.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1615,37 +1600,39 @@ me, ▲Takane＊＊▲.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry for being late, 
-I forgot my phone at home 
-and rushed to get it back.</Dialog>
+          <Dialog>The other day, I forgot my
+phone at home and had to
+rush back to get it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, so you also forget 
-things sometimes 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Don't make fun of me. 
-So when I got it, I 
+          <Dialog>Haha, so even you forget
+things,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Geez, don't tease me. And
+so, on my way back, I
 suddenly realized...</Dialog>
-          <Dialog>What？ What's wrong？</Dialog>
-          <Dialog>I never thought I would 
-have do that before I 
-started dating you.</Dialog>
-          <Dialog>Before we started dating 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yes. I'm sure I won't miss 
-those days. I went back 
-to get it, because... 
-I'm always waiting for 
-your messages.</Dialog>
-          <Dialog>I see, thank you so much.</Dialog>
-          <Dialog>No... I should be thanking 
-you. It's wonderful to 
-think I changed with only 
-that small detail.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Hehe, so send me a lot 
-of emails and call me a 
-lot！ Okay？</Dialog>
-          <Dialog>Alright！</Dialog>
+          <Dialog>Realized what？</Dialog>
+          <Dialog>That before I started dating
+you, I probably would've
+just gone out without it.</Dialog>
+          <Dialog>You, before you started
+dating me, ▲高嶺＊＊▲？</Dialog>
+          <Dialog>Yes. I'd have thought one
+day without a phone is fine.
+But that time, I went
+straight back without even
+thinking. ...Because I'm
+waiting for messages from
+you.</Dialog>
+          <Dialog>I see. Thanks.</Dialog>
+          <Dialog>No... I should thank you.
+Feeling that I've changed
+through a little thing like
+this is wonderful. It's all
+thanks to you.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>Hehe, so send me lots of
+texts and calls！ Okay？</Dialog>
+          <Dialog>All right, got it！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1763,38 +1750,36 @@ lot！ Okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Since this is the first 
-time I've been in a 
-relationship, I've come 
-to understand...</Dialog>
+          <Dialog>Since I started dating you,
+people have started telling
+me...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What did you realize？</Dialog>
-          <Dialog>My whole persona seems to 
-have gotten gentle.</Dialog>
-          <Dialog>Really...？ It's been quite 
-some time, so I think that 
-might be true, isn't it？</Dialog>
-          <Dialog>Thank you. People I've 
-not seen a for long time, 
-or my family told me the 
-same. I didn't realize it.</Dialog>
-          <Dialog>You didn't notice it？</Dialog>
-          <Dialog>Yes, and that's the 
-problem. Why is it only 
-me...？</Dialog>
-          <Dialog>Why？</Dialog>
-          <Dialog>Geez, think it some more, 
-please？</Dialog>
-          <Dialog>...Hmm, I give up.</Dialog>
-          <Dialog>Do you think it's because 
-I talk to you about a lot 
-of things？ So... you're 
-the one who changed me.</Dialog>
-          <Dialog>You mean, because we are 
-thinking the same things？</Dialog>
-          <Dialog>Yes. So I guess it's a 
-joint work between you 
-and me now, right？</Dialog>
+          <Dialog>Huh, telling you what？</Dialog>
+          <Dialog>That I've gotten gentler.</Dialog>
+          <Dialog>Is that so...？ Haven't you
+always been？</Dialog>
+          <Dialog>Thank you. But people I
+hadn't seen in a while, and
+even my family, said it... I
+don't feel it myself.</Dialog>
+          <Dialog>So I'm the only one who
+didn't notice...</Dialog>
+          <Dialog>Yes, that's the problem. Why
+only you...？</Dialog>
+          <Dialog>Why, I wonder？</Dialog>
+          <Dialog>Geez, think properly？</Dialog>
+          <Dialog>......Hmm, nope. I give up.</Dialog>
+          <Dialog>Probably because I talk to
+you about all sorts of
+things, right？ So... you're
+in it with me. You're one of
+the people who changed me.</Dialog>
+          <Dialog>So, because we're both
+thinking about the same
+things？</Dialog>
+          <Dialog>Yes. So maybe the me of now
+is a joint work by you and
+me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1887,42 +1872,39 @@ and me now, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've been asked for 
-directions by random 
-people, and even kids 
-call me to play.</Dialog>
+          <Dialog>Lately, people often ask me
+for directions, or little
+kids suddenly talk to me.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm sure it's because 
-you're so reliable. And the 
-kids want to play with 
-their beautiful onee-san, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Even if you praise me that 
-much, you will get nothing 
-from it.</Dialog>
-          <Dialog>Haha. There are people who 
-are easy to talk to, and 
-you have a really gentle 
-aura.</Dialog>
-          <Dialog>Is that a gift from our 
-relationship？ And my 
-aura... Someone told me 
-the same once.</Dialog>
-          <Dialog>Huh？ Really？</Dialog>
-          <Dialog>One time, someone who I 
-helped to find their way, 
-told me that his ex's 
-aura was coming from me.</Dialog>
-          <Dialog>No... that was not it！ It 
-was a pickup line 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Really？ I thought it would 
-be better to ask the 
-policeman, so I took him 
-to the police box...</Dialog>
-          <Dialog>(*Phew* That made me worry. 
-I need to keep an eye on 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Sure, you'd give good
+directions,
+▲高嶺＊＊▲,
+and kids would want to play
+with a pretty big sister.</Dialog>
+          <Dialog>Praising me that much won't
+get you anything.</Dialog>
+          <Dialog>Haha. But there are people
+who are just easy to talk
+to, right？ Like they give
+off a gentle aura.</Dialog>
+          <Dialog>Maybe that's another gift
+from dating you？ An aura...
+Actually, someone did say
+something like that.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>Someone I gave directions to
+the other day said I give
+off the aura of his lover
+from a past life.</Dialog>
+          <Dialog>No... no,
+▲高嶺＊＊▲！
+That's a pickup line！</Dialog>
+          <Dialog>Is... it？ I thought it'd be
+better for him to ask a
+police officer, so I took
+him to the police box...</Dialog>
+          <Dialog>(Phew... I can't take my
+eyes off ▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2015,29 +1997,31 @@ I need to keep an eye on
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, I'm sorry... It's an 
-email from Mama.</Dialog>
+          <Dialog>Ah, sorry... a text. From
+Mama.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What did she say？</Dialog>
-          <Dialog>Yes, I'll read it out... 
-Say hello to the person 
-next to me. Hehe.</Dialog>
-          <Dialog>The person next to you... 
-Me？</Dialog>
-          <Dialog>There is no one next to 
-me, except you.</Dialog>
-          <Dialog>Ah yes, you're right！</Dialog>
-          <Dialog>Yes... Before it was 
-"Where are you now？" 
-Or something like that. 
-But they've been relieved 
-since we began dating.</Dialog>
-          <Dialog>I see... Then let's live 
-up to their expectations.</Dialog>
-          <Dialog>Hehe. Let's continue to 
-get along.</Dialog>
-          <Dialog>(I'll never let you down 
-Takane's Mom！)</Dialog>
+          <Dialog>What does it say？</Dialog>
+          <Dialog>Yes. She's asking me to pick
+something up, and... "Say
+hello to the person next to
+you." Hehe.</Dialog>
+          <Dialog>The person next to you...
+me？</Dialog>
+          <Dialog>The only person next to me
+is you.</Dialog>
+          <Dialog>Right！</Dialog>
+          <Dialog>Yes. ...Before, it was
+always things like "Come
+home early" or "Where are
+you now？" But since I
+started dating you, she
+seems reassured.</Dialog>
+          <Dialog>I see... Then I'll live up
+to her expectations！</Dialog>
+          <Dialog>Hehe. Then, I'm in your
+hands.</Dialog>
+          <Dialog>(I'll see her home safely,
+Mrs. Takane！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2137,30 +2121,27 @@ Takane's Mom！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I know it's sudden, but I 
-have something to ask you. 
-Is now a good time？</Dialog>
+          <Dialog>This is sudden, but can I
+ask you something？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, what is it？</Dialog>
-          <Dialog>Recently, one of my 
-friends told me that I 
-was beautiful...</Dialog>
-          <Dialog>That was not a question！</Dialog>
-          <Dialog>Listen to me already. 
-It's not one person, more 
-of my friends keep 
-telling me the same.</Dialog>
-          <Dialog>It feels like something 
-began just now...</Dialog>
-          <Dialog>...It doesn't make sense.</Dialog>
-          <Dialog>Huh？ What do you mean？</Dialog>
-          <Dialog>Actually, I was trying to 
-be more beautiful.</Dialog>
-          <Dialog>Oh, then, I think that's 
-good. I think you achieved 
-what you wanted.</Dialog>
-          <Dialog>Still, it doesn't make 
-sense unless you notice it！</Dialog>
+          <Dialog>Yeah, what？</Dialog>
+          <Dialog>Recently, my friends have
+been telling me I've gotten
+prettier...</Dialog>
+          <Dialog>Not just recently！</Dialog>
+          <Dialog>Geez, listen. And not just
+one friend, several.</Dialog>
+          <Dialog>It's kind of late for them
+to notice, honestly...</Dialog>
+          <Dialog>...But then there's no
+point.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>I really was working hard to
+get prettier.</Dialog>
+          <Dialog>Huh, then that's great. It
+means it worked.</Dialog>
+          <Dialog>But it's pointless if you
+don't notice！</Dialog>
           <Dialog>(You did this... for me？ 
 I see...)</Dialog>
         </Dialogs>
@@ -2262,35 +2243,30 @@ I see...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you care too much about 
-other couples？</Dialog>
+          <Dialog>Hey, do other couples catch
+your attention？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Why do you ask？</Dialog>
-          <Dialog>I have noticed there are 
-things that make you look 
-to couples around when 
-we're on a date.</Dialog>
-          <Dialog>Ah, maybe I've heard 
-something like that. 
-Specially if we're near 
-the same age.</Dialog>
-          <Dialog>I wonder if you think 
-others couples are cute, 
-specially if a cute girl 
-is there.</Dialog>
-          <Dialog>I don't think so. I'm more 
-worried about what you 
-think of the man in that 
-couple, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I think nothing about 
-that.</Dialog>
-          <Dialog>That's exactly what I do！</Dialog>
+          <Dialog>...Why？</Dialog>
+          <Dialog>Because sometimes on dates,
+I find myself noticing
+couples walking toward us.</Dialog>
+          <Dialog>Ah, maybe. Especially if
+they're our age.</Dialog>
+          <Dialog>For me, especially if the
+girl is cute, I wonder if
+you think she's cute too.</Dialog>
+          <Dialog>No way I'd think that. I'm
+more worried about what you
+think of the guy,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>It's only you for me, you
+know.</Dialog>
+          <Dialog>Same goes for me！</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>Hahaha.</Dialog>
-          <Dialog>Yes, I don't care about 
+          <Dialog>Haha.</Dialog>
+          <Dialog>Yeah, I won't worry about
 other couples anymore.</Dialog>
-          <Dialog>(That's how it should be！)</Dialog>
+          <Dialog>(Right！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2395,26 +2371,25 @@ other couples anymore.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Hey.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ Do you need 
-something？</Dialog>
-          <Dialog>You know...</Dialog>
-          <Dialog>What's wrong？</Dialog>
-          <Dialog>Don't you think we are 
-kissing... too much？</Dialog>
-          <Dialog>Huh！？</Dialog>
-          <Dialog>That was the talk among my 
-friends... That's what you 
-do, right？ Not every date 
-and... you said you would 
-kiss me...</Dialog>
-          <Dialog>So, I'm a little worried. 
-I think it's better not to 
-care...</Dialog>
-          <Dialog>Yup！ It's better to just 
-do our thing！</Dialog>
-          <Dialog>... Yes.</Dialog>
-          <Dialog>(I feel like I'm losing 
-here...)</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Um...</Dialog>
+          <Dialog>What's up？</Dialog>
+          <Dialog>Are we... kissing... too
+much？</Dialog>
+          <Dialog>Whaa!?</Dialog>
+          <Dialog>It came up with my
+friends... She said they
+don't kiss every date, and
+um... they don't keep doing
+it for ages...</Dialog>
+          <Dialog>So I got a little worried...
+Is it better not to worry
+about it...</Dialog>
+          <Dialog>Yeah！ Other couples are
+other couples, we're us！</Dialog>
+          <Dialog>...Okay.</Dialog>
+          <Dialog>(I feel like worrying about
+it means losing...！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2484,23 +2459,18 @@ here...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We're better friends than 
-any other couple, aren't 
-we？</Dialog>
+          <Dialog>Hey. We're closer than any
+other couple, right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh yeah！ We fall second 
-to none.</Dialog>
-          <Dialog>Hehe. That's true. You're 
-pretty confident, aren't 
-you？</Dialog>
-          <Dialog>You bet I am. That's the 
-boyfriend power for you！</Dialog>
+          <Dialog>You bet！ Second to none.</Dialog>
+          <Dialog>Hehe. Right. But... you're
+awfully confident？</Dialog>
+          <Dialog>Sure am. What else is
+boyfriend power for！</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>It was something we were 
-talking before！</Dialog>
-          <Dialog>Huh？ Is that so？</Dialog>
-          <Dialog>(It doesn't matter, I'll 
-keep going for her！)</Dialog>
+          <Dialog>Never mind！</Dialog>
+          <Dialog>？ Okay？</Dialog>
+          <Dialog>(I'll keep charging ahead！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2593,33 +2563,34 @@ keep going for her！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder how much time 
-we've spend together.</Dialog>
+          <Dialog>I wonder how much time we've
+spent together...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How much time？</Dialog>
-          <Dialog>Yes. You know that after 
-a year dating, we probably 
-haven't spent half the 
-time together, right？</Dialog>
-          <Dialog>You're right. At home, 
-even during class, most of 
-the day we're separated.</Dialog>
-          <Dialog>That's right. But, even if 
-you can't be with me, I'm 
-always thinking of you.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>That's why I decided to 
-think that even when I 
-couldn't see you, it 
-didn't change the fact we 
-are dating.</Dialog>
-          <Dialog>Yes, rather that being 
-together and thinking 
-about other things, it's 
-better to think about each 
-other.</Dialog>
-          <Dialog>Yeah, that's right. Hehe, 
-I'm glad you agree.</Dialog>
+          <Dialog>Time？</Dialog>
+          <Dialog>Yes. See, even if we've been
+dating a year, the time we
+actually spent together is
+probably not even half,
+right？</Dialog>
+          <Dialog>True. At home... even in
+class, we're apart most of
+the day.</Dialog>
+          <Dialog>Right. But even when we
+can't be together, I'm
+thinking of you.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>So I decided to think that
+even the time we can't see
+each other is still part of
+dating you.</Dialog>
+          <Dialog>Yeah. Rather than being
+together but thinking about
+different things, being
+apart but thinking about
+each other feels more like
+dating.</Dialog>
+          <Dialog>Yes, that's right. Hehe, I'm
+glad it's you.</Dialog>
           <Dialog>Me too！</Dialog>
         </Dialogs>
       </SDL2>
@@ -2712,28 +2683,28 @@ I'm glad you agree.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Someday, when I become an 
-old lady, will you remember 
-how I was？</Dialog>
+          <Dialog>You know, someday... when
+I'm an old lady, will I be
+able to remember right now？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>Well, you know. I was 
-speaking about that 
-before. You are making a 
-bothered face, but listen 
-to me...</Dialog>
-          <Dialog>I don't want to forget 
-anything... No matter how 
-long we've been together, 
-no matter how small the 
-detail...</Dialog>
-          <Dialog>I see. Yes, that's okay, 
-I can remember too！</Dialog>
+          <Dialog>Right now？</Dialog>
+          <Dialog>Yes. Right now. Me saying
+something like this out of
+nowhere, you looking a
+little troubled... but still
+listening properly...</Dialog>
+          <Dialog>I don't want to forget... No
+matter how long we're
+together, no matter how
+small it is...</Dialog>
+          <Dialog>I see. Yeah, it's okay,
+you'll remember！</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>Sure, as a grandpa, I will 
-help you remember.</Dialog>
-          <Dialog>...Yup！ Please do it, 
-▲主人公＊▲！</Dialog>
+          <Dialog>Yeah. Grandpa me will make
+you remember, even if I have
+to force it.</Dialog>
+          <Dialog>▲主人公＊▲.
+Yes！ Please do！</Dialog>
           <Dialog>Leave it to me！</Dialog>
         </Dialogs>
       </SDL2>
@@ -2838,31 +2809,28 @@ help you remember.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you think we are 
-similar？</Dialog>
+          <Dialog>Do you think we're alike？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh, what do you mean？</Dialog>
-          <Dialog>It's something one of my 
-friends told me about. 
-That we have a similar 
-aura.</Dialog>
-          <Dialog>I wonder if that's right, 
-I wouldn't know about that.</Dialog>
-          <Dialog>You're right. However, it 
-is often said that married 
-couples have similar 
-auras... I was really 
-happy to be told that.</Dialog>
-          <Dialog>Yes, that kind of thing 
-sounds nice.</Dialog>
-          <Dialog>And you often say that 
-dogs look like their 
-owners, don't you？</Dialog>
+          <Dialog>Huh, how so？</Dialog>
+          <Dialog>Not any one thing... A
+friend told me our vibes
+have gotten similar.</Dialog>
+          <Dialog>Really... I can't tell
+myself.</Dialog>
+          <Dialog>Right. But people often say
+couples who've been together
+a long time start to look
+alike... It made me a little
+happy.</Dialog>
+          <Dialog>Yeah, that's kind of nice.</Dialog>
+          <Dialog>And people often say dogs
+look like their owners too,
+right？</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Yes, and you look like a 
-cute dog.</Dialog>
-          <Dialog>Yes！</Dialog>
-          <Dialog>Shall we go for a walk？</Dialog>
+          <Dialog>Oh, you're starting to look
+like a cute puppy.</Dialog>
+          <Dialog>Whaa！</Dialog>
+          <Dialog>Want to go for a walk？</Dialog>
           <Dialog>...Woof.</Dialog>
         </Dialogs>
       </SDL2>
