@@ -182,29 +182,29 @@
           <Dialog>Laughing</Dialog>
           <Dialog>Angry</Dialog>
           <Dialog>Sad</Dialog>
-          <Dialog>Funny</Dialog>
+          <Dialog>Happy</Dialog>
           <Dialog>Surprised</Dialog>
           <Dialog>Troubled</Dialog>
           <Dialog>Thrilled</Dialog>
-          <Dialog>Light laugh</Dialog>
-          <Dialog>Mildly angry</Dialog>
+          <Dialog>Laugh (blush)</Dialog>
+          <Dialog>Angry (blush)</Dialog>
           <Dialog>Embarrassed</Dialog>
-          <Dialog>Surprised</Dialog>
-          <Dialog>Entertained</Dialog>
-          <Dialog>Fidgety</Dialog>
-          <Dialog>Embarrassed grin</Dialog>
-          <Dialog>Smiling face</Dialog>
+          <Dialog>Surprised (blush)</Dialog>
+          <Dialog>Happy (blush)</Dialog>
+          <Dialog>Fidgety (blush)</Dialog>
+          <Dialog>Troubled smile</Dialog>
+          <Dialog>Smile (fixed)</Dialog>
           <Dialog>Kissing face</Dialog>
           <Dialog>Half-kissing face</Dialog>
-          <Dialog>Kissing face (closed eyes)</Dialog>
-          <Dialog>Normal</Dialog>
-          <Dialog>Embarrassed</Dialog>
-          <Dialog>Angry</Dialog>
-          <Dialog>Thrilled</Dialog>
-          <Dialog>Awkward</Dialog>
-          <Dialog>Smile</Dialog>
-          <Dialog>Smile with blush</Dialog>
-          <Dialog>Worried smile</Dialog>
+          <Dialog>Kissing face (eyes closed)</Dialog>
+          <Dialog>Normal (eyes closed)</Dialog>
+          <Dialog>Troubled (eyes closed)</Dialog>
+          <Dialog>Angry (eyes closed)</Dialog>
+          <Dialog>Thrilled (eyes closed)</Dialog>
+          <Dialog>Embarrassed (eyes closed)</Dialog>
+          <Dialog>Smile (blush)</Dialog>
+          <Dialog>Smile (fixed, blush)</Dialog>
+          <Dialog>Smile (fixed, troubled)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
