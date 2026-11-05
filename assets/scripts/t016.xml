@@ -57,15 +57,14 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what happened？ You've 
-been quiet since then.</Dialog>
-          <Dialog>Have I done something bad？</Dialog>
-          <Dialog>If you stay quiet, I won't 
-understand a thing.</Dialog>
-          <Dialog>...How long will you stay 
-that way？</Dialog>
-          <Dialog>I don't care！ Do whatever 
-you like！</Dialog>
+          <Dialog>Hey, what's wrong？ You've
+been quiet this whole time.</Dialog>
+          <Dialog>Did I do something wrong？</Dialog>
+          <Dialog>If you stay quiet, I won't
+know.</Dialog>
+          <Dialog>...How long are you going to
+keep this up？</Dialog>
+          <Dialog>Fine, do whatever you want！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -125,14 +124,14 @@ you like！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... What happened？ 
-Since then...</Dialog>
+          <Dialog>Hey... What's wrong？ You've
+been like this for a
+while...</Dialog>
           <Dialog>Did I make you angry？</Dialog>
           <Dialog>...Please say something.</Dialog>
-          <Dialog>...It's just cruel to stay 
-quiet like that...</Dialog>
-          <Dialog>Whatever！ I'm going home 
-by myself...</Dialog>
+          <Dialog>...Staying quiet is so
+mean...</Dialog>
+          <Dialog>Fine, I'm going home...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -192,11 +191,11 @@ by myself...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？ You've been quiet for 
-a while... What happened？</Dialog>
-          <Dialog>I see. You're just playing 
-jokes with me, right？</Dialog>
-          <Dialog>...Hmm？</Dialog>
+          <Dialog>Huh？ You've been quiet this
+whole time... Why？</Dialog>
+          <Dialog>I get it, you're joking
+around, right？ Right？</Dialog>
+          <Dialog>...Hey？</Dialog>
           <Dialog>Come on！ At least answer 
 me.</Dialog>
           <Dialog>...I don't care anymore！</Dialog>
@@ -259,14 +258,14 @@ me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...What happened？ You're 
-being so quiet.</Dialog>
-          <Dialog>...Have you fallen asleep？</Dialog>
+          <Dialog>...Why are you so quiet？</Dialog>
+          <Dialog>...Did you fall asleep or
+something？</Dialog>
           <Dialog>Rabbit Manaka will become 
 sleepy too, you know？</Dialog>
-          <Dialog>...Do you know？ Talking 
-all by yourself is very 
-embarrassing.</Dialog>
+          <Dialog>...Did you know？ Talking
+all by yourself is really
+embarrassing？</Dialog>
           <Dialog>...Whatever. Bye.</Dialog>
         </Dialogs>
       </SDL2>
@@ -329,15 +328,14 @@ embarrassing.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Why are you being so 
 quiet？</Dialog>
-          <Dialog>...It would be nice if 
-you just said something...</Dialog>
-          <Dialog>Rabbits will die too if 
-they get lonely, you know？</Dialog>
+          <Dialog>...I'd like you to say
+something...</Dialog>
+          <Dialog>Rabbits die when they get
+lonely, you know？</Dialog>
           <Dialog>I'm telling you. Rabbit 
-Manaka is getting lonely~！</Dialog>
-          <Dialog>...Please, don't ever do 
-this to me again in my 
-lifetime. Bye.</Dialog>
+Manaka is getting lonely～！</Dialog>
+          <Dialog>...Please just stay like
+that forever, then. Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -399,10 +397,10 @@ lifetime. Bye.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Hello？ Are you awake？</Dialog>
           <Dialog>Hey, it's morning already.</Dialog>
-          <Dialog>Rabbit Manaka is going to 
-dance now！</Dialog>
-          <Dialog>I lied！</Dialog>
-          <Dialog>...I feel like a fool. Bye.</Dialog>
+          <Dialog>And now, Rabbit Manaka's
+dance begins！</Dialog>
+          <Dialog>Just kidding！</Dialog>
+          <Dialog>...I feel silly. Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -464,11 +462,11 @@ dance now！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hey, why are you being so 
 quiet？</Dialog>
-          <Dialog>...You haven't said 
-anything at all.</Dialog>
-          <Dialog>Is it boring being with 
-me...？ I wonder.</Dialog>
-          <Dialog>...Is it true？</Dialog>
+          <Dialog>...You won't say anything to
+me.</Dialog>
+          <Dialog>You're not having fun with
+me anymore... or something.</Dialog>
+          <Dialog>...Is that it？</Dialog>
           <Dialog>...Sorry, I'm going home.</Dialog>
         </Dialogs>
       </SDL2>
@@ -531,15 +529,14 @@ me...？ I wonder.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...What happened？ You've 
 been so quiet.</Dialog>
-          <Dialog>Are you having a bad time？ 
-I can't make you feel 
-better？</Dialog>
-          <Dialog>...Hey, if I'm the one 
-making you feel bad, I'm 
-really sorry...</Dialog>
-          <Dialog>I'm sorry to make you feel 
-so bored.</Dialog>
-          <Dialog>I'm going home. Bye...</Dialog>
+          <Dialog>Are you being mean on
+purpose？ Did I do something
+wrong？</Dialog>
+          <Dialog>...Hey, don't be mean. I'll
+apologize...</Dialog>
+          <Dialog>...I'm sorry for boring
+you...</Dialog>
+          <Dialog>...I'm going home. Bye...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -601,13 +598,13 @@ so bored.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>You've been quiet for a 
 while now. What happened？</Dialog>
-          <Dialog>Are you possibly angry 
-with me？</Dialog>
+          <Dialog>...Are you angry？</Dialog>
           <Dialog>I must've done something 
 bad to you...</Dialog>
           <Dialog>Hey, if you're not angry, 
 can you say something？</Dialog>
-          <Dialog>I'm going home now... Bye.</Dialog>
+          <Dialog>I'm going home today.
+...See you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -657,16 +654,16 @@ can you say something？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...You didn't have to 
-overdo it.</Dialog>
+          <Dialog>...You don't have to force
+yourself.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>Now I know that we can 
-have days like this 
-sometimes.</Dialog>
-          <Dialog>That's...</Dialog>
-          <Dialog>I'm leaving. You should 
-reflect on this.</Dialog>
+          <Dialog>I mean, I know there are
+days that aren't fun. I get
+that.</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>I'm going home. Think about
+what you did.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -716,14 +713,14 @@ reflect on this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it that bad being with 
-me？</Dialog>
+          <Dialog>Do you... not like being
+with me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>Did I make you upset or 
-something？</Dialog>
-          <Dialog>That's...</Dialog>
-          <Dialog>I'm leaving for today.</Dialog>
+          <Dialog>Did I do something to make
+you mad...？</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>I'm going home for today.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -776,10 +773,10 @@ something？</Dialog>
           <Dialog>...Boring.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>I expected that today 
-would be fun...</Dialog>
-          <Dialog>That's...</Dialog>
-          <Dialog>Enough. Bye！</Dialog>
+          <Dialog>I wanted to have fun today
+too...</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>Forget it. Bye！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -829,17 +826,16 @@ would be fun...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, are you trying to 
-upset me or something？</Dialog>
+          <Dialog>Hey, are you trying to make
+me mad？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>Too bad. Our date was so 
-boring, but I'm not 
-getting upset.</Dialog>
-          <Dialog>Anyway, I think you need 
-some time to cool your 
-head. I'm leaving.</Dialog>
-          <Dialog>Eh！？ Wait...</Dialog>
+          <Dialog>Too bad. I won't get mad
+just because a date is
+boring.</Dialog>
+          <Dialog>But it seems you need to
+cool your head. Bye.</Dialog>
+          <Dialog>Eh!? Wait...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -889,13 +885,13 @@ head. I'm leaving.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are really terrible 
+          <Dialog>I think you're being awful
 today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>You're so mean！</Dialog>
-          <Dialog>Mean, mean, mean！！</Dialog>
-          <Dialog>Eh！？ Wait...</Dialog>
+          <Dialog>Meanie.</Dialog>
+          <Dialog>Meanie, meanie, meanie！</Dialog>
+          <Dialog>Eh!? Wait...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -945,16 +941,15 @@ today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is it！？</Dialog>
+          <Dialog>Geez, I hate this！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>...？</Dialog>
-          <Dialog>Can I draw something on 
-your face now？ If you let 
-me, I might forgive you.</Dialog>
-          <Dialog>...No, even so, I still 
-can't forgive you. 
-Bye-bye！</Dialog>
-          <Dialog>Eh！？ Wait...</Dialog>
+          <Dialog>Can I doodle on your face？
+Then maybe I could forgive
+you.</Dialog>
+          <Dialog>...No, I still can't forgive
+you. Bye-bye！</Dialog>
+          <Dialog>Eh!? Wait...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1004,12 +999,13 @@ Bye-bye！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Do you... love me？</Dialog>
+          <Dialog>...You do love me... right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>Or do you... Never mind.</Dialog>
-          <Dialog>I think I'd better leave 
-for today... See you.</Dialog>
+          <Dialog>Or have you already... No,
+never mind.</Dialog>
+          <Dialog>I think I'd better go home
+for today... See you？</Dialog>
           <Dialog>...Wait！</Dialog>
         </Dialogs>
       </SDL2>
@@ -1060,13 +1056,13 @@ for today... See you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...What's wrong？</Dialog>
+          <Dialog>...Why？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh...？</Dialog>
-          <Dialog>...Why are you so mean 
-today. Are you angry？</Dialog>
-          <Dialog>I'm sorry... I'd better 
-leave now.</Dialog>
+          <Dialog>...Why are you being mean？
+Did I do something wrong？</Dialog>
+          <Dialog>Sorry... I want to go home
+now.</Dialog>
           <Dialog>...Wait！</Dialog>
         </Dialogs>
       </SDL2>
@@ -1117,14 +1113,14 @@ leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... I thought we would 
-have a good time today.</Dialog>
+          <Dialog>Hey... I wanted us to have a
+good time today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>If you hate me, please 
-tell me, okay？</Dialog>
-          <Dialog>But I really don't want 
-to hear that... Bye now.</Dialog>
+          <Dialog>If you've gotten tired of
+me, please tell me, okay？</Dialog>
+          <Dialog>I don't want to say things
+like this... Bye.</Dialog>
           <Dialog>...Wait！</Dialog>
         </Dialogs>
       </SDL2>

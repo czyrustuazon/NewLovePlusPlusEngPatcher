@@ -41,8 +41,9 @@ coming up. Have you been
 studying？ Hey, how about a 
 review session at my house？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>At your house？ Well, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>At your house,
+▲高嶺＊＊▲？
+Hmm...</Dialog>
           <Dialog>Okay. Let's do that</Dialog>
           <Dialog>Sorry, I can't...</Dialog>
         </Dialogs>
@@ -89,10 +90,11 @@ right？ Um, how about we
 review the lessons 
 together in my room？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>In your room？ Well, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>In your room,
+▲高嶺＊＊▲？
+Hmm...</Dialog>
           <Dialog>Yes, let's do that！</Dialog>
-          <Dialog>I'm not in the mood today</Dialog>
+          <Dialog>Sorry, today's no good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -136,9 +138,9 @@ tests？ If you have anything
 you don't understand, 
 Takane-sensei can teach you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Really？ What shall I do...？</Dialog>
+          <Dialog>Really？ Hmm, should I...？</Dialog>
           <Dialog>Please, sensei！</Dialog>
-          <Dialog>I'm fine, sensei！</Dialog>
+          <Dialog>I'm good, sensei！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -158,8 +160,8 @@ Takane-sensei can teach you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay. When you're ready, 
-just come to my house.</Dialog>
+          <Dialog>Then once you're ready, come
+over to my house, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -200,8 +202,8 @@ waiting then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe. Very well. Let's do 
-this after school.</Dialog>
+          <Dialog>Hehe, very good. Come over
+after school, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -242,9 +244,10 @@ Then maybe next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. Sorry, I wasn't 
-aware that you weren't in 
-the mood. Maybe next time.</Dialog>
+          <Dialog>I see... Sorry, I didn't
+even ask if you were free. I
+hope we can study together
+next time...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -264,9 +267,9 @@ the mood. Maybe next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. Very confident in 
-yourself, huh？ This time, 
-study on our own then.</Dialog>
+          <Dialog>Hmm, such a confident
+answer. Then let's study on
+our own this time？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -305,11 +308,10 @@ study on our own then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice timing. Hey, how about 
-we review the lessons 
-together after this？ 
-What do you think 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Perfect
+timing. Hey, want to study
+together after this？ I
+can't focus on my own...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Right. The tests are coming 
 up...</Dialog>
@@ -357,14 +359,15 @@ up...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What a coincidence. Hey, if 
-you have time, how about we 
-study for the tests today 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. What a
+coincidence！ Hey, if you
+have time... want to study
+for the tests together after
+this？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, it's almost exams time.</Dialog>
+          <Dialog>Ah, tests are coming up.</Dialog>
           <Dialog>All right. Let's do that！</Dialog>
-          <Dialog>Sorry, I really can't...</Dialog>
+          <Dialog>Sorry, I've got plans...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -403,13 +406,13 @@ study for the tests today
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was about to call you. 
-Hey, wanna study together 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. I was just
+about to message you. Hey,
+want to study together？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah, the tests are coming 
 up. Let me see...</Dialog>
-          <Dialog>Okay, let's do that！</Dialog>
+          <Dialog>All right, let's do this！</Dialog>
           <Dialog>Sorry, I can't</Dialog>
         </Dialogs>
       </SDL2>
@@ -453,9 +456,9 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, I'm glad. Then I'll 
-be waiting at home. See 
-you later.</Dialog>
+          <Dialog>Hehe, I'm so happy. Then
+I'll get things ready at
+home？ See you later.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -475,9 +478,9 @@ you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, Let's do that！ 
-Well... I'll see you at 
-my house, okay？</Dialog>
+          <Dialog>Yeah, let's do this！
+...Just kidding. So, will
+you come to my house later？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -497,8 +500,8 @@ my house, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... Then I might ask 
-you later. Bye now.</Dialog>
+          <Dialog>I see... Then I'll ask you
+another day？ Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -518,9 +521,8 @@ you later. Bye now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... I see. Let's wait 
-until the next chance 
-then. Bye now.</Dialog>
+          <Dialog>Ah... I see. Then I'll ask
+some other time？ Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -540,9 +542,10 @@ then. Bye now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？ Hehe. Too bad... Next 
-time, make yourself 
-available, okay？</Dialog>
+          <Dialog>Aww... Hehe, just kidding.
+Too bad, though... Make sure
+you're free next time,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -567,12 +570,12 @@ available, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I don't quite understand. 
-How about we study 
+          <Dialog>There's something I don't
+get. Want to study
 together？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Is that so？ Then, you can 
-come study at my house.</Dialog>
+          <Dialog>Really？ Then let's do it in
+my room.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -597,11 +600,11 @@ come study at my house.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I don't quite understand. 
-How about we study together？</Dialog>
+          <Dialog>There's something I don't
+get. Want to study
+together？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, let's study at my 
-house.</Dialog>
+          <Dialog>Okay, let's. In my room.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -626,11 +629,12 @@ house.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I don't quite understand. 
-How about we study together？</Dialog>
+          <Dialog>There's something I don't
+get. Want to study
+together？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, how about I tutor 
-you at my house？</Dialog>
+          <Dialog>Then I'll teach you in my
+room... Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -655,10 +659,11 @@ you at my house？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Welcome. Well...</Dialog>
+          <Dialog>Welcome. ...Hehe, listen to
+me.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Ah, I'm getting a bit 
-nervous...)</Dialog>
+          <Dialog>(Ah, my heart's kind of
+racing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -683,12 +688,13 @@ nervous...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... Well... Please make 
-yourself at home...</Dialog>
+          <Dialog>Um... So, make yourself
+comfortable？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Your nervousness makes me 
-feel nervous too, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>(Ugh,
+▲高嶺＊＊▲'s
+nerves are rubbing off on me
+too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -713,11 +719,11 @@ feel nervous too,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is the first time I've 
-invited a guy to my room. 
-I'm so nervous.</Dialog>
+          <Dialog>This is the first time a
+boy's been in my room... I'm
+nervous.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hearing that makes me 
+          <Dialog>(If you say that, I'll get
 nervous too...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -743,8 +749,8 @@ nervous too...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Let's concentrate and study 
-hard, okay？</Dialog>
+          <Dialog>Let's focus and study hard
+today too, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay！</Dialog>
         </Dialogs>
@@ -771,8 +777,7 @@ hard, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I hope we can review a lot 
-of lessons today.</Dialog>
+          <Dialog>I hope we get a lot done？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah. Let's do our best！</Dialog>
         </Dialogs>
@@ -799,8 +804,8 @@ of lessons today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I hope we can get some 
-good results today.</Dialog>
+          <Dialog>I hope we can study
+efficiently today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah.</Dialog>
         </Dialogs>
@@ -822,8 +827,7 @@ good results today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, stop looking at 
-everything.</Dialog>
+          <Dialog>Geez, stop looking around.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -865,8 +869,8 @@ too much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't look over there. 
-Hehe, you helpless guy.</Dialog>
+          <Dialog>Don't look there. Hehe,
+you're hopeless.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -929,9 +933,9 @@ nervous...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Coffee, iced tea, hot tea, 
-water. What'd you like？ 
-Hehe.</Dialog>
+          <Dialog>Coffee, black tea, green
+tea, water... What'll it be
+today？ Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -951,7 +955,8 @@ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have a seat. Shall we start？</Dialog>
+          <Dialog>Have a seat？ Let's get
+started？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -991,8 +996,8 @@ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, go ahead and enjoy. 
-Make yourself at home.</Dialog>
+          <Dialog>Here you go. Make yourself
+comfortable？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1032,7 +1037,7 @@ Make yourself at home.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Shall we start now？</Dialog>
+          <Dialog>We're starting soon, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1052,7 +1057,8 @@ Make yourself at home.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, time to start. Hehe.</Dialog>
+          <Dialog>Okay, we're starting？
+Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1076,10 +1082,10 @@ Make yourself at home.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, I'll ask questions. 
-If you answer them all 
-correctly, I'll give you 
-a reward. Do your best.</Dialog>
+          <Dialog>Okay, I'll quiz you. Get
+them all right and you'll
+get a reward, so do your
+best.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1119,7 +1125,7 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Exactly. Wonderful.</Dialog>
+          <Dialog>Right！ Amazing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1139,7 +1145,7 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe. Bingo▼</Dialog>
+          <Dialog>Hehe, ding-ding▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1179,7 +1185,7 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wrong. How disappointing.</Dialog>
+          <Dialog>Wrong. Close, though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1199,7 +1205,7 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Boo boo...</Dialog>
+          <Dialog>B-Bzzt.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1219,7 +1225,7 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Be more serious！</Dialog>
+          <Dialog>Geez, focus！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1239,9 +1245,8 @@ a reward. Do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... If you stop and 
-think about it, you'll 
-finally get it.</Dialog>
+          <Dialog>Hmm... Think a little more
+and I'm sure you'll get it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1261,9 +1266,8 @@ finally get it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, you need to be more 
-serious about reviewing 
-your lessons.</Dialog>
+          <Dialog>See, that's what you get for
+not reviewing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1303,7 +1307,7 @@ your lessons.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you ready for the next 
+          <Dialog>Can we go to the next
 question？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1344,8 +1348,8 @@ question？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, you did very well. 
-I'll give you a reward.</Dialog>
+          <Dialog>Yes, very well done. I'll
+give you your reward？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1365,9 +1369,8 @@ I'll give you a reward.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, I expected as much. 
-Now, here's a reward... 
-okay？</Dialog>
+          <Dialog>Hehe, impressive. Now, your
+reward... okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1387,9 +1390,9 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe. Great job▼ As I 
-promised, I'll give you a 
-reward.</Dialog>
+          <Dialog>Hehe, well done▼ As
+promised, maybe I'll give
+you a reward.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1409,7 +1412,7 @@ reward.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, now, a reward...</Dialog>
+          <Dialog>Hehe, here's your reward...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1429,8 +1432,7 @@ reward.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you wait here for a 
-moment...？</Dialog>
+          <Dialog>Wait just a little...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1450,9 +1452,9 @@ moment...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Disappointing, huh？ Just a 
-little more, and you'll 
-get the reward, okay？</Dialog>
+          <Dialog>So close！ Just a little
+more and you'd get the
+reward.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1472,9 +1474,9 @@ get the reward, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How disappointing... I'm 
-sorry. I won't give you 
-the reward...</Dialog>
+          <Dialog>So close, but... Sorry, I
+don't think I can give you
+the reward for this.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1494,8 +1496,8 @@ the reward...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Too bad！ You were so close 
-to getting the reward.</Dialog>
+          <Dialog>Too bad！ You're one step
+away from the reward？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1535,8 +1537,8 @@ to getting the reward.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I see. If that's what 
-you want, it's fine.</Dialog>
+          <Dialog>...Really？ If that's what
+you want, that's fine.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1556,7 +1558,7 @@ you want, it's fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then, once more.</Dialog>
+          <Dialog>Okay, once more.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1576,8 +1578,9 @@ you want, it's fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... I can't give you a 
-reward for this.</Dialog>
+          <Dialog>Geez... At this rate,
+there's no talk of any
+reward？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1597,8 +1600,8 @@ reward for this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you not feeling well？ 
-Are you okay？</Dialog>
+          <Dialog>Are you maybe not feeling
+well？ Are you okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1618,9 +1621,9 @@ Are you okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wanted to give you a 
-reward, but... Are you 
-taking this seriously？</Dialog>
+          <Dialog>I want to give you a
+reward... Think you can get
+motivated？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1640,8 +1643,8 @@ taking this seriously？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's the spirit. Hehe, 
-do your best.</Dialog>
+          <Dialog>That's the spirit！ Hehe,
+let's do our best？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1661,7 +1664,8 @@ do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... Are you giving up？</Dialog>
+          <Dialog>Hmm... So you're giving
+up...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1681,8 +1685,8 @@ do your best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hey, then you don't 
-want to study, huh？</Dialog>
+          <Dialog>...I see. This isn't much of
+a study session, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1702,9 +1706,9 @@ want to study, huh？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hey. Then I'll give you 
-a bonus. This is specially 
-for you, okay？</Dialog>
+          <Dialog>...Geez. Fine, I'll throw in
+a bonus. ...Just this once,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1724,7 +1728,7 @@ for you, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What should I do...？</Dialog>
+          <Dialog>What do I do... I...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1744,7 +1748,7 @@ for you, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, don't stare.</Dialog>
+          <Dialog>Hey, don't look too much？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1764,7 +1768,8 @@ for you, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I move closer to you？</Dialog>
+          <Dialog>Can I come... a little
+closer？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1804,8 +1809,8 @@ for you, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can wear this specially 
-for you, okay？</Dialog>
+          <Dialog>...I'd only do this in front
+of you, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1825,8 +1830,9 @@ for you, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, how is it？ If you 
-like it, I'll be very happy...</Dialog>
+          <Dialog>Hey, how is it？ I'd be
+happy if it's what you were
+hoping for...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1846,9 +1852,9 @@ like it, I'll be very happy...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is what you gave me 
-as a present... Hey, don't 
-ever tell anyone, okay？</Dialog>
+          <Dialog>The clothes you gave me as a
+present... Hey, keep it a
+secret from everyone, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1868,8 +1874,8 @@ ever tell anyone, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want you to see this... 
-Does it suit me？</Dialog>
+          <Dialog>I thought I'd like you to
+see... Does it suit me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1889,8 +1895,8 @@ Does it suit me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Do you like this？ Let 
-me know.</Dialog>
+          <Dialog>...Do you like this kind of
+thing？ What do you think？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1910,8 +1916,9 @@ me know.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I hope you like it... But, 
-do I look bad in this？</Dialog>
+          <Dialog>I wanted you to be happy...
+Do you not like me like
+this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1931,8 +1938,9 @@ do I look bad in this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Time's up, I guess..... 
-Hah, I'm still so nervous.</Dialog>
+          <Dialog>Time's up, I guess？
+...Phew, my heart's still
+pounding...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1952,9 +1960,10 @@ Hah, I'm still so nervous.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's enough, okay？ I did 
-something quite extreme. 
-I'm so embarrassed.</Dialog>
+          <Dialog>That's as far as it goes,
+okay？ ...I did something
+pretty bold, didn't I？ So
+embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1974,8 +1983,8 @@ I'm so embarrassed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, that's all. I was 
-really nervous...</Dialog>
+          <Dialog>Hehe, that's it. My heart
+was really pounding...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1995,9 +2004,9 @@ really nervous...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, wanna try another 
-round？ I'll reward you 
-with a different costume...</Dialog>
+          <Dialog>...Hey, want to take another
+quiz？ Then I'll show you a
+different outfit...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2017,7 +2026,7 @@ with a different costume...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Um, then do your best.</Dialog>
+          <Dialog>...Okay, then do your best？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2037,9 +2046,8 @@ with a different costume...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Okay. Then I'll be 
-looking forward to the 
-next time, okay？</Dialog>
+          <Dialog>...Okay. We'll save the fun
+for next time, then？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2059,9 +2067,8 @@ next time, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You did a great job. 
-Here's something special 
-for you.</Dialog>
+          <Dialog>You worked hard, didn't
+you？ So... this is special.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2081,9 +2088,9 @@ for you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You really did your best, 
-so I should do my part 
-too...</Dialog>
+          <Dialog>You worked so hard, so I
+thought I'd do my part
+too... How is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2103,7 +2110,7 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is special, okay？</Dialog>
+          <Dialog>It's special, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2123,9 +2130,8 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you don't feel motivated 
-to study, I'll be very 
-angry...</Dialog>
+          <Dialog>If this doesn't get you
+motivated... I'll be mad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2145,9 +2151,9 @@ angry...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you feel motivated？ 
-It's embarrassing, but if 
-it's for you...</Dialog>
+          <Dialog>Will this get you
+motivated...？ It's
+embarrassing, but for you...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2171,10 +2177,10 @@ it's for you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is very embarrassing. 
-But, if it will help 
-motivate you to study, I 
-guess it's okay.</Dialog>
+          <Dialog>It's really embarrassing,
+you know？ But... if it gets
+you motivated, I guess
+that's fine.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2214,8 +2220,8 @@ guess it's okay.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is really 
-embarrassing...</Dialog>
+          <Dialog>It's kind of embarrassing
+after all...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2235,7 +2241,8 @@ embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey. You stare too much.</Dialog>
+          <Dialog>Geez, you're staring too
+much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2275,8 +2282,8 @@ embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, um... What do you 
-think？</Dialog>
+          <Dialog>Come on... Don't you have
+anything to say？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2296,8 +2303,8 @@ think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What should I do？ I can't 
-be calm...</Dialog>
+          <Dialog>What do I do, I can't calm
+down...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2357,7 +2364,7 @@ be calm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... Come on...</Dialog>
+          <Dialog>Hey, come on... Geez...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2398,8 +2405,8 @@ quiet？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hey, can you look away 
-for a while？ Okay...？</Dialog>
+          <Dialog>...Hey, could you look away,
+just for a bit？ Because...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2419,7 +2426,7 @@ for a while？ Okay...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Pervert.</Dialog>
+          <Dialog>...Meanie...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2439,7 +2446,7 @@ for a while？ Okay...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, is this enough？</Dialog>
+          <Dialog>Hey, is that enough？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2459,8 +2466,8 @@ for a while？ Okay...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you look at me like 
-that...</Dialog>
+          <Dialog>When you look at me like
+that, I...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2480,7 +2487,7 @@ that...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, this is enough, okay？</Dialog>
+          <Dialog>Okay, that's it！ ...Okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2500,8 +2507,8 @@ that...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't look at me like that. 
-It's embarrassing...</Dialog>
+          <Dialog>Don't look so much？ It's
+embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2521,7 +2528,8 @@ It's embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you like this...？</Dialog>
+          <Dialog>Is there some part that
+catches your eye？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2541,7 +2549,7 @@ It's embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Where are you looking at？</Dialog>
+          <Dialog>...Where are you looking？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2561,8 +2569,8 @@ It's embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't look at me with that 
-face. You idiot...</Dialog>
+          <Dialog>Don't look at me with that
+face. Geez... Dummy.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2582,7 +2590,8 @@ face. You idiot...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't stare. I feel bad...</Dialog>
+          <Dialog>I don't like being stared
+at...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2602,8 +2611,7 @@ face. You idiot...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... Just like this, 
-okay？</Dialog>
+          <Dialog>Hey... Like this... okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2623,9 +2631,10 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is probably different 
-from my usual outfits. I'm 
-getting so nervous.</Dialog>
+          <Dialog>Maybe because I'm dressed
+differently than usual？ My
+heart's pounding right
+now...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2645,9 +2654,9 @@ getting so nervous.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Are you going to hate 
-me if I continue wearing 
-this？</Dialog>
+          <Dialog>...Even if I stay dressed
+like this... you won't stop
+liking me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2667,7 +2676,8 @@ this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, this is it for today.</Dialog>
+          <Dialog>Okay, that's it for today, I
+think？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2687,8 +2697,8 @@ this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>With this, you'll get good 
-test results for sure.</Dialog>
+          <Dialog>With this, you should do
+well on the tests, right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2708,8 +2718,8 @@ test results for sure.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You did perfectly, huh？ 
-Hehe, it's true.</Dialog>
+          <Dialog>That was perfect！ Hehe,
+really.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2729,10 +2739,9 @@ Hehe, it's true.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>With this, you can rest 
-assured. I wonder if this 
-was worth the effort 
-teaching you. Just kidding.</Dialog>
+          <Dialog>Now I can relax. I guess
+being your teacher paid
+off？ Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2752,9 +2761,8 @@ teaching you. Just kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It wasn't bad but... 
-Shouldn't you put some 
-more effort？</Dialog>
+          <Dialog>It wasn't bad, but... a
+little more, maybe？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2774,9 +2782,8 @@ more effort？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think you can do a 
-little better than this. 
-Try harder, okay？</Dialog>
+          <Dialog>I think you can do a little
+better. Let's work hard？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2796,8 +2803,8 @@ Try harder, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hm, you'd better try 
-harder, okay？</Dialog>
+          <Dialog>Hmm. "Needs a little more
+effort," I'd say？ Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2817,9 +2824,8 @@ harder, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You should study harder... 
-No, I guess I just feel a 
-bit uneasy.</Dialog>
+          <Dialog>I'm a little... No, pretty
+worried, actually.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2839,9 +2845,8 @@ bit uneasy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I think you should 
-be more serious when you 
-study.</Dialog>
+          <Dialog>Um... Maybe you should study
+a bit more seriously？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2861,7 +2866,7 @@ study.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now, I'm not too sure...</Dialog>
+          <Dialog>Your teacher's worried...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2881,9 +2886,9 @@ study.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's already this late... 
-I think we should stop 
-here...</Dialog>
+          <Dialog>It's already this late...
+Time to call it a day, I
+guess...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2913,8 +2918,8 @@ here...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what are your plans 
-after this？ Going home？</Dialog>
+          <Dialog>Hey, what do you want to
+do？ ...Are you going home？</Dialog>
           <Dialog>Yeah. I'm going home.</Dialog>
           <Dialog>I'll stay a little longer.</Dialog>
         </Dialogs>
@@ -2936,8 +2941,7 @@ after this？ Going home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Is that so？ 
-Um, I'm kidding.</Dialog>
+          <Dialog>...I see. Yeah, of course？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2987,7 +2991,7 @@ for me just a bit？</Dialog>
 I was able to study with 
 you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm so glad too. Thank you.</Dialog>
+          <Dialog>Same here. Thank you, too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3040,12 +3044,11 @@ to concentrate much...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We had such a strange 
-study session, eh？</Dialog>
+          <Dialog>It turned into a bit of a
+strange study session, huh？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Doing something like this 
-is good every once in a 
-while, right？</Dialog>
+          <Dialog>Isn't something like this
+nice once in a while？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
