@@ -91,29 +91,27 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, can I ask you a 
-question？</Dialog>
+          <Dialog>Hey, can I ask you
+something？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What？</Dialog>
-          <Dialog>Am I... good enough？</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>Sometimes I feel uneasy. I 
-wonder why you chose me. I 
-wonder what part of me you 
-like, and stuff.</Dialog>
-          <Dialog>...Perhaps there might be 
-a girl that suits you much 
-better...</Dialog>
-          <Dialog>Stop！</Dialog>
+          <Dialog>Are you sure... it's me you
+want？</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>Sometimes I get anxious. Why
+me, what part of me did you
+fall for...</Dialog>
+          <Dialog>...Maybe there's someone
+more wonderful for you...</Dialog>
+          <Dialog>Stop.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Stop imagining things 
-without considering my 
-feelings！</Dialog>
-          <Dialog>Ah... That's right... I'm 
+          <Dialog>No imagining things that
+ignore how I feel！</Dialog>
+          <Dialog>Ah... You're right... I'm
 sorry.</Dialog>
-          <Dialog>(Hmm... How can I make you 
-understand this 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>(Hmm. How can I get
+▲高嶺＊＊▲
+to understand？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -207,34 +205,30 @@ understand this
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>About what we talked about 
-earlier, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲. About what we
+talked about the other day.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Yeah.</Dialog>
-          <Dialog>Why do you love me？ There 
-might be a guy that suits 
-you better than me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>T-There is no one who can 
-take your place...！</Dialog>
-          <Dialog>I see. Then you can rest 
-assured, because I feel the 
-same way too.</Dialog>
-          <Dialog>...Eh？</Dialog>
-          <Dialog>It's not just some parts 
-of you that I like. If I 
-had to say, it would be 
-everything about you.</Dialog>
-          <Dialog>And you feel the same way, 
-right？</Dialog>
-          <Dialog>...Not at all. It's not 
-the same...</Dialog>
-          <Dialog>I definitely love you 
-more... I'm not losing to 
-you.</Dialog>
-          <Dialog>All right. From now on, 
-we'll see who wins, okay？</Dialog>
+          <Dialog>Why me,
+▲高嶺＊＊▲？
+What part of me did you fall
+for？ I'm sure there were
+cooler guys.</Dialog>
+          <Dialog>N-No one could ever replace
+you...！</Dialog>
+          <Dialog>I see, that's a relief. Same
+as me.</Dialog>
+          <Dialog>...Huh.</Dialog>
+          <Dialog>It's not about which part I
+like. If I had to say...
+everything？</Dialog>
+          <Dialog>See, same, right？</Dialog>
+          <Dialog>...It's not the same at
+all...</Dialog>
+          <Dialog>I definitely love you more.
+...I won't lose.</Dialog>
+          <Dialog>All right, it's a contest
+from here on, then？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -323,35 +317,33 @@ we'll see who wins, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have you ever thought about 
-the mechanisms of falling 
-in love？</Dialog>
+          <Dialog>Have you ever thought about
+how falling in love works？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, before I realized it, 
-I already loved you. That's 
-why I said yes when you 
-confessed to me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I'm so happy. Anyway, even 
-though you said so, there 
-are things that I'm quite 
-concerned about.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Ah, no. I didn't mean that 
-I feel unsatisfied or 
-uneasy...</Dialog>
-          <Dialog>I'm just wondering where 
-these feelings of love 
-come from...</Dialog>
-          <Dialog>For me, I've never really 
-hated anyone in my life. 
-But I've never loved 
-anyone this much either.</Dialog>
-          <Dialog>That's why I think that 
-love is amazing, and I 
-wonder what are behind 
-these feelings of love.</Dialog>
-          <Dialog>(It really is amazing...)</Dialog>
+          <Dialog>Hmm, with
+▲高嶺＊＊▲,
+I just fell for you before I
+knew it... That's why I said
+yes when you confessed.</Dialog>
+          <Dialog>I was so happy. But even so,
+I think there must be things
+about me that bother you.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>Oh, no. I don't mean I'm
+unhappy or anxious about
+it...</Dialog>
+          <Dialog>Loving someone, including
+all those parts... Where
+does a feeling like that
+come from, I wonder.</Dialog>
+          <Dialog>Me too. I've never thought I
+hated anyone, but I've never
+loved anyone this much
+either.</Dialog>
+          <Dialog>So it's so mysterious. What
+does it mean, to fall in
+love with someone？</Dialog>
+          <Dialog>(It really is mysterious...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -460,35 +452,34 @@ these feelings of love.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We've talked about the 
-mechanisms of falling in 
-love earlier, right？</Dialog>
+          <Dialog>Remember I said I was
+thinking about how falling
+in love works？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. Did you find the 
-answer？</Dialog>
-          <Dialog>Hmm... No matter how hard 
-I think about it, I can 
-never understand it.</Dialog>
-          <Dialog>But, I recalled some people 
-saying that love doesn't 
-need reason.</Dialog>
-          <Dialog>When I think about it, it's 
-really true. So, it's 
-probably better that I just 
-stop thinking about this.</Dialog>
-          <Dialog>Is that so？</Dialog>
-          <Dialog>Yeah, I know there are many 
-theories about love, but I 
-don't care anymore.</Dialog>
-          <Dialog>Just being able to see you 
-is the only answer I need.</Dialog>
-          <Dialog>...Yeah.</Dialog>
-          <Dialog>Hehe. Thanks for listening 
-to me. Ah, I spent too much 
-time thinking about this 
-that I've slacked off on 
-studying lately！</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>Yeah. Reach a conclusion？</Dialog>
+          <Dialog>Mm... No matter how much I
+think, I can't figure it
+out...</Dialog>
+          <Dialog>And then I suddenly
+remembered the saying that
+love isn't about logic.</Dialog>
+          <Dialog>When I remembered it, I felt
+better. ...Maybe I don't
+need to think about it
+anymore.</Dialog>
+          <Dialog>I see.</Dialog>
+          <Dialog>Yes. I'm sure you could come
+up with all kinds of logic,
+but it's fine.</Dialog>
+          <Dialog>Meeting you. I think that's
+the answer.</Dialog>
+          <Dialog>...Just saying.</Dialog>
+          <Dialog>Hehe, that's all from me.
+Ah, I thought so much I fell
+behind on studying, so I
+have to work hard from
+tonight！</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -592,33 +583,31 @@ studying lately！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's almost your birthday, 
-huh？</Dialog>
+          <Dialog>Your birthday's coming up
+soon, isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, it's coming up soon.</Dialog>
-          <Dialog>Yes, it is. Geez... Are 
-guys always like this？</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>Do guys usually not pay 
-attention to their own 
-birthday？</Dialog>
-          <Dialog>I don't know. What about 
-you ▲Takane＊＊▲？</Dialog>
-          <Dialog>Yeah. I always get excited 
-about my birthday.</Dialog>
-          <Dialog>It's another year for me to 
-grow older and experience 
-new things.</Dialog>
-          <Dialog>I can't help but think 
-about what will be coming 
-next and whether I'll meet 
-new people.</Dialog>
-          <Dialog>I see. You really think a 
-lot about your birthday...</Dialog>
-          <Dialog>Hey, how come the topic was 
-changed to my birthday？ We 
-were talking about your 
-birthday to begin with！</Dialog>
+          <Dialog>Oh, is it that time
+already？</Dialog>
+          <Dialog>It's that time. Geez... Are
+all boys like that？</Dialog>
+          <Dialog>Like what？</Dialog>
+          <Dialog>Not that interested. In
+their own birthday.</Dialog>
+          <Dialog>Who knows. What about
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Yes. I get all fidgety？</Dialog>
+          <Dialog>Getting older means gaining
+experience, right？</Dialog>
+          <Dialog>Thinking about how I'll
+spend the next year and who
+I'll meet makes it even more
+so.</Dialog>
+          <Dialog>I see. Deep stuff,
+birthdays...</Dialog>
+          <Dialog>Hey, how did this turn into
+talk about me？ We were
+talking about your
+birthday！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -725,27 +714,24 @@ birthday to begin with！</Dialog>
           <Dialog>Hey, about your birthday...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>...Ah.</Dialog>
-          <Dialog>...Geez. You forgot about 
-it.</Dialog>
-          <Dialog>Hahaha. I'm more concerned 
-about your birthday 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>...Geez. You forgot.</Dialog>
+          <Dialog>Hahaha... Well, you know.
+I'm more focused on
+▲高嶺＊＊▲'s birthday...</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>Of course. I've been 
-thinking about it a lot. 
-Even now.</Dialog>
+          <Dialog>Well, of course. I'm already
+thinking about all sorts of
+things, believe it or not.</Dialog>
           <Dialog>...Hmm.</Dialog>
-          <Dialog>That's your response？ Just 
-that？</Dialog>
-          <Dialog>What do you mean by "just 
-that"？</Dialog>
-          <Dialog>Ah, you're getting 
-embarrassed.</Dialog>
-          <Dialog>...I am not. It's not about 
-my birthday. I was talking 
-about yours. Geez！</Dialog>
-          <Dialog>(I wonder what she's 
-planning for my birthday.)</Dialog>
+          <Dialog>"Hmm"... That's it？</Dialog>
+          <Dialog>W-What do you mean, "that's
+it"？</Dialog>
+          <Dialog>Oh, you're blushing.</Dialog>
+          <Dialog>...I am not. Right now we're
+talking about you, not me,
+right？ Geez！</Dialog>
+          <Dialog>(Could she be planning
+something？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -849,27 +835,26 @@ planning for my birthday.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh...</Dialog>
+          <Dialog>Sigh...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What？ Is it about my 
-birthday？</Dialog>
-          <Dialog>Hmm？ You remember it？</Dialog>
-          <Dialog>Y-Yeah, I remember.</Dialog>
-          <Dialog>...Hehe, geez. I wish you 
-just forgot about it.</Dialog>
-          <Dialog>Shall I？</Dialog>
-          <Dialog>You just try to play along, 
-huh？ Geez, someone like 
-you... Hehehe！</Dialog>
-          <Dialog>By the way, you seem to 
-think about it a lot. Did 
-you get anything for me yet？</Dialog>
-          <Dialog>I wish I did.</Dialog>
-          <Dialog>You didn't！？</Dialog>
-          <Dialog>Huh？ I thought you didn't 
-care about it. Hehehe.</Dialog>
-          <Dialog>(Urgh, why is she the one 
-teasing me now？)</Dialog>
+          <Dialog>What？ About my birthday？</Dialog>
+          <Dialog>Hmm？ So you remembered？</Dialog>
+          <Dialog>O-Of course I remembered.</Dialog>
+          <Dialog>...Hehe, geez. You can keep
+forgetting, you know？ It's
+enough if only I know.</Dialog>
+          <Dialog>I guess that's true.</Dialog>
+          <Dialog>You agree, huh. Geez,
+you're... Hehehe！</Dialog>
+          <Dialog>By the way, you've been
+thinking about it a lot. Is
+there something？</Dialog>
+          <Dialog>Wouldn't it be nice if there
+were？</Dialog>
+          <Dialog>There isn't!?</Dialog>
+          <Dialog>Oh？ I thought you weren't
+interested？ Hehehe.</Dialog>
+          <Dialog>(Ugh, is she teasing me？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -962,32 +947,26 @@ teasing me now？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, for my birthday...</Dialog>
+          <Dialog>...Hey, about my birthday.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Now, you've started 
-to care about it, huh？</Dialog>
-          <Dialog>I've never said that I 
-didn't care about it.</Dialog>
-          <Dialog>Okay, okay. Hmm, I can tell 
-you that I already got 
-something for you. Just 
-don't expect too much.</Dialog>
-          <Dialog>No, I'm really expecting 
-something nice.</Dialog>
+          <Dialog>Hmm. Finally interested, are
+we？</Dialog>
+          <Dialog>It's not like I wasn't.</Dialog>
+          <Dialog>Okay, okay. Yes, you can
+assume there's something？
+But don't get your hopes up.</Dialog>
+          <Dialog>No, I'll get my hopes up.</Dialog>
           <Dialog>Hehe, why？</Dialog>
-          <Dialog>Because you've been 
-thinking about it for a 
-long time. Even longer than 
-I have.</Dialog>
-          <Dialog>....Because it's the day 
-you were born. Isn't it 
-something I should feel 
-thankful for？</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Oh well. I'll have to wait 
-until your birthday to 
-wish you a happy birthday, 
-right！？</Dialog>
+          <Dialog>Because you've been thinking
+about it all this time,
+right？ More than me.</Dialog>
+          <Dialog>...Because it's the day you
+were born. I want to say
+thank you, don't I？</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>Just kidding. I'll say happy
+birthday properly on the
+day, so wait for it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1091,39 +1070,35 @@ right！？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's almost your birthday, 
-huh, ▲Takane＊＊▲？</Dialog>
+          <Dialog>It's almost
+▲高嶺＊＊▲'s
+birthday, huh？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, you remembered.</Dialog>
-          <Dialog>Yeah. Does your family have 
-any plans for your 
-birthday, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yeah. We always celebrate 
-a family member's birthday 
-together.</Dialog>
-          <Dialog>Like, do you bake a cake 
-together？</Dialog>
-          <Dialog>Right. It's a Takane 
-tradition to bake a cake 
-for a family member whose 
-birthday is coming up.</Dialog>
-          <Dialog>...You mean your dad also 
-bakes a cake？</Dialog>
-          <Dialog>Of course. He's always in 
-high spirits, and he takes 
-a day off from work every 
-year for the occasion.</Dialog>
-          <Dialog>He does！？</Dialog>
-          <Dialog>Hehe, Papa is very obsessed 
-with stuff like this.</Dialog>
-          <Dialog>I wonder what kind of cake 
-he'll make this year... I 
+          <Dialog>Oh, you remembered？</Dialog>
+          <Dialog>Of course. Does
+▲高嶺＊＊▲'s
+family do anything？</Dialog>
+          <Dialog>Yes. We always celebrate
+everyone's birthday.</Dialog>
+          <Dialog>Don't tell me, a homemade
+cake too？</Dialog>
+          <Dialog>Yes. The Takane rule is that
+everyone except the birthday
+person makes it.</Dialog>
+          <Dialog>...So your dad joins in
+too？</Dialog>
+          <Dialog>Of course. He gets really
+fired up. Every year he
+takes the day off work.</Dialog>
+          <Dialog>That far!?</Dialog>
+          <Dialog>Hehe. Papa gets really into
+things.</Dialog>
+          <Dialog>I wonder what kind of cake
+he'll make this year... I
 can't wait▼</Dialog>
-          <Dialog>(If I don't try my best, 
-maybe she won't appreciate 
-it when we celebrate her 
-birthday together！)</Dialog>
+          <Dialog>(If I don't try hard, my
+celebration will get
+overshadowed...！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1221,34 +1196,29 @@ birthday together！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>By the way, Papa told me 
-that the cake he planned 
-to bake for me this year 
-would be something I've 
-never tasted before.</Dialog>
+          <Dialog>By the way, this year Papa
+says he's making something
+I've never tasted before.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>E-Eh？ ...What kind of cake 
-is that？</Dialog>
-          <Dialog>He wouldn't tell me.</Dialog>
-          <Dialog>I only know that he asked 
-his friend in France to 
-send him a secret recipe.</Dialog>
-          <Dialog>France！？</Dialog>
-          <Dialog>Yeah. I'm very happy but I 
-think he overdid it. 
-Anyway, he told me that he 
-didn't want to lose.</Dialog>
-          <Dialog>...Lose to who？</Dialog>
-          <Dialog>For that, he didn't tell 
-me and Mama only smiled as 
-if it were something that 
-couldn't be helped.</Dialog>
-          <Dialog>But I'm so curious what 
-kind of cake it'll be... 
-I really can't wait▼</Dialog>
-          <Dialog>(The one her dad doesn't 
-want to lose to... Could 
-it be...)</Dialog>
+          <Dialog>O-Oh yeah... What kind of
+cake？</Dialog>
+          <Dialog>He won't tell me.</Dialog>
+          <Dialog>All I know is he had a
+friend in France send him
+the recipe specially.</Dialog>
+          <Dialog>France!?</Dialog>
+          <Dialog>Yes. I'm happy, but when I
+told him he didn't have to
+go that far, he said he
+can't lose.</Dialog>
+          <Dialog>...Can't lose to what？</Dialog>
+          <Dialog>He wouldn't tell me that
+either. Mama just laughed
+like, "Oh, that man."</Dialog>
+          <Dialog>But what kind of cake will
+it be... I can't wait▼</Dialog>
+          <Dialog>(Can't lose to... Could it
+be...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1337,31 +1307,26 @@ it be...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How was your dad after 
-what we spoke before？</Dialog>
+          <Dialog>How's your dad doing since
+then？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Seems like he practiced 
-baking it once, but it 
-didn't come out well. Mama 
-said that he was quite 
-disappointed.</Dialog>
+          <Dialog>He practiced once. But Mama
+says it's hard and he's
+struggling.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>And then he asked about 
-you.</Dialog>
-          <Dialog>Eh...？ About me？</Dialog>
-          <Dialog>Yeah, like whether you knew 
-my birthday, and whether 
-you had said something 
-about it...</Dialog>
-          <Dialog>When I asked him why he 
-was concerned about that, 
-he said he was just 
-collecting information.</Dialog>
+          <Dialog>And then he asked about you.</Dialog>
+          <Dialog>Huh... Me？</Dialog>
+          <Dialog>Yes. Whether we talk about
+my birthday, whether you
+said anything...</Dialog>
+          <Dialog>When I asked why he wanted
+to know, he said it's
+intelligence gathering.</Dialog>
           <Dialog>...What！！</Dialog>
-          <Dialog>I don't understand... Do 
-you know why he said that？</Dialog>
-          <Dialog>(As I thought, his rival is 
-me！)</Dialog>
+          <Dialog>I didn't really get what he
+meant... Do you？</Dialog>
+          <Dialog>(So I'm his rival after
+all！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1461,33 +1426,29 @@ me！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Your birthday is coming up.</Dialog>
+          <Dialog>Your birthday's right around
+the corner, huh？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, I hope it'll be a 
-special one this year.</Dialog>
-          <Dialog>A special one？</Dialog>
-          <Dialog>Yeah, we've been talking 
-about my birthday all this 
-time until now, right？</Dialog>
-          <Dialog>And you've been very 
-concerned about it for so 
-long. Actually, that's 
-already more than enough 
-for me.</Dialog>
-          <Dialog>Now I'm in trouble.</Dialog>
-          <Dialog>Eh？</Dialog>
-          <Dialog>At least, I want you to 
-anticipate something from 
-me. That way I can keep 
-trying my best for you.</Dialog>
-          <Dialog>Hmm？ So I can anticipate 
-something nice？</Dialog>
-          <Dialog>Y-Yeah.</Dialog>
-          <Dialog>Hehe！ Okay, I'll do as you 
-wish. You have to try very 
-hard, all right？</Dialog>
-          <Dialog>(I won't lose to your 
-dad！)</Dialog>
+          <Dialog>Yes. I think this year will
+be special.</Dialog>
+          <Dialog>Special？</Dialog>
+          <Dialog>Yes. It's not often I talk
+about my birthday this far
+in advance, right？</Dialog>
+          <Dialog>And you care about it this
+much too. That alone fills
+me up.</Dialog>
+          <Dialog>That's a problem.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>You have to look forward to
+it at least a little. That
+gets me more fired up too.</Dialog>
+          <Dialog>Hmm？ So I'm allowed to.</Dialog>
+          <Dialog>S-Sure.</Dialog>
+          <Dialog>Hehe！ Then I'll take you up
+on that. Do your best,
+okay？</Dialog>
+          <Dialog>(I can't lose to her dad！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1577,30 +1538,29 @@ dad！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's been almost a year, 
-huh？</Dialog>
+          <Dialog>It's almost been a year,
+hasn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Really？ It's been a year 
-already？</Dialog>
-          <Dialog>...Hmm？ You realized it at 
-once, huh？</Dialog>
-          <Dialog>Well, I should, right？</Dialog>
-          <Dialog>Hehe, sorry. I didn't mean 
-to tease you.</Dialog>
-          <Dialog>It feels like just a blink 
-of an eye, you know？ Since 
-the time we started dating.</Dialog>
-          <Dialog>When I recall the moment 
-I confessed to you, I still 
-feel so embarrassed.</Dialog>
-          <Dialog>I was really happy when you 
-confessed to me, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Hey, don't say it... 
-Please, I  beg you. Don't 
-look at me now.</Dialog>
-          <Dialog>(You've never changed, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Oh, right. Already？</Dialog>
+          <Dialog>...Hmm, so you knew right
+away？</Dialog>
+          <Dialog>Ah. You were testing me？</Dialog>
+          <Dialog>Hehe, sorry. I didn't mean
+to be mean.</Dialog>
+          <Dialog>It went by in a flash,
+didn't it？ Since we started
+going out...</Dialog>
+          <Dialog>Remembering when I
+confessed... makes me
+embarrassed.</Dialog>
+          <Dialog>Remembering it makes me
+happy. Back then,
+▲高嶺＊＊▲...</Dialog>
+          <Dialog>Geez, don't say it.
+...Please, don't look at me
+either.</Dialog>
+          <Dialog>(▲高嶺＊＊▲ hasn't changed
+one bit there.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1685,34 +1645,29 @@ look at me now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, usually, what do 
-people do when it's time 
-for an important occasion？</Dialog>
+          <Dialog>Hey, do people usually do
+something at milestones like
+this？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, you mean for our 
+          <Dialog>Ah, for anniversaries？</Dialog>
+          <Dialog>Yes. It's my first time, so
+I don't really know...</Dialog>
+          <Dialog>Hmm... I wonder？</Dialog>
+          <Dialog>Does talking like this count
+as doing something？</Dialog>
+          <Dialog>Hahaha, true.</Dialog>
+          <Dialog>Well, we don't have to think
+so hard about it, right？ If
+that's all we focus on,
+it'll feel cramped.</Dialog>
+          <Dialog>Hehe, because every day
+would become an
 anniversary？</Dialog>
-          <Dialog>Yeah, this is my first time 
-to be in a relationship, 
-so I don't really know...</Dialog>
-          <Dialog>Hmm... What shall we do？</Dialog>
-          <Dialog>When you speak that way, I 
-kind of wonder if you've 
-already had plans in your 
-mind.</Dialog>
-          <Dialog>Hahaha. Exactly.</Dialog>
-          <Dialog>Well, we don't really have 
-to think about it too 
-seriously, right？ Let's 
-not pressure ourselves.</Dialog>
-          <Dialog>Hehe, we can treat everyday 
-like our anniversary, huh？</Dialog>
-          <Dialog>Right. But the first 
-anniversary should be 
-special.</Dialog>
-          <Dialog>Yeah, I hope it would be 
-something that we still 
-think about no matter how 
-many years have passed...</Dialog>
+          <Dialog>Exactly. But the first year
+is special, right？</Dialog>
+          <Dialog>Yes. I'm sure no matter how
+many years go by, I'll
+remember that day...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1792,22 +1747,21 @@ many years have passed...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, how about we use this 
-chance to tell each other 
-if there's anything we want 
-each other to improve？</Dialog>
+          <Dialog>Hey, how about we use this
+chance to tell each other
+something we'd like fixed？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>To improve...？</Dialog>
+          <Dialog>Something to fix, huh...</Dialog>
           <Dialog>...Nothing？</Dialog>
-          <Dialog>Hmm... How about you, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hmm, I don't have anything 
-in particular, I think.</Dialog>
-          <Dialog>I don't have any either.</Dialog>
-          <Dialog>...Hehe. So, it seems our 
-conversation ends here.</Dialog>
-          <Dialog>Haha, we'll just keep being 
-nice to each other, okay？</Dialog>
+          <Dialog>Hmm. What about
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Me？ Yes, nothing in
+particular, I guess？</Dialog>
+          <Dialog>Me neither.</Dialog>
+          <Dialog>...Hehe. That ended the
+conversation, didn't it？</Dialog>
+          <Dialog>Haha, well, I guess it means
+let's keep this up？</Dialog>
           <Dialog>Okay▼</Dialog>
         </Dialogs>
       </SDL2>
@@ -1913,26 +1867,24 @@ nice to each other, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, our anniversary is 
-coming up.</Dialog>
+          <Dialog>Hehe, it's almost here,
+huh？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. Thanks for being nice 
-to me this whole year.</Dialog>
-          <Dialog>Don't mention it. I have to 
-thank you, too.</Dialog>
+          <Dialog>Yeah. Thanks for this past
+year.</Dialog>
+          <Dialog>Oh, no, thank you too.</Dialog>
           <Dialog>...Hehe.</Dialog>
           <Dialog>Hahaha...</Dialog>
-          <Dialog>...I wish we could continue 
-having a conversation like 
-this forever.</Dialog>
-          <Dialog>Our next milestone is the 
-next 3 years, okay？</Dialog>
-          <Dialog>No, 5 years！</Dialog>
-          <Dialog>Nah, 10 years！</Dialog>
-          <Dialog>Hehe, I want more！</Dialog>
-          <Dialog>Haha, right！ Let's try our 
-best.</Dialog>
-          <Dialog>Okay▼</Dialog>
+          <Dialog>...I hope we keep having
+conversations like this
+forever.</Dialog>
+          <Dialog>The goal for now is three
+years？</Dialog>
+          <Dialog>No, five！</Dialog>
+          <Dialog>No way, ten！</Dialog>
+          <Dialog>Hehe, longer！</Dialog>
+          <Dialog>Haha, right！ Here's to us？</Dialog>
+          <Dialog>Yes▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2032,28 +1984,24 @@ best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Can I ask you a question？</Dialog>
+          <Dialog>...Can I ask you something？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, what？</Dialog>
-          <Dialog>Well... Is it really okay 
-for you to have me by your 
-side？</Dialog>
-          <Dialog>Eh！？</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Well？ ...Is it okay for me
+to be the one by your side？</Dialog>
+          <Dialog>Eh!?</Dialog>
           <Dialog>I'm sorry！</Dialog>
-          <Dialog>I think we're happy like 
-this, but...</Dialog>
-          <Dialog>I don't if I'm the only one 
-feeling happy. I'm so 
-worried...</Dialog>
-          <Dialog>This is my first time to be 
-in a relationship, so I 
-don't really know anything.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>...Sorry. I shouldn't say 
-something like this 
-anymore.</Dialog>
-          <Dialog>(How can I let you know 
-how I feel...？)</Dialog>
+          <Dialog>I feel so happy. But...</Dialog>
+          <Dialog>I also feel anxious, like is
+it okay that I'm the only
+one this lucky...</Dialog>
+          <Dialog>This is my first time, so I
+don't know what to do...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>...I'm sorry. I'll stop
+there.</Dialog>
+          <Dialog>(How can I make sure she
+gets how I feel...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2157,27 +2105,26 @@ how I feel...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>About the question you 
-asked me earlier, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲. About your
+question the other day.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Is it really okay for you 
-to have me by your side 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>How can it not be okay！？</Dialog>
-          <Dialog>I'm okay to have you by my 
-side... No, I mean if it's 
-not you, I can't...</Dialog>
-          <Dialog>I see. We both can rest 
-assured then！</Dialog>
-          <Dialog>I see. We both can rest 
-assured then！</Dialog>
-          <Dialog>Am I really good for you？</Dialog>
-          <Dialog>It has to be you, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Am I really okay as the one
+by
+▲高嶺＊＊▲'s
+side？</Dialog>
+          <Dialog>Of course you are！</Dialog>
+          <Dialog>You're the one I want by my
+side... No, if it's not you,
+I...！</Dialog>
+          <Dialog>I see. Then we're the same.
+What a relief！</Dialog>
+          <Dialog>...Huh.</Dialog>
+          <Dialog>Are you sure？ Me？</Dialog>
+          <Dialog>I want
+▲高嶺＊＊▲.</Dialog>
           <Dialog>...I...</Dialog>
-          <Dialog>Hey, come here.</Dialog>
+          <Dialog>Come on, come here.</Dialog>
           <Dialog>...Okay！</Dialog>
         </Dialogs>
       </SDL2>
@@ -2272,28 +2219,25 @@ assured then！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How can people love someone 
-so much？</Dialog>
+          <Dialog>How can a person love one
+person this much？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>I've been thinking about 
-this lately. There's 
-probably something special.</Dialog>
-          <Dialog>In the past, I didn't have 
-any particular feelings 
-for anyone. I just loved 
-everyone and cared about 
-everyone...</Dialog>
-          <Dialog>I used to be like that, but 
-now...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>I think about it a lot
+lately. What does "special"
+even mean？</Dialog>
+          <Dialog>I never thought about liking
+or disliking people. I liked
+everyone, everyone was
+important...</Dialog>
+          <Dialog>I always thought that way,
+but now...</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>I really don't know. 
-Something must have changed 
-inside me.</Dialog>
-          <Dialog>I wonder why I have this 
-kind of feeling... This is 
-mysterious.</Dialog>
-          <Dialog>(Um, I also wonder why...)</Dialog>
+          <Dialog>You never know what'll
+happen to you, do you？</Dialog>
+          <Dialog>But really, why do I feel
+this way... It's mysterious.</Dialog>
+          <Dialog>(Yeah, why is that...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2396,32 +2340,30 @@ mysterious.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Earlier, we talked about 
-how people can love someone 
-so much, right？</Dialog>
+          <Dialog>Remember we talked about how
+a person can love one person
+so much？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, did you find out the 
-reason？</Dialog>
-          <Dialog>Yeah. For me, the answer 
-is... because it's you.</Dialog>
+          <Dialog>Yeah, figure anything out？</Dialog>
+          <Dialog>Yes. I think it's because
+it's you.</Dialog>
           <Dialog>Me？</Dialog>
           <Dialog>...Right. If it wasn't 
 you... I wouldn't have been 
 able to love someone this 
 much, for sure.</Dialog>
-          <Dialog>You are my first love, and 
-the first person who made 
-me feel this way...</Dialog>
-          <Dialog>I'm so glad that my first 
-love is you. Thank you for 
-always being by my side.</Dialog>
-          <Dialog>...No. This is like I'm 
-confessing my love to you 
-all over again.</Dialog>
-          <Dialog>But, this is really how I 
-feel. Please let me love 
-you like this forever, okay？</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>My first love, falling for
+someone for the first
+time...</Dialog>
+          <Dialog>I'm glad my first boyfriend
+is you. Thank you for being
+by my side.</Dialog>
+          <Dialog>...Oh no. It's like I'm
+confessing all over again.</Dialog>
+          <Dialog>But it's how I really feel.
+Let me keep loving you
+forever, okay？</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2516,31 +2458,27 @@ you like this forever, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, it's almost your 
-birthday, right？</Dialog>
+          <Dialog>Hey. Your birthday's coming
+up soon, right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, now that you mentioned 
+          <Dialog>Ah, now that you mention
 it...</Dialog>
           <Dialog>Is there anything you want？</Dialog>
-          <Dialog>What I want？ Hmm...</Dialog>
-          <Dialog>I'll ask you again later, 
-so think about it, okay？ 
-...Ah.</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>For something like this, is 
-it better that I keep it a 
-secret？ You might want a 
-surprise.</Dialog>
-          <Dialog>Hmm, a surprise is nice, 
-too.</Dialog>
-          <Dialog>Really？ But I want you to 
-be happy to get what you 
-want...</Dialog>
-          <Dialog>Hmm, what should I do？ 
-Hmm... Hmm...</Dialog>
-          <Dialog>(...She's just so cute like 
-this. I'll keep watching 
-her for a while.)</Dialog>
+          <Dialog>Something I want？ Hmm...</Dialog>
+          <Dialog>I'll ask again, so think
+about it？ ...Oh.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>With things like this, is it
+more fun to keep it a
+secret？</Dialog>
+          <Dialog>Could be.</Dialog>
+          <Dialog>Right？ But I want you to be
+happy...</Dialog>
+          <Dialog>Hmm, what should I do. Um,
+um...</Dialog>
+          <Dialog>(...She's kind of cute, so
+I'll just watch her for a
+while.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2634,32 +2572,29 @@ her for a while.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Have you decided whether 
-you want to hear my request 
-or not？</Dialog>
+          <Dialog>Decided which way？ Whether
+to hear my request or not.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Not yet... Can you give me 
-some more time to think？</Dialog>
-          <Dialog>That's fine. For the 
-meantime, I'll think about 
-it more seriously too.</Dialog>
-          <Dialog>Hey, is it okay that you 
-just give me some hints？</Dialog>
-          <Dialog>Hmm... But if I know 
-beforehand what kind of 
-thing I'll get, it won't be 
-a surprise when I see it.</Dialog>
-          <Dialog>...Hmm, that's true.</Dialog>
-          <Dialog>But just some vague hints 
-would be okay, right？</Dialog>
-          <Dialog>...Hmm...</Dialog>
-          <Dialog>How about a chopstick rest？ 
-Will you like it？ Or a 
-doll？ That's not good, 
-right？ Hey, which one do 
-you like？</Dialog>
-          <Dialog>(I wouldn't call them vague 
-hints...)</Dialog>
+          <Dialog>No, not yet... Can I have a
+little more time？</Dialog>
+          <Dialog>Sure. I'll think it over
+carefully too, then.</Dialog>
+          <Dialog>Hey, can I just get a hint？
+Like, your tastes.</Dialog>
+          <Dialog>Hmm... I feel like I'd guess
+what I'm getting, and it'd
+be less fun for me.</Dialog>
+          <Dialog>...Yes, maybe.</Dialog>
+          <Dialog>I'll decide about hints
+after I decide which way,
+then？</Dialog>
+          <Dialog>...Um...</Dialog>
+          <Dialog>Like, chopstick rests,
+things like that？ And dolls
+are probably no good...
+right？ Hey, am I close？</Dialog>
+          <Dialog>(That's not really a hint
+anymore...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2758,32 +2693,29 @@ hints...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, my birthday's getting 
-very close, huh...？</Dialog>
+          <Dialog>So. The day's getting closer
+and closer...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
-          <Dialog>Hahaha, it's okay. There's 
-no need to rush.</Dialog>
-          <Dialog>I don't think you have to 
-pay attention to it this 
-much.</Dialog>
-          <Dialog>No, I have to.</Dialog>
-          <Dialog>It represents the day you 
-were born into this world. 
-It's a very important day.</Dialog>
-          <Dialog>Is it troublesome for you 
-that I'm getting this happy 
-about it？</Dialog>
-          <Dialog>No, not at all. I'm very 
-thankful.</Dialog>
-          <Dialog>Okay. I was quite worried 
-that I might cause you 
-trouble. Now I'm a bit 
-relieved.</Dialog>
-          <Dialog>I'll think about it 
-carefully, so please just 
-wait, okay？</Dialog>
-          <Dialog>Okay, roger that！</Dialog>
+          <Dialog>Um...</Dialog>
+          <Dialog>Hahaha. It's fine, I'm not
+in a hurry.</Dialog>
+          <Dialog>Actually, you don't have to
+worry about it so much.</Dialog>
+          <Dialog>That's no good.</Dialog>
+          <Dialog>Because it's the important
+day you were born into this
+world.</Dialog>
+          <Dialog>I want you to be even a
+little happy... Is that a
+bother？</Dialog>
+          <Dialog>No, not at all. Thanks.</Dialog>
+          <Dialog>...No. I was worried it was
+just for my own
+satisfaction... so I'm
+relieved you said that.</Dialog>
+          <Dialog>I'll think it through, so
+wait a little longer？</Dialog>
+          <Dialog>Okay, got it！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2884,29 +2816,28 @@ wait, okay？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>I've decided.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, so this is an official 
-announcement, huh？</Dialog>
-          <Dialog>Hehe, I've decided to keep 
-it a secret.</Dialog>
-          <Dialog>I see. Okay, I'll be 
-looking forward to it then.</Dialog>
-          <Dialog>But, please don't expect 
-too much, okay？</Dialog>
-          <Dialog>Eh？</Dialog>
-          <Dialog>Um... Um... I've really 
-tried my best, but...</Dialog>
-          <Dialog>Hahaha, I was just kidding. 
-When I have you with me, I 
-don't need anything else, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>is this right？ ...T-Thank 
-you...</Dialog>
-          <Dialog>Ah, I shouldn't be easily 
-overjoyed like this, right？ 
-Is it okay that I'm happy 
-about it？</Dialog>
-          <Dialog>(For me, something like 
-this is more than enough！)</Dialog>
+          <Dialog>Oh. Time for the
+announcement？</Dialog>
+          <Dialog>Hehe. I'm keeping it a
+secret after all.</Dialog>
+          <Dialog>I see. Okay, I'll look
+forward to it.</Dialog>
+          <Dialog>But don't expect too much,
+okay？</Dialog>
+          <Dialog>Awww？</Dialog>
+          <Dialog>Oh... Um, I do mean to try
+hard, but...</Dialog>
+          <Dialog>Hahaha, just kidding. As
+long as I'm with
+▲高嶺＊＊▲, that's all I
+need.</Dialog>
+          <Dialog>...Th-Thank you...</Dialog>
+          <Dialog>Oh. You don't have to make
+me happy like that right
+now, okay？ I'm happy, but
+no fair？</Dialog>
+          <Dialog>(This alone is plenty for
+me！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2996,31 +2927,29 @@ this is more than enough！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's almost your birthday, 
-right, ▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲'s birthday is
+almost here, huh.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. Thank you for 
-remembering it.</Dialog>
-          <Dialog>Has your family started 
-talking about this？</Dialog>
-          <Dialog>Not yet. Hehe, you're 
-pretty fast.</Dialog>
+          <Dialog>Yes. Thank you for
+remembering.</Dialog>
+          <Dialog>Are they starting to talk
+about it at home？</Dialog>
+          <Dialog>Not yet. Hehe, it's too
+early.</Dialog>
           <Dialog>Hahaha, I see.</Dialog>
-          <Dialog>We bake some cake at home 
-every year, but we don't 
-really talk about it like 
-this.</Dialog>
-          <Dialog>Don't tell me you bake your 
-own birthday cakes, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>No, Papa is always the one 
-baking it for me.</Dialog>
-          <Dialog>Huh？ So it's like that in 
-your family, huh？</Dialog>
-          <Dialog>Yeah, it's quite thrilling 
-every year. Hehe.</Dialog>
-          <Dialog>(Huh？ That means he's not 
-very good at it, eh？)</Dialog>
+          <Dialog>But we make a cake every
+year, so maybe they're
+talking about that？</Dialog>
+          <Dialog>Don't tell me ▲高嶺＊＊▲
+bakes her own birthday
+cake？</Dialog>
+          <Dialog>No. On that day, Papa makes
+it for me.</Dialog>
+          <Dialog>Huh, so that's how it's
+split up.</Dialog>
+          <Dialog>Yes. It's nerve-racking
+every time, hehe.</Dialog>
+          <Dialog>(Hm？ Is he not very good？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3125,36 +3054,36 @@ very good at it, eh？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you have a big birthday 
-party at home 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Does
+▲高嶺＊＊▲'s
+family throw a big birthday
+party？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Not a big one, but there's 
-always a party.</Dialog>
-          <Dialog>We eat cake, sing "Happy 
-Birthday," and then I open 
-the presents, something 
-like that.</Dialog>
-          <Dialog>Our dinner will be a little 
-bit more special. We 
-reminisce about the old 
-days while we're eating.</Dialog>
-          <Dialog>Reminisce about the old 
-days？</Dialog>
-          <Dialog>Yeah, something about when 
-I was in grade school or 
-when Papa and Mama were 
-young.</Dialog>
-          <Dialog>Hmm... That sounds fun.</Dialog>
-          <Dialog>Hehe, I usually stay up 
-late on my birthday.</Dialog>
-          <Dialog>I'm hoping I can stay up 
-even later this year.</Dialog>
-          <Dialog>Like, until 9:30 PM？</Dialog>
-          <Dialog>...I can stay longer than 
-that... I think.</Dialog>
-          <Dialog>(But that's about your 
-limit, isn't it...？)</Dialog>
+          <Dialog>Not big, exactly, but we do
+it properly？</Dialog>
+          <Dialog>Like I said before, we make
+a cake, sing "Happy
+Birthday," and exchange
+presents.</Dialog>
+          <Dialog>Then we eat a slightly
+fancier dinner than usual
+and reminisce.</Dialog>
+          <Dialog>Reminisce？</Dialog>
+          <Dialog>Yes. Stories from when I was
+in grade school, or when
+Papa and Mama were young.</Dialog>
+          <Dialog>Huh... Sounds fun.</Dialog>
+          <Dialog>Hehe. My birthday's the one
+night I get to stay up a
+little late.</Dialog>
+          <Dialog>I hope I can stay awake
+longer than last year.</Dialog>
+          <Dialog>Like, 9:30？</Dialog>
+          <Dialog>...I can stay up a little
+longer than that.
+...Probably.</Dialog>
+          <Dialog>(But that's probably her
+limit...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3233,28 +3162,25 @@ limit, isn't it...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, do you have anything 
-you want to ask from me 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>By the way,
+▲高嶺＊＊▲.
+There was something I wanted
+to ask.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ What do you mean？</Dialog>
-          <Dialog>Do you have any requests？ 
-Like something you want 
-or somewhere you want to 
-visit？</Dialog>
-          <Dialog>Hmm... I don't have any.</Dialog>
-          <Dialog>Huh？ None at all？</Dialog>
-          <Dialog>Yes, just hearing you say 
-"Happy Birthday" to me is 
-enough.</Dialog>
-          <Dialog>Of course, I'll be saying 
-that.</Dialog>
-          <Dialog>Hehe. Just that is more 
-than enough. You don't have 
-to concern yourself about 
-it too much. Thank you.</Dialog>
-          <Dialog>(Hmm... What should I get 
-for her then...？)</Dialog>
+          <Dialog>Yes, what is it？</Dialog>
+          <Dialog>Any requests？ Something you
+want, somewhere you want to
+go？</Dialog>
+          <Dialog>Hmm... Not really.</Dialog>
+          <Dialog>Ugh. Nothing？</Dialog>
+          <Dialog>Yes. If you just say happy
+birthday, that's enough.</Dialog>
+          <Dialog>I'll say that, of course.</Dialog>
+          <Dialog>Hehe. Just being celebrated
+makes me happy, so really,
+don't worry？ Thank you for
+thinking of it.</Dialog>
+          <Dialog>(Hmm... What should I do...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3367,36 +3293,33 @@ for her then...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>About what you asked me 
-earlier, whether I had a 
-request for my birthday 
-present or not...</Dialog>
+          <Dialog>About the birthday request
+you asked about the other
+day...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh！ You've got something 
-you want？</Dialog>
-          <Dialog>Yes... I want you.</Dialog>
-          <Dialog>Okay, that's good... What！？</Dialog>
-          <Dialog>One year from now, I want 
-you to always be with me. 
-And on my next birthday, 
-I'll request the same 
-thing. Is this not okay？</Dialog>
-          <Dialog>...I was just surprised. 
-Of course, it's okay... 
-But you want just this？</Dialog>
-          <Dialog>What do you mean by "just" 
-this？</Dialog>
-          <Dialog>Because I'll always be with 
-you no matter what, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Oh！ Thought of something？</Dialog>
+          <Dialog>Yes. ...You.</Dialog>
+          <Dialog>Ah, then... Wait, what!?</Dialog>
+          <Dialog>The right to stay by your
+side for the next year. And
+it renews every year. Is
+that no good？</Dialog>
+          <Dialog>...That surprised me. It's
+not no good... but is that
+really all？</Dialog>
+          <Dialog>What do you mean, "all"？</Dialog>
+          <Dialog>Well, the seat next to me is
+already
+▲高嶺＊＊▲'s.
+It's reserved.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>That's all I want to hear. 
-Thank you. You've made me 
-feel very happy even before 
-my birthday has arrived.</Dialog>
-          <Dialog>You can look forward to my 
-request every year, okay？</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>Those words alone are plenty
+for me. Thank you for making
+me this happy even before my
+birthday.</Dialog>
+          <Dialog>I'll look forward to it
+every year, okay？</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3486,28 +3409,25 @@ request every year, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's been a year, huh...？</Dialog>
+          <Dialog>It's almost a year, huh...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ What？</Dialog>
-          <Dialog>Come on, it's almost a year 
-since we started dating.</Dialog>
-          <Dialog>...Yeah. It went by very 
-fast.</Dialog>
-          <Dialog>In the beginning, I kept 
-thinking what it would feel 
-like after a year has 
-passed...</Dialog>
-          <Dialog>Nothing has changed, right？</Dialog>
+          <Dialog>Hm？ What？</Dialog>
+          <Dialog>You know, since we started
+going out.</Dialog>
+          <Dialog>...Yes. It feels like it
+went by so fast.</Dialog>
+          <Dialog>At first, I wondered what
+things would be like after a
+year, but...</Dialog>
+          <Dialog>Not much has changed？</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>No... To have you by my 
-side, and to talk about 
-this with you...</Dialog>
-          <Dialog>A lot of wonderful things 
-have happened. Yeah.</Dialog>
-          <Dialog>(What was with that quiet 
-moment？ I'm a bit 
-concerned...)</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>No. You're beside me. We're
+talking like this...</Dialog>
+          <Dialog>I just think that's amazing.
+Yes.</Dialog>
+          <Dialog>(That pause just now bugs me
+a little...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3611,36 +3531,32 @@ concerned...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, earlier, we talked 
-about what would happen 
-after we've been together 
-for a year, right？</Dialog>
+          <Dialog>Hey, you said the other day
+you wondered what things
+would be like after a year,
+right？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...Yeah.</Dialog>
-          <Dialog>At that time, was there 
-something in your mind？</Dialog>
-          <Dialog>...Hehehe. I really can't 
-hide anything from you...</Dialog>
-          <Dialog>To tell you the truth... 
-I was about to tell you 
-that I couldn't believe 
-that you would still be 
-with me after a year.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>I don't have the 
-confidence... I don't know 
-if it's okay to be happy 
-about what we are now...</Dialog>
-          <Dialog>...That was what I thought 
-about back then...</Dialog>
-          <Dialog>Ah, but I'm okay now. After 
-you said so many things to 
-me, I've gained a little 
-more confidence.</Dialog>
-          <Dialog>So, don't worry... Sorry 
+          <Dialog>...Yes.</Dialog>
+          <Dialog>Weren't you thinking
+something after that？</Dialog>
+          <Dialog>...Hehe. I can't hide
+anything from you...</Dialog>
+          <Dialog>To be honest... back then, I
+thought that a year later, I
+might not be by your side.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>I couldn't believe in
+myself. ...Was it really
+okay to be this happy...</Dialog>
+          <Dialog>...So I thought things like
+that...</Dialog>
+          <Dialog>Oh, but I'm okay now？
+You've said so many things
+to me... I've gained a
+little confidence.</Dialog>
+          <Dialog>So don't worry？ ...Sorry
 for saying something weird.</Dialog>
-          <Dialog>(Just "a little" more 
-confidence...？)</Dialog>
+          <Dialog>(Just "a little"...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3740,29 +3656,27 @@ confidence...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Is there anything about me 
-you want me to improve, 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Is there anything
+▲高嶺＊＊▲
+wants me to fix？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, why ask this all of 
-a sudden？</Dialog>
-          <Dialog>Come on. We've been 
-together for so long. Just 
-tell me the truth.</Dialog>
-          <Dialog>Hmm... Maybe nothing？</Dialog>
+          <Dialog>Hehe, what's this all of a
+sudden？</Dialog>
+          <Dialog>Well, it's our first
+anniversary, so let's be
+clear about it.</Dialog>
+          <Dialog>Hmm... Not really？</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>...Yup.</Dialog>
-          <Dialog>No, there's something！</Dialog>
-          <Dialog>Eh？ Hey, this has happened 
-before... How did you know 
-what I was thinking？</Dialog>
-          <Dialog>That's because I'm your 
-boyfriend.</Dialog>
-          <Dialog>...Hmm, is that so？</Dialog>
-          <Dialog>Now I have a lot more 
-confidence...</Dialog>
-          <Dialog>(Yeah, this is going 
-great！)</Dialog>
+          <Dialog>...Yes.</Dialog>
+          <Dialog>No, there is something！</Dialog>
+          <Dialog>What！ ...Hey, it was like
+this last time too... How
+can you tell？</Dialog>
+          <Dialog>Well, I am your boyfriend.</Dialog>
+          <Dialog>...Yes, I see...</Dialog>
+          <Dialog>I feel like I could get
+really confident...</Dialog>
+          <Dialog>(Yep, a good sign！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3832,22 +3746,21 @@ great！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A year's passed, hasn't it？</Dialog>
+          <Dialog>Our first anniversary's
+right around the corner,
+huh？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. Thank you for the 
-past year. Um, I...</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>Is it OK if I stay by your 
-side like this for the next 
-year, too？</Dialog>
+          <Dialog>Yes. Thank you for this
+year. You know, I...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Can I stay by your side like
+this next year too？ ...Oh.</Dialog>
           <Dialog>...Ah？</Dialog>
-          <Dialog>Well, I want to continue 
-being with you like this. 
-So... please treat me 
-kindly, okay？</Dialog>
-          <Dialog>Oh, same here. Please treat 
-me well.</Dialog>
-          <Dialog>Okay▼</Dialog>
+          <Dialog>No, I want to be by your
+side even after that. So...
+here's to us, okay？</Dialog>
+          <Dialog>Sure. Here's to us, too.</Dialog>
+          <Dialog>Yes▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3941,30 +3854,25 @@ me well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, I have a question.</Dialog>
+          <Dialog>Hey, a question.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？？ What is it？</Dialog>
-          <Dialog>...Do you regret that I 
-became your girlfriend？</Dialog>
-          <Dialog>Why are you saying this all 
-of a sudden...？ Did I do 
-something bad？</Dialog>
-          <Dialog>No, it's not like that. 
-It's just...</Dialog>
-          <Dialog>It's just, I don't think I 
-have confidence in myself...</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>It's like I want to 
-compensate for my own 
-worthlessness. I feel like 
-I still don't put enough 
-effort.</Dialog>
-          <Dialog>I'm sorry. Just now, can 
-you pretend you didn't 
-hear that？</Dialog>
-          <Dialog>(You can have all the 
-confidence in yourself 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Hm？ What？</Dialog>
+          <Dialog>...Do you regret making me
+your girlfriend？</Dialog>
+          <Dialog>Why so suddenly... Did I do
+something？</Dialog>
+          <Dialog>No, it's not that. It's
+just...</Dialog>
+          <Dialog>It's just, I think I don't
+have confidence...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>...Wanting you to make up
+for my own shortcomings... I
+still need to work harder.</Dialog>
+          <Dialog>I'm sorry. Pretend you
+didn't hear that？</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+should be more confident...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4049,35 +3957,31 @@ confidence in yourself
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I've never had any 
-regrets to have you as my 
-girlfriend, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲. I have never
+once regretted that
+▲高嶺＊＊▲ became my
+girlfriend.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>W-What is this all of a 
-sudden...？</Dialog>
-          <Dialog>Rather,I've been wondering 
-if I'm good enough for 
-you...</Dialog>
-          <Dialog>Hey, besides you... I've 
-never even thought about 
-anyone else.</Dialog>
-          <Dialog>Yeah, It's the same for me, 
-too. So, we should both 
-have confidence in 
-ourselves. We're equal now.</Dialog>
-          <Dialog>Can I really be confident？</Dialog>
-          <Dialog>Of course！ But... Is it 
-okay that your spirit might 
-rub off on me？</Dialog>
-          <Dialog>Hehe... It's okay if you're 
-brimming with confidence.</Dialog>
-          <Dialog>Well then, I should do the 
-same. Otherwise, it'll be 
-unfair ▲Takane＊＊▲.</Dialog>
-          <Dialog>Hehehe！ I understand... 
-From now on, let's do our 
-best together, okay？</Dialog>
+          <Dialog>W-What？ All of a sudden...</Dialog>
+          <Dialog>If anything, am I okay？ As
+the boyfriend you chose？</Dialog>
+          <Dialog>N-No one but you... I've
+never even considered it.</Dialog>
+          <Dialog>Yeah, me too. So let's both
+be confident from here on.
+Confirming our feelings like
+this.</Dialog>
+          <Dialog>...I can be confident？</Dialog>
+          <Dialog>Of course！ In exchange,
+help me get confident too？</Dialog>
+          <Dialog>Hehe... Geez... You can be
+full of confidence, you
+know？</Dialog>
+          <Dialog>Then ▲高嶺＊＊▲ should be
+too. Otherwise it's unfair.</Dialog>
+          <Dialog>Hehehe！ Understood.
+...Here's to us from now on,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4176,32 +4080,28 @@ best together, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you know the mechanisms 
-of falling in love？</Dialog>
+          <Dialog>Do you know how falling in
+love works？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Mechanisms？</Dialog>
-          <Dialog>Yes. Everything we feel, 
-including heart throbbing 
-or the feelings of 
-happiness, is because of 
-substances in our brain.</Dialog>
-          <Dialog>Mmm, that's rather blunt...</Dialog>
-          <Dialog>Isn't it？ It's so 
-scientific that I'm a 
-little disappointed.</Dialog>
-          <Dialog>It's too much if you think 
-that the way we are is 
-thanks to adrenaline, 
-endorphins and the like.</Dialog>
-          <Dialog>Hmmm... But, is that really 
-how it is？</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>I mean, do people just fall 
-in love because of that？</Dialog>
-          <Dialog>...I wonder. But somehow, I 
-hope there's something more 
-to it than that...</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>How it works？</Dialog>
+          <Dialog>Yes. It's all because of
+chemicals in the brain. Your
+heart pounding, feeling
+happy, all of it.</Dialog>
+          <Dialog>That's kind of blunt...</Dialog>
+          <Dialog>Right？ It's so scientific,
+I was a little disappointed.</Dialog>
+          <Dialog>Even more when I think that
+us being like this is thanks
+to adrenaline or endorphins.</Dialog>
+          <Dialog>Hmm... But is that really
+true？</Dialog>
+          <Dialog>Really？</Dialog>
+          <Dialog>I mean, do people fall in
+love just from that？</Dialog>
+          <Dialog>...I wonder. I hope it's not
+just that, but...</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4307,31 +4207,31 @@ to it than that...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've decided to stop 
-thinking about it, you know？</Dialog>
+          <Dialog>You know？ I've decided to
+stop thinking about it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Ah, about the mechanisms 
-of falling in love？</Dialog>
-          <Dialog>Yeah. Assuming that brain 
-substances are capricious 
-like that... I have that 
-kind of feeling only when 
-I'm with you.</Dialog>
-          <Dialog>...Because I met you, I 
-fell in love with you. With 
-just that, I'm fine.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>Besides, isn't it annoying？ 
-I don't need scientific 
-talk. I can tell that I 
-love you just like this.</Dialog>
-          <Dialog>Yeah, you could say that.</Dialog>
+          <Dialog>Hm？ ...Oh, how falling in
+love works？</Dialog>
+          <Dialog>Yes. Even if it's just brain
+chemicals acting on a
+whim... I think it only
+would have happened in front
+of you.</Dialog>
+          <Dialog>...I met you, and I fell in
+love with you. I think
+that's all I need.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>Besides, isn't it
+frustrating？ I don't want
+this much love for you
+explained away as science.</Dialog>
+          <Dialog>Yeah, I see your point.</Dialog>
           <Dialog>Hehe, right？</Dialog>
-          <Dialog>I think, definitely, from 
-now on... I'll grow to love 
-you more and more... You 
-accept that, right？</Dialog>
-          <Dialog>Yeah, trust me！</Dialog>
+          <Dialog>I'm sure I'll keep loving
+you more and more from now
+on... You'll take it all,
+okay？</Dialog>
+          <Dialog>Sure, leave it to me！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4431,36 +4331,34 @@ accept that, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say, you're a bit forgetful 
-but... Your birthday is 
-coming up soon, isn't it？</Dialog>
+          <Dialog>Hey, it's a little early,
+but... your birthday's
+coming up, isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah！.. My birthday？</Dialog>
-          <Dialog>Hehe, yes. Not anyone 
-else's, it's yours.</Dialog>
-          <Dialog>Really？ Looks like my 
-adulthood is approaching.</Dialog>
-          <Dialog>To mark the occasion, do 
-you have any requests, 
-like something you want？</Dialog>
-          <Dialog>Are you going to give me a 
-present？ Let me see it 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>It's okay if it's not right 
-now. So, will you think 
-about it for me？</Dialog>
-          <Dialog>Sure, I will. But, why do 
-you look so happy？</Dialog>
-          <Dialog>Well, it's the day my 
-darling was born and I can 
-celebrate it. Why shouldn't 
-I be happy？</Dialog>
-          <Dialog>...Uh, um...</Dialog>
-          <Dialog>Ah, are you embarrassed？ 
-How cute▼</Dialog>
-          <Dialog>(When it's said right to my 
-face like that, I guess it 
-can't be helped...)</Dialog>
+          <Dialog>Ah！ Mine？</Dialog>
+          <Dialog>Hehe, yes. Yours, nobody
+else's.</Dialog>
+          <Dialog>I see, one step closer to
+being a grown-up.</Dialog>
+          <Dialog>To mark it, is there
+anything you want, any
+requests？</Dialog>
+          <Dialog>From
+▲高嶺＊＊▲
+to me？ Let's see...</Dialog>
+          <Dialog>It doesn't have to be right
+now, so will you think about
+it？</Dialog>
+          <Dialog>Sure, got it. But why do you
+look so happy？</Dialog>
+          <Dialog>Because it's the day you
+were born, you know？ I get
+to celebrate it, so how
+could I not be happy？</Dialog>
+          <Dialog>...H-Hey...</Dialog>
+          <Dialog>Oh, you're blushing？ Cute▼</Dialog>
+          <Dialog>(Anyone would, if you said
+that to their face...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4545,31 +4443,28 @@ can't be helped...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say, have you thought about 
-your request？</Dialog>
+          <Dialog>Hey, did you think of it？
+Your request.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Not yet. I really can't 
-decide yet.</Dialog>
-          <Dialog>Being a young man, you 
-shouldn't keep thinking 
-about it for too long.</Dialog>
-          <Dialog>Hahaha. On the other hand, 
-do you have anything you 
-want to give me 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Not yet. I'm torn on a lot
+of things.</Dialog>
+          <Dialog>Hmm, ponder away. That's the
+privilege of youth.</Dialog>
+          <Dialog>Hahaha. Hey, on the flip
+side, is there something
+▲高嶺＊＊▲ wants to give
+me？</Dialog>
           <Dialog>Hmm？</Dialog>
-          <Dialog>Oh, seems like you do.</Dialog>
-          <Dialog>It's not like I don't have 
-any, but I prefer to give 
-you something you want.</Dialog>
+          <Dialog>Oh. There is.</Dialog>
+          <Dialog>I won't say there isn't. But
+still, I want to give you
+something you want.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>Because I'm interested in 
-what you'll request. Hehe, 
-I'm looking forward to it, 
-OK▼</Dialog>
-          <Dialog>(It seems like a difficult 
-hurdle has arisen... Is it 
-just my imagination？)</Dialog>
+          <Dialog>And I'm curious what you'll
+pick. Hehe, can't wait▼</Dialog>
+          <Dialog>(D-Did the bar just get
+higher... Or is it just
+me？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4662,31 +4557,28 @@ just my imagination？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I haven't given any 
-thought about my birthday 
-present request yet...)</Dialog>
+          <Dialog>(Come to think of it, I
+still haven't thought of a
+birthday request...)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey！</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>Hehe, I can see through 
-you. With that look, you 
-haven't decided what you 
-want yet, right？</Dialog>
-          <Dialog>Yeah...</Dialog>
-          <Dialog>Geez, I didn't mean to make 
-you feel troubled like 
-this. Hey, how about you 
-let me pick a present for 
-you？</Dialog>
-          <Dialog>That way you don't have to 
-worry about it so much.</Dialog>
-          <Dialog>Ah... you don't have to.</Dialog>
-          <Dialog>No, it's not good that you 
-have to worry about your 
-own birthday present.</Dialog>
-          <Dialog>(But, now I have to make 
-sure you don't worry about 
-it too much...)</Dialog>
+          <Dialog>Hey, you.</Dialog>
+          <Dialog>Huh!?</Dialog>
+          <Dialog>Hehe, it's written all over
+your face. You haven't
+decided yet, right？</Dialog>
+          <Dialog>No...</Dialog>
+          <Dialog>Geez. I didn't mean to make
+you worry this much... Hey,
+can you leave the rest to
+me？</Dialog>
+          <Dialog>In exchange... don't brood
+over it so much alone.</Dialog>
+          <Dialog>Ah... You're right.</Dialog>
+          <Dialog>No, it was my fault too. I
+wanted to celebrate, and I
+made you worry.</Dialog>
+          <Dialog>(I ended up making her worry
+instead... I'll be careful.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4796,36 +4688,35 @@ it too much...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How is it？ Have you 
-decided what you'd do for 
-my birthday 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲, how's it
+going？ Is my birthday plan
+coming along？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...Geez, you're not wrong 
-about it...</Dialog>
-          <Dialog>Hahaha. I guessed right.</Dialog>
-          <Dialog>Hehe. Okay, okay. There's 
-been some progress. You can 
-look forward to it.</Dialog>
-          <Dialog>Oh, you're very confident, 
-huh？</Dialog>
-          <Dialog>...Yeah. Because I'm the 
-happiest person when it 
-comes to your birthday.</Dialog>
-          <Dialog>Even more than I am？</Dialog>
-          <Dialog>Yeah, that's why I'm 
-confident that I can make 
-you happy... I'm kidding.</Dialog>
-          <Dialog>Ah, I must be the first one 
-to say Happy Birthday to 
-you. If someone else is 
-about to say it before me, 
-you've got to run away！</Dialog>
-          <Dialog>...I'll try.</Dialog>
-          <Dialog>No, you must run away.</Dialog>
-          <Dialog>Haha, roger that！</Dialog>
-          <Dialog>Very well. I'm kidding！ 
-Teehee！</Dialog>
+          <Dialog>...Geez. You're totally
+different from the other
+day.</Dialog>
+          <Dialog>Hahaha. Well, you know.</Dialog>
+          <Dialog>Hehe, okay, okay. It's
+coming along？ Look forward
+to it？</Dialog>
+          <Dialog>Oh, confident？</Dialog>
+          <Dialog>...Yes. Because the person
+happiest about your birthday
+is surely me.</Dialog>
+          <Dialog>More than me？</Dialog>
+          <Dialog>Yes. So I'm confident I can
+make you smile. ...Just
+saying.</Dialog>
+          <Dialog>Oh, and I'm saying happy
+birthday first, so if
+someone's about to say it,
+run away, okay？ At full
+speed！</Dialog>
+          <Dialog>...I'll do what I can.</Dialog>
+          <Dialog>No, please do it.</Dialog>
+          <Dialog>Haha, roger！</Dialog>
+          <Dialog>Good. Just kidding！
+Hehehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4924,32 +4815,29 @@ Teehee！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The day of your birthday is 
-getting close, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲'s birthday is
+coming up soon...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ You remembered？</Dialog>
+          <Dialog>Hmm, you remembered？</Dialog>
           <Dialog>Of course.</Dialog>
-          <Dialog>Hehe. Thanks. Are you 
-planning something for me？</Dialog>
-          <Dialog>Um, yeah. Speaking of 
-which, will you have 
-anything special at home？</Dialog>
-          <Dialog>Yeah, it's marked on the 
-schedule of everyone in my 
-family.</Dialog>
-          <Dialog>I see. Your family always 
-celebrates birthdays and 
-such, hmm, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>It'll be a big issue if 
-anyone forgets.</Dialog>
-          <Dialog>So, you mustn't... Ah, but 
-since you mentioned it as 
-early as now, I can rest 
-assured, can't I？</Dialog>
-          <Dialog>Yeah... I don't think I'll 
-forget...</Dialog>
+          <Dialog>Hehe, thank you. Are you
+maybe planning something？</Dialog>
+          <Dialog>Yeah, kind of. By the way,
+does your family do
+anything？</Dialog>
+          <Dialog>Yes. It's firmly built into
+the yearly schedule.</Dialog>
+          <Dialog>I see.
+▲高嶺＊＊▲'s
+family seems really proper
+about that.</Dialog>
+          <Dialog>If anyone forgot, there'd be
+trouble？</Dialog>
+          <Dialog>So you too... Oh, but since
+you're bringing it up this
+early, you'll be fine？</Dialog>
+          <Dialog>Hmm... I plan to be,
+anyway...</Dialog>
           <Dialog>Teeheehee！</Dialog>
         </Dialogs>
       </SDL2>
@@ -5059,40 +4947,35 @@ forget...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, up until now, what has 
-been the present that you 
-got that you liked most, 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Hey,
+▲高嶺＊＊▲.
+What's the present that made
+you happiest so far？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What I liked most is the 
-fountain pen that Papa and 
-Mama gave me when I entered 
-junior high.</Dialog>
-          <Dialog>Hmm... A fountain pen？</Dialog>
-          <Dialog>Mama always uses fountain 
-pens. She looks very cool 
-when she writes. I used to 
-imitate her when I was a 
-child.</Dialog>
-          <Dialog>It felt great when I wrote 
-with a fountain pen, so I 
-used it every day until she 
-found out.</Dialog>
-          <Dialog>...It wasn't a nice idea to 
-write until the pen nib 
-broke.</Dialog>
-          <Dialog>Hahaha. That's what I can 
-expect from you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Then my parents gave one to 
-me as a present on the 
-entrance ceremony. But I 
-didn't want to ruin it, so 
-I didn't use it.</Dialog>
-          <Dialog>That's kind of wasteful...</Dialog>
-          <Dialog>Yeah, probably. Anyway, is 
-this useful as a reference？</Dialog>
-          <Dialog>...Who knows？</Dialog>
+          <Dialog>The best was a fountain pen,
+I think？ A gift from Papa
+and Mama when I started
+middle school.</Dialog>
+          <Dialog>Huh... Why a fountain pen？</Dialog>
+          <Dialog>Mama always used one？ She
+looked so lovely using it
+that I secretly tried it.</Dialog>
+          <Dialog>And it was so nice to write
+with. I used it every day,
+so I got caught right away.</Dialog>
+          <Dialog>...Writing until I crushed
+the nib was no good, was it.</Dialog>
+          <Dialog>Hahaha, that's so
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>So they gave me one at my
+entrance ceremony. But it's
+too precious, so I don't use
+it.</Dialog>
+          <Dialog>Not using it seems more of a
+waste...</Dialog>
+          <Dialog>Yes, I know. So？ Was that
+helpful？</Dialog>
+          <Dialog>...Um？</Dialog>
           <Dialog>Hehe！ Do your best, okay？</Dialog>
         </Dialogs>
       </SDL2>
@@ -5182,35 +5065,30 @@ this useful as a reference？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Have you ever hated your 
-birthday 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Does
+▲高嶺＊＊▲
+ever hate birthdays？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Why？</Dialog>
-          <Dialog>Sometimes when I mentioned 
-about birthdays to girls, 
-some of them looked 
-depressed.</Dialog>
-          <Dialog>Hehe. Yeah, I think that 
-happens. But for me, I'm 
-really looking forward to 
-my birthday...</Dialog>
-          <Dialog>Ah, I can say that it's 
-time to contemplate on 
-different things.</Dialog>
-          <Dialog>Contemplate？</Dialog>
-          <Dialog>Yeah, when your birthday 
-arrives, you grow up for 
-another year. It's like 
-you're getting close to 
-becoming an adult, right？</Dialog>
-          <Dialog>That's true.</Dialog>
-          <Dialog>This has turned to be such 
-a serious conversation, but 
-I think that's how I feel.</Dialog>
-          <Dialog>(You really think about 
-things seriously, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>I hear it sometimes. Girls
+talking about it with gloomy
+faces.</Dialog>
+          <Dialog>Hehe, yes, there might be
+some. For me, it's fun and
+I'm happy, but...</Dialog>
+          <Dialog>Oh, and it helps me refocus.</Dialog>
+          <Dialog>Refocus？</Dialog>
+          <Dialog>Yes. Getting older isn't the
+only part of growing up,
+right？ I want to really
+grow each year, don't you？</Dialog>
+          <Dialog>I see.</Dialog>
+          <Dialog>That got a little serious.
+Yes, but that's how I feel,
+I guess？</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+really does think things
+through...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5295,32 +5173,27 @@ things seriously,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Your birthday is getting 
-closer and closer, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>One way or another,
+▲高嶺＊＊▲'s
+birthday is almost here...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. Hey, last time, I 
-told you that I usually 
-contemplate on different 
-things on my birthday, 
-right？</Dialog>
-          <Dialog>Yeah, sure.</Dialog>
-          <Dialog>But this year... I don't 
-really think much about it.</Dialog>
-          <Dialog>Eh...？ Why？</Dialog>
-          <Dialog>Because you're with me. 
-Just this already makes my 
-heart throb.</Dialog>
-          <Dialog>I'm sure my birthday this 
-year will turn out to be a 
-great one. One that I'll 
-never forget.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>...Hehe！ That's why you 
-should be the first one to 
-say Happy Birthday to me 
-this year. I'll be waiting.</Dialog>
-          <Dialog>Okay！</Dialog>
+          <Dialog>Yes. Hey, remember I said
+birthdays help me refocus？</Dialog>
+          <Dialog>Ah, yeah.</Dialog>
+          <Dialog>But this year... I'm not
+thinking about that much.</Dialog>
+          <Dialog>Huh... Why？</Dialog>
+          <Dialog>Because you're here with me.
+That alone makes my heart
+pound.</Dialog>
+          <Dialog>I think it'll be a special
+day I won't forget no matter
+how many years pass.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>...Hehe！ So come be the
+first to say happy birthday,
+okay？ I'll be waiting.</Dialog>
+          <Dialog>Sure！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5408,33 +5281,27 @@ this year. I'll be waiting.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From that time... Since I 
-confessed my love to you, 
-it's almost been a year.</Dialog>
+          <Dialog>Since then... since the day
+I confessed to you, it's
+almost a year.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Really？... Yeah, it was 
-around this time.</Dialog>
-          <Dialog>It's "already" been a year 
-or "just" a year... I'm not 
-sure how I feel. It's funny 
-how time plays tricks like 
-that.</Dialog>
+          <Dialog>Right... Yeah, it was around
+this time.</Dialog>
+          <Dialog>It feels like "already," and
+it feels like "only"... Time
+is strange.</Dialog>
           <Dialog>Yeah.</Dialog>
-          <Dialog>Hehe. Many things have 
-happened during this one 
-year, huh？</Dialog>
-          <Dialog>Yeah, so many that I can't 
-possibly count them.</Dialog>
-          <Dialog>Hey, if the first year has 
-been like this, then how do 
-you think the later years 
-will turn out？</Dialog>
-          <Dialog>I'm sure much more crazy 
-stuff will happen. Are you 
-ready for it？</Dialog>
-          <Dialog>Hehe, of course. Let's 
-continue making memories 
-together.</Dialog>
+          <Dialog>Hehe. A lot happened this
+year, didn't it？</Dialog>
+          <Dialog>Yeah, more than I can count
+on both hands.</Dialog>
+          <Dialog>Hey, if the first year was
+like this, what'll the
+second and third be like？</Dialog>
+          <Dialog>Oh, it'll be wild. Ready？</Dialog>
+          <Dialog>Hehe, of course. Let's keep
+making lots of memories,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5519,29 +5386,25 @@ together.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, have I... become a 
-proper girlfriend for you？</Dialog>
+          <Dialog>Hey, am I... growing
+properly as your
+girlfriend？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You're perfect as a 
-girlfriend.</Dialog>
-          <Dialog>...You answered pretty 
-quickly. Are you sure？</Dialog>
-          <Dialog>I'm positive. We've done 
-all sorts of things... 
-There are things I couldn't 
-have done if you weren't my 
-girlfriend.</Dialog>
-          <Dialog>Eh！？ What are you talking 
-about？ Y-You shouldn't be 
-talking about that kind of 
-stuff here...</Dialog>
-          <Dialog>Stuff like going out on 
-dates and holding hands 
-while we walk...</Dialog>
+          <Dialog>I'd say you're perfect, no？</Dialog>
+          <Dialog>...You answered instantly.
+Is that true？</Dialog>
+          <Dialog>It's true. For instance,
+things only a girlfriend can
+do, like this and that...</Dialog>
+          <Dialog>Huh!? W-What are you
+talking about？ Geez, in a
+place like this...</Dialog>
+          <Dialog>Going on dates, walking hand
+in hand, right？</Dialog>
           <Dialog>Ah...！</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>Hmph... forget it！</Dialog>
-          <Dialog>(...Why is she so angry？)</Dialog>
+          <Dialog>Geez... Hmph！</Dialog>
+          <Dialog>(...Why is she mad？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5630,30 +5493,29 @@ while we walk...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's continue what we were 
-talking about before...</Dialog>
+          <Dialog>About what we were talking
+about the other day.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh. So, you want to say 
-more weird stuff？</Dialog>
-          <Dialog>I wasn't going to！ I'm 
-your boyfriend, so I wonder 
-if I'm good enough, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Oh. You're going to say
+something weird again,
+aren't you？</Dialog>
+          <Dialog>I-I won't. I was wondering
+if I'm growing as
+▲高嶺＊＊▲'s boyfriend.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>...Why are you so quiet 
-now？</Dialog>
-          <Dialog>Hehe, just teasing you. To 
-be honest, I think you're 
-almost too good to be my 
-boyfriend.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>It'd be great if you didn't 
-say weird things... But 
-that's what makes you who 
-you are, I suppose？</Dialog>
-          <Dialog>Please don't ever change▼</Dialog>
-          <Dialog>(I should be feeling happy 
-to hear this... right？)</Dialog>
+          <Dialog>...Why'd you go quiet？</Dialog>
+          <Dialog>Hehe, kidding. I think
+you're too good a boyfriend
+for me？</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>If you'd stop saying things
+like last time, you'd be
+even better... But that's
+part of you too, right？</Dialog>
+          <Dialog>Please stay just as you
+are▼</Dialog>
+          <Dialog>(I can just be happy about
+that... right？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5743,25 +5605,22 @@ to hear this... right？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The countdown to our one 
-year anniversary has 
-started▼</Dialog>
+          <Dialog>The countdown to our first
+anniversary has begun▼</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>So it has.</Dialog>
-          <Dialog>Hehe. I know there's a 
-saying "Don't count your 
-chickens before they hatch" 
-but...</Dialog>
-          <Dialog>Next year, and the years 
-after that, wouldn't it be 
-nice to stay like this？</Dialog>
-          <Dialog>Yeah, and we'll keep 
-growing together.</Dialog>
-          <Dialog>Yeah, bit by bit, we're 
-getting there.... Until we 
-finally grow old together.</Dialog>
-          <Dialog>Forever and ever.</Dialog>
-          <Dialog>Forever and ever.</Dialog>
+          <Dialog>It has.</Dialog>
+          <Dialog>Hehe. They say it's tempting
+fate to talk about next
+year, but...</Dialog>
+          <Dialog>Next year, and after that, I
+hope we can spend our time
+like this？</Dialog>
+          <Dialog>Yeah. Both growing as we go.</Dialog>
+          <Dialog>Yes. Piling up all sorts of
+things, one by one... Aiming
+to be a sweet old couple？</Dialog>
+          <Dialog>That's a long way off.</Dialog>
+          <Dialog>It is a long way off.</Dialog>
           <Dialog>Hahaha...</Dialog>
           <Dialog>Hehehe...</Dialog>
         </Dialogs>
