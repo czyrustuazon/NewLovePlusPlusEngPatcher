@@ -42,13 +42,14 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hello, it's Manaka. Is it 
-okay to speak now？</Dialog>
+          <Dialog>Hello, it's Manaka. Is now
+okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, it's okay.</Dialog>
-          <Dialog>Well, if you'd like... 
-I made dinner today, so why 
-don't you come to eat？</Dialog>
+          <Dialog>Yeah, it's fine.</Dialog>
+          <Dialog>Um, if you'd like... I'm
+making dinner today, so
+would you come over and
+eat？</Dialog>
           <Dialog>I'll definitely go！</Dialog>
           <Dialog>I can't today</Dialog>
         </Dialogs>
@@ -82,11 +83,10 @@ don't you come to eat？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I'll definitely go！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That makes me happy. I'll 
-go back to it. I'll wait 
-for you today, so please 
-come to my house.</Dialog>
-          <Dialog>Okay. I understand.</Dialog>
+          <Dialog>I'm so glad. Then I'll head
+home first and wait, so come
+to my house, okay？</Dialog>
+          <Dialog>Okay, got it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -116,12 +116,12 @@ come to my house.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'll absolutely go！</Dialog>
+          <Dialog>I'm definitely coming！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm so happy. Then I'll 
-be waiting for you, so 
-look forward to it, okay？</Dialog>
-          <Dialog>Yes, thank you.</Dialog>
+          <Dialog>I'm so glad. Then I'll be
+waiting, so look forward to
+it, okay？</Dialog>
+          <Dialog>Yeah, thanks.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -151,13 +151,12 @@ look forward to it, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm sorry, today is not 
-possible...</Dialog>
+          <Dialog>Sorry, I can't today...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... It was so sudden, 
-so you don't have to worry. 
-See you next time.</Dialog>
-          <Dialog>(Yeah, it's a shame...)</Dialog>
+          <Dialog>I see... it was sudden, so
+it can't be helped. Maybe
+another time, then.</Dialog>
+          <Dialog>(Aww, too bad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -184,7 +183,7 @@ See you next time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Good evening.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Welcome home♪</Dialog>
+          <Dialog>Welcome♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -209,12 +208,11 @@ See you next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is the first time 
-you've eaten at my house, 
-right？</Dialog>
+          <Dialog>This is the first time
+you've eaten at my house,
+isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, and I'm a little 
-nervous.</Dialog>
+          <Dialog>Yeah, I'm a little nervous.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -239,10 +237,10 @@ nervous.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Go ahead and relax for a 
-bit.</Dialog>
+          <Dialog>Make yourself at home,
+okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, sure. I'll do that.</Dialog>
+          <Dialog>Yeah. I will.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -262,10 +260,9 @@ bit.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, there is a dish 
-I wanted you to try today. 
-I hope it suits your 
-tastes.</Dialog>
+          <Dialog>Actually, there's a dish I
+wanted you to try today. I
+hope you like it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -295,11 +292,11 @@ tastes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm thinking about what to 
-do, but... Do you have any 
+          <Dialog>I have some ideas already...
+but do you have any
 requests？</Dialog>
           <Dialog>I'll leave it to you</Dialog>
-          <Dialog>Make a request</Dialog>
+          <Dialog>I'll make a request</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -319,9 +316,8 @@ requests？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've learned new recipes 
-for tasty new dishes, so 
-I'll try to make one.</Dialog>
+          <Dialog>Then I'll make something I
+learned recently.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -341,8 +337,9 @@ I'll try to make one.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I understand. I'll cook 
-your favorite dishes.</Dialog>
+          <Dialog>Okay. Then I'll make
+something I think you'll
+like.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -357,8 +354,7 @@ your favorite dishes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If possible, I would like 
-to try this dish 
+          <Dialog>If possible, I'd like
 ▲メニュー▲.</Dialog>
         </Dialogs>
       </SDL2>
@@ -379,10 +375,10 @@ to try this dish
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry to keep you waiting. 
-I've done this dish like 
-I knew, so expect a great 
-flavor, okay？ I'm kidding♪</Dialog>
+          <Dialog>Here you go. It came out
+great, so you can look
+forward to it？ Just
+kidding♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -402,9 +398,8 @@ flavor, okay？ I'm kidding♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Here it is, thank you for 
-waiting. I hope it's 
-delicious...</Dialog>
+          <Dialog>Here you go. I hope it's
+good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -424,9 +419,9 @@ delicious...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I made a little mistake... 
-But I think the taste is 
-okay, so please try it.</Dialog>
+          <Dialog>I messed up a little... but
+I think it tastes okay, so
+try it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -446,8 +441,8 @@ okay, so please try it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried a little for 
-myself. I hope it tastes 
+          <Dialog>I tried adding my own little
+twist. I hope it tastes
 good.</Dialog>
         </Dialogs>
       </SDL2>
@@ -468,9 +463,9 @@ good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried to make a new 
-arrangement here... What 
-do you think about it？</Dialog>
+          <Dialog>I really like this twist I
+came up with... what do you
+think？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -490,8 +485,8 @@ do you think about it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried to develop a new 
-taste. Did you get it？</Dialog>
+          <Dialog>I tried going for a slightly
+new flavor. Can you tell？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -511,9 +506,8 @@ taste. Did you get it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I put this dish in a love 
-flower pattern, do you 
-see it？ Hehe♪</Dialog>
+          <Dialog>This dish is a Manaka
+original, you know？ Hehe♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -533,9 +527,9 @@ see it？ Hehe♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The classic taste is also 
-good, but I tried a new 
-flavor for today.</Dialog>
+          <Dialog>The classic taste is nice
+too, but today I tried
+changing it up a little.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -555,8 +549,8 @@ flavor for today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried a little for 
-myself. How do you like it？</Dialog>
+          <Dialog>I tried adding a little
+twist of my own. How is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -576,8 +570,8 @@ myself. How do you like it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm confident in my 
-Japanese cuisine.</Dialog>
+          <Dialog>I'm confident in my Japanese
+cooking.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -597,9 +591,9 @@ Japanese cuisine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, my Japanese food 
-has a good reputation with 
-Mama and Papa.</Dialog>
+          <Dialog>My Japanese cooking gets
+good reviews from Papa and
+Mama too, you know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -619,8 +613,8 @@ Mama and Papa.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm good making Japanese 
-food, maybe.</Dialog>
+          <Dialog>I think Japanese food might
+be one of my strengths.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -640,9 +634,8 @@ food, maybe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There are a lot of dishes 
-you can make with Western 
-food.</Dialog>
+          <Dialog>Western food usually turns
+out well for me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -662,8 +655,8 @@ food.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you think I'm good 
-enough making Western food？</Dialog>
+          <Dialog>I'm confident in my Western
+cooking, you know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -683,9 +676,9 @@ enough making Western food？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How does it taste？ I'm 
-good making Western food, 
-so I think it's delicious.</Dialog>
+          <Dialog>Well？ Western food is one
+of my strengths, so I think
+it's good.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -705,8 +698,8 @@ so I think it's delicious.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you have a knack for 
-Chinese food？ Hehe♪</Dialog>
+          <Dialog>Chinese cooking has a trick
+to it, you know？ Hehe♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -726,10 +719,9 @@ Chinese food？ Hehe♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm confident preparing 
-Chinese food, so I hope 
-you'll think it's 
-delicious too.</Dialog>
+          <Dialog>I'm confident in my Chinese
+cooking, so I hope you'll
+think it's good too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -749,8 +741,9 @@ delicious too.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Doesn't my Chinese food 
-looks good？ Hehe.</Dialog>
+          <Dialog>I put care into how my
+Chinese dishes look too, you
+know？ Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -770,9 +763,9 @@ looks good？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad I've been able 
-to cook this kind of food 
-these days♪</Dialog>
+          <Dialog>Lately I've been able to
+make this kind of dish, so
+I'm happy♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -792,10 +785,10 @@ these days♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think it's surprising I 
-can cook something like 
-this. I'm pretty good at 
-this, don't I？</Dialog>
+          <Dialog>Is it surprising that I make
+this kind of food？ It's
+actually one of my
+specialties, you know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -815,8 +808,8 @@ this, don't I？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What do you think？ It's my 
-specialty.</Dialog>
+          <Dialog>How is it？ It's my
+specialty genre, after all.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -836,8 +829,8 @@ specialty.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm able to cook any kind 
-of food fairly well.</Dialog>
+          <Dialog>I've gotten pretty good at
+making all sorts of dishes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -857,9 +850,9 @@ of food fairly well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I love how you say that 
-every dish I make is 
-delicious♪</Dialog>
+          <Dialog>I'll make you say
+"delicious" no matter what I
+cook♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -879,8 +872,8 @@ delicious♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you want me to make 
-something now？</Dialog>
+          <Dialog>Lately, I think I can make
+just about anything.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -900,10 +893,11 @@ something now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Japanese food is somewhat 
-hard to make... If I can 
-succeed with love alone, 
-I'm confident about this...</Dialog>
+          <Dialog>Japanese food just doesn't
+go well for me... If love
+alone made it work, I'd be
+confident of a perfect
+score, though...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -923,10 +917,9 @@ I'm confident about this...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I... I might not be good 
-making Japanese food. But 
-there's a love of love in 
-it, so that counts right？</Dialog>
+          <Dialog>I... might be a little bad
+at Japanese food. But it's
+packed with love, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -946,10 +939,11 @@ it, so that counts right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Japanese food is so 
-delicate and difficult. 
-Do you like it？ I did my 
-best, so try it.</Dialog>
+          <Dialog>Japanese food is so delicate
+and hard... maybe I just
+feel like I'm bad at it？
+But I tried hard, so please
+try it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -969,10 +963,9 @@ best, so try it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm trying to do it in my 
-own way, but... I couldn't 
-get the points to prepare 
-Western food.</Dialog>
+          <Dialog>I'm trying in my own way...
+but I can't quite grasp the
+key to Western food.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -992,10 +985,9 @@ Western food.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Western food seems easy 
-to make, but it's quite 
-difficult. I wonder if I 
-lack sense...</Dialog>
+          <Dialog>Western food seems easy but
+it's actually hard. Maybe I
+just lack the knack...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1015,10 +1007,10 @@ lack sense...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I struggle with Western 
-style food, for some 
-reason. I know you like a 
-challenge...</Dialog>
+          <Dialog>For some reason, I struggle
+with Western dishes. Please
+understand I still made it
+with all my heart...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1038,10 +1030,10 @@ challenge...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's difficult to set up 
-Chinese food. I wish I 
-could get through with 
-love alone...</Dialog>
+          <Dialog>Getting the steps right for
+Chinese food is hard... I
+wish love alone could get me
+through.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1061,9 +1053,9 @@ love alone...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I couldn't decide how to 
-season Chinese food... 
-I'm just following the 
+          <Dialog>I can't get the seasoning
+right for Chinese food...
+even though I follow the
 recipe...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1084,9 +1076,9 @@ recipe...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can't get the hang of 
-Chinese food. What do you 
-think of it？</Dialog>
+          <Dialog>I just can't get the hang of
+Chinese food. How is
+today's...？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1106,11 +1098,10 @@ think of it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Actually, I'm not good 
-making this kind of dish. 
-But you made it so 
-difficult for me, didn't 
-you？</Dialog>
+          <Dialog>This dish... is actually a
+little hard for me. But I
+made it with all my heart,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1130,9 +1121,9 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm doing my best. 
-However, I'm not sure about 
-this type of cooking.</Dialog>
+          <Dialog>I'm doing my best, but I'm
+not confident with this type
+of dish...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1152,9 +1143,9 @@ this type of cooking.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about this dish？ 
-I'm not good making it... 
-I'm a little worried.</Dialog>
+          <Dialog>How is this dish？ I'm not
+that good at it... so I'm a
+little worried.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1174,11 +1165,11 @@ I'm a little worried.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Somehow, I couldn't get 
-the taste right, no matter 
-what I tried. I'm not 
-sure... I'd be happy if 
-you could try it.</Dialog>
+          <Dialog>Somehow, I can't get the
+flavor right no matter what
+I make. I'm not confident...
+but I'd be happy if you ate
+it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1198,10 +1189,9 @@ you could try it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Cooking is so difficult... 
-I wish I could cook a dish 
-that gives you a lot of 
-confidence.</Dialog>
+          <Dialog>Cooking is so hard... I wish
+I could make a dish I'm
+confident serving you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1221,9 +1211,9 @@ confidence.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The point of cooking today 
-is... Isn't it enough to 
-cooking using just love？</Dialog>
+          <Dialog>The key point of today's
+dish is, um... is love alone
+not enough？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1243,10 +1233,10 @@ cooking using just love？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is this tableware the 
-same you have at your 
-house？ She should use it 
-carefully♪</Dialog>
+          <Dialog>Look, these dishes. They
+match yours, you know？
+Let's take good care of
+them♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1266,9 +1256,8 @@ carefully♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I really like to have 
-matching tableware with 
-you.</Dialog>
+          <Dialog>I really love having dishes
+that match yours.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1283,8 +1272,8 @@ you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I'm already full. 
-Thank you for the meal.</Dialog>
+          <Dialog>Ahh, I'm stuffed. Thanks for
+the meal.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1299,8 +1288,8 @@ Thank you for the meal.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I feel like I've got new 
-powers.)</Dialog>
+          <Dialog>(I feel like it gave me some
+good energy.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1330,12 +1319,12 @@ powers.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thanks for the food♪　
-So, how was it...？ I'd 
-like to hear your thoughts.</Dialog>
+          <Dialog>It was nothing special♪ How
+was it... I'd like to hear
+what you think.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sure.</Dialog>
-          <Dialog>(I can't stop smiling.)</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>(She looks so happy.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1365,12 +1354,14 @@ like to hear your thoughts.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, can I hear your 
-thoughts？ I think I was 
-able to do it well today.</Dialog>
+          <Dialog>Um, can I hear what you
+think？ Today, I think it
+came out well, if I do say
+so myself...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It was really good...)</Dialog>
-          <Dialog>Yup.</Dialog>
+          <Dialog>(It really was pretty
+good...)</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1400,12 +1391,12 @@ able to do it well today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So, how was it？ I feel you 
-really liked it today♪</Dialog>
+          <Dialog>So, how was it？ I have a
+feeling I'll hear something
+nice today♪</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, sure.</Dialog>
-          <Dialog>(Yeah, I really enjoyed 
-the food...)</Dialog>
+          <Dialog>Oh.</Dialog>
+          <Dialog>(It's true...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1435,12 +1426,12 @@ the food...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How was it？ Can you tell 
-me what you think？</Dialog>
+          <Dialog>How was it？ Can I hear what
+you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, it was...</Dialog>
-          <Dialog>(Well, I think it was 
-good...)</Dialog>
+          <Dialog>Yeah, let's see...</Dialog>
+          <Dialog>(I think it was on the good
+side...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1470,11 +1461,11 @@ good...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, er... Was it 
-delicious？</Dialog>
+          <Dialog>Um... was it good？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Mmm, it had good taste.)</Dialog>
-          <Dialog>Yeah, you see...</Dialog>
+          <Dialog>(Well, about what I
+expected...)</Dialog>
+          <Dialog>Yeah, um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1504,12 +1495,11 @@ delicious？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If possible, I'd like to 
-hear what'd you think 
-about it.</Dialog>
+          <Dialog>If you don't mind, I'd like
+to hear what you think.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Well, it wasn't bad...)</Dialog>
-          <Dialog>Yeah, sure...</Dialog>
+          <Dialog>Yeah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1539,12 +1529,11 @@ about it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry... It wasn't good 
-enough, wasn't it？</Dialog>
+          <Dialog>Sorry... it wasn't that
+great, was it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hmm... I don't know what 
-to say.)</Dialog>
-          <Dialog>Well, you see...</Dialog>
+          <Dialog>(Hmm... what should I say？)</Dialog>
+          <Dialog>Let's see...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1574,12 +1563,11 @@ to say.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry... It wasn't 
-delicious, was it？</Dialog>
+          <Dialog>I'm sorry... it wasn't good,
+was it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I don't want to make her 
-sad...)</Dialog>
-          <Dialog>Let's see...</Dialog>
+          <Dialog>(She's so down...)</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1609,11 +1597,10 @@ sad...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm afraid to hear your 
-impressions... Do you want 
-me to ask you？</Dialog>
+          <Dialog>I'm scared to hear it... but
+maybe I'll ask？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My impressions？</Dialog>
+          <Dialog>What I think...？</Dialog>
           <Dialog>(Hmm...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -1639,8 +1626,8 @@ me to ask you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>It was delicious</Dialog>
-          <Dialog>It wasn't bad</Dialog>
-          <Dialog>I didn't like it</Dialog>
+          <Dialog>It was decent</Dialog>
+          <Dialog>Not my taste</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1665,11 +1652,12 @@ me to ask you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It was really tasteful.</Dialog>
+          <Dialog>It was perfectly delicious.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad！ If you praise 
-me like that, I think I 
-can do my best again♪</Dialog>
+          <Dialog>I'm so happy！ When you
+praise me like that, it
+makes me want to try hard
+again♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1694,9 +1682,9 @@ can do my best again♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It really was delicious.</Dialog>
+          <Dialog>It was really delicious.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ Hehe, I'm glad♪</Dialog>
+          <Dialog>Really？ Hehe, I'm so glad♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1721,11 +1709,10 @@ can do my best again♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It was surprisingly 
-delicious.</Dialog>
+          <Dialog>It was surprisingly good.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What！？ I see... Then it 
-was fine, right？</Dialog>
+          <Dialog>Huh!? Really... so that
+was okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1750,11 +1737,10 @@ was fine, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think it was rather 
-delicious.</Dialog>
+          <Dialog>It was pretty good, I think.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ In that case I'll 
-stop worrying.</Dialog>
+          <Dialog>Really？ Then that's a
+relief.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1779,10 +1765,10 @@ stop worrying.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It had a normal taste.</Dialog>
+          <Dialog>It was decent.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. Then... Can I be 
-happy about it？</Dialog>
+          <Dialog>I see. Then... should I be
+happy？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1807,10 +1793,9 @@ happy about it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think it was normal, 
-don't you think？</Dialog>
+          <Dialog>It was pretty good, though？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really！？ I thought it was 
+          <Dialog>Really!? I thought it was
 a failure...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1836,13 +1821,12 @@ a failure...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That taste... I guess I 
-didn't like it very much.</Dialog>
+          <Dialog>The taste... wasn't really
+my thing, I guess.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ I was really 
-confident too, but... 
-I should think about it 
-twice.</Dialog>
+          <Dialog>Really？ I was confident
+about it... I should rethink
+it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1867,14 +1851,12 @@ twice.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>This kind of flavor is 
-little different from my 
-tastes.</Dialog>
+          <Dialog>This kind of flavor... isn't
+quite my taste.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see.... It wasn't good 
-after all, was it？ I'll 
-study cooking harder and 
-do my best.</Dialog>
+          <Dialog>I see... it wasn't that
+great after all, was it？
+I'll study cooking harder.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1899,15 +1881,14 @@ do my best.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think it was a little 
-different from what you 
-usually make, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>It wasn't quite like
+▲高嶺＊＊▲'s usual...
+maybe.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You care about me, so I'll 
-try harder and make it 
-delicious next time, so 
-wait.</Dialog>
+          <Dialog>You're being considerate...
+I'll try harder and make
+something delicious next
+time, so wait for me, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1937,11 +1918,11 @@ wait.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, don't you think it'll 
-be better to eat something 
-else rather than bentos？</Dialog>
-          <Dialog>But I like your bentos</Dialog>
-          <Dialog>I'll try school lunch</Dialog>
+          <Dialog>Hey, do you ever feel like
+eating something other than
+bento for a change？</Dialog>
+          <Dialog>I want your bento</Dialog>
+          <Dialog>The cafeteria is nice too</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1966,10 +1947,11 @@ else rather than bentos？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I like your bentos.</Dialog>
+          <Dialog>I'd still rather have your
+bento.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ Then I'll make you 
-some again♪</Dialog>
+          <Dialog>Really？ Then I'll make you
+another one♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1994,11 +1976,11 @@ some again♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I think it's time 
-to switch to the school 
-meals.</Dialog>
+          <Dialog>Yeah, I think going to the
+cafeteria would be a nice
+change of pace.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, that might be good, 
+          <Dialog>I see, that might be nice
 too.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2039,16 +2021,14 @@ too.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you usually prepare 
-breakfast in the morning？</Dialog>
+          <Dialog>Um, what do you usually do
+for breakfast？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I think it's a good 
-thing to do sometimes.</Dialog>
-          <Dialog>Well, if you'd like... 
-How about I go to make 
-your breakfast？ If it's 
-not annoying.</Dialog>
-          <Dialog>Lemme see...</Dialog>
+          <Dialog>Hmm, pretty random stuff.</Dialog>
+          <Dialog>Then... how about I come
+make you breakfast？ If it's
+not a bother.</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2073,8 +2053,8 @@ not annoying.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Umm, can I go and make you 
-breakfast again？</Dialog>
+          <Dialog>You know, can I come make
+you breakfast again？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
         </Dialogs>
@@ -2121,13 +2101,12 @@ breakfast again？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you're offering to do it 
-for me, then I'll gladly 
-accept your help 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>If ▲高嶺＊＊▲ is offering,
+maybe I'll take you up on
+it.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm happy. Okay, I'll come 
-and see you next time.</Dialog>
+          <Dialog>I'm so glad. Then I'll come
+over next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2152,12 +2131,13 @@ and see you next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, that's... I'll make 
-it myself.</Dialog>
+          <Dialog>That's... I'll make it
+myself.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... Maybe it's 
-uncomfortable for you if 
-I come in the mornings.</Dialog>
+          <Dialog>Right... it might be
+uncomfortable having me come
+over first thing in the
+morning.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2197,16 +2177,16 @@ I come in the mornings.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've been making sweets 
-recently. If you don't 
-mind, do you want some？</Dialog>
+          <Dialog>You know, lately I've been
+making a lot of sweets.
+Would you try some, if you'd
+like？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Of course！ I really like 
-your sweets！</Dialog>
-          <Dialog>I'm really happy. Then I'll 
-make something delicious, 
-so look forward to it♪</Dialog>
-          <Dialog>Yes, please.</Dialog>
+          <Dialog>Of course！</Dialog>
+          <Dialog>I'm so glad. Then I'll make
+something delicious, so look
+forward to it♪</Dialog>
+          <Dialog>Yeah, thanks.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2241,11 +2221,11 @@ so look forward to it♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say, can I go to your house 
-again to prepare dinner？</Dialog>
+          <Dialog>Um... can I come to your
+place to make dinner again？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Lemme see...</Dialog>
-          <Dialog>Yeah, please do</Dialog>
+          <Dialog>Let's see...</Dialog>
+          <Dialog>Yes, please</Dialog>
           <Dialog>I'll make it myself</Dialog>
         </Dialogs>
       </SDL2>
@@ -2271,11 +2251,11 @@ again to prepare dinner？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'd really like to ask you 
-for your help.</Dialog>
+          <Dialog>I'd be the one asking you
+to.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ Well then, I'll 
-go make dinner next time♪</Dialog>
+          <Dialog>Really？ Then I'll come make
+it next time♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2300,12 +2280,11 @@ go make dinner next time♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, you know... I'll make 
+          <Dialog>That's... I'll try to make
 it myself.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... It's also 
-important to do things like 
-that for yourself.</Dialog>
+          <Dialog>I see... cooking for
+yourself is important too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
