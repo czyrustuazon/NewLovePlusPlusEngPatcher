@@ -184,44 +184,39 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>About how I call you 
-▲主人公＊▲...</Dialog>
+          <Dialog>▲主人公＊▲. About what I
+call you...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Can I call you 
+          <Dialog>Can I call you
 ▲新主人公▲？</Dialog>
           <Dialog>Well, that is...</Dialog>
-          <Dialog>Yes, that's okay</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>The usual name is better</Dialog>
-          <Dialog>Yeah, it's okay to call 
-me that.</Dialog>
-          <Dialog>Really？ I've always wanted 
-to call you this.</Dialog>
-          <Dialog>(▲主人公＊▲...？ 
-That sounds nice...)</Dialog>
-          <Dialog>Hmm... How about trying 
-something else...？</Dialog>
+          <Dialog>Sure, that's fine</Dialog>
+          <Dialog>I'd like something else</Dialog>
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>Sure, you can call me that.</Dialog>
+          <Dialog>Really？ I've wanted to call
+you that for a while.</Dialog>
+          <Dialog>(▲主人公＊▲, huh...
+Not bad.)</Dialog>
+          <Dialog>Hmm, I'd like something
+else...</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>▲新主人公▲... How about 
-that？</Dialog>
-          <Dialog>Okay, I see. Then...</Dialog>
-          <Dialog>Yes, it sounds better, 
-▲主人公＊▲.</Dialog>
-          <Dialog>(Yes, not bad！)</Dialog>
-          <Dialog>Sorry, that's really 
-impossible.</Dialog>
-          <Dialog>Eh？ Really...？ I'm sorry.</Dialog>
-          <Dialog>(That's no good...)</Dialog>
-          <Dialog>Isn't it fine the way it 
-is now？</Dialog>
-          <Dialog>So... I won't change it 
-then...</Dialog>
-          <Dialog>(The usual name is the 
-best！)</Dialog>
+          <Dialog>How about ▲新主人公▲？</Dialog>
+          <Dialog>Okay, got it. Then...</Dialog>
+          <Dialog>▲主人公＊▲. Yes, maybe
+it's better than before.</Dialog>
+          <Dialog>(Yeah, not bad！)</Dialog>
+          <Dialog>Sorry, I can't do that one.</Dialog>
+          <Dialog>Oh, I see... Sorry.</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>I think the way it is now is
+fine.</Dialog>
+          <Dialog>I see... The way it is...</Dialog>
+          <Dialog>(The usual is best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -398,38 +393,37 @@ best！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲新主人公▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ What was it just now？</Dialog>
-          <Dialog>Calling you this... Is it 
+          <Dialog>Hm？ What did you just say？</Dialog>
+          <Dialog>Calling you that... is it
 bad？</Dialog>
           <Dialog>Well, that is...</Dialog>
-          <Dialog>Yes, that's okay</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>The usual name is better</Dialog>
-          <Dialog>Yeah, it's okay to call me 
-that.</Dialog>
-          <Dialog>Good. It's quite 
-embarrassing.</Dialog>
-          <Dialog>(▲主人公＊▲...？ 
-That sounds nice...)</Dialog>
-          <Dialog>Hmm... How about trying 
-something else...？</Dialog>
+          <Dialog>Sure, that's fine</Dialog>
+          <Dialog>I'd like something else</Dialog>
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>Sure, you can call me that.</Dialog>
+          <Dialog>Good. It's a little
+embarrassing, huh.</Dialog>
+          <Dialog>(▲主人公＊▲, huh...
+Not bad.)</Dialog>
+          <Dialog>Hmm, I'd like something
+else...</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>▲新主人公▲... How about 
-that？</Dialog>
+          <Dialog>How about ▲新主人公▲？</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Well, that should be okay...</Dialog>
-          <Dialog>(Yes, not bad！)</Dialog>
-          <Dialog>Sorry, that's not good.</Dialog>
+          <Dialog>Yes, that might be nice.
+I'll do that...</Dialog>
+          <Dialog>(Yeah, not bad！)</Dialog>
+          <Dialog>Sorry. I don't like that
+kind of thing.</Dialog>
           <Dialog>Really...？ Sorry.</Dialog>
-          <Dialog>(That's no good...)</Dialog>
-          <Dialog>Isn't it fine the way it 
-is now？</Dialog>
-          <Dialog>You're right. I'm sorry...</Dialog>
-          <Dialog>(The usual name is the 
-best！)</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>I think the way it is now is
+fine.</Dialog>
+          <Dialog>You're right, sorry...</Dialog>
+          <Dialog>(The usual is best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -609,36 +603,34 @@ best！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？</Dialog>
-          <Dialog>▲新主人公▲... How about I 
-call you like that？</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>How would you like being
+called ▲新主人公▲？</Dialog>
           <Dialog>Well, that is...</Dialog>
-          <Dialog>Yes, that's okay.</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>The usual name is better</Dialog>
-          <Dialog>Yeah, it's okay to call me 
-that.</Dialog>
-          <Dialog>Really？ I'm glad！ Yeah.</Dialog>
-          <Dialog>(▲主人公＊▲...？ 
-That sounds nice...)</Dialog>
-          <Dialog>Hmm... How about trying 
-something else...？</Dialog>
+          <Dialog>Sure, that's fine</Dialog>
+          <Dialog>I'd like something else</Dialog>
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>Sure, you can call me that.</Dialog>
+          <Dialog>Really？ Yay！ Hehe.</Dialog>
+          <Dialog>(▲主人公＊▲, huh...
+Not bad.)</Dialog>
+          <Dialog>Hmm, I'd like something
+else...</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>▲新主人公▲... How about 
-that？</Dialog>
+          <Dialog>How about ▲新主人公▲？</Dialog>
           <Dialog>Okay, then...</Dialog>
-          <Dialog>▲主人公＊▲. 
+          <Dialog>▲主人公＊▲.
 How's that？ Hehe！</Dialog>
-          <Dialog>(Yes, not bad！)</Dialog>
-          <Dialog>That's... not good.</Dialog>
-          <Dialog>(That's no good...)</Dialog>
-          <Dialog>Isn't it fine the way it 
-is now？</Dialog>
-          <Dialog>Hmm... fine then.</Dialog>
-          <Dialog>(My usual name is best！)</Dialog>
+          <Dialog>(Yeah, not bad！)</Dialog>
+          <Dialog>...That one's a no.</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>I think the way it is now is
+fine.</Dialog>
+          <Dialog>Hmm. Then never mind.</Dialog>
+          <Dialog>(The usual is best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -834,45 +826,42 @@ is now？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲新主人公▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>...What if I called you 
-this way？</Dialog>
+          <Dialog>Whoa!?</Dialog>
+          <Dialog>...How do you like being
+called that？</Dialog>
           <Dialog>(This is...)</Dialog>
-          <Dialog>Good！ Really good！</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>Stop it.</Dialog>
-          <Dialog>Isn't it？ I've been 
-wondering whether I should 
-call you this way...</Dialog>
-          <Dialog>(▲主人公＊▲...？)</Dialog>
-          <Dialog>(Well, since she asked, 
-I'd better choose what I 
-like...)</Dialog>
+          <Dialog>Great！ Really great！</Dialog>
+          <Dialog>Something better...</Dialog>
+          <Dialog>Please don't</Dialog>
+          <Dialog>Right？ I thought this might
+be nice...</Dialog>
+          <Dialog>(▲主人公＊▲, huh...)</Dialog>
+          <Dialog>(Since we're at it, I'll go
+for it...)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>Just keep it the same.</Dialog>
-          <Dialog>I'd rather go with... 
-▲新主人公▲... 
-How's that...？</Dialog>
-          <Dialog>Eh...？ Hmm... Okay, I got 
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>More like... how about
+▲新主人公▲...？</Dialog>
+          <Dialog>Huh...？ Hmm... Okay, got
 it.</Dialog>
-          <Dialog>Really！？</Dialog>
-          <Dialog>▲主人公＊▲... 
-That sounds pretty weird. 
-Are you sure？</Dialog>
-          <Dialog>(She has tried saying 
-it...)</Dialog>
-          <Dialog>Ah, that's good！</Dialog>
-          <Dialog>Isn't it！？</Dialog>
-          <Dialog>I'm kidding.</Dialog>
-          <Dialog>(Tsk. So this is not good, 
-huh...？)</Dialog>
-          <Dialog>You'd better stop it.</Dialog>
-          <Dialog>Well... No, this is okay.</Dialog>
-          <Dialog>(Yep, the usual name is 
-the best...)</Dialog>
+          <Dialog>Really!?</Dialog>
+          <Dialog>▲主人公＊▲. ...It feels
+really strange. Are you
+sure？</Dialog>
+          <Dialog>(Never hurts to ask...)</Dialog>
+          <Dialog>Oh, that's nice！</Dialog>
+          <Dialog>Right!?</Dialog>
+          <Dialog>Kidding.</Dialog>
+          <Dialog>(Darn, that one was a
+no...)</Dialog>
+          <Dialog>Let's not do that kind of
+thing.</Dialog>
+          <Dialog>I see... No, it's fine
+then.</Dialog>
+          <Dialog>(Yep, normal is best.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1068,44 +1057,41 @@ the best...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲新主人公▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>This name is... not good？</Dialog>
+          <Dialog>Whoa!?</Dialog>
+          <Dialog>Calling you this... is it
+bad？</Dialog>
           <Dialog>(This is...)</Dialog>
-          <Dialog>Good！ Really good！</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>Stop it.</Dialog>
-          <Dialog>Good... But, it's very 
-embarrassing.</Dialog>
-          <Dialog>(▲主人公＊▲...？)</Dialog>
-          <Dialog>(Well, since she asked, 
-I'd better choose what I 
-like...)</Dialog>
+          <Dialog>Great！ Really great！</Dialog>
+          <Dialog>Something better...</Dialog>
+          <Dialog>Please don't</Dialog>
+          <Dialog>Good... But it's so
+embarrassing...</Dialog>
+          <Dialog>(▲主人公＊▲, huh...)</Dialog>
+          <Dialog>(Since we're at it, I'll go
+for it...)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>The usual name is better</Dialog>
-          <Dialog>I'd rather go with... 
-▲新主人公▲... 
-How's that...？</Dialog>
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>More like... how about
+▲新主人公▲...？</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Huh...？ Not good？</Dialog>
-          <Dialog>▲主人公＊▲... 
-Is this good？ Weird？ It's 
-not weird, isn't it？</Dialog>
-          <Dialog>(She has tried saying it...)</Dialog>
-          <Dialog>Ah, it's as weird as I 
-thought！ I was just 
-joking, joking！</Dialog>
-          <Dialog>That's right. Thank 
-goodness...</Dialog>
-          <Dialog>(Tsk. So this is not good, 
-huh...？)</Dialog>
-          <Dialog>You'd better stop it.</Dialog>
-          <Dialog>Really... Sorry for saying 
-something weird.</Dialog>
-          <Dialog>(Yep, the usual name is 
-the best...)</Dialog>
+          <Dialog>Huh... Was it no good？</Dialog>
+          <Dialog>▲主人公＊▲. ...Is this
+right？ Is it weird？ It's
+not weird, is it？</Dialog>
+          <Dialog>(Never hurts to ask...)</Dialog>
+          <Dialog>Ah, that's weird, right！
+Kidding, just kidding！</Dialog>
+          <Dialog>Right... Phew.</Dialog>
+          <Dialog>(Darn, that one was a
+no...)</Dialog>
+          <Dialog>Let's not do that kind of
+thing.</Dialog>
+          <Dialog>I see... Sorry for saying
+something weird？</Dialog>
+          <Dialog>(Yep, normal is best.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1301,47 +1287,42 @@ the best...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲新主人公▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>▲新主人公▲. How's that？ 
-Teehee▼</Dialog>
+          <Dialog>Whoa!?</Dialog>
+          <Dialog>▲新主人公▲. How's that？
+Hehe▼</Dialog>
           <Dialog>(This is...)</Dialog>
-          <Dialog>Good！ Really good！</Dialog>
-          <Dialog>How about something else？</Dialog>
-          <Dialog>Stop it.</Dialog>
-          <Dialog>Hehe, this is better than 
-before. Don't you feel it？ 
-Let's use this from now 
-on, okay？</Dialog>
-          <Dialog>(▲主人公＊▲...？)</Dialog>
-          <Dialog>(Well, since she asked, 
-I'd better choose what I 
-like...)</Dialog>
+          <Dialog>Great！ Really great！</Dialog>
+          <Dialog>Something better...</Dialog>
+          <Dialog>Please don't</Dialog>
+          <Dialog>Hehe, doesn't it feel closer
+than before？ I'll call you
+this from now on.</Dialog>
+          <Dialog>(▲主人公＊▲, huh...)</Dialog>
+          <Dialog>(Since we're at it, I'll go
+for it...)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>The usual name is better</Dialog>
-          <Dialog>I'd rather go with... 
-▲新主人公▲... 
-How's that...？</Dialog>
+          <Dialog>Keep it the way it is</Dialog>
+          <Dialog>More like... how about
+▲新主人公▲...？</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>That！ Isn't it good！？</Dialog>
-          <Dialog>If you're this happy, 
-then it's good.</Dialog>
-          <Dialog>(She has tried saying 
-it...)</Dialog>
+          <Dialog>That's it！ Good, right!?</Dialog>
+          <Dialog>You're that happy？ Then
+okay.</Dialog>
+          <Dialog>(Never hurts to ask...)</Dialog>
           <Dialog>Are you serious？</Dialog>
-          <Dialog>Ah, it's as weird as I 
-thought！ I was just 
-joking, joking！</Dialog>
-          <Dialog>That's not good, right？</Dialog>
-          <Dialog>(Tsk. So this is not good, 
-huh...？)</Dialog>
-          <Dialog>You'd better stop it.</Dialog>
-          <Dialog>You're right. But I'm a 
-bit disappointed.</Dialog>
-          <Dialog>(Yep, the usual name is 
-the best...)</Dialog>
+          <Dialog>Ah, that's weird, right！
+Kidding, just kidding！</Dialog>
+          <Dialog>I don't want to, okay？</Dialog>
+          <Dialog>(Darn, that one was a
+no...)</Dialog>
+          <Dialog>Let's not do that kind of
+thing.</Dialog>
+          <Dialog>You're right. But it's a
+little disappointing.</Dialog>
+          <Dialog>(Yep, normal is best.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1481,30 +1462,30 @@ the best...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder if I should try 
-changing how I call 
-▲Takane＊＊▲...？)</Dialog>
+          <Dialog>(Maybe it's time I tried
+calling
+▲高嶺＊＊▲
+something different...？)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>I should keep it the same</Dialog>
+          <Dialog>Actually, keep it as is</Dialog>
           <Dialog>▲生成選択肢５▲.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>How is it？</Dialog>
-          <Dialog>Yeah, that's okay.</Dialog>
-          <Dialog>Really？ Then I'll call you 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>You don't have to be that 
-happy. Geez.</Dialog>
-          <Dialog>I probably have to reserve 
-that.</Dialog>
-          <Dialog>(So it's no good...)</Dialog>
-          <Dialog>That's not good.</Dialog>
-          <Dialog>Really！？</Dialog>
-          <Dialog>Yeah, not good.</Dialog>
-          <Dialog>Um, forget it...</Dialog>
+          <Dialog>How about it？</Dialog>
+          <Dialog>Yes. That's... fine.</Dialog>
+          <Dialog>Really？ Then,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Geez, you don't have to be
+that happy.</Dialog>
+          <Dialog>I think I'll pass on that.</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>I don't like that.</Dialog>
+          <Dialog>Really!?</Dialog>
+          <Dialog>Yes. I don't.</Dialog>
+          <Dialog>Oh well...</Dialog>
           <Dialog>...？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1645,29 +1626,30 @@ that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder if I should try 
-changing how I call 
-▲Takane＊＊▲...？)</Dialog>
+          <Dialog>(Maybe it's time I tried
+calling
+▲高嶺＊＊▲
+something different...？)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>I should keep it the same</Dialog>
+          <Dialog>Actually, keep it as is</Dialog>
           <Dialog>▲生成選択肢５▲.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>How is it？</Dialog>
-          <Dialog>Well... Yeah, that's okay.</Dialog>
-          <Dialog>Really？ Then I'll call you 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Ah... it's embarrassing.</Dialog>
-          <Dialog>That's... embarrassing...</Dialog>
-          <Dialog>(So it's no good...)</Dialog>
-          <Dialog>Hmm... I pass on it...</Dialog>
-          <Dialog>It's fine！ It's fine！</Dialog>
-          <Dialog>Sorry. It's really 
-impossible.</Dialog>
-          <Dialog>Um, forget it...</Dialog>
+          <Dialog>How about it？</Dialog>
+          <Dialog>Um... Yes, okay.</Dialog>
+          <Dialog>Really？ Then,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Geez... It's embarrassing.</Dialog>
+          <Dialog>That kind of thing... is
+embarrassing.</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>Hmm, I think I'll pass...</Dialog>
+          <Dialog>Come on！ Come on！</Dialog>
+          <Dialog>Sorry. I really can't.</Dialog>
+          <Dialog>Oh well...</Dialog>
           <Dialog>...？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1808,28 +1790,29 @@ impossible.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder if I should try 
-changing how I call 
-▲Takane＊＊▲...？)</Dialog>
+          <Dialog>(Maybe it's time I tried
+calling
+▲高嶺＊＊▲
+something different...？)</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
           <Dialog>▲生成選択肢４▲</Dialog>
-          <Dialog>I should keep it the same</Dialog>
+          <Dialog>Actually, keep it as is</Dialog>
           <Dialog>▲生成選択肢５▲.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>How is it？</Dialog>
-          <Dialog>Eh？ Is that okay？</Dialog>
-          <Dialog>Yes！ It's really good！</Dialog>
-          <Dialog>Well, then. It's okay.</Dialog>
-          <Dialog>You'd better call me 
-something else. Stop it, 
-okay？</Dialog>
-          <Dialog>(So it's no good...)</Dialog>
-          <Dialog>It's fine！ It's fine！</Dialog>
+          <Dialog>How about it？</Dialog>
+          <Dialog>Huh, you like that kind of
+thing？</Dialog>
+          <Dialog>Yes！ I definitely do！</Dialog>
+          <Dialog>Geez. Fine, then.</Dialog>
+          <Dialog>Maybe a different name.
+Let's not？</Dialog>
+          <Dialog>(No good, huh...)</Dialog>
+          <Dialog>Come on！ Come on！</Dialog>
           <Dialog>No！</Dialog>
-          <Dialog>Um, forget it...</Dialog>
+          <Dialog>Oh well...</Dialog>
           <Dialog>...？</Dialog>
         </Dialogs>
       </SDL2>
