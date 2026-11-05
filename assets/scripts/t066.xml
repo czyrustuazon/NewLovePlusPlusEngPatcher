@@ -25,10 +25,10 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This game syncs in parallel 
-with the internal DS clock. 
-So, make sure the time is 
-set right.</Dialog>
+          <Dialog>This game runs on your DS's
+internal clock. So check
+that the time is set
+correctly before you start.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -83,10 +83,9 @@ DS settings.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay. Decide the game time 
-that suits your lifestyle. 
-Don't set it up playfully, 
-okay？</Dialog>
+          <Dialog>Okay. Now set the game time
+to match your daily life. No
+setting it as a joke, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -134,9 +133,8 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, these are all the 
-game settings. Thank you 
-for working so hard.</Dialog>
+          <Dialog>Okay, that's all the setup.
+Good work.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

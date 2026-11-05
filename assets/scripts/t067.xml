@@ -43,10 +43,8 @@
           <Dialog>Takane</Dialog>
           <Dialog>Yes, hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yes, I now your tone. 
-What's wrong？</Dialog>
+          <Dialog>▲高嶺＊＊▲, it's me.</Dialog>
+          <Dialog>Yes, it's me. What's up？</Dialog>
           <Dialog>Um, you know...</Dialog>
         </Dialogs>
       </SDL2>
@@ -93,10 +91,9 @@ What's wrong？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yeah, I know your voice. 
-What's wrong？</Dialog>
+          <Dialog>▲高嶺＊＊▲, it's me.</Dialog>
+          <Dialog>Yes, I know your voice.
+What's up？</Dialog>
           <Dialog>Um, you know...</Dialog>
         </Dialogs>
       </SDL2>
@@ -137,12 +134,10 @@ What's wrong？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, this is Manaka 
-speaking.</Dialog>
+          <Dialog>Hello, this is Manaka.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, it's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hehe, what's wrong？</Dialog>
+          <Dialog>▲高嶺＊＊▲, it's me.</Dialog>
+          <Dialog>Hehe, what's up？</Dialog>
           <Dialog>Um, you know...</Dialog>
         </Dialogs>
       </SDL2>
@@ -198,20 +193,19 @@ speaking.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I want to change our the 
-day of our date...</Dialog>
-          <Dialog>How does ▲月▲▲日▲ at 
-▲時刻▲ sound？</Dialog>
+          <Dialog>I'd like to move our date...</Dialog>
+          <Dialog>How about ▲月▲▲日▲
+at ▲時刻▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Yes, that sounds fine. 
-I'm glad we didn't had to 
-cancel our date.</Dialog>
-          <Dialog>It was a relief for me 
-too. See you soon.</Dialog>
-          <Dialog>I'm sorry. It seems like 
-I can't make it that day...</Dialog>
-          <Dialog>I see, well then...</Dialog>
+          <Dialog>Yes, that's fine. I'm glad
+our date didn't get
+canceled.</Dialog>
+          <Dialog>That's a relief for me too.
+See you.</Dialog>
+          <Dialog>Sorry. I don't think I
+can...</Dialog>
+          <Dialog>I see, then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -270,19 +264,16 @@ I can't make it that day...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I want to change the day 
-of our date...</Dialog>
-          <Dialog>How does ▲月▲▲日▲ at 
-▲時刻▲ sound？</Dialog>
+          <Dialog>I'd like to move our date...</Dialog>
+          <Dialog>How about ▲月▲▲日▲
+at ▲時刻▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>That makes me glad... 
-Emm, I mean it's okay.</Dialog>
+          <Dialog>Phew... Um, yes, that works.</Dialog>
           <Dialog>I see, thank you. See you 
 soon.</Dialog>
-          <Dialog>Sorry, that day is a 
-little...</Dialog>
-          <Dialog>I see, well then...</Dialog>
+          <Dialog>Sorry, that's a little...</Dialog>
+          <Dialog>I see, then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -341,18 +332,17 @@ little...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I want to change the date 
-for our date...</Dialog>
-          <Dialog>How does ▲月▲▲日▲ at 
-▲時刻▲ sound？</Dialog>
+          <Dialog>I'd like to move our date...</Dialog>
+          <Dialog>How about ▲月▲▲日▲
+at ▲時刻▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Okay. Hehe, I'll indulge 
-your selfish desires.</Dialog>
-          <Dialog>Sorry, sorry. Then, I'll 
-see you soon.</Dialog>
+          <Dialog>Okay. Hehe, I'll humor your
+selfish request.</Dialog>
+          <Dialog>Sorry, sorry. Then that's
+settled. See you.</Dialog>
           <Dialog>Hmm, nope.</Dialog>
-          <Dialog>I see, well then...</Dialog>
+          <Dialog>I see, then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -385,13 +375,12 @@ see you soon.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Um... I'm sorry. It was 
-nothing after all.</Dialog>
+          <Dialog>Um... Sorry. Never mind
+after all.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, what's with that？ 
-But, I'm glad we didn't 
-had to cancel our date. 
-See ya.</Dialog>
+          <Dialog>Geez, what was that？ But
+I'm glad it wasn't to cancel
+our date. Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -424,11 +413,11 @@ See ya.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah... sorry. It's nothing.</Dialog>
+          <Dialog>Ah... My bad！ Never mind.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you sure？ I wanted to 
-hear your voice a little 
-more... I'm kidding. See ya.</Dialog>
+          <Dialog>Are you sure？ Did you just
+want to hear my voice...
+Just kidding！ Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -461,13 +450,13 @@ more... I'm kidding. See ya.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Actually, I just called 
-because I wanted to hear 
-your voice. I'm kidding.</Dialog>
+          <Dialog>...Actually, I just called
+because I wanted to hear
+your voice. Kidding.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, that's a lie. But 
-it's okay, thank you. 
-See you later.</Dialog>
+          <Dialog>Geez, you're always teasing.
+But okay, thank you. See
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -482,8 +471,8 @@ See you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(This is fine. I have to 
-remember about it.)</Dialog>
+          <Dialog>(All set. I'd better not
+forget.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -498,10 +487,9 @@ remember about it.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(This is fine. It's bad 
-to change the date too 
-many times, so let's go 
-with the original day.)</Dialog>
+          <Dialog>(All set. It's not fair to
+keep changing it, so this is
+the last time.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -564,21 +552,18 @@ with the original day.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'd like to change the 
-day for our travel...</Dialog>
-          <Dialog>How does this day sound: 
-▲月▲▲日▲？</Dialog>
+          <Dialog>I'd like to move the dates
+of our trip...</Dialog>
+          <Dialog>How about ▲月▲▲日▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>It's okay, I'm glad you 
-let me know. Don't 
+          <Dialog>Phew, that's fine. Don't
 worry about it.</Dialog>
-          <Dialog>I see, I'm relieved. 
-I'm sorry, I'll see ya.</Dialog>
-          <Dialog>I'm sorry. That day 
-it's not good...</Dialog>
-          <Dialog>I see. Then I'll see you 
-later...</Dialog>
+          <Dialog>I see, good. Sorry about
+that, bye.</Dialog>
+          <Dialog>Sorry. That day doesn't work
+for me...</Dialog>
+          <Dialog>I see, then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

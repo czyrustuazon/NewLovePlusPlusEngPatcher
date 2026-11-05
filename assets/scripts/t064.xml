@@ -198,44 +198,41 @@
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>You've been acting cold 
-recently...</Dialog>
-          <Dialog>That's sudden. I don't 
-think so.</Dialog>
-          <Dialog>Is that so！</Dialog>
-          <Dialog>Eh？... Calm down.</Dialog>
-          <Dialog>You're so cold.</Dialog>
+          <Dialog>▲高嶺＊＊▲. What's up？</Dialog>
+          <Dialog>You've been cold lately...</Dialog>
+          <Dialog>Where's this coming from？
+That's not true.</Dialog>
+          <Dialog>It is！</Dialog>
+          <Dialog>Huh？ ...Calm down.</Dialog>
+          <Dialog>That's what's cold.</Dialog>
           <Dialog>Huh？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(Well, she's in a bad mood 
-today. Certainly I might 
-have been cold recently.)</Dialog>
-          <Dialog>I'm really sorry, I won't 
-do it anymore！</Dialog>
-          <Dialog>Don't worry about that！</Dialog>
-          <Dialog>...Is that bad？</Dialog>
-          <Dialog>Be in a good mood.</Dialog>
-          <Dialog>I don't want to forgive 
+          <Dialog>(Hmm, she's really in a bad
+mood today. I guess I have
+been cold lately...)</Dialog>
+          <Dialog>I'm really sorry, I won't do
+it again！</Dialog>
+          <Dialog>Don't worry about it so
+much！</Dialog>
+          <Dialog>...Isn't it your fault？</Dialog>
+          <Dialog>Come on, cheer up.</Dialog>
+          <Dialog>No, I don't want to forgive
 you.</Dialog>
-          <Dialog>Why are you... I'll 
-apologize, so please 
-calm down.</Dialog>
-          <Dialog>If you understand, it's 
-okay...</Dialog>
-          <Dialog>Wait a minute, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>(What is it...？)</Dialog>
-          <Dialog>If I made you feel 
-uncomfortable, I'm sorry.</Dialog>
-          <Dialog>I wonder what happened.</Dialog>
+          <Dialog>Why are you so... I'll
+apologize properly.</Dialog>
+          <Dialog>If you don't understand,
+then forget it...</Dialog>
+          <Dialog>Hey, wait,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>(What's with her...)</Dialog>
+          <Dialog>If I made you feel bad, I'm
+sorry.</Dialog>
+          <Dialog>What's gotten into me...</Dialog>
           <Dialog>Sorry...</Dialog>
-          <Dialog>Yes, it's good. I was 
-acting a little weird 
-today.</Dialog>
-          <Dialog>(I wonder if she forgave 
-me. I have to be careful.)</Dialog>
+          <Dialog>Yes, it's fine. I'm a little
+strange today, huh.</Dialog>
+          <Dialog>(She forgave me. I'll be
+more careful.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -455,43 +452,44 @@ me. I have to be careful.)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hey, these days... 
-Why are you acting so 
-cold？</Dialog>
-          <Dialog>...Really？</Dialog>
+          <Dialog>▲高嶺＊＊▲. What's up？</Dialog>
+          <Dialog>Hey, you've been... cold
+lately, haven't you？</Dialog>
+          <Dialog>...Have I？</Dialog>
           <Dialog>Emm... Maybe so... I'm 
 kidding.</Dialog>
-          <Dialog>There's no such thing.</Dialog>
-          <Dialog>No, is that ...It 
-definitely is.</Dialog>
-          <Dialog>I wonder.</Dialog>
-          <Dialog>Do you hate me？</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>(Hmm, was she hurt？ I may 
-have been cold recently...)</Dialog>
-          <Dialog>I'm really sorry, I won't 
-do it anymore！</Dialog>
-          <Dialog>Don't worry about that！</Dialog>
-          <Dialog>...Is that bad？</Dialog>
+          <Dialog>That's not true.</Dialog>
+          <Dialog>No, it is. ...Definitely.</Dialog>
+          <Dialog>Is it...</Dialog>
+          <Dialog>Do you... not like me
+anymore？</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>(Hmm, is she really hurt？ I
+guess I have been cold
+lately...)</Dialog>
+          <Dialog>I'm really sorry, I won't do
+it again！</Dialog>
+          <Dialog>Don't worry about it so
+much！</Dialog>
+          <Dialog>...Isn't it your fault？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Don't be in a bad mood.</Dialog>
-          <Dialog>...It's painful.</Dialog>
-          <Dialog>Is it painful？</Dialog>
-          <Dialog>Maybe I shouldn't...</Dialog>
-          <Dialog>Wait a minute, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>(What is this...？)</Dialog>
-          <Dialog>...That is...</Dialog>
-          <Dialog>Ask me, please！</Dialog>
-          <Dialog>Sorry. I said something 
-weird.</Dialog>
+          <Dialog>Come on, cheer up.</Dialog>
+          <Dialog>...It hurts.</Dialog>
+          <Dialog>It hurts？</Dialog>
+          <Dialog>I don't think I can take it
+anymore...</Dialog>
+          <Dialog>Hey, wait,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>(What's with her...)</Dialog>
+          <Dialog>...That's...</Dialog>
+          <Dialog>Please！</Dialog>
+          <Dialog>...Sorry. For saying
+something weird.</Dialog>
           <Dialog>Then...</Dialog>
-          <Dialog>Yes, I'm kinda weird 
-these days.</Dialog>
-          <Dialog>(She forgave me. I have 
-to be careful.)</Dialog>
+          <Dialog>Yes, I've been a little off
+lately.</Dialog>
+          <Dialog>(She forgave me. I'll be
+more careful.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -715,45 +713,45 @@ to be careful.)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>You've been acting cold 
-recently. Why？</Dialog>
-          <Dialog>Cold？ ...It's your 
-imagination！</Dialog>
-          <Dialog>No... It's not my 
-imagination. Because...</Dialog>
+          <Dialog>▲高嶺＊＊▲. What's up？</Dialog>
+          <Dialog>You've been cold lately.
+Why？</Dialog>
+          <Dialog>Cold？ ...You're imagining
+it！</Dialog>
+          <Dialog>No... I'm not imagining it.
+Because...</Dialog>
           <Dialog>Hmm？</Dialog>
-          <Dialog>Because... I don't know 
-what to do...</Dialog>
-          <Dialog>...Are you angry？</Dialog>
+          <Dialog>Because... I don't know what
+to do...</Dialog>
+          <Dialog>...Are you mad？</Dialog>
           <Dialog>I don't know！</Dialog>
-          <Dialog>(This looks serious... 
-Certainly I might have 
-been cold recently...)</Dialog>
-          <Dialog>I'm really sorry, I won't 
-do it anymore！</Dialog>
-          <Dialog>Don't worry about that！</Dialog>
-          <Dialog>...Is that bad？</Dialog>
+          <Dialog>(She seems serious... I
+guess I have been cold
+lately...)</Dialog>
+          <Dialog>I'm really sorry, I won't do
+it again！</Dialog>
+          <Dialog>Don't worry about it so
+much！</Dialog>
+          <Dialog>...Isn't it your fault？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Don't be in a bad mood.</Dialog>
-          <Dialog>There is no reason to 
-listen to you anymore.</Dialog>
-          <Dialog>Haha, don't get so angry. 
-Look, laugh a little.</Dialog>
-          <Dialog>Geez, I don't like this 
-anymore！</Dialog>
-          <Dialog>Wait a minute, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>(What is this...？)</Dialog>
-          <Dialog>I'll fix it soon...</Dialog>
-          <Dialog>Hey, please. Do you feel 
-upset？ Teehee▼</Dialog>
-          <Dialog>... I'm kidding.</Dialog>
-          <Dialog>... Geez. Yes, I might be 
-a little too angry too.</Dialog>
-          <Dialog>(I wonder if she forgave 
-me. I have to be careful.)</Dialog>
+          <Dialog>Come on, cheer up.</Dialog>
+          <Dialog>There's no way I can cheer
+up.</Dialog>
+          <Dialog>Haha, don't be so mad. Come
+on, smile, smile.</Dialog>
+          <Dialog>I've had enough！</Dialog>
+          <Dialog>Hey, wait,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>(What's with her...)</Dialog>
+          <Dialog>As if I could cheer up that
+fast...</Dialog>
+          <Dialog>Hey, please？ Cheer up？
+Tee-hee▼</Dialog>
+          <Dialog>...Just kidding.</Dialog>
+          <Dialog>...Geez. Yes, maybe I got a
+little too mad too.</Dialog>
+          <Dialog>(She forgave me. I'll be
+more careful.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -818,22 +816,23 @@ me. I have to be careful.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, let's go home.</Dialog>
-          <Dialog>(Ah, she's there... Are you 
-still angry, 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>Invite to go together</Dialog>
-          <Dialog>Go back alone</Dialog>
-          <Dialog>Hey, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Hey, let's go home 
+          <Dialog>Well, time to head home.</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Hey, let's walk home
 together.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Before that, I think you 
-have something to say.</Dialog>
+          <Dialog>Before that, I think there's
+something you should say.</Dialog>
           <Dialog>▲Takane＊＊▲！</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
-          <Dialog>(She's still angry, it's 
-okay...)</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
+          <Dialog>(She might still be mad, so
+never mind...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -898,21 +897,22 @@ okay...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, let's go home.</Dialog>
-          <Dialog>(Oh, she's over there... 
-Are you still angry 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>Invite to go together</Dialog>
-          <Dialog>Go back alone</Dialog>
-          <Dialog>Hey, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Hey, let's go home 
+          <Dialog>Well, time to head home.</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Hey, let's walk home
 together.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...No, not yet...</Dialog>
+          <Dialog>...No, because I'm still...</Dialog>
           <Dialog>▲Takane＊＊▲！</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
-          <Dialog>(She's still angry, it's 
-okay...)</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
+          <Dialog>(She might still be mad, so
+never mind...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -977,22 +977,23 @@ okay...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, let's go back.</Dialog>
-          <Dialog>(Oh, she's over there... 
-Are you still angry, 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>Invite to go together</Dialog>
-          <Dialog>Go back alone</Dialog>
-          <Dialog>Hey, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Hey, let's go home 
+          <Dialog>Well, time to head home.</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey,
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Hey, let's walk home
 together.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You haven't reflected at 
-all！</Dialog>
+          <Dialog>You haven't reflected at
+all.</Dialog>
           <Dialog>▲Takane＊＊▲！</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
-          <Dialog>(She may still be angry, 
-it's okay...)</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
+          <Dialog>(She might still be mad, so
+never mind...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1038,11 +1039,11 @@ it's okay...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's go on a date, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>...No. I still haven't 
-forgiven you yet.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, let's go
+on a date.</Dialog>
+          <Dialog>...No. I haven't forgiven
+you yet.</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1092,11 +1093,11 @@ forgiven you yet.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's go on a date, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Date... No can do. I'm 
-not willing to.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, let's go
+on a date.</Dialog>
+          <Dialog>A date... No. I don't want
+to go.</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1142,11 +1143,11 @@ not willing to.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's go on a date, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Date？ You still haven't 
-apologized.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, let's go
+on a date.</Dialog>
+          <Dialog>A date？ ...You still
+haven't apologized properly.</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1205,19 +1206,19 @@ apologized.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It's my phone... Oh, it's 
-her. Are still angry with 
-me ▲Takane＊＊▲？)</Dialog>
-          <Dialog>Hello？ 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>(A call... Oh,
+▲高嶺＊＊▲.
+Is she not mad anymore？)</Dialog>
+          <Dialog>Hello.
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, you promised me a 
-date last time.</Dialog>
+          <Dialog>Hey, we made plans for a
+date, right？</Dialog>
           <Dialog>Oh, yeah. I remember.</Dialog>
-          <Dialog>Huh... Let me cancel it. 
-See you.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>Cancel that. Bye.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>(She's still mad after
+all...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1276,19 +1277,19 @@ See you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's my phone... Ah, it's 
-her. Are still angry with 
-me ▲Takane＊＊▲？)</Dialog>
-          <Dialog>Hello？ 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>(A call... Oh,
+▲高嶺＊＊▲.
+Is she not mad anymore？)</Dialog>
+          <Dialog>Hello.
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I promised you 
-a date last time.</Dialog>
-          <Dialog>Ah, yes. What's wrong？</Dialog>
-          <Dialog>After what happened, let's 
-cancel it okay？ Sorry.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>Um, about our date plans.</Dialog>
+          <Dialog>Oh, yeah. What's up？</Dialog>
+          <Dialog>Let's call it off after
+all？ Sorry.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>(She's still mad after
+all...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1347,21 +1348,20 @@ cancel it okay？ Sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's my phone... Oh, it's 
-her. Are still angry with 
-me ▲Takane＊＊▲？)</Dialog>
-          <Dialog>Hello？ 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>(A call... Oh,
+▲高嶺＊＊▲.
+Is she not mad anymore？)</Dialog>
+          <Dialog>Hello.
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey. We made a promise to 
-date next time.</Dialog>
-          <Dialog>Oh, yes. Looking forward 
-to it？</Dialog>
-          <Dialog>No. We should not make 
-those promises for the 
-time being.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>Hey. About our next date
+plans.</Dialog>
+          <Dialog>Oh, yeah. Can't wait, huh？</Dialog>
+          <Dialog>No. So let's just cancel the
+plans.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>(She's still mad after
+all...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1407,11 +1407,11 @@ time being.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me, can you see me 
-now ▲Takane＊＊▲？</Dialog>
-          <Dialog>Not good yet. I don't want 
-to see you yet.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, can we
+meet up now？</Dialog>
+          <Dialog>Not yet. I don't want to see
+you.</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1453,10 +1453,10 @@ to see you yet.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes, hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me, can you see me 
-now ▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, can we
+meet up now？</Dialog>
           <Dialog>Um... Sorry.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1498,10 +1498,10 @@ now ▲Takane＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me, can you see me 
-now ▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey, can we
+meet up now？</Dialog>
           <Dialog>I don't want to see you.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>(She's still mad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1521,7 +1521,8 @@ now ▲Takane＊＊▲？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'll do my best to do it.</Dialog>
+          <Dialog>So that's the kind of thing
+you work hard at.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1541,8 +1542,8 @@ now ▲Takane＊＊▲？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wish you cared about me 
-too...</Dialog>
+          <Dialog>I wish you'd pay proper
+attention to me too...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1562,7 +1563,7 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm.</Dialog>
+          <Dialog>Hmph.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1582,7 +1583,8 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I didn't watch it.</Dialog>
+          <Dialog>...It's not like I was
+watching.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1602,7 +1604,8 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Because I'm worried.</Dialog>
+          <Dialog>Because I can't help being
+curious.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1626,7 +1629,7 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm doing it again. Hah...</Dialog>
+          <Dialog>He's at it again. Sigh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1646,7 +1649,7 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>As expected... but...</Dialog>
+          <Dialog>Impressive... but.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1686,7 +1689,7 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But as my boyfriend...</Dialog>
+          <Dialog>But as a boyfriend...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1706,9 +1709,8 @@ too...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wasn't watching it, 
-because I was going to 
-blame you.</Dialog>
+          <Dialog>I wasn't watching to blame
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1728,7 +1730,7 @@ blame you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's complex...</Dialog>
+          <Dialog>It's complicated...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1752,8 +1754,8 @@ blame you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe.. No, it's not good 
-to laugh.</Dialog>
+          <Dialog>Hehe. ...No, I shouldn't
+laugh.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1803,16 +1805,17 @@ to laugh.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Oh, it's her... Are you 
-still angry with me 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>Hey</Dialog>
-          <Dialog>Do not speak</Dialog>
-          <Dialog>Hey.</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
+          <Dialog>Hey there</Dialog>
+          <Dialog>Don't call out</Dialog>
+          <Dialog>Hey there.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>It's still early...</Dialog>
-          <Dialog>(It's still no good...)</Dialog>
-          <Dialog>(Let's leave her for now.)</Dialog>
+          <Dialog>So casual...</Dialog>
+          <Dialog>(Still no good...)</Dialog>
+          <Dialog>(I'll leave her alone for
+now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1862,16 +1865,17 @@ still angry with me
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Oh, it's her... Are you 
-still angry with me 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
           <Dialog>Hey</Dialog>
-          <Dialog>Do not speak</Dialog>
+          <Dialog>Don't call out</Dialog>
           <Dialog>Hey.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... sorry.</Dialog>
-          <Dialog>(It's still no good...)</Dialog>
-          <Dialog>(Let's leave her for now.)</Dialog>
+          <Dialog>Oh... Sorry.</Dialog>
+          <Dialog>(Still no good...)</Dialog>
+          <Dialog>(I'll leave her alone for
+now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1921,16 +1925,17 @@ still angry with me
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Oh, it's her... Are you 
-still angry with me 
-▲Takane＊＊▲？)</Dialog>
-          <Dialog>Time to be on my knees！</Dialog>
-          <Dialog>Do not speak</Dialog>
-          <Dialog>Hah！</Dialog>
+          <Dialog>(Oh,
+▲高嶺＊＊▲... Is she still
+mad？)</Dialog>
+          <Dialog>Knee-buckle her！</Dialog>
+          <Dialog>Don't call out</Dialog>
+          <Dialog>Hup！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>What are you doing？</Dialog>
-          <Dialog>(It's still no good.)</Dialog>
-          <Dialog>(Let's leave her for now.)</Dialog>
+          <Dialog>What was that？</Dialog>
+          <Dialog>(Still no good...)</Dialog>
+          <Dialog>(I'll leave her alone for
+now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1975,12 +1980,13 @@ still angry with me
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah.</Dialog>
+          <Dialog>Oh.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲.</Dialog>
+          <Dialog>Oh,
+▲高嶺＊＊▲.</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>(Still mad, huh...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2028,9 +2034,10 @@ still angry with me
           <Dialog>Ah...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲.</Dialog>
-          <Dialog>I'm sorry.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>Oh,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Excuse me.</Dialog>
+          <Dialog>(Still mad, huh...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2078,9 +2085,10 @@ still angry with me
           <Dialog>Ah...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲.</Dialog>
-          <Dialog>...Move please.</Dialog>
-          <Dialog>(She's still angry...)</Dialog>
+          <Dialog>Oh,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>...Move.</Dialog>
+          <Dialog>(Still mad, huh...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2179,23 +2187,23 @@ still angry with me
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲. 
-From that moment, I...</Dialog>
-          <Dialog>I know. You worked hard 
-for me.</Dialog>
-          <Dialog>I'm sorry, I regret it 
-all. Not being able to talk 
-to you was painful, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yes, it was painful...</Dialog>
+          <Dialog>▲高嶺＊＊▲. Since then,
+I...</Dialog>
+          <Dialog>I know. You tried hard for
+me.</Dialog>
+          <Dialog>I'm sorry, I've reflected. I
+never knew not talking with
+▲高嶺＊＊▲
+would hurt this much.</Dialog>
+          <Dialog>Yes, it hurts...</Dialog>
           <Dialog>I'm sorry, forgive me.</Dialog>
-          <Dialog>That's not the case... 
-What would I do if you 
-started hating me...</Dialog>
-          <Dialog>But such a thing...</Dialog>
-          <Dialog>Sorry... That's what I 
-think...</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
+          <Dialog>That's not it... I was so
+scared about what I'd do if
+you came to hate me...</Dialog>
+          <Dialog>As if I would.</Dialog>
+          <Dialog>I'm sorry... I never want
+that again...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2294,24 +2302,22 @@ think...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲... 
-Since then, I...</Dialog>
-          <Dialog>Yup. I saw you doing your 
-best.</Dialog>
-          <Dialog>Yes, I know I was wrong.</Dialog>
-          <Dialog>I'm sorry too. But I don't 
-want you to do it 
-anymore...</Dialog>
-          <Dialog>Yes. I don't want to be 
-hated by you anymore, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>No, even if it's messed 
-up, I started to like you 
-more and more... 
-I'm afraid of it...</Dialog>
+          <Dialog>▲高嶺＊＊▲. Since then,
+I...</Dialog>
+          <Dialog>Yes. I saw you trying hard.</Dialog>
+          <Dialog>Yeah, it was my fault.</Dialog>
+          <Dialog>I'm sorry too. But I don't
+want you to do that again...</Dialog>
+          <Dialog>Yeah. I don't want
+▲高嶺＊＊▲
+to hate me anymore.</Dialog>
+          <Dialog>No, even when you're mean to
+me, I keep loving you
+more... and that scares
+me...</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>So kiss me...</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
+          <Dialog>So, kiss me...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2411,21 +2417,22 @@ I'm afraid of it...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲... 
-Since then, I...</Dialog>
-          <Dialog>Yes, you were doing your 
-best.</Dialog>
-          <Dialog>Did I？ I didn't like it...</Dialog>
-          <Dialog>I know, because of me. 
-I'm sorry.</Dialog>
-          <Dialog>I thought you would hate 
+          <Dialog>▲高嶺＊＊▲. Since then,
+I...</Dialog>
+          <Dialog>Yes, you tried hard.</Dialog>
+          <Dialog>Do you get it？ I wasn't
+being mean because I wanted
+to...</Dialog>
+          <Dialog>I know, it was my fault.
+Sorry.</Dialog>
+          <Dialog>I thought you'd come to hate
 me... I was scared...</Dialog>
-          <Dialog>I'm really sorry. I made 
-you feel pain.</Dialog>
-          <Dialog>Idiot！</Dialog>
-          <Dialog>I was scared... I was 
+          <Dialog>I'm really sorry. For
+hurting you.</Dialog>
+          <Dialog>Dummy！</Dialog>
+          <Dialog>I was scared... I was
 lonely！</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2562,36 +2569,37 @@ lonely！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder how have you been 
-doing since then 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>(I wonder how
+▲高嶺＊＊▲
+is feeling...)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
-          <Dialog>It's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Eh！？ Wait a minute... 
-Where are you？</Dialog>
+          <Dialog>Coming.</Dialog>
+          <Dialog>▲高嶺＊＊▲. It's me.</Dialog>
+          <Dialog>Huh!? Wait a sec... Okay,
+come in.</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Did you come to visit me？</Dialog>
-          <Dialog>Yes, it's a little easier. 
-Thank you. I'm sorry, for 
-going out of the way.</Dialog>
-          <Dialog>That's obvious. I worry 
-about you.</Dialog>
+          <Dialog>Was it okay for me to
+visit？</Dialog>
+          <Dialog>Yes, I feel a little better.
+Thank you. Sorry you came
+all this way.</Dialog>
+          <Dialog>Of course I would. I worry
+about my girlfriend.</Dialog>
           <Dialog>Yes, I'm happy.</Dialog>
-          <Dialog>You're always trying too 
-hard. You need to get out 
-more ▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲
+always works too hard. You
+need to relax more.</Dialog>
           <Dialog>Hehe, like you？</Dialog>
-          <Dialog>Haha. Yes, like me.</Dialog>
-          <Dialog>If it's for too long, 
-it's bad for your health. 
-It's time to go home.</Dialog>
+          <Dialog>Haha. Yeah, like me.</Dialog>
+          <Dialog>If I stay too long, it'll
+wear you out. I'll head
+home.</Dialog>
           <Dialog>Yes, thank you for coming.</Dialog>
-          <Dialog>Of course. Well then, take 
+          <Dialog>Of course. See you, take
 care.</Dialog>
-          <Dialog>(I hope you get well soon, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>(I hope
+▲高嶺＊＊▲
+gets better soon.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2738,38 +2746,38 @@ care.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder how have you been 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>(I wonder how
+▲高嶺＊＊▲
+is feeling...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes？</Dialog>
-          <Dialog>It's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Eh？ Um, wait a minute... 
-Please come in.</Dialog>
+          <Dialog>▲高嶺＊＊▲. It's me.</Dialog>
+          <Dialog>...Huh. Um, wait a sec...
+Come in.</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>I'm visiting you. Is it 
-okay？</Dialog>
-          <Dialog>Thank you. Yeah, it's a 
-lot easier.</Dialog>
+          <Dialog>I came to visit. How are
+you？</Dialog>
+          <Dialog>Thank you. Yes, I feel much
+better.</Dialog>
           <Dialog>I see, I'm glad.</Dialog>
           <Dialog>Hehe...</Dialog>
-          <Dialog>Huh？ What's the matter？</Dialog>
-          <Dialog>I was just bored. I was 
-wondering if I could see 
-you.</Dialog>
-          <Dialog>Me too. That's why if I 
-can't see you, I'll get 
-sick, ▲Takane＊＊▲.</Dialog>
+          <Dialog>？ What's up？</Dialog>
+          <Dialog>I was just getting bored. I
+was wishing I could see you.</Dialog>
+          <Dialog>Me too. If I couldn't see
+▲高嶺＊＊▲ any longer, I'd
+get sick too.</Dialog>
           <Dialog>Hehe.</Dialog>
-          <Dialog>If it's too long, it's 
-bad for you. It's time to 
-go home.</Dialog>
-          <Dialog>Oh, are you going already？</Dialog>
-          <Dialog>It's important to get 
-some rest. I'll come 
-again. See you.</Dialog>
-          <Dialog>(I hope you get better soon 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>If I stay too long, it'll
+wear you out. I'll head
+home.</Dialog>
+          <Dialog>Oh, you're leaving already？</Dialog>
+          <Dialog>Getting better is more
+important. I'll come again.
+See you.</Dialog>
+          <Dialog>(I hope
+▲高嶺＊＊▲
+gets better soon.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2902,39 +2910,41 @@ again. See you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I wonder how have you been 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>(I wonder how
+▲高嶺＊＊▲
+is feeling...)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes！</Dialog>
-          <Dialog>It's me, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>No way？ No, wait a sec... 
-Okay, come in.</Dialog>
+          <Dialog>Coming！</Dialog>
+          <Dialog>▲高嶺＊＊▲. It's me.</Dialog>
+          <Dialog>What？ W-Wait... Okay, come
+in.</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Can't you wait a little？</Dialog>
-          <Dialog>Yes. I was waiting.</Dialog>
-          <Dialog>Oh, you're more honest 
-than usual.</Dialog>
-          <Dialog>I'm always honest, aren't 
-I？</Dialog>
-          <Dialog>Haha, that's right. 
-If you're happy, it was 
-worth it.</Dialog>
-          <Dialog>I've been longing for this 
-kind of thing. When you 
-get sick, your boyfriend 
-will come to see you.</Dialog>
-          <Dialog>Hopefully if you're going 
-to visit me, you don't get 
-sick.</Dialog>
-          <Dialog>If it's too long, it's 
-bad for you. I'll be back 
-soon.</Dialog>
+          <Dialog>Here I am, the one you've
+been waiting for, right？
+Just kidding.</Dialog>
+          <Dialog>Yes, I was waiting.</Dialog>
+          <Dialog>Huh, you're more honest than
+usual.</Dialog>
+          <Dialog>I'm always honest, you
+know？</Dialog>
+          <Dialog>Haha, right. If you're
+happy, it was worth coming.</Dialog>
+          <Dialog>I always kind of dreamed of
+this. When you get sick,
+your boyfriend comes to
+visit.</Dialog>
+          <Dialog>For the visitor, it'd be
+better not to have to come
+at all, though.</Dialog>
+          <Dialog>If I stay too long, it'll
+wear you out. I'll head
+home.</Dialog>
           <Dialog>Will you come again？</Dialog>
-          <Dialog>Yes, I'll come again. 
-See you.</Dialog>
-          <Dialog>(I hope you get better soon 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Yeah, I'll come again. See
+you.</Dialog>
+          <Dialog>(I hope
+▲高嶺＊＊▲
+gets better soon.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2996,18 +3006,18 @@ See you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm happy, but... If you 
-come visit this many 
-times, won't you get sick？</Dialog>
+          <Dialog>I'm happy, but... if you
+keep coming, you'll catch
+it, you know？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If that heals you, I'm 
-willing to get sick.</Dialog>
-          <Dialog>No good！ I want to play 
-with you as soon as I'm 
-healed. Don't get sick！</Dialog>
-          <Dialog>Yes, yes. I understand, 
-calm down.</Dialog>
-          <Dialog>Oh you... Do you promise？</Dialog>
+          <Dialog>If that'd cure you, maybe
+that's not so bad.</Dialog>
+          <Dialog>No！ I want to go out with
+you as soon as I'm better.
+So you can't get sick！</Dialog>
+          <Dialog>Okay, okay. I get it, calm
+down.</Dialog>
+          <Dialog>Geez... Promise？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3061,17 +3071,15 @@ calm down.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When you come visit me 
-like this, it's like I'm 
-keeping you to myself, so 
-it's a bit nice.</Dialog>
+          <Dialog>When you visit like this,
+it's like I have you all to
+myself. It's kind of nice.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You want to keep me to 
-yourself, right？</Dialog>
+          <Dialog>Isn't it always like that？</Dialog>
           <Dialog>...Maybe.</Dialog>
-          <Dialog>Right？ That's why, it's 
-better to be healthy.</Dialog>
-          <Dialog>Yeah, let's go play.</Dialog>
+          <Dialog>Right？ So, being healthy is
+better after all.</Dialog>
+          <Dialog>Yes, let's go out soon.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3125,17 +3133,15 @@ better to be healthy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad to see you. 
-Don't you get sick？</Dialog>
+          <Dialog>I'm happy you came, but
+won't you catch it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm strong.</Dialog>
-          <Dialog>Then, what kind of thing 
-do you want me to pass 
-you？</Dialog>
-          <Dialog>...Now's not good. After 
-I heal.</Dialog>
-          <Dialog>Hehe, I just thought 
-about it.</Dialog>
+          <Dialog>I'm tough.</Dialog>
+          <Dialog>Then want to try something
+that'd make me catch it？</Dialog>
+          <Dialog>...No. After I get better.</Dialog>
+          <Dialog>Hehe, I thought about it for
+a second.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3216,17 +3222,17 @@ about it.</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah...</Dialog>
-          <Dialog>▲Takane＊＊▲！ 
-Are you feeling better？</Dialog>
-          <Dialog>Yes, I'm fine. Maybe 
-thanks to your visit.</Dialog>
-          <Dialog>I hope. Maybe that was bad 
-for your body.</Dialog>
-          <Dialog>That's not true. I'm Papa's 
-daughter, so I have no 
-doubts.</Dialog>
+          <Dialog>▲高嶺＊＊▲. Are you better
+now？</Dialog>
+          <Dialog>Yes, I'm fine. Thanks to
+your visits, maybe.</Dialog>
+          <Dialog>I hope so. Maybe it was bad
+for you, though.</Dialog>
+          <Dialog>Not at all. I'm a doctor's
+daughter, so trust me on
+that.</Dialog>
           <Dialog>I see, then it's nice.</Dialog>
-          <Dialog>Let's play a lot today, 
+          <Dialog>Let's go out a lot again,
 okay？</Dialog>
         </Dialogs>
       </SDL2>
@@ -3312,17 +3318,17 @@ okay？</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah...</Dialog>
-          <Dialog>▲Takane＊＊▲！ 
-Are you feeling fine？</Dialog>
-          <Dialog>I'm already okay. Thank 
-you for your visit.</Dialog>
-          <Dialog>You're welcome. Don't 
-over do it, okay？</Dialog>
-          <Dialog>Yup. But, isn't it nice 
-to go out with you？</Dialog>
+          <Dialog>▲高嶺＊＊▲. Are you better
+now？</Dialog>
+          <Dialog>I'm all better. Thanks for
+visiting.</Dialog>
+          <Dialog>You're welcome. Don't push
+yourself again, okay？</Dialog>
+          <Dialog>Okay. But going out with you
+is fine, right？</Dialog>
           <Dialog>Of course！</Dialog>
-          <Dialog>That's fine. Let's get 
-along, okay？</Dialog>
+          <Dialog>Then good. I'm counting on
+you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3403,15 +3409,16 @@ along, okay？</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah...</Dialog>
-          <Dialog>▲Takane＊＊▲！ 
-Are you feeling fine？</Dialog>
-          <Dialog>As you can see. It was 
-thanks to your visit.</Dialog>
+          <Dialog>▲高嶺＊＊▲. Are you better
+now？</Dialog>
+          <Dialog>As you can see. Thanks to my
+boyfriend's visits.</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>I'm in good shape.</Dialog>
+          <Dialog>Geez, getting carried away.</Dialog>
           <Dialog>Haha.</Dialog>
-          <Dialog>Hehe, let's have a date 
-soon. I've endured enough.</Dialog>
+          <Dialog>Hehe, let's go on a date
+soon. I've been holding
+back.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3543,37 +3550,35 @@ soon. I've endured enough.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm bored... I'm tired of 
-being at home.)</Dialog>
-          <Dialog>Who might that be... Yes！</Dialog>
+          <Dialog>(Bored... I'm sick of being
+stuck at home.)</Dialog>
+          <Dialog>Who could that be...
+Coming！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>▲Takane＊＊▲？　
+          <Dialog>▲高嶺＊＊▲？
 Oh, no way.</Dialog>
           <Dialog>I came to visit.</Dialog>
-          <Dialog>I'm sorry if I'm bothering 
-you.</Dialog>
-          <Dialog>Not at all. I was 
-wondering if you were 
-bored.</Dialog>
-          <Dialog>Correct answer. Thank you 
-for coming.</Dialog>
+          <Dialog>Sorry you came all this way.</Dialog>
+          <Dialog>Not at all. I thought you
+might be bored.</Dialog>
+          <Dialog>Bingo. You're a lifesaver.</Dialog>
           <Dialog>Hehe, I'm glad.</Dialog>
-          <Dialog>Oh, it's annoying if you 
-stay for too long. 
-I'm leaving now.</Dialog>
-          <Dialog>That's not the case 
-though... But okay, thank 
-you for coming.</Dialog>
-          <Dialog>If you have any trouble, 
-let me know please？ About 
-anything.</Dialog>
-          <Dialog>As expected from you. 
-All right, thank you.</Dialog>
-          <Dialog>...Is that so？ Then, be 
-careful.</Dialog>
-          <Dialog>(I have to get well soon, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Oh, I'll be a bother if I
+stay long. I'll go home now.</Dialog>
+          <Dialog>Not at all... but okay,
+thanks for today.</Dialog>
+          <Dialog>If you need anything, let me
+know？ Like, help around the
+house.</Dialog>
+          <Dialog>I can't ask that much. I'm
+fine, thanks.</Dialog>
+          <Dialog>...Really？ Then, get well
+soon.</Dialog>
+          <Dialog>(I need to get better fast,
+for
+▲高嶺＊＊▲'s
+sake too.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3714,40 +3719,38 @@ careful.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm bored... I'm tired 
-of staying at home.)</Dialog>
-          <Dialog>Who might that be... Yes！</Dialog>
+          <Dialog>(Bored... I'm sick of being
+stuck at home.)</Dialog>
+          <Dialog>Who could that be...
+Coming！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>▲Takane＊＊▲？ 
+          <Dialog>▲高嶺＊＊▲？
 Oh, no way.</Dialog>
-          <Dialog>I'm visiting. I hope it's 
-not annoying.</Dialog>
-          <Dialog>It's not annoying. I just 
-wanted someone to talk 
-to.</Dialog>
-          <Dialog>I'm glad, you look good.</Dialog>
-          <Dialog>Yes, when I saw you face, 
-I felt better at once, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Oh you... Yes！</Dialog>
-          <Dialog>Oh, it's not good for 
-your health if you talk 
-too much.</Dialog>
-          <Dialog>That's not true...</Dialog>
-          <Dialog>Is your housework okay？ 
-Can I help you with 
-something？</Dialog>
-          <Dialog>It's okay. I'll do 
-something.</Dialog>
-          <Dialog>... Well, I'm going home 
-for today. If something 
-happens, contact me.</Dialog>
-          <Dialog>Yes, I understand. Thank 
-you.</Dialog>
-          <Dialog>(I have to get well soon 
-for you, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>I came to visit. If it's not
+a bother.</Dialog>
+          <Dialog>Not a bother. I wanted
+someone to talk to.</Dialog>
+          <Dialog>I'm glad you look well.</Dialog>
+          <Dialog>Yeah, seeing ▲高嶺＊＊▲'s
+face made me feel better
+right away.</Dialog>
+          <Dialog>Geez. ...Okay.</Dialog>
+          <Dialog>Oh, talking too much isn't
+good for you.</Dialog>
+          <Dialog>It's fine, though...</Dialog>
+          <Dialog>Is the housework okay？ Want
+me to help with anything？</Dialog>
+          <Dialog>It's fine, it's fine. I'm
+managing.</Dialog>
+          <Dialog>......Then, I'll go home
+today. If anything comes up,
+let me know？</Dialog>
+          <Dialog>Yeah, got it. Thanks.</Dialog>
+          <Dialog>(I need to get better fast,
+for
+▲高嶺＊＊▲'s
+sake too.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3898,38 +3901,40 @@ for you,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm bored... I'm tired 
-of staying home.)</Dialog>
-          <Dialog>Who might that be... Yes！</Dialog>
+          <Dialog>(Bored... I'm sick of being
+stuck at home.)</Dialog>
+          <Dialog>Who could that be...
+Coming！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>▲Takane＊＊▲？ 
+          <Dialog>▲高嶺＊＊▲？
 Oh, no way.</Dialog>
-          <Dialog>Sorry to keep you waiting. 
-I came to see you.</Dialog>
-          <Dialog>Waiting. I'm tired of 
-waiting.</Dialog>
-          <Dialog>Oh you, did you have to 
-be so energetic？</Dialog>
-          <Dialog>Oh, no！ Don't go home！</Dialog>
-          <Dialog>Hehe, I'm not going home.</Dialog>
-          <Dialog>Oh, we talked for a long 
-time. You have to rest. 
-It's time to go home.</Dialog>
-          <Dialog>It's okay.</Dialog>
-          <Dialog>This is coming from the 
-doctor's daughter, okay？ 
-If you overdo it, you'll 
-see a doctor.</Dialog>
-          <Dialog>Eh... as a medical 
-examination？</Dialog>
-          <Dialog>Huh？ What's wrong？</Dialog>
-          <Dialog>N-nothing. Thank you 
-today！</Dialog>
+          <Dialog>Sorry I'm late. I came to
+visit.</Dialog>
+          <Dialog>Yep, I waited and waited.
+I'm worn out from waiting.</Dialog>
+          <Dialog>Geez, if you're that lively,
+maybe I didn't need to
+come？</Dialog>
+          <Dialog>Ah, no！ Don't go home！</Dialog>
+          <Dialog>Hehe, I'm not going.</Dialog>
+          <Dialog>Oh, we talked so long. You
+need to rest. I'll go home
+soon.</Dialog>
+          <Dialog>I'm fine.</Dialog>
+          <Dialog>I'm a doctor's daughter, you
+know？ Push yourself too
+hard and I'll give you an
+examination.</Dialog>
+          <Dialog>Huh... an e-examination？</Dialog>
+          <Dialog>？ What's wrong？</Dialog>
+          <Dialog>N-Nothing. See you, thanks
+for today！</Dialog>
           <Dialog>Yes, see you.</Dialog>
-          <Dialog>(I have to get well soon, 
-for your sake, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>(I need to get better fast,
+for
+▲高嶺＊＊▲'s
+sake too.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3989,15 +3994,15 @@ for your sake,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm free...)</Dialog>
-          <Dialog>Oh, maybe...</Dialog>
+          <Dialog>(I'm bored...)</Dialog>
+          <Dialog>Oh, could it be...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you have any problems？</Dialog>
-          <Dialog>If there are, there are.</Dialog>
+          <Dialog>Is anything bothering you？</Dialog>
+          <Dialog>Well, there is something.</Dialog>
           <Dialog>What？</Dialog>
-          <Dialog>In other words... 
-Hey, do you understand？</Dialog>
-          <Dialog>Geez, idiot.</Dialog>
+          <Dialog>It's hard to say in words...
+Hey, can't you tell？</Dialog>
+          <Dialog>Geez, dummy.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4061,19 +4066,16 @@ Hey, do you understand？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm free...)</Dialog>
-          <Dialog>Oh, maybe...</Dialog>
+          <Dialog>(I'm bored...)</Dialog>
+          <Dialog>Oh, could it be...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you alright？ 
-Does it hurt？</Dialog>
-          <Dialog>My body feels weird.</Dialog>
-          <Dialog>Eh！ Does it hurt 
-somewhere？</Dialog>
-          <Dialog>My mouth feels lonely. 
-I want your kiss.</Dialog>
-          <Dialog>...It's useless. I'll 
-think about it when you 
-get better.</Dialog>
+          <Dialog>Are you okay？ Feeling bad？</Dialog>
+          <Dialog>I feel bad.</Dialog>
+          <Dialog>What！ Does something hurt？</Dialog>
+          <Dialog>My lips are lonely. A kiss
+would cure me.</Dialog>
+          <Dialog>...Not yet. I'll think about
+it when you're better.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4141,17 +4143,17 @@ get better.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I am free...)</Dialog>
-          <Dialog>Oh, maybe...</Dialog>
+          <Dialog>(I'm bored...)</Dialog>
+          <Dialog>Oh, could it be...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you have a good rest？</Dialog>
-          <Dialog>Yes.</Dialog>
-          <Dialog>Hehe, nice. Get well 
+          <Dialog>Have you been resting
+properly？</Dialog>
+          <Dialog>Yes, ma'am.</Dialog>
+          <Dialog>Hehe, very good. Get well
 soon, okay？</Dialog>
-          <Dialog>Yes, we can't kiss if I 
-don't heal...</Dialog>
-          <Dialog>Yup. So you get better 
-soon, okay？</Dialog>
+          <Dialog>Yeah, I can't kiss you until
+I'm better...</Dialog>
+          <Dialog>Yes. So get well soon？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4215,13 +4217,12 @@ soon, okay？</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>Sorry to keep you waiting. 
 Thank you for your visit.</Dialog>
-          <Dialog>I'm glad. Aren't you hot 
+          <Dialog>I'm glad. Nothing hurts
 anymore？</Dialog>
-          <Dialog>Yes. After that, I want to 
-go and play with you, it 
-will be perfect, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hehe, I'll cooperate.</Dialog>
+          <Dialog>Yeah. Now if I go out with
+▲高嶺＊＊▲,
+it'll be perfect.</Dialog>
+          <Dialog>Hehe, I'll help！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4285,11 +4286,11 @@ will be perfect,
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>Sorry to keep you waiting. 
 Thank you for your visit.</Dialog>
-          <Dialog>Yes... I'm glad, don't 
-get sick anymore...</Dialog>
-          <Dialog>Yes. I'm sorry to make 
-you feel lonely. I like 
-being together.</Dialog>
+          <Dialog>Yes... I'm glad. Don't get
+sick again...</Dialog>
+          <Dialog>Yeah. Sorry for making you
+lonely. Let's make up for it
+by being together.</Dialog>
           <Dialog>Yup....</Dialog>
         </Dialogs>
       </SDL2>
@@ -4358,12 +4359,12 @@ being together.</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>Sorry to keep you waiting. 
 Thank you for your visit.</Dialog>
-          <Dialog>I'm glad... Oh, you can't 
-get sick and worry your 
-girlfriend anymore, okay？</Dialog>
-          <Dialog>Yes, I will do my best.</Dialog>
-          <Dialog>Let's go play a lot. 
-Then I will forgive you.</Dialog>
+          <Dialog>I'm glad... Oh, no more
+getting sick and worrying
+your girlfriend, okay？</Dialog>
+          <Dialog>Yes, I'll try.</Dialog>
+          <Dialog>Let's go out lots. Then I'll
+forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
