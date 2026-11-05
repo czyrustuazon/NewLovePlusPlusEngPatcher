@@ -91,24 +91,23 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, hey, 
-▲主人公＊▲.</Dialog>
+          <Dialog>Hey, hey. ▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Can we solve this problem 
-together？</Dialog>
+          <Dialog>▲高嶺＊＊▲. What's up？</Dialog>
+          <Dialog>Will you solve this problem
+with me？</Dialog>
           <Dialog>Let's see...</Dialog>
           <Dialog>...Hehe.</Dialog>
-          <Dialog>What？</Dialog>
-          <Dialog>Your confidence is 
-inspiring. You're doing 
-your best.</Dialog>
-          <Dialog>I can't lose to you.</Dialog>
-          <Dialog>I want us to do our best 
-together so, from now 
-on... let me be next to 
-you. I'm kidding.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>You're so cool when you're
+full of confidence. You
+worked really hard, after
+all.</Dialog>
+          <Dialog>I can't fall behind either.</Dialog>
+          <Dialog>I want us to do our best
+together, so from now on
+too... let me stay by your
+side. Just kidding.</Dialog>
           <Dialog>(Yay！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -206,27 +205,27 @@ you. I'm kidding.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hey, the results of the 
 math quiz――</Dialog>
-          <Dialog>Hehe. It's looking good, 
-isn't it？</Dialog>
+          <Dialog>Hehe. Looks like it went
+well？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I did perfectly！ Thank you 
-for teaching me a lot, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Yay！ I'm kidding.</Dialog>
-          <Dialog>I'm glad you thought you'd 
-get good results.</Dialog>
-          <Dialog>Why did you think that？</Dialog>
-          <Dialog>You answered my questions 
-fluently, and you were 
-working truly hard...</Dialog>
-          <Dialog>...My favorite person is 
-truly...</Dialog>
-          <Dialog>Ah, no, what I was... 
-That, you know... Let's 
-continue doing our best 
-next time, okay？</Dialog>
-          <Dialog>(Yeah, let's give it our 
-all！)</Dialog>
+          <Dialog>Nailed it！ All thanks to
+▲高嶺＊＊▲ teaching me so
+much！</Dialog>
+          <Dialog>Yay！ ...Just kidding.</Dialog>
+          <Dialog>I had a feeling you'd get a
+good result, so I'm happy.</Dialog>
+          <Dialog>What made you think I'd do
+well？</Dialog>
+          <Dialog>You answered my questions so
+smoothly, and you worked so
+hard...</Dialog>
+          <Dialog>...I thought, that's the
+person I love, after all...</Dialog>
+          <Dialog>Ah, oh no, I... um, so...
+let's do our best next time
+too？</Dialog>
+          <Dialog>(All right, I'll do my
+best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -311,29 +310,31 @@ all！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>How can the sensei come 
-up with a surprising 
-solution like that？</Dialog>
+          <Dialog>How do you come up with
+solutions that surprise even
+the teacher？</Dialog>
           <Dialog>Oh, that. I came up with 
 it during preparation.</Dialog>
-          <Dialog>That shows the results of 
-your everyday efforts. 
-It's amazing, I want to 
-be your apprentice.</Dialog>
-          <Dialog>You are already one！ I was 
-just imitating you 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Me...？</Dialog>
-          <Dialog>Hehe！ It's a little 
-strange. Two people 
-learning from each other.</Dialog>
-          <Dialog>That reminds me...</Dialog>
-          <Dialog>From now on, let's do 
-our best while learning 
-from each other, okay？</Dialog>
-          <Dialog>(Alright, I can't wait！)</Dialog>
+          <Dialog>That's the result of your
+everyday effort. Amazing. I
+want to learn from you.</Dialog>
+          <Dialog>You too, ▲高嶺＊＊▲！ I
+was just following
+▲高嶺＊＊▲'s example.</Dialog>
+          <Dialog>Me？ Hardly...</Dialog>
+          <Dialog>Hehe！ But it's a little
+funny. Both of us learning
+from each other.</Dialog>
+          <Dialog>Now that you mention it.</Dialog>
+          <Dialog>Right. ...From now on too,
+let's keep learning from
+each other and doing our
+best？</Dialog>
+          <Dialog>(All right, no slacking,
+let's do our best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -418,30 +419,30 @@ from each other, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Should I solve it like 
-this？ I understand it 
-now. Okay, next problem...</Dialog>
+          <Dialog>So that's how you solve it.
+I see～. All right, next
+problem！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Hehe！</Dialog>
-          <Dialog>Huh？ What's wrong？</Dialog>
-          <Dialog>You've been studying with 
-a smile on your face 
-recently.</Dialog>
-          <Dialog>You're doing excellent, 
-maybe because we're 
-together like this.</Dialog>
-          <Dialog>When you say that, it makes 
-me want to do my best too, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Me too. I'll do my best, 
-if you tell me to.</Dialog>
-          <Dialog>Perhaps that is what make 
-us give our best.</Dialog>
-          <Dialog>Of course！ That's why... 
-We will always be together, 
-right？</Dialog>
-          <Dialog>(Alright！！ I got my 
-energy back！)</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Nothing. You've looked like
+you're having so much fun
+studying lately.</Dialog>
+          <Dialog>I've been doing well too.
+Maybe because you're with
+me.</Dialog>
+          <Dialog>When ▲高嶺＊＊▲ says that,
+it makes me want to try even
+harder.</Dialog>
+          <Dialog>Same here. If you say that
+to me, I'll try hard too.</Dialog>
+          <Dialog>Maybe we'll just keep
+pushing ourselves like this
+forever.</Dialog>
+          <Dialog>Of course！ Because... we'll
+always be together, right？</Dialog>
+          <Dialog>(All right!! Time to
+refocus！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -516,23 +517,23 @@ energy back！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're the only one who 
-could solve that problem.</Dialog>
+          <Dialog>That really hard problem.
+Apparently you were the only
+one who solved it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you mean you couldn't 
-solve it, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Nope. Do you want to brag 
-about it？ I'm kidding.</Dialog>
-          <Dialog>Haha！ If I brag about it, 
-it's going to be more 
-difficult, so I'll refrain 
-from doing it...</Dialog>
+          <Dialog>So that means ▲高嶺＊＊▲
+didn't either？</Dialog>
+          <Dialog>Right. You can brag, you
+know？ Just kidding.</Dialog>
+          <Dialog>Haha！ But if I bragged,
+they'd give me even harder
+ones, so I'll pass...</Dialog>
           <Dialog>Hehe！</Dialog>
-          <Dialog>But now, you can really 
+          <Dialog>But the way you are now, it
+seems like you could really
 solve any problem.</Dialog>
-          <Dialog>Should I brag about that 
-instead？ ...I'm kidding.</Dialog>
+          <Dialog>Maybe I'll go brag for you？
+...Just kidding.</Dialog>
           <Dialog>(Let's do our best next 
 time！)</Dialog>
         </Dialogs>
@@ -626,20 +627,19 @@ time！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Umm, why are you angry, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>You're so unfair.</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>You did your best studying 
-alone.</Dialog>
-          <Dialog>Well, it's because I want 
-to be a man who deserves 
-to be with you, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲. Um... why are
+you mad？</Dialog>
+          <Dialog>No fair.</Dialog>
+          <Dialog>Wh-what is？</Dialog>
+          <Dialog>You studied hard all by
+yourself.</Dialog>
+          <Dialog>Yeah. I want to be a guy
+who's worthy of
+▲高嶺＊＊▲.</Dialog>
           <Dialog>！！！</Dialog>
           <Dialog>...Geez.</Dialog>
-          <Dialog>Well done. I'll be with 
-you next time, okay？</Dialog>
+          <Dialog>Well done. Next time, I'm
+joining you, okay？</Dialog>
           <Dialog>(Yay！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -725,30 +725,29 @@ you next time, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best in Modern 
-studies this time！)</Dialog>
+          <Dialog>(I nailed modern Japanese
+this time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Was everyone looking at 
-you？ Everyone said your 
-interpretation was so 
-sharp.</Dialog>
-          <Dialog>You're complimenting me 
-too much.</Dialog>
-          <Dialog>Isn't it right？ I'm 
-telling the truth.</Dialog>
-          <Dialog>If you say so, it was 
-worth the effort.</Dialog>
-          <Dialog>Really？ Then, I'll do it 
-more！ Are you sure it's 
-okay？</Dialog>
-          <Dialog>I'd feel embarrassed if 
-you do it too much！</Dialog>
-          <Dialog>Hehe！ Geez, don't say it 
-like that.</Dialog>
-          <Dialog>You do your best because 
-you're so nice. I'm kidding▼</Dialog>
-          <Dialog>(I'll continue doing my 
-best！)</Dialog>
+          <Dialog>You were the center of
+attention, huh？ Everyone
+said your interpretation was
+really sharp.</Dialog>
+          <Dialog>You're overpraising me.</Dialog>
+          <Dialog>That's not even enough, you
+know？ Really and truly.</Dialog>
+          <Dialog>When you say that, it makes
+me feel like I have to keep
+working hard.</Dialog>
+          <Dialog>Really？ Then I'll praise
+you even more！ Okay？</Dialog>
+          <Dialog>Too much praise is...
+embarrassing！</Dialog>
+          <Dialog>Hehe！ Geez, don't say that.</Dialog>
+          <Dialog>You're really wonderful when
+you're working hard, you
+know. Just kidding▼</Dialog>
+          <Dialog>(I'll keep doing my best
+after all！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -828,25 +827,23 @@ best！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...*Sigh*.</Dialog>
+          <Dialog>...Haah.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？ You're 
-sighing too much.</Dialog>
+          <Dialog>What's wrong？ Sighing like
+that.</Dialog>
           <Dialog>I couldn't concentrate on 
 today's class. It's your 
 fault, you know？</Dialog>
-          <Dialog>My fault！？</Dialog>
-          <Dialog>Did you guess why by 
-saying it aloud？</Dialog>
-          <Dialog>You were reading with a 
-high tone, and your voice 
-was wonderful... I was 
-watching you all the time.</Dialog>
-          <Dialog>Eh！？ You didn't have to, 
-I didn't do anything that 
-nice.</Dialog>
-          <Dialog>It was amazing！！ It really 
-was like that to me.</Dialog>
+          <Dialog>Me!?</Dialog>
+          <Dialog>You got called on to read
+aloud, right？</Dialog>
+          <Dialog>You read so smoothly, and
+your voice was lovely... I
+couldn't stop staring.</Dialog>
+          <Dialog>Huh!? I'm not that
+amazing.</Dialog>
+          <Dialog>You are!! That's how you
+look to me.</Dialog>
           <Dialog>(Yay！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -912,19 +909,18 @@ was like that to me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Your essay has become very 
-popular.</Dialog>
+          <Dialog>Your essay is getting a
+great reputation.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm really glad I put that 
-much effort.</Dialog>
+          <Dialog>I'm glad I put effort into
+it.</Dialog>
           <Dialog>Hehe. I became one of your 
 fans too▼</Dialog>
-          <Dialog>For the essay？</Dialog>
-          <Dialog>For the essay... That too！ 
-I'm kidding.</Dialog>
-          <Dialog>I will continue to support 
-you with all my strength. 
-Hehe！</Dialog>
+          <Dialog>Of the essay？</Dialog>
+          <Dialog>The essay... too！ Just
+kidding.</Dialog>
+          <Dialog>I'll keep cheering you on
+with all I've got. Hehe！</Dialog>
           <Dialog>(I'll keep doing my best！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -1019,27 +1015,27 @@ Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're free now, right？ 
-I really need your help, 
-▲主人公＊▲.</Dialog>
+          <Dialog>You're on fire,
+▲主人公＊▲. I wish you'd
+share some.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>With what？</Dialog>
-          <Dialog>Reading comprehension, 
-interpretation, memory 
-and then...</Dialog>
-          <Dialog>What, that much？</Dialog>
-          <Dialog>Is that a no？</Dialog>
-          <Dialog>No, I didn't mean it like 
-that！</Dialog>
+          <Dialog>Want some？</Dialog>
+          <Dialog>Yes. Reading comprehension,
+a sense for interpretation,
+memory, and...</Dialog>
+          <Dialog>Whoa, that much？</Dialog>
+          <Dialog>No good？</Dialog>
+          <Dialog>It's not that it's no good！</Dialog>
           <Dialog>Hehe！ I'm sorry.</Dialog>
-          <Dialog>I don't want the results 
-of your hard work, I want 
-to emulate your hard work.</Dialog>
-          <Dialog>You look so cool when you 
-are concentrated... 
-Keep up the good work, 
+          <Dialog>I don't want the results of
+your hard work, I want to
+learn from how hard you
+work.</Dialog>
+          <Dialog>You look so cool when you're
+focused... so keep it up,
 okay？</Dialog>
-          <Dialog>(Okay, let's do it！)</Dialog>
+          <Dialog>(All right, let's get fired
+up！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1119,24 +1115,23 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to learn your 
+          <Dialog>I want to learn from your
 sense.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I still have a long way to 
 go, but thank you.</Dialog>
-          <Dialog>Even though you do such 
-wonderful works, you still 
-have things to learn？</Dialog>
-          <Dialog>Okay, I'll aim higher！</Dialog>
+          <Dialog>You make such wonderful
+works, and you still have a
+long way to go？</Dialog>
+          <Dialog>Yep. Aim for the top！</Dialog>
           <Dialog>Hehe！</Dialog>
-          <Dialog>I really like that kind of 
-thing...</Dialog>
-          <Dialog>Hmm？ I couldn't hear that, 
-can you say it once more！</Dialog>
-          <Dialog>You don't have to polish 
-that sense.... Geez.</Dialog>
-          <Dialog>(I'm glad I put effort in 
-this！)</Dialog>
+          <Dialog>I love that part of you
+too...</Dialog>
+          <Dialog>Hm？ Didn't catch that, one
+more time！</Dialog>
+          <Dialog>That's not a sense you need
+to polish. ...Geez.</Dialog>
+          <Dialog>(Yay！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1221,22 +1216,22 @@ this！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wow... Did you make that？</Dialog>
+          <Dialog>Wow... hey, did you make
+that？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, why？</Dialog>
-          <Dialog>I think it's wonderful. 
-I want to use it to 
-decorate my room.</Dialog>
-          <Dialog>Really？</Dialog>
-          <Dialog>Yeah, so everyone can see 
-it.</Dialog>
-          <Dialog>Yeah, that sounds nice.</Dialog>
-          <Dialog>...Would you like to hide 
-it somewhere？ Take it with 
-you, for example.</Dialog>
-          <Dialog>Why with me？</Dialog>
-          <Dialog>To keep your work all for 
-yourself. I'm kidding.</Dialog>
+          <Dialog>Yeah. Why？</Dialog>
+          <Dialog>I just think it's wonderful.
+I'd even want to display it
+in my room.</Dialog>
+          <Dialog>That much？</Dialog>
+          <Dialog>Yes. Look, everyone's
+looking at it.</Dialog>
+          <Dialog>Now that you mention it...</Dialog>
+          <Dialog>...Maybe I should hide it？
+Along with you.</Dialog>
+          <Dialog>Me too？</Dialog>
+          <Dialog>Your work and you, all to
+myself. Just kidding.</Dialog>
           <Dialog>(I'll keep it up！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -1317,25 +1312,25 @@ yourself. I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I really did my best this 
+          <Dialog>(I really nailed it this
 time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Your recent work is 
-wonderful. Just by looking 
-at it, warms my heart...</Dialog>
-          <Dialog>If you say that, then it 
-was worth the effort, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hehe. You won't get 
-anything if you lie.</Dialog>
-          <Dialog>Huh？</Dialog>
+          <Dialog>Your recent work is
+wonderful. Looking at it
+warms my heart...</Dialog>
+          <Dialog>Hearing ▲高嶺＊＊▲ say
+that makes all the effort
+worth it.</Dialog>
+          <Dialog>Hehe. Flattery won't get you
+anything.</Dialog>
+          <Dialog>Aww.</Dialog>
           <Dialog>Geez.</Dialog>
-          <Dialog>But, I think it's really 
-nice...</Dialog>
-          <Dialog>I want you to show me more, 
-I'll always be next to you.</Dialog>
-          <Dialog>(Yeah, together sounds 
-nice！)</Dialog>
+          <Dialog>But I really do think it's
+wonderful...</Dialog>
+          <Dialog>I want you to show me more.
+From now on, always.</Dialog>
+          <Dialog>(All right, let's do our
+best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1420,21 +1415,22 @@ nice！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I like the recent paintings 
-you made.</Dialog>
-          <Dialog>Really？</Dialog>
-          <Dialog>Hehe, I'm serious. You 
-deserve all the praise.</Dialog>
-          <Dialog>It reflects kindness, and 
-the use of colors is 
-amazing...</Dialog>
-          <Dialog>You make me happy saying 
-those things to me.</Dialog>
+          <Dialog>I love the pictures you've
+been drawing lately.</Dialog>
+          <Dialog>Seriously？</Dialog>
+          <Dialog>Hehe, seriously. No
+flattery, no favoritism.</Dialog>
+          <Dialog>They're gentle, and the way
+you use color is so...</Dialog>
+          <Dialog>More than any grade, those
+words make me happy.</Dialog>
           <Dialog>...Really？</Dialog>
-          <Dialog>Yeah, really. So, can you 
-praise me more？</Dialog>
+          <Dialog>Yeah, really. So feel free
+to praise me more, you
+know？</Dialog>
           <Dialog>Hehe, geez. Well done▼</Dialog>
           <Dialog>(I'll do my best next 
 time！)</Dialog>
@@ -1536,27 +1532,26 @@ time！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you take that photo？ 
-It's amazing, 
-▲主人公＊▲.</Dialog>
+          <Dialog>▲主人公＊▲. I saw your
+painting？ It's amazing.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, thank you.</Dialog>
-          <Dialog>Hey... What do you need 
-to create such a wonderful 
-thing？</Dialog>
-          <Dialog>Relentless effort... Maybe.</Dialog>
-          <Dialog>How can I make that 
-effort？ With sense？</Dialog>
-          <Dialog>How！？ ...Do you want to 
-know the reason why？</Dialog>
-          <Dialog>You may have been born 
-with it, but there are 
-ways to improve it...</Dialog>
+          <Dialog>Oh, thanks！</Dialog>
+          <Dialog>Hey... what does it take to
+create something that
+wonderful？</Dialog>
+          <Dialog>Tireless effort... I guess.</Dialog>
+          <Dialog>How can effort make it
+better？ Artistic sense, I
+mean.</Dialog>
+          <Dialog>How!? ...You want to know
+that badly？</Dialog>
+          <Dialog>It might be something you're
+born with, but if there's a
+way to improve it...</Dialog>
           <Dialog>...That's a trade secret！</Dialog>
-          <Dialog>...Meanie.</Dialog>
-          <Dialog>It's all fine, because if 
-this happens, you'll be the 
-only one who can see it.</Dialog>
+          <Dialog>...No fair.</Dialog>
+          <Dialog>Fine. In that case, I'll
+just stick to you like glue.</Dialog>
           <Dialog>(I have to do my best next 
 time！)</Dialog>
         </Dialogs>
@@ -1650,23 +1645,21 @@ time！)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(I did my best this time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you know you have 
-become popular now, because 
-you have a wonderful 
-singing voice？</Dialog>
-          <Dialog>Haha. Really？</Dialog>
-          <Dialog>Of course. Everyone was 
-fascinated.</Dialog>
-          <Dialog>...Everyone... Even you... 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>They say lots of people are
+moved by your singing
+voice？</Dialog>
+          <Dialog>Haha. Is that true？</Dialog>
+          <Dialog>Of course. Everyone else is
+enchanted, too.</Dialog>
+          <Dialog>And you, ▲高嶺＊＊▲？</Dialog>
           <Dialog>Ah！</Dialog>
-          <Dialog>...Did you just say "even 
-you"？</Dialog>
-          <Dialog>The truth is, I want to 
-have you only for myself...</Dialog>
-          <Dialog>But I want to brag about 
-it a little... Keep doing 
-your best, okay？</Dialog>
+          <Dialog>...I said "everyone else,
+too," didn't I？</Dialog>
+          <Dialog>Honestly, I'd like to keep
+it all to myself...</Dialog>
+          <Dialog>But I also want to brag a
+little... so keep it up,
+okay？</Dialog>
           <Dialog>(Yeah, I'll keep doing my 
 best！)</Dialog>
         </Dialogs>
@@ -1745,15 +1738,16 @@ best！)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(I did my best this time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I've been feeling strange 
-after you perform.</Dialog>
-          <Dialog>Strange？</Dialog>
-          <Dialog>Yeah. The sound is so 
-clear... It make me want to 
-listen to it many times.</Dialog>
-          <Dialog>Whenever you want！</Dialog>
+          <Dialog>Lately, your playing has a
+mysterious feel to it.</Dialog>
+          <Dialog>Mysterious？</Dialog>
+          <Dialog>Yes. The sound is so
+clear... it makes me want to
+hear it over and over.</Dialog>
+          <Dialog>Anytime, at your request！</Dialog>
           <Dialog>A concert just for me？</Dialog>
-          <Dialog>Yes. In the music room！</Dialog>
+          <Dialog>Yep. We'll reserve the music
+room！</Dialog>
           <Dialog>Hehe！ If that happens, 
 should I play the piano 
 too？</Dialog>
@@ -1843,23 +1837,26 @@ time！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I sang perfectly this 
+          <Dialog>(I sang my heart out this
 time！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲！</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲！</Dialog>
-          <Dialog>You were singing with so 
-much passion, even sensei 
-smiled！</Dialog>
-          <Dialog>I really think the music 
-makes you enjoy the sound.</Dialog>
-          <Dialog>Did it look like that？</Dialog>
+          <Dialog>Ah, ▲高嶺＊＊▲.</Dialog>
+          <Dialog>You sang like you were
+having so much fun, even the
+teacher was smiling！</Dialog>
+          <Dialog>It made me realize music
+really is about "enjoying
+sound."</Dialog>
+          <Dialog>Did I look like I was having
+that much fun？</Dialog>
           <Dialog>Hehe, yeah... But...</Dialog>
           <Dialog>...But？</Dialog>
-          <Dialog>I wonder... If I sing with 
-you, I'll also feel good？</Dialog>
-          <Dialog>(I have to make that 
-happen！)</Dialog>
+          <Dialog>I wonder if it feels good
+because I'm singing with
+you.</Dialog>
+          <Dialog>(Let's keep it up next time
+too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1949,27 +1946,23 @@ happen！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I think this time it 
-went perfect！)</Dialog>
+          <Dialog>(Nailed it this time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>It was amazing. It seems 
-that my knowledge of music 
-is expanding.</Dialog>
-          <Dialog>Really？ I don't know about 
-that.</Dialog>
-          <Dialog>It's a lot of fun because 
-I can listen to Chopin 
-and other composers.</Dialog>
-          <Dialog>I'll be left behind if I 
-don't do my best.</Dialog>
-          <Dialog>Now, don't exaggerate.</Dialog>
-          <Dialog>...Hehe！ But, you don't 
-want to be left behind, 
-right？</Dialog>
-          <Dialog>Even so, I'm a senior in 
-music.</Dialog>
+          <Dialog>Amazing. Your knowledge of
+music seems to keep growing.</Dialog>
+          <Dialog>You think？</Dialog>
+          <Dialog>I get to hear about Chopin
+and all kinds of composers,
+so it's really fun.</Dialog>
+          <Dialog>I'd better work hard, or
+I'll get left behind.</Dialog>
+          <Dialog>Oh, come on.</Dialog>
+          <Dialog>...Hehe！ But I won't lose,
+okay？</Dialog>
+          <Dialog>I am your senior when it
+comes to music, after all.</Dialog>
           <Dialog>Alright, I'll do my best！</Dialog>
-          <Dialog>Yes. Hehe！</Dialog>
+          <Dialog>Yeah！ Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2049,29 +2042,25 @@ music.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It went perfect, I did 
-my best！)</Dialog>
+          <Dialog>(Nailed it！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>During music class, it 
-looks like you're having 
-so much fun and I get 
-lured in too.</Dialog>
-          <Dialog>I think we can have a lot 
-of fun if you're lured 
-in, ▲Takane＊＊▲.</Dialog>
-          <Dialog>That'd be ideal, and I'm 
-sure good things would 
-follow.</Dialog>
-          <Dialog>I don't think we could have 
-any trouble if you're with 
-me, ▲Takane＊＊▲！</Dialog>
+          <Dialog>In music class, you look
+like you're having so much
+fun that it rubs off on me.</Dialog>
+          <Dialog>And seeing ▲高嶺＊＊▲ like
+that rubs off on me, so it
+gets even more fun.</Dialog>
+          <Dialog>And then results follow.
+That's really ideal.</Dialog>
+          <Dialog>Feels like that happens a
+lot. When I'm with
+▲高嶺＊＊▲！</Dialog>
           <Dialog>...I'm happy.</Dialog>
           <Dialog>I also want to do my best 
 because I have you...</Dialog>
-          <Dialog>Hehe. Let's continue like 
-this. Let's do our best, 
-okay？</Dialog>
-          <Dialog>(Yeah, let's do our best！)</Dialog>
+          <Dialog>Hehe. Let's keep going like
+this. Do our best？</Dialog>
+          <Dialog>(Let's get fired up！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2151,25 +2140,25 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm often told that you 
-make a handsome face when 
-singing.</Dialog>
+          <Dialog>When you're singing, people
+often tell me I have a
+really nice look on my face.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>And you think that too, 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲？</Dialog>
           <Dialog>Yup.</Dialog>
-          <Dialog>Isn't it wonderful？ I'm so 
-proud of you！</Dialog>
-          <Dialog>...That's what I want to 
-say. You look so happy.</Dialog>
-          <Dialog>It's a little embarrassing, 
-but that's what I really 
-feel.</Dialog>
-          <Dialog>It's your fault. I'm 
-kidding.</Dialog>
-          <Dialog>(It makes me feel 
-embarrassed... but I'm 
-glad I did my best！)</Dialog>
+          <Dialog>"Isn't he wonderful？ He's
+my boyfriend, and I'm so
+proud！"</Dialog>
+          <Dialog>...is written all over my
+face, they say. That I look
+so happy.</Dialog>
+          <Dialog>It's a little
+embarrassing... but it just
+happens.</Dialog>
+          <Dialog>It's your fault, you know.
+Just kidding.</Dialog>
+          <Dialog>(That's embarrassing... but
+I'm glad I worked hard！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2259,29 +2248,27 @@ glad I did my best！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this 
+          <Dialog>(I really nailed it this
 time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You're doing amazing 
-these days. You have good 
-times for both short and 
-long distances.</Dialog>
-          <Dialog>Thank you, I feel great 
-and I'm having fun！</Dialog>
-          <Dialog>Hmm. Your running pose 
-was so cool. It was really 
-nice――</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>It's really wonderful... 
-Emm...</Dialog>
+          <Dialog>You've been amazing lately.
+Great times in both sprints
+and long distance.</Dialog>
+          <Dialog>Thanks, maybe I'm on a
+roll！</Dialog>
+          <Dialog>Yes. You looked so cool
+running, too. Really
+wonderful――</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Wonderful... and, um...</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>That is why... I love 
-you？ ...I'm kidding.</Dialog>
-          <Dialog>I'm sorry, I couldn't hear 
-it, can you say it again！</Dialog>
-          <Dialog>...Don't lie！ Hehe, geez...</Dialog>
-          <Dialog>(Hehe, I'll keep doing my 
-best！)</Dialog>
+          <Dialog>So... I love you？ ...Just
+kidding.</Dialog>
+          <Dialog>Sorry, didn't catch that,
+one more time！</Dialog>
+          <Dialog>...Liar！ Hehe, geez...</Dialog>
+          <Dialog>(All right, let's do our
+best next time too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2373,21 +2360,21 @@ best！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？　What's wrong？</Dialog>
-          <Dialog>Ah... Well, you're looking 
-great and your body is in 
-good shape.</Dialog>
-          <Dialog>Maybe my efforts are 
-showing out！</Dialog>
-          <Dialog>Hmm.......</Dialog>
+          <Dialog>？ What？</Dialog>
+          <Dialog>Ah... um. You look so light
+on your feet, I figured
+you're in good shape.</Dialog>
+          <Dialog>Maybe my daily efforts are
+paying off！</Dialog>
+          <Dialog>Yeah. ......</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>You look so nice when 
-you're in the court.</Dialog>
-          <Dialog>I would be glad if it was 
-just normal.</Dialog>
-          <Dialog>I'm sorry. I was just 
-thinking...</Dialog>
-          <Dialog>(I'm feeling embarrassed.)</Dialog>
+          <Dialog>You're wonderful when you're
+on the court, but</Dialog>
+          <Dialog>even just being normal like
+this, you're wonderful.</Dialog>
+          <Dialog>Sorry. I can't help being
+conscious of you...</Dialog>
+          <Dialog>(Now I'm embarrassed too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2477,24 +2464,27 @@ thinking...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Please tell me what you 
-think after breaking 
-records one after another.</Dialog>
-          <Dialog>There are still more, so 
-I want to aim higher！</Dialog>
-          <Dialog>What do you aim for？</Dialog>
-          <Dialog>Your gold medal is in the 
-future, right？</Dialog>
-          <Dialog>Please give it to me now！</Dialog>
+          <Dialog>Please tell us how it feels
+to break record after
+record.</Dialog>
+          <Dialog>I still have a long way to
+go, so I want to aim even
+higher！</Dialog>
+          <Dialog>Still a long way to go？</Dialog>
+          <Dialog>Then I'll hold off on my
+gold medal for you a while
+longer, okay？</Dialog>
+          <Dialog>I'll take that now, please！</Dialog>
           <Dialog>Hehe！</Dialog>
-          <Dialog>I will give you a reward 
-for your hard work.</Dialog>
-          <Dialog>Let's keep doing our best 
-while being careful▼</Dialog>
-          <Dialog>(Okay, I have to do my 
-best！)</Dialog>
+          <Dialog>I hereby present you with
+the Great Effort Award.</Dialog>
+          <Dialog>Keep training hard without
+getting hurt, okay▼</Dialog>
+          <Dialog>(All right, I'll do my best
+next time too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2579,26 +2569,25 @@ best！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best trying to do 
-some exercise this time！)</Dialog>
+          <Dialog>(I really nailed my workouts
+this time！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>▲Takane＊＊▲. Yo！</Dialog>
-          <Dialog>Yo. Hehe！ You're doing 
-great.</Dialog>
-          <Dialog>Well, I do think I'm doing 
-great！</Dialog>
-          <Dialog>I also secretly stand 
-taller next to you. 
-I'm kidding.</Dialog>
-          <Dialog>It's not a secret, it's 
-okay to be proud！</Dialog>
+          <Dialog>▲高嶺＊＊▲. Yo！</Dialog>
+          <Dialog>Yo. Hehe！ You're on fire,
+huh？</Dialog>
+          <Dialog>Pretty much！</Dialog>
+          <Dialog>I'm secretly proud of you
+too. Just kidding.</Dialog>
+          <Dialog>No need to keep it secret,
+you can be proud out in the
+open！</Dialog>
           <Dialog>Yup... Thank you.</Dialog>
-          <Dialog>Tell me if you get tired？ 
-I'll give you a massage, 
-okay？</Dialog>
-          <Dialog>(That sounds nice, I'll 
-keep it up！)</Dialog>
+          <Dialog>Tell me if you get worn
+out？ I'll give you a
+massage. Okay？</Dialog>
+          <Dialog>(All right, let's do our
+best！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2668,23 +2657,24 @@ keep it up！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>What's wrong？ You're 
-spacing out, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Ah, I'm sorry. Um... 
-I think you're getting 
-stronger...</Dialog>
-          <Dialog>That's why, I was getting 
-a little thrilled...</Dialog>
+          <Dialog>What's up？ ▲高嶺＊＊▲...
+you're spacing out.</Dialog>
+          <Dialog>Ah, sorry. Um... I was just
+thinking how strong you've
+gotten...</Dialog>
+          <Dialog>And that's making my heart
+race a little...</Dialog>
           <Dialog>That much？</Dialog>
-          <Dialog>...Yeah. When you get 
-closer, you can hear the 
-beating of my heart...</Dialog>
-          <Dialog>(...Alright, I'll do my 
-best！)</Dialog>
+          <Dialog>...Yes. If you get close,
+you might hear my
+heartbeat...</Dialog>
+          <Dialog>(...All right, I'll work
+hard and get even
+stronger！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2773,26 +2763,25 @@ best！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Good work, 
 ▲主人公＊▲.</Dialog>
-          <Dialog>Good work to you too. Hmm？ 
-You look happy, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yes, because of your great 
-success.</Dialog>
-          <Dialog>I know you're doing your 
-best... And that makes me 
-very happy.</Dialog>
+          <Dialog>Good work, ▲高嶺＊＊▲.
+...Hm？ You look happy.</Dialog>
+          <Dialog>Yes. Because you've been
+doing so great.</Dialog>
+          <Dialog>I know how hard you're
+working... so it makes me
+really happy.</Dialog>
           <Dialog>I see. Thank you！</Dialog>
-          <Dialog>Yup. I think we can get 
-good results if we continue 
-like this.</Dialog>
-          <Dialog>You can do it too, 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>Yes. I bet you'll get good
+results in matches too.</Dialog>
+          <Dialog>You too, ▲高嶺＊＊▲！</Dialog>
           <Dialog>Hehe, yes. I'll do my best▼</Dialog>
-          <Dialog>(Let's do our best！)</Dialog>
+          <Dialog>(All right, let's get fired
+up！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2867,24 +2856,22 @@ like this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
-          <Dialog>But, I'm a little tired...</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
+          <Dialog>That said, I'm beat...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You won the rally with 
-manager Tezuka, aren't 
-you tired？</Dialog>
-          <Dialog>You really understand me, 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>You beat Captain Tezuka in a
+rally, after all. Of course
+you're tired.</Dialog>
+          <Dialog>You get it, ▲高嶺＊＊▲！</Dialog>
           <Dialog>Hehe. There, there.</Dialog>
-          <Dialog>Everyone said it was 
-amazing. I want to use 
-your practice techniques 
-as reference.</Dialog>
-          <Dialog>But I still can't compete 
-with you.</Dialog>
-          <Dialog>Do you want to do our 
-best together？ I'll help 
-you too, okay？</Dialog>
+          <Dialog>Everyone said you're
+amazing？ They want to use
+your practice as a model.</Dialog>
+          <Dialog>But I still can't really
+match him.</Dialog>
+          <Dialog>Then let's work on that？
+I'll help too. Okay？</Dialog>
           <Dialog>(Okay, let's do our best！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -2964,24 +2951,23 @@ you too, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you finish cleaning 
-up, ▲主人公＊▲？</Dialog>
-          <Dialog>Yes, a while ago.</Dialog>
+          <Dialog>▲主人公＊▲. Did you
+already finish cleaning up？</Dialog>
+          <Dialog>Yeah, just now.</Dialog>
           <Dialog>I knew it. I wish I had 
 come a little earlier.</Dialog>
-          <Dialog>Yay, it's my victory！</Dialog>
+          <Dialog>I win！</Dialog>
           <Dialog>Hehe, geez. If it's a 
 cleaning competition, 
 I won't lose next time.</Dialog>
-          <Dialog>Then I will help you next 
-time. Okay, it's time to 
-wrap things up.</Dialog>
-          <Dialog>Good work. Do you want to 
-go home together？</Dialog>
-          <Dialog>(We'll give it our all next 
-time！)</Dialog>
+          <Dialog>Maybe I'll have you help
+next time. Shall we head
+home？</Dialog>
+          <Dialog>Good work. Let's go home？</Dialog>
+          <Dialog>(Let's keep this up！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3065,26 +3051,26 @@ time！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I did my best this time！)</Dialog>
+          <Dialog>(I really nailed it this
+time！)</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, how were you able to 
-perform that move before, 
-▲主人公＊▲？</Dialog>
-          <Dialog>I don't know. My body moved 
-on it's own！ It's a joke.</Dialog>
-          <Dialog>Hehe. That was not a joke, 
-but something you wanted 
-to do, right？</Dialog>
-          <Dialog>That's why I'm practicing 
-so much... I want to play 
-like that.</Dialog>
-          <Dialog>Recently, you have been 
-in many impressive matches, 
-and I...</Dialog>
-          <Dialog>...And you？</Dialog>
-          <Dialog>Geez... I don't care.</Dialog>
-          <Dialog>(Hmm, I have to do my best 
-next time！)</Dialog>
+          <Dialog>▲主人公＊▲. Hey, why did
+you move forward in that
+situation？</Dialog>
+          <Dialog>Hmm. My body just moved on
+its own！ Just kidding.</Dialog>
+          <Dialog>Hehe. It's not "just
+kidding," it's really true,
+isn't it？</Dialog>
+          <Dialog>You practice with so much
+focus... of course it shows
+in your play.</Dialog>
+          <Dialog>Lately, you've had so many
+impressive moments, and I...</Dialog>
+          <Dialog>...Hm？</Dialog>
+          <Dialog>Geez... hmph.</Dialog>
+          <Dialog>(Yeah, let's do our best
+next time too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3174,26 +3160,25 @@ next time！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Isn't your form getting a 
-lot more beautiful？</Dialog>
+          <Dialog>Your form... it's gotten
+even cleaner, huh？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you think so？</Dialog>
-          <Dialog>Yeah. Suzuki-sensei also 
-praised you.</Dialog>
-          <Dialog>Don't forget about your 
-purpose. I'll be watching 
-over you.</Dialog>
-          <Dialog>I'll help you too. Put 
-yourself in front of me！</Dialog>
-          <Dialog>Really？ Then, please... 
-How should I do it？</Dialog>
-          <Dialog>Eh, are you sure？ Being in 
-front of me is a little...</Dialog>
-          <Dialog>...Perv.</Dialog>
-          <Dialog>Just kidding！</Dialog>
-          <Dialog>Hehe, I get it. I look 
-forward to work with you, 
-Coach▼</Dialog>
+          <Dialog>Oh. Seriously？</Dialog>
+          <Dialog>Yes. Even Suzuki-sensei was
+praising it.</Dialog>
+          <Dialog>"Never forget your
+beginner's spirit," right.
+I'll go back to basics too.</Dialog>
+          <Dialog>I'll help. Hands-on, every
+step！</Dialog>
+          <Dialog>Really？ Then maybe I'll...
+take you up on it？</Dialog>
+          <Dialog>Huh, really？ Hands-on,
+every step...？</Dialog>
+          <Dialog>...Pervert.</Dialog>
+          <Dialog>I'm kidding！</Dialog>
+          <Dialog>Hehe, I know. I'm in your
+hands, Coach▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3278,24 +3263,23 @@ Coach▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(First place in mixed 
-classes relay. I wonder if 
-you were watching me 
-▲Takane＊＊▲.)</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲.</Dialog>
+          <Dialog>(First place in the mixed
+relay. I wonder if
+▲高嶺＊＊▲ was watching～)</Dialog>
+          <Dialog>Ah, ▲高嶺＊＊▲.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Congrats...</Dialog>
-          <Dialog>Thank you？ ...What's wrong？</Dialog>
-          <Dialog>You know, when you got 
-first place...</Dialog>
-          <Dialog>I was yelling "You did it！ 
-I love you！".</Dialog>
-          <Dialog>I see.... What！？</Dialog>
-          <Dialog>Oh, it's okay. It was just 
-a little embarrassing...</Dialog>
-          <Dialog>But, I'm happy. You looked 
-so cool getting first 
-place▼</Dialog>
+          <Dialog>Congratulations...</Dialog>
+          <Dialog>Thanks？ ...What's wrong？</Dialog>
+          <Dialog>You know. When you crossed
+the finish line first...</Dialog>
+          <Dialog>I screamed！ "Yay！"... "I
+love you！"...</Dialog>
+          <Dialog>I see.... What!?</Dialog>
+          <Dialog>Oh, it's fine. It was just a
+little embarrassing...</Dialog>
+          <Dialog>More importantly, congrats.
+First place. You looked so
+cool▼</Dialog>
           <Dialog>(I'm glad I did my best！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -3371,24 +3355,23 @@ place▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hah～... I swam too much.)</Dialog>
+          <Dialog>(Haah～... I overdid the
+swimming.)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲. 
-What's wrong？</Dialog>
-          <Dialog>You know, when you were 
-in the pool... You looked 
-so cool while swimming.</Dialog>
-          <Dialog>Thank you...？</Dialog>
-          <Dialog>I'm kind of nervous. 
-I wonder if it's because 
-you are only wearing 
-trunks. You look so strong.</Dialog>
+          <Dialog>Ah, ▲高嶺＊＊▲. What's
+up？</Dialog>
+          <Dialog>Um. Well... you looked cool
+swimming.</Dialog>
+          <Dialog>Thanks？</Dialog>
+          <Dialog>I'm kind of nervous. Maybe
+because you're not wearing
+clothes. You look so big.</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>Yup.... Hehe. But, you 
-look cool even if you 
-don't swim▼</Dialog>
-          <Dialog>(Yay～！！)</Dialog>
+          <Dialog>Yes. ...Hehe. But you're
+cool even when you're not
+swimming▼</Dialog>
+          <Dialog>(Yay～!!)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
