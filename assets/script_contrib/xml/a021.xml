@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="632934291" Unknown="5">
+  <Entries>
+    <Entry Unknown0="2305975469" Unknown1="2543833788">
+      <SDL2 Key="2277749493">
+        <Unknown>
+        </Unknown>
+        <Dialogs>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="707425104" Unknown1="1317172596">
+      <SDL2 Key="2277749493">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64271</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey, you got a moment？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Yeah, what is it？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3793689608" Unknown1="1311190377">
+      <SDL2 Key="2277749493">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64272</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64273</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64274</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Right. Today's TV fortune,
+you know.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>The one with the animals
+racing？</Dialog>
+          <Dialog>Yes, that one. And the
+tanuki came in first.</Dialog>
+          <Dialog>That means... "great
+blessing"？</Dialog>
+          <Dialog>Correct！ Hehe. Something
+good is sure to happen
+today.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3653424381" Unknown1="3975094796">
+      <SDL2 Key="3086211167">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64275</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64276</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64277</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Come to think of it, today's
+TV fortune was so close.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>TV fortune... ah, the one
+with the racing animals？</Dialog>
+          <Dialog>Right. The tanuki was in
+first most of the way, but
+got overtaken and came in
+second. So, "middle
+blessing."</Dialog>
+          <Dialog>A middle blessing is pretty
+good, isn't it？</Dialog>
+          <Dialog>Hmm. But that's just
+average... hmm.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2054857632" Unknown1="2480063940">
+      <SDL2 Key="2683667329">
+        <Unknown>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64278</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64279</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>64280</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Huh？ You seem down. Did
+something happen？</Dialog>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Yeah... it's today's TV
+fortune.</Dialog>
+          <Dialog>Ah, the one with the racing
+animals？</Dialog>
+          <Dialog>Yes... the tanuki got
+overtaken and lost...</Dialog>
+          <Dialog>So the fortune wasn't
+good...</Dialog>
+          <Dialog>Haah, maybe I should keep a
+low profile today...？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>
