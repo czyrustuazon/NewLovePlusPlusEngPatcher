@@ -59,15 +59,17 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What's with that person？</Dialog>
+          <Dialog>What's that crowd, I
+wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Something about a place... 
-Ah, look！ He's shouting！ 
-Can you see them？</Dialog>
-          <Dialog>If you can see it... 
-Can I see it too？</Dialog>
-          <Dialog>It's a little far... 
-Is that okay？</Dialog>
+          <Dialog>Looks like some kind of
+location shoot... Ah, look！
+They're filming！ Want to
+watch？</Dialog>
+          <Dialog>...If you want to watch. I'm
+fine, I think？</Dialog>
+          <Dialog>I'm not that into it
+either... but are you sure？</Dialog>
           <Dialog>Yes. Because time spent 
 with you is important... 
 I'm kidding. Let's go♪</Dialog>
@@ -123,13 +125,12 @@ I'm kidding. Let's go♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ What are you doing？</Dialog>
+          <Dialog>？ What are you doing？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, sorry. I was speaking 
-with a friend, someone from 
-other class.</Dialog>
-          <Dialog>A girl？ Do I know her？</Dialog>
-          <Dialog>...Geez. I'll never tell 
+          <Dialog>Ah, sorry. I saw a friend, a
+girl from the next class.</Dialog>
+          <Dialog>A girl？ Someone I know？</Dialog>
+          <Dialog>...Geez. I'm never telling
 you.</Dialog>
           <Dialog>(I didn't mean it like 
 that！)</Dialog>
@@ -199,21 +200,20 @@ that！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, there is a vending 
-machine... Oden...</Dialog>
+          <Dialog>...Hey, that vending
+machine... "oden"...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, it's Oden. 
-The ingredients are the 
-correct ones.</Dialog>
-          <Dialog>It's not Oden-flavored 
+          <Dialog>Yeah, oden. With real
+ingredients in it.</Dialog>
+          <Dialog>So it's not oden-flavored
 juice...</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>Ah... I know that. 
-I know there's not Oden 
-juice, okay？ Emm... 
-Isn't it fun？</Dialog>
-          <Dialog>(Oden juice... 
-That would be extreme...)</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>Ah... I know. There's no way
+there'd be oden-flavored
+juice, right？ Um... that
+was funny, right？</Dialog>
+          <Dialog>(Oden-flavored juice...
+that'd be intense...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -291,19 +291,21 @@ That would be extreme...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Kyaa.</Dialog>
+          <Dialog>...Eek.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Uwa！</Dialog>
-          <Dialog>...Hmm. Hey, that girl's 
-skirt flipped up. You were 
-watching, weren't you？？</Dialog>
-          <Dialog>Just for a moment.</Dialog>
-          <Dialog>...If that were to happen 
-to me, does that mean 
-others can see it？</Dialog>
+          <Dialog>Whoa！</Dialog>
+          <Dialog>...Mm. Hey, you saw that
+woman's skirt flip up,
+didn't you？</Dialog>
+          <Dialog>But it was just for a
+second.</Dialog>
+          <Dialog>...If the same thing
+happened to me and other
+people saw, how would you
+feel？</Dialog>
           <Dialog>Absolutely not！</Dialog>
-          <Dialog>Then, you absolutely must 
-not do it！ Understand？</Dialog>
+          <Dialog>Then you absolutely can't
+either！ Understand？</Dialog>
           <Dialog>(I will do my best...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -367,18 +369,17 @@ not do it！ Understand？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Come closer, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲, over here.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm... why？</Dialog>
-          <Dialog>Ah, I saw some people over 
-there watching you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Is that so...？ Wasn't it 
-your imagination？</Dialog>
+          <Dialog>Eh... why？</Dialog>
+          <Dialog>...Those guys over there
+were looking at you,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Really...？ Not just your
+imagination？</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>...Hehe, okay. Thank you 
-for protecting me.</Dialog>
+          <Dialog>...Hehe, okay. Thank you for
+protecting me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -436,23 +437,22 @@ for protecting me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There's a family dinner 
+          <Dialog>There's a family restaurant
 over there, right？</Dialog>
-          <Dialog>It's has a drink bar, but 
-how many cups would you be 
-able to drink？</Dialog>
+          <Dialog>With a drink bar, how many
+glasses could you drink？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If that's the case... 
-How many you can drink, 
-if you could work part-time 
-there？</Dialog>
-          <Dialog>How many？ If I was working 
-there, then they would run 
-out of drinks. What would 
-they do in that case？</Dialog>
-          <Dialog>(I guess this kinds of 
-topics make you worry, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Who knows... If it were free
+drinks while working a
+part-time job, I could go
+forever.</Dialog>
+          <Dialog>Forever？ If everyone were
+like that, the drinks would
+run out. What would they do
+then？</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+gets curious about
+weird things sometimes...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -502,16 +502,17 @@ topics make you worry,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh... what a nice cafe.</Dialog>
+          <Dialog>Ah... What a lovely cafe.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. Somehow I feel like 
-I'm in France.</Dialog>
-          <Dialog>A place where if your 
-whisper your love, you 
-won't want to go home.</Dialog>
-          <Dialog>Je t'aime, 
-▲Takane＊＊▲▼</Dialog>
-          <Dialog>That doesn't work here. 
+          <Dialog>Yeah. Kind of, you know,
+very French.</Dialog>
+          <Dialog>If someone whispered love to
+you in a place like that, I
+bet lots of girls wouldn't
+want to go home.</Dialog>
+          <Dialog>Je t'aime,
+▲高嶺＊＊▲▼</Dialog>
+          <Dialog>That doesn't count here.
 Hehe！</Dialog>
         </Dialogs>
       </SDL2>
@@ -571,22 +572,23 @@ Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, that person... 
-Hey, recently I've been 
-seeing people with game 
-consoles outside...</Dialog>
+          <Dialog>Ah, that person too... Hey,
+lately I see lots of people
+outside carrying game
+consoles...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, I wonder if it's 
-Streetpass.</Dialog>
+          <Dialog>Ah, probably for StreetPass.</Dialog>
           <Dialog>Streetpass？</Dialog>
-          <Dialog>If you pass by someone 
-with the same console, 
-you can do many things. 
-Exchange data, fight...</Dialog>
-          <Dialog>Amazing！ Just by passing？ 
-Don't you need a line？</Dialog>
-          <Dialog>(She sounds like a granny 
-saying that...)</Dialog>
+          <Dialog>If you pass someone while
+both carrying the same
+console, you can do all
+sorts of things. Trade data,
+battle...</Dialog>
+          <Dialog>Amazing！ Just by passing
+each other？ You don't need
+a cord？</Dialog>
+          <Dialog>(A "cord"... She sounds like
+a grandma...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -636,18 +638,18 @@ saying that...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Some people are writing 
-emails while walking, 
-I wonder if it's not 
-dangerous.</Dialog>
+          <Dialog>There are people texting
+while walking. Isn't that
+dangerous？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's dangerous, you have 
-to be careful about 
-bicycles or cars――.</Dialog>
+          <Dialog>Probably. You have to watch
+out for bikes and cars――</Dialog>
           <Dialog>Ah！？</Dialog>
-          <Dialog>...I need to be careful 
-too.</Dialog>
-          <Dialog>Yes... I was surprised...</Dialog>
+          <Dialog>...Walking and talking
+without looking ahead is
+dangerous too. ...Let's be
+careful too.</Dialog>
+          <Dialog>Yes... That surprised me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -706,18 +708,17 @@ too.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... Did you see？ 
+          <Dialog>Ah. Did you notice？
 Lightning.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Rain is coming... 
-Guerrilla heavy rain！</Dialog>
-          <Dialog>Emm, for real？</Dialog>
-          <Dialog>Let's go to the shelter！ 
-Your hand 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>...Hehe, yes. Emm... 
-Shall we dash？</Dialog>
-          <Dialog>Yes, dash！</Dialog>
+          <Dialog>Rain's coming... It's a
+sudden downpour！</Dialog>
+          <Dialog>Eh, really？</Dialog>
+          <Dialog>Take cover！
+▲高嶺＊＊▲,
+your hand！</Dialog>
+          <Dialog>...Hehe, okay. Um... dash？</Dialog>
+          <Dialog>Yeah, dash！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -767,20 +768,18 @@ Shall we dash？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's great weather, 
-isn't it？</Dialog>
+          <Dialog>Nice weather, isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm sure you are a sunny 
-woman, I think, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Then, are you a sunny man？</Dialog>
-          <Dialog>I wonder... Actually, both 
-of us are into rain and 
-enjoy doing workouts with 
-that, don't we？</Dialog>
-          <Dialog>Either way, isn't our 
-compatibility perfect？ 
-Hehe！</Dialog>
+          <Dialog>You must be a sunshine girl,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Aren't you the sunshine
+boy？</Dialog>
+          <Dialog>Who knows... Maybe we're
+both actually rain people,
+and two negatives make a
+positive？</Dialog>
+          <Dialog>Either way, it means we're a
+perfect match？ Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -839,19 +838,18 @@ Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, look！ An electric 
-bulletin board.</Dialog>
+          <Dialog>Ah, look！ The electronic
+billboard.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>"I like Yukiko！" Oh, a 
-confession！ I wonder if 
-I should make it that 
-way, would you be glad？</Dialog>
-          <Dialog>That is... a no.</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>I'm happy when you tell 
-me directly... so... 
-Right？</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
+          <Dialog>"I love you, Yukiko！" Whoa,
+a confession！ Should I have
+done it like that？</Dialog>
+          <Dialog>That's... no good.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Because I was happy you told
+me you loved me directly...
+So... you know？</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -912,14 +910,15 @@ Right？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Ah！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>Kyaa！</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Eek！</Dialog>
           <Dialog>▲Takane＊＊▲！？</Dialog>
-          <Dialog>I'm... I'm sorry. 
-I was... Geez, no.</Dialog>
-          <Dialog>(It's certainly 
-embarrassing if you do it 
-yourself...)</Dialog>
+          <Dialog>S... Sorry. I was watching
+someone who almost tripped,
+and then I... Geez, how
+embarrassing.</Dialog>
+          <Dialog>(Yeah, it's embarrassing
+when you do it yourself...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -982,17 +981,17 @@ yourself...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It seems celebrities come 
-often to that ramen shop.</Dialog>
+          <Dialog>It seems celebrities often
+come to that ramen shop.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Celebrities. Do you know 
-any ▲Takane＊＊▲？</Dialog>
-          <Dialog>That's a way to say it. 
-I don't know any.</Dialog>
-          <Dialog>I see, sorry. Then what 
-kind of persons？</Dialog>
-          <Dialog>...I forgot. That's the 
-end of the story.</Dialog>
+          <Dialog>Huh, celebrities even you
+would know,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>...There you go again. Even
+I know some.</Dialog>
+          <Dialog>Right, sorry. So, who？</Dialog>
+          <Dialog>...I forgot. This
+conversation is over.</Dialog>
           <Dialog>(I should stop pushing 
 further...)</Dialog>
         </Dialogs>
@@ -1056,19 +1055,18 @@ further...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, look at that. A fashion 
-couple.</Dialog>
+          <Dialog>Ah, look？ A stylish couple.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's true. I wonder if 
-they feel good doing it 
-together.</Dialog>
-          <Dialog>Is there any way to 
-research it？ I wonder if 
-it's enough as I'm now...</Dialog>
-          <Dialog>Me too, I wonder if I'm 
-enough to be with you...</Dialog>
-          <Dialog>Don't say it like that. 
-Geez.</Dialog>
+          <Dialog>Yeah. How do you get that
+good a sense of style？</Dialog>
+          <Dialog>Just research, maybe？
+You're more than enough as
+you are now, though...</Dialog>
+          <Dialog>And you're more than enough
+as you are now,
+▲高嶺＊＊▲...</Dialog>
+          <Dialog>...You're so careless with
+your words. Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1125,11 +1123,11 @@ Geez.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Rain...？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, certainly. It's a fox 
-marriage.</Dialog>
-          <Dialog>Then, I will say yes... 
-I'm kidding.</Dialog>
-          <Dialog>Hmm？　You're kidding right？</Dialog>
+          <Dialog>Yeah. A sunshower... a
+"fox's wedding."</Dialog>
+          <Dialog>Then, maybe I'll marry you
+too... Just kidding.</Dialog>
+          <Dialog>Hm？ What did you say？</Dialog>
           <Dialog>...Geez.</Dialog>
           <Dialog>？？？</Dialog>
         </Dialogs>
@@ -1194,18 +1192,18 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah. Hey, the song I just 
-heard...</Dialog>
+          <Dialog>Ah. Hey, that song just
+now...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ What do you mean？</Dialog>
-          <Dialog>Didn't you hear it？ 
-Emm... It was a cute song.</Dialog>
-          <Dialog>How？ If you sing it, I may 
-understand what you mean.</Dialog>
-          <Dialog>You know... I forgot about 
-it. Will I hear it again？ 
-I'm interested.</Dialog>
-          <Dialog>(I'm also interested！)</Dialog>
+          <Dialog>Hm？ Was something playing？</Dialog>
+          <Dialog>You didn't hear it？ Um...
+what was it called？</Dialog>
+          <Dialog>What was it like？ If you
+sing it, I might know.</Dialog>
+          <Dialog>Well......... I forgot. I
+wonder if it'll play again？
+Now it's bugging me.</Dialog>
+          <Dialog>(Now it's bugging me too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1260,14 +1258,14 @@ I'm interested.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, I kicked a rock.</Dialog>
+          <Dialog>Ah, I kicked a pebble.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Pass！</Dialog>
-          <Dialog>Emm... Emm, pass...？</Dialog>
+          <Dialog>Eh... um, pass...？</Dialog>
           <Dialog>Nice assist！</Dialog>
-          <Dialog>Gool！ Alright, a hug as 
-a reward！</Dialog>
-          <Dialog>I won't do it. Hehehe！</Dialog>
+          <Dialog>Gooooal！ All right, a
+reward hug！</Dialog>
+          <Dialog>Not happening. Hehehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1326,24 +1324,25 @@ a reward！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, can you see what's at 
-the upper wall of that 
-building？</Dialog>
+          <Dialog>Hey, look at the upper wall
+of that building？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？... What's that？　A 
-door？</Dialog>
-          <Dialog>It says "Emergency Exit", 
-but there are no stairs... 
-Isn't it strange？</Dialog>
-          <Dialog>I get you. Why is there an 
-emergency exit sign on 
-the outside.</Dialog>
-          <Dialog>Yes... It's weird... 
-A little scary, right？ 
-I wonder why...</Dialog>
-          <Dialog>(That something might 
-fright you a rare sight 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Hm？ ...What's that？ That
+door.</Dialog>
+          <Dialog>"Emergency Exit," it says,
+but... there are no stairs,
+right？</Dialog>
+          <Dialog>...Nope. More than that,
+isn't it weird to have an
+emergency exit sign on the
+outside？</Dialog>
+          <Dialog>Yes... it's not just
+unusual... it's a little
+scary, isn't it？ Why
+would...</Dialog>
+          <Dialog>(A scared
+▲高嶺＊＊▲
+is pretty rare too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1397,17 +1396,18 @@ fright you a rare sight
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, he's giving out 
-tissues, you got any？</Dialog>
+          <Dialog>Hey, have you ever taken one
+of those tissue packs they
+hand out？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Of course. Didn't you get 
-any, ▲Takane＊＊▲？</Dialog>
-          <Dialog>Yes... I was distracted 
-and I got so nervous...</Dialog>
-          <Dialog>I will give you courage 
-next time.</Dialog>
-          <Dialog>(Courage... I wonder if 
-it's necessary.)</Dialog>
+          <Dialog>Of course. You haven't,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>No... Taking things for free
+makes me feel bad...</Dialog>
+          <Dialog>...Maybe next time I'll work
+up the courage and take one.</Dialog>
+          <Dialog>(Courage... is that really
+needed？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1461,17 +1461,19 @@ it's necessary.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, at the top of that 
-building. Is there a 
-person over there？</Dialog>
+          <Dialog>Hey, near the top of that
+building. Is that a person
+up there？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm. It looks like it, 
-how can you see it？</Dialog>
-          <Dialog>Hmm, you can't see well...</Dialog>
-          <Dialog>With such a defenseless 
-face, I could prank you！</Dialog>
-          <Dialog>Emm？ I don't make that 
-kind of face... Geez.</Dialog>
+          <Dialog>Hmm. It kind of looks like
+one, but who knows？</Dialog>
+          <Dialog>Mm......... I can't see
+well...</Dialog>
+          <Dialog>...With a defenseless face
+like that, I'll play a prank
+on you！</Dialog>
+          <Dialog>Eh？ Ah, I'm not making that
+face. ...Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1538,13 +1540,12 @@ kind of face... Geez.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah, a large puddle.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you have boots, you 
-can jump in them！</Dialog>
-          <Dialog>Yes, go ahead. I'll take 
-a look at you▼</Dialog>
-          <Dialog>Yup. I'll go for it！</Dialog>
-          <Dialog>Emm... Sorry, I meant it 
-as a joke...！</Dialog>
+          <Dialog>If I had rain boots on, I'd
+want to go splashing！</Dialog>
+          <Dialog>Go ahead. I'll watch▼</Dialog>
+          <Dialog>Roger. Here I go！</Dialog>
+          <Dialog>Eh... sorry, I meant it as a
+joke...！</Dialog>
           <Dialog>Haha, I know！</Dialog>
           <Dialog>Ah... Geez！</Dialog>
         </Dialogs>
@@ -1601,19 +1602,19 @@ as a joke...！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The parasol of the people 
-walking if front of us is 
-wonderful.</Dialog>
+          <Dialog>The parasol on the person
+walking ahead of us is
+lovely.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's just a parasol... 
-Boys don't get into that 
-kind of thing.</Dialog>
-          <Dialog>Is that right？ Then, I'll 
-give you one as a present.</Dialog>
-          <Dialog>Eh！ A parasol... for me！？</Dialog>
-          <Dialog>Hehe. Because you think 
-it's cute, right？</Dialog>
-          <Dialog>No, no！</Dialog>
+          <Dialog>Parasols, huh... Guys don't
+really have much to do with
+them.</Dialog>
+          <Dialog>You think？ Then maybe I'll
+give you one as a present？</Dialog>
+          <Dialog>What！ A parasol... for
+me!?</Dialog>
+          <Dialog>Hehe. I think it'd be cute？</Dialog>
+          <Dialog>No way！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1672,15 +1673,16 @@ it's cute, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We passed near a baby 
-recently, wasn't he cute？</Dialog>
+          <Dialog>That baby we just passed was
+so cute, wasn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you make him laugh？ 
-Making faces, or the like, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yes, it was nice... 
-Hey, do you like babies？</Dialog>
-          <Dialog>Hmm？ Yeah, I suppose.</Dialog>
+          <Dialog>He was smiling at you,
+▲高嶺＊＊▲,
+wasn't he？ Like, all big
+grin.</Dialog>
+          <Dialog>Yes, so nice... Hey, do you
+like babies too？</Dialog>
+          <Dialog>Hm？ Well, I guess.</Dialog>
           <Dialog>I'm glad♪</Dialog>
           <Dialog>(Huh？？？)</Dialog>
         </Dialogs>
@@ -1736,19 +1738,22 @@ Hey, do you like babies？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, do you know that 
-kind of small tree？</Dialog>
+          <Dialog>Hey, what kind of tree is
+that little tree, I wonder？
+Do you know？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The one with the little 
-red fruit？</Dialog>
-          <Dialog>Yes. I've always been 
-interested, and I think 
-about looking it up, but 
-I forget when I get home.</Dialog>
-          <Dialog>Haha, that happens. 
-I'm sure you'll forget 
-about it and ask again.</Dialog>
-          <Dialog>That happens！ I'm kidding.</Dialog>
+          <Dialog>The one with the little red
+berries？</Dialog>
+          <Dialog>Yes. I've always wondered,
+and I mean to look it up,
+but I forget once I get
+home.</Dialog>
+          <Dialog>Haha, I know how that goes.
+And you'll forget today too,
+and next time we'll have the
+same conversation.</Dialog>
+          <Dialog>I know how that goes！ Just
+kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1798,17 +1803,18 @@ about it and ask again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wish I could see that 
-cloud shape again...</Dialog>
+          <Dialog>I wish we could see clouds
+shaped like this together
+again...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Cloud shape？</Dialog>
-          <Dialog>Yes. Do you know they 
-change depending on the 
-season？</Dialog>
-          <Dialog>I see. Then, next year 
-we'll try to look for it.</Dialog>
-          <Dialog>It will be done. 
-I'm kidding, Hehe！</Dialog>
+          <Dialog>Yes. They change with the
+seasons, right？</Dialog>
+          <Dialog>I see. Then we'll be having
+this same talk again next
+year, huh.</Dialog>
+          <Dialog>That's how it'll be. Just
+kidding, hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1864,13 +1870,13 @@ I'm kidding, Hehe！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah, a bookstore.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ Want to stop by？</Dialog>
-          <Dialog>Emm... Yes, is that okay 
-right now？</Dialog>
-          <Dialog>Haha, what was that voice. 
-Okay, let's go in.</Dialog>
-          <Dialog>I wonder why I made that 
-voice. Emm... Teehee♪</Dialog>
+          <Dialog>Hm？ Want to stop by？</Dialog>
+          <Dialog>Um... no, not right now, I
+think？</Dialog>
+          <Dialog>Haha, what's that？ Then
+why'd you say "bookstore"？</Dialog>
+          <Dialog>Why, I wonder... It just
+came out. Um... Teehee♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1925,18 +1931,19 @@ voice. Emm... Teehee♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say, is that... a lump？ 
-Do you think that's a lump？</Dialog>
+          <Dialog>Hey, that... lump？ It's
+been there for a while. What
+is it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, that's... some kind 
-of object, I think...</Dialog>
-          <Dialog>I wonder about that. 
-But, nobody is watching it.</Dialog>
-          <Dialog>I know. Even though it has 
-a strong presence.</Dialog>
-          <Dialog>Yes, then let's see it for 
-ourselves, okay？</Dialog>
-          <Dialog>(I'll be watching it...)</Dialog>
+          <Dialog>Ah, that... Some kind of art
+object, I guess.</Dialog>
+          <Dialog>I wonder. But nobody's
+looking at it.</Dialog>
+          <Dialog>Yeah. Even though it's got
+such presence.</Dialog>
+          <Dialog>Yes, so let's look at it
+properly for it？</Dialog>
+          <Dialog>(Staaare...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1991,22 +1998,20 @@ ourselves, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There's an empty space 
-over there, isn't it？</Dialog>
+          <Dialog>See that empty space over
+there？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, it says it's looking 
-for tenants.</Dialog>
-          <Dialog>I heard rumors there 
-could be a Winning Burger 
-build there, do you think 
-it's true？</Dialog>
-          <Dialog>I wonder about that... 
-It's because that's 
-small, right？</Dialog>
-          <Dialog>That's right. It needs to 
-be a wide space like in 
-the station...</Dialog>
-          <Dialog>(I'm curious about it...)</Dialog>
+          <Dialog>Ah, it says "Tenants
+Wanted."</Dialog>
+          <Dialog>I heard a rumor a Winning
+Burger is going in there. Is
+it true, I wonder？</Dialog>
+          <Dialog>Who knows... I mean, it's
+super tiny？</Dialog>
+          <Dialog>Right... It's only about the
+size of a station kiosk...</Dialog>
+          <Dialog>(Actually, I kind of want to
+see that...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2060,20 +2065,19 @@ the station...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There's a doll swinging its 
-arms in the middle of a 
-construction...</Dialog>
+          <Dialog>Those dolls waving their
+arms at construction
+sites...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you mean？　Is it 
-scary？</Dialog>
-          <Dialog>...Why does it look like 
-you're having fun？</Dialog>
+          <Dialog>Hm？ Scary？</Dialog>
+          <Dialog>...Why do you look so
+happy？</Dialog>
           <Dialog>It's a boyfriend's duty 
 to protect his scared 
 girlfriend！</Dialog>
-          <Dialog>But that's not what it 
-means... Geez, but it's 
-fine nonetheless.</Dialog>
+          <Dialog>Always making things up.
+That's not it... Geez, never
+mind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2134,15 +2138,15 @@ fine nonetheless.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah, a maid.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>She's handing off leaflets. 
-Is it for a maid cafe？ 
-But, ▲Takane＊＊▲...</Dialog>
-          <Dialog>Okay, stop right there.</Dialog>
+          <Dialog>Handing out flyers. Did a
+maid cafe open？ Hmm... but
+still, ▲高嶺＊＊▲...</Dialog>
+          <Dialog>Okay, that's enough.</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>Well, I was just trying to 
-embarrass you by doing 
-this.</Dialog>
-          <Dialog>(I'm already embarrassed.)</Dialog>
+          <Dialog>You're trying to make me
+blush again. I won't fall
+for it.</Dialog>
+          <Dialog>(You're already blushing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2197,21 +2201,20 @@ this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hey, the shape of that 
-plane is strange, isn't 
-it？</Dialog>
+          <Dialog>......Hey, that plane's
+shape is unusual, isn't it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm. Certainly... 
-it looks like a car.</Dialog>
-          <Dialog>I saw news that another 
-country was developing a 
-flying car... 
-It can't be, right？</Dialog>
-          <Dialog>No way！ I'm not sure 
-because it's still far 
-away, but it's an airship.</Dialog>
+          <Dialog>Hmm. True... it looks like a
+car.</Dialog>
+          <Dialog>I saw on the news that
+they're developing a flying
+car overseas... No way,
+right？</Dialog>
+          <Dialog>No way！ It's too far to
+tell, but it might be a
+blimp.</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>(...Is that right？)</Dialog>
+          <Dialog>(...No way, right？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2261,15 +2264,16 @@ away, but it's an airship.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There are lots of pigeons 
-on the wire...</Dialog>
+          <Dialog>Lots of pigeons on the power
+line...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>True. We're passing under！</Dialog>
-          <Dialog>Really？ It's cute. 
-Is it over there？</Dialog>
-          <Dialog>Not there！ Over there...</Dialog>
-          <Dialog>Ah... Yes, I can see it 
-from the distance.</Dialog>
+          <Dialog>Yeah. Scary to walk under！</Dialog>
+          <Dialog>Really？ They're cute. Let's
+go that way？</Dialog>
+          <Dialog>No way！ Look, you can see
+it. *Plop*...</Dialog>
+          <Dialog>Ah... yes, I'll just look
+from far away.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2323,17 +2327,17 @@ from the distance.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The pedestrian bridge 
-over there is not used 
-much.</Dialog>
+          <Dialog>Nobody really uses that
+pedestrian bridge, huh.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>There's a pedestrian 
-crossing next to it.</Dialog>
-          <Dialog>Yes... I haven't used it, 
-it might be rusty.</Dialog>
-          <Dialog>Maybe... 
-Okay, let's cross it！</Dialog>
-          <Dialog>Hehe, yes.</Dialog>
+          <Dialog>There's a crosswalk right
+next to it.</Dialog>
+          <Dialog>Yes... Maybe that's why it's
+getting so rusty, since
+nobody uses it.</Dialog>
+          <Dialog>Maybe. ...All right, let's
+try crossing it！</Dialog>
+          <Dialog>Hehe, okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2387,17 +2391,19 @@ Okay, let's cross it！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>"Take you time"</Dialog>
+          <Dialog>"Don't you rush / there's
+time enough / take it slow"</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ Ah, that traffic 
-slogan. It was made by 
-elementary school students.</Dialog>
-          <Dialog>Well then, you can do it 
-too. Try it...</Dialog>
-          <Dialog>Huh！ “I think Manaka 
-Takane is cute！”　Yes！</Dialog>
-          <Dialog>...That's not a slogan... 
-Geez.</Dialog>
+          <Dialog>Hm？ Ah, a traffic safety
+slogan. An elementary
+schooler made it.</Dialog>
+          <Dialog>Now, let's hear one from
+you. Go.</Dialog>
+          <Dialog>Eh！ Um... "So cute / Manaka
+Takane is / mine all mine！"
+There！</Dialog>
+          <Dialog>...That's not a slogan or
+anything. ...Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2460,17 +2466,16 @@ Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, what a cute taxi.</Dialog>
+          <Dialog>Ah, a cute taxi.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Where？ I mean... a cute 
+          <Dialog>Where？ I mean... a cute
 taxi？</Dialog>
-          <Dialog>Yes. Lots of stuffed 
-animals. Also, it's 
-decorated with lace.</Dialog>
-          <Dialog>I wonder if it's of a 
-female driver.</Dialog>
-          <Dialog>It was from a grandpa. 
-Isn't it cute？</Dialog>
+          <Dialog>Yes. Lots of stuffed
+animals. It's decorated with
+lace, too.</Dialog>
+          <Dialog>A woman driver, then.</Dialog>
+          <Dialog>No, it was an old man. Cute,
+right？</Dialog>
           <Dialog>(...Really？)</Dialog>
         </Dialogs>
       </SDL2>
@@ -2543,16 +2548,17 @@ Isn't it cute？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah！？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？　What's wrong？</Dialog>
-          <Dialog>Right now I saw... a very 
-big rat...</Dialog>
-          <Dialog>Ah, a big brown rat.</Dialog>
-          <Dialog>No, it was more like... 
-a big dog.</Dialog>
-          <Dialog>A dog-sized mouse！？</Dialog>
-          <Dialog>Maybe I'm wrong... but...</Dialog>
-          <Dialog>(Towano City first ever 
-dog-sized mouse...)</Dialog>
+          <Dialog>Hm？ What's up？</Dialog>
+          <Dialog>Just now, over there... a
+really big rat...</Dialog>
+          <Dialog>Ah, sewer rats show up
+sometimes.</Dialog>
+          <Dialog>No, even bigger... like a
+dog.</Dialog>
+          <Dialog>A dog-sized rat!?</Dialog>
+          <Dialog>Maybe I saw wrong... but...</Dialog>
+          <Dialog>(What is with Towano
+City...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2615,20 +2621,19 @@ dog-sized mouse...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wow... Is that a classic 
-car？ That's my kind of 
-car.</Dialog>
+          <Dialog>Wow... Those are called
+classic cars, right？ Cars
+like that.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, that's cool. However, 
-maintenance seems to be 
-difficult.</Dialog>
-          <Dialog>I would like it, even if 
-it's difficult.</Dialog>
-          <Dialog>I sure hope you understand 
-what you're saying 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>...That's wrong. I hate 
-people without delicacy.</Dialog>
+          <Dialog>Yeah, cool. Looks like a lot
+of maintenance, though.</Dialog>
+          <Dialog>I guess when you love
+something, even the hard
+parts are fun.</Dialog>
+          <Dialog>...！ Just like how I feel
+about you, ▲高嶺＊＊▲！</Dialog>
+          <Dialog>...That's not it. I don't
+like people with no tact.</Dialog>
           <Dialog>(She's angry. Understanding 
 women is difficult...)</Dialog>
         </Dialogs>
@@ -2670,14 +2675,15 @@ women is difficult...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！.. No.</Dialog>
+          <Dialog>Ah！ ...Oh no.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？ What？</Dialog>
-          <Dialog>A doll is standing over 
-there... I thought it was 
-a person...</Dialog>
-          <Dialog>(It's uncle Carneore... 
-You don't know him？)</Dialog>
+          <Dialog>That doll standing over
+there... I thought it was a
+person...</Dialog>
+          <Dialog>(The old fried chicken
+mascot... Maybe she's never
+seen it？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2736,16 +2742,16 @@ You don't know him？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, there's a small bento 
-shop over there.</Dialog>
+          <Dialog>A little bento shop opened
+over there.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's true. I'll buy one 
-next time.</Dialog>
-          <Dialog>...Don't.</Dialog>
+          <Dialog>Oh yeah. Maybe I'll try
+buying from there sometime.</Dialog>
+          <Dialog>...No.</Dialog>
           <Dialog>Why？</Dialog>
-          <Dialog>It's my job to do that... 
-What do you say？</Dialog>
-          <Dialog>Yes.</Dialog>
+          <Dialog>...I make yours. So, no.
+...Your answer？</Dialog>
+          <Dialog>Yes, ma'am.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2806,11 +2812,12 @@ What do you say？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>......</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>Rock, paper... scissors.</Dialog>
-          <Dialog>Ah！！</Dialog>
-          <Dialog>You devil▼ Oni-chan！</Dialog>
-          <Dialog>Oh, that's unfair！</Dialog>
+          <Dialog>Ah!!</Dialog>
+          <Dialog>You're it▼ Come and get
+me！</Dialog>
+          <Dialog>Ah, hey, no fair！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2860,19 +2867,16 @@ What do you say？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, there are games over 
-there, even though it's a 
-candy store？</Dialog>
+          <Dialog>Hey, that's a candy shop,
+but there are games in it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's the game corner of 
-the candy shop. It's a 
-fighting game.</Dialog>
+          <Dialog>The game corner at a candy
+shop, huh. Fighting games.</Dialog>
           <Dialog>Fighting... Hmm.</Dialog>
-          <Dialog>Interested？ Do you think 
-you can find someone 
-stronger than me？</Dialog>
-          <Dialog>Geez, was that an 
-imitation？ Hehe.</Dialog>
+          <Dialog>Interested？ Gonna go find
+someone stronger than you？</Dialog>
+          <Dialog>Geez, is that an impression
+of something？ Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2922,21 +2926,21 @@ imitation？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hey, there are people 
-standing there, right？</Dialog>
+          <Dialog>...Hey, the thing standing
+over there... it's a person,
+right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Maybe some kind of 
-performance. They paint 
-their whole body... 
-that looks painful.</Dialog>
-          <Dialog>Yes... Your skin can't 
-breathe through the paint, 
-so it's going to be 
-unpleasant.</Dialog>
-          <Dialog>It's art from the soul... 
-It's brilliant！</Dialog>
-          <Dialog>Geez, what？　That's... 
-Hehehe！</Dialog>
+          <Dialog>Probably some kind of
+performance. Painted all
+over... that looks rough.</Dialog>
+          <Dialog>Yes... The paint keeps your
+skin from breathing, so they
+probably can't do it long.</Dialog>
+          <Dialog>Knowing that and doing it
+anyway, that's the soul of
+an artist... Splendid！</Dialog>
+          <Dialog>Geez, what's that？
+...Hehehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2990,18 +2994,19 @@ Hehehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wow, those clothes are 
+          <Dialog>Wow, those clothes are
 cute▼</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, they look great！ 
-Try them！</Dialog>
-          <Dialog>Emm... is that okay？ 
-Taking a detour...</Dialog>
-          <Dialog>Yes, sensei！ I think a 
-detour in a date is good！</Dialog>
-          <Dialog>...Hehe！ I'm just going 
-to try them, I won't stay 
-long, I'm kidding.</Dialog>
+          <Dialog>Yeah, they'd look great on
+you！ Try them on！</Dialog>
+          <Dialog>Eh... is it okay？ Making a
+detour...</Dialog>
+          <Dialog>Yes, teacher！ I believe
+detours are part of the
+date！</Dialog>
+          <Dialog>...Hehe！ Then just trying
+them on. I won't stay long,
+okay？ Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3051,15 +3056,15 @@ long, I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...It can't be！ Hehe！</Dialog>
+          <Dialog>...Oh no！ Hehe！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？</Dialog>
-          <Dialog>That signboard... Instead 
-of Ramen, it says Rameen...</Dialog>
-          <Dialog>Rameen... It's true！ 
-I didn't notice... I should 
-have seen it before.</Dialog>
-          <Dialog>Rameen... Hehehe, no more.</Dialog>
+          <Dialog>Wh-What？</Dialog>
+          <Dialog>That sign... It doesn't say
+"ramen," it says "raemn"...</Dialog>
+          <Dialog>"Raemn"... it's true！ I
+never noticed... I must've
+seen it a bunch of times.</Dialog>
+          <Dialog>"Raemn"... Hehehe, oh geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3122,18 +3127,17 @@ have seen it before.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if it's going to 
-be sunny tomorrow...</Dialog>
+          <Dialog>I wonder if it'll be sunny
+tomorrow...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Tomorrow？ Why？</Dialog>
-          <Dialog>I want to hang my futon. 
-I couldn't dry it today.</Dialog>
-          <Dialog>I see, I forgot to dry it 
-too.</Dialog>
-          <Dialog>A fluffy futon feels good, 
-right？ I wonder if you 
-need my help.</Dialog>
-          <Dialog>It's okay, I can do it 
+          <Dialog>I want to air out my futon.
+I couldn't today.</Dialog>
+          <Dialog>I see. When did I last air
+mine, I wonder.</Dialog>
+          <Dialog>A fluffy futon feels nice,
+you know？ Want me to help？</Dialog>
+          <Dialog>It's fine, I'll do it
 myself！</Dialog>
         </Dialogs>
       </SDL2>
@@ -3184,14 +3188,14 @@ myself！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you say the order of 
-the traffic light colors, 
-looking at the sky？</Dialog>
+          <Dialog>Can you say the order of the
+traffic light colors from
+memory？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, from the left...</Dialog>
+          <Dialog>Huh. From the left～...</Dialog>
           <Dialog>From the left？</Dialog>
-          <Dialog>...Yellow in the middle！</Dialog>
-          <Dialog>Correct！ Geez. Hehe！</Dialog>
+          <Dialog>...Yellow's in the middle！</Dialog>
+          <Dialog>Correct！ ...Geez. Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3249,18 +3253,19 @@ looking at the sky？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what's that strange 
+          <Dialog>Hey, what's that strange
 vehicle？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, that's a stand-up 
-motorcycle. It seems to 
-be popular overseas.</Dialog>
-          <Dialog>Hmm... Sounds nice and 
-funny. I want to ride it.</Dialog>
-          <Dialog>It would be better to 
-ride it together！</Dialog>
-          <Dialog>Hehe, yes. Should I look 
-into it later？</Dialog>
+          <Dialog>Ah, that's one of those
+stand-up scooters.
+Apparently it's popular
+overseas.</Dialog>
+          <Dialog>Hmm... Looks fun. I want to
+ride one.</Dialog>
+          <Dialog>It'd be even better if there
+was a two-seater！</Dialog>
+          <Dialog>Hehe, yes. Maybe I'll look
+it up later？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3314,18 +3319,20 @@ into it later？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder how Ueki can craft 
-such beautiful things.</Dialog>
+          <Dialog>How do gardeners make such
+clean lines, I wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ Ah, the garden over 
+          <Dialog>Hm？ Ah, that garden over
 there.</Dialog>
-          <Dialog>It seems impossible for 
-me to make it so flat.</Dialog>
-          <Dialog>Oh, that one looks 
-expensive. Huh？　This one 
-too...</Dialog>
-          <Dialog>Hehe, yes, it's like that, 
-I'm going to try it too.</Dialog>
+          <Dialog>I don't think I could even
+make it flat and level.</Dialog>
+          <Dialog>Ah, this side's too high.
+Huh？ This side too. And
+while you go "huh, huh,
+huh"...</Dialog>
+          <Dialog>Hehe, yes, there's nothing
+left. I'd probably do that
+too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3382,11 +3389,11 @@ I'm going to try it too.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Ah.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>That person's clothes...</Dialog>
-          <Dialog>Oh！ They are the same as 
-mine's.</Dialog>
-          <Dialog>Yes, it seems like that.</Dialog>
+          <Dialog>Ah！ Same as mine.</Dialog>
+          <Dialog>So this kind of thing
+happens...</Dialog>
           <Dialog>(It's somehow awkward...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -3445,22 +3452,20 @@ mine's.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, have you ever walked 
-along the white line on 
-the sidewalk？</Dialog>
+          <Dialog>Hey, have you ever walked
+along just the white lines
+on the road？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Only your feet can touch 
-the white line！ 
-Like that？</Dialog>
-          <Dialog>Yes yes. Aren't child 
-masters on creating 
-games？</Dialog>
-          <Dialog>That's right... 
-Ah, that face...</Dialog>
-          <Dialog>Hehe, correct. Don't 
-fall until you reach your 
-destination, okay？ Okay, 
-start！</Dialog>
+          <Dialog>Like "You can only step on
+the white parts of the
+crosswalk！"？</Dialog>
+          <Dialog>Uh-huh. Kids are masters at
+turning anything into a
+game, right？</Dialog>
+          <Dialog>Yeah... Ah, don't tell me
+that face means...</Dialog>
+          <Dialog>Hehe, correct. Until we get
+there, okay？ Ready, go！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3504,20 +3509,19 @@ start！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Isn't that barber's pole 
-strange？</Dialog>
+          <Dialog>Barber poles are mysterious,
+aren't they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Strange？ The origin of 
-that color has various 
-theories around it, you 
-know？</Dialog>
-          <Dialog>Yes. But why did it had 
-to be a spiral？ Always 
-turning around...</Dialog>
-          <Dialog>(I'm interested in it. 
-You sure think unusual 
-things sometimes, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Mysterious？ There are
+various theories about where
+the colors come from,
+right？</Dialog>
+          <Dialog>Yes. But why make it a
+spiral？ And then spin it
+around...</Dialog>
+          <Dialog>(Now I'm curious too.
+▲高嶺＊＊▲ gets hung up on
+strange things sometimes.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3571,19 +3575,17 @@ things sometimes,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！ The smell of a 
-bakery.</Dialog>
+          <Dialog>Ah. The smell of a bakery.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Really. This smell makes 
-me hungry. It's unfair！</Dialog>
-          <Dialog>Maybe it's promotion？ 
-Emm... You know, a sales 
-promotion.</Dialog>
-          <Dialog>Ah！！ A pun... 
-Did you make a pun 
-▲Takane＊＊▲！？</Dialog>
-          <Dialog>...Why do you have to act 
-so surprised？ Geez.</Dialog>
+          <Dialog>Yeah. That smell makes me
+hungry. That's a low blow！</Dialog>
+          <Dialog>Maybe it's a low... dough？
+Um... you know, as in bread
+dough...</Dialog>
+          <Dialog>!! A pun... from you,
+▲高嶺＊＊▲!?</Dialog>
+          <Dialog>...You don't have to be that
+surprised, do you？ Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3641,19 +3643,19 @@ so surprised？ Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Danger！ A bee！</Dialog>
+          <Dialog>Look out！ A bee！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Emm, where！？</Dialog>
-          <Dialog>On your shoulder... Ah, 
-I said it. I'm sorry, I 
-was surprised.</Dialog>
-          <Dialog>It fine. More than that, 
-I'm glad it didn't go 
-towards you 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>...Geez. I was just 
-worried. Won't you do the 
-same for me？</Dialog>
+          <Dialog>Eh, where!?</Dialog>
+          <Dialog>On your shoulder... Ah, it
+flew off. Sorry for
+startling you.</Dialog>
+          <Dialog>No problem. More
+importantly, I'm glad it
+didn't go to you,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>...Geez. Always worrying
+about me. Take care of
+yourself too, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3708,19 +3710,19 @@ same for me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If we walked without being 
-aware of each other... 
-Is there a difference in 
-speed？</Dialog>
+          <Dialog>If we walked without paying
+attention to each other...
+would our speeds be
+different, I wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I wonder. Probably we have 
-different strides.</Dialog>
-          <Dialog>Is that right？...</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>You're so kind, after all. 
-Hehe！</Dialog>
-          <Dialog>(Don't be shy if you say 
-it...)</Dialog>
+          <Dialog>Probably. Our strides are
+different too.</Dialog>
+          <Dialog>Right？ ......</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>You really are kind. Hehe！</Dialog>
+          <Dialog>(When she says it out loud,
+it's kind of
+embarrassing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3764,18 +3766,18 @@ it...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah. Sticky insects.</Dialog>
+          <Dialog>Ah. Sticky burrs.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Truly... Huh, is that a 
-sticky insect？ or a catchy 
-insect？</Dialog>
-          <Dialog>You mean Onami？ I wonder 
-if it's called 
-differently... I have to 
-look it up.</Dialog>
-          <Dialog>(You really like to 
-research things 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Oh yeah... wait, are they
+called "kuttsuki-mushi" or
+"hittsuki-mushi"？</Dialog>
+          <Dialog>You mean cocklebur, right？
+I wonder if there are lots
+of names... I'll have to
+look it up when I get home.</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+really loves
+looking things up.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3834,24 +3836,24 @@ research things
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You may have heard about 
-replacing the dust paper 
-after a long time.</Dialog>
+          <Dialog>That might be the first time
+in ages I've heard the paper
+recycling truck.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Certainly. I heard about 
-it when I was little.</Dialog>
-          <Dialog>Not many people use the 
-word "dust paper", right？ 
-Are there other words 
-like that？</Dialog>
-          <Dialog>Emm... Like Monkake？ 
-My relatives said 
-something like that.</Dialog>
-          <Dialog>Monkake！ Hey, are there 
-some other words？</Dialog>
-          <Dialog>(I see your curiosity was 
-ignited with that word 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>True. I feel like I heard it
+when I was little.</Dialog>
+          <Dialog>Not many people say
+"chirigami" for tissues
+anymore, right？ Are there
+other words like that？</Dialog>
+          <Dialog>"Emonkake," maybe？ For a
+clothes hanger. I think my
+relatives said it.</Dialog>
+          <Dialog>"Emonkake"！ Hey, any
+others？</Dialog>
+          <Dialog>(There goes
+▲高嶺＊＊▲'s
+curiosity again...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3901,16 +3903,15 @@ ignited with that word
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The people we just passed 
-by were humming and 
-singing.</Dialog>
+          <Dialog>The person who just biked
+past us was humming.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Seriously？ I didn't 
-notice...</Dialog>
-          <Dialog>You are good at it, 
-aren't you？</Dialog>
-          <Dialog>Haha！ I can't do humming 
-at that level.</Dialog>
+          <Dialog>Really？ I didn't notice...</Dialog>
+          <Dialog>They were really good, you
+know？ With vibrato and
+everything.</Dialog>
+          <Dialog>Haha！ That's beyond
+humming.</Dialog>
           <Dialog>Maybe. Hehe！</Dialog>
         </Dialogs>
       </SDL2>
@@ -3974,22 +3975,22 @@ at that level.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That girl playing over 
-there is good at 
-skipping.</Dialog>
+          <Dialog>The girl playing over there
+is good at skipping.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, it's true. Can you 
-also skip 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>...I can, you know？ With 
-an unique rhythm.</Dialog>
-          <Dialog>An unique rhythm...？ 
-You know, right here――.</Dialog>
-          <Dialog>...If you skip in such a 
-place, won't it be a 
-bother？ Look, I'm going 
-now.</Dialog>
-          <Dialog>(I'm sorry...)</Dialog>
+          <Dialog>Oh, she is. Can you skip,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>...I can, you know？ It's
+just a little more of a
+unique rhythm than other
+people's.</Dialog>
+          <Dialog>A unique rhythm...？ Hey,
+right here――</Dialog>
+          <Dialog>...If I skipped somewhere
+like this, it'd bother
+people, right？ Come on,
+let's go.</Dialog>
+          <Dialog>(Suspicious...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4043,18 +4044,18 @@ now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, it's sprinkling water.</Dialog>
+          <Dialog>Ah, they're sprinkling
+water.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's true. It seems like 
-sprinkling water is not 
-only in summer.</Dialog>
-          <Dialog>Yes. It seems it's used 
-to settle dust from the 
-ground.</Dialog>
+          <Dialog>Yeah. Sprinkling water isn't
+just a summer thing, you
+know.</Dialog>
+          <Dialog>Yes. It also keeps the dust
+down.</Dialog>
           <Dialog>I see.</Dialog>
-          <Dialog>I used to do this at home. 
-How many years since then, 
-I wonder？</Dialog>
+          <Dialog>We used to do it at home a
+long time ago. Maybe I'll do
+it again？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4117,22 +4118,23 @@ I wonder？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We used to play a game 
-called rock, paper and 
-scissors, don't we？</Dialog>
+          <Dialog>You know that game where you
+do rock-paper-scissors and
+move forward saying
+"cho-ko-re-i-to" or
+"pa-i-na-tsu-pu-ru"？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, it was something we 
-might have done when we 
-were kids.</Dialog>
-          <Dialog>Yes... If you do it now, 
-you'll be embarrassed, 
-don't you think？</Dialog>
-          <Dialog>There's no such word in 
-an idiot couple's 
+          <Dialog>Ah, the one we always played
+as kids？</Dialog>
+          <Dialog>Yes. ...Would it be
+embarrassing to do it now？</Dialog>
+          <Dialog>There's no word
+"embarrassing" in a
+lovey-dovey couple's
 dictionary！</Dialog>
-          <Dialog>Geez, an idiot couple... 
-Yes, that's right, isn't 
-it？ Then, rock...</Dialog>
+          <Dialog>Geez, lovey-dovey couple...
+But yes, you're right. Then,
+rock, paper...</Dialog>
           <Dialog>(Scissors！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -4192,18 +4194,19 @@ it？ Then, rock...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, in rock, paper why 
-do we say "rock"？</Dialog>
+          <Dialog>Hey, why is "janken" called
+"janken"？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That was sudden. Maybe 
-paper stands for "paper 
-roll".</Dialog>
-          <Dialog>Then, what about "rock"？</Dialog>
-          <Dialog>"Rock n'roll！" Maybe.</Dialog>
-          <Dialog>Hehe, really？ Then in 
-"rock,paper, scissors", 
-what does scissors mean？</Dialog>
-          <Dialog>(This is really funny...)</Dialog>
+          <Dialog>That was sudden. Hmm, "ken"
+must mean fist, probably.</Dialog>
+          <Dialog>Then what about "jan"？</Dialog>
+          <Dialog>"Ta-daan！" because you
+throw out your fist.</Dialog>
+          <Dialog>Hehe, really？ Then... what
+about the "pon" in
+"jan-ken-pon"？</Dialog>
+          <Dialog>(Ugh, is she expecting a
+funny answer...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4257,17 +4260,16 @@ what does scissors mean？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think sparrows are 
-rarely seen these days, 
-don't you？</Dialog>
+          <Dialog>Don't you feel like you
+don't see sparrows much
+lately？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It seems their numbers 
-are decreasing.</Dialog>
-          <Dialog>That so... Ah, I want 
-to see one... they are 
-cute.</Dialog>
-          <Dialog>I hope the cause can be 
-reverted.</Dialog>
+          <Dialog>Apparently their numbers are
+dropping. Nobody knows why.</Dialog>
+          <Dialog>I see... Ah, there's one.
+...Cute.</Dialog>
+          <Dialog>I hope they figure out the
+cause.</Dialog>
           <Dialog>Yes...</Dialog>
         </Dialogs>
       </SDL2>
@@ -4318,20 +4320,19 @@ reverted.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Why is that pigeon so calm 
-when people pass by？</Dialog>
+          <Dialog>Why are pigeons so calm, I
+wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Even if humans come near, 
-they don't fly... If you 
-run, they just calmly walk 
-away.</Dialog>
-          <Dialog>You mean, they don't think 
-of us as humans？</Dialog>
-          <Dialog>Haha, probably！ Like, you 
-should walk near the edge 
-to avoid bothering them！</Dialog>
-          <Dialog>So we say "I'm sorry 
-Pigeon-san" I'm kidding. 
+          <Dialog>Even when people come, they
+don't try to fly... When
+they do move, they just
+stroll.</Dialog>
+          <Dialog>Maybe they think they're
+human？</Dialog>
+          <Dialog>Haha, maybe！ Like, "You
+walk on the edge！"</Dialog>
+          <Dialog>And we go, "Sorry, Mr.
+Pigeon." Just kidding.
 Hehe！</Dialog>
         </Dialogs>
       </SDL2>
@@ -4376,14 +4377,14 @@ Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... My eye...</Dialog>
+          <Dialog>Ah... in my eye...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you okay？ It's easy 
-to hurt your eyes 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Really...？ I wonder if 
-I should walk with my 
-eyes closed.</Dialog>
+          <Dialog>You okay？ Maybe stuff gets
+in easily because your eyes
+are big, ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Is that so...？ Hmm, maybe I
+should walk squinting. That
+sounds tiring.</Dialog>
           <Dialog>(That's dangerous...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -4455,18 +4456,15 @@ eyes closed.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah！？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？　What happened？</Dialog>
-          <Dialog>I wonder if... Was that a 
-spiderweb？</Dialog>
+          <Dialog>Hm？ What's up？</Dialog>
+          <Dialog>What... a spiderweb？</Dialog>
           <Dialog>Are you okay？</Dialog>
-          <Dialog>Yes. But I broke their 
-nest.</Dialog>
-          <Dialog>You didn't do it with any 
-ill will, it can't be 
-helped.</Dialog>
-          <Dialog>I have to be careful. 
-Perhaps I was too focused 
-on our chat.</Dialog>
+          <Dialog>Yes. But I broke the web.</Dialog>
+          <Dialog>You didn't mean to, so it
+can't be helped.</Dialog>
+          <Dialog>I need to be careful. Maybe
+I was too caught up in
+talking.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4524,18 +4522,19 @@ on our chat.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>？ Hey, what does that 
-sign means？</Dialog>
+          <Dialog>？ Hey, was that sign always
+there？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？... Certainly, it's 
-rare.</Dialog>
-          <Dialog>A deer mark... You don't 
-see one here, right？</Dialog>
-          <Dialog>Did they put it wrong？ 
-Or, have deer actually 
-appeared？</Dialog>
-          <Dialog>Wouldn't it be great？ 
-We could have fun. Hehe！</Dialog>
+          <Dialog>Hm？ ...I don't recognize
+it, that's for sure.</Dialog>
+          <Dialog>A deer crossing sign... Deer
+don't come out here, right？</Dialog>
+          <Dialog>A mistake？ Or maybe they
+actually started showing
+up？</Dialog>
+          <Dialog>That'd be amazing, wouldn't
+it？ I'm a little excited.
+Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4590,18 +4589,18 @@ We could have fun. Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That sound...</Dialog>
+          <Dialog>That sound just now...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A pistol？ I wonder if 
+          <Dialog>A starter pistol？ Maybe
 there's an event somewhere.</Dialog>
-          <Dialog>Do you think some 
-competition started nearby？</Dialog>
-          <Dialog>I guess. Then if it sounds 
-next time, let's race！</Dialog>
+          <Dialog>It kind of makes you want to
+start running, doesn't it？</Dialog>
+          <Dialog>Yeah. Then if it goes off
+again, on your mark, go！</Dialog>
           <Dialog>Hehe, I won't lose.</Dialog>
-          <Dialog>(Really？ I can't really 
-win against you 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>(You're serious,
+▲高嶺＊＊▲？
+I can't win this...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4660,19 +4659,22 @@ win against you
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah. First yellow car.</Dialog>
+          <Dialog>Ah. Car with yellow plates,
+number one.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's that？ Finding 100 
-objects around？</Dialog>
-          <Dialog>Correct. Do you think I can 
-find it today？</Dialog>
-          <Dialog>Even if you don't find it, 
-happiness is in front of... 
-Look here 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>...Yes, you're right. 
+          <Dialog>What was that again？ If you
+find 100, something good
+happens, something like
+that？</Dialog>
+          <Dialog>Yes, yes. Can I find them
+all today, I wonder？</Dialog>
+          <Dialog>Even without finding them,
+happiness is right in front
+of you,
+▲高嶺＊＊▲... See！</Dialog>
+          <Dialog>...Yes, you're right.
 Hehehe！</Dialog>
-          <Dialog>(That's good...)</Dialog>
+          <Dialog>(It got a laugh...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4724,14 +4726,14 @@ Hehehe！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Wow, a rainbow...！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Truly. But it's not 
-raining... Then why？</Dialog>
+          <Dialog>Yeah. And it's not even
+raining... how come？</Dialog>
           <Dialog>Yes, it's strange.</Dialog>
-          <Dialog>By our power, we can make 
-miracles happen！</Dialog>
-          <Dialog>Hehe！ Then I hope there 
-are many more in the 
-future, right？</Dialog>
+          <Dialog>Our combined power is
+summoning miracles！</Dialog>
+          <Dialog>Hehe！ I hope lots more
+things like this happen,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4786,16 +4788,16 @@ future, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, a soap bubble.</Dialog>
+          <Dialog>Ah, soap bubbles.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, a child is over 
-there. So innocent.</Dialog>
-          <Dialog>Don't this make you wanna 
-sing？</Dialog>
-          <Dialog>Go ahead！</Dialog>
-          <Dialog>I should not. Next time, 
-right？</Dialog>
-          <Dialog>(Tsk.)</Dialog>
+          <Dialog>From that kid over there. So
+innocent.</Dialog>
+          <Dialog>Makes you want to sing,
+doesn't it？</Dialog>
+          <Dialog>Go ahead, go ahead！</Dialog>
+          <Dialog>...Actually, I'll pass. Next
+time, okay？</Dialog>
+          <Dialog>(Darn.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4850,21 +4852,20 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did the little boy from 
-before speak in English？</Dialog>
+          <Dialog>That boy just now was
+speaking English, wasn't
+he？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>He was. And he is so 
-small...</Dialog>
-          <Dialog>His mother seems to be 
-Japanese, maybe he is 
-half-blood？</Dialog>
-          <Dialog>That might be the case. 
-It might be cool for a 
-child to speak English. 
-Maybe our children will do 
-that too？</Dialog>
-          <Dialog>...Geez, it's unfair to 
-say that unconsciously.</Dialog>
+          <Dialog>Yeah. And so little...</Dialog>
+          <Dialog>His mom seemed Japanese, so
+maybe he's half？</Dialog>
+          <Dialog>Maybe. It'd be cool if a kid
+could speak English. Might
+be nice to teach our own
+kids someday, huh？</Dialog>
+          <Dialog>...Geez, it's unfair that
+you say that without even
+thinking.</Dialog>
           <Dialog>Huh？</Dialog>
         </Dialogs>
       </SDL2>
@@ -4927,12 +4928,13 @@ say that unconsciously.</Dialog>
           <Dialog>Ah！？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>▲Takane＊＊▲！</Dialog>
-          <Dialog>Hah... It seems like I 
-bumped onto something.</Dialog>
+          <Dialog>Phew... Looks like you
+didn't bump into anything.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Hmm？ Was it scary？</Dialog>
-          <Dialog>No, but thank you for 
-always worrying about me.</Dialog>
+          <Dialog>Hm？ Did that scare you？</Dialog>
+          <Dialog>No, it's just that you
+worried about me right
+away... Thank you, always.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4992,12 +4994,12 @@ always worrying about me.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>Look, look. There's 
-something over there...</Dialog>
-          <Dialog>Eh, where？</Dialog>
-          <Dialog>A secret. A secret only 
-for myself. I'm kidding.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Found a mole. So you have
+one there...</Dialog>
+          <Dialog>Huh, where, where？</Dialog>
+          <Dialog>It's a secret. Just for me
+to know. Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5052,17 +5054,18 @@ for myself. I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？ What's wrong？</Dialog>
+          <Dialog>？ What is it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You have long eyelashes 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Really？... But why are 
-you telling me that.</Dialog>
-          <Dialog>How can I say it nicely？ 
-Your eyes are big and 
-cute, your skin is 
-beautiful and...</Dialog>
-          <Dialog>No, stop！ Geez...</Dialog>
+          <Dialog>You have really long
+eyelashes,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Really？ ...But why bring
+that up now？</Dialog>
+          <Dialog>I could go on forever, you
+know？ Your eyes are big and
+cute, your skin's beautiful,
+and...</Dialog>
+          <Dialog>Stop！ ...Geez.</Dialog>
           <Dialog>(But it's true！)</Dialog>
         </Dialogs>
       </SDL2>
@@ -5128,14 +5131,14 @@ beautiful and...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa！</Dialog>
+          <Dialog>Eek！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh！？ What happened？</Dialog>
-          <Dialog>Right now, my back... 
-Did you touch it？</Dialog>
-          <Dialog>Me？ I didn't do it.</Dialog>
-          <Dialog>Emm... Then... Who...？</Dialog>
-          <Dialog>...I'm sorry. It was me.</Dialog>
+          <Dialog>!? What's wrong？</Dialog>
+          <Dialog>Just now, my back... you
+stroked it, didn't you？</Dialog>
+          <Dialog>Me？ ...I didn't？</Dialog>
+          <Dialog>Eh... Then... who...？</Dialog>
+          <Dialog>...Sorry. It was me.</Dialog>
           <Dialog>Geez！</Dialog>
         </Dialogs>
       </SDL2>
@@ -5194,18 +5197,16 @@ Did you touch it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Passing in front of the 
-cake shop, makes me wanna 
-enter...</Dialog>
+          <Dialog>Whenever I pass a cake shop,
+I want to go in...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Can't you make them 
-yourself？</Dialog>
-          <Dialog>Of course. If you can, 
-you should make them 
-yourself, but you can't 
-beat the store's flavor.</Dialog>
-          <Dialog>Is that right？</Dialog>
-          <Dialog>Yes. But I'm glad you say 
+          <Dialog>Even though you can make
+them yourself？</Dialog>
+          <Dialog>Of course. If I make them, I
+can make them how I like,
+but I can't beat a shop.</Dialog>
+          <Dialog>You think？</Dialog>
+          <Dialog>Yes. But I'm happy you say
 that.</Dialog>
         </Dialogs>
       </SDL2>
@@ -5261,16 +5262,17 @@ that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When I walked this way... 
-There are various types 
-of nameplates.</Dialog>
+          <Dialog>Walking around like this...
+there are all kinds of house
+nameplates, aren't there？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Indeed there are. Wood, 
-stone, metal...</Dialog>
-          <Dialog>Which one do you want to 
-use？</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>I'm talking to myself！</Dialog>
+          <Dialog>There are. Wood, stone,
+metal...</Dialog>
+          <Dialog>...What kind would you
+want？</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>......I'm just talking to
+myself！</Dialog>
           <Dialog>(Huh？？？)</Dialog>
         </Dialogs>
       </SDL2>
@@ -5333,19 +5335,17 @@ use？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Look, look. A round post.</Dialog>
+          <Dialog>Look, see. A round mailbox.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, yes. I noticed it 
-recently.</Dialog>
-          <Dialog>Yes, I didn't notice. 
-I like more the square 
-post.</Dialog>
-          <Dialog>Is it cute？</Dialog>
-          <Dialog>Yes▼ In the olden days, 
-there was a piggy bank 
-back in my house... 
-I should ask it it's 
-there.</Dialog>
+          <Dialog>Was that always there？</Dialog>
+          <Dialog>Yes, I never noticed. I
+might like it better than
+the square ones.</Dialog>
+          <Dialog>It's cute, huh？</Dialog>
+          <Dialog>Yes▼ We used to have a
+piggy bank shaped like that
+at home... I'll ask if it's
+still around.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5400,20 +5400,22 @@ there.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you see the number of 
-the car we just passed？</Dialog>
+          <Dialog>Did you see the license
+plate on the car that just
+passed？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I didn't see it. Was it a 
-rare number？</Dialog>
-          <Dialog>It was the same as your 
+          <Dialog>I didn't. Was it an unusual
+number？</Dialog>
+          <Dialog>It was the same as your
 birthday.</Dialog>
-          <Dialog>Eh！ It would be nice to 
-have seen it！</Dialog>
-          <Dialog>I would be glad if you 
-had noticed it sooner. Pay 
-attention next time okay？</Dialog>
-          <Dialog>(I wonder if a car with 
-her birthday will pass.)</Dialog>
+          <Dialog>What！ I wish I'd seen it！</Dialog>
+          <Dialog>I wish I'd noticed sooner
+too. I'll watch out next
+time, okay？</Dialog>
+          <Dialog>(I wonder if a car with
+▲高嶺＊＊▲'s
+birthday on the plate will
+come by.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5472,21 +5474,22 @@ her birthday will pass.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, there's a vending 
-machine here... but why 
-does it have a 4 digits 
-display？</Dialog>
+          <Dialog>Hey, there was one on that
+vending machine too...
+what's the 4-digit display
+for？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, when the four digits 
-are the same, you'll get 
-an extra from the machine.</Dialog>
-          <Dialog>Emm, it's amazing.</Dialog>
-          <Dialog>It's rare, though.</Dialog>
-          <Dialog>It's a great vending 
-machine... But, I wonder 
-if I can drink them both.</Dialog>
-          <Dialog>(Well, that will happen 
-until it hits 4 digits...)</Dialog>
+          <Dialog>Ah, it's a lottery vending
+machine. If you win, you get
+another drink.</Dialog>
+          <Dialog>Eh, amazing.</Dialog>
+          <Dialog>It hardly ever happens,
+though.</Dialog>
+          <Dialog>What a bargain vending
+machine. ...But could I
+drink two？</Dialog>
+          <Dialog>(She won't keep buying until
+she wins... right？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5536,17 +5539,17 @@ until it hits 4 digits...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like passing by the 
+          <Dialog>I love walking past the
 flower shop.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Because it smells good？</Dialog>
-          <Dialog>There is that too, but I 
-feel fresh when going 
-inside.</Dialog>
-          <Dialog>You get power from the 
-flowers.</Dialog>
-          <Dialog>Yes▼ Let's buy something 
-and go home.</Dialog>
+          <Dialog>That too, but it makes me
+feel kind of fresh and
+lively.</Dialog>
+          <Dialog>So the flowers give you
+energy.</Dialog>
+          <Dialog>Yes▼ Maybe I'll buy some to
+take home.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5601,21 +5604,20 @@ and go home.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Some people are walking 
-while eating croquettes...</Dialog>
+          <Dialog>Someone's walking while
+eating a croquette...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, there seems to be a 
-butcher in this 
-neighborhood that sells 
-freshly fried croquettes.</Dialog>
+          <Dialog>Ah, apparently there's a
+butcher around here selling
+fresh-fried croquettes. They
+say they're good.</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>Do you want to stop by？ 
-We're near anyway！</Dialog>
-          <Dialog>Yes... I'm curious... 
-But...</Dialog>
-          <Dialog>(I feel it would be a 
-bother to eat while 
-walking...)</Dialog>
+          <Dialog>Want to stop by？ Since
+we're here！</Dialog>
+          <Dialog>Yes... I'm curious, but...
+hmm...</Dialog>
+          <Dialog>(Eating while walking might
+be a big hurdle for her...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5669,19 +5671,18 @@ walking...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The streelights in Towano 
-City are often cute, 
-right？</Dialog>
+          <Dialog>Lots of the streetlights in
+Towano City are cute, aren't
+they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Heh？ Ah, truly...</Dialog>
-          <Dialog>Hehe！ I wonder if boys 
-don't really care about 
-cute things, don't you？</Dialog>
-          <Dialog>For that, I can trust you 
-to decide, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Yay, I was trusted▼ 
-I'm kidding.</Dialog>
+          <Dialog>Huh？ Oh, they are...</Dialog>
+          <Dialog>Hehe！ I guess guys really
+don't pay attention to cute
+things？</Dialog>
+          <Dialog>I'll leave that department
+to you, ▲高嶺＊＊▲！</Dialog>
+          <Dialog>Yes, leave it to me▼ Just
+kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5735,19 +5736,20 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Why are am I being asked 
-for directions today？</Dialog>
+          <Dialog>Why am I getting asked for
+directions so much today, I
+wonder？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Maybe because of your 
-"nice person aura"？</Dialog>
-          <Dialog>Hehe, what's that... 
-But it's easy to talk 
-because we often laugh 
-when we're together.</Dialog>
-          <Dialog>I see... Yes, it may be 
-that.</Dialog>
-          <Dialog>Right？ I hope we can 
-always be like this.</Dialog>
+          <Dialog>Maybe you're giving off a
+nice-person aura？</Dialog>
+          <Dialog>Hehe, what's that？ ...But
+maybe it's because we're
+always laughing when we're
+together, so we're easy to
+approach.</Dialog>
+          <Dialog>I see... Yeah, could be.</Dialog>
+          <Dialog>Right？ I hope we can always
+be like this, us two.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5801,17 +5803,17 @@ always be like this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, balloons.</Dialog>
+          <Dialog>Ah, a balloon.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>There's something at the 
-end of the string... 
-Is that a letter？</Dialog>
-          <Dialog>I hope it will be carried 
-far away, so their 
-relationship can blossom.</Dialog>
-          <Dialog>I know, let's send one 
-together！</Dialog>
-          <Dialog>Yes. Hehe！</Dialog>
+          <Dialog>Something's tied to the end
+of the string... A letter？</Dialog>
+          <Dialog>Maybe. I hope it's carried
+far, far away, and the
+person who let it go finds a
+good match.</Dialog>
+          <Dialog>Then let's send it some good
+vibes. From both of us！</Dialog>
+          <Dialog>Agreed. Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5870,18 +5872,18 @@ together！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh！？ That public 
-telephone is ringing...</Dialog>
+          <Dialog>!? A pay phone is
+ringing...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It seems like it's 
-somewhere near...</Dialog>
+          <Dialog>So pay phones can ring...</Dialog>
           <Dialog>Hey, should I answer it？</Dialog>
-          <Dialog>I'm sure it's a mistake 
-or something. Otherwise, 
-isn't it scary？</Dialog>
-          <Dialog>Huh？ Why？ 
-I was surprised...</Dialog>
-          <Dialog>(Sorry...)</Dialog>
+          <Dialog>It's probably a wrong number
+or some test. More
+importantly, isn't it
+scary？</Dialog>
+          <Dialog>？ Why？ It surprised me,
+but...</Dialog>
+          <Dialog>(Too bad...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5936,19 +5938,18 @@ I was surprised...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There aren't many people 
-or cars today, right？</Dialog>
+          <Dialog>Not many people or cars
+today, huh？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You often see movies where 
-people suddenly vanish from 
-all over the world, and 
-dramas even picture that.</Dialog>
-          <Dialog>Then, are we now the last 
-two people in the world？</Dialog>
-          <Dialog>Sounds nice... 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>There was a drama or movie
+like this. Everyone in the
+world disappears.</Dialog>
+          <Dialog>Then are we the only two in
+the world right now？</Dialog>
+          <Dialog>All right...
+▲高嶺＊＊▲！</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>That's too bad！</Dialog>
+          <Dialog>Too bad！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6002,18 +6003,19 @@ two people in the world？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wow, that's a very big 
-shoe... A sign, maybe？</Dialog>
+          <Dialog>Whoa, a really big shoe...
+Is it a sign？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It seems we can go inside, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yes. In fact, if I was 
-that size, I wonder how 
-tall I would be.</Dialog>
-          <Dialog>Hmm... Maybe around 100m？</Dialog>
-          <Dialog>Can you imagine something 
-like that？ I want to 
-experience that view.</Dialog>
+          <Dialog>You could fit right inside
+that,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Yes. If someone actually had
+feet that size, how tall
+would they be, I wonder？</Dialog>
+          <Dialog>Hmm... about 100 meters？</Dialog>
+          <Dialog>......I can't picture it.
+But I'd kind of like to see
+the view from up there.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6072,20 +6074,20 @@ experience that view.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That postman's red bike 
-it's cute.</Dialog>
+          <Dialog>That red motorbike the mail
+carrier rides is so cute.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Cute？ Not cool？</Dialog>
-          <Dialog>Yeah, cute. When I was in 
-elementary school, I wanted 
+          <Dialog>Yes, cute. When I was in
+elementary school, I wanted
 to ride one.</Dialog>
-          <Dialog>Riding a motorcycle would 
-be quickly for us 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Would I look good riding 
-one？ I'm kidding.</Dialog>
-          <Dialog>(I might want to look at 
-you...)</Dialog>
+          <Dialog>You, zipping around on a
+motorbike,
+▲高嶺＊＊▲...</Dialog>
+          <Dialog>Would it suit me？ Just
+kidding.</Dialog>
+          <Dialog>(I kind of want to see
+that？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6139,18 +6141,17 @@ you...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, a mover... A moving 
-store sounds like a 
-difficult job, doesn't it？</Dialog>
+          <Dialog>Ah, someone's moving...
+Movers have it hard, don't
+they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes. That large bag 
-requires a lot of people 
-to carry it blows my mind.</Dialog>
-          <Dialog>...When I move, would I 
-require less people？</Dialog>
-          <Dialog>Huh, are you moving？</Dialog>
-          <Dialog>Not now, I meant in the 
-future.</Dialog>
+          <Dialog>Yeah. They have to carry
+huge stuff with just a few
+people.</Dialog>
+          <Dialog>...When I move, I'll keep my
+things to a minimum, okay？</Dialog>
+          <Dialog>Huh, you're moving？</Dialog>
+          <Dialog>No, I mean in the future.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6202,15 +6203,13 @@ future.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah, a doggy.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ Does it have an 
-owner？</Dialog>
-          <Dialog>Yes... Ah. Its stopping 
-at the pedestrian 
-crosswalk.</Dialog>
-          <Dialog>A dog that takes a walk 
-at will...</Dialog>
-          <Dialog>That kind of dog it's 
-amazing.</Dialog>
+          <Dialog>Huh？ Isn't there an owner？</Dialog>
+          <Dialog>No... Ah. It stopped
+properly at the crosswalk.</Dialog>
+          <Dialog>A dog walking itself,
+wherever it likes...</Dialog>
+          <Dialog>So there are dogs like that.
+Amazing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6269,20 +6268,18 @@ amazing.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>A courier is always 
-running, isn't it？</Dialog>
+          <Dialog>Delivery people are always
+running, aren't they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Certainly, they do have 
-that image, and I saw it 
-earlier.</Dialog>
-          <Dialog>Is that a rule？</Dialog>
-          <Dialog>I don't think it's like 
-that... I hope？</Dialog>
-          <Dialog>He seems to be physically 
-strong, right？ Should I 
-try that kind of workout 
-in my training？</Dialog>
-          <Dialog>(How would you do that？)</Dialog>
+          <Dialog>That's definitely the image.
+I saw one earlier too.</Dialog>
+          <Dialog>Is that a rule, I wonder？</Dialog>
+          <Dialog>I don't think so... but who
+knows？</Dialog>
+          <Dialog>They must get really fit,
+right？ ...Maybe I'll add
+that to my training？</Dialog>
+          <Dialog>(Training... how？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6337,16 +6334,15 @@ in my training？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, that car was being 
-moved by a tow truck...</Dialog>
+          <Dialog>Hey, that car being towed by
+the tow truck just now...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, it sure is.</Dialog>
-          <Dialog>It might have been Papa's 
+          <Dialog>Uh-huh.</Dialog>
+          <Dialog>It might have been Papa's
 car.</Dialog>
-          <Dialog>Huh... Eh！</Dialog>
-          <Dialog>It might have been a 
-mistake because it was just 
-a moment. I don't know...</Dialog>
+          <Dialog>Huh... What！</Dialog>
+          <Dialog>It was just for a second, so
+I might be wrong...</Dialog>
           <Dialog>(If so, that would be 
 tough...)</Dialog>
         </Dialogs>
@@ -6403,18 +6399,19 @@ tough...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... Hey, the person 
-around the corner now... 
-Didn't she look like me？</Dialog>
+          <Dialog>Ah... Hey, the woman who
+just turned the corner...
+didn't she look just like
+me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Her clothes are the same, 
-aren't they？</Dialog>
-          <Dialog>Not that... It's like an 
-adult version of me...</Dialog>
-          <Dialog>Huh！ Where！ I'll go after 
+          <Dialog>You mean not just the same
+clothes or something？</Dialog>
+          <Dialog>No. Like me, but a little
+more grown up...</Dialog>
+          <Dialog>！ Where！ Let's go after
 her！</Dialog>
-          <Dialog>.....No.</Dialog>
-          <Dialog>(She got jealous...)</Dialog>
+          <Dialog>......No.</Dialog>
+          <Dialog>(Jealous much...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6472,19 +6469,18 @@ her！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, have you been to a 
+          <Dialog>Hey, have you ever been to a
 public bath？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Not yet. And you, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>No, so I thought I'd like 
-to go there once.</Dialog>
-          <Dialog>Then, today, just the two 
-of us--！</Dialog>
-          <Dialog>It sounds interesting, 
-but... I'm sure Mama and 
-Papa would be surprised. 
-Forgive me for asking.</Dialog>
+          <Dialog>What about you,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Never. So I'd like to try it
+once.</Dialog>
+          <Dialog>Then today, the two of
+us――！</Dialog>
+          <Dialog>Sounds fun, but... Papa and
+Mama would be shocked. Maybe
+they'd allow it if I asked.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6543,22 +6539,21 @@ Forgive me for asking.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Someone is washing their 
-hair at the barber... 
-I wonder why they wash it 
-facing down.</Dialog>
+          <Dialog>I saw someone getting their
+hair washed at that
+barber... They wash it
+face-down？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I see. That's because 
-the beauty parlor is in the 
-back.</Dialog>
-          <Dialog>Does your face get splashed 
-with hot water？</Dialog>
-          <Dialog>It's not recommended to 
-women who are wearing 
-makeup.</Dialog>
-          <Dialog>I see... I think that might 
-be interesting.</Dialog>
-          <Dialog>(Do you want to go？)</Dialog>
+          <Dialog>Ah, right. At beauty salons
+it's face-up.</Dialog>
+          <Dialog>Doesn't the water get on
+your face？</Dialog>
+          <Dialog>It does, it does. So I
+wouldn't recommend it for
+women wearing makeup.</Dialog>
+          <Dialog>Hmm... That might be kind of
+fun.</Dialog>
+          <Dialog>(She wants to try it？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6613,18 +6608,18 @@ be interesting.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？ Did something shine 
-just now？</Dialog>
+          <Dialog>？ Did something just
+flash？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？　Oh, really. 
-It's like a Morse code... 
-What's the message？</Dialog>
+          <Dialog>Hm？ Oh, yeah. Like Morse
+code... some kind of
+signal？</Dialog>
           <Dialog>......</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>How should I study Morse 
-code？</Dialog>
-          <Dialog>(Are you also interested 
-in that...？)</Dialog>
+          <Dialog>...How do you learn Morse
+code, I wonder？</Dialog>
+          <Dialog>(She's interested in that
+too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6678,19 +6673,17 @@ in that...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, contrails.</Dialog>
+          <Dialog>Ah, a contrail.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>They remain for a long 
-time without erasing, 
-which means that the 
-weather is downhill.</Dialog>
+          <Dialog>If it stays without fading,
+that means the weather's
+going to turn bad.</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>It's because the sky is 
-damp！.. I just saw 
-something.</Dialog>
-          <Dialog>That's right. Then I'll 
-go tell someone else what 
-you told me.</Dialog>
+          <Dialog>Because it means the upper
+air is humid！ ...I saw it
+somewhere. By chance.</Dialog>
+          <Dialog>I see. Then next time, I'll
+teach someone.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6744,17 +6737,18 @@ you told me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The girl who just waved 
-from the bus, wasn't she 
-cute？</Dialog>
+          <Dialog>The girl who waved at us
+from the bus was cute,
+wasn't she？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>When I looked back, 
-I waved back.</Dialog>
-          <Dialog>Yes. I really understand 
-how you feel, it's fun to 
-look back.</Dialog>
-          <Dialog>Yay, ▲Takane＊＊▲~▼</Dialog>
-          <Dialog>Yay▼ Hehehe！</Dialog>
+          <Dialog>When we waved back, she
+waved twice as hard.</Dialog>
+          <Dialog>Yes. I totally get how she
+felt. It's fun when someone
+waves back.</Dialog>
+          <Dialog>Yaaay,
+▲高嶺＊＊▲～▼</Dialog>
+          <Dialog>Yeees▼ Hehehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
