@@ -96,31 +96,26 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay, it's time to go home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
+          <Dialog>Okay, time to go home.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
           <Dialog>▲Takane＊＊▲！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>I'm going home now, 
-why don't we go back 
-together？</Dialog>
-          <Dialog>Yes！ Ah, umm...</Dialog>
-          <Dialog>Huh？ Do you have something 
-to do？</Dialog>
-          <Dialog>No, not really... It's just 
-that I couldn't help it 
-and said it loud... Shall 
-we go？</Dialog>
-          <Dialog>I'm busy today... Maybe 
-next time. Then we can 
-take any detour we want. 
-I'm kidding.</Dialog>
-          <Dialog>(Welp, I can't do anything 
-about it...)</Dialog>
-          <Dialog>(Well, today is fine.)</Dialog>
+          <Dialog>I'm heading home now. Want
+to come with me？</Dialog>
+          <Dialog>Yes！ Ah...</Dialog>
+          <Dialog>Hm？ Something you need to
+do？</Dialog>
+          <Dialog>No, it's not that... I said
+it so loudly without
+thinking... Let's go？</Dialog>
+          <Dialog>I'm in a hurry today... Next
+time. Then I'll even allow a
+detour. Just kidding.</Dialog>
+          <Dialog>(Can't be helped...)</Dialog>
+          <Dialog>(I'll skip it today.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -208,27 +203,23 @@ about it...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, time to home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
+          <Dialog>All right, time to head
+home.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
           <Dialog>Hey, over here.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Why don't we go back home 
-together？</Dialog>
-          <Dialog>Yes, gladly. I was looking 
-forward for this, because 
-I wanted to go back home 
-with you.</Dialog>
-          <Dialog>You took the effort to 
-invite me, but today isn't 
-possible... Let's go home 
+          <Dialog>Want to walk home together？</Dialog>
+          <Dialog>Yes, gladly. I was looking
+for you too, so we could
+walk home together.</Dialog>
+          <Dialog>Thanks for asking, but today
+I can't... Let's walk home
 together next time, okay？</Dialog>
-          <Dialog>(Well, there are days like 
-this...)</Dialog>
-          <Dialog>(Well, it's okay...)</Dialog>
+          <Dialog>(Some days are like this...)</Dialog>
+          <Dialog>(Oh well...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -312,25 +303,23 @@ this...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay then, I think I'll 
-go home now...</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Heey！</Dialog>
+          <Dialog>Well, guess I'll head
+home...</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
-          <Dialog>Why don't we go back home 
-together？</Dialog>
-          <Dialog>Yes, I'll go with anywhere 
-with you▼</Dialog>
-          <Dialog>I'm busy today... Why don't 
-we go back together next 
-time？</Dialog>
-          <Dialog>(That's a surprise...)</Dialog>
-          <Dialog>(I don't feel like going 
-back yet.)</Dialog>
+          <Dialog>Yes？</Dialog>
+          <Dialog>If you're heading home, want
+to go together？</Dialog>
+          <Dialog>Yes, I'll join you▼</Dialog>
+          <Dialog>I'm in a hurry today... Next
+time, let's definitely walk
+home together？</Dialog>
+          <Dialog>(Oh well...)</Dialog>
+          <Dialog>(I'm not in the mood
+today...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -405,24 +394,21 @@ back yet.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think I'll go home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Why don't we go back home 
-together 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Guess I'll head home.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>▲高嶺＊＊▲.
+I'm heading home, let's walk
+together.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Sure, I have plenty of time 
-today. Let's take our time 
-while walking, okay？</Dialog>
-          <Dialog>I don't think is a good 
-idea today. See you later.</Dialog>
-          <Dialog>(I was refused...)</Dialog>
-          <Dialog>(It's okay, there'll be a 
-next time...)</Dialog>
+          <Dialog>Sure. I have plenty of time
+today. Let's take it slow？</Dialog>
+          <Dialog>I think I'll pass today. See
+you.</Dialog>
+          <Dialog>(Turned down...)</Dialog>
+          <Dialog>(Oh well, whatever...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -497,21 +483,20 @@ next time...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>*Phew* ...I'll go back home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Are you going back home？</Dialog>
+          <Dialog>*Yawn*... Time to go home.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Heading home now？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That's right...</Dialog>
-          <Dialog>I want to go home with you, 
-too. Shall we head back？</Dialog>
-          <Dialog>I'm sorry, today is no 
-good. See you.</Dialog>
-          <Dialog>(It was not good today...)</Dialog>
-          <Dialog>(I can see her anytime, 
-so it's fine.)</Dialog>
+          <Dialog>Yes...</Dialog>
+          <Dialog>I'd like to walk home with
+you. Let's go？</Dialog>
+          <Dialog>Sorry, today's not good.
+Bye.</Dialog>
+          <Dialog>(No luck...)</Dialog>
+          <Dialog>(I can see her anytime...
+it's fine.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -591,26 +576,23 @@ so it's fine.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think it's a good time 
-to go back home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Hello. Are you heading 
-home now 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Guess I'll head home soon.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>▲高嶺＊＊▲.
+You're heading home too,
+right？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That's right. Are you 
-inviting me to go back 
-home with you？</Dialog>
-          <Dialog>That's correct.</Dialog>
-          <Dialog>Well then, let's go.</Dialog>
-          <Dialog>But it's not good today. 
-Sorry.</Dialog>
-          <Dialog>(It seems I'm going back 
+          <Dialog>Yes. Is this an invitation
+to walk home together？</Dialog>
+          <Dialog>That's right.</Dialog>
+          <Dialog>Then let's go.</Dialog>
+          <Dialog>But I can't today. Sorry.</Dialog>
+          <Dialog>(Guess I'm going home
 alone...)</Dialog>
-          <Dialog>(I feel lonely, somehow...)</Dialog>
+          <Dialog>(Somehow, I feel like being
+alone...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -680,22 +662,20 @@ alone...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's late, I have to start 
-heading back...</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Heey, ▲Takane＊＊▲！</Dialog>
+          <Dialog>Already this late...</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey,
+▲高嶺＊＊▲.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>If you'd like, let's go 
+          <Dialog>If it's okay, let's walk
 home together.</Dialog>
-          <Dialog>...It's not a good time, 
-so I'm not going home yet.</Dialog>
-          <Dialog>(It's not good, or...)</Dialog>
-          <Dialog>(I should leave her 
-alone...)</Dialog>
+          <Dialog>...It's not okay. So I'm not
+walking with you.</Dialog>
+          <Dialog>(Not okay, huh...)</Dialog>
+          <Dialog>(Better leave her alone...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -765,21 +745,19 @@ alone...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, I need a plan after 
-getting home...</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
+          <Dialog>Um, my plans after I get
+home...</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
           <Dialog>Over here！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Ah...</Dialog>
-          <Dialog>Were you planning to go 
-home now？</Dialog>
-          <Dialog>Yes. But, I want to go 
-back alone.</Dialog>
-          <Dialog>(Oh well...)</Dialog>
-          <Dialog>(Let's not disturb her...)</Dialog>
+          <Dialog>Heading home now？</Dialog>
+          <Dialog>Yes... but I want to go home
+alone.</Dialog>
+          <Dialog>(Sigh...)</Dialog>
+          <Dialog>(I'll leave it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -849,20 +827,18 @@ back alone.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Alright, I'm going back 
-home.</Dialog>
-          <Dialog>(Ah, ▲Takane＊＊▲ 
-is over there...)</Dialog>
-          <Dialog>Let's go back together</Dialog>
-          <Dialog>I'm going back alone</Dialog>
-          <Dialog>Hey, do you have a minute？</Dialog>
+          <Dialog>All right, going home.</Dialog>
+          <Dialog>(Ah, ▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Ask her to walk home</Dialog>
+          <Dialog>Go home alone</Dialog>
+          <Dialog>Hey, got a minute？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...What's the matter？</Dialog>
-          <Dialog>I thought about going back 
-home with you.</Dialog>
-          <Dialog>I'm busy right now...</Dialog>
-          <Dialog>(She seems pretty cranky...)</Dialog>
-          <Dialog>(I pass this once...)</Dialog>
+          <Dialog>...What do you want？</Dialog>
+          <Dialog>I thought we could walk home
+together.</Dialog>
+          <Dialog>I'm in a hurry...</Dialog>
+          <Dialog>(She seems pretty grumpy...)</Dialog>
+          <Dialog>(I'll pass this time...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -946,25 +922,22 @@ home with you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wait a minute, please.</Dialog>
+          <Dialog>Wait a second.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>I saw you while you went 
-back home, so I chased 
-after you. Can I go with 
-you？</Dialog>
-          <Dialog>Sure, let's go home 
-together</Dialog>
-          <Dialog>Sorry, today is a little...</Dialog>
-          <Dialog>Sure, let's go home 
+          <Dialog>I saw you heading home, so I
+chased after you. Can I come
+with you？</Dialog>
+          <Dialog>Sure, let's walk home</Dialog>
+          <Dialog>Sorry, not today...</Dialog>
+          <Dialog>Sure, let's walk home
 together.</Dialog>
-          <Dialog>Hehe, it was worth running 
-to catch you.</Dialog>
-          <Dialog>Today, I want to go home 
-alone. I'm sorry...</Dialog>
-          <Dialog>I see... I'm sorry to hold 
+          <Dialog>Hehe, running was worth it.</Dialog>
+          <Dialog>I want to go home alone
+today. Sorry...</Dialog>
+          <Dialog>I see... Sorry for stopping
 you.</Dialog>
-          <Dialog>Sorry. See you later.</Dialog>
+          <Dialog>Sorry. See you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1048,24 +1021,19 @@ you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What a happy coincidence 
-▲主人公＊▲</Dialog>
+          <Dialog>▲主人公＊▲.
+...What a coincidence.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You're right. Were you 
-going back home？</Dialog>
-          <Dialog>Yes. Hey, can I go home 
+          <Dialog>Yeah. Heading home？</Dialog>
+          <Dialog>Yes. Hey, can I walk home
 with you？</Dialog>
-          <Dialog>Okay, let's go back 
-together</Dialog>
-          <Dialog>I'm sorry, today is...</Dialog>
-          <Dialog>Sure, let's go back 
-together.</Dialog>
-          <Dialog>I'm so happy.</Dialog>
-          <Dialog>There's a lot going on 
-today, so...</Dialog>
-          <Dialog>Is it that bad？ Well then, 
-see you next time.</Dialog>
-          <Dialog>Yup.</Dialog>
+          <Dialog>Sure, let's walk home</Dialog>
+          <Dialog>Sorry, not today...</Dialog>
+          <Dialog>Sure. Let's go.</Dialog>
+          <Dialog>Yay.</Dialog>
+          <Dialog>A lot's going on today...</Dialog>
+          <Dialog>Not today？ Then, next time.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1145,24 +1113,21 @@ see you next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Whassup, it's me, Manaka.</Dialog>
+          <Dialog>Yo, it's Manaka.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Whassup.</Dialog>
-          <Dialog>I was waiting for you, 
-so we could go back home 
-together. What do you say？</Dialog>
-          <Dialog>Sure, let's go home 
-together</Dialog>
-          <Dialog>Sorry, but today is...</Dialog>
-          <Dialog>Okay. You went out of your 
-way to wait for me after 
-all.</Dialog>
-          <Dialog>It's because I wanted to 
-be with you▼</Dialog>
-          <Dialog>Sorry, today is no good.</Dialog>
-          <Dialog>Is it impossible？ It's a 
-pity then...</Dialog>
-          <Dialog>I'm sorry. Well then...</Dialog>
+          <Dialog>Yo.</Dialog>
+          <Dialog>I waited so we could walk
+home together. How about
+it？</Dialog>
+          <Dialog>Sure, let's walk home</Dialog>
+          <Dialog>Sorry, not today...</Dialog>
+          <Dialog>Sure. You waited for me,
+huh.</Dialog>
+          <Dialog>Because I want to be with
+you▼</Dialog>
+          <Dialog>Sorry, today's not good.</Dialog>
+          <Dialog>Can't？ Too bad...</Dialog>
+          <Dialog>Sorry. See you...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1212,15 +1177,15 @@ pity then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good morning. It's such a 
-nice day.</Dialog>
+          <Dialog>Good morning. Lovely
+morning, isn't it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Good morning, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Do you want to go with me？ 
-We can talk while walking.</Dialog>
-          <Dialog>Yes, let's get going.</Dialog>
-          <Dialog>Yay, let's go.</Dialog>
+          <Dialog>Good morning,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Let's walk together？ And
+talk.</Dialog>
+          <Dialog>Yeah, let's get going.</Dialog>
+          <Dialog>Yes, let's.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1270,18 +1235,18 @@ We can talk while walking.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good morning. I've been 
-waiting for you.</Dialog>
+          <Dialog>Good morning, I've been
+waiting.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Good morning. Were you 
-waiting too much 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Not much. I think it's more 
-fun to go to school 
-together, won't you agree？</Dialog>
+          <Dialog>Morning,
+▲高嶺＊＊▲.
+You were waiting for me？</Dialog>
+          <Dialog>Yes, going to school
+together is more fun,
+right？</Dialog>
           <Dialog>I see. All right, let's go！</Dialog>
-          <Dialog>Hehe... I'm glad I waited 
-for you.</Dialog>
+          <Dialog>Geez, you're the one who
+showed up late... Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1331,17 +1296,14 @@ for you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good morning. I managed to 
-predict the right time you 
-arrive here.</Dialog>
+          <Dialog>Morning. I figured you'd be
+here about now.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Good morning, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>It's the right time indeed. 
-Shall we go？</Dialog>
-          <Dialog>Ah, I see. I had my timing 
-correct then.</Dialog>
-          <Dialog>Oh you, don't get ahead of 
+          <Dialog>Morning,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Perfect timing. Let's go？</Dialog>
+          <Dialog>Yeah. Nice timing, me.</Dialog>
+          <Dialog>Geez, you're so full of
 yourself.</Dialog>
         </Dialogs>
       </SDL2>
