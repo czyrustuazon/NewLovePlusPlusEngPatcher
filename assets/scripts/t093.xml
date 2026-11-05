@@ -32,13 +32,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How does it look？ 
-I thought you'd prefer the 
-shorter one but, does it 
-look good on me？</Dialog>
+          <Dialog>How is it？ I thought you
+might like it shorter... Did
+I guess right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well...</Dialog>
-          <Dialog>Of course！</Dialog>
+          <Dialog>Um...</Dialog>
+          <Dialog>Spot on！</Dialog>
           <Dialog>Not really...</Dialog>
         </Dialogs>
       </SDL2>
@@ -78,13 +77,13 @@ look good on me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How do you like my hair. 
-I tried shortening it, 
-but...</Dialog>
+          <Dialog>What do you think of my
+hair？ I took the plunge and
+cut it...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>I think it's good！</Dialog>
-          <Dialog>Maybe something else</Dialog>
+          <Dialog>I like it！</Dialog>
+          <Dialog>Not quite, maybe</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -123,12 +122,12 @@ but...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe. A shorter hair style 
-is cuter... I'm kidding.</Dialog>
+          <Dialog>Hehe. Short hair is cute,
+right... Just kidding.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Lemme see...</Dialog>
+          <Dialog>Um...</Dialog>
           <Dialog>Cute！</Dialog>
-          <Dialog>It was better before</Dialog>
+          <Dialog>I liked it better before</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -163,13 +162,13 @@ is cuter... I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This time I tried to make 
-it semi-long. I'd like to 
-hear your thoughts.</Dialog>
+          <Dialog>I went with medium-length.
+I'd like to hear what you
+think.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>It's nice</Dialog>
-          <Dialog>I don't like it much</Dialog>
+          <Dialog>Nice！</Dialog>
+          <Dialog>Not really my thing</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -204,14 +203,13 @@ hear your thoughts.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought about it a lot, 
-and I decided to leave it 
-this long... Does it look 
-weird？</Dialog>
+          <Dialog>I thought about it a lot and
+ended up at this length...
+Is it weird？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's not weird...</Dialog>
-          <Dialog>It's rather good！</Dialog>
-          <Dialog>But I don't like it</Dialog>
+          <Dialog>It's not weird, but...</Dialog>
+          <Dialog>In fact, it's great！</Dialog>
+          <Dialog>But it's not my type</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -246,13 +244,12 @@ weird？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought this length was 
-the best, but what do you 
-think？</Dialog>
+          <Dialog>I thought this length was
+best. What do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Um...</Dialog>
-          <Dialog>Yes, the best！</Dialog>
-          <Dialog>I think not</Dialog>
+          <Dialog>Yeah, the best！</Dialog>
+          <Dialog>It's kind of in-between</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -291,15 +288,13 @@ think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried this 'cause my hair 
-has grown, but what do you 
-think？ Mama told me it 
-looks good... Does it look 
-good？</Dialog>
+          <Dialog>My hair grew, so I tried
+this. Mama said it's nice...
+Does it suit me？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well...</Dialog>
+          <Dialog>Well, of course...</Dialog>
           <Dialog>It suits you perfectly！</Dialog>
-          <Dialog>It's somewhat strange</Dialog>
+          <Dialog>Something feels off</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -338,13 +333,13 @@ good？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried letting my hair 
-grow. This way I would 
-look more like a girl...</Dialog>
+          <Dialog>I let my hair grow out. I
+thought it might be nicer
+and more girly...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yup...</Dialog>
-          <Dialog>Good！ You look girlier！</Dialog>
-          <Dialog>Even if it's not long...</Dialog>
+          <Dialog>Yeah...</Dialog>
+          <Dialog>Yes！ I love girly！</Dialog>
+          <Dialog>It needn't be that long...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -383,14 +378,13 @@ look more like a girl...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How does this hairstyle 
-look？ I stretched it out 
-thinking that you might 
-be happy.</Dialog>
+          <Dialog>How is it？ This hairstyle.
+I grew it out thinking you'd
+like it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It was for me...？</Dialog>
-          <Dialog>I'm so happy！</Dialog>
-          <Dialog>I liked the other one</Dialog>
+          <Dialog>For me...？</Dialog>
+          <Dialog>That makes me so happy！</Dialog>
+          <Dialog>Before was fine, though</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -410,8 +404,9 @@ be happy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you. I'm so happy 
-to be praised.</Dialog>
+          <Dialog>Thank you. It really does
+make me happy to be
+complimented.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -435,9 +430,9 @@ to be praised.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad. I've always 
-been curious about what 
-you'd think.</Dialog>
+          <Dialog>I'm glad. I was wondering
+what you'd think the whole
+time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -457,8 +452,8 @@ you'd think.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？ Hehe... No, I'm 
-getting shy.</Dialog>
+          <Dialog>Really？ Hehe... Oh no, I
+can't stop grinning.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -478,8 +473,8 @@ getting shy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... Okay, I'll use it 
-as reference next time.</Dialog>
+          <Dialog>I see... Okay, I'll keep
+that in mind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -499,8 +494,8 @@ as reference next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... I should have 
-stopped before doing this.</Dialog>
+          <Dialog>I see... I shouldn't have
+done it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -520,8 +515,8 @@ stopped before doing this.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did I fail？ What should I 
-do now？</Dialog>
+          <Dialog>Did I mess up？ What do I
+do...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -560,12 +555,13 @@ do now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I changed my hair style. 
-What do you think？</Dialog>
+          <Dialog>Hey, look. I changed my
+hairstyle, what do you
+think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right...</Dialog>
-          <Dialog>Looks good！</Dialog>
-          <Dialog>It may not look good</Dialog>
+          <Dialog>Let's see...</Dialog>
+          <Dialog>It suits you！</Dialog>
+          <Dialog>Maybe it doesn't suit you</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -604,12 +600,13 @@ What do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried to change my hair 
-style to bright my mood.</Dialog>
+          <Dialog>Um, my hairstyle... I
+changed it, partly for a
+change of pace.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That hair style...</Dialog>
-          <Dialog>Is my favorite！</Dialog>
-          <Dialog>I think that's little...</Dialog>
+          <Dialog>That hairstyle...</Dialog>
+          <Dialog>I love it！</Dialog>
+          <Dialog>I'm not so sure...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -644,13 +641,13 @@ style to bright my mood.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, did you notice it？ 
+          <Dialog>Hey, you noticed, right？
 What do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>About you hair style 
-change...</Dialog>
-          <Dialog>It's good！</Dialog>
-          <Dialog>Not so good</Dialog>
+          <Dialog>You changed your
+hairstyle...</Dialog>
+          <Dialog>Nice！</Dialog>
+          <Dialog>Not great</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -690,7 +687,7 @@ change...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad I'm trying a lot 
+          <Dialog>I'm glad I tried all sorts
 of things...</Dialog>
         </Dialogs>
       </SDL2>
@@ -711,7 +708,7 @@ of things...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you. It's closer to 
+          <Dialog>Thank you. Is it closer to
 what you like？</Dialog>
         </Dialogs>
       </SDL2>
@@ -732,7 +729,7 @@ what you like？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, it that so？ I get it.</Dialog>
+          <Dialog>Ah, I see... Got it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -756,9 +753,8 @@ what you like？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Didn't you like it？ 
-I think I'll reconsider it 
-then.</Dialog>
+          <Dialog>You didn't like it？ Maybe
+I'll rethink it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -778,9 +774,8 @@ then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...So it's not the one. 
-It was hard choosing 
-after all.</Dialog>
+          <Dialog>...So this isn't it. It
+really is hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -819,13 +814,12 @@ after all.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about this color？ 
-I tried it as a change of 
-image.</Dialog>
+          <Dialog>How's this color？ Um...
+it's a makeover.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I think it's...</Dialog>
-          <Dialog>Looks great！</Dialog>
-          <Dialog>Not good</Dialog>
+          <Dialog>Yeah, this is...</Dialog>
+          <Dialog>It works！</Dialog>
+          <Dialog>Nope</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -864,13 +858,13 @@ image.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I changed the color of my 
-hair. Compared to before, 
-what do you think？</Dialog>
+          <Dialog>I changed my hair color.
+Compared to before, what do
+you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
           <Dialog>It's better now！</Dialog>
-          <Dialog>I liked the previous one</Dialog>
+          <Dialog>I liked the old one</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -909,13 +903,13 @@ what do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I changed the color of my 
-hair. How about it, do 
-you like it？</Dialog>
+          <Dialog>I changed my hair color. How
+is it, did it turn out
+well？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>This...</Dialog>
-          <Dialog>I like it！</Dialog>
-          <Dialog>It was a failure</Dialog>
+          <Dialog>This is...</Dialog>
+          <Dialog>Looks great！</Dialog>
+          <Dialog>Maybe a miss</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -960,16 +954,15 @@ you like it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I changed the 
-color of my hair a little.</Dialog>
+          <Dialog>Hey. I changed my hair color
+a little.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(...A little！？)</Dialog>
-          <Dialog>Mama tried to stop me, 
-but I thought it would 
-look good on me... 
-What do you think？</Dialog>
-          <Dialog>It's very good！</Dialog>
-          <Dialog>Do as your mom says</Dialog>
+          <Dialog>(...A little!?)</Dialog>
+          <Dialog>Mama tried to stop me, but I
+thought it'd suit me... What
+do you think？</Dialog>
+          <Dialog>It looks great！</Dialog>
+          <Dialog>Your mom was right</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1018,15 +1011,14 @@ What do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I tried this 
-hair color...</Dialog>
+          <Dialog>So, about this hair color...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...So you've taken the 
-plunge.</Dialog>
-          <Dialog>I know I been adventurous. 
-So, let's be honest here.</Dialog>
-          <Dialog>Looks fresh and good！</Dialog>
-          <Dialog>Too much adventure</Dialog>
+          <Dialog>...That's bold.</Dialog>
+          <Dialog>I know I'm being
+adventurous. So... be
+honest.</Dialog>
+          <Dialog>Fresh and nice！</Dialog>
+          <Dialog>Too adventurous</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1075,15 +1067,13 @@ So, let's be honest here.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... What do you think 
-about this？</Dialog>
+          <Dialog>Hey... any thoughts？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...What do you mean？</Dialog>
-          <Dialog>About this color of hair, 
-of course. Are you 
-surprised？</Dialog>
-          <Dialog>Yes, I am</Dialog>
-          <Dialog>I think it's...</Dialog>
+          <Dialog>...About what？</Dialog>
+          <Dialog>This hair color, of course.
+Did it surprise you？</Dialog>
+          <Dialog>I couldn't stop staring</Dialog>
+          <Dialog>It threw me a bit</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1107,9 +1097,9 @@ surprised？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Does this dress look good？ 
-It's different from usual, 
-so I don't know myself...</Dialog>
+          <Dialog>Hey. Do these clothes suit
+me？ They're different from
+usual, so I can't tell...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1129,9 +1119,9 @@ so I don't know myself...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sometimes I want to wear 
-clothes like this... Do you 
-think they look good？</Dialog>
+          <Dialog>Maybe clothes like this are
+okay once in a while... I
+wonder？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1155,10 +1145,9 @@ think they look good？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about these clothes？ 
-I tried to look at a 
-different magazine from 
-usual.</Dialog>
+          <Dialog>How are these clothes？ I
+used a different magazine
+than usual for ideas.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1202,15 +1191,14 @@ usual.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What do you think of these 
-clothes？ I tried to make 
-my image a little cleaner, 
-▲主人公＊▲.</Dialog>
+          <Dialog>▲主人公＊▲. Tell me what
+you think of these clothes？
+I went for an elegant look.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Um...</Dialog>
-          <Dialog>Looks good, neat and clean</Dialog>
-          <Dialog>No comments</Dialog>
-          <Dialog>Anything is fine</Dialog>
+          <Dialog>Nice, very elegant</Dialog>
+          <Dialog>No comment</Dialog>
+          <Dialog>Whatever's fine</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1250,14 +1238,14 @@ my image a little cleaner,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if clean fashion 
-suits me... What do you 
-think？</Dialog>
+          <Dialog>I wonder if neat, simple
+fashion suits me... What do
+you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What I think is...</Dialog>
-          <Dialog>Of course it looks good！</Dialog>
-          <Dialog>I don't like it</Dialog>
-          <Dialog>Whichever is okay</Dialog>
+          <Dialog>For me...</Dialog>
+          <Dialog>Of course it suits you！</Dialog>
+          <Dialog>Not my taste</Dialog>
+          <Dialog>Either way's fine</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1301,16 +1289,15 @@ think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What do you think of 
-clothes like this？ The 
-theme for it was neat and 
-clean girls... I'm kidding.</Dialog>
+          <Dialog>What do you think of clothes
+like this？ The theme is
+"elegant girl"... Just
+kidding.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, then it's...</Dialog>
-          <Dialog>It's perfect for you, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Not so good</Dialog>
-          <Dialog>Not that interesting</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>It's so ▲高嶺＊＊▲！</Dialog>
+          <Dialog>Not so great</Dialog>
+          <Dialog>Not interested</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1354,13 +1341,12 @@ clean girls... I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wanted to change the 
-atmosphere a little. 
-Don't you think this 
-dress is cute？</Dialog>
+          <Dialog>I wanted to change my vibe a
+bit. Don't you think these
+clothes are cute？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Lemme see...</Dialog>
-          <Dialog>Cute！ It's nice！</Dialog>
+          <Dialog>Um...</Dialog>
+          <Dialog>Cute！ Love it！</Dialog>
           <Dialog>Is it cute？</Dialog>
           <Dialog>Whatever</Dialog>
         </Dialogs>
@@ -1406,15 +1392,15 @@ dress is cute？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm tried to wear 
-something different than 
-usual... Do you like 
-clothes like this？</Dialog>
+          <Dialog>I tried wearing something
+different from usual... Do
+you like cute clothes like
+this？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My preference is...</Dialog>
-          <Dialog>Exactly this！</Dialog>
+          <Dialog>My taste is...</Dialog>
+          <Dialog>This is exactly it！</Dialog>
           <Dialog>Not like this</Dialog>
-          <Dialog>No preference</Dialog>
+          <Dialog>No real preference</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1458,13 +1444,13 @@ clothes like this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried to change my image. 
-Did I get cuter？</Dialog>
+          <Dialog>I tried changing my look.
+Did it come out cute？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well...</Dialog>
-          <Dialog>I think it's cute</Dialog>
-          <Dialog>A little</Dialog>
-          <Dialog>Everything is cute</Dialog>
+          <Dialog>Of course it's cute</Dialog>
+          <Dialog>It's a bit off</Dialog>
+          <Dialog>Anything's cute on you</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1508,13 +1494,13 @@ Did I get cuter？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I tried to wear casual 
-clothes. Do you like this？</Dialog>
+          <Dialog>I went with casual clothes.
+Is this your type？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My preference is...</Dialog>
-          <Dialog>Exactly this！</Dialog>
-          <Dialog>No, not this</Dialog>
-          <Dialog>Anything is fine</Dialog>
+          <Dialog>My taste is...</Dialog>
+          <Dialog>This, this！</Dialog>
+          <Dialog>No, that's not it</Dialog>
+          <Dialog>Any is fine</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1554,16 +1540,14 @@ clothes. Do you like this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did my image change a bit？ 
-If I wear this kind of 
-clothes, will I look more 
-active？</Dialog>
+          <Dialog>Did my image change？ In
+clothes like this, do I look
+more active？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Depending on whether are 
-you active or not...</Dialog>
-          <Dialog>Looks good！</Dialog>
-          <Dialog>It doesn't look good</Dialog>
-          <Dialog>I don't care</Dialog>
+          <Dialog>Never mind active...</Dialog>
+          <Dialog>It suits you！</Dialog>
+          <Dialog>Doesn't suit you</Dialog>
+          <Dialog>I don't care about clothes</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1607,12 +1591,11 @@ you active or not...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about this outfit？ 
-I feel different from 
-usual, so I tried to make 
-it more casual.</Dialog>
+          <Dialog>How's this outfit？ I went
+casual for a different vibe
+than usual.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Certainly, I think...</Dialog>
+          <Dialog>Definitely...</Dialog>
           <Dialog>It's good！</Dialog>
           <Dialog>It doesn't look good</Dialog>
           <Dialog>Anything is fine</Dialog>
@@ -1655,13 +1638,13 @@ it more casual.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is my best... Do you 
-feel excited about this？</Dialog>
+          <Dialog>This is my very best... Does
+it make your heart race？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Of course！</Dialog>
+          <Dialog>It does！</Dialog>
           <Dialog>Not really...</Dialog>
-          <Dialog>I don't get it</Dialog>
+          <Dialog>I'm not sure</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1701,14 +1684,13 @@ feel excited about this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, do you think 
-this outfit is... 
-Is it se-... Sexy？</Dialog>
+          <Dialog>Um, these clothes... are
+they s-sexy, do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
           <Dialog>Very sexy！</Dialog>
-          <Dialog>You'd better stop</Dialog>
-          <Dialog>What？</Dialog>
+          <Dialog>Better not</Dialog>
+          <Dialog>What do you mean？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1752,16 +1734,15 @@ Is it se-... Sexy？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm a little worried about 
-where you are staring, 
-but... Would you be happy 
-if I wear this kind of 
-clothes？</Dialog>
+          <Dialog>I'm a little worried about
+where you're looking, but...
+are you happy when I wear
+clothes like this？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>...</Dialog>
-          <Dialog>I'll be very happy！</Dialog>
-          <Dialog>I'm not that happy</Dialog>
-          <Dialog>I don't think so</Dialog>
+          <Dialog>Super happy！</Dialog>
+          <Dialog>Not happy</Dialog>
+          <Dialog>I don't feel anything</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1781,8 +1762,8 @@ clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you like this？ I'll 
-remember it.</Dialog>
+          <Dialog>You like this？ I'll
+remember that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1802,9 +1783,8 @@ remember it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm so happy... I was 
-nervous until I showed it 
-to you.</Dialog>
+          <Dialog>I'm so happy... I was
+nervous until I showed you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1824,8 +1804,7 @@ to you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My image change succeeded. 
-I'm glad.</Dialog>
+          <Dialog>Makeover success. I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1845,7 +1824,7 @@ I'm glad.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you for your honest 
+          <Dialog>Thank you for your honest
 opinion. *Phew*</Dialog>
         </Dialogs>
       </SDL2>
@@ -1870,9 +1849,8 @@ opinion. *Phew*</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. Then this is 
-wrong... Fashion is 
-difficult.</Dialog>
+          <Dialog>I see. Then this is out.
+...Fashion is hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1896,9 +1874,8 @@ difficult.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is that so？ I still don't 
-seem to understand you 
-then...</Dialog>
+          <Dialog>Really？ Seems I still don't
+understand you...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1918,8 +1895,8 @@ then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Your reply was 
-absolutely appropriate.</Dialog>
+          <Dialog>...That answer was totally
+careless.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1939,7 +1916,7 @@ absolutely appropriate.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry. If you're not 
+          <Dialog>Sorry. If you're not
 interested, it's fine.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1964,10 +1941,10 @@ interested, it's fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're not interested then. 
-It might be more of a 
-shock that being told it 
-doesn't suit me.</Dialog>
+          <Dialog>So you're not interested.
+That might be more of a
+shock than being told it
+doesn't suit me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1987,9 +1964,9 @@ doesn't suit me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Even though I decided 
-hesitantly, but this was 
-kind of stupid anyway...</Dialog>
+          <Dialog>I agonized over what to
+choose, and now I feel kind
+of stupid...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2009,8 +1986,8 @@ kind of stupid anyway...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It doesn't make sense if 
-you're not happy...</Dialog>
+          <Dialog>It's pointless if you're not
+happy with it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2030,9 +2007,9 @@ you're not happy...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I don't think that 
-kind of attitude is 
-good... Geez.</Dialog>
+          <Dialog>...I don't think that kind
+of attitude is good.
+...Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2072,14 +2049,13 @@ good... Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My outfit... Do you think 
-it stands out？</Dialog>
+          <Dialog>My clothes... are they too
+plain？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>It's good as it is</Dialog>
-          <Dialog>That kind of image might 
-not be good</Dialog>
-          <Dialog>I don't care</Dialog>
+          <Dialog>You're fine as you are</Dialog>
+          <Dialog>A change might be nice</Dialog>
+          <Dialog>I hadn't noticed</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2119,13 +2095,14 @@ not be good</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I always try to dress 
-neatly. What do you think？</Dialog>
+          <Dialog>I always try to dress
+elegantly. What do you
+think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm...</Dialog>
-          <Dialog>I think it's okay</Dialog>
-          <Dialog>I want different clothes</Dialog>
-          <Dialog>I don't think so</Dialog>
+          <Dialog>I think...</Dialog>
+          <Dialog>I think it's nice</Dialog>
+          <Dialog>Different clothes, maybe</Dialog>
+          <Dialog>No opinion really</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2169,16 +2146,14 @@ neatly. What do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what do you think 
-about my clothes？ How do 
-you like about this clean 
-fashion？</Dialog>
+          <Dialog>Hey, what kind of clothes do
+you like？ Today's elegant
+look？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think...</Dialog>
-          <Dialog>Yeah, it's good</Dialog>
-          <Dialog>Why not something 
-different？</Dialog>
-          <Dialog>Nothing changes</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>Yeah, keep it like this</Dialog>
+          <Dialog>Try something else？</Dialog>
+          <Dialog>It's all the same to me</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2222,14 +2197,14 @@ different？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like these cute clothes, 
-but I want to hear your 
-opinion.</Dialog>
+          <Dialog>I like cute outfits like
+this... but I'd like to hear
+your opinion.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Um...</Dialog>
           <Dialog>It's cute, so it's okay</Dialog>
-          <Dialog>Pick other clothes</Dialog>
-          <Dialog>No comment</Dialog>
+          <Dialog>Try something else</Dialog>
+          <Dialog>I have no opinion</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2273,14 +2248,14 @@ opinion.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What do you think of these 
-clothes？ Is cute suitable 
-for your tastes？</Dialog>
+          <Dialog>What do you think of these
+clothes？ Is cute your
+taste？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think...</Dialog>
-          <Dialog>It's okay！</Dialog>
-          <Dialog>Honestly, a little</Dialog>
-          <Dialog>No comment</Dialog>
+          <Dialog>Well...</Dialog>
+          <Dialog>It suits you fine！</Dialog>
+          <Dialog>Honestly, not quite</Dialog>
+          <Dialog>No opinion</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2320,14 +2295,14 @@ for your tastes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm trying to dress cutely, 
-but aren't you getting 
-tired of it？</Dialog>
+          <Dialog>I try to dress cute, but
+aren't you getting tired of
+it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>I like cute</Dialog>
-          <Dialog>A little</Dialog>
-          <Dialog>No comment</Dialog>
+          <Dialog>Cute is still best</Dialog>
+          <Dialog>Honestly, I'm tired of it</Dialog>
+          <Dialog>No opinion</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2367,14 +2342,13 @@ tired of it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think casual clothes are 
-good. What do you think？</Dialog>
+          <Dialog>I think casual clothes suit
+me, but maybe not？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Me？ Lemme see...</Dialog>
-          <Dialog>I'm glad you're trying 
-them</Dialog>
-          <Dialog>I don't like them</Dialog>
-          <Dialog>Who knows...？</Dialog>
+          <Dialog>Me？ Let's see...</Dialog>
+          <Dialog>I like it as it is</Dialog>
+          <Dialog>Actually, I didn't like it</Dialog>
+          <Dialog>Who knows？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2414,15 +2388,14 @@ them</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's easy to move in when 
-I'm wearing this kind of 
-clothes... What do you 
-think？</Dialog>
+          <Dialog>They're easy to move in, so
+I wear clothes like this...
+but what do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see, then...</Dialog>
-          <Dialog>I think it's good！</Dialog>
-          <Dialog>Don't look good</Dialog>
-          <Dialog>I'm not interested</Dialog>
+          <Dialog>Hmm, well...</Dialog>
+          <Dialog>I think it's great！</Dialog>
+          <Dialog>It doesn't suit you</Dialog>
+          <Dialog>Not that interested</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2466,15 +2439,15 @@ think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Shall I try a different 
-kind of fashion？ Maybe 
-it's not just casual I 
-must do.</Dialog>
+          <Dialog>Maybe I should try a
+different style？ Something
+besides casual might be
+nice.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Um...</Dialog>
-          <Dialog>I think it's good！</Dialog>
-          <Dialog>Change it...</Dialog>
-          <Dialog>I'll leave it to you</Dialog>
+          <Dialog>Stay like this！</Dialog>
+          <Dialog>Please change it...</Dialog>
+          <Dialog>Up to you</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2498,9 +2471,9 @@ must do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, if you're fine with 
-it, that's cool... Yup, 
-it's okay. I'm kidding.</Dialog>
+          <Dialog>Okay. If you like it, that's
+good enough. ...No, that's
+what I want. Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2524,9 +2497,9 @@ it's okay. I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？ I'm glad, but if 
-you like something else, 
-tell me please？</Dialog>
+          <Dialog>Really？ I'm happy, but if
+you'd like something
+different, tell me, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2546,8 +2519,8 @@ tell me please？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... Then, I'll 
-continue to dress this way.</Dialog>
+          <Dialog>I see... Then I'll stick
+with this style.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2567,9 +2540,8 @@ continue to dress this way.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, I see. The next time 
-I go shopping, I'll think 
-about it.</Dialog>
+          <Dialog>Ah... okay. I'll think about
+it next time I go shopping.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2593,9 +2565,8 @@ about it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it... I was 
-wondering if that was the 
-case.</Dialog>
+          <Dialog>I knew it... I had a feeling
+it wasn't right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2615,9 +2586,8 @@ case.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That so...？ Okay, I'm 
-looking forward for next 
-time.</Dialog>
+          <Dialog>I see... Okay, look forward
+to next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2637,8 +2607,8 @@ time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... I just wanted a 
-clearer opinion...</Dialog>
+          <Dialog>Mm... I wanted a clearer
+opinion...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2658,8 +2628,8 @@ clearer opinion...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wanted you to see me in 
-a different light...</Dialog>
+          <Dialog>I want you to really look at
+me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2679,7 +2649,8 @@ a different light...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't care anymore.</Dialog>
+          <Dialog>Geez, that doesn't tell me
+anything.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
