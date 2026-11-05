@@ -26,13 +26,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Today was a wonderful... 
-I wish we could have a 
-date like this again. 
-See you.</Dialog>
+          <Dialog>Today was a wonderful day...
+I hope we can have a date
+like this again. Bye.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We can do it again, and 
-again. See you.</Dialog>
+          <Dialog>We can, as many times as you
+want. See you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -61,12 +60,12 @@ again. See you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>See you... I'm so excited 
-tonight, and don't know 
-if I can sleep. I'm sure 
-it's because of our date.</Dialog>
+          <Dialog>Bye. ...If my heart's racing
+too much to sleep tonight,
+it's definitely the date's
+fault.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, just be careful.</Dialog>
+          <Dialog>Haha, get home safe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -91,13 +90,12 @@ it's because of our date.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't want to leave... 
-What would you do if I 
-said that？</Dialog>
+          <Dialog>I don't want to leave...
+What would you do if I said
+that？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha... If it happens, 
-then I'll think of 
-something.</Dialog>
+          <Dialog>Haha... But it can't be
+helped.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -122,10 +120,10 @@ something.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can go back from here. 
-Bye bye.</Dialog>
+          <Dialog>You can leave me here.
+Bye-bye.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yup. See you later then.</Dialog>
+          <Dialog>Yeah. See you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -150,11 +148,11 @@ Bye bye.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I feel a little lonely, 
-but our date is over.</Dialog>
+          <Dialog>I'm a little sad, but our
+date is over.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'll invite you again 
-soon. Bye bye.</Dialog>
+          <Dialog>I'll ask you out again.
+Bye-bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -183,11 +181,10 @@ soon. Bye bye.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From here I can go back. 
-I'll send you an email 
-you later, okay？</Dialog>
+          <Dialog>Well, this is where we part.
+I'll text you, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, I'll be waiting.</Dialog>
+          <Dialog>Yeah. I'll be waiting.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -212,7 +209,7 @@ you later, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay then, this is it.</Dialog>
+          <Dialog>Well, this is it.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Goodbye.</Dialog>
         </Dialogs>
@@ -239,10 +236,9 @@ you later, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez. I can go back from 
-here...</Dialog>
+          <Dialog>Geez, this is far enough...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see... Bye bye.</Dialog>
+          <Dialog>I see... Bye-bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -267,10 +263,9 @@ here...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well then, I'll be going 
-back home now.</Dialog>
+          <Dialog>Well, I'll head off here.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... okay then.</Dialog>
+          <Dialog>Phew... right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -297,7 +292,7 @@ back home now.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>See ya！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, see you later！</Dialog>
+          <Dialog>Yeah, see you！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -324,7 +319,7 @@ back home now.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Bye-bye.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, bye-bye.</Dialog>
+          <Dialog>Yeah, bye-bye！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -376,10 +371,10 @@ back home now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I just wanted to see your 
-face again.</Dialog>
+          <Dialog>I just wanted to see your
+face one more time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -404,9 +399,9 @@ face again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What happened？</Dialog>
+          <Dialog>What's up？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Just a little more...</Dialog>
+          <Dialog>Just a little longer... so.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -431,9 +426,9 @@ face again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh... what's wrong？</Dialog>
+          <Dialog>Ah... what？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... please, just...</Dialog>
+          <Dialog>Um... please.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -458,8 +453,7 @@ face again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Yes, this makes me 
-happy.</Dialog>
+          <Dialog>...Yes, I'm happy.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay...</Dialog>
         </Dialogs>
@@ -486,10 +480,10 @@ happy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you for listening 
-to my selfish requests.</Dialog>
+          <Dialog>Thank you for indulging my
+selfishness.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Don't worry, it's okay.</Dialog>
+          <Dialog>Don't mention it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -514,9 +508,9 @@ to my selfish requests.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... I love you...</Dialog>
+          <Dialog>Hey, I love you...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -541,11 +535,10 @@ to my selfish requests.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This will give me some 
-peace of mind...</Dialog>
+          <Dialog>Being like this makes me
+feel at ease...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Is that so？ That makes 
-me happy.</Dialog>
+          <Dialog>Yeah？ I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -572,7 +565,7 @@ me happy.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Thank you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You're welcome.</Dialog>
+          <Dialog>Don't worry about it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -597,10 +590,10 @@ me happy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We should continue this 
-on our next date... right？</Dialog>
+          <Dialog>The rest... on our next
+date, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes... that's right.</Dialog>
+          <Dialog>Yeah... Right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
