@@ -78,21 +78,20 @@
           <Dialog>Takane</Dialog>
           <Dialog>Ah, hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello. It's me. I was 
-wondering if you wanted 
-to meet me somewhere.</Dialog>
-          <Dialog>Yes, I also want to see 
-you.</Dialog>
-          <Dialog>Then let's meet at the 
-▲デート場所▲.</Dialog>
-          <Dialog>I'll be there right away. 
-I'll probably arrive 
-first, but you don't have 
-to hurry, all right...？</Dialog>
-          <Dialog>Ah... Sorry, I can't go 
-now.</Dialog>
-          <Dialog>Is that so？ I see. Then 
-talk to you later.</Dialog>
+          <Dialog>Hello, it's me. Hey, can we
+meet up now？</Dialog>
+          <Dialog>Yes, I was just thinking I
+wanted to see you too.</Dialog>
+          <Dialog>Then let's meet at
+▲デート場所▲ now.</Dialog>
+          <Dialog>I'll be right there. I'll
+get there first, so you
+don't have to rush... Just
+kidding.</Dialog>
+          <Dialog>Ah... Sorry, I can't right
+now. Too bad...</Dialog>
+          <Dialog>I see, got it. Next time,
+then.</Dialog>
           <Dialog>Um, I'm really sorry....</Dialog>
         </Dialogs>
       </SDL2>
@@ -170,17 +169,18 @@ talk to you later.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's me. Want to meet up？</Dialog>
+          <Dialog>It's me. Can we meet up
+now？</Dialog>
           <Dialog>I've... been wanting to 
 see you as well...</Dialog>
-          <Dialog>Then let's meet at the 
-▲デート場所▲.</Dialog>
-          <Dialog>Well, then... I'll see 
-you later, okay？</Dialog>
+          <Dialog>Then let's meet at
+▲デート場所▲ now.</Dialog>
+          <Dialog>Yes, see you then... Be
+careful, okay？</Dialog>
           <Dialog>Now...？ Sorry, I have 
 something else to do.</Dialog>
-          <Dialog>Is that so？ I see. Then, 
-talk to you later.</Dialog>
+          <Dialog>I see, got it. Next time,
+then.</Dialog>
           <Dialog>I'm so sorry... Let's 
 meet up next time.</Dialog>
         </Dialogs>
@@ -259,20 +259,20 @@ meet up next time.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello. What's up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I want to see you 
-right now. Is it okay？</Dialog>
+          <Dialog>Hey. Can we meet up now？ Is
+that okay？</Dialog>
           <Dialog>Yes, of course.</Dialog>
-          <Dialog>Then let's meet at the 
-▲デート場所▲.</Dialog>
+          <Dialog>Then let's meet at
+▲デート場所▲ now.</Dialog>
           <Dialog>Yes, I'm glad you said 
 you wanted to meet me... 
 Teehee...</Dialog>
           <Dialog>I can't... I can't go out 
 now.</Dialog>
-          <Dialog>Huh, it's a shame. Talk to 
-you later then.</Dialog>
-          <Dialog>I'm so sorry... Let's meet 
-next time.</Dialog>
+          <Dialog>I see, got it. Next time,
+then.</Dialog>
+          <Dialog>Sigh, too bad. Next time,
+then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -349,17 +349,15 @@ next time.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello. It's me. I was 
-wondering if you wanted 
-to meet me somewhere.</Dialog>
+          <Dialog>Hello, it's me. Hey, can we
+meet up now？</Dialog>
           <Dialog>Now...？ Yeah, it's fine.</Dialog>
-          <Dialog>Then see you at the 
+          <Dialog>Then see you at
 ▲デート場所▲.</Dialog>
-          <Dialog>Okay, got it. Well, talk 
-to you later.</Dialog>
+          <Dialog>Okay, got it. See you later.</Dialog>
           <Dialog>Ah... I can't go now.</Dialog>
-          <Dialog>Is that so？ Then it can't 
-be helped.</Dialog>
+          <Dialog>I see. Then it can't be
+helped.</Dialog>
           <Dialog>Yes, later.</Dialog>
         </Dialogs>
       </SDL2>
@@ -437,17 +435,16 @@ be helped.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I want to see you 
-right now. Is it okay？</Dialog>
+          <Dialog>It's me. Can we meet up
+now？</Dialog>
           <Dialog>Let me see... Okay, fine.</Dialog>
-          <Dialog>Then see you at the 
+          <Dialog>Then see you at
 ▲デート場所▲.</Dialog>
-          <Dialog>Okay. Well, talk to you 
-later.</Dialog>
+          <Dialog>Okay. See you later, then.</Dialog>
           <Dialog>I have something else to 
 do right now...</Dialog>
-          <Dialog>Is that so？ Then it can't 
-be helped.</Dialog>
+          <Dialog>I see. Then it can't be
+helped.</Dialog>
           <Dialog>Yes, sorry.</Dialog>
         </Dialogs>
       </SDL2>
@@ -525,17 +522,17 @@ be helped.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello？ What's up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I want to see you 
-right now. Is it okay？</Dialog>
-          <Dialog>Hmm, that's... okay.</Dialog>
-          <Dialog>Then see you at the 
+          <Dialog>Hey. Can we meet up now？ Is
+that okay？</Dialog>
+          <Dialog>Hmm... Okay.</Dialog>
+          <Dialog>Then see you at
 ▲デート場所▲.</Dialog>
           <Dialog>Got it. Talk to you later.</Dialog>
-          <Dialog>I can't. I'm very busy 
-now.</Dialog>
-          <Dialog>Is that so？ Then it can't 
-be helped.</Dialog>
-          <Dialog>Yes, sorry.</Dialog>
+          <Dialog>I can't. I'm a little tied
+up right now.</Dialog>
+          <Dialog>I see. Then it can't be
+helped.</Dialog>
+          <Dialog>Yes, see you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -592,12 +589,11 @@ be helped.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello. It's me. I was 
-wondering if you wanted to 
-meet me somewhere.</Dialog>
-          <Dialog>I don't want to see you, 
-though.</Dialog>
-          <Dialog>Really！？</Dialog>
+          <Dialog>Hello, it's me. Hey, can we
+meet up now？</Dialog>
+          <Dialog>I don't think I want to see
+you.</Dialog>
+          <Dialog>Really!?</Dialog>
           <Dialog>Yes, so... I'm hanging up. 
 Bye.</Dialog>
           <Dialog>(She seemed to be in a 
@@ -658,11 +654,10 @@ very bad mood...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Um... Hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I want to see you 
-right now. Is it okay？</Dialog>
-          <Dialog>No, I don't want to meet 
-you.</Dialog>
-          <Dialog>Really！？</Dialog>
+          <Dialog>It's me. Can we meet up
+now？</Dialog>
+          <Dialog>No. I don't want to see you.</Dialog>
+          <Dialog>Really!?</Dialog>
           <Dialog>Yes. Bye, I'm hanging up.</Dialog>
           <Dialog>(She seemed to be in a 
 very bad mood...)</Dialog>
@@ -722,13 +717,12 @@ very bad mood...)</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I want to see you 
-right now. Is it okay？</Dialog>
-          <Dialog>I don't want to meet you.</Dialog>
-          <Dialog>What！？ Why！？</Dialog>
-          <Dialog>I just don't want to meet 
-you. That's it. I'll hang 
-up.</Dialog>
+          <Dialog>Hey. Can we meet up now？ Is
+that okay？</Dialog>
+          <Dialog>I don't think I can.</Dialog>
+          <Dialog>What!? Why!?</Dialog>
+          <Dialog>Because I don't want to see
+you. I'm hanging up.</Dialog>
           <Dialog>(She seemed to be in a 
 very bad mood...)</Dialog>
         </Dialogs>
@@ -847,29 +841,26 @@ very bad mood...)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hello, this is Manaka. 
-Do you want to meet 
-somewhere right now？</Dialog>
+          <Dialog>Hello, it's Manaka. Can we
+meet up now？</Dialog>
           <Dialog>Now, huh...？</Dialog>
           <Dialog>Okay, that sounds good</Dialog>
-          <Dialog>Let's schedule a time</Dialog>
-          <Dialog>I'm sorry...</Dialog>
-          <Dialog>All right. I'll see you at 
-the ▲デート場所▲ then. 
-I'll hurry there.</Dialog>
-          <Dialog>You don't have to hurry... 
-No, you should... 
-I really want to see you 
-soon.</Dialog>
+          <Dialog>Pick a time</Dialog>
+          <Dialog>Sorry, not right now...</Dialog>
+          <Dialog>Okay. Then... at
+▲デート場所▲. I'll be
+right there.</Dialog>
+          <Dialog>You don't have to rush...
+No, actually, I want to see
+you right away.</Dialog>
           <Dialog>Haha. Roger that.</Dialog>
           <Dialog>Yes, that's fine.</Dialog>
-          <Dialog>Then at ▲時刻▲, 
-I'll see you at the 
-▲デート場所▲ then.</Dialog>
-          <Dialog>Sorry, I can't go now...</Dialog>
+          <Dialog>Then ▲時刻▲ at
+▲デート場所▲.</Dialog>
+          <Dialog>Sorry, I can't right now...</Dialog>
           <Dialog>Is that so...？ It can't 
 be helped.</Dialog>
-          <Dialog>Um, see you.</Dialog>
+          <Dialog>Yeah, next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -986,27 +977,24 @@ be helped.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hello. Emm, it's me... 
-Manaka. Do you want to 
-meet somewhere right now？</Dialog>
+          <Dialog>Hello. Um, it's... Manaka.
+Can we meet up now？</Dialog>
           <Dialog>Now, huh...？</Dialog>
           <Dialog>Okay, that sounds good</Dialog>
-          <Dialog>Let's schedule a time</Dialog>
-          <Dialog>I'm sorry...</Dialog>
-          <Dialog>All right. I'll see you at 
-▲デート場所▲ then.</Dialog>
-          <Dialog>Sorry that I want to meet 
-you all of a sudden.</Dialog>
-          <Dialog>It's okay. I'll see you 
-there.</Dialog>
+          <Dialog>Pick a time</Dialog>
+          <Dialog>Sorry, not right now...</Dialog>
+          <Dialog>Okay. Then... at
+▲デート場所▲.</Dialog>
+          <Dialog>Sorry, I just suddenly
+wanted to see you...</Dialog>
+          <Dialog>Yeah, me too. See you later.</Dialog>
           <Dialog>Yes, that's fine.</Dialog>
-          <Dialog>Then at ▲時刻▲, 
-I'll see you at 
-▲デート場所▲ then.</Dialog>
-          <Dialog>Sorry, I can't go now...</Dialog>
+          <Dialog>Then ▲時刻▲ at
+▲デート場所▲.</Dialog>
+          <Dialog>Sorry, I can't right now...</Dialog>
           <Dialog>Is that so...？ Sorry for 
 asking you all of a sudden.</Dialog>
-          <Dialog>Um, see you.</Dialog>
+          <Dialog>Yeah, next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1123,25 +1111,22 @@ asking you all of a sudden.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hello？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yo！ It's Manaka. I want 
-to hang out with you. 
-Are you busy？</Dialog>
+          <Dialog>Hey, it's Manaka. I want to
+see you now, how about it？</Dialog>
           <Dialog>Now, huh...？</Dialog>
           <Dialog>Okay, that sounds good</Dialog>
-          <Dialog>Let's schedule a time</Dialog>
-          <Dialog>I'm sorry...</Dialog>
-          <Dialog>All right. I'll see you at 
-the ▲デート場所▲ then.</Dialog>
-          <Dialog>Hehe, yay！ See you later.</Dialog>
+          <Dialog>Pick a time</Dialog>
+          <Dialog>Sorry, not right now...</Dialog>
+          <Dialog>Okay. Then... at
+▲デート場所▲.</Dialog>
+          <Dialog>Hehe, yay. See you later.</Dialog>
           <Dialog>Okay, later.</Dialog>
           <Dialog>Yes, that's fine.</Dialog>
-          <Dialog>Then at ▲時刻▲, 
-I'll see you at the 
-▲デート場所▲ then.</Dialog>
-          <Dialog>Sorry, I can't go now...</Dialog>
-          <Dialog>Is that so...？ Yeah, I 
-know, it was sudden.</Dialog>
-          <Dialog>Um, see you.</Dialog>
+          <Dialog>Then ▲時刻▲ at
+▲デート場所▲.</Dialog>
+          <Dialog>Sorry, I can't right now...</Dialog>
+          <Dialog>I see... Yes, it was sudden.</Dialog>
+          <Dialog>Yeah, next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
