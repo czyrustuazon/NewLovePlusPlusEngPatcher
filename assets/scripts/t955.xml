@@ -57,9 +57,9 @@
         <Dialogs>
           <Dialog>Invite today</Dialog>
           <Dialog>Invite on weekend</Dialog>
-          <Dialog>Okay. Now it's okay</Dialog>
-          <Dialog>Hmm... not convenient</Dialog>
-          <Dialog>Better next time</Dialog>
+          <Dialog>Yeah, sure</Dialog>
+          <Dialog>Hmm... I can't make it</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -95,9 +95,9 @@
         <Dialogs>
           <Dialog>Invite today</Dialog>
           <Dialog>Invite on weekend</Dialog>
-          <Dialog>Okay. Now it's okay</Dialog>
-          <Dialog>Hmm... not convenient</Dialog>
-          <Dialog>Better next time</Dialog>
+          <Dialog>Yeah, sure</Dialog>
+          <Dialog>Hmm... I can't make it</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -133,9 +133,9 @@
         <Dialogs>
           <Dialog>Invite today</Dialog>
           <Dialog>Invite on weekend</Dialog>
-          <Dialog>Okay. Now it's okay</Dialog>
-          <Dialog>Hmm... not convenient</Dialog>
-          <Dialog>Better next time</Dialog>
+          <Dialog>Yeah, sure</Dialog>
+          <Dialog>Hmm... I can't make it</Dialog>
+          <Dialog>Never mind</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
