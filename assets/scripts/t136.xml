@@ -17,7 +17,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are we meeting someone？</Dialog>
+          <Dialog>Am I meeting someone？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -37,8 +37,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup... sounds like fun, 
-right？</Dialog>
+          <Dialog>Yes... I'm excited？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -58,8 +57,8 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh... right now？　Okay, but 
-it's so sudden.。</Dialog>
+          <Dialog>Huh... right now？ Okay, but
+it's so sudden.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -79,8 +78,8 @@ it's so sudden.。</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice to meet you, I am 
-Takane Manaka.</Dialog>
+          <Dialog>Nice to meet you, I'm Manaka
+Takane.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -100,7 +99,7 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... your name is...</Dialog>
+          <Dialog>Um... and your name is...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -124,8 +123,8 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog> Nice to meet you, 
-▲紹介友達名▲.</Dialog>
+          <Dialog>▲紹介友達名▲. Nice to meet
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -145,7 +144,8 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry！　Um, please repeat.</Dialog>
+          <Dialog>Sorry！ Um, could you say it
+once more？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -169,8 +169,8 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice to meet you, 
-▲紹介友達名▲.</Dialog>
+          <Dialog>▲紹介友達名▲. Nice to meet
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -190,7 +190,7 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah...</Dialog>
+          <Dialog>Hmm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -210,8 +210,8 @@ Takane Manaka.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I know. Here, write it 
-down, please.</Dialog>
+          <Dialog>I know, then could you try
+writing it here？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -235,9 +235,8 @@ down, please.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, pleased to make your 
-acquaintance, 
-▲紹介友達名▲.</Dialog>
+          <Dialog>▲紹介友達名▲. Yes, very
+nice to meet you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -277,7 +276,7 @@ acquaintance,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, father.</Dialog>
+          <Dialog>Ah, his father.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -297,7 +296,7 @@ acquaintance,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, mother</Dialog>
+          <Dialog>Ah, his mother.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -317,7 +316,7 @@ acquaintance,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, onii-san.</Dialog>
+          <Dialog>Ah, his big brother.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -337,7 +336,7 @@ acquaintance,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, onee-san.</Dialog>
+          <Dialog>Ah, his big sister.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -498,8 +497,7 @@ Takane.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What is it, a lost and 
-found？</Dialog>
+          <Dialog>Did you drop something？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -539,7 +537,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nope！</Dialog>
+          <Dialog>Eek！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -579,7 +577,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No, geez... now？</Dialog>
+          <Dialog>Oh no, geez... now？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -599,7 +597,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>E-Excuse me！ What is it？</Dialog>
+          <Dialog>U-um！ What is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -619,7 +617,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, that something...</Dialog>
+          <Dialog>Ah, um, is something...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -659,7 +657,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>W-What is it？</Dialog>
+          <Dialog>Wh-what is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -679,7 +677,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？　What？</Dialog>
+          <Dialog>Huh？ Huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -699,7 +697,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wait, please stop！</Dialog>
+          <Dialog>Hey, please stop！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -719,7 +717,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What are you doing？</Dialog>
+          <Dialog>Is something on me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -739,7 +737,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Uh, what？</Dialog>
+          <Dialog>Um, what？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -779,7 +777,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes？　What's wrong？</Dialog>
+          <Dialog>Yes？ Can I help you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -799,7 +797,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, is there something...</Dialog>
+          <Dialog>Um, is something...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -819,7 +817,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wha- yeah？</Dialog>
+          <Dialog>Y-yes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -839,7 +837,7 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This way, please look.</Dialog>
+          <Dialog>Please look over here.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -859,8 +857,8 @@ found？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Excuse me, this way, please 
-look.</Dialog>
+          <Dialog>Excuse me, please look over
+here.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -880,7 +878,7 @@ look.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, hello.</Dialog>
+          <Dialog>Um, hellooo？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -900,9 +898,8 @@ look.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, if you stare at me too 
-much, I won't know what to 
-do...</Dialog>
+          <Dialog>Um, being stared at that
+much is kind of...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -922,8 +919,8 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... please, don't stare 
-at me so much...</Dialog>
+          <Dialog>Um... please don't stare at
+me like that...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -943,7 +940,7 @@ at me so much...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Embarrassing...</Dialog>
+          <Dialog>It's embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -963,8 +960,8 @@ at me so much...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What？　Wait, you're too 
-close.</Dialog>
+          <Dialog>Huh？ Um, aren't you a bit
+close？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -984,8 +981,8 @@ close.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, can we back away a 
-little more？</Dialog>
+          <Dialog>Um, could we step back a
+little？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1005,8 +1002,8 @@ little more？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, it's hard to talk to 
-you...</Dialog>
+          <Dialog>Um, it's hard to talk like
+this...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1026,7 +1023,7 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？ What's wrong？</Dialog>
+          <Dialog>Huh？ Is something wrong？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1046,7 +1043,8 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, what's going on？</Dialog>
+          <Dialog>Um, is something the
+matter？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1066,7 +1064,7 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, hello！　Hah...</Dialog>
+          <Dialog>Um, hellooo！ Haah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1086,7 +1084,7 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1106,7 +1104,8 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, let's just calm down！</Dialog>
+          <Dialog>Um, let's all calm down a
+little！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1146,7 +1145,7 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's right...</Dialog>
+          <Dialog>I see...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1166,7 +1165,7 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, yeah...</Dialog>
+          <Dialog>Um, hmm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1186,8 +1185,8 @@ you...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, well, you know, geez, 
-that's about it...</Dialog>
+          <Dialog>Um, well, geez, that's
+probably enough...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1207,8 +1206,8 @@ that's about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, you don't have to think 
-so much about it...</Dialog>
+          <Dialog>Um, you don't have to think
+so hard about it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1248,7 +1247,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, Dad.</Dialog>
+          <Dialog>Um, his father.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1268,7 +1267,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, mom.</Dialog>
+          <Dialog>Um, his mother.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1288,7 +1287,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, onii-san.</Dialog>
+          <Dialog>Um, his big brother.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1308,7 +1307,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, onee-san.</Dialog>
+          <Dialog>Um, his big sister.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1348,7 +1347,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I guess it is.</Dialog>
+          <Dialog>That's right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1388,7 +1387,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh.</Dialog>
+          <Dialog>Yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1508,7 +1507,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*sniff*.</Dialog>
+          <Dialog>Tee-hee.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1528,7 +1527,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, let's see...</Dialog>
+          <Dialog>Um, well...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1548,7 +1547,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What to do...</Dialog>
+          <Dialog>What do I do...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1568,7 +1567,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's a bit...</Dialog>
+          <Dialog>That's a little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1628,7 +1627,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good.</Dialog>
+          <Dialog>I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1648,7 +1647,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good to hear.</Dialog>
+          <Dialog>I'm glad to hear it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1688,7 +1687,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry for the inconvenience.</Dialog>
+          <Dialog>That's very kind of you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1708,7 +1707,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh...</Dialog>
+          <Dialog>Ehh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1728,7 +1727,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't think so.</Dialog>
+          <Dialog>Oh, no...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1768,7 +1767,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Too bad...</Dialog>
+          <Dialog>That's too bad...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1808,7 +1807,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hah...</Dialog>
+          <Dialog>Haah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1868,7 +1867,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So what？</Dialog>
+          <Dialog>And then？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1888,7 +1887,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh！</Dialog>
+          <Dialog>Whaaat！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1928,7 +1927,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is that so！？</Dialog>
+          <Dialog>Is that so!?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1948,7 +1947,7 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it true！？</Dialog>
+          <Dialog>Really!?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1988,8 +1987,8 @@ so much about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you his onii-san, by 
-any chance？</Dialog>
+          <Dialog>Could you be his older
+brother？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2009,8 +2008,7 @@ any chance？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you his father, by any 
-chance？</Dialog>
+          <Dialog>Could you be his father？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2030,8 +2028,8 @@ chance？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you his onee-san, by 
-any chance？</Dialog>
+          <Dialog>Could you be his older
+sister？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2051,8 +2049,7 @@ any chance？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you his mother, by any 
-chance？</Dialog>
+          <Dialog>Could you be his mother？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2092,7 +2089,7 @@ chance？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry, I just thought...</Dialog>
+          <Dialog>Sorry, I just assumed...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2132,8 +2129,8 @@ chance？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... what's it like to be 
-with him？</Dialog>
+          <Dialog>Um... what's your, you know,
+relationship with him？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2153,8 +2150,8 @@ with him？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then, perhaps you're his 
-father, I'm kidding.</Dialog>
+          <Dialog>Then, could you be his
+father... Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2174,7 +2171,7 @@ father, I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So, maybe it's you're his 
+          <Dialog>Then, could you be his
 little brother？</Dialog>
         </Dialogs>
       </SDL2>
@@ -2195,8 +2192,8 @@ little brother？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, you don't mean you're 
-his mother？</Dialog>
+          <Dialog>Um, you couldn't be his
+mother, could you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2216,8 +2213,8 @@ his mother？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So, maybe it's you're his 
-little sister？</Dialog>
+          <Dialog>Um, could you be his little
+sister？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2237,8 +2234,7 @@ little sister？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, so you're a relative 
-or something？</Dialog>
+          <Dialog>Huh, then maybe a relative？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2258,10 +2254,10 @@ or something？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Once again, my name is 
-Takane Manaka, and I am 
-dating him. I am pleased 
-to make your acquaintance.</Dialog>
+          <Dialog>Let me introduce myself
+properly. I'm Manaka Takane,
+and I'm dating him. It's
+very nice to meet you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2281,7 +2277,7 @@ to make your acquaintance.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, he looks a lot like his 
+          <Dialog>Um, he really looks like his
 father.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2302,8 +2298,7 @@ father.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, nice to meet you... 
-mother.</Dialog>
+          <Dialog>Um, nice to meet you... Mrs.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2323,8 +2318,8 @@ mother.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You two are, well, similar, 
-aren't you？ Hehe.</Dialog>
+          <Dialog>You two really look alike.
+Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2344,7 +2339,8 @@ aren't you？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, please take care of me.</Dialog>
+          <Dialog>Um, it's very nice to meet
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2364,7 +2360,7 @@ aren't you？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice to meet you, okay？</Dialog>
+          <Dialog>Nice to meet you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2384,9 +2380,9 @@ aren't you？ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice to meet you, huh？　
-He looks just like his 
-father, doesn't he？</Dialog>
+          <Dialog>Nice to meet you？ You look
+just like your dad, don't
+you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2406,8 +2402,9 @@ father, doesn't he？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Nice to meet you, he has 
-been a great help.</Dialog>
+          <Dialog>Nice to meet you. Thank you
+for always looking after
+him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2447,7 +2444,7 @@ been a great help.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>They look a lot alike. Hehe.</Dialog>
+          <Dialog>You really look alike. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2467,8 +2464,8 @@ been a great help.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>They do look alike after 
-all. Hehe.</Dialog>
+          <Dialog>You really do look alike.
+Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2488,7 +2485,7 @@ all. Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*Yawn*... no...</Dialog>
+          <Dialog>Whoa... oh my...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2508,7 +2505,7 @@ all. Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*Yawn*...！！　It's so 
+          <Dialog>Whoa... !! How
 embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
@@ -2529,9 +2526,8 @@ embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, do you have a family 
-with a lot of skinship in 
-the house？</Dialog>
+          <Dialog>Um, so your family is very
+affectionate, then？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2551,8 +2547,7 @@ the house？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From here on out, it's a 
-pleasure.</Dialog>
+          <Dialog>Let's get along from now on.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2572,8 +2567,8 @@ pleasure.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From here on out, I'll be 
-under your care.</Dialog>
+          <Dialog>I look forward to getting to
+know you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2593,8 +2588,8 @@ under your care.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think I should change my 
-hair, after all...</Dialog>
+          <Dialog>Maybe I should change my
+hair after all...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2614,7 +2609,7 @@ hair, after all...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's weird, I knew it...</Dialog>
+          <Dialog>It's weird, isn't it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2634,8 +2629,7 @@ hair, after all...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's kind of lively, isn't 
-it？</Dialog>
+          <Dialog>It's lively here, isn't it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2675,7 +2669,7 @@ it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So can I ask you the same 
+          <Dialog>Then, can I ask you the same
 thing？</Dialog>
         </Dialogs>
       </SDL2>
@@ -2696,7 +2690,7 @@ thing？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's right.</Dialog>
+          <Dialog>I see.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2736,8 +2730,8 @@ thing？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have you known him for a 
-long time now？</Dialog>
+          <Dialog>Have you known him for a
+long time？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2777,8 +2771,8 @@ long time now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is he saying something 
-about me？</Dialog>
+          <Dialog>Does he say anything about
+me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2818,8 +2812,8 @@ about me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Still a bit embarrassing, 
-isn't it？</Dialog>
+          <Dialog>It's still a little
+embarrassing, huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2859,7 +2853,7 @@ isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you surprised？</Dialog>
+          <Dialog>Surprised？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2899,9 +2893,8 @@ isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is this the first time 
-you've done something like 
-this？</Dialog>
+          <Dialog>Is this your first time
+doing something like this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2921,9 +2914,9 @@ this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is the first time 
-you've done something like 
-this, right？</Dialog>
+          <Dialog>This is your first time
+doing something like this,
+isn't it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2943,8 +2936,8 @@ this, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's right, he did, 
-because he wouldn't tell me.</Dialog>
+          <Dialog>Oh, I see. He never tells me
+these things.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2964,7 +2957,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... no, nothing？</Dialog>
+          <Dialog>I see... no, it's nothing？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2984,7 +2977,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, I'm so embarrassed...</Dialog>
+          <Dialog>Geez, how embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3004,7 +2997,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry, this is how it is.</Dialog>
+          <Dialog>Sorry, this is how I am.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3044,7 +3037,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm not the only one, hehe.</Dialog>
+          <Dialog>So it's not just me, hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3064,7 +3057,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. I'm sorry.</Dialog>
+          <Dialog>I see, I'm sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3084,7 +3077,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, I know, I'm sorry.</Dialog>
+          <Dialog>Of course, I'm sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3124,7 +3117,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That is true, yes.</Dialog>
+          <Dialog>That's true, yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3164,7 +3157,8 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So it's been a while today？</Dialog>
+          <Dialog>So today's the first time in
+a while？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3184,7 +3178,7 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh, so that's it...</Dialog>
+          <Dialog>Huh, I see...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3204,8 +3198,9 @@ because he wouldn't tell me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. Well, then, today is 
-suddenly, right, I'm sorry.</Dialog>
+          <Dialog>I see. Then today was so
+sudden, wasn't it？ I'm
+sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3225,7 +3220,7 @@ suddenly, right, I'm sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see.　Right？ Yeah, I'm 
+          <Dialog>I see. Right？ Yeah, it's
 fine.</Dialog>
         </Dialogs>
       </SDL2>
@@ -3266,7 +3261,7 @@ fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's good.</Dialog>
+          <Dialog>I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3286,7 +3281,7 @@ fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then I'm glad to hear it.</Dialog>
+          <Dialog>Then I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3306,8 +3301,8 @@ fine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？ Really？　A little 
-relieved.</Dialog>
+          <Dialog>Huh？ Really？ That's a bit
+of a relief.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3327,8 +3322,8 @@ relieved.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... I am a little 
-relieved.</Dialog>
+          <Dialog>Really... that's a bit of a
+relief.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3348,8 +3343,8 @@ relieved.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, not yet, it's less than 
-a year...</Dialog>
+          <Dialog>Um, it hasn't even been a
+year yet...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3369,8 +3364,8 @@ a year...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We have not even been 
-together for a year.</Dialog>
+          <Dialog>We haven't even been
+together a year yet.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3390,8 +3385,8 @@ together for a year.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, it's been over a 
-year... time goes fast.</Dialog>
+          <Dialog>It's already been over a
+year... that went fast.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3411,8 +3406,7 @@ year... time goes fast.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, it has been over a 
-year.</Dialog>
+          <Dialog>Yes, it's been over a year.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3432,8 +3426,8 @@ year.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, I can't believe it 
-has been this long...</Dialog>
+          <Dialog>Oh, a really long time...
+Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3453,7 +3447,7 @@ has been this long...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We've been together for a 
+          <Dialog>We've been together a pretty
 long time now...</Dialog>
         </Dialogs>
       </SDL2>
@@ -3474,9 +3468,9 @@ long time now...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I knew he would 
-always be there for me when 
-I wanted to see him...</Dialog>
+          <Dialog>Um... it's because he's
+always there when I want to
+see him...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3496,9 +3490,9 @@ I wanted to see him...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's because, after all, 
-he is there for me when 
-I want to see him...</Dialog>
+          <Dialog>That's because he's there
+for me whenever I want to
+see him...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3518,8 +3512,9 @@ I want to see him...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kind, warm... that kind of 
-thing. Embarrassing...</Dialog>
+          <Dialog>He's kind and warm... that's
+what I like. How
+embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3539,8 +3534,8 @@ thing. Embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, because he is a warm 
-person, after all... Yes.</Dialog>
+          <Dialog>Well, it's because he's such
+a warm person... yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3560,8 +3555,8 @@ person, after all... Yes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That is, after all, he is 
-very cool... I'm kidding.</Dialog>
+          <Dialog>That's, well, because he's
+really cool... Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3581,9 +3576,9 @@ very cool... I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He is handsome. He is 
-popular among girls at 
-school. Hehe.</Dialog>
+          <Dialog>Because he's handsome. He's
+really popular with the
+girls at school. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3603,8 +3598,9 @@ school. Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He is fun to talk to and 
-has a quick mind...</Dialog>
+          <Dialog>That he's fun to talk to, I
+guess... he's so
+quick-witted.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3624,10 +3620,9 @@ has a quick mind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The best part is that he 
-is very quick-witted. 
-I always enjoy talking 
-to him.</Dialog>
+          <Dialog>Most of all, that he's
+quick-witted. Talking with
+him is always fun.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3647,8 +3642,8 @@ to him.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's... um, hmm... huh？　
-I forgot...</Dialog>
+          <Dialog>That's... um, hmm... huh？ I
+forgot...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3668,8 +3663,8 @@ I forgot...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, that... well, you know, 
-um... sorry.</Dialog>
+          <Dialog>Um, well... that kind of
+thing is, um... I'm sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3689,9 +3684,9 @@ um... sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I recently attempted a new 
-dish and was praised for 
-it. I guess.</Dialog>
+          <Dialog>When I tried a new dish
+recently and he praised it,
+I guess.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3711,8 +3706,8 @@ it. I guess.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was praised for trying 
-a new dish.</Dialog>
+          <Dialog>When I tried a new dish and
+he praised it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3732,8 +3727,8 @@ a new dish.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The other day, I got a 
-gift, I guess... from him.</Dialog>
+          <Dialog>Getting a present the other
+day, I guess... from him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3753,9 +3748,9 @@ gift, I guess... from him.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He gave me a gift. Lately, 
-that's the best thing I've 
-received.</Dialog>
+          <Dialog>He gave me a present.
+Lately, that's the best
+thing that's happened.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3775,9 +3770,10 @@ received.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was happy that... yes, 
-I was able to spend our big 
-day with him.</Dialog>
+          <Dialog>What made me happy was...
+oh, being able to spend an
+important day together...
+with him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3797,11 +3793,10 @@ day with him.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We were able to spend our 
-anniversary together... 
-No, of course, as high 
-school students. Yes, of 
-course.</Dialog>
+          <Dialog>Spending our anniversary
+together... oh, as high
+schoolers should, of course.
+Yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3821,9 +3816,9 @@ course.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He wished me a happy 
-birthday the other day and 
-said he remembered me...</Dialog>
+          <Dialog>The other day, he celebrated
+my birthday, and I was so
+happy he remembered...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3843,9 +3838,9 @@ said he remembered me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was my birthday the 
-other day. He celebrated 
-it with me...</Dialog>
+          <Dialog>It was my birthday the other
+day. He celebrated it with
+me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3865,8 +3860,8 @@ it with me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That would be, of course―― 
-um... well... it's a secret.</Dialog>
+          <Dialog>That has to be――um...
+well... a secret.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3886,8 +3881,9 @@ um... well... it's a secret.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was really happy when―― 
-um... well... it's a secret.</Dialog>
+          <Dialog>What made me happiest
+was――um... well... a
+secret.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3907,10 +3903,10 @@ um... well... it's a secret.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... If you don't receive 
-an email from the person 
-you're waiting for, you're 
-just worried about it...</Dialog>
+          <Dialog>Hmm... when I don't get a
+text from the person I'm
+waiting on, I end up moping
+about it... it's bad of me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3930,10 +3926,10 @@ just worried about it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm just waiting on my own, 
-worrying that I won't get 
-an email from the person 
-I'm waiting for.</Dialog>
+          <Dialog>I mope when I don't get a
+text from the person I'm
+waiting on, even though I'm
+the one choosing to wait.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3953,10 +3949,9 @@ I'm waiting for.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... I worry that if we 
-don't have a lot of 
-skinship, I might be 
-depressed.</Dialog>
+          <Dialog>Hmm... when there isn't much
+physical affection, I worry
+he might find me annoying.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3976,9 +3971,10 @@ depressed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was wondering if that... 
-lack of skinship might be 
-depressing...</Dialog>
+          <Dialog>Um... when there isn't much
+physical affection, I wonder
+if maybe he finds me
+annoying...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3998,10 +3994,10 @@ depressing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Lately, I've been thinking 
-a lot about the importance 
-of food preferences. It's 
-hard to match tastes.</Dialog>
+          <Dialog>Lately I've been thinking
+how much food preferences
+matter. Matching tastes is
+hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4021,10 +4017,10 @@ hard to match tastes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Recently, I've been just 
-thinking about the value 
-of food preferences. It is 
-difficult to match tastes.</Dialog>
+          <Dialog>Lately I've been thinking
+food preferences really
+matter. Matching tastes is
+hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4044,13 +4040,11 @@ difficult to match tastes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Lately, he's been taking 
-a lot of pictures of me, 
-but... you know, there are 
-a lot of cool things that 
-I don't want them to be 
-photographed, and I'm 
-embarrassed...</Dialog>
+          <Dialog>Lately he takes pictures of
+me a lot... but, um, there
+are a lot of shots I don't
+want taken, and it's
+embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4070,10 +4064,9 @@ embarrassed...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Lately he has been taking 
-a lot of pictures for me... 
-and sometimes, that... 
-is still good.</Dialog>
+          <Dialog>Lately he takes pictures of
+me a lot... and sometimes,
+um... never mind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4093,8 +4086,9 @@ is still good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Uh... he doesn't casually 
-try to... you know, kiss...</Dialog>
+          <Dialog>Hmm... he's not very smooth
+about it... like, um,
+kissing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4114,10 +4108,9 @@ try to... you know, kiss...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I wonder if he could 
-be a little more casual 
-about it... no, it's 
-nothing...</Dialog>
+          <Dialog>Um... I wish he'd be a bit
+smoother about it... no,
+never mind...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4137,10 +4130,10 @@ nothing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm, I know men are not 
-good at casual skinship... 
-if it's too much all the 
-time, it's still...</Dialog>
+          <Dialog>Hmm, I know guys aren't good
+at casual affection... but
+if it's always like that,
+well...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4160,9 +4153,9 @@ time, it's still...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've always wanted to ask 
-you, do you have a lot of 
-skinship at home？</Dialog>
+          <Dialog>I've been wanting to ask, is
+your family very
+affectionate at home？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4182,9 +4175,9 @@ skinship at home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm worried... yeah, just 
-worried―― I should stop 
-doing that...</Dialog>
+          <Dialog>Worries... oh, my worry
+is――actually, never
+mind...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4204,8 +4197,8 @@ doing that...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm worried about, well―― 
-um, I'll better stop it.</Dialog>
+          <Dialog>My worry is――um, I think
+I'll keep it to myself.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4225,11 +4218,10 @@ um, I'll better stop it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I did a lot of training as 
-a child, but the only 
-things I still continue 
-to do are sweets and 
-playing the piano.</Dialog>
+          <Dialog>I took lots of lessons when
+I was little, but the only
+ones I still keep up are
+making sweets and piano.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4249,11 +4241,10 @@ playing the piano.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I did a lot of training as 
-a child, but the only 
-things I still continue 
-to do are baking sweets 
-and playing the piano.</Dialog>
+          <Dialog>I took lots of lessons when
+I was little, but the only
+ones I still keep up are
+making sweets and piano.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4273,10 +4264,9 @@ and playing the piano.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My hobbies include baking 
-sweets... but lately I've 
-been concentrating on 
-tennis with him.</Dialog>
+          <Dialog>My hobby is making sweets...
+but lately I've been focused
+on tennis with him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4296,10 +4286,9 @@ tennis with him.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My hobby is baking... 
-But lately I've been 
-concentrating on him and 
-tennis.</Dialog>
+          <Dialog>My hobby is making sweets.
+But lately I've been focused
+on tennis with him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4319,10 +4308,10 @@ tennis.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've always loved sweets, 
-but lately I've been 
-especially into cooking. 
-Ask him why. Hehe.</Dialog>
+          <Dialog>I've always liked it, but
+lately I'm really into
+cooking. For the reason, ask
+him. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4342,11 +4331,10 @@ Ask him why. Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've always liked cooking, 
-but lately I've been 
-especially into cooking. 
-He eats a lot, so it gives 
-me a sense of pride.</Dialog>
+          <Dialog>I've always liked it, but
+lately I'm really into
+cooking. He eats so much, it
+makes it worth it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4366,10 +4354,9 @@ me a sense of pride.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Recently, I often accompany 
-him with his camera. Maybe 
-I should take a picture of 
-him, too.</Dialog>
+          <Dialog>Lately I often go along with
+him and his camera. Maybe
+I'll take some pictures too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4389,12 +4376,11 @@ him, too.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Recently, I often accompany 
-him with his camera. 
-I think I should try taking 
-pictures of myself, too, 
-instead of just being 
-photographed.</Dialog>
+          <Dialog>Lately I often go along with
+him and his camera. Instead
+of always being the subject,
+maybe I'll try taking
+pictures too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4414,9 +4400,9 @@ photographed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm not a picky eater. That 
-said... I just love sweet 
-potatoes...</Dialog>
+          <Dialog>I'm not a picky eater.
+And... what I love most is
+sweet potatoes...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4436,9 +4422,8 @@ potatoes...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What I like... um, it's not 
-like I like it or hate it. 
-Yes.</Dialog>
+          <Dialog>What I like... um, I don't
+think I'm picky. Yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4458,10 +4443,10 @@ Yes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I've been eating a lot of 
-Japanese food lately... 
-maybe I like it more than 
-I did before.</Dialog>
+          <Dialog>I've been eating a lot of
+Japanese food lately... so
+maybe I like it more than
+before.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4481,9 +4466,9 @@ I did before.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I eat Japanese food with 
-him a lot these days. So 
-I have come to like it.</Dialog>
+          <Dialog>Lately I often eat Japanese
+food with him. So I've come
+to like it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4503,10 +4488,9 @@ I have come to like it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There is a restaurant we've 
-been frequenting lately, 
-so I'm researching their 
-menu.</Dialog>
+          <Dialog>There's a restaurant I go to
+a lot lately, so I'm
+studying their menu.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4526,10 +4510,9 @@ menu.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There is a restaurant that 
-he and I have been going to 
-a lot lately, so I'm 
-researching the menu there.</Dialog>
+          <Dialog>There's a restaurant he and
+I go to a lot lately, so I'm
+studying their menu.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4549,9 +4532,9 @@ researching the menu there.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm really into Chinese 
-food right now.　Maybe it's 
-because he eats a lot.</Dialog>
+          <Dialog>I'm into Chinese food right
+now. Maybe because we eat it
+so often.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4571,9 +4554,9 @@ because he eats a lot.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>These days it's Chinese 
-food. We often go out to 
-eat together.</Dialog>
+          <Dialog>Lately it's Chinese. Because
+we often go out to eat it
+together.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4593,11 +4576,10 @@ eat together.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... when you have 
-someone to cook for, you 
-might naturally become that 
-person's favorite... 
-I'm kidding.</Dialog>
+          <Dialog>Hmm... when you have someone
+to cook for, you naturally
+start to like what they
+like... Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4617,11 +4599,11 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When I have someone to cook 
-for, I can't help but like 
-his taste... I wonder if 
-I'm becoming more like him, 
-I'm kidding.</Dialog>
+          <Dialog>When you have someone to
+cook for, you end up
+matching their tastes... so
+maybe I'm becoming more like
+him... Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4641,8 +4623,8 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I am 16 years old and a 
-sophomore in high school.</Dialog>
+          <Dialog>I'm 16, a second-year in
+high school.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4662,8 +4644,8 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I am 16 years old and a 
-sophomore in high school.</Dialog>
+          <Dialog>I'm 16, a second-year in
+high school.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4683,8 +4665,8 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I am 17 years old and a 
-sophomore in high school.</Dialog>
+          <Dialog>I'm 17, a second-year in
+high school.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4704,8 +4686,8 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I am 17 years old and a 
-sophomore in high school.</Dialog>
+          <Dialog>I'm 17, a second-year in
+high school.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4725,7 +4707,7 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes？　You mean my hair？</Dialog>
+          <Dialog>Yes？ You mean my hair？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4745,7 +4727,7 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes？　My hair？</Dialog>
+          <Dialog>Yes？ My hair？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4765,8 +4747,8 @@ sophomore in high school.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My hair？ Does it bother 
-you that much？</Dialog>
+          <Dialog>My hair？ Is it that
+noticeable？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4786,8 +4768,8 @@ you that much？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, are you still curious？ 
-About my hair？</Dialog>
+          <Dialog>Um, it does stand out,
+doesn't it？ My hair？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4807,9 +4789,8 @@ About my hair？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it... this hair 
-doesn't suit me at all, 
-right？</Dialog>
+          <Dialog>It doesn't suit me after
+all... does it？ This hair？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4829,8 +4810,8 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Doesn't this hair look good 
-on me after all？</Dialog>
+          <Dialog>It doesn't suit me after
+all？ This hair.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4850,7 +4831,7 @@ on me after all？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like these things.</Dialog>
+          <Dialog>I like this kind of thing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4870,8 +4851,8 @@ on me after all？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Recently, I've been doing 
-it this way.</Dialog>
+          <Dialog>Lately, I've been wearing it
+like this.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4891,8 +4872,8 @@ it this way.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He said these look great 
-on me...</Dialog>
+          <Dialog>He said this kind of style
+suits me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4912,7 +4893,7 @@ on me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He recommended this one...</Dialog>
+          <Dialog>He recommended this...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4932,8 +4913,8 @@ on me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was growing it out, but 
-I cut it the other day.</Dialog>
+          <Dialog>I was growing it out, but I
+cut it the other day.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4953,9 +4934,9 @@ I cut it the other day.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I talked to him about it 
-and decided to cut it up... 
-Is it weird？</Dialog>
+          <Dialog>I talked it over with him
+and cut it... does it look
+weird？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4975,10 +4956,9 @@ Is it weird？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I discussed it with him and 
-decided to go with this 
-color... doesn't it look 
-good on me？</Dialog>
+          <Dialog>I talked it over with him
+and tried this color...
+doesn't it suit me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4998,8 +4978,9 @@ good on me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I talked to him about it 
-and dyed it... Is it weird？</Dialog>
+          <Dialog>I talked it over with him
+and dyed it... does it look
+weird？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5039,8 +5020,8 @@ and dyed it... Is it weird？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... but for myself, 
-I like it.</Dialog>
+          <Dialog>I see... but I like it
+myself...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5060,9 +5041,9 @@ I like it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Objectively, I wonder if he 
-has any sense of style, and 
-sometimes I'm worried...</Dialog>
+          <Dialog>Objectively speaking, does
+he have good taste？
+Sometimes I worry...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5082,9 +5063,8 @@ sometimes I'm worried...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What do you think of his 
-hobbies from his family's 
-point of view？</Dialog>
+          <Dialog>As his family, what do you
+think of his taste？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5104,7 +5084,7 @@ point of view？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？　I think so too.</Dialog>
+          <Dialog>Right？ I think so too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5124,7 +5104,7 @@ point of view？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It can't be... I believe in 
+          <Dialog>No way... and I trusted
 him...</Dialog>
         </Dialogs>
       </SDL2>
@@ -5145,7 +5125,7 @@ him...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Uh, you mean these clothes？</Dialog>
+          <Dialog>Um, you mean these clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5165,7 +5145,7 @@ him...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes？　This clothes？</Dialog>
+          <Dialog>Yes？ These clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5185,8 +5165,8 @@ him...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you still curious about 
-this clothes？</Dialog>
+          <Dialog>These clothes, they stand
+out, huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5206,8 +5186,8 @@ this clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>These clothes？ Do you 
-still wonder about it？</Dialog>
+          <Dialog>These clothes？ They do
+stand out, don't they？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5227,10 +5207,9 @@ still wonder about it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're looking at it 
-again... Do you really care 
-that much about these 
-clothes？</Dialog>
+          <Dialog>You're looking again... do
+they stand out that much？
+These clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5250,8 +5229,8 @@ clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... do you care so much 
-about that these clothes？</Dialog>
+          <Dialog>Um... do they stand out that
+much？ These clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5271,8 +5250,8 @@ about that these clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is what he picked out 
-for me for the day...</Dialog>
+          <Dialog>He picked these out for me
+for today...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5292,8 +5271,8 @@ for me for the day...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is what he brought to 
-me today.</Dialog>
+          <Dialog>He chose this outfit for me
+today.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5313,7 +5292,8 @@ me today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is his gift...</Dialog>
+          <Dialog>This was a present from
+him...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5333,9 +5313,8 @@ me today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is a gift from him, 
-I hope it looks good on 
-me...</Dialog>
+          <Dialog>This was a present from him.
+I hope it suits me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5355,7 +5334,7 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good.　Hehe.</Dialog>
+          <Dialog>I'm glad. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5395,8 +5374,9 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you talk to him about 
-girls' clothing tastes？</Dialog>
+          <Dialog>Do you and he ever talk
+about what you like in
+girls' clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5416,9 +5396,9 @@ girls' clothing tastes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you talk to him about 
-about his taste in girls' 
-clothes？</Dialog>
+          <Dialog>Do you and he ever talk
+about what you like in
+girls' clothes？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5438,8 +5418,8 @@ clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I guess men talk about that 
-kind of thing a lot...</Dialog>
+          <Dialog>Guys talk about that kind of
+thing a lot, huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5479,8 +5459,8 @@ kind of thing a lot...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it. All that talk. 
-Geez...</Dialog>
+          <Dialog>I knew it. Always talking
+about that. Geez...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5500,8 +5480,8 @@ Geez...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh, I see... I though it 
-was okay...</Dialog>
+          <Dialog>Huh, really... I just
+assumed...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5521,8 +5501,8 @@ was okay...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you wear these kinds of 
-clothes？</Dialog>
+          <Dialog>Do you wear clothes like
+this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5542,8 +5522,8 @@ clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you also wear this kind 
-of clothes？</Dialog>
+          <Dialog>Do you ever wear clothes
+like this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5563,9 +5543,9 @@ of clothes？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？　Isn't it nice？　We 
-seem to have the same 
-interests, don't we？</Dialog>
+          <Dialog>Right？ Nice, isn't it？
+Looks like we have similar
+taste？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5585,8 +5565,8 @@ interests, don't we？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, you like it？ I think 
-we have the same taste！</Dialog>
+          <Dialog>Oh, you like it？ Looks like
+we have similar taste！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5606,8 +5586,8 @@ we have the same taste！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>A little more daring is 
-better...</Dialog>
+          <Dialog>Maybe something a little
+bolder after all...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5627,7 +5607,7 @@ better...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>More of a cute look...</Dialog>
+          <Dialog>Something cuter...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5647,8 +5627,8 @@ better...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？ I'll use it as a 
-reference.</Dialog>
+          <Dialog>Right？ I'll keep that in
+mind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5668,8 +5648,7 @@ reference.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder what I should 
-do...</Dialog>
+          <Dialog>Then, what should I...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5689,7 +5668,7 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, I have a question.</Dialog>
+          <Dialog>Um, a question.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5709,8 +5688,8 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're blood type A, aren't 
-you？</Dialog>
+          <Dialog>Your blood type is A, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5730,8 +5709,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are blood type A, 
-aren't you？</Dialog>
+          <Dialog>Your blood type is A, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5751,8 +5730,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're blood type B, aren't 
-you？</Dialog>
+          <Dialog>Your blood type is B, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5772,8 +5751,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are blood type B, 
-aren't you？</Dialog>
+          <Dialog>Your blood type is B, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5793,8 +5772,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're blood type AB, 
-aren't you？</Dialog>
+          <Dialog>Your blood type is AB, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5814,8 +5793,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are blood type AB, 
-aren't you？</Dialog>
+          <Dialog>Your blood type is AB, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5835,8 +5814,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're blood type O, aren't 
-you？</Dialog>
+          <Dialog>Your blood type is O, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5856,8 +5835,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are blood type O, 
-aren't you？</Dialog>
+          <Dialog>Your blood type is O, isn't
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5877,7 +5856,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it. Typical, hehe.</Dialog>
+          <Dialog>I knew it. You're so
+typical, hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5897,8 +5877,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？ It's very easy to 
-understand.</Dialog>
+          <Dialog>Right？ You're very easy to
+read.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5918,8 +5898,8 @@ understand.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？　That's weird... what 
-type then？</Dialog>
+          <Dialog>Huh？ That's weird... what
+type are you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5939,8 +5919,8 @@ type then？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？　I see... what type is 
-it？</Dialog>
+          <Dialog>Huh？ Really... what type
+are you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5960,7 +5940,7 @@ it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... it's a little 
+          <Dialog>I see... that's a little
 surprising...</Dialog>
         </Dialogs>
       </SDL2>
@@ -5981,7 +5961,7 @@ surprising...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... that's a bit 
+          <Dialog>I see... that's a little
 surprising.</Dialog>
         </Dialogs>
       </SDL2>
@@ -6002,7 +5982,7 @@ surprising.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？　Then, I guessed 
+          <Dialog>Right？ Then I got it
 right！</Dialog>
         </Dialogs>
       </SDL2>
@@ -6023,8 +6003,8 @@ right！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I know, right？ I'm good at 
-guessing.</Dialog>
+          <Dialog>Right, I knew it. I'm good
+at guessing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6044,8 +6024,8 @@ guessing.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, so you are just like 
-him. Right？</Dialog>
+          <Dialog>Ah, that means you're the
+same as him. Right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6065,8 +6045,7 @@ him. Right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, so you are just like 
-him.</Dialog>
+          <Dialog>Ah, you're the same as him.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6086,8 +6065,8 @@ him.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now, it's my turn. What 
-type am I？</Dialog>
+          <Dialog>Now it's my turn. What type
+am I？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6107,8 +6086,8 @@ type am I？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, now me. What type am 
-I？</Dialog>
+          <Dialog>Then now it's my turn. What
+type am I？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6128,9 +6107,9 @@ I？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Correct！　An honest and 
-logical Type A, right？ 
-Buddies！</Dialog>
+          <Dialog>Correct！ Sincere and
+logical type A, right？
+We're the same！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6150,8 +6129,8 @@ Buddies！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're right！ Type A's, 
-let's get along！</Dialog>
+          <Dialog>Correct！ Fellow type A's,
+let's be friends！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6171,10 +6150,10 @@ let's get along！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Boo！　The correct answer 
-was A. Yes, he and I are 
-both type A. Maybe that's 
-why we get along so well.</Dialog>
+          <Dialog>Bzzt！ The answer is A.
+That's right, he and I are
+both type A. Maybe that's
+why we get along.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6194,10 +6173,9 @@ why we get along so well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Too bad, the correct answer 
-was type A.　Yes, I am like 
-him. Maybe that's why we 
-get along so well.</Dialog>
+          <Dialog>Too bad, the answer is type
+A. The same as him. Maybe
+that's why we get along.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6217,8 +6195,8 @@ get along so well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... why does it look 
-like that.</Dialog>
+          <Dialog>Hmm... I wonder why I seem
+that way.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6238,8 +6216,8 @@ like that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... I'd be a little 
-happy if it was like that.</Dialog>
+          <Dialog>Really？ If so, maybe I'm a
+little happy.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6259,9 +6237,9 @@ happy if it was like that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？　I think this may 
-be the first time you've 
-told me...</Dialog>
+          <Dialog>Really？ I think that's the
+first time anyone's said
+that...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6281,7 +6259,8 @@ told me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm told that sometimes...</Dialog>
+          <Dialog>People tell me that
+sometimes...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6301,9 +6280,9 @@ told me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The correct answer, by the 
-way, was Type A.　I'm often 
-told it's typical...</Dialog>
+          <Dialog>By the way, the answer is
+type A. People often say I'm
+typical...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6323,9 +6302,8 @@ told it's typical...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right, so do you believe in 
-blood type compatibility 
-testing？</Dialog>
+          <Dialog>Oh, then, do you believe in
+blood type compatibility？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6345,9 +6323,8 @@ testing？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you think there is a 
-blood type compatibility 
-then？</Dialog>
+          <Dialog>Then, do you think blood
+type compatibility is real？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6367,8 +6344,8 @@ then？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So what type do you think 
-you are compatible with？</Dialog>
+          <Dialog>Then, what type do you think
+you're compatible with？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6388,8 +6365,9 @@ you are compatible with？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So what blood type is 
-compatible with you？</Dialog>
+          <Dialog>Then, what blood type do you
+think you're compatible
+with？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6429,10 +6407,10 @@ compatible with you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My father, too, says there 
-is no medical evidence. 
-But I felt like there might 
-be.</Dialog>
+          <Dialog>My father says there's no
+medical basis for it either.
+But somehow, I feel like
+there is.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6452,8 +6430,8 @@ be.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good to hear. I knew it, 
-the methodical part？</Dialog>
+          <Dialog>Good. Because they're
+meticulous, I bet？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6473,8 +6451,8 @@ the methodical part？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see. The creative part 
-after all？</Dialog>
+          <Dialog>I see. Because they're
+creative, I bet？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6494,8 +6472,8 @@ after all？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Like, doing things at your 
-pace, or something？</Dialog>
+          <Dialog>Because they go at their own
+pace？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6515,8 +6493,8 @@ pace, or something？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>After all, the feeling of 
-generosity？</Dialog>
+          <Dialog>Because they're easygoing, I
+bet？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6536,8 +6514,9 @@ generosity？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, then, a person who 
-cares... I'm kidding, hehe.</Dialog>
+          <Dialog>Ah, then, is there someone
+you like... Just kidding,
+hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6557,7 +6536,7 @@ cares... I'm kidding, hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I guessed right. Hehe.</Dialog>
+          <Dialog>Got it right. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6577,8 +6556,8 @@ cares... I'm kidding, hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If not, I guess... snooping 
-is not a good idea.</Dialog>
+          <Dialog>If not... maybe I shouldn't
+pry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6598,8 +6577,8 @@ is not a good idea.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think I can see how you 
-and I might be good friends.</Dialog>
+          <Dialog>Maybe it suits you, I think
+I get it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6619,8 +6598,9 @@ and I might be good friends.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Maybe it fits surprisingly 
-well, I think I understand.</Dialog>
+          <Dialog>Maybe it suits you
+surprisingly well, I think I
+get it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6640,8 +6620,8 @@ well, I think I understand.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see, I knew it would be 
-that way.</Dialog>
+          <Dialog>I see, so that's how it
+goes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6661,7 +6641,7 @@ that way.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, it's a really good 
+          <Dialog>True, that's a good
 combination.</Dialog>
         </Dialogs>
       </SDL2>
@@ -6682,8 +6662,8 @@ combination.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if that kind of 
-thing is good.</Dialog>
+          <Dialog>Maybe that's surprisingly
+good too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6703,9 +6683,9 @@ thing is good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Maybe it's a good, unlikely 
-combination. Or something 
-like that.</Dialog>
+          <Dialog>It's an unexpected
+combination, but maybe
+that's good too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6725,9 +6705,9 @@ like that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then I'm also a perfect 
-match for him in blood 
-typing.</Dialog>
+          <Dialog>Then by blood type, you're
+perfectly compatible with
+him too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6747,9 +6727,9 @@ typing.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, so you're not a good 
-match for him in the blood 
-typing...</Dialog>
+          <Dialog>Ah, then by blood type, you
+and he aren't such a great
+match...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6769,8 +6749,8 @@ typing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What is the actual 
-compatibility？</Dialog>
+          <Dialog>How compatible are you
+really？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6790,8 +6770,7 @@ compatibility？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought it was. Good to 
-know.</Dialog>
+          <Dialog>I thought so. Good.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6811,7 +6790,7 @@ know.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？　...sorry, somehow.</Dialog>
+          <Dialog>Huh？ ...Sorry, somehow.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6831,9 +6810,9 @@ know.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you one thing？ 
-...Do you have any siblings 
-older than yourself？</Dialog>
+          <Dialog>Can I ask one thing？ ...Do
+you have any older
+siblings？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6853,9 +6832,9 @@ older than yourself？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it！　I feel like 
-a younger kid.　So is that 
-your onii-san？</Dialog>
+          <Dialog>I knew it！ You seem like a
+younger kid. Then, an older
+brother？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6875,10 +6854,9 @@ your onii-san？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Right？　I'm the eldest, 
-too, so I thought maybe 
-it's true.　So you have a 
-little sister？</Dialog>
+          <Dialog>Right？ I'm the oldest too,
+so I thought maybe. Then, do
+you have a little sister？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6898,7 +6876,7 @@ little sister？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yay！　I'm good at guessing♪</Dialog>
+          <Dialog>Yay！ I'm good at guessing♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6918,9 +6896,9 @@ little sister？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sister？ ...Oh, if you ask 
-me, that's what it looks 
-like.</Dialog>
+          <Dialog>An older sister？ ...Ah, now
+that you mention it, maybe
+so.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6940,8 +6918,8 @@ like.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yay, I guessed again. It's 
-so easy to understand.</Dialog>
+          <Dialog>Yay, I guessed right again.
+You're so easy to read.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6961,9 +6939,9 @@ so easy to understand.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Too bad... you're so kind 
-to girls, I thought you had 
-a little sister.</Dialog>
+          <Dialog>Too bad... you're so nice to
+girls, I thought you had a
+little sister.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6983,7 +6961,7 @@ a little sister.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>By the way, I am an only 
+          <Dialog>By the way, I'm an only
 child.</Dialog>
         </Dialogs>
       </SDL2>
@@ -7004,8 +6982,8 @@ child.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Since it's an opportunity, 
-let's hear it...</Dialog>
+          <Dialog>Since I have the chance,
+maybe I'll ask...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7025,9 +7003,8 @@ let's hear it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm going to ask you about 
-this because it's a great 
-opportunity...</Dialog>
+          <Dialog>Since I have the chance,
+I'll go ahead and ask...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7047,7 +7024,7 @@ opportunity...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Has he always been like 
+          <Dialog>Has he always been like
 this？</Dialog>
         </Dialogs>
       </SDL2>
@@ -7068,8 +7045,8 @@ this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Has he been like this since 
-he was a child？</Dialog>
+          <Dialog>Has he been like this since
+he was little？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7089,7 +7066,7 @@ he was a child？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*sniff*... I knew it...</Dialog>
+          <Dialog>Tee-hee... I knew it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7109,7 +7086,7 @@ he was a child？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*sniff*... I see...</Dialog>
+          <Dialog>Tee-hee... I see...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7129,8 +7106,9 @@ he was a child？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Heh... you can't imagine 
-what it's like with me.</Dialog>
+          <Dialog>Huh... I can't really
+picture that from how he is
+with me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7150,8 +7128,8 @@ what it's like with me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wait, I can't imagine 
-that... heh...</Dialog>
+          <Dialog>I can't really picture it...
+huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7191,8 +7169,8 @@ that... heh...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is he always, even at home, 
-so active？</Dialog>
+          <Dialog>Is he always this active at
+home too？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7212,8 +7190,8 @@ so active？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is he mischievous, even at 
-home？</Dialog>
+          <Dialog>Is he a little rascal at
+home too？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7233,8 +7211,8 @@ home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is he always so laid back 
-at home？</Dialog>
+          <Dialog>Is he always this laid-back
+at home too？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7254,8 +7232,8 @@ at home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is he still a laid-back 
-person at home？</Dialog>
+          <Dialog>Is he a laid-back type at
+home too？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7275,7 +7253,7 @@ person at home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see.　I thought he was...</Dialog>
+          <Dialog>I see. ...I thought so.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7295,8 +7273,8 @@ person at home？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I knew it... is that 
-natural for him？</Dialog>
+          <Dialog>I knew it... so that's just
+how he is？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7316,9 +7294,8 @@ natural for him？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... then maybe he is 
-pushing himself too hard 
-in front of me...</Dialog>
+          <Dialog>I see... then maybe he's
+pushing himself around me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7338,8 +7315,8 @@ in front of me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can't imagine that for 
-a minute.　Heh...</Dialog>
+          <Dialog>I can't really picture it.
+Huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7359,8 +7336,9 @@ a minute.　Heh...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When he is with me, he is 
-more laid back.</Dialog>
+          <Dialog>When he's with me, if
+anything, he's pretty
+laid-back.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7380,9 +7358,9 @@ more laid back.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When he's with me, he's 
-more of a mischievous boy, 
-isn't he？</Dialog>
+          <Dialog>When he's with me, if
+anything, he's a bit of a
+rascal？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7402,7 +7380,7 @@ isn't he？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But he's always so kind.</Dialog>
+          <Dialog>But he's always kind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7422,7 +7400,7 @@ isn't he？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But sometimes he can be a 
+          <Dialog>But sometimes he can be a
 little mean.</Dialog>
         </Dialogs>
       </SDL2>
@@ -7443,9 +7421,9 @@ little mean.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if that's what 
-makes him a good fit for 
-me...</Dialog>
+          <Dialog>Maybe that side of him is
+why we get along... Just
+kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7465,7 +7443,8 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like that about him.</Dialog>
+          <Dialog>That side of him is what I
+really love.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7485,7 +7464,7 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a kind 
+          <Dialog>He told me you were a kind
 person...</Dialog>
         </Dialogs>
       </SDL2>
@@ -7506,7 +7485,7 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a cool 
+          <Dialog>He told me you were a cool
 person...</Dialog>
         </Dialogs>
       </SDL2>
@@ -7527,7 +7506,7 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a quiet 
+          <Dialog>He told me you were a quiet
 person...</Dialog>
         </Dialogs>
       </SDL2>
@@ -7548,8 +7527,8 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a 
-lively person...</Dialog>
+          <Dialog>He told me you were a lively
+person...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7569,7 +7548,7 @@ lively person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a 
+          <Dialog>He told me you were a
 serious person...</Dialog>
         </Dialogs>
       </SDL2>
@@ -7590,7 +7569,7 @@ serious person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>He told me you were a funny 
+          <Dialog>He told me you were a funny
 person...</Dialog>
         </Dialogs>
       </SDL2>
@@ -7611,8 +7590,8 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But when we met, it was 
-more like...</Dialog>
+          <Dialog>But now that I've met you,
+if anything...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7632,7 +7611,7 @@ more like...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was just as I had heard.</Dialog>
+          <Dialog>You're just like he said.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7652,7 +7631,7 @@ more like...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was as I had heard.</Dialog>
+          <Dialog>You're just like he said.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7672,8 +7651,7 @@ more like...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought you were a kind 
-person...</Dialog>
+          <Dialog>You're a kind person...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7693,8 +7671,7 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought you were a kind 
-person...</Dialog>
+          <Dialog>You're a kind person...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7714,7 +7691,7 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought you were cool.</Dialog>
+          <Dialog>You're a cool person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7734,8 +7711,8 @@ person...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a cool person, 
-aren't you？　Quite.</Dialog>
+          <Dialog>You're pretty cool, aren't
+you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7755,8 +7732,7 @@ aren't you？　Quite.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought you were a calm 
-person.</Dialog>
+          <Dialog>You're a calm person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7776,8 +7752,8 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a calm person, 
-really.</Dialog>
+          <Dialog>You're really a gentle
+person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7797,7 +7773,7 @@ really.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a lively person.</Dialog>
+          <Dialog>You're a lively person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7817,8 +7793,8 @@ really.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a lively person, 
-aren't you？</Dialog>
+          <Dialog>You're pretty lively, aren't
+you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7838,8 +7814,8 @@ aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a serious person, 
-really.</Dialog>
+          <Dialog>You're actually a serious
+person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7859,8 +7835,8 @@ really.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I thought you were serious, 
-really.</Dialog>
+          <Dialog>You're actually a serious
+person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7880,8 +7856,7 @@ really.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are an interesting 
-person.</Dialog>
+          <Dialog>You're a funny person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7901,8 +7876,8 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are an interesting 
-person, aren't you？</Dialog>
+          <Dialog>You're pretty funny, aren't
+you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7922,7 +7897,7 @@ person, aren't you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was good to see you 
+          <Dialog>I'm glad I got to meet you
 today.</Dialog>
         </Dialogs>
       </SDL2>
@@ -7943,8 +7918,8 @@ today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was a pleasure to meet 
-you today.</Dialog>
+          <Dialog>I was happy to meet you
+today.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -7964,7 +7939,7 @@ you today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Perhaps it is you little 
+          <Dialog>Could you be his little
 brother？</Dialog>
         </Dialogs>
       </SDL2>
@@ -7985,7 +7960,7 @@ brother？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Perhaps it is you little 
+          <Dialog>Could you be his little
 sister？</Dialog>
         </Dialogs>
       </SDL2>
@@ -8006,8 +7981,8 @@ sister？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry, then is that you 
-onii-san？</Dialog>
+          <Dialog>Sorry, then his older
+brother？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8027,8 +8002,8 @@ onii-san？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry, then is that you 
-onee-san？</Dialog>
+          <Dialog>Sorry, then his older
+sister？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8048,7 +8023,7 @@ onee-san？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, that...</Dialog>
+          <Dialog>Um, well...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8108,7 +8083,7 @@ onee-san？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, excuse me...</Dialog>
+          <Dialog>U-um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8188,8 +8163,8 @@ onee-san？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I'm afraid of that 
-face...</Dialog>
+          <Dialog>Um... your face is a little
+scary...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8209,7 +8184,7 @@ face...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？　...ah.</Dialog>
+          <Dialog>？　...Ah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8229,7 +8204,7 @@ face...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Uh...</Dialog>
+          <Dialog>Ugh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8249,7 +8224,7 @@ face...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... where are you 
+          <Dialog>Hey... where are you
 looking？</Dialog>
         </Dialogs>
       </SDL2>
@@ -8270,7 +8245,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... where are you 
+          <Dialog>Um... where are you
 looking？</Dialog>
         </Dialogs>
       </SDL2>
@@ -8291,7 +8266,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Whoa... eh？</Dialog>
+          <Dialog>Whoa... huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8351,7 +8326,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ouch. Hehe.</Dialog>
+          <Dialog>Ow. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8371,7 +8346,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ouch... Hmm...</Dialog>
+          <Dialog>Ow... mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8391,7 +8366,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kya... hehe.</Dialog>
+          <Dialog>Kyah... hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8411,7 +8386,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wait... geez！</Dialog>
+          <Dialog>Hey... geez！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8431,7 +8406,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, please stop...</Dialog>
+          <Dialog>Um, that's enough...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8455,8 +8430,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can you help me, please, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Help me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8496,7 +8470,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？</Dialog>
+          <Dialog>Huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8536,7 +8510,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kya！</Dialog>
+          <Dialog>Kyah！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8556,7 +8530,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8596,7 +8570,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh...</Dialog>
+          <Dialog>Huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8636,7 +8610,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kya...</Dialog>
+          <Dialog>Kyah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8656,7 +8630,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8676,7 +8650,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah...</Dialog>
+          <Dialog>Ah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8736,7 +8710,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kya.</Dialog>
+          <Dialog>Kyah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8756,7 +8730,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm.</Dialog>
+          <Dialog>Mm.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8796,7 +8770,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...eh？</Dialog>
+          <Dialog>...Huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8836,7 +8810,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8856,7 +8830,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are...</Dialog>
+          <Dialog>You're...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8876,7 +8850,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's so kind... yeah.</Dialog>
+          <Dialog>You're kind... yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8896,7 +8870,7 @@ looking？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are kind of a cool 
+          <Dialog>You're kind of a cool
 person.</Dialog>
         </Dialogs>
       </SDL2>
@@ -8917,7 +8891,7 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're calm.</Dialog>
+          <Dialog>You're so calm.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8937,7 +8911,7 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a lively person.</Dialog>
+          <Dialog>You're a lively person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8957,7 +8931,7 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're a serious guy.</Dialog>
+          <Dialog>You're a serious person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8977,8 +8951,9 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Maybe it's my imagination, 
-but your gaze is a little...</Dialog>
+          <Dialog>Maybe it's just my
+imagination, but your eyes
+are a little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -8998,9 +8973,9 @@ but your gaze is a little...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's nice to be honest, but 
-I think you need to be a 
-little more careful...</Dialog>
+          <Dialog>Being honest is nice, but I
+wish you'd be a little more
+considerate...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9020,9 +8995,9 @@ little more careful...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I feel like you're going to 
-see a lot of things, but 
-maybe I'm imagining it.</Dialog>
+          <Dialog>I feel like you're looking
+at a lot of things, but
+maybe it's my imagination.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9042,9 +9017,9 @@ maybe I'm imagining it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're looking at a lot of 
-things, so... I'm a little 
-restless.</Dialog>
+          <Dialog>You keep looking at all
+sorts of places... it makes
+me a little uneasy.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9064,8 +9039,8 @@ restless.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're staring at me. Not 
-that I don't like it...</Dialog>
+          <Dialog>You stare at me so much. Not
+that I mind, but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9085,8 +9060,8 @@ that I don't like it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What can I say, a little 
-skinship...</Dialog>
+          <Dialog>How should I put it, the
+touching is a little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9106,9 +9081,8 @@ skinship...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know, I might have a 
-problem with the intense 
-skinship.</Dialog>
+          <Dialog>Um, you're really touchy...
+it's a bit much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9128,8 +9102,8 @@ skinship.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think you touch too 
-much... it's not good.</Dialog>
+          <Dialog>I think you touch too much.
+...That's not good.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9149,8 +9123,8 @@ much... it's not good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The conversation may be at 
-your own pace.</Dialog>
+          <Dialog>You talk at your own pace, I
+think.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9170,8 +9144,8 @@ your own pace.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Very fast-paced. The way of 
-conversation is so flexible.</Dialog>
+          <Dialog>You really go at your own
+pace. You talk so freely.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9191,9 +9165,9 @@ conversation is so flexible.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you get nervous easily？　
-I wish we could have talked 
-a little more.</Dialog>
+          <Dialog>Do you get nervous easily？
+I wish we could've talked
+more.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9213,8 +9187,8 @@ a little more.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You were very nervous. We 
-didn't talk much.</Dialog>
+          <Dialog>You get nervous easily, huh.
+We didn't get to talk much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9234,7 +9208,7 @@ didn't talk much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, I was thinking...</Dialog>
+          <Dialog>Um, here's what I thought...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9254,7 +9228,7 @@ didn't talk much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a kind person...</Dialog>
+          <Dialog>You're a kind person...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9274,7 +9248,7 @@ didn't talk much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are kind of a cool 
+          <Dialog>You're kind of a cool
 person.</Dialog>
         </Dialogs>
       </SDL2>
@@ -9295,7 +9269,7 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a calm person.</Dialog>
+          <Dialog>You're a gentle person.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9315,7 +9289,8 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a lively person.</Dialog>
+          <Dialog>You're a lively person,
+aren't you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9335,7 +9310,8 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a serious person.</Dialog>
+          <Dialog>You're a serious person,
+aren't you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9355,8 +9331,8 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You gaze is... nothing. 
-Sorry.</Dialog>
+          <Dialog>Your eyes are a little...
+never mind. I'm sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9376,10 +9352,9 @@ Sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry if I'm a little 
-concerned about the way 
-you're looking at me, or 
-if it's just my imagination.</Dialog>
+          <Dialog>Your eyes bother me a
+little... sorry if it's just
+my imagination.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9399,9 +9374,9 @@ if it's just my imagination.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was... nervous because 
-I felt like I was being 
-watched.</Dialog>
+          <Dialog>I felt like I was being
+watched... it made me
+nervous.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9421,8 +9396,8 @@ watched.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I am... nervous to be 
-looked at.</Dialog>
+          <Dialog>Being looked at... makes me
+nervous.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9442,8 +9417,9 @@ looked at.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm a little... nervous 
-about being stared at.</Dialog>
+          <Dialog>Being stared at is a
+little... ah, I mean it
+makes me nervous.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9463,7 +9439,8 @@ about being stared at.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm, skinship is a little...</Dialog>
+          <Dialog>Um, the touching is a
+little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9483,8 +9460,8 @@ about being stared at.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see that you like 
-skinship.</Dialog>
+          <Dialog>Um, you really like
+touching, don't you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9504,9 +9481,8 @@ skinship.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think it's too much, you 
-know, too touchy-feely for 
-any amount of time.</Dialog>
+          <Dialog>Um, I really do think you
+touch too much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9526,10 +9502,9 @@ any amount of time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a person who goes 
-at his own pace. The way 
-you have conversations, 
-I mean.</Dialog>
+          <Dialog>You go at your own pace,
+don't you？ The way you
+talk.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9549,8 +9524,8 @@ I mean.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are a very fast-paced 
-person.</Dialog>
+          <Dialog>You really go at your own
+pace, don't you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9570,9 +9545,9 @@ person.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Perhaps you were nervous？　
-I would have liked to talk 
-to you a little more.</Dialog>
+          <Dialog>Were you nervous, maybe？ I
+wish we could've talked
+more.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9592,9 +9567,8 @@ to you a little more.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Were you nervous？　
-I'm sorry we couldn't talk 
-much.</Dialog>
+          <Dialog>Were you nervous？ It's a
+shame we couldn't talk much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9614,7 +9588,7 @@ much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You are so alike.</Dialog>
+          <Dialog>You know, you look like...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9634,8 +9608,8 @@ much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, don't people say you 
-look alike？</Dialog>
+          <Dialog>Um, has anyone told you that
+you look like...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9655,7 +9629,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Athletes...</Dialog>
+          <Dialog>That athlete...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9675,7 +9649,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The artist's...</Dialog>
+          <Dialog>That artist...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9695,7 +9669,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Entertainers...</Dialog>
+          <Dialog>That celebrity...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9715,7 +9689,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The company's...</Dialog>
+          <Dialog>Someone from work...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9735,7 +9709,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The school's...</Dialog>
+          <Dialog>Someone from school...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9755,7 +9729,7 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The club's...</Dialog>
+          <Dialog>Someone from my club...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9775,7 +9749,8 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The current topic...</Dialog>
+          <Dialog>The one everyone's talking
+about...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9795,7 +9770,8 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is popular among men...</Dialog>
+          <Dialog>The one guys love right
+now...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9815,7 +9791,8 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is popular among women...</Dialog>
+          <Dialog>The one girls love right
+now...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9835,8 +9812,8 @@ look alike？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You can see it on TV 
-often...</Dialog>
+          <Dialog>The one you always see on
+TV...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9856,7 +9833,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's in the movie...</Dialog>
+          <Dialog>The one in that movie...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9876,7 +9853,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's in the textbooks...</Dialog>
+          <Dialog>The one in the textbooks...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9896,7 +9873,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>International...</Dialog>
+          <Dialog>That foreign...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9916,7 +9893,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From friends...</Dialog>
+          <Dialog>My friend's...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9936,7 +9913,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From someone I know...</Dialog>
+          <Dialog>Someone I know's...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9956,7 +9933,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From your relatives...</Dialog>
+          <Dialog>My boyfriend's relative...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9976,7 +9953,8 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From your family...</Dialog>
+          <Dialog>My boyfriend's family
+member...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -9996,7 +9974,8 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I saw it in town recently...</Dialog>
+          <Dialog>The one I saw in town the
+other day...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10016,7 +9995,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That romantic...</Dialog>
+          <Dialog>That hopeless romantic...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10036,7 +10015,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That narcissistic...</Dialog>
+          <Dialog>That narcissist...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10056,7 +10035,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That good talker...</Dialog>
+          <Dialog>That smooth talker...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10096,7 +10075,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Everyone's favorite...</Dialog>
+          <Dialog>The one everyone admires...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10116,7 +10095,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's a bit of a no-no...</Dialog>
+          <Dialog>That kind of hopeless...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10136,7 +10115,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, you look alike.</Dialog>
+          <Dialog>Hehe, just like them.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10156,7 +10135,7 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, you look alike.</Dialog>
+          <Dialog>Yes, you're just like them.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10176,8 +10155,8 @@ often...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？　I think you look 
-exactly alike.</Dialog>
+          <Dialog>Huh？ I think you look just
+like them.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10197,7 +10176,7 @@ exactly alike.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Really？　I think you look 
+          <Dialog>Really？ I think you look
 alike... sorry.</Dialog>
         </Dialogs>
       </SDL2>
@@ -10218,8 +10197,8 @@ alike... sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah... I really thought 
-you looked alike.</Dialog>
+          <Dialog>Really... I thought you
+looked alike.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10239,7 +10218,7 @@ you looked alike.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh... I see, sorry.</Dialog>
+          <Dialog>Ah... I see, sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10259,8 +10238,7 @@ you looked alike.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From here on out, I'll be 
-under your care.</Dialog>
+          <Dialog>Let's get along from now on.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10280,8 +10258,8 @@ under your care.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Please keep on caring for 
-out me, from here on out.</Dialog>
+          <Dialog>I look forward to getting to
+know you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10321,7 +10299,7 @@ out me, from here on out.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... I don't think so.</Dialog>
+          <Dialog>Hmm... not really, I guess.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
