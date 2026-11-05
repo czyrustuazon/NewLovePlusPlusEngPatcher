@@ -43,10 +43,9 @@ That's against the rules.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you turn off the power 
-without saving？ Why are 
-you doing something so 
-terrible？</Dialog>
+          <Dialog>Did you turn off the power
+without saving？ Why would
+you do something so mean？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -88,10 +87,9 @@ I can see right through you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving again... 
-And I went through all this 
-trouble to forgive you.</Dialog>
+          <Dialog>You turned off the power
+without saving again... Even
+though I forgave you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -111,10 +109,10 @@ trouble to forgive you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving again... 
-I told you to be careful 
-the other day.</Dialog>
+          <Dialog>You turned off the power
+without saving again... Even
+though I warned you last
+time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -134,10 +132,10 @@ the other day.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you turn off the power 
-without saving again？ 
-Don't you hear what I tell 
-you？</Dialog>
+          <Dialog>Did you turn off the power
+without saving again？
+Weren't you listening to
+me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -157,10 +155,10 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know why I'm angry 
-right？ You turned off the 
-power without saving, 
-right？</Dialog>
+          <Dialog>...You know why I'm angry,
+right？ Because you turned
+off the power without
+saving.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -180,10 +178,10 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving too many 
-times... It's not good if 
-it's on purpose.</Dialog>
+          <Dialog>You keep turning off the
+power without saving... If
+it's on purpose, that's not
+okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -207,10 +205,10 @@ it's on purpose.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving, again. How 
-many times have you done 
-this？ This is my limit.</Dialog>
+          <Dialog>How many times have you
+turned off the power without
+saving now？ I've had
+enough.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -340,7 +338,7 @@ me), I won't forgive you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have courage, do it.</Dialog>
+          <Dialog>Be brave.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -536,10 +534,9 @@ I'll forgive you for that...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... That's different 
-from what I asked... 
-That's not right... 
-But, I forgive you.</Dialog>
+          <Dialog>Ah... that's not what I
+asked for... It's not,
+but... I forgive you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -559,8 +556,7 @@ But, I forgive you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Alright, you finally said 
-it.</Dialog>
+          <Dialog>You said it properly.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -580,8 +576,7 @@ it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay... You've said it 
-properly.</Dialog>
+          <Dialog>Yes... it reached me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -601,8 +596,8 @@ properly.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, geez... I can't do 
-anything about it.</Dialog>
+          <Dialog>Geez... I guess I can't help
+it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -622,9 +617,8 @@ anything about it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I beg of you, don't do 
-anything so horrible 
-anymore.</Dialog>
+          <Dialog>Please. Don't do anything so
+mean again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -748,9 +742,9 @@ I won't lose.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You turned off the power 
-without saving again... 
-Stop doing that already！</Dialog>
+          <Dialog>You turned off the power
+without saving again, didn't
+you. ...Geez！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -793,9 +787,8 @@ I told you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I know it, you turned off 
-the power without saving 
-again.</Dialog>
+          <Dialog>I know. You turned off the
+power without saving again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -884,8 +877,9 @@ you say at least that much.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No way, are you going to 
-keep quiet all the time？</Dialog>
+          <Dialog>Don't tell me you're going
+to stay silent the whole
+time？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -926,7 +920,7 @@ something？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't you feel remorse？</Dialog>
+          <Dialog>Aren't you sorry？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -950,8 +944,8 @@ something？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'll know if you cheat. 
-Say it one more time.</Dialog>
+          <Dialog>I can tell if you fudge it.
+One more time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -992,8 +986,8 @@ Can you try again？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Say it clearly one more 
-time.</Dialog>
+          <Dialog>Say it more clearly. Once
+more, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1117,8 +1111,7 @@ it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, thank you. This makes 
-me glad.</Dialog>
+          <Dialog>Yes, thank you. I'm glad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1290,7 +1283,7 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't care anymore...</Dialog>
+          <Dialog>Hmph...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1310,8 +1303,8 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't want you to tell 
-me something silly...</Dialog>
+          <Dialog>I don't want you to say
+careless things...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1397,10 +1390,10 @@ is embarrassing.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay, we can make up again. 
-No doing this anymore, 
-okay？ These are important 
-memories for us.</Dialog>
+          <Dialog>Then we've officially made
+up. But never again, okay？
+They're our precious
+memories.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1424,10 +1417,9 @@ memories for us.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Finally. Remember this: 
-even if something seems 
-unpleasant, it's still a 
-memory of us.</Dialog>
+          <Dialog>One last thing, remember:
+even when bad things happen,
+they're still our memories.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1474,7 +1466,7 @@ part of our memories.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Just own up to it...</Dialog>
+          <Dialog>That's not very gracious...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1494,8 +1486,7 @@ part of our memories.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What a troublesome 
-person...</Dialog>
+          <Dialog>You're impossible...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1706,8 +1697,8 @@ reaching me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes. You were able to 
-convey your feelings.</Dialog>
+          <Dialog>Yes. Your feelings came
+through.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1916,7 +1907,7 @@ moving.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, look at me.</Dialog>
+          <Dialog>Yes, look right at me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1996,8 +1987,7 @@ moving.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You have such beautiful 
-eyes.</Dialog>
+          <Dialog>Your eyes were beautiful.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2017,8 +2007,8 @@ eyes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Incredible！ You have set 
-a new record♪</Dialog>
+          <Dialog>Amazing！ You set a new
+record♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
