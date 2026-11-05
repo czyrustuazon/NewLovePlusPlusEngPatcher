@@ -43,12 +43,12 @@
           <Dialog>Takane</Dialog>
           <Dialog>Hello... Hehe.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello... Huh, why are you 
+          <Dialog>Hello... Why are you
 laughing？</Dialog>
-          <Dialog>I had the feeling something 
-good would happen. And I 
-suddenly got your call. 
-What are you doing？</Dialog>
+          <Dialog>I just had a feeling
+something good would happen.
+And then you called. So,
+what is it？</Dialog>
           <Dialog>Well, you know...</Dialog>
         </Dialogs>
       </SDL2>
@@ -91,9 +91,9 @@ What are you doing？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes, hello.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you okay to speak now？</Dialog>
-          <Dialog>Yeah, go ahead.</Dialog>
-          <Dialog>You know...</Dialog>
+          <Dialog>It's me, is now okay？</Dialog>
+          <Dialog>Sure. Go ahead.</Dialog>
+          <Dialog>Um, so...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -133,12 +133,12 @@ What are you doing？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>*dial tone*</Dialog>
+          <Dialog>......'lo.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello... Huh？ hello？</Dialog>
-          <Dialog>I can hear you... 
-What happened？</Dialog>
-          <Dialog>Ah, emmm...</Dialog>
+          <Dialog>Hello... Huh？ Hello？</Dialog>
+          <Dialog>I can hear you... Is
+something up？</Dialog>
+          <Dialog>Ah, um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -153,9 +153,8 @@ What happened？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How does this day sound, 
-▲月▲▲日▲？ 
-Why don't we go to the 
+          <Dialog>How about ▲月▲▲日▲？
+Want to go to
 ▲デート場所▲？</Dialog>
         </Dialogs>
       </SDL2>
@@ -171,9 +170,9 @@ Why don't we go to the
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you free tomorrow？　
-Why don't we go to the 
-▲デート場所▲？</Dialog>
+          <Dialog>Are you free tomorrow？ Want
+to go to ▲デート場所▲
+together？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -188,9 +187,8 @@ Why don't we go to the
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you are free, why don't 
-we have a date at the 
-▲デート場所▲？</Dialog>
+          <Dialog>If you're free, want to go
+to ▲デート場所▲ now？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -214,9 +212,9 @@ we have a date at the
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes. I was just thinking 
-I wanted to go out. Thank 
-you for inviting me.</Dialog>
+          <Dialog>Yes... I was just thinking I
+wanted to go out. Thank you
+for asking.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -236,8 +234,8 @@ you for inviting me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, I'm free. So, I'll 
-see you there, okay？</Dialog>
+          <Dialog>I'm free. Then it's
+decided？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -261,10 +259,8 @@ see you there, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Tomorrow then, got it. 
-It suddenly feels like the 
-day is going slower, 
-I can't wait.</Dialog>
+          <Dialog>Got it, tomorrow. Suddenly I
+can't wait for it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -305,8 +301,8 @@ make it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, that's okay. We are 
-going on a date, right？</Dialog>
+          <Dialog>Yes, that's fine. Let's go
+on a date？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -326,7 +322,7 @@ going on a date, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay. I have some free time.</Dialog>
+          <Dialog>Sure. I happen to be free.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -346,8 +342,8 @@ going on a date, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That day is not good. 
-I'm sorry, but...</Dialog>
+          <Dialog>I can't that day. It's a
+shame, but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -367,8 +363,8 @@ I'm sorry, but...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That day is a little... 
-I can't.</Dialog>
+          <Dialog>That day's a little... I
+can't.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -392,9 +388,9 @@ I can't.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry, I have something 
-to do tomorrow. I shouldn't 
-have made plans.</Dialog>
+          <Dialog>Sorry, I have plans
+tomorrow... Geez, I wish I
+hadn't made them.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -414,8 +410,8 @@ have made plans.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Tomorrow？ I have something 
-to do tomorrow.</Dialog>
+          <Dialog>Tomorrow？ Tomorrow's a
+little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -435,8 +431,7 @@ to do tomorrow.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can't go right now... 
-Sorry.</Dialog>
+          <Dialog>Right now... I can't. Sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -456,8 +451,7 @@ Sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>But right now is... 
-It's too sudden.</Dialog>
+          <Dialog>Right now is... too sudden.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -477,9 +471,8 @@ It's too sudden.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Please wait. If you don't 
-mind, why don't we go to 
-another place？</Dialog>
+          <Dialog>Um. If you don't mind, how
+about somewhere else？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -499,9 +492,8 @@ another place？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you could change the 
-day, I might be able to 
-go...</Dialog>
+          <Dialog>If we could change the day,
+I might be able to go...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -526,11 +518,11 @@ go...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is complicated... 
-What should I do？</Dialog>
+          <Dialog>That's tough... What should
+we do？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you think it's better 
-to pass this time？</Dialog>
+          <Dialog>Guess I'll give up this
+time...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -555,11 +547,10 @@ to pass this time？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What should we do about 
-the time？</Dialog>
+          <Dialog>What time should we make
+it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well then, we will meet 
-at...</Dialog>
+          <Dialog>Then, let's meet at...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -584,11 +575,10 @@ at...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay. That day is fine 
-for me.</Dialog>
+          <Dialog>Okay. That day's fine for me
+too.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Then, I'll see you at 
-▲時刻▲ in 
+          <Dialog>Then ▲時刻▲ at
 ▲デート場所▲.</Dialog>
         </Dialogs>
       </SDL2>
@@ -618,13 +608,13 @@ for me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If that's the case, I think 
-I'm going to go home late. 
-Now that we have set the 
-date, I want us to take our 
-time that day...</Dialog>
+          <Dialog>That might make it late
+getting home. Since we're
+going, I'd like to take our
+time...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Very well, I can't wait.</Dialog>
+          <Dialog>Right, let's make it
+earlier, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -649,12 +639,10 @@ time that day...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry. I would be 
-grateful if you could 
-move it a little late...</Dialog>
+          <Dialog>Sorry. It'd help if we could
+make it a little later...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, now that you 
-mention it...</Dialog>
+          <Dialog>Then, let's see...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -679,10 +667,10 @@ mention it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hehe, this will keep 
-me happy until that day.</Dialog>
+          <Dialog>...Hehe, now I'll be happy
+all the way until the day.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, yes I get you.</Dialog>
+          <Dialog>Haha, I know what you mean.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -707,13 +695,12 @@ me happy until that day.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My heart stamp is getting 
-thin. I have to buy it 
-again.</Dialog>
+          <Dialog>I'm almost out of heart
+stickers. I'll have to buy
+more.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(You do cute things 
-each time I see you, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>(You do such cute things,
+▲高嶺＊＊▲.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -742,12 +729,11 @@ each time I see you,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I wonder if tomorrow 
-can come already. I've been 
-staring at the clock-hands 
-for a while.</Dialog>
+          <Dialog>...I wish tomorrow would
+hurry up and come. I keep
+staring at the clock.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, I'm impatient too.</Dialog>
+          <Dialog>Haha, you're so impatient.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -772,8 +758,8 @@ for a while.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I hope for tomorrow 
-to come soon？</Dialog>
+          <Dialog>Can I look forward to
+tomorrow？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Haha, leave it to me.</Dialog>
         </Dialogs>
@@ -800,12 +786,10 @@ to come soon？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now then, do you want to 
-hold a competition to see 
-which one arrives first？</Dialog>
+          <Dialog>Then... let's race to see
+who gets there first？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>All right, I'm not going 
-to lose.</Dialog>
+          <Dialog>All right, I won't lose.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -830,12 +814,11 @@ to lose.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm going to get ready 
-quickly, so wait for me 
-a little longer, please？</Dialog>
+          <Dialog>I'll get ready fast, so wait
+a little, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'll be waiting for you. 
-You don't have to panic.</Dialog>
+          <Dialog>I'll be waiting, no rush.
+Don't hurry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -860,11 +843,9 @@ You don't have to panic.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... I really wanted to 
-see you.</Dialog>
+          <Dialog>Mm... I wanted to see you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We can't do anything about 
-it. See you next time.</Dialog>
+          <Dialog>Can't be helped. Next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -889,11 +870,11 @@ it. See you next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...This is not going to 
-work.</Dialog>
+          <Dialog>...It's not working out,
+huh.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I agree. I'll invite you 
-again next time.</Dialog>
+          <Dialog>Yeah... I'll ask again next
+time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -918,10 +899,10 @@ again next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I see... There's nothing I 
-can do.</Dialog>
+          <Dialog>I see... Then it can't be
+helped.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's too bad...</Dialog>
+          <Dialog>Sorry...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -946,12 +927,11 @@ can do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm sorry, it's nothing. 
-Never mind.</Dialog>
+          <Dialog>Sorry, it's nothing. Don't
+worry about it.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh？ Now I'm curious, 
-but... Yeah, I'll see you 
-later then.</Dialog>
+          <Dialog>？ Now I'm curious, but...
+okay, bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -976,11 +956,11 @@ later then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm... Sorry, it was 
-nothing after all！</Dialog>
+          <Dialog>Hmm... Sorry, forget what I
+said！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Nothing？ Oh, okay... 
-If you say so...</Dialog>
+          <Dialog>Forget it？ Okay... if you
+say so...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1005,12 +985,10 @@ If you say so...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me but... I'm sorry, 
-is it okay if I just called 
-to hear your voice？</Dialog>
+          <Dialog>Um... sorry, can you forget
+what I just said？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see, don't worry I 
-understand...</Dialog>
+          <Dialog>I see, okay...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1035,9 +1013,9 @@ understand...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'll be hanging up soon.</Dialog>
+          <Dialog>Well, I'll hang up soon...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sure, see you later.</Dialog>
+          <Dialog>Yeah. Bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1062,10 +1040,10 @@ understand...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Okay then... Good night.</Dialog>
+          <Dialog>Well... good night.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Good night, 
-▲Takane＊＊▲.</Dialog>
+▲高嶺＊＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1092,7 +1070,7 @@ understand...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Well, I'll hang up...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, see you later...</Dialog>
+          <Dialog>Yeah, bye...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1117,9 +1095,9 @@ understand...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>See you later.</Dialog>
+          <Dialog>Well, see you.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes. Good night.</Dialog>
+          <Dialog>Yeah. Good night.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1169,18 +1147,14 @@ understand...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...I don't want to end 
-the call.</Dialog>
+          <Dialog>...You're not hanging up.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Don't hang up.</Dialog>
-          <Dialog>I want to stay like this 
-for a while... Can we speak 
-a little while longer？</Dialog>
-          <Dialog>...Yes, I want to hear 
-your voice a little longer.</Dialog>
-          <Dialog>But, we have to say goodbye 
-soon. Okay then... 
-Bye-bye.</Dialog>
+          <Dialog>You're not either.</Dialog>
+          <Dialog>I want to stay like this
+forever... right？</Dialog>
+          <Dialog>...Yeah, me too.</Dialog>
+          <Dialog>But it'll never end. Well
+then... bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1233,10 +1207,10 @@ Bye-bye.</Dialog>
           <Dialog>...Hello？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hello？</Dialog>
-          <Dialog>Hehe. I wanted to hear your 
-voice again.</Dialog>
+          <Dialog>Hehe. I got to hear your
+voice one more time.</Dialog>
           <Dialog>Haha...</Dialog>
-          <Dialog>Okay then... See you later.</Dialog>
+          <Dialog>Well then... see you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1291,18 +1265,17 @@ voice again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Hehe. Why don't you hang 
-up first？</Dialog>
+          <Dialog>...Hehe. Why aren't you
+hanging up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's kind of hard to hang 
-up to you...</Dialog>
-          <Dialog>For me too. Hey, can we 
+          <Dialog>It's kind of hard to hang
+up...</Dialog>
+          <Dialog>Me too. Hey, can we just
 stay like this forever？</Dialog>
-          <Dialog>Well, now that's something 
-else...</Dialog>
-          <Dialog>It was a joke. Okay then... 
-Bye-bye.</Dialog>
-          <Dialog>(...I thought you meant it.)</Dialog>
+          <Dialog>Um, well...</Dialog>
+          <Dialog>Just kidding. Well...
+bye-bye.</Dialog>
+          <Dialog>(...I thought she meant it.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

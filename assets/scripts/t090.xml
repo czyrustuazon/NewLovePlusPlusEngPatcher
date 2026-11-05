@@ -37,14 +37,13 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, ▲Takane＊＊▲？</Dialog>
+          <Dialog>Hello？
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. I want to talk for 
-a bit, is it okay？</Dialog>
-          <Dialog>Yes, it's okay. What do 
-you want to talk about？</Dialog>
-          <Dialog>What do you think about 
-this？ You know...</Dialog>
+          <Dialog>Yes. I have something to
+talk about, is now okay？</Dialog>
+          <Dialog>Sure. What is it？</Dialog>
+          <Dialog>Guess what？ You know...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -84,12 +83,13 @@ this？ You know...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hello, ▲Takane＊＊▲？</Dialog>
+          <Dialog>Hello,
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes... Umm...</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>I want to ask you one 
-thing, you know...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>I have a favor to ask, you
+know...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -141,12 +141,11 @@ thing, you know...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hello. It's Manaka.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. What is it？</Dialog>
-          <Dialog>Umm...</Dialog>
-          <Dialog>Somehow, this is funny 
-right？</Dialog>
-          <Dialog>When I heard your voice, 
-it sounded funny. That's it.</Dialog>
+          <Dialog>Yeah. What's up？</Dialog>
+          <Dialog>Um...</Dialog>
+          <Dialog>You sound happy？</Dialog>
+          <Dialog>Hearing your voice made me
+happy. So, um.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -166,9 +165,8 @@ it sounded funny. That's it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It would be nice if I 
-could go out with you 
-next time.</Dialog>
+          <Dialog>I'd love it if we could go
+out together sometime.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -188,8 +186,8 @@ next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Next time. I want to... 
-go out on a date.</Dialog>
+          <Dialog>Sometime... I want to go on
+a date.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -209,9 +207,8 @@ go out on a date.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>An invitation to go to on 
-a date, from me？ I don't 
-know.</Dialog>
+          <Dialog>A date invitation from me.
+What do you think？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -231,8 +228,8 @@ know.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you want, why don't we 
-go together somewhere 
+          <Dialog>If you like, want to go
+somewhere together
 tomorrow？</Dialog>
         </Dialogs>
       </SDL2>
@@ -253,9 +250,9 @@ tomorrow？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Tomorrow... I'd be happy 
-we could date, if I 
-wasn't busy.</Dialog>
+          <Dialog>Tomorrow... if you're not
+busy, I'd love to go on a
+date.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -275,10 +272,9 @@ wasn't busy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You want to go on a date 
-tomorrow？ I wonder if 
-it's not an inconvenience 
-for you.</Dialog>
+          <Dialog>Want to go on a date
+tomorrow？ Is it a bad
+time？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -298,9 +294,9 @@ for you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I would be happy if we 
-could go out together. 
-What do you think？</Dialog>
+          <Dialog>I'd love it if we could go
+out together now. How about
+it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -324,9 +320,8 @@ What do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wanted to see you all of 
-the sudden... Can we go out 
-now？</Dialog>
+          <Dialog>I suddenly wanted to see
+you... Can we go out now？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -346,8 +341,8 @@ now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Would you like to go on 
-a date？ Let's go now.</Dialog>
+          <Dialog>Want to go on a date？
+Starting now.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -392,9 +387,9 @@ a date？ Let's go now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Where are you？</Dialog>
+          <Dialog>Where would you like to go？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Emmm...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -419,8 +414,8 @@ a date？ Let's go now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to hear your 
-opinion.</Dialog>
+          <Dialog>I'd like to hear what you
+think too.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well then...</Dialog>
         </Dialogs>
@@ -447,8 +442,8 @@ opinion.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're right... Do you want 
-to go somewhere specific？</Dialog>
+          <Dialog>Let's see... Any requests
+for where？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Then...</Dialog>
         </Dialogs>
@@ -475,10 +470,9 @@ to go somewhere specific？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're right... Should we 
-go there？</Dialog>
+          <Dialog>Hmm... Shall we go there？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, it's decided.</Dialog>
+          <Dialog>Then it's decided.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -503,10 +497,10 @@ go there？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think that's good too... 
-Was it already decided？</Dialog>
+          <Dialog>I think that's a good place
+too... Decided？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Right.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -531,9 +525,10 @@ Was it already decided？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes. I like that too.</Dialog>
+          <Dialog>Yes. I'd like to go there
+too.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well then, it's decided.</Dialog>
+          <Dialog>Then it's decided.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -558,10 +553,10 @@ Was it already decided？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's... Should we stop？</Dialog>
+          <Dialog>Not there... let's skip it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see. Then, let's go to 
-another place...</Dialog>
+          <Dialog>I see. Then somewhere
+else...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -586,8 +581,8 @@ another place...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Well, if possible, we 
-should go elsewhere...</Dialog>
+          <Dialog>...Um, if possible,
+somewhere else...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Really？ Then...</Dialog>
         </Dialogs>
@@ -614,11 +609,11 @@ should go elsewhere...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm. If possible, we can 
-do other things...</Dialog>
+          <Dialog>Hmm. If possible, I'd rather
+go somewhere other than
+there...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Alright, then let's think 
-of something.</Dialog>
+          <Dialog>Okay, then I'll think again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -643,7 +638,7 @@ of something.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>When is it convenient？</Dialog>
+          <Dialog>When works for you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Then...</Dialog>
         </Dialogs>
@@ -670,9 +665,10 @@ of something.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What time should we set？</Dialog>
+          <Dialog>What time should we make
+it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Emm...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -697,10 +693,10 @@ of something.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Then, we have to decide on 
-the schedule next time.</Dialog>
+          <Dialog>Then next, we need to decide
+the schedule.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>And then...</Dialog>
+          <Dialog>Then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -725,9 +721,9 @@ the schedule next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>So, is it decided then？</Dialog>
+          <Dialog>So, is it decided？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -752,9 +748,9 @@ the schedule next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if this is okay.</Dialog>
+          <Dialog>Is this okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, there's no problem.</Dialog>
+          <Dialog>Yeah, no problem.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -781,7 +777,7 @@ the schedule next time.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes. This is good.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Very well then.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -806,10 +802,10 @@ the schedule next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad I consulted with 
-you about our date.</Dialog>
+          <Dialog>I'm glad we planned the date
+together.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I think she liked it.)</Dialog>
+          <Dialog>(Looks like she likes it.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -834,11 +830,11 @@ you about our date.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I asked you to decide the 
-place, after all.</Dialog>
+          <Dialog>In the end, I had you decide
+the place.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's okay, you can count 
-on me.</Dialog>
+          <Dialog>It's fine, I like it when
+you rely on me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -863,11 +859,11 @@ on me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Well then, we decided were 
-we should go on a date.</Dialog>
+          <Dialog>I let you decide the whole
+date.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I just chose my 
-favorite location.</Dialog>
+          <Dialog>It's fine, I just picked
+where I wanted to go.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -892,11 +888,10 @@ favorite location.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wish I could have helped 
-you...</Dialog>
+          <Dialog>I wish we could have worked
+it out...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Things like this happened 
-sometimes.</Dialog>
+          <Dialog>These things happen.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -921,11 +916,10 @@ sometimes.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry for asking such 
-an unreasonable question.</Dialog>
+          <Dialog>Sorry for asking for
+something impossible.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's not true. Invite me 
-again sometime.</Dialog>
+          <Dialog>Not at all. Ask me again.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -950,11 +944,10 @@ again sometime.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can't do anything about 
-it... but I'm very sorry.</Dialog>
+          <Dialog>It can't be helped... but
+it's a shame.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We have another chance, 
-so let's try again.</Dialog>
+          <Dialog>There'll be another chance.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
