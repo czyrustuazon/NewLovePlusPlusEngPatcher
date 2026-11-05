@@ -733,7 +733,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Dummy</Dialog>
-          <Dialog>Leave it to me</Dialog>
+          <Dialog>Surprise me</Dialog>
           <Dialog>▲生成選択肢１▲</Dialog>
           <Dialog>▲生成選択肢２▲</Dialog>
           <Dialog>▲生成選択肢３▲</Dialog>
@@ -741,13 +741,13 @@
           <Dialog>Choose what to debug</Dialog>
           <Dialog>1:Choose by chopstick type</Dialog>
           <Dialog>2:Choose by restaurant menu</Dialog>
-          <Dialog>3:By old flow before 7/23</Dialog>
+          <Dialog>3:Use old flow (pre-7/23)</Dialog>
           <Dialog>4:Choose by dish number</Dialog>
           <Dialog>5:Settings</Dialog>
           <Dialog>6</Dialog>
           <Dialog>Choose which tools to use</Dialog>
           <Dialog>Choose another</Dialog>
-          <Dialog>Chopsticks:Rice</Dialog>
+          <Dialog>Chopsticks:Tendon</Dialog>
           <Dialog>Chopsticks:Ramen</Dialog>
           <Dialog>Chopsticks:Zaru Soba</Dialog>
           <Dialog>Fork</Dialog>
@@ -755,14 +755,14 @@
           <Dialog>Spoon:Curry</Dialog>
           <Dialog>Spoon:Stew</Dialog>
           <Dialog>Both hands</Dialog>
-          <Dialog>Hands:Ichibu-mochi</Dialog>
-          <Dialog>Hands:Kushi-mochi</Dialog>
+          <Dialog>One hand:Partial grip</Dialog>
+          <Dialog>One hand:Skewer grip</Dialog>
           <Dialog>Straw</Dialog>
           <Dialog>Cup</Dialog>
           <Dialog>Settings screen</Dialog>
           <Dialog>1:random behavior</Dialog>
-          <Dialog>2:innocent</Dialog>
-          <Dialog>3:my girlfriend's feelings</Dialog>
+          <Dialog>2:Innocent or not</Dialog>
+          <Dialog>3:Girlfriend's feeling</Dialog>
           <Dialog>4:</Dialog>
           <Dialog>5:</Dialog>
           <Dialog>Return</Dialog>
@@ -772,7 +772,7 @@
           <Dialog>random=&gt;2固定</Dialog>
           <Dialog>random=&gt;3固定</Dialog>
           <Dialog>random=&gt;4固定</Dialog>
-          <Dialog>Set up</Dialog>
+          <Dialog>Settings saved</Dialog>
           <Dialog>Set to innocent</Dialog>
           <Dialog>Set to not innocent</Dialog>
           <Dialog>Feeling:Set to low</Dialog>
@@ -782,31 +782,31 @@
           <Dialog>▲生成選択肢６▲</Dialog>
           <Dialog>Next</Dialog>
           <Dialog>Italian restaurant</Dialog>
-          <Dialog>Restaurant</Dialog>
+          <Dialog>Eatery</Dialog>
           <Dialog>Girlfriend's house</Dialog>
           <Dialog>Curry Shop</Dialog>
           <Dialog>Cake Buffet</Dialog>
           <Dialog>Chain Store/WB</Dialog>
           <Dialog>Chain Store/Coffee Shop</Dialog>
           <Dialog>Chain Store/Dixies</Dialog>
-          <Dialog>Chain Store/Dixies Comp</Dialog>
+          <Dialog>Chain Store/Dixies rival</Dialog>
           <Dialog>Ramen Shop</Dialog>
           <Dialog>Restaurant</Dialog>
           <Dialog>Beach</Dialog>
           <Dialog>Cafeteria</Dialog>
           <Dialog>Coffee shop</Dialog>
           <Dialog>Lakeside Restaurant</Dialog>
-          <Dialog>Hero's house/Normal</Dialog>
-          <Dialog>Hero's house/Nursing</Dialog>
+          <Dialog>Player's house/Normal</Dialog>
+          <Dialog>Player's house/Sick care</Dialog>
           <Dialog>Handmade bento</Dialog>
           <Dialog>Sushi shop</Dialog>
-          <Dialog>Store</Dialog>
-          <Dialog>Yakiniku store</Dialog>
+          <Dialog>Food stall</Dialog>
+          <Dialog>Yakiniku restaurant</Dialog>
           <Dialog>Chinese restaurant</Dialog>
           <Dialog>Japanese sweet shop</Dialog>
           <Dialog>Morning</Dialog>
-          <Dialog>Renge</Dialog>
-          <Dialog>One hand:Zenbu-mochi</Dialog>
+          <Dialog>Soup spoon</Dialog>
+          <Dialog>One hand:Full grip</Dialog>
           <Dialog>百の位 000</Dialog>
           <Dialog>百の位 100</Dialog>
           <Dialog>百の位 200</Dialog>
