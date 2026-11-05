@@ -84,22 +84,22 @@
           <Dialog>Takane</Dialog>
           <Dialog>'Morning.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>Hey. How long are you 
-gonna stay in bed？</Dialog>
-          <Dialog>Okay... Morni-- What！？ 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Hehe. Good morning.</Dialog>
-          <Dialog>Um... Good morning...</Dialog>
-          <Dialog>That's good. Hey, if you 
-don't get up, we'll be 
-late.</Dialog>
-          <Dialog>Yes... But, why is this...？</Dialog>
-          <Dialog>Someone said that he could 
-barely get up in the 
-morning, right？ Now, get 
-ready！</Dialog>
-          <Dialog>Okay~.</Dialog>
+          <Dialog>Mmm.</Dialog>
+          <Dialog>Geez. Are you always cutting
+it this close？</Dialog>
+          <Dialog>Mm... Morn... Wha！
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Hehe. Where's my good
+morning？</Dialog>
+          <Dialog>Um. Good morning...</Dialog>
+          <Dialog>Well done. Come on, get up
+properly？ We'll be late.</Dialog>
+          <Dialog>Yes. ...Wait, why are you
+here？</Dialog>
+          <Dialog>Someone said he's bad with
+mornings, right？ Anyway,
+come on, get ready！</Dialog>
+          <Dialog>Okaaay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -210,24 +210,25 @@ ready！</Dialog>
         <Dialogs>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>'Morning. Please wake up.</Dialog>
+          <Dialog>Good morning, please wake
+up！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Mmm...</Dialog>
-          <Dialog>Huh！？ Why？Ah, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Did you forget？ I told you 
-I'd help you get up.</Dialog>
-          <Dialog>Eh？ ...Ah, I see.</Dialog>
-          <Dialog>Hehe. You sleepyhead.</Dialog>
-          <Dialog>I'll be waiting outside 
-then.</Dialog>
-          <Dialog>Why don't you stay here？ 
-I'll just get dressed and 
-I'll be ready...</Dialog>
+          <Dialog>Mmm？</Dialog>
+          <Dialog>...Hm？
+▲高嶺＊＊▲！
+Why？</Dialog>
+          <Dialog>Did you forget？ I said I'd
+come help wake you up.</Dialog>
+          <Dialog>Huh？ ...Oh, right.</Dialog>
+          <Dialog>Hehe, sleepyhead.</Dialog>
+          <Dialog>Then I'll wait outside your
+room, okay？</Dialog>
+          <Dialog>Why？ I'll get changed right
+away, so you can just...</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>I'll be waiting outside. 
-Just hurry up.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Anyway, I'll wait outside.
+Hurry, okay？</Dialog>
           <Dialog>(...？)</Dialog>
         </Dialogs>
       </SDL2>
@@ -320,24 +321,24 @@ Just hurry up.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm...</Dialog>
-          <Dialog>Eh？ ▲Takane＊＊▲. 
-▲Takane＊＊▲！？</Dialog>
-          <Dialog>Hehe. Are you awake？</Dialog>
-          <Dialog>I'm awake... Um...</Dialog>
-          <Dialog>I promised you, right？ 
-So now I'm here to wake 
-you up. Hey, are you still 
-half asleep？</Dialog>
-          <Dialog>Um, my brain hasn't woken 
-up yet.</Dialog>
-          <Dialog>...Then shall I get in bed 
-with you until you fully 
-wake up？</Dialog>
-          <Dialog>Yeah... What！！？</Dialog>
-          <Dialog>Haha, now you're awake. 
-Get ready, okay？</Dialog>
-          <Dialog>(What a surprise...)</Dialog>
+          <Dialog>Mm...</Dialog>
+          <Dialog>Mm... Huh...
+▲高嶺＊＊▲.
+▲高嶺＊＊▲!?</Dialog>
+          <Dialog>Hehe, awake now？</Dialog>
+          <Dialog>Awake... Um？</Dialog>
+          <Dialog>We promised, didn't we？
+That I'd come wake you. Are
+you still half asleep？</Dialog>
+          <Dialog>Yeah, my brain might not be
+working.</Dialog>
+          <Dialog>...Then maybe I'll lie down
+beside you until you're
+fully awake.</Dialog>
+          <Dialog>Okay... Wait, what!?</Dialog>
+          <Dialog>Hehe, eyes wide open. Get
+ready quickly, okay？</Dialog>
+          <Dialog>(That surprised me...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -387,16 +388,15 @@ Get ready, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If you don't get up, I'll 
-leave...</Dialog>
+          <Dialog>If you don't hurry, I'm
+leaving？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Wait... I wanna buy some 
-potatoes first...</Dialog>
-          <Dialog>Haha. 'Morning. It's 
-morning already.</Dialog>
-          <Dialog>Okay, thank you... Whoa...</Dialog>
-          <Dialog>I'll wait outside. You'd 
-better hurry, okay？</Dialog>
+          <Dialog>Wait, sweet potato truck...</Dialog>
+          <Dialog>Hehe, good morning. It's
+morning？</Dialog>
+          <Dialog>Yeah, thanks... *yawn*...</Dialog>
+          <Dialog>I'll be outside, so come
+quick, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -457,19 +457,19 @@ better hurry, okay？</Dialog>
         <Dialogs>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
-          <Dialog>Please wake up.</Dialog>
+          <Dialog>Please wake up！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Mmm... Good Morning... Ah, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Mm... Oh,
+▲高嶺＊＊▲.
+Mornin'...</Dialog>
           <Dialog>'Morning. Did you sleep 
 well？</Dialog>
-          <Dialog>Just a little bit more... 
-You should sleep too. Come 
-on, ▲Takane＊＊▲.</Dialog>
-          <Dialog>Hey... I'll give you a 
-little more time. I'll 
-wake you up in a bit, 
-okay？</Dialog>
+          <Dialog>A little longer...
+▲高嶺＊＊▲,
+you too, come on...</Dialog>
+          <Dialog>Geez... Just a little,
+okay？ After a little, get
+up, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -519,17 +519,17 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>'Morning. It's morning 
-already.</Dialog>
+          <Dialog>Good morning. It's morning？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲... 
-Good Morning...</Dialog>
-          <Dialog>Hehe. Looking at you like 
-this, I want to sleep on 
-your bed too.</Dialog>
-          <Dialog>Oh, welcome...</Dialog>
-          <Dialog>Hehe, no thanks. Wake up, 
-okay？ We're gonna be late.</Dialog>
+          <Dialog>▲高嶺＊＊▲...
+Mornin'...</Dialog>
+          <Dialog>Hehe. Funny, watching you
+makes me want to curl up and
+sleep too.</Dialog>
+          <Dialog>Yeah, please do...</Dialog>
+          <Dialog>Hehe, geez. Come on, wake
+up？ We'll be late, you
+know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -626,24 +626,24 @@ okay？ We're gonna be late.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Eh？ What's up, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hey, have you bought your 
-lunch yet？</Dialog>
-          <Dialog>No, I'm about to. Why？</Dialog>
-          <Dialog>Would you mind eating 
+          <Dialog>Oh,
+▲高嶺＊＊▲.
+What's up？</Dialog>
+          <Dialog>Hey, have you bought lunch
+yet？</Dialog>
+          <Dialog>No, about to. Why？</Dialog>
+          <Dialog>If you want, would you eat
 this？</Dialog>
-          <Dialog>A lunch box？ You made it, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hey, don't be too loud.</Dialog>
-          <Dialog>Ah, sorry. I'm just so 
-happy.</Dialog>
-          <Dialog>Then I won't blame you. 
-Oh well... Is a Japanese 
-styled lunch okay for you？</Dialog>
+          <Dialog>A bento？ Did
+▲高嶺＊＊▲
+make it？ Seriously！</Dialog>
+          <Dialog>Geez, you're too loud.</Dialog>
+          <Dialog>Ah, sorry. I got so happy.</Dialog>
+          <Dialog>Then I guess it can't be
+helped？ Hehe. It's Japanese
+food, is that okay？</Dialog>
           <Dialog>No problem at all！</Dialog>
-          <Dialog>You're too loud again. 
-...Geez.</Dialog>
+          <Dialog>Shouting again. ...Geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -733,24 +733,27 @@ styled lunch okay for you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, what's up, 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Oh,
+▲高嶺＊＊▲.
+What's up？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, well... I wonder if 
-you already had lunch...</Dialog>
-          <Dialog>I'm about to go buy it...</Dialog>
-          <Dialog>Great. Here. I was hoping 
-you would try this...</Dialog>
-          <Dialog>A lunch box？ Is it for me？</Dialog>
-          <Dialog>Yes. I made it myself. 
-...Please try it.</Dialog>
-          <Dialog>Okay！</Dialog>
-          <Dialog>Wow, Japanese food. So 
-nice.</Dialog>
-          <Dialog>If you don't like it, 
-please tell me.</Dialog>
-          <Dialog>Oh, I really like it.</Dialog>
-          <Dialog>...I'm glad to hear that. 
+          <Dialog>Um, well. I was wondering
+what you're doing for lunch
+today...</Dialog>
+          <Dialog>I was about to go buy
+something...</Dialog>
+          <Dialog>Good. This. I'd like you to
+eat it...</Dialog>
+          <Dialog>A bento？ Did you maybe make
+it for me？</Dialog>
+          <Dialog>Yes. I tried hard... Hehe.
+...Enjoy.</Dialog>
+          <Dialog>Of course！</Dialog>
+          <Dialog>Ooh, Japanese food. Nice.</Dialog>
+          <Dialog>If it's not to your taste,
+tell me, okay？</Dialog>
+          <Dialog>No way it won't be.</Dialog>
+          <Dialog>...I'm happy to hear that.
 Hehe.</Dialog>
         </Dialogs>
       </SDL2>
@@ -848,26 +851,24 @@ Hehe.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, what's up, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hey, have you bought your 
+          <Dialog>Oh,
+▲高嶺＊＊▲.
+What's up？</Dialog>
+          <Dialog>Hey, did you already buy
 lunch？</Dialog>
-          <Dialog>Yeah. This sandwich here.</Dialog>
-          <Dialog>Then it's confiscated.</Dialog>
-          <Dialog>Eh！？ Wait！</Dialog>
-          <Dialog>You should eat this 
-instead.</Dialog>
-          <Dialog>Huh？ Ah, could it be a 
-homemade lunch box？</Dialog>
-          <Dialog>Hehe. It's Japanese food 
-though.</Dialog>
-          <Dialog>Oh, awesome！ Wonderful. 
-Thank you, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>You're welcome. Please let 
-me know how you like it. 
-I'll surely try harder 
-next time.</Dialog>
+          <Dialog>Yeah, this. Bread.</Dialog>
+          <Dialog>Then that's confiscated.</Dialog>
+          <Dialog>Huh, wait！</Dialog>
+          <Dialog>This is for you, okay？</Dialog>
+          <Dialog>Huh. Oh... Is this a
+homemade bento？</Dialog>
+          <Dialog>Hehe. It's Japanese food,
+the total opposite of bread.</Dialog>
+          <Dialog>Whoa, amazing！ The real
+deal. Thanks, ▲高嶺＊＊▲！</Dialog>
+          <Dialog>You're welcome. If it's not
+to your taste, tell me？
+I'll try harder next time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -919,14 +920,13 @@ next time.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>...How is it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Very delicious. Your soup 
-base and the seasonings 
-are well blended...</Dialog>
-          <Dialog>Hey, how many times are 
-you going to praise me？</Dialog>
-          <Dialog>It's just too delicious 
-that I can't help 
-praising you.</Dialog>
+          <Dialog>Yeah, delicious. The broth
+really comes through, and
+the seasoning has depth...</Dialog>
+          <Dialog>Geez, how many times is
+that？</Dialog>
+          <Dialog>It's really good, so I can't
+help it, right？</Dialog>
           <Dialog>I see. You can't help it, 
 eh？ Hehe！</Dialog>
         </Dialogs>
@@ -978,19 +978,19 @@ eh？ Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today's lunch is so tasty！ 
-Your stew is the best 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Today's bento is great too！
+▲高嶺＊＊▲'s simmered
+dishes are the best.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hehe. Thanks.</Dialog>
-          <Dialog>Hey, what shall I cook 
-for you next？</Dialog>
-          <Dialog>Your food is always so 
-delicious. So anything's 
-okay, ▲Takane＊＊▲.</Dialog>
-          <Dialog>Really？ I'm so happy... 
-Then I'll also try my 
-best next time.</Dialog>
+          <Dialog>Hey, what kind of bento
+would you like next？</Dialog>
+          <Dialog>Everything
+▲高嶺＊＊▲
+makes is delicious, so...</Dialog>
+          <Dialog>Really？ I'm so happy...
+Then I'll do my best next
+time too？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1040,15 +1040,16 @@ best next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How is today's lunch？</Dialog>
+          <Dialog>How was today's bento？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Perfect. Your flavor is the 
-best, ▲Takane＊＊▲.</Dialog>
-          <Dialog>Just the flavor？</Dialog>
-          <Dialog>Oh, I'm sorry.</Dialog>
-          <Dialog>Hehe. Very well. I wonder 
-what I should make next. 
-You have any requests？</Dialog>
+          <Dialog>Perfect.
+▲高嶺＊＊▲'s
+seasoning is the best.</Dialog>
+          <Dialog>Not "the seasoning, too"？</Dialog>
+          <Dialog>Oh, right. My mistake.</Dialog>
+          <Dialog>Hehe, very good. Just
+kidding. What should I make
+next？ Any requests？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1135,20 +1136,21 @@ You have any requests？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Takane＊＊▲. Yo！</Dialog>
-          <Dialog>Hehe, yo！ I made a lunch 
-box today.</Dialog>
-          <Dialog>Lunch box？ Then I'll go 
-buy a sandwich and we can 
-eat together.</Dialog>
-          <Dialog>I didn't mean that. Here.</Dialog>
-          <Dialog>...Is this for me！？</Dialog>
-          <Dialog>Hey, don't overreact.</Dialog>
-          <Dialog>Oh, a Western-styled 
-lunch！ Looks yummy. Can I 
-really eat it？</Dialog>
+          <Dialog>▲高嶺＊＊▲. Hey there.</Dialog>
+          <Dialog>Hehe, hey there. Today I
+brought a bento.</Dialog>
+          <Dialog>A bento？ Then I'll go buy
+bread at the school store.</Dialog>
+          <Dialog>That's not what I meant.
+Here.</Dialog>
+          <Dialog>...There's one for me
+too!?</Dialog>
+          <Dialog>Geez, you're so dramatic.</Dialog>
+          <Dialog>Whoa, a Western-style
+lunch！ Looks great！ Can I
+eat it？</Dialog>
           <Dialog>Hehe. Please▼</Dialog>
-          <Dialog>I'll eat it now！</Dialog>
+          <Dialog>Thanks for the food！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1235,28 +1237,26 @@ really eat it？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲. 
-Wait a sec. I'll go buy my 
-lunch, so we can eat 
+          <Dialog>Oh,
+▲高嶺＊＊▲.
+Wait a sec, I'll run to the
+school store, then lunch
 together...</Dialog>
-          <Dialog>Wait. I knew you would 
-say that. That's why I 
-hurried here.</Dialog>
-          <Dialog>Ah, do you have anything 
-you want to eat in 
-particular？</Dialog>
-          <Dialog>No, that's not the case. 
-Here. I want you to try 
-this.</Dialog>
+          <Dialog>Wait. I figured you'd do
+that, so I hurried over too.</Dialog>
+          <Dialog>Ah, is there something you
+want me to get？</Dialog>
+          <Dialog>No, it's not that. I'd like
+you to eat this.</Dialog>
           <Dialog>A lunch box！</Dialog>
-          <Dialog>Yes. It's Western food 
-though. If it's okay, 
-please have some.</Dialog>
+          <Dialog>Yes. It's Western-style...
+but please enjoy, if you'd
+like.</Dialog>
           <Dialog>I'll eat it！</Dialog>
-          <Dialog>Hehe. Seeing your happy 
-face makes me happy too. 
-Here you go.</Dialog>
-          <Dialog>I'll eat it now！</Dialog>
+          <Dialog>Hehe, when you look that
+happy, it makes me happy
+too. Here you go.</Dialog>
+          <Dialog>Thanks for the food！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1358,27 +1358,23 @@ Here you go.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's up 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hehe. I'm going to kidnap 
-you.</Dialog>
-          <Dialog>I don't have money though. 
-What do you want？</Dialog>
-          <Dialog>What shall I request 
-then...？ Here.</Dialog>
-          <Dialog>Huh？ A lunch box！？</Dialog>
-          <Dialog>Yes. I want you to eat 
-this. How's that？</Dialog>
-          <Dialog>Okay！</Dialog>
-          <Dialog>Hey, wipe your mouth.</Dialog>
-          <Dialog>Am I drooling or 
-something...？ From the 
-smell, this must be 
-Western food.</Dialog>
-          <Dialog>Hehe, bingo. Hey, why 
-don't you hurry and eat 
-it？</Dialog>
-          <Dialog>Okay！</Dialog>
+          <Dialog>▲高嶺＊＊▲.
+What's up？</Dialog>
+          <Dialog>Hehe, I came to kidnap you.</Dialog>
+          <Dialog>Me？ You won't get any
+ransom, you know？</Dialog>
+          <Dialog>We'll see about that？ Here.</Dialog>
+          <Dialog>Hm？ A bento!?</Dialog>
+          <Dialog>Yes. I wanted to have lunch
+with you. How about it？</Dialog>
+          <Dialog>I'm in！</Dialog>
+          <Dialog>Geez, your mouth's hanging
+open.</Dialog>
+          <Dialog>I'm drooling... This smell
+says Western-style.</Dialog>
+          <Dialog>Hehe, ding-ding. Hey, eat
+quick？</Dialog>
+          <Dialog>Sure！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1418,16 +1414,16 @@ it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, delicious！ I'm looking 
-forward to the next one.</Dialog>
+          <Dialog>Ahh, that was good！ Can't
+wait for the next one.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>You're very good at 
-cheering people up, huh？</Dialog>
-          <Dialog>I'm really looking forward 
-to it. It's like I've 
-discovered something new 
-for every bite I took...</Dialog>
-          <Dialog>Okay, okay. Enough. Hehe！</Dialog>
+          <Dialog>You're really good at
+motivating me, aren't you？</Dialog>
+          <Dialog>Because I really am looking
+forward to it. Every time I
+eat, I discover something
+new...</Dialog>
+          <Dialog>Okay, okay. Geez... Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1476,18 +1472,18 @@ for every bite I took...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, new menu.</Dialog>
+          <Dialog>Oh, a new menu.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. I added so many 
-things that you wanted to 
-eat in it. How is it？</Dialog>
+          <Dialog>Yes. I thought I'd like you
+to try lots of different
+things. ...How is it？</Dialog>
           <Dialog>This is...</Dialog>
-          <Dialog>Very delicious！ The last 
-one was delicious but this 
-one is perfect！ It's my 
-favorite.</Dialog>
-          <Dialog>...I'm glad that I added 
-more stuff in it.</Dialog>
+          <Dialog>Delicious！ The last one was
+good, but this one's exactly
+my taste too.</Dialog>
+          <Dialog>...I'm glad. I hope I can
+keep growing my repertoire
+like this.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1537,16 +1533,17 @@ more stuff in it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How is today's side dish？</Dialog>
+          <Dialog>How are today's side
+dishes？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's very delicious. Wow, 
-you really can cook 
-delicious food.</Dialog>
-          <Dialog>You can still praise me 
-even more？</Dialog>
-          <Dialog>Your food is so delicious. 
-I want more, 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>Yeah, good again today. Is
+it okay for it to be this
+good？</Dialog>
+          <Dialog>You can praise me more, you
+know？</Dialog>
+          <Dialog>I want to eat more of
+▲高嶺＊＊▲'s
+cooking.</Dialog>
           <Dialog>Hehe. Roger that. You can 
 look forward to it▼</Dialog>
         </Dialogs>
@@ -1630,24 +1627,22 @@ look forward to it▼</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's up, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>...Here. Shall we eat 
+          <Dialog>▲高嶺＊＊▲,
+what's up？</Dialog>
+          <Dialog>...This. Want to eat
 together？</Dialog>
-          <Dialog>...A lunch box？ Is that 
-for me？</Dialog>
-          <Dialog>If you don't want it, 
-I'll just eat it alone.</Dialog>
-          <Dialog>I want it！ Yes, I want it！</Dialog>
-          <Dialog>Hmm. It's Chinese food 
-though. Is it good？</Dialog>
-          <Dialog>Of course！ So you can also 
-can cook Chinese food. 
-Hmm... It looks yummy, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Please try it and let me 
-know what you think. Here 
-you go.</Dialog>
+          <Dialog>...A bento？ For me？</Dialog>
+          <Dialog>If you don't want it, I'll
+eat it alone.</Dialog>
+          <Dialog>I-I want it！ I do！</Dialog>
+          <Dialog>Um, it's Chinese food. Is
+that okay？</Dialog>
+          <Dialog>Of course！ Chinese food
+made by ▲高嶺＊＊▲...
+Looks great...</Dialog>
+          <Dialog>Save your thoughts until
+after you eat, please. Go
+ahead？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1739,28 +1734,25 @@ you go.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What is it, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Um, hey... Have you 
-already bought your lunch？</Dialog>
-          <Dialog>No, I'm about to. Eh？ 
-What's that you're 
-carrying？</Dialog>
-          <Dialog>...Um, it's the lunch I 
-made. Shall we eat 
-together？</Dialog>
-          <Dialog>Oh, thank you！ What did 
-you make？</Dialog>
-          <Dialog>Chinese food. Hey, you 
-said earlier that you 
-like it, right？</Dialog>
-          <Dialog>Oh, it looks luxurious. 
-Thank you so much.</Dialog>
-          <Dialog>Okay. Let me know how you 
-like it after you finish 
-it, okay？</Dialog>
-          <Dialog>I really want to know your 
-preferences.</Dialog>
+          <Dialog>▲高嶺＊＊▲.
+What's up？</Dialog>
+          <Dialog>Um. Hey, did you already go
+buy lunch？</Dialog>
+          <Dialog>No, I was about to. Huh？
+What's that you're holding？</Dialog>
+          <Dialog>...Yes. I made a bento. Want
+to share？</Dialog>
+          <Dialog>Oh, thanks！ What is it, by
+the way？</Dialog>
+          <Dialog>Chinese. You said before you
+like food that fills you up,
+right？</Dialog>
+          <Dialog>Whoa, fancy. I'll gratefully
+dig in.</Dialog>
+          <Dialog>Okay. Tell me how it was
+when you're done？</Dialog>
+          <Dialog>I want to know what you
+like.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1852,28 +1844,23 @@ preferences.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's up 
-▲Takane＊＊▲？ </Dialog>
-          <Dialog>Shall we eat lunch 
-together？</Dialog>
-          <Dialog>Oh, great. Just wait a 
-sec. I'll go buy my lunch.</Dialog>
-          <Dialog>You don't have to. I made 
-some for you.</Dialog>
-          <Dialog>You made lunch for me？</Dialog>
-          <Dialog>If you're not in the mood 
-for Chinese food, you can 
-buy your own...</Dialog>
-          <Dialog>Chinese food？ That's 
-great！</Dialog>
-          <Dialog>Hehe. Just seeing your 
-happy face makes me feel 
-like it is really worth 
-it to cook this.</Dialog>
-          <Dialog>Then shall we start 
-eating？ I want to hear 
-your opinion, so please 
-savor it, okay？</Dialog>
+          <Dialog>What's up,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Let's have lunch together？</Dialog>
+          <Dialog>Sure. Then wait a sec. I'll
+run to the store...</Dialog>
+          <Dialog>No need. I have one for you.</Dialog>
+          <Dialog>A bento？</Dialog>
+          <Dialog>If you're not in the mood
+for Chinese, the school
+store...</Dialog>
+          <Dialog>Chinese！ Nice！</Dialog>
+          <Dialog>Hehe. If you make that face,
+I guess it was worth all the
+effort？</Dialog>
+          <Dialog>Then let's eat. I want to
+hear what you think, so
+really taste it, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1928,20 +1915,18 @@ savor it, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, it's Chinese food.</Dialog>
+          <Dialog>Oh, it's Chinese.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, it's Chinese food... 
-How is it？</Dialog>
-          <Dialog>Delicious！ I feel like 
-your food is spicing up 
-my spirits.</Dialog>
-          <Dialog>Hehe. That's probably 
-because I actually put 
-spices in there.</Dialog>
-          <Dialog>Really？</Dialog>
-          <Dialog>Yeah, you can feel them, 
-right？ Hehe. You'd better 
-hurry and eat it.</Dialog>
+          <Dialog>Yes, it's Chinese. ...How is
+it？</Dialog>
+          <Dialog>Delicious！ Your cooking
+keeps getting better, I
+swear.</Dialog>
+          <Dialog>Hehe. Isn't that because of
+the spice？</Dialog>
+          <Dialog>Spice？</Dialog>
+          <Dialog>Yes, you know the saying？
+Hehe, eat up, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1991,19 +1976,17 @@ hurry and eat it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Today's lunch is Chinese 
-food.</Dialog>
+          <Dialog>Today's bento is Chinese.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I've been waiting！</Dialog>
-          <Dialog>Hehe, you're in such good 
-mood... What do you think 
-about the side dish today？</Dialog>
-          <Dialog>...Very delicious！ It's 
-so delicious that I'm full 
-of joy now.</Dialog>
-          <Dialog>Hearing you say that, I'm 
-now so full of joy too. 
-I'm kidding.</Dialog>
+          <Dialog>Hehe, you're such a smooth
+talker. ...How are today's
+side dishes？</Dialog>
+          <Dialog>...Delicious！ The kind of
+delicious that makes you
+feel happy？</Dialog>
+          <Dialog>Hearing you say that makes
+me happy too. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2053,20 +2036,17 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yup, today's Chinese food 
-is also delicious！</Dialog>
+          <Dialog>Mm, today's Chinese is great
+too！</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hehe. I'm glad.</Dialog>
-          <Dialog>But, for you to cook such 
-wonderful food, it must be 
-quite troublesome. I love 
-to eat it, but...</Dialog>
-          <Dialog>No problem. Seeing your 
-smile when you eat it is 
-the best reward for me.</Dialog>
-          <Dialog>...I'm kidding. Hey, what 
-do you want to eat next 
-time？</Dialog>
+          <Dialog>But isn't it a lot of work
+every time？ Such a fancy
+bento... I'm happy, though.</Dialog>
+          <Dialog>Not at all. Because your
+smile is a feast for me.</Dialog>
+          <Dialog>...Just kidding. Hey, what
+do you want to eat next？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
