@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="898542522" Unknown="19">
+  <Entries>
+    <Entry Unknown0="3046631657" Unknown1="3425443329">
+      <SDL2 Key="599726767">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63901</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63902</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63903</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63904</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63905</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey, what's the matter？
+You've been so quiet...</Dialog>
+          <Dialog>Hey, come on.</Dialog>
+          <Dialog>Geez, at least say something
+to me.</Dialog>
+          <Dialog>I'm going to get mad, you
+know？ ...Is that okay？</Dialog>
+          <Dialog>Okay... I'm going home...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2701255381" Unknown1="908397163">
+      <SDL2 Key="599726767">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63906</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63907</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63908</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63909</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63910</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hehe, what's wrong？ You've
+become so quiet.</Dialog>
+          <Dialog>Geez, how long are you going
+to keep this up？ If it's
+boring, shall we just go
+home？</Dialog>
+          <Dialog>Hmm, I see... so you're
+going to ignore me like
+that...</Dialog>
+          <Dialog>You're being a little too
+naughty... you know？</Dialog>
+          <Dialog>I'm going home... bye.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="201051711" Unknown1="806384741">
+      <SDL2 Key="1409237274">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63911</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63912</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63913</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63914</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63915</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63916</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hmm？ What's wrong？</Dialog>
+          <Dialog>What's really wrong？
+Thinking about something？
+If something's bothering
+you, I'll listen, okay？</Dialog>
+          <Dialog>Geez, say something. If you
+don't tell me, how can I
+know？</Dialog>
+          <Dialog>Fine. You're in that kind of
+mood today. Okay, got it.</Dialog>
+          <Dialog>...I'm going home.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="99047481" Unknown1="494693969">
+      <SDL2 Key="1933539430">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63917</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63918</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63919</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63920</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63921</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hehe, you've been quiet for a
+while. What's wrong？</Dialog>
+          <Dialog>...I'm getting sleepy too...
+hey, you're actually awake,
+right？</Dialog>
+          <Dialog>Hehe. Shall big sis lend you
+her lap for a pillow～？</Dialog>
+          <Dialog>One sheep... two sheep... a
+tanuki... how many tanuki
+was it...</Dialog>
+          <Dialog>Haah... now I'm sleepy
+too... time to go home.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4048638501" Unknown1="2272615099">
+      <SDL2 Key="1933539430">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63922</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63923</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63924</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63925</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63926</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey, what's wrong？ You've
+been quiet for quite a while.</Dialog>
+          <Dialog>Hellooo, anybody home？ Are
+you awake～？</Dialog>
+          <Dialog>Oh, I see. So you're playing
+possum？</Dialog>
+          <Dialog>Kids who play possum get
+turned into possum stew.</Dialog>
+          <Dialog>Then just stay like that
+forever. Mommy's going home,
+okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1531657871" Unknown1="2170602677">
+      <SDL2 Key="1933539430">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63927</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63928</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63929</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63930</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63931</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63932</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63933</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>What's wrong？ You've been
+quiet for a while...</Dialog>
+          <Dialog>Yoo-hoo, Nene Anegasaki's
+boyfriend～. Please
+answer～. Your girlfriend is
+crying～.</Dialog>
+          <Dialog>Yoo-hoo, I'm really going to
+cry～. If you apologize
+cutely, I'll forgive you～.</Dialog>
+          <Dialog>I feel like I've been
+bewitched by a tanuki...
+wait, was it a fox？</Dialog>
+          <Dialog>Ponpoko ponpoko ponpoko...
+haah, I'm going home.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1429702793" Unknown1="1858911905">
+      <SDL2 Key="1005710156">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63934</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63935</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63936</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63937</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63938</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63939</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63940</Value0>
+                <Value1>500</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63941</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey... you've been quiet...
+did I do something？</Dialog>
+          <Dialog>Sorry. If I did something
+that bothered you, I
+apologize. So... okay？</Dialog>
+          <Dialog>I'm sorry. I'll fix
+everything that's wrong with
+me...</Dialog>
+          <Dialog>Yeah... it's all my fault,
+right？ That's why... you
+won't say anything, right？</Dialog>
+          <Dialog>Sorry. I should go home
+today, right？ Yes. I'll do
+that. Sorry about today.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1101103733" Unknown1="3569723915">
+      <SDL2 Key="1005710156">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63942</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63943</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63944</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63945</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63946</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63947</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63948</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>...What's wrong？ You've
+been so quiet... did I do
+something？</Dialog>
+          <Dialog>If that's so, you have to
+tell me.</Dialog>
+          <Dialog>I can't tell if you stay
+quiet. Say it properly.</Dialog>
+          <Dialog>...I see. You're in that
+kind of mood today. Okay,
+got it. Sorry, for
+everything.</Dialog>
+          <Dialog>I'll go home today. Well...
+see you... okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2879090399" Unknown1="3534754821">
+      <SDL2 Key="1005710156">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63949</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63950</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63951</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>131072</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63952</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63953</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63954</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63955</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey... did I do something？
+Ah, no. Sorry, asking
+something weird all of a
+sudden.</Dialog>
+          <Dialog>...Are you in a bad mood？</Dialog>
+          <Dialog>Days like that happen. If
+something happened, you can
+lean on me, okay？</Dialog>
+          <Dialog>...I see, you won't even
+lean on me today.</Dialog>
+          <Dialog>I'll head home now. Um...
+see you... okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2777151705" Unknown1="3055292145">
+      <SDL2 Key="1005710156">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63956</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63957</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63958</Value0>
+                <Value1>333</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63959</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>...Sorry, I'm going home
+now.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>It's not that I don't like
+you... but for a date, the
+mood matters too, right？</Dialog>
+          <Dialog>...Sorry. Was I being
+insensitive？</Dialog>
+          <Dialog>...Bye. See you.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2448552645" Unknown1="739637851">
+      <SDL2 Key="1798382231">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63960</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63961</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63962</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63963</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Haah... shall we call it a
+day today？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>It's our date, after all...
+don't you think you could
+think about your girlfriend
+a little more？</Dialog>
+          <Dialog>...Sorry. Was I being
+insensitive？</Dialog>
+          <Dialog>Reflect on it a little.
+Okay？ Bye.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4226539055" Unknown1="704668757">
+      <SDL2 Key="1798382231">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63964</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63965</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63966</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63967</Value0>
+                <Value1>333</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Geez... and it's our date.</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>Mood matters, you know？ Big
+sis is a girl too, after
+all.</Dialog>
+          <Dialog>...Sorry. Was I being
+insensitive？</Dialog>
+          <Dialog>Yes. A little too
+insensitive. So that's it
+for today. Reflect on it
+until our next date, okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4124518441" Unknown1="124542529">
+      <SDL2 Key="1798382231">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63968</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63969</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63970</Value0>
+                <Value1>333</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63971</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63972</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Geez... it's our date, and
+it's ruined like this, you
+know？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>Maybe it's my fault. I'm
+older, so I should lead you.
+Right, it's me, it's me...</Dialog>
+          <Dialog>You don't need to worry so
+much, ▲姉ヶ崎＊▲...</Dialog>
+          <Dialog>...I'm going home. Going
+home to reflect...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3779142165" Unknown1="2103790251">
+      <SDL2 Key="1798382231">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63973</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63974</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63975</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63976</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>458752</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>How would you feel if you
+went cherry blossom viewing
+and none were blooming？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>Or you went to the beach and
+swimming was banned, or went
+chestnut picking and they
+were all picked already, or
+went skiing and there was no
+snow at all. How would you
+feel？</Dialog>
+          <Dialog>How would I...</Dialog>
+          <Dialog>Answer: that's how I feel
+right now. Better luck next
+time... maybe？ Well, I'm
+going home today.</Dialog>
+          <Dialog>Wait...</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1262161535" Unknown1="2068886693">
+      <SDL2 Key="636720509">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63977</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63978</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63979</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63980</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63981</Value0>
+                <Value1>333</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hmm, what should I do at
+times like this... Spartan
+training, after all？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>Hehe. Seems I spoiled you a
+little too much. Girls are
+creatures who care about
+atmosphere, mood... that
+kind of thing, you know？</Dialog>
+          <Dialog>Sorry, was I insensitive？</Dialog>
+          <Dialog>Yes. So that's it for
+today's date. Next time,
+make sure big sis is
+properly satisfied.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="1160222841" Unknown1="1354542737">
+      <SDL2 Key="636720509">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63982</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63983</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63984</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63985</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey... is it because I'm
+older that you can't get in
+the mood after all？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>...Sorry. Is it okay if we
+end today's date here...？</Dialog>
+          <Dialog>...Sorry. Was I being
+insensitive？</Dialog>
+          <Dialog>No, it's fine. ...It's
+because I'm older, after
+all, isn't it.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="831623781" Unknown1="3400899323">
+      <SDL2 Key="636720509">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63986</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63987</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63988</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63989</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey, shall we end today's
+date here？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>What's this, all of a
+sudden？</Dialog>
+          <Dialog>It doesn't feel like a
+date... aren't you bored
+too？</Dialog>
+          <Dialog>That's...</Dialog>
+          <Dialog>It's fine. I'm still not in
+the mood either way... bye.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2609610447" Unknown1="3433039093">
+      <SDL2 Key="636720509">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63990</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>196608</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63991</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>262144</Value1>
+          </Entry>
+          <Entry>
+            <Values />
+            <Value0>147458</Value0>
+            <Value1>327680</Value1>
+          </Entry>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>63992</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>63993</Value0>
+                <Value1>467</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>393216</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Hey... are you bored？</Dialog>
+          <Dialog>○○○○○○○○</Dialog>
+          <Dialog>Huh？ What's this, all of a
+sudden？</Dialog>
+          <Dialog>Maybe I'm not leading well
+enough... I can't even keep
+a younger boy satisfied...</Dialog>
+          <Dialog>That's not what I meant...</Dialog>
+          <Dialog>It's fine. Sorry for saying
+something to dampen the
+mood. I'm going home today,
+so, bye.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2507655386" Unknown1="604896993">
+      <SDL2 Key="1161022409">
+        <Unknown>
+        </Unknown>
+        <Dialogs>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>
