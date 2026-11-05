@@ -32,8 +32,8 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask you
+just one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Um, yes.</Dialog>
         </Dialogs>
@@ -85,20 +85,17 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This morning, I read a 
-fortune telling column 
-in a newspaper.</Dialog>
+          <Dialog>This morning I read the
+horoscope in the paper.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ And what did it say？</Dialog>
-          <Dialog>Hehe. It said, "Everything 
-will go smoothly. You are 
-very lucky."</Dialog>
-          <Dialog>Oh, that's good. And did 
-you find anything lucky 
-today？</Dialog>
-          <Dialog>Having a chance to talk 
-with you like this... 
-No, there's nothing. Hehe！</Dialog>
+          <Dialog>Oh？ What did it say？</Dialog>
+          <Dialog>Hehe. "Everything goes your
+way. Excellent luck."</Dialog>
+          <Dialog>Oh, nice. Feeling it so
+far？</Dialog>
+          <Dialog>Getting to talk with you
+like this is already... No,
+never mind. Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -152,19 +149,17 @@ No, there's nothing. Hehe！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This morning, I read a 
-fortune telling column in 
-a newspaper.</Dialog>
+          <Dialog>This morning I read the
+horoscope in the paper.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ And what did it say？</Dialog>
-          <Dialog>It said, "Things go like 
-flowing water. You are 
-lucky."</Dialog>
-          <Dialog>Eh...？ It sounds so 
+          <Dialog>Oh？ What did it say？</Dialog>
+          <Dialog>"Like flowing water. Good
+luck."</Dialog>
+          <Dialog>Huh... Sounds kind of
 philosophical.</Dialog>
-          <Dialog>Hehe, is that so？ I think 
-today will be a good day 
-just like the other days.</Dialog>
+          <Dialog>Hehe, it does, doesn't it？
+I'll take it to mean a good
+day, same as usual.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -219,21 +214,19 @@ just like the other days.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This morning, I read a 
-fortune telling column in 
-a newspaper.</Dialog>
+          <Dialog>This morning I read the
+horoscope in the paper.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ And what did it say？</Dialog>
-          <Dialog>It said, "Be careful. 
-Today is bad."</Dialog>
-          <Dialog>...Really？ Well, don't 
-take it too seriously！</Dialog>
-          <Dialog>Yeah... After all, it's 
-just a fortune, right？ 
-Just let it be. It's 
-merely a fortune...</Dialog>
-          <Dialog>(She takes these things 
-surprisingly seriously...)</Dialog>
+          <Dialog>Oh？ What did it say？</Dialog>
+          <Dialog>"Take care. Bad luck."...</Dialog>
+          <Dialog>...I see. Well, don't worry
+about it！</Dialog>
+          <Dialog>Yeah. It's just a horoscope,
+after all. ...Though a
+horoscope is still a
+horoscope.</Dialog>
+          <Dialog>(Is she the type who
+actually minds？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
