@@ -215,49 +215,47 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>We finally arrived.</Dialog>
+          <Dialog>We're here.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>Yeah...</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>We're staying here 
-together.</Dialog>
+          <Dialog>We're staying here together,
+huh.</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Yes, right here.</Dialog>
-          <Dialog>Ah, yes.</Dialog>
+          <Dialog>L-let's go in.</Dialog>
+          <Dialog>Y-yeah.</Dialog>
           <Dialog>(I'm getting nervous...)</Dialog>
-          <Dialog>Wouldn't it be strange if 
-we stayed together that 
-many times？</Dialog>
-          <Dialog>Strange？... Why would it 
-be strange？</Dialog>
-          <Dialog>That's because... We're 
-only high school students.</Dialog>
-          <Dialog>I don't think that matters. 
-Is there anything wrong 
-with that？</Dialog>
-          <Dialog>Well... Yes, you're right.</Dialog>
-          <Dialog>Okay, let's go in.</Dialog>
-          <Dialog>Reception</Dialog>
-          <Dialog>Welcome to Hotel Onoya, 
-honored guests.</Dialog>
-          <Dialog>I have a reservation under 
-the name ▲苗字▲...</Dialog>
-          <Dialog>Let's go in, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Yup.</Dialog>
-          <Dialog>Please give me your luggage 
-dear wife.</Dialog>
-          <Dialog>Eh... Whoa, me？ Yes... 
-Thank you.</Dialog>
-          <Dialog>Oh, huh, what's wrong, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Suddenly calling me your 
-wife, it's...</Dialog>
-          <Dialog>Haha. I think it's normal 
-if they see us as a couple.</Dialog>
-          <Dialog>(You're bright red. I'm 
-getting embarrassed too 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>If we keep staying over
+together like this, won't
+people think it's weird？</Dialog>
+          <Dialog>Weird... how？</Dialog>
+          <Dialog>Well... because we're in
+high school.</Dialog>
+          <Dialog>That doesn't matter. It's
+not like we're doing
+anything wrong, right？</Dialog>
+          <Dialog>Yes... yes, you're right.</Dialog>
+          <Dialog>Yeah, let's go.</Dialog>
+          <Dialog>Front Desk</Dialog>
+          <Dialog>Welcome. Welcome to Hotel
+Onoya.</Dialog>
+          <Dialog>I have a reservation under
+▲苗字▲...</Dialog>
+          <Dialog>Let's go, ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Okay.</Dialog>
+          <Dialog>Madam, allow me to take your
+bags.</Dialog>
+          <Dialog>Huh... m-me!? Y-yes...
+thank you very much.</Dialog>
+          <Dialog>Oh, huh, ▲高嶺＊＊▲,
+what's wrong？</Dialog>
+          <Dialog>He suddenly called me
+"madam"...</Dialog>
+          <Dialog>Haha. Guess we look like a
+married couple, huh.</Dialog>
+          <Dialog>(▲高嶺＊＊▲'s bright red.
+I'm embarrassed too, but I
+don't mind it at all.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -393,33 +391,32 @@ getting embarrassed too
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, this room...</Dialog>
-          <Dialog>We should have separated 
-rooms...</Dialog>
-          <Dialog>Did they say anything？</Dialog>
-          <Dialog>There's nothing available. 
-It's my mistake, I'm 
-sorry. What should we do？</Dialog>
+          <Dialog>Um, about the rooms...</Dialog>
+          <Dialog>We should have booked
+separate ones...</Dialog>
+          <Dialog>How did it go？</Dialog>
+          <Dialog>No luck, they're full. Must
+be a mix-up. Man. What do we
+do？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Then it's okay.</Dialog>
-          <Dialog>What？</Dialog>
-          <Dialog>Because it would be 
-annoying for the hotel 
-staff, if we told we want 
-other room.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>I want to be with you 
-forever.</Dialog>
-          <Dialog>I'm getting nervous just 
-by standing in a room with 
-you.</Dialog>
-          <Dialog>Yes, will we get used to 
-this soon？</Dialog>
-          <Dialog>I wonder... But, if we do, 
-don't you feel like you've 
-lost something？ We won't 
-have as much fun.</Dialog>
-          <Dialog>Geez, what's with that.</Dialog>
+          <Dialog>...It's fine.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>I mean, we'd only trouble
+the hotel staff. I don't
+mind sharing a room.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>I want to be with you all
+the time.</Dialog>
+          <Dialog>This moment always makes me
+nervous, huh.</Dialog>
+          <Dialog>Yes, I wonder if we'll get
+used to it？</Dialog>
+          <Dialog>I wonder... but if we got
+used to it, wouldn't that
+feel like a loss？ The
+excitement would be gone.</Dialog>
+          <Dialog>Geez, what's that supposed
+to mean？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -684,69 +681,69 @@ have as much fun.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay, it's time for us to 
-go eat at the buffet.</Dialog>
+          <Dialog>Oh, the buffet should be
+starting about now.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, I hope we can have 
-some delicious dish.</Dialog>
-          <Dialog>Me too！</Dialog>
-          <Dialog>Alright, I'll eat the 
-shrimps！ Shrimps！</Dialog>
-          <Dialog>Geez, don't eat too fast, 
-please.</Dialog>
-          <Dialog>Haha. Let's go to the 
-restaurant.</Dialog>
-          <Dialog>Yeah, let's go.</Dialog>
-          <Dialog>No more, I'm so full.</Dialog>
-          <Dialog>Geez, I told you about it.</Dialog>
-          <Dialog>Reception</Dialog>
-          <Dialog>Dear guests, how was your 
-meal？</Dialog>
-          <Dialog>It was delicious, a feast.</Dialog>
-          <Dialog>Thank you very much. 
-Tomorrow's breakfast will 
-be here too, so please 
-come when it's time.</Dialog>
-          <Dialog>That's right. Dear guests, 
-have you heard of the story 
-about the legendary beach？</Dialog>
-          <Dialog>Legendary beach？</Dialog>
-          <Dialog>Yes, there is an island 
-called Hatsushima, which 
-can be reached by boat 
-from Atami Port.</Dialog>
-          <Dialog>In that place, there is a 
-beach no one has ever 
-reached.</Dialog>
-          <Dialog>And legend says that 
-couples that vow love to 
-each other, can be happy 
-forever.</Dialog>
-          <Dialog>(I think I heard that 
-somewhere...)</Dialog>
-          <Dialog>A married couple like you 
-should have no trouble 
-finding it.</Dialog>
+          <Dialog>Hehe, I hope the food is
+good.</Dialog>
+          <Dialog>Yeah！</Dialog>
+          <Dialog>All right, I'm eating
+shrimp！ Shrimp！</Dialog>
+          <Dialog>Geez, rushing is bad
+manners.</Dialog>
+          <Dialog>Haha. Then let's head to the
+dining hall.</Dialog>
+          <Dialog>Okay, let's go.</Dialog>
+          <Dialog>Ahh, I'm stuffed.</Dialog>
+          <Dialog>Geez, people will hear you.</Dialog>
+          <Dialog>Front Desk</Dialog>
+          <Dialog>How was your meal？</Dialog>
+          <Dialog>It was delicious. Thank you
+for the meal.</Dialog>
+          <Dialog>Thank you very much.
+Tomorrow's breakfast will be
+in the same place, so please
+come by when it's time.</Dialog>
+          <Dialog>Oh, yes. Have you ever heard
+the story of the legendary
+beach？</Dialog>
+          <Dialog>A legendary beach？</Dialog>
+          <Dialog>Yes, there's an island
+called Hatsushima that you
+can reach by boat from Atami
+Port.</Dialog>
+          <Dialog>On it, there's a beach that
+no one has ever reached.</Dialog>
+          <Dialog>And legend says couples who
+pledge their love there will
+be happy forever.</Dialog>
+          <Dialog>(Sounds like something I've
+heard before...)</Dialog>
+          <Dialog>A well-matched married
+couple like you might just
+find it.</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Sorry for taking up your 
-time. Enjoy your stay.</Dialog>
-          <Dialog>Haha, a legendary beach, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Sounds nice...</Dialog>
-          <Dialog>Eh？</Dialog>
-          <Dialog>We'll definitely go find 
-it tomorrow.</Dialog>
-          <Dialog>Ah, yes. I'm with you.</Dialog>
-          <Dialog>(Well, if this means you're 
-happy, then it's okay 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>I've kept you long enough.
+Please enjoy your stay.</Dialog>
+          <Dialog>Haha, a legendary beach,
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>How lovely...</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>Tomorrow, we're definitely
+going to look for it.</Dialog>
+          <Dialog>Ah, y-yeah. Sure.</Dialog>
+          <Dialog>(Well, if it makes
+▲高嶺＊＊▲ happy, that's
+fine.)</Dialog>
           <Dialog>What should we do tomorrow？</Dialog>
-          <Dialog>I want to go there again.</Dialog>
-          <Dialog>Go there... To the beach？</Dialog>
-          <Dialog>Yes, it's a place where we 
-made memories.</Dialog>
-          <Dialog>You're right, I would like 
-to find it again...</Dialog>
+          <Dialog>I want to go back there
+again.</Dialog>
+          <Dialog>There... you mean the
+beach？</Dialog>
+          <Dialog>Yes, it's a place full of
+memories for us.</Dialog>
+          <Dialog>Yeah, let's look for it
+again...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -775,13 +772,13 @@ to find it again...</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Alright, let's go！</Dialog>
-          <Dialog>Open-bath or private bath？</Dialog>
+          <Dialog>All right, let's go！</Dialog>
+          <Dialog>The open-air bath instead？</Dialog>
           <Dialog>...Let's not</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Why don't you go to the 
-open-air bath rather than 
-the private bath？</Dialog>
+          <Dialog>Rather than the private
+bath, want to try the
+open-air bath？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -881,35 +878,33 @@ the private bath？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's time to go back to 
-our room and sleep 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲, let's head
+back to the room.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Okay.</Dialog>
-          <Dialog>(Come to think of it, 
-this bed ... it's for one 
-person only, right？)</Dialog>
-          <Dialog>(If this was a futon, 
-I could put them closer...)</Dialog>
+          <Dialog>(Come to think of it, these
+beds... we each use our own,
+right？)</Dialog>
+          <Dialog>(If these were futons, we
+could push them together...)</Dialog>
           <Dialog>▲Takane＊＊▲！？</Dialog>
-          <Dialog>Wouldn't it be best to 
-have a futon？</Dialog>
-          <Dialog>Ah, were you thinking the 
-same ▲Takane＊＊▲？</Dialog>
-          <Dialog>Yes. Because if we had a 
-futon, we could do funny 
-things with them, right？</Dialog>
-          <Dialog>That's right！</Dialog>
-          <Dialog>Isn't it？ In my house, 
-everyone has a futon. 
-You can lay it down, fold 
-it up, hehe！</Dialog>
-          <Dialog>Laying and folding... 
-Is that fun？</Dialog>
-          <Dialog>Yes. Huh？... Am I wrong？</Dialog>
-          <Dialog>No, that's not it... 
-Each person has their own 
-way of enjoying bed time.</Dialog>
+          <Dialog>Futons would've been nice
+too, right？</Dialog>
+          <Dialog>Ah, you think so too,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Yes. With futons, there's
+all sorts of fun stuff,
+right？</Dialog>
+          <Dialog>Right！</Dialog>
+          <Dialog>Right？ At my house,
+everyone has a bed. Laying
+them out, folding them up,
+hehe！</Dialog>
+          <Dialog>Laying them out, folding
+them up... that's fun？</Dialog>
+          <Dialog>Yes. Huh？ ...Isn't it？</Dialog>
+          <Dialog>No... well, everyone has
+their own idea of fun...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
