@@ -36,11 +36,12 @@
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Friends and others</Dialog>
+          <Dialog>Friends, etc.</Dialog>
           <Dialog>Family</Dialog>
           <Dialog>Others</Dialog>
           <Dialog>Select from list</Dialog>
-          <Dialog>【DEBUG】BF's face registered</Dialog>
+          <Dialog>【DEBUG】BF's face
+registered</Dialog>
           <Dialog>▲紹介友達名▲</Dialog>
         </Dialogs>
       </SDL2>
@@ -211,32 +212,33 @@
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Pal</Dialog>
+          <Dialog>Friend</Dialog>
           <Dialog>Family</Dialog>
           <Dialog>Other</Dialog>
           <Dialog>Select from list</Dialog>
-          <Dialog>【DEBUG】BF's face registered</Dialog>
+          <Dialog>【DEBUG】BF's face
+registered</Dialog>
           <Dialog>▲紹介友達名▲</Dialog>
           <Dialog>Celebrity</Dialog>
           <Dialog>Father</Dialog>
           <Dialog>Mother</Dialog>
           <Dialog>Big brother</Dialog>
           <Dialog>Big sister</Dialog>
-          <Dialog>Lil' brother</Dialog>
-          <Dialog>Lil' sister</Dialog>
+          <Dialog>Little brother</Dialog>
+          <Dialog>Little sister</Dialog>
           <Dialog>Son</Dialog>
           <Dialog>Daughter</Dialog>
-          <Dialog>A Type</Dialog>
-          <Dialog>B Type</Dialog>
-          <Dialog>AB Type</Dialog>
-          <Dialog>O Type</Dialog>
+          <Dialog>Type A</Dialog>
+          <Dialog>Type B</Dialog>
+          <Dialog>Type AB</Dialog>
+          <Dialog>Type O</Dialog>
           <Dialog>Kind</Dialog>
           <Dialog>Cold</Dialog>
           <Dialog>Quiet</Dialog>
           <Dialog>Noisy</Dialog>
           <Dialog>Serious</Dialog>
-          <Dialog>Interesting</Dialog>
-          <Dialog>Nasty</Dialog>
+          <Dialog>Funny</Dialog>
+          <Dialog>Pervy</Dialog>
           <Dialog>Register</Dialog>
           <Dialog>Start Over</Dialog>
           <Dialog>○</Dialog>
@@ -298,10 +300,11 @@
         <Dialogs>
           <Dialog>For how long have you been 
 dating？</Dialog>
-          <Dialog>What's your boyfriend's 
-favorite place？</Dialog>
-          <Dialog>What has made you happy？</Dialog>
-          <Dialog>What worries you？</Dialog>
+          <Dialog>What do you like about your
+boyfriend？</Dialog>
+          <Dialog>What made you happy
+recently？</Dialog>
+          <Dialog>Any worries？</Dialog>
           <Dialog>What are your hobbies？</Dialog>
           <Dialog>What is your favorite dish？</Dialog>
           <Dialog>How old are you？</Dialog>
@@ -496,15 +499,15 @@ favorite place？</Dialog>
           <Dialog>×</Dialog>
           <Dialog>Nice to meet you</Dialog>
           <Dialog>Wrong</Dialog>
-          <Dialog>A Type</Dialog>
-          <Dialog>B Type</Dialog>
-          <Dialog>O Type</Dialog>
-          <Dialog>AB Type</Dialog>
+          <Dialog>Type A</Dialog>
+          <Dialog>Type B</Dialog>
+          <Dialog>Type O</Dialog>
+          <Dialog>Type AB</Dialog>
           <Dialog>Passionate</Dialog>
-          <Dialog>Rough</Dialog>
-          <Dialog>Natural</Dialog>
-          <Dialog>Careful</Dialog>
-          <Dialog>Out</Dialog>
+          <Dialog>Sloppy</Dialog>
+          <Dialog>Airheaded</Dialog>
+          <Dialog>Meticulous</Dialog>
+          <Dialog>Wild</Dialog>
           <Dialog>Selfish</Dialog>
           <Dialog>Introduce to others</Dialog>
           <Dialog>End</Dialog>
