@@ -64,14 +64,14 @@
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？</Dialog>
-          <Dialog>The school trip starts 
-tomorrow, right？</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Let's do the school trip
+again tomorrow, okay？</Dialog>
+          <Dialog>Yeah...</Dialog>
           <Dialog>Hehe, I'm looking forward 
 to it...</Dialog>
           <Dialog>Good night...</Dialog>
-          <Dialog>Yes, G' night...</Dialog>
+          <Dialog>Night...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -131,16 +131,15 @@ to it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay, I'll turn off the 
-lights now.</Dialog>
+          <Dialog>Okay, I'll dim the lights.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I see....</Dialog>
-          <Dialog>What's wrong？</Dialog>
-          <Dialog>Tomorrow, you'll wake up 
-first and look at me.</Dialog>
-          <Dialog>Ah... Maybe that's true.</Dialog>
-          <Dialog>Sorry for saying that. 
-Good night, Dear▼</Dialog>
+          <Dialog>I see...</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>When I wake up tomorrow, the
+first thing I'll see is you.</Dialog>
+          <Dialog>Yeah... that's true.</Dialog>
+          <Dialog>Sorry, that's all. Good
+night, Dear▼</Dialog>
           <Dialog>Good night.</Dialog>
         </Dialogs>
       </SDL2>
