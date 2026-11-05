@@ -340,88 +340,79 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>I'm thinking about buying 
-new clothes. I'll need 
-your opinion.</Dialog>
-          <Dialog>My opinion for clothes...？ 
-Hmm... Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>I want to get some new
+clothes, so I thought I'd
+ask your opinion.</Dialog>
+          <Dialog>Clothes... Hmm, let's see...</Dialog>
           <Dialog>Simple, I guess</Dialog>
-          <Dialog>▲Takane＊＊▲, cute！</Dialog>
+          <Dialog>Cute, like ▲高嶺＊＊▲</Dialog>
           <Dialog>Neat and tidy</Dialog>
-          <Dialog>Try something different...</Dialog>
+          <Dialog>Sometimes, maybe...</Dialog>
           <Dialog>Current clothes are nice</Dialog>
-          <Dialog>I like simple clothes. A 
-casual style is okay.</Dialog>
-          <Dialog>I don't think that style 
-will suit me though.</Dialog>
-          <Dialog>But if the wearer is too 
-pretty, something simple 
-will make the overall look 
-more balanced！</Dialog>
+          <Dialog>Something simple？ Casual,
+you know？</Dialog>
+          <Dialog>I don't think that kind of
+thing suits me much.</Dialog>
+          <Dialog>But when the base is this
+good, simple clothes keep it
+balanced！</Dialog>
           <Dialog>Hey, I was asking you 
 seriously... So, casual 
 style, eh？</Dialog>
-          <Dialog>(I think a casual style 
-will be really nice. Yeah.)</Dialog>
-          <Dialog>Cute is good！</Dialog>
+          <Dialog>(Casual's easier on me too,
+yeah.)</Dialog>
+          <Dialog>I like cute stuff.</Dialog>
           <Dialog>Hmm... I see.</Dialog>
           <Dialog>...？</Dialog>
-          <Dialog>I know I'm just not cute.</Dialog>
-          <Dialog>No, no！ Come on. Something 
-fluttery and fluffy will 
-suit you best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Like something with frills, 
-or laces, or sheer muslins？</Dialog>
-          <Dialog>I guess.</Dialog>
-          <Dialog>Wouldn't that make me look 
-too childish？</Dialog>
-          <Dialog>No！ I'm sure you'll look 
-cute！</Dialog>
-          <Dialog>O-Okay. Thanks. But, hmm...</Dialog>
-          <Dialog>(A cute style is best for 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>Surely, a tidy, neat, 
-lady-like style would suit 
-▲Takane＊＊▲ best.</Dialog>
-          <Dialog>I don't think I look like a 
-lady or anything like that.</Dialog>
-          <Dialog>Sorry, but I think you look 
-best with a graceful style
-▲Takane＊＊▲.</Dialog>
+          <Dialog>I'm not cute anyway.</Dialog>
+          <Dialog>No, no！ You know, frilly,
+fluffy stuff. Very
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>Frills, lace, organza
+fabric？</Dialog>
+          <Dialog>Something like that.</Dialog>
+          <Dialog>Isn't that a bit childish
+now？</Dialog>
+          <Dialog>No way！ I guarantee it！</Dialog>
+          <Dialog>R-Really？ Thanks. But,
+hmm...</Dialog>
+          <Dialog>(Cute is best for
+▲高嶺＊＊▲！)</Dialog>
+          <Dialog>Something neat and ladylike
+suits
+▲高嶺＊＊▲
+best.</Dialog>
+          <Dialog>I'm not a "young lady" or
+anything like that.</Dialog>
+          <Dialog>Sorry. But I think something
+a little graceful suits
+▲高嶺＊＊▲.</Dialog>
           <Dialog>Is that so？ Hmm...</Dialog>
-          <Dialog>(Of course. For me, a 
-graceful style suits 
-▲Takane＊＊▲ best！)</Dialog>
-          <Dialog>Occasionally, it should be 
-something like...</Dialog>
-          <Dialog>Like what？</Dialog>
-          <Dialog>Something with a little 
-less fabric... Yeah.</Dialog>
+          <Dialog>(Graceful and refined is
+▲高嶺＊＊▲！)</Dialog>
+          <Dialog>Sometimes, you know... How
+do I put it？</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>Something with a little less
+fabric, you know.</Dialog>
           <Dialog>Like mini-skirts or 
 something of that sort？</Dialog>
-          <Dialog>S-Sort of. They make you 
-look active！</Dialog>
-          <Dialog>Hmm？ Mini-skirts are 
-active, huh？</Dialog>
-          <Dialog>They are, right？ And you 
-can help protect the 
-environment too.</Dialog>
+          <Dialog>W-Well, yeah. It's healthy！</Dialog>
+          <Dialog>Right, healthy. Miniskirts.</Dialog>
+          <Dialog>Right？ No waste, and
+eco-friendly too.</Dialog>
           <Dialog>Don't get ahead of 
 yourself... Pervert.</Dialog>
-          <Dialog>I'm sorry...</Dialog>
-          <Dialog>Of course, from a 
-boyfriend's point of view, 
-the style you're wearing 
-now looks good.</Dialog>
-          <Dialog>Really？ Hmm, then from a 
-girlfriend's point of view, 
-I think I'll keep wearing 
-this style. Hehe▼</Dialog>
+          <Dialog>Sorry...</Dialog>
+          <Dialog>Actually, I like you just as
+you are. As your boyfriend.</Dialog>
+          <Dialog>I see, hmm... Then maybe
+I'll stay this way. As your
+girlfriend. Hehe▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -752,99 +743,86 @@ this style. Hehe▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>I'm going to buy some new 
-clothes and I wonder what 
-style you prefer.</Dialog>
-          <Dialog>Your clothes...？ Hmm, 
-well...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>I want to get some new
+clothes. What kind do you
+like？</Dialog>
+          <Dialog>Clothes... Hmm, let's see...</Dialog>
           <Dialog>Simple, I guess</Dialog>
-          <Dialog>▲Takane＊＊▲, cute！</Dialog>
+          <Dialog>Cute, like ▲高嶺＊＊▲</Dialog>
           <Dialog>Neat and tidy</Dialog>
-          <Dialog>Try something different...</Dialog>
+          <Dialog>Sometimes, maybe...</Dialog>
           <Dialog>Current clothes are nice.</Dialog>
-          <Dialog>I like simple clothes. A 
-casual style is okay.</Dialog>
-          <Dialog>Um, I understand... But for 
-a plain girl like me, won't 
-that make me look even more 
-plain？</Dialog>
-          <Dialog>You think you're a plain 
-girl！？ That's not true 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>Something simple？ Casual,
+you know？</Dialog>
+          <Dialog>Yeah, I get it, but... I'm
+plain, so I'd just look even
+plainer.</Dialog>
+          <Dialog>▲高嶺＊＊▲
+is plain!? No way...</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>Really. And don't try to 
-say something like that to 
-your friends either.</Dialog>
+          <Dialog>Really. Actually, better not
+say that to your friends.</Dialog>
           <Dialog>Huh...？ Why？</Dialog>
-          <Dialog>(People might take it as 
-sarcasm...)</Dialog>
-          <Dialog>Cute is good！</Dialog>
+          <Dialog>(They'd think you're being
+snide...)</Dialog>
+          <Dialog>I like cute stuff.</Dialog>
           <Dialog>Cute？</Dialog>
-          <Dialog>Come on, you've worn that 
-style even before we 
-started dating.</Dialog>
-          <Dialog>Ah, that's... true. But, 
-don't you think I look 
-childish like that？</Dialog>
-          <Dialog>Not at all. For me, the you 
-that I know is always the 
-one that I love, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Um... Since you said so, 
-I'll keep wearing this 
-style.</Dialog>
-          <Dialog>(Did that sound a little 
-pretentious？ But I really 
-think you looks best with 
-cute outfits, 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>Of course, a neat style 
-that makes you look like 
-a lady will suit you best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I'm not a lady or anything 
-like that...</Dialog>
-          <Dialog>Really？ But, I really 
-think a graceful style 
-would suit you best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Do you... think so...？ If 
-you say so, it might really 
-suit me...</Dialog>
-          <Dialog>(Yeah, neat clothes suit 
-▲Takane＊＊▲ best！)</Dialog>
-          <Dialog>Occasionally, you should 
-try... Hmm... How can I 
-say this？ Something that 
-doesn't waste so much 
-material.</Dialog>
+          <Dialog>You know, the kind you wore
+a lot before we started
+going out.</Dialog>
+          <Dialog>Ah, that kind... Yeah. But
+it's a little childish now.</Dialog>
+          <Dialog>Not at all. The
+▲高嶺＊＊▲
+I met is still the
+▲高嶺＊＊▲
+I love.</Dialog>
+          <Dialog>Yes... If you say so, I'd
+like that too.</Dialog>
+          <Dialog>(Too corny？ But cute is
+best for ▲高嶺＊＊▲！)</Dialog>
+          <Dialog>Something neat and ladylike
+suits
+▲高嶺＊＊▲
+best.</Dialog>
+          <Dialog>I'm not a "young lady" or
+anything...</Dialog>
+          <Dialog>I see. But I think something
+a little graceful suits
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Do you think so... I hope it
+suits me the way you
+imagine...</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+is all about neat and
+graceful！)</Dialog>
+          <Dialog>Sometimes, maybe... How do I
+put it？ Something that
+doesn't waste fabric？</Dialog>
           <Dialog>...？</Dialog>
-          <Dialog>Um... Some outfits that are 
-kind of small and tight...</Dialog>
-          <Dialog>You mean... something like 
-a mini-skirt？</Dialog>
-          <Dialog>Well, that's one example.</Dialog>
+          <Dialog>Um... Less fabric, maybe？
+Shorter hems？</Dialog>
+          <Dialog>Do you mean... miniskirts,
+that kind of thing？</Dialog>
+          <Dialog>Well, that's one option？</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>Is it a style you don't 
-want to wear？</Dialog>
-          <Dialog>It's not that I don't want 
-to wear... but you have to 
-promise that you won't look 
-at me with your perverted 
-eyes.</Dialog>
-          <Dialog>I promise！！</Dialog>
+          <Dialog>No good？</Dialog>
+          <Dialog>It's not no good... but do
+you promise not to look at
+me in a pervy way？</Dialog>
+          <Dialog>I promise!!</Dialog>
           <Dialog>Geez...</Dialog>
-          <Dialog>Hooray~！！</Dialog>
+          <Dialog>Yesss!!</Dialog>
           <Dialog>Of course, from a 
 boyfriend's point of view, 
 the style you're wearing 
 now looks good.</Dialog>
-          <Dialog>...Um, okay. That's good 
-then. Hehe▼</Dialog>
+          <Dialog>...Okay. Then I'll do that？
+Hehe▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1194,109 +1172,94 @@ then. Hehe▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>I'm thinking about buying 
-some new clothes. Do you 
-have any requests？</Dialog>
-          <Dialog>My opinion for clothes...？ 
-Hmm... Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>I'm thinking of getting new
+clothes. If you have any
+requests, tell me？</Dialog>
+          <Dialog>Clothes... Hmm, let's see...</Dialog>
           <Dialog>Simple, I guess</Dialog>
-          <Dialog>▲Takane＊＊▲, cute！</Dialog>
+          <Dialog>Cute, like ▲高嶺＊＊▲</Dialog>
           <Dialog>Neat and tidy</Dialog>
-          <Dialog>Try something different...</Dialog>
+          <Dialog>Sometimes, maybe...</Dialog>
           <Dialog>Current clothes are nice</Dialog>
-          <Dialog>Something refreshing like a 
-casual style will be nice.</Dialog>
+          <Dialog>Something simple and
+casual？</Dialog>
           <Dialog>Casual？ Why？</Dialog>
-          <Dialog>Somehow, they'll make you 
-look active. I think that 
-style suits you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I've also wanted to try 
-wearing that style. Don't 
-be disappointed if it 
-doesn't suit me, okay？</Dialog>
-          <Dialog>I won't！ I'm sure it'll 
-suit you 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Hehe, then I'll take the 
-challenge.</Dialog>
-          <Dialog>(A casual style is best 
-for her. I'll have to pay 
-attention to my clothes, 
-too.)</Dialog>
-          <Dialog>Cute ones would be nice. 
-A cute style suits you 
-nicely, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Really？</Dialog>
-          <Dialog>Around the time we first 
-met, you always wore cute 
-outfits, right 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yeah, I know. But I think I 
-look childish in them, so 
-I've been wondering if 
-you'd like a different 
-style.</Dialog>
-          <Dialog>You always look good in 
-everything. But I think a 
-cute style suits you best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Thanks, I'm glad you said 
+          <Dialog>I just think an active look
+suits
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>I've kind of wanted to try
+that too... You won't be
+disappointed if it doesn't
+suit me？</Dialog>
+          <Dialog>I won't！ Everything suits
+▲高嶺＊＊▲！</Dialog>
+          <Dialog>Hehe, okay, then I'll give
+it a try？</Dialog>
+          <Dialog>(Casual's the best. I won't
+have to worry about it
+either！)</Dialog>
+          <Dialog>I like cute clothes. They're
+so
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>So me？</Dialog>
+          <Dialog>The kind ▲高嶺＊＊▲ wore a
+lot when we first met.</Dialog>
+          <Dialog>I get it, but... they're a
+little childish, so I
+thought maybe you liked a
+different style.</Dialog>
+          <Dialog>Everything looks good, but
+cute suits you. It's so
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Thank you. I'm happy to hear
 that.</Dialog>
-          <Dialog>(Yeah, you look best with 
-cute outfits, 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>Something neat and a bit 
-elegant would be nice.</Dialog>
-          <Dialog>Elegant...？ Hmm...</Dialog>
-          <Dialog>For a man, an elegant style 
-is somewhat ideal, you 
-know？</Dialog>
-          <Dialog>I see... But... Will that 
-style suit me？</Dialog>
-          <Dialog>It will suit you！ I'm 
-quite sure.</Dialog>
-          <Dialog>Hm, then I'll try it. Hehe▼</Dialog>
-          <Dialog>(Yeah, you would look good 
-with an elegant style, 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>Occasionally, you should 
-take a challenge and try 
-something that makes you 
-look more mature, right？</Dialog>
-          <Dialog>Mature？ You mean like 
-something college students 
-would wear？</Dialog>
-          <Dialog>Something like that... I 
-mean, something small that 
-fits you tightly...</Dialog>
-          <Dialog>Something like... a very 
-short mini-skirt, or a 
-shirt that shows my belly 
-button？</Dialog>
-          <Dialog>Yeah, something like that 
-would be nice.</Dialog>
-          <Dialog>But that's quite 
-embarrassing... Do you 
-think I should try that？</Dialog>
-          <Dialog>Yeah... You don't want to？</Dialog>
-          <Dialog>Geez... I'll try to take 
-the challenge.</Dialog>
-          <Dialog>(Hooray to the challenge！！)</Dialog>
-          <Dialog>Actually, your current 
-style is very nice. I think 
-you look great, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>(Cute is best for
+▲高嶺＊＊▲！)</Dialog>
+          <Dialog>What about something neat？
+Elegant, I guess？</Dialog>
+          <Dialog>Elegant... I see.</Dialog>
+          <Dialog>As a guy, neat and graceful
+is the ideal, you know.
+Yeah.</Dialog>
+          <Dialog>Is that how it is. But...
+would it suit me？</Dialog>
+          <Dialog>It would！ I think so.</Dialog>
+          <Dialog>Okay, then I'll try it.
+Hehe▼</Dialog>
+          <Dialog>(Neat and graceful suits
+▲高嶺＊＊▲！)</Dialog>
+          <Dialog>Sometimes, maybe... An
+adventure？ Something a
+little more grown-up？</Dialog>
+          <Dialog>Grown-up, like a college
+student？</Dialog>
+          <Dialog>You could say that... Less
+fabric？ Shorter hems？</Dialog>
+          <Dialog>Do you mean... really short
+minis, or something that
+shows my belly button？</Dialog>
+          <Dialog>Yeah, well. As one form of
+expression？</Dialog>
+          <Dialog>That's a little
+embarrassing... Is that what
+you want？</Dialog>
+          <Dialog>Yeah... No good？</Dialog>
+          <Dialog>Geez... Fine, I'll be
+adventurous.</Dialog>
+          <Dialog>(Hooray for adventure!!)</Dialog>
+          <Dialog>Actually, I like you as you
+are. I like
+▲高嶺＊＊▲
+like that.</Dialog>
           <Dialog>...Really？</Dialog>
-          <Dialog>Really. You already look 
-great like this, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Okay▼</Dialog>
+          <Dialog>Really.
+▲高嶺＊＊▲
+is fine as is.</Dialog>
+          <Dialog>Okaaay▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1550,69 +1513,66 @@ great like this,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>I'm thinking about changing 
-my hairstyle. What do you 
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>I'm thinking of changing my
+hair a little. What do you
 think？</Dialog>
-          <Dialog>Hairstyle...？ Hmm, well...</Dialog>
-          <Dialog>Long, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Short is nice</Dialog>
-          <Dialog>Not long, nor short...</Dialog>
+          <Dialog>Hairstyle... Hmm, let's
+see...</Dialog>
+          <Dialog>Long. That's ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Short, obviously</Dialog>
+          <Dialog>Not long, not short...</Dialog>
           <Dialog>Current length is good.</Dialog>
-          <Dialog>Long hair suits you best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Really？ Hmm... I guess you 
-might be right.</Dialog>
-          <Dialog>Your image suits a heroine 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Long really is best for
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Really？ Hmm... I guess it
+is.</Dialog>
+          <Dialog>▲高嶺＊＊▲ has that
+classic heroine image.</Dialog>
           <Dialog>Really？</Dialog>
-          <Dialog>Yes, and the heroine is 
-obligated to have long, 
-silky hair.</Dialog>
-          <Dialog>That sounds weird. But... 
-Okay, I think long hair's 
-good then.</Dialog>
-          <Dialog>(Of course, for you, long 
-hair suits you the best, 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>Short is nice！</Dialog>
+          <Dialog>Right. And heroines are
+required to have silky long
+hair.</Dialog>
+          <Dialog>That's silly. But... Yeah,
+maybe long is best.</Dialog>
+          <Dialog>(Long hair is
+▲高嶺＊＊▲！)</Dialog>
+          <Dialog>Short, obviously！</Dialog>
           <Dialog>Really？ Why？</Dialog>
-          <Dialog>Why？ It gives a lively, 
-open-minded, and friendly 
-image. Also, it's a nice 
-choice for an image change.</Dialog>
+          <Dialog>How do I put it, it's
+lively, friendly,
+approachable？ And it'd be a
+change of image.</Dialog>
           <Dialog>I see.</Dialog>
           <Dialog>But... Hmm...</Dialog>
           <Dialog>What？</Dialog>
-          <Dialog>So you're saying I'm dull, 
-narrow-minded, and 
-unfriendly then？</Dialog>
-          <Dialog>(I made her angry... But I 
-really like short hair！)</Dialog>
-          <Dialog>Let me see... Semi-long, I 
-guess.</Dialog>
-          <Dialog>You like semi-long hair？ 
-Why？</Dialog>
-          <Dialog>Short hair is nice but long 
-hair also suits you well. 
-So I chose the middle path, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hey... You should think 
-about it more seriously.</Dialog>
-          <Dialog>But, in a way, I can do a 
-lot of styles with that 
-length... I guess it's good.</Dialog>
-          <Dialog>(Not too long, not too 
-short. Semi-long is great！)</Dialog>
-          <Dialog>The current length is good. 
-I like you with this 
-hairstyle, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hmm...？ I see. I'll keep it 
-like this for you then.</Dialog>
+          <Dialog>So I'm plain, stuck-up, and
+unapproachable, then.</Dialog>
+          <Dialog>(I made her mad... But short
+is the best！)</Dialog>
+          <Dialog>Let's see... Medium-length.</Dialog>
+          <Dialog>Medium-length？ Why？</Dialog>
+          <Dialog>Short is nice, but long is
+so
+▲高嶺＊＊▲.
+So I split the difference.</Dialog>
+          <Dialog>Geez... You're so
+wishy-washy.</Dialog>
+          <Dialog>But I can style it lots of
+ways... Yes, maybe that's
+good.</Dialog>
+          <Dialog>(Not long, not short,
+medium！)</Dialog>
+          <Dialog>I like the length it is now.
+I love
+▲高嶺＊＊▲
+with that hairstyle.</Dialog>
+          <Dialog>Hmm... I see. Then I'll keep
+it like this a little
+longer.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1886,78 +1846,71 @@ like this for you then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>I'm thinking about changing 
-my hairstyle. What do you 
-think？</Dialog>
-          <Dialog>Hairstyle...？ Hmm, well...</Dialog>
-          <Dialog>Long, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Short is nice</Dialog>
-          <Dialog>Semi-long, I guess</Dialog>
-          <Dialog>Current length is good</Dialog>
-          <Dialog>Your look goes best with 
-long hair, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I see... Why is that？</Dialog>
-          <Dialog>Because that was what left 
-a big impression on me when 
-I first met you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hmm？ What kind of 
-impression？</Dialog>
-          <Dialog>Your long hair was swaying 
-sparklingly, and I thought, 
-"Wow, so beautiful."</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>I think it's time to change
+my hair a little. What do
+you like？</Dialog>
+          <Dialog>Hairstyle... Hmm, let's
+see...</Dialog>
+          <Dialog>Long. That's ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Short, obviously</Dialog>
+          <Dialog>Medium-length, I guess</Dialog>
+          <Dialog>Just like now</Dialog>
+          <Dialog>Long is best for
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>I see... Why？</Dialog>
+          <Dialog>I guess because my first
+impression of
+▲高嶺＊＊▲
+stuck with me.</Dialog>
+          <Dialog>Hmm... What impression？</Dialog>
+          <Dialog>Your long hair swaying and
+sparkling, and I thought,
+"Wow, she's beautiful."</Dialog>
           <Dialog>......</Dialog>
           <Dialog>I also like long hair. I'm 
 very glad to hear you say 
 that.</Dialog>
-          <Dialog>(You look best with long 
-hair. Yeah, 
-▲Takane＊＊▲...)</Dialog>
-          <Dialog>Short is nice！-</Dialog>
+          <Dialog>(Long hair is
+▲高嶺＊＊▲, yeah.)</Dialog>
+          <Dialog>Short, obviously！</Dialog>
           <Dialog>Short？ Really？</Dialog>
-          <Dialog>The "pretty" image is nice, 
-but your "cute" image is 
-obvious, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>That depends on individual 
-taste. Are you saying that 
-because we've been hanging 
-out often？</Dialog>
-          <Dialog>Maybe. But I think everyone 
-who looks at you would say 
-that you are cute！</Dialog>
-          <Dialog>Well, for me, I only need 
-to hear that from you. Oh 
-well...</Dialog>
-          <Dialog>(Yay！ Go with short！)</Dialog>
-          <Dialog>Well, I think, semi-long.</Dialog>
-          <Dialog>Semi-long？</Dialog>
-          <Dialog>Short is nice, but I want 
-you to have long hair. 
-Sorry. It's just my guy's 
-ego, I guess, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>You don't have to apologize 
-for that...</Dialog>
-          <Dialog>I really like it when you 
-tell me what you think. 
-Just this is enough to 
-make me love you, I'm 
-kidding...</Dialog>
-          <Dialog>(You are just so cute 
-▲Takane＊＊▲...)</Dialog>
-          <Dialog>I like your current 
-hairstyle, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Okay. I was just thinking 
-that you might get bored 
-of it... I'll keep it like 
-this then.</Dialog>
+          <Dialog>"Pretty" is nice too, but
+with short hair,
+▲高嶺＊＊▲'s cuteness
+really shows？</Dialog>
+          <Dialog>Oh, you're just biased.
+We're going out, after all.</Dialog>
+          <Dialog>I don't know, I think anyone
+would say you're cute！</Dialog>
+          <Dialog>Yes. But for me, it's enough
+if just you think so.
+...Just saying.</Dialog>
+          <Dialog>(Yay！ Short it is！)</Dialog>
+          <Dialog>Let's see... I'll go with
+medium-length.</Dialog>
+          <Dialog>Medium-length？</Dialog>
+          <Dialog>Short is nice, but
+▲高嶺＊＊▲ means long
+hair. Sorry, that's just my
+male ego.</Dialog>
+          <Dialog>Don't say sorry...</Dialog>
+          <Dialog>I'm happier when you tell me
+all kinds of things. Maybe
+it means you love me that
+much... Just kidding.</Dialog>
+          <Dialog>(▲高嶺＊＊▲,
+saying something so cute...)</Dialog>
+          <Dialog>I like the length it is now.
+I like
+▲高嶺＊＊▲
+like that.</Dialog>
+          <Dialog>Okay. I thought you might
+get tired of it... Then I'll
+keep it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2263,81 +2216,81 @@ this then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Well, I'm thinking about 
-changing my hairstyle. Do 
-you have any requests？</Dialog>
-          <Dialog>Hairstyle...？ Hmm, well...</Dialog>
-          <Dialog>Long, ▲Takane＊＊▲！</Dialog>
-          <Dialog>Short is nice</Dialog>
-          <Dialog>Not long, nor short...</Dialog>
-          <Dialog>Current length is good</Dialog>
-          <Dialog>I like you with long hair 
-the best, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I see. Just to know... 
-Why？</Dialog>
-          <Dialog>When we first met, 
-you had long hair, right 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yeah. I've always had long 
-hair.</Dialog>
-          <Dialog>Your long hair was swaying 
-sparklingly, and I thought, 
-"Wow, so beautiful."</Dialog>
-          <Dialog>Geez... You say things like 
-this so casually. But I'm 
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey？ I'm thinking of
+changing my hairstyle a
+little. Any requests？</Dialog>
+          <Dialog>Hairstyle... Hmm, let's
+see...</Dialog>
+          <Dialog>Long. That's ▲高嶺＊＊▲.</Dialog>
+          <Dialog>Short, obviously</Dialog>
+          <Dialog>Medium-length, I guess</Dialog>
+          <Dialog>Just like now</Dialog>
+          <Dialog>I like
+▲高嶺＊＊▲
+with long hair best.</Dialog>
+          <Dialog>I see. Hmm... Why？</Dialog>
+          <Dialog>When we first met,
+▲高嶺＊＊▲
+had long hair, right？</Dialog>
+          <Dialog>Yes. I've been growing it
+for a long time.</Dialog>
+          <Dialog>Your long hair was swaying
+and sparkling, and I
+thought, "Wow, she's
+beautiful."</Dialog>
+          <Dialog>Geez... You always say
+things like that. But I'm
 happy.</Dialog>
-          <Dialog>(You look best with long 
-hair. No doubt about it, 
-▲Takane＊＊▲...)</Dialog>
-          <Dialog>Short is nice！</Dialog>
+          <Dialog>(Long hair is
+▲高嶺＊＊▲, yeah.)</Dialog>
+          <Dialog>Short, obviously！</Dialog>
           <Dialog>Short？ I see... Why？</Dialog>
-          <Dialog>People usually look at you 
-and think you are a lady of 
-a high-class family, right 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>That's... Yeah, I guess 
-they do.</Dialog>
-          <Dialog>But you actually are a 
-sociable and lively girl. 
-So, short hair is more 
-suitable for you.</Dialog>
+          <Dialog>People sometimes see
+▲高嶺＊＊▲
+as a proper "young lady,"
+right？</Dialog>
+          <Dialog>That's... Yes, maybe.</Dialog>
+          <Dialog>But really, you're friendly
+and energetic, the type
+short hair suits, I think.</Dialog>
           <Dialog>...Thank you. I'm really 
 happy to hear you say that. 
 I want to be a girl like 
 what you described.</Dialog>
-          <Dialog>Okay. Then I'll take this 
-short hair challenge！</Dialog>
-          <Dialog>(Yay！ Short hair！)</Dialog>
-          <Dialog>Well, I think, semi-long.</Dialog>
-          <Dialog>Semi-long？</Dialog>
-          <Dialog>Short is good and long 
-makes you look more like 
-"THE ▲Takane＊＊▲." 
-I can't choose one over 
-the other...</Dialog>
-          <Dialog>So you chose semi-long？ 
-Hehe, you're so weird.</Dialog>
-          <Dialog>Really？ But we got a 
-solution for it already, 
-right？</Dialog>
-          <Dialog>Yes. Then I'll go with it. 
+          <Dialog>All right！ Takane, the
+athlete, takes on the
+short-hair challenge！</Dialog>
+          <Dialog>(Yes！ Short it is！)</Dialog>
+          <Dialog>Let's see... I'll go with
+medium-length.</Dialog>
+          <Dialog>Medium-length？</Dialog>
+          <Dialog>Well, short is nice, but
+long is so "THE
+▲高嶺＊＊▲," I can't pick
+either...</Dialog>
+          <Dialog>So, medium-length？ Hehe,
+you're funny.</Dialog>
+          <Dialog>Is it？ It's a solution,
+isn't it？</Dialog>
+          <Dialog>Okaaay. Then I'll try that.
 Hehe▼</Dialog>
-          <Dialog>(I can't wait to see you 
-with a semi-long hairstyle 
-▲Takane＊＊▲！)</Dialog>
-          <Dialog>I like your current 
-hairstyle, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>(Medium-length
+▲高嶺＊＊▲.
+Can't wait！)</Dialog>
+          <Dialog>I like the length it is now.
+I like
+▲高嶺＊＊▲
+like that.</Dialog>
           <Dialog>...Really？</Dialog>
           <Dialog>Really.</Dialog>
-          <Dialog>Then I'll keep it like this 
-because you said you "like" 
-it. Yeah... Hehe▼</Dialog>
+          <Dialog>Then I'll keep it. If you
+think it's "good," that's
+good for me. ...Just
+kidding. Hehe▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2677,79 +2630,70 @@ it. Yeah... Hehe▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Hey, what's your favorite 
-food？ I just want to make 
-sure...</Dialog>
-          <Dialog>My favorite food...？ 
-Lately, I like...</Dialog>
-          <Dialog>Potatoes！</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, what was your favorite
+food again？ Just to check？</Dialog>
+          <Dialog>Favorite food... Lately,
+let's see...</Dialog>
+          <Dialog>Sweet potatoes！</Dialog>
           <Dialog>Japanese food</Dialog>
-          <Dialog>Western food</Dialog>
-          <Dialog>Chinese food</Dialog>
-          <Dialog>I love sweet potatoes！ 
-You do too, right, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Potatoes？ Um... Yeah, I 
-like them.</Dialog>
-          <Dialog>Lately, I really enjoy 
-eating them. They're just 
-so delicious！</Dialog>
-          <Dialog>They're delicious but how 
-could I prepare any potato 
-dishes...？ Um...</Dialog>
+          <Dialog>Western-style food</Dialog>
+          <Dialog>Chinese food！</Dialog>
+          <Dialog>Sweet potatoes, of course！
+Same as
+▲高嶺＊＊▲, right？</Dialog>
+          <Dialog>Sweet potatoes？ Um... Yes,
+I like them？</Dialog>
+          <Dialog>I've been hooked lately too.
+They're so good！</Dialog>
+          <Dialog>They're good. But sweet
+potato dishes... Hmm...</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>No！ Never mind.</Dialog>
           <Dialog>(...？)</Dialog>
-          <Dialog>I love Japanese food. I'm 
-Japanese, after all！</Dialog>
+          <Dialog>Japanese food. As a Japanese
+guy, something light！</Dialog>
           <Dialog>Yay.</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>Nothing！ I also love it. 
-Anything you dislike？</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Nothing！ I love it too.
+Anything you don't like？</Dialog>
           <Dialog>Dislike？</Dialog>
-          <Dialog>For example, some fish, or 
-some vegetable...</Dialog>
-          <Dialog>Udon, soba, gyudon, 
-katsudon, tempura... Nope. 
-None at all！</Dialog>
-          <Dialog>Eh？ So... any Japanese food 
-is fine for you then？</Dialog>
-          <Dialog>Yeah, I just love Japanese 
-food！</Dialog>
-          <Dialog>(Yeah... I'm proud to be 
-Japanese！)</Dialog>
-          <Dialog>I guess I love Western 
-food. Ketchup and sauce are 
-famous for young people, 
-right！？</Dialog>
-          <Dialog>Ketchup and sauce？ Like in 
-a Western-styled restaurant？</Dialog>
-          <Dialog>Yeah, right！ I like omelet 
-rice and Neapolitan. 
-Something like that.</Dialog>
-          <Dialog>How about hamburger and 
-curry？</Dialog>
-          <Dialog>Yeah, I like those as well！</Dialog>
+          <Dialog>Like, certain fish or
+vegetables...</Dialog>
+          <Dialog>Udon, soba, gyudon,
+katsudon, tendon... Nope,
+nothing！</Dialog>
+          <Dialog>Huh？ Um... Japanese food is
+fine, right？</Dialog>
+          <Dialog>Yep, Japanese food！</Dialog>
+          <Dialog>(Ahh, glad I'm Japanese！)</Dialog>
+          <Dialog>Western-style, I guess.
+Young guys need ketchup and
+sauce！</Dialog>
+          <Dialog>Ketchup and sauce？ Like a
+Western-style diner？</Dialog>
+          <Dialog>Oh, nice！ Omelet rice,
+Napolitan spaghetti.</Dialog>
+          <Dialog>Hamburg steak, curry,
+right？</Dialog>
+          <Dialog>Yeah, yeah.</Dialog>
           <Dialog>Hehe. You're so cute▼</Dialog>
-          <Dialog>I love Chinese food！ Like 
-stir-fried dishes that make 
-you go "haaaa" when you eat 
-them.</Dialog>
-          <Dialog>So you like stir-fried 
-dishes？</Dialog>
-          <Dialog>Sort of. They fill my 
-stomach very well.</Dialog>
+          <Dialog>I like Chinese food！ It's
+oily, and you get that "Ahh,
+I ate！" feeling！</Dialog>
+          <Dialog>You like oily food？</Dialog>
+          <Dialog>Well, it keeps you full, you
+know？</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>You don't like Chinese 
-food, ▲Takane＊＊▲？</Dialog>
-          <Dialog>No, I like it. But if it's 
-stir-fried, it will get 
-cold. Hmm...</Dialog>
-          <Dialog>(It will get cold？)</Dialog>
+          <Dialog>Does
+▲高嶺＊＊▲
+not like Chinese food？</Dialog>
+          <Dialog>I do？ But oily food, once
+it gets cold... Hmm...</Dialog>
+          <Dialog>(Once it gets cold？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2963,55 +2907,52 @@ cold. Hmm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>If the two of us were to go 
-somewhere, where would you 
-want to go？</Dialog>
-          <Dialog>Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, if we went somewhere
+together, what kind of place
+would you want to go？</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>Somewhere quiet where you 
-can feel at ease or 
-something like that？</Dialog>
-          <Dialog>Yeah. We would be able to 
-relax in a place like that, 
-right？</Dialog>
-          <Dialog>Hehe. Quiet places, huh？ 
+          <Dialog>Somewhere quiet, where we
+can relax？</Dialog>
+          <Dialog>Yeah, like that. In a place
+like that, we could take it
+easy together, right？</Dialog>
+          <Dialog>Hehe. Somewhere calm, huh？
 I'll remember that.</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
           <Dialog>Hmm... Why？</Dialog>
-          <Dialog>In such places, we can be 
-hyper without causing 
-troubles to others.</Dialog>
-          <Dialog>Hehe, that's right.</Dialog>
-          <Dialog>Okay, I got it. I'll 
-remember that.</Dialog>
-          <Dialog>Fashionable places, I guess.</Dialog>
-          <Dialog>Fashionable...</Dialog>
+          <Dialog>In a place like that, we can
+goof around and it's fine,
+right？</Dialog>
+          <Dialog>Hehe, I see.</Dialog>
+          <Dialog>Okay, got it. I'll remember
+that.</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>Trendy...</Dialog>
           <Dialog>Hmm？ What's wrong？</Dialog>
-          <Dialog>I'm not quite comfortable 
-going to such places.</Dialog>
-          <Dialog>But, I'll try. So, you like 
-fashionable places, huh？</Dialog>
+          <Dialog>I thought that's a bit
+outside my comfort zone.</Dialog>
+          <Dialog>No, but I'll try. Trendy
+places, huh？</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
-          <Dialog>Your answer is pretty 
-vague, you know？</Dialog>
-          <Dialog>Well, if you are with me, 
-where we go doesn't matter 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Hey, I was asking you 
-seriously.</Dialog>
-          <Dialog>Hehe. But, okay. I'll 
-remember that.</Dialog>
+          <Dialog>Isn't that really vague？</Dialog>
+          <Dialog>Well, honestly, as long as
+▲高嶺＊＊▲
+is there, anywhere's...</Dialog>
+          <Dialog>Geez. I'm asking seriously.</Dialog>
+          <Dialog>Hehe, but okay. I'll
+remember that？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3235,59 +3176,52 @@ remember that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Hey, what kind of places 
-would you like to go when 
-you are with me？</Dialog>
-          <Dialog>Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, what kind of places do
+you want to go with me？</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>Hehe. Somewhere we can 
-relax, right？</Dialog>
-          <Dialog>Yeah. A place where I can 
-have some leisure time to 
-talk with you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>...Yeah. I think I like 
-those kinds of places, too.</Dialog>
-          <Dialog>Calm and quiet places, huh？ 
-I'll keep that in mind...</Dialog>
+          <Dialog>Hehe. It's nice to relax,
+isn't it？</Dialog>
+          <Dialog>Exactly. I can talk with
+▲高嶺＊＊▲
+at my own pace, too.</Dialog>
+          <Dialog>...Yes. I think I like
+places like that too.</Dialog>
+          <Dialog>Calm places, huh？ I'll
+remember...</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
-          <Dialog>Those places make you feel 
-refreshed, right？</Dialog>
-          <Dialog>Yeah, that's right！</Dialog>
-          <Dialog>Hehe. I think I can 
-understand that kind of 
-feeling.</Dialog>
-          <Dialog>Places where you can 
-exercise, eh？ I'll keep 
-that in mind...</Dialog>
-          <Dialog>Fashionable places, I guess.</Dialog>
-          <Dialog>Um... Like those date spots 
-that get featured in 
-magazines？</Dialog>
+          <Dialog>Because it feels
+refreshing？</Dialog>
+          <Dialog>Yeah, yeah, exactly！</Dialog>
+          <Dialog>Hehe, I think I get it.</Dialog>
+          <Dialog>Places to move around, huh？
+I'll remember...</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>Um... The kind that end up
+in magazines？</Dialog>
           <Dialog>Yeah, something like that.</Dialog>
-          <Dialog>Hehe. It'd be fun to go 
-somewhere like that with 
-you.</Dialog>
-          <Dialog>Fashionable places, huh？ 
-I'll keep that in mind...</Dialog>
+          <Dialog>Hehe. With you, I think I'd
+really enjoy it.</Dialog>
+          <Dialog>Trendy places, huh？ I'll
+remember...</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
           <Dialog>Places where you can play？</Dialog>
-          <Dialog>Yeah, so that I can have 
-as much fun as I want with 
-you, ▲Takane＊＊▲.</Dialog>
-          <Dialog>It must be fun to play 
-with you...</Dialog>
+          <Dialog>Yeah. Somewhere I can really
+cut loose with
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>With you, I bet it'd be
+fun...</Dialog>
           <Dialog>Places where you can play, 
 huh？ I'll keep that in 
 mind...</Dialog>
@@ -3514,56 +3448,58 @@ mind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Okay, here's the question. 
-Where would you like to go 
-for a date？</Dialog>
-          <Dialog>Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, a question. If we went
+on a date, where would you
+want to go？</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>Hmm...Why？</Dialog>
-          <Dialog>So that we can relax 
-together, right 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>You didn't have to ask me.</Dialog>
-          <Dialog>Hehe, but I got it. Calm 
-and quiet places, huh？</Dialog>
+          <Dialog>Hmm... Why？</Dialog>
+          <Dialog>Well, because I can relax
+with
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>The question mark at the end
+is unnecessary.</Dialog>
+          <Dialog>Hehe, but got it. Calm
+places, huh？</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
-          <Dialog>So we can have a match？</Dialog>
-          <Dialog>Yeah, something like that. 
-Victory will be mine！</Dialog>
-          <Dialog>Hehe, are you sure？ Don't 
-be so confident.</Dialog>
-          <Dialog>But I got it. Places where 
-you can exercise, huh？</Dialog>
-          <Dialog>Fashionable places, I guess.</Dialog>
-          <Dialog>Like places that everyone 
-talks about？</Dialog>
-          <Dialog>Yeah, it feels like we've 
-conquered something when we 
-go there.</Dialog>
-          <Dialog>Hehe, I see. We can create 
-nice memories together...</Dialog>
-          <Dialog>Okay, I got it. Fashionable 
-places, huh？</Dialog>
+          <Dialog>To have a match, maybe？</Dialog>
+          <Dialog>Something like that. En
+garde！</Dialog>
+          <Dialog>Hehe, are you sure？ Saying
+something like that.</Dialog>
+          <Dialog>Okay, but got it. Places to
+move around, huh？</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>The kind everyone's talking
+about？</Dialog>
+          <Dialog>Yeah, yeah. I want us to
+conquer them together, you
+know.</Dialog>
+          <Dialog>Hehe, right. We could make
+lots of memories...</Dialog>
+          <Dialog>Mm, got it. Trendy places,
+huh？</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
-          <Dialog>You still haven't played 
-enough, huh？</Dialog>
-          <Dialog>You played enough then, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Hehe. Geez！ I didn't say 
-that, right？</Dialog>
-          <Dialog>Places where you can play, 
-huh？ Got it▼</Dialog>
+          <Dialog>You haven't played enough
+yet？</Dialog>
+          <Dialog>Has
+▲高嶺＊＊▲
+played enough？</Dialog>
+          <Dialog>Hehe, geez. Of course not,
+right？</Dialog>
+          <Dialog>Places to have fun, huh？
+Roger▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3787,53 +3723,47 @@ huh？ Got it▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Hey, when you go out alone, 
-what kind of places do you 
-like to go to？</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, when you're on your
+own, where do you go？</Dialog>
           <Dialog>When I go out alone...？</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>Hmm？ So, you can't enjoy 
-your quiet time when you're 
-with me then？</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>Hehe, just kidding. Don't 
-panic！</Dialog>
-          <Dialog>Calm and quiet places, huh？</Dialog>
+          <Dialog>Hmm... Because you can't
+relax when you're with me？</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>Hehe, kidding. You panicked
+too much.</Dialog>
+          <Dialog>Calm places, huh...</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
-          <Dialog>Hmm？ You like to relieve 
-your stress that way？</Dialog>
-          <Dialog>Nah, I'm not really a 
-stressed person.</Dialog>
+          <Dialog>Hmm... To blow off stress？</Dialog>
+          <Dialog>Well, partly... though I'm
+not really the stressed
+type.</Dialog>
           <Dialog>Hehe, I see.</Dialog>
-          <Dialog>So, you like places where 
-you can exercise. Okay.</Dialog>
-          <Dialog>Fashionable places, I guess.</Dialog>
-          <Dialog>...You go to those places 
-alone？</Dialog>
-          <Dialog>Yeah, I need to do some 
-research sometimes.</Dialog>
-          <Dialog>Hmm... That's fine then.</Dialog>
-          <Dialog>Fashionable places... I got 
-it.</Dialog>
+          <Dialog>Places to move around,
+huh...</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>...You go to those alone.</Dialog>
+          <Dialog>Yeah, well, as research
+too？</Dialog>
+          <Dialog>Hmm... Then that's fine.</Dialog>
+          <Dialog>Trendy places. I see...</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
-          <Dialog>So you like to play by 
-yourself...</Dialog>
-          <Dialog>▲Takane＊＊▲？ 
+          <Dialog>Places to have fun alone...</Dialog>
+          <Dialog>▲高嶺＊＊▲？
 What's wrong？</Dialog>
-          <Dialog>No, never mind.</Dialog>
-          <Dialog>Places where you can play, 
-hmm...</Dialog>
+          <Dialog>No, it's nothing.</Dialog>
+          <Dialog>Places to have fun, huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4057,57 +3987,51 @@ hmm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>What kind of places do you 
-like to go to when you go 
-out alone？</Dialog>
-          <Dialog>Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, where do you go when
+you're by yourself？</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>I see... You also need 
-some quiet time, right？</Dialog>
-          <Dialog>Right. Sometimes I need to 
-take a breather.</Dialog>
-          <Dialog>Hehe. That's good, huh？</Dialog>
-          <Dialog>Calm and quiet places, hmm...</Dialog>
+          <Dialog>I see... You need time like
+that too, right？</Dialog>
+          <Dialog>Exactly, somewhere I can
+breathe easy.</Dialog>
+          <Dialog>Hehe, that's nice, isn't
+it？</Dialog>
+          <Dialog>Calm places, huh...</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
-          <Dialog>You like to exercise alone？</Dialog>
-          <Dialog>Yeah, I like to go for my 
-independent training.</Dialog>
-          <Dialog>Hehe, you're really 
-energetic, huh？</Dialog>
-          <Dialog>So you like places where 
-you can exercise, hmm...</Dialog>
-          <Dialog>Fashionable places, I 
-guess.</Dialog>
-          <Dialog>Don't you feel lonely when 
-you go to such places by 
-yourself？</Dialog>
-          <Dialog>I'm okay. I go there to do 
-some research for our date 
-locations anyway.</Dialog>
-          <Dialog>Really？ I'm happy...</Dialog>
-          <Dialog>So... Fashionable places, 
-hmm.</Dialog>
+          <Dialog>You exercise alone？</Dialog>
+          <Dialog>Yeah, kind of like
+self-training, in a way.</Dialog>
+          <Dialog>Hehe, you're full of energy,
+huh？</Dialog>
+          <Dialog>Places to move around,
+huh...</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>Isn't it lonely going to
+places like that alone？</Dialog>
+          <Dialog>I'm fine. It's more like
+date research anyway.</Dialog>
+          <Dialog>Really？ That makes me
+happy...</Dialog>
+          <Dialog>I see... Trendy places, huh.</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
-          <Dialog>Wow... Playing makes you 
-feel refreshed, right？</Dialog>
-          <Dialog>That's right. I highly 
-recommend it.</Dialog>
-          <Dialog>I see. Maybe I'll try one 
-of those places when I 
-have a chance.</Dialog>
-          <Dialog>Places where you can play, 
-hmm...</Dialog>
+          <Dialog>Like playing all out to
+refresh yourself？</Dialog>
+          <Dialog>Exactly. I recommend it.</Dialog>
+          <Dialog>I see. Maybe I'll try it if
+I get the chance？</Dialog>
+          <Dialog>Places to have fun, huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4326,58 +4250,51 @@ hmm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Hey, what kind of places 
-do you like to go to when 
-you go out alone？</Dialog>
-          <Dialog>Let me see...</Dialog>
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, where do you go when
+you're on your own？</Dialog>
+          <Dialog>Let's see...</Dialog>
           <Dialog>Calm and quiet places</Dialog>
           <Dialog>Anywhere I can exercise</Dialog>
-          <Dialog>Fashionable places</Dialog>
+          <Dialog>Trendy places</Dialog>
           <Dialog>Anywhere I can play</Dialog>
           <Dialog>Calm and quiet places, I 
 guess.</Dialog>
-          <Dialog>Calm and quiet？</Dialog>
-          <Dialog>Yeah. I need some time to 
-search for my inner self.</Dialog>
-          <Dialog>Hehe, you said it so 
-casually like that.</Dialog>
-          <Dialog>I see. You like calm and 
-quiet places then...</Dialog>
+          <Dialog>You go to calm down？</Dialog>
+          <Dialog>Yeah, to find a different
+side of myself...</Dialog>
+          <Dialog>Hehe, geez, you're making
+that up.</Dialog>
+          <Dialog>I see, calm places, huh...</Dialog>
           <Dialog>Anywhere I can exercise, I 
 guess.</Dialog>
-          <Dialog>If I can spend some time 
-exercising, I can sleep 
+          <Dialog>I can focus, and I sleep
 like a log at night.</Dialog>
-          <Dialog>Hmm...？ Maybe I should try 
-to disturb you while you 
-are asleep.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>Hehe, just kidding. You 
-like places where you can 
-exercise then...</Dialog>
-          <Dialog>Fashionable places, I 
-guess.</Dialog>
-          <Dialog>Hmm？ Are you researching 
-date spots for us？</Dialog>
-          <Dialog>Sort of.</Dialog>
-          <Dialog>Hehe. I can have some 
-expectation for our next 
-date, then.</Dialog>
-          <Dialog>Well... Fashionable places, 
-hmm...</Dialog>
+          <Dialog>Hmm... Maybe I'll disturb
+you next time？ Disturb your
+sleep.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>Hehe, kidding. Places to
+move around, huh...</Dialog>
+          <Dialog>Trendy places, I guess.</Dialog>
+          <Dialog>Hmm... Hey, are you doing
+research for me？</Dialog>
+          <Dialog>Pretty much.</Dialog>
+          <Dialog>Hehe, maybe I'll look
+forward to our next date？</Dialog>
+          <Dialog>I see, trendy places, huh...</Dialog>
           <Dialog>Anywhere I can play, I 
 guess.</Dialog>
-          <Dialog>You don't mean playing in  
-a perverted sense, right？</Dialog>
+          <Dialog>That's not some weird kind
+of fun, right？</Dialog>
           <Dialog>O-Of course！</Dialog>
-          <Dialog>Hehe. Of course, I'm just 
-kidding.</Dialog>
-          <Dialog>Well, places where you can 
-exercise, hmm...</Dialog>
+          <Dialog>Hehe, I'm joking, don't
+panic.</Dialog>
+          <Dialog>I see, places to have fun,
+huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4624,55 +4541,51 @@ exercise, hmm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... What's your 
-favorite "type"？ I mean, 
-in regards to girls.</Dialog>
+          <Dialog>Hey... What's your "type"？
+Of girl, I mean.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My type？ Let me see... She 
-has to be...</Dialog>
-          <Dialog>Kind and obedient</Dialog>
-          <Dialog>Cheerful and positive</Dialog>
-          <Dialog>You're my type 
-▲Takane＊＊▲</Dialog>
-          <Dialog>Kind and obedient. Yeah...</Dialog>
-          <Dialog>Kind and obedient, huh？ 
-Hmm, I see.</Dialog>
+          <Dialog>My type？ Let's see,
+lately...</Dialog>
+          <Dialog>Kind and quiet</Dialog>
+          <Dialog>Cheerful and outgoing</Dialog>
+          <Dialog>You, ▲高嶺＊＊▲</Dialog>
+          <Dialog>Kind and quiet, yeah.</Dialog>
+          <Dialog>Kind and quiet... Yes, of
+course.</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>I thought I've been kind 
-to you lately.</Dialog>
-          <Dialog>But, you said...</Dialog>
-          <Dialog>I said what？</Dialog>
-          <Dialog>Nothing... Being kind is 
-quite difficult.</Dialog>
-          <Dialog>(▲Takane＊＊▲...)</Dialog>
-          <Dialog>Cheerful and positive.</Dialog>
-          <Dialog>Cheerful and positive... I 
-see. Huh...</Dialog>
-          <Dialog>Eh？ Did I say something 
+          <Dialog>I wish I could be kinder
+too.</Dialog>
+          <Dialog>But you...</Dialog>
+          <Dialog>I what？</Dialog>
+          <Dialog>Nothing. Being kind is hard.</Dialog>
+          <Dialog>(▲高嶺＊＊▲...)</Dialog>
+          <Dialog>Cheerful and outgoing.</Dialog>
+          <Dialog>Cheerful and outgoing. I
+see. Hmm...</Dialog>
+          <Dialog>Huh？ Did I say something
 weird？</Dialog>
-          <Dialog>Weird？ You're just fond of 
-cheerful and positive 
-girls, right？</Dialog>
-          <Dialog>W-Well, that's right..... 
-Are you angry？</Dialog>
-          <Dialog>I don't know.</Dialog>
-          <Dialog>(She's angry...)</Dialog>
-          <Dialog>She has to be like you 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Ah！！ I didn't expect you 
-to say that...</Dialog>
-          <Dialog>But I like you. That's why 
-I'm with you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>I see. Hmm...</Dialog>
-          <Dialog>Eh？ Did I say something 
+          <Dialog>Why？ That's your
+preference, isn't it？ Kind
+and cheerful, was it？</Dialog>
+          <Dialog>W-Well, yeah. ...Are you
+mad？</Dialog>
+          <Dialog>Hmph.</Dialog>
+          <Dialog>(She's mad...)</Dialog>
+          <Dialog>It's
+▲高嶺＊＊▲, of course.</Dialog>
+          <Dialog>!! I wasn't fishing for
+that...</Dialog>
+          <Dialog>But I'm going out with
+▲高嶺＊＊▲
+because I like her.</Dialog>
+          <Dialog>I see, hmm...</Dialog>
+          <Dialog>Huh？ Did I say something
 weird？</Dialog>
           <Dialog>You did.</Dialog>
-          <Dialog>Which part was weird？</Dialog>
-          <Dialog>I don't know... Don't tease 
-me.</Dialog>
-          <Dialog>(I think she's getting 
-embarrassed.)</Dialog>
+          <Dialog>Which part？</Dialog>
+          <Dialog>Hmph. ...Meanie.</Dialog>
+          <Dialog>(Now I'm getting
+embarrassed...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4918,57 +4831,57 @@ embarrassed.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, can you tell me what 
-type of girl you like？</Dialog>
+          <Dialog>Hey, can I ask what type of
+girl you like？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, sure. For me...</Dialog>
-          <Dialog>Cool and calm</Dialog>
-          <Dialog>Cheerful and positive</Dialog>
-          <Dialog>You're my type 
-▲Takane＊＊▲</Dialog>
-          <Dialog>Cool and calm, I guess</Dialog>
-          <Dialog>Cool？ Like being cold？</Dialog>
-          <Dialog>Well, kind of... And 
-like... intelligent and 
-mysterious.</Dialog>
-          <Dialog>I see... I also think that 
-kind of girl is wonderful, 
+          <Dialog>Sure. Hmm, lately...</Dialog>
+          <Dialog>Cool and quiet</Dialog>
+          <Dialog>Cheerful and outgoing</Dialog>
+          <Dialog>You, ▲高嶺＊＊▲</Dialog>
+          <Dialog>Cool and quiet, I guess.
+Yeah.</Dialog>
+          <Dialog>Cool？ You mean cold？</Dialog>
+          <Dialog>Well, maybe. Kind of
+intellectual, mysterious？</Dialog>
+          <Dialog>I see... I think people like
+that are wonderful too...
 but...</Dialog>
-          <Dialog>I just can't act coldly 
-toward you. Because for me, 
-you are...</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>No. I got it. I'll try my 
-best！</Dialog>
+          <Dialog>Being cold to you is
+impossible. Because I
+already... about you...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>No. I see. I have to try
+harder！</Dialog>
           <Dialog>(...？)</Dialog>
-          <Dialog>Cheerful and positive.</Dialog>
-          <Dialog>Cheerful and positive... I 
-see... Um... But...</Dialog>
+          <Dialog>Cheerful and outgoing.</Dialog>
+          <Dialog>Cheerful and outgoing... I
+see... Yes. But...</Dialog>
           <Dialog>Is that weird？</Dialog>
-          <Dialog>No. But don't you think 
-that type of girl is a bit 
-disgraceful？</Dialog>
-          <Dialog>Really？ Why？</Dialog>
-          <Dialog>Why...？ Like if I try to 
-approach you...</Dialog>
-          <Dialog>You're trying to approach 
-me, ▲Takane＊＊▲？</Dialog>
-          <Dialog>...You're so mean.</Dialog>
+          <Dialog>No. But wouldn't you think a
+girl like that is...
+improper？</Dialog>
+          <Dialog>Would I？ Like how？</Dialog>
+          <Dialog>Like, if I were... more,
+um...</Dialog>
+          <Dialog>If
+▲高嶺＊＊▲
+made the first move？</Dialog>
+          <Dialog>...Meanie.</Dialog>
           <Dialog>(？？？)</Dialog>
-          <Dialog>She has to be just like 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hey... It was a serious 
-question.</Dialog>
-          <Dialog>But I really like you. 
-That's why I'm with you 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>It's
+▲高嶺＊＊▲, of course.</Dialog>
+          <Dialog>Geez... I'm asking
+seriously, you know？</Dialog>
+          <Dialog>Well, I like
+▲高嶺＊＊▲,
+that's why we're going out.</Dialog>
           <Dialog>...Oh. Thank you.</Dialog>
           <Dialog>You're welcome.</Dialog>
           <Dialog>Hehe. Hey...</Dialog>
           <Dialog>Hmm？</Dialog>
-          <Dialog>I love this gentle part of 
-you... Yeah.</Dialog>
-          <Dialog>(I'm getting embarrassed...)</Dialog>
+          <Dialog>I love that kind side of
+you. ...Just saying.</Dialog>
+          <Dialog>(Kind of embarrassing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5151,53 +5064,49 @@ you... Yeah.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey. Has your favorite 
-type changed since the last 
-time I asked？</Dialog>
+          <Dialog>Hey？ Has your "type"
+changed lately？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My type？ Let me see... She 
-has to be...</Dialog>
-          <Dialog>Cool and calm</Dialog>
-          <Dialog>Kind and obedient</Dialog>
-          <Dialog>You're my type 
-▲Takane＊＊▲</Dialog>
-          <Dialog>The cool and calm type, I 
-guess.</Dialog>
-          <Dialog>Really！？</Dialog>
-          <Dialog>Huh？ Did I say something 
+          <Dialog>My type？ Let's see,
+lately...</Dialog>
+          <Dialog>Cool and quiet</Dialog>
+          <Dialog>Kind and quiet</Dialog>
+          <Dialog>You, ▲高嶺＊＊▲</Dialog>
+          <Dialog>A little cool, the quiet
+type, I guess？</Dialog>
+          <Dialog>Really!?</Dialog>
+          <Dialog>Huh？ Did I say something
 weird？</Dialog>
-          <Dialog>That's not the case, but 
-because you... That's why 
-I...</Dialog>
+          <Dialog>It's not that, but you...
+that's why I...</Dialog>
           <Dialog>...？</Dialog>
-          <Dialog>Geez... Why did it turn 
-out like this？</Dialog>
+          <Dialog>Geez... Why does it end up
+like this？</Dialog>
           <Dialog>(...？)</Dialog>
-          <Dialog>Kind and obedient, I guess.</Dialog>
-          <Dialog>Hmm... You like obedient 
-girls, huh？</Dialog>
-          <Dialog>Yeah, feminine and maybe a 
-bit shy. That would be 
-great.</Dialog>
-          <Dialog>It would be hard for me to 
-become like that... But if 
-you like...</Dialog>
+          <Dialog>Kind and quiet is nice.</Dialog>
+          <Dialog>Hmm... So you like quiet
+girls.</Dialog>
+          <Dialog>A proper, demure Japanese
+girl, of course. Bashful,
+you know？ That's great,
+yeah.</Dialog>
+          <Dialog>I do think I'm a little
+improper. But it's partly
+you who makes me that way...</Dialog>
           <Dialog>？？？</Dialog>
-          <Dialog>Enough... I don't care 
-anymore.</Dialog>
-          <Dialog>(...▲Takane＊＊▲？)</Dialog>
-          <Dialog>Actually... It has to be 
-someone just like you, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>Hey... Don't try to flatter 
-me.</Dialog>
-          <Dialog>It's not flattery. I 
-really mean it.</Dialog>
-          <Dialog>Okay... I'll try a bit 
-harder then.</Dialog>
-          <Dialog>(I definitely like you as 
-you are right now, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Geez... I don't get it.</Dialog>
+          <Dialog>(...▲高嶺＊＊▲？)</Dialog>
+          <Dialog>Actually, I'd go with
+▲高嶺＊＊▲
+as she is now？</Dialog>
+          <Dialog>Geez... You're such a smooth
+talker.</Dialog>
+          <Dialog>I'm telling the truth, you
+know.</Dialog>
+          <Dialog>Yes... Then I'll try even
+harder. Is that okay？</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+as she is now is the best.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5313,24 +5222,23 @@ you are right now,
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>By the way...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Yes？</Dialog>
-          <Dialog>Lately, what do you do when 
-you're at home 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Lately I just do absolutely 
-nothing.</Dialog>
-          <Dialog>I just lie on my bed 
-hugging my pillow...</Dialog>
-          <Dialog>And think about various 
-things？</Dialog>
-          <Dialog>I guess so...</Dialog>
-          <Dialog>Hmm？ Do you usually fall 
-asleep just like that？</Dialog>
-          <Dialog>...I can't sleep. That's 
-why...</Dialog>
+          <Dialog>Yeah. What is it？</Dialog>
+          <Dialog>What has
+▲高嶺＊＊▲
+been up to at home lately？</Dialog>
+          <Dialog>Lately, I've been spacing
+out.</Dialog>
+          <Dialog>Flopping onto my bed.
+Hugging my pillow.</Dialog>
+          <Dialog>Thinking about stuff？</Dialog>
+          <Dialog>Something like that... I
+guess？</Dialog>
+          <Dialog>Huh... Sounds like you'd
+fall asleep like that.</Dialog>
+          <Dialog>...I can't sleep. Because...</Dialog>
           <Dialog>......</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Enough, you thickhead...</Dialog>
+          <Dialog>Geez. You're so dense.</Dialog>
           <Dialog>(...？)</Dialog>
         </Dialogs>
       </SDL2>
@@ -5427,31 +5335,33 @@ why...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>By the way...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Yes？</Dialog>
-          <Dialog>What do you usually do when 
-you are at home 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Lately, I started reading 
-magazines to check out 
-fashions, hairstyle, and 
-stuff like that.</Dialog>
-          <Dialog>Eh？ You also read those, 
-▲Takane＊＊▲！？</Dialog>
-          <Dialog>...You're that surprised？</Dialog>
-          <Dialog>Yes, a little bit... I 
-can't imagine you buying 
-magazines.</Dialog>
-          <Dialog>Well, I've never been 
-interested in them until I 
-met you, I guess.</Dialog>
-          <Dialog>Then... You started reading 
-them because of me, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>...Next time, we should go 
-buy magazines together. I 
-want to know what you like.</Dialog>
-          <Dialog>(You're just too cute 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Yeah. What is it？</Dialog>
+          <Dialog>What does
+▲高嶺＊＊▲
+do at home？</Dialog>
+          <Dialog>Lately, I read magazines to
+check out clothes, play with
+my hair...</Dialog>
+          <Dialog>Huh, even
+▲高嶺＊＊▲
+reads magazines？</Dialog>
+          <Dialog>...Surprised？</Dialog>
+          <Dialog>Yeah, a little. I didn't
+think you'd buy that kind of
+thing.</Dialog>
+          <Dialog>Yes... Before I met you, I
+wasn't very interested, I
+guess.</Dialog>
+          <Dialog>So
+▲高嶺＊＊▲,
+could it be you did it for
+me...？</Dialog>
+          <Dialog>...Let's go look at
+magazines together
+sometime？ I want to know
+more about what you like.</Dialog>
+          <Dialog>(▲高嶺＊＊▲,
+saying something so cute...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5563,29 +5473,27 @@ want to know what you like.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>By the way...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Yes？</Dialog>
-          <Dialog>Lately, what do you do when 
-you're at home, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Lately... I would play the 
-piano while pondering 
-various things.</Dialog>
-          <Dialog>Pondering while playing 
-the piano！？ That sounds 
-very difficult to do.</Dialog>
-          <Dialog>It depends, I guess. If 
-I'm playing an easy song, 
-I can chat while playing 
-as well.</Dialog>
-          <Dialog>Hmm... Then what have you 
-been pondering about？</Dialog>
-          <Dialog>Many things. I've been 
-thinking about you, too.</Dialog>
-          <Dialog>What？ ...What about me？</Dialog>
-          <Dialog>Well, I wonder. I'd better 
-hurry home and start 
-playing the piano▼</Dialog>
-          <Dialog>(Um, now I'm curious...)</Dialog>
+          <Dialog>Yeah. What is it？</Dialog>
+          <Dialog>What has
+▲高嶺＊＊▲
+been up to at home lately？</Dialog>
+          <Dialog>Lately... I've been thinking
+while playing piano.</Dialog>
+          <Dialog>Thinking while playing!?
+Isn't that hard？</Dialog>
+          <Dialog>Depends on the person？ I
+can't with hard pieces, but
+with ones I know well, I can
+even chat？</Dialog>
+          <Dialog>Huh... So what are you
+thinking about？</Dialog>
+          <Dialog>All sorts of things.
+Including you.</Dialog>
+          <Dialog>Me？ ...Did I do something？</Dialog>
+          <Dialog>Hmm, who knows？ I'll play
+piano when I get home today
+too▼</Dialog>
+          <Dialog>(Hmm, now I'm curious...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5705,34 +5613,35 @@ playing the piano▼</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>By the way...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Yes？</Dialog>
-          <Dialog>How's everything at home 
-lately, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>The other day, Mama bought 
-a really amazing sponge. 
-Now I'm so in the mood for 
-cleaning.</Dialog>
-          <Dialog>Huh？ Is it that good？</Dialog>
-          <Dialog>Yeah, last time I spilled 
-my tea and the floor got a 
-big stain...</Dialog>
-          <Dialog>I used this sponge and the 
-stain turned into just a 
-tiny dot. It was fun.</Dialog>
-          <Dialog>But, I won't be able to 
-use it again.</Dialog>
+          <Dialog>Yeah. What is it？</Dialog>
+          <Dialog>What has
+▲高嶺＊＊▲
+been up to at home lately？</Dialog>
+          <Dialog>The other day Mama bought
+this amazing sponge. Since
+then I've been cleaning a
+lot.</Dialog>
+          <Dialog>Huh, there's such a thing.</Dialog>
+          <Dialog>Yes. It takes off tea stains
+really well, but what
+surprised me even more
+was...</Dialog>
+          <Dialog>It keeps getting smaller as
+you use it！ That's what's
+fun.</Dialog>
+          <Dialog>But I might not be able to
+anymore.</Dialog>
           <Dialog>Why？</Dialog>
-          <Dialog>I got scolded for polishing 
-things without asking. Now, 
-there's only one spot on my 
-bed that looks off-color.</Dialog>
+          <Dialog>I was scrubbing everything
+too hard and Mama scolded
+me. Especially the floor,
+since I turned one spot
+white...</Dialog>
           <Dialog>T-That's...</Dialog>
-          <Dialog>...I think I overdid it.</Dialog>
-          <Dialog>(So, you're the type that 
-can't stop yourself once 
-you get into something huh, 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>...I overdid it, didn't I？</Dialog>
+          <Dialog>(Once ▲高嶺＊＊▲ gets
+hooked, she goes all the
+way...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6009,70 +5918,64 @@ you get into something huh,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I ask you a question, 
-▲主人公＊▲？</Dialog>
+          <Dialog>▲主人公＊▲. Can I ask just
+one thing？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, go ahead.</Dialog>
-          <Dialog>Hey, lately, have you been 
-oversleeping in the 
-morning？</Dialog>
-          <Dialog>In the morning？ Well... 
-In the morning... I...</Dialog>
-          <Dialog>I can get up easily</Dialog>
-          <Dialog>I can barely get up</Dialog>
-          <Dialog>A man must get up early！</Dialog>
-          <Dialog>I stay up until morning！</Dialog>
-          <Dialog>Well, I can get up very 
-easily.</Dialog>
-          <Dialog>Is that so...？</Dialog>
-          <Dialog>Eh？ Is that something 
-unexpected？</Dialog>
-          <Dialog>No！ It sure feels good 
-waking up in the morning, 
+          <Dialog>Sure, what？</Dialog>
+          <Dialog>Hey, have you been
+oversleeping lately？ Are
+you a morning person？</Dialog>
+          <Dialog>Mornings？ Let's see... I'm
+more of a...</Dialog>
+          <Dialog>Morning person</Dialog>
+          <Dialog>Not a morning person</Dialog>
+          <Dialog>Successful men rise early！</Dialog>
+          <Dialog>Total night owl！</Dialog>
+          <Dialog>I guess I'm good with
+mornings？</Dialog>
+          <Dialog>Oh... I see...</Dialog>
+          <Dialog>Huh？ Surprised？</Dialog>
+          <Dialog>No！ Mornings feel great,
 right？</Dialog>
-          <Dialog>Right！ The early bird gets 
-the worm, right？</Dialog>
-          <Dialog>Yeah... That's right...</Dialog>
+          <Dialog>Right！ The early bird gets
+the worm！</Dialog>
+          <Dialog>Hmm... I see.</Dialog>
           <Dialog>(...？)</Dialog>
-          <Dialog>Well, I can barely get up.</Dialog>
-          <Dialog>As I thought. If you don't 
-fully wake up, you'll be 
-spacing out all day long.</Dialog>
-          <Dialog>I know that, but it's not 
-easy to do.</Dialog>
-          <Dialog>No good. You'll have to do 
-something with it, okay？</Dialog>
-          <Dialog>I can't.</Dialog>
-          <Dialog>No. I'll also help to make 
-sure you fully wake up, all 
+          <Dialog>I guess I'm not great with
+mornings？</Dialog>
+          <Dialog>I knew it. If you don't wake
+up properly, you'll be
+spaced out all day, right？</Dialog>
+          <Dialog>I know, but it's not that
+easy.</Dialog>
+          <Dialog>No good. You have to do
+something about it. Okay？</Dialog>
+          <Dialog>Can't.</Dialog>
+          <Dialog>Nope. I'll help too, so
+you'll get up properly.
+Okay？</Dialog>
+          <Dialog>(A wake-up call, maybe？)</Dialog>
+          <Dialog>Successful men rise early！
+Right？</Dialog>
+          <Dialog>R-Right. Yes.</Dialog>
+          <Dialog>Right. Battle-ready from the
+morning. That's the basics
+of a successful man.</Dialog>
+          <Dialog>You don't have to be a
+successful man...</Dialog>
+          <Dialog>Not to brag, but I'm a total
+night owl！</Dialog>
+          <Dialog>Geez... Don't brag about
+that.</Dialog>
+          <Dialog>Heh！</Dialog>
+          <Dialog>Then getting up in the
+morning must be hard,
 right？</Dialog>
-          <Dialog>(Is she going to give me a 
-morning call？)</Dialog>
-          <Dialog>A man must get up early！ 
-Isn't that right？</Dialog>
-          <Dialog>T-That's right. Yeah.</Dialog>
-          <Dialog>Yeah. It's like we have to 
-be ready for the battle. 
-It's a basis for an able 
-man.</Dialog>
-          <Dialog>You don't have to be an 
-able man then...</Dialog>
-          <Dialog>It's not something to be 
-proud of, but I usually 
-stay up until morning！</Dialog>
-          <Dialog>Hey... That's totally not 
-something to be proud of.</Dialog>
-          <Dialog>Hehe！</Dialog>
-          <Dialog>Then it must be hard for 
-you to get up in the 
-morning, right？</Dialog>
-          <Dialog>Nah, not hard. I mean I'll 
-just keep sleeping. Will 
-you wake me up then？</Dialog>
-          <Dialog>Hey, don't get too full of 
-yourself. But maybe I 
-really should help wake 
-you up, huh？</Dialog>
+          <Dialog>Pretty much. Actually, I
+can't get up. Wake me up.</Dialog>
+          <Dialog>Geez, getting carried away.
+Then if I help, will you get
+up properly？ Well？</Dialog>
           <Dialog>(Help？ How？)</Dialog>
         </Dialogs>
       </SDL2>
