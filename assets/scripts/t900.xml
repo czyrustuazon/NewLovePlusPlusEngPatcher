@@ -27,13 +27,11 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Seems she's not here yet... 
-Where are you 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>There's no one around... 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Looks like ▲高嶺＊＊▲
+isn't here yet.</Dialog>
+          <Dialog>▲高嶺＊＊▲... she left.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Others can see us...</Dialog>
+          <Dialog>People will see us...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
