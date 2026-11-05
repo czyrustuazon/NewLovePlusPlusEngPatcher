@@ -112,8 +112,7 @@ on time.</Dialog>
 me？ It's so hot today. 
 I'm sorry.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>No, no, I haven't waited 
-long.</Dialog>
+          <Dialog>No, I didn't wait at all.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -366,10 +365,10 @@ punctual people.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Whew, it's hot. I'm glad 
-you didn't wait long.</Dialog>
+          <Dialog>Phew, it's hot today. Good
+thing I didn't have to wait.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's okay.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -394,12 +393,11 @@ you didn't wait long.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sweating even though 
-I'm standing still. I'm 
-glad you arrived right on 
-time.</Dialog>
+          <Dialog>I'm sweating just standing
+here. Good thing you came
+right on time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -424,11 +422,11 @@ time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh, today is too hot. 
-I'm glad you arrived 
-early.</Dialog>
+          <Dialog>Ugh, it's way too hot today.
+Good thing you came right
+away.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -538,8 +536,8 @@ time. It's so cold today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's fine, but I would be 
-happy if you arrived a bit 
+          <Dialog>It's fine, but I'd be happy
+if you came a little
 earlier.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I'm sorry. I'll be more 
@@ -653,8 +651,8 @@ to melt from the heat.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You're a little late. It's 
-hot today.</Dialog>
+          <Dialog>You're only a little late,
+but it's hot today...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry. I'll be more 
 careful next time.</Dialog>
@@ -682,10 +680,9 @@ careful next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I like the nervousness 
-while waiting for a date, 
-but on a hot day like 
-this...</Dialog>
+          <Dialog>I like the butterflies of
+waiting, but on a hot day
+like this...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry. I apologize.</Dialog>
         </Dialogs>
@@ -716,9 +713,9 @@ this...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You should be punctual, 
-especially on such a 
-cold day.</Dialog>
+          <Dialog>I'd like you to be on time.
+Especially on a cold day
+like this.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>You're right, I'm sorry.</Dialog>
         </Dialogs>
@@ -750,7 +747,7 @@ you to make me wait when
 it's freezing like this. 
 I could catch a cold.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm very sorry.</Dialog>
+          <Dialog>You're right, sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -775,8 +772,8 @@ I could catch a cold.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, making me wait on a 
-cold day like this is bad, 
+          <Dialog>Geez, you can't make me wait
+on a cold day like this,
 okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry.</Dialog>
@@ -808,9 +805,8 @@ okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was just thinking about 
-going home. It's a good 
-thing that you arrived.</Dialog>
+          <Dialog>I was just about to go home.
+But you came, so it's okay.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I'm very sorry！ 
 I apologize.</Dialog>
@@ -872,10 +868,9 @@ will never happen again.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thanks for coming. 
-Although I have been 
-waiting, I feel relieved 
-when I see you...</Dialog>
+          <Dialog>I'm glad you came. I waited
+a long time, but seeing you
+is a relief...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry for making you 
 worry. I apologize！</Dialog>
@@ -936,9 +931,9 @@ already.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did I upset you or 
-something？ I'm feeling 
-uneasy...</Dialog>
+          <Dialog>Did I do something to make
+you mad？ I'm about to keel
+over...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry for making you wait 
 in such hot weather. I 
@@ -967,10 +962,9 @@ apologize！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I even thought that you 
-might collapse from 
-heatstroke on your way 
-here...</Dialog>
+          <Dialog>I thought you might have
+collapsed from heatstroke or
+something.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry. I'm just late. I 
 apologize！</Dialog>
