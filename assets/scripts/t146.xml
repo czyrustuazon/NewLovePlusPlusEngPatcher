@@ -184,52 +184,49 @@
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ What's wrong？</Dialog>
-          <Dialog>I've come up with a 
-really good idea. Can you 
+          <Dialog>Hm？</Dialog>
+          <Dialog>You know, I just thought of
+a really good idea. Will you
 hear me out？</Dialog>
-          <Dialog>What's wrong？ If I can do 
-something...</Dialog>
-          <Dialog>...Isn't Enoshima near 
-Shona？</Dialog>
-          <Dialog>What happened to Enoshima？</Dialog>
-          <Dialog>Why don't we go there on 
-a date next time？</Dialog>
-          <Dialog>I see. Isn't it unusual 
-that you thought about a 
-new date spot, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>...Huh？ That's... Yes！ 
-You're always thinking 
-about them, so doing 
-sometimes it's okay.</Dialog>
-          <Dialog>I see, you're right.</Dialog>
-          <Dialog>Yeah！ I think Enoshima is 
-a wonderful place！ You can 
-go on a day trip, the fish 
-is delicious and, uh... 
+          <Dialog>What's up？ All formal like
+that...</Dialog>
+          <Dialog>...You know Enoshima,
+right？ In Shonan.</Dialog>
+          <Dialog>What about Enoshima？</Dialog>
+          <Dialog>Want to go there sometime？
+Um, on a date.</Dialog>
+          <Dialog>Huh... it's rare for
+▲高嶺＊＊▲ to come up with
+a new date spot.</Dialog>
+          <Dialog>...Huh？ That's, you know...
+right！ You're always the
+one planning, so I thought
+I'd do it for once.</Dialog>
+          <Dialog>I see, makes sense.</Dialog>
+          <Dialog>That's right, yes！ I think
+Enoshima is a lovely place！
+See, you can go on a day
+trip, the fish looks
+delicious, and, um... it's
 Shonan！</Dialog>
           <Dialog>Shonan, huh...</Dialog>
-          <Dialog>Yes, Shonan. 
-I'm kidding...</Dialog>
-          <Dialog>▲Takane＊＊▲.</Dialog>
+          <Dialog>"Shonan." Ha ha... just
+kidding...</Dialog>
+          <Dialog>▲高嶺＊＊▲.</Dialog>
           <Dialog>Yes.</Dialog>
-          <Dialog>Are you hiding something 
-about this？</Dialog>
-          <Dialog>Emm......</Dialog>
+          <Dialog>Are you hiding something？</Dialog>
+          <Dialog>Um......</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>No？ At Enoshima...</Dialog>
-          <Dialog>It's okay. If you wanna go, 
-let's go, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Really？ I'm really glad！</Dialog>
-          <Dialog>I should do some research 
-about it, right？ About 
-Enoshima！ Hehe, are you 
-looking forward for it？</Dialog>
-          <Dialog>(So you really wanted to go 
-there, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>You don't want to？
+Enoshima...</Dialog>
+          <Dialog>Sure. If ▲高嶺＊＊▲ wants
+to go, let's go！</Dialog>
+          <Dialog>Really？ I'm so glad！</Dialog>
+          <Dialog>I'll study up properly,
+okay？ On Enoshima！ Hehe, I
+can't wait.</Dialog>
+          <Dialog>(▲高嶺＊＊▲ must really
+want to go.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -304,22 +301,19 @@ there,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now then, I wonder where 
-▲Takane＊＊▲ is...</Dialog>
+          <Dialog>Now, where's ▲高嶺＊＊▲...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>▲Takane＊＊▲？</Dialog>
-          <Dialog>There's something different 
-about you today, 
-▲Takane＊＊▲...？</Dialog>
-          <Dialog>Really？</Dialog>
-          <Dialog>Hmm, the way you're 
-dressed up...</Dialog>
-          <Dialog>Well, you know, it's 
+          <Dialog>▲高嶺＊＊▲... you seem
+kind of different today...？</Dialog>
+          <Dialog>R-really？</Dialog>
+          <Dialog>Yeah, all dressed up, I
+mean...</Dialog>
+          <Dialog>Well, you know, it's
 Shonan...</Dialog>
-          <Dialog>...Don't look at me too 
-much.</Dialog>
-          <Dialog>(She looks so cute...)</Dialog>
+          <Dialog>...Don't look at me so much.</Dialog>
+          <Dialog>(Sh-she's so cute...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -376,17 +370,16 @@ much.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, ▲Takane＊＊▲！ 
-You're early.</Dialog>
-          <Dialog>Yeah, I wanted to arrive 
+          <Dialog>Ah, ▲高嶺＊＊▲！ You're
 early.</Dialog>
-          <Dialog>Aren't you wearing 
-something different today 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>That's because, you know, 
-I guessed you'll take some 
-photos again... Meanie.</Dialog>
-          <Dialog>(She's so cute...)</Dialog>
+          <Dialog>Yes, I came way too early.</Dialog>
+          <Dialog>▲高嶺＊＊▲... you're a
+little dressed up again
+today？</Dialog>
+          <Dialog>That's, well, because I
+thought you'd take pictures
+again... Meanie.</Dialog>
+          <Dialog>(So cute...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -473,26 +466,24 @@ photos again... Meanie.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hehe♪</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you having fun, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yeah. There's no sound 
-coming from the inverter 
-control of the ＶＶＶＦ.</Dialog>
-          <Dialog>Vee... What？</Dialog>
-          <Dialog>This vehicle is a new 
-500-type, so it has a 
-ＶＶＶＦ inverter. The engine 
-is making a humming noise, 
-right？</Dialog>
-          <Dialog>So that was it？</Dialog>
-          <Dialog>That's right. Hehe♪</Dialog>
-          <Dialog>Say... Do you like railways 
-that much 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>That's not the case, but 
-I've been researching 
-about trains for today.</Dialog>
-          <Dialog>I see...</Dialog>
+          <Dialog>You look like you're having
+fun, ▲高嶺＊＊▲？</Dialog>
+          <Dialog>Yes. I was just listening to
+the sound of the VVVF
+inverter control.</Dialog>
+          <Dialog>V... what？</Dialog>
+          <Dialog>This car is the new 500
+series, so it has a VVVF
+inverter. Hear that whirring
+sound when it starts
+moving？</Dialog>
+          <Dialog>Does it？</Dialog>
+          <Dialog>It does. Hehe♪</Dialog>
+          <Dialog>Hey, ▲高嶺＊＊▲, were you
+always this into trains？</Dialog>
+          <Dialog>Not really, but I looked up
+the Enoden for today.</Dialog>
+          <Dialog>Huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -562,25 +553,28 @@ about trains for today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, a 10-type vehicle...</Dialog>
+          <Dialog>Ah, a 10 series car...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>The blue vehicle that was 
-parked before.</Dialog>
-          <Dialog>Are you addicted to trains 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>That's not it, but I 
-looked it up before, you 
-know？ I remembered some 
-things, and I got curious.</Dialog>
-          <Dialog>I see. So that's the 
-10-type... Are there more 
-of them？</Dialog>
-          <Dialog>From the active vehicles we 
-have the popular 300-type, 
-1000-type, 2000-type...</Dialog>
-          <Dialog>(And I'm addicted to you, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Yes. The blue car that was
+just stopped there.</Dialog>
+          <Dialog>▲高嶺＊＊▲'s totally
+hooked on the Enoden, huh？</Dialog>
+          <Dialog>It's not that, but I looked
+it up before, remember？ I
+learned all sorts of things
+then, so I can't help
+noticing.</Dialog>
+          <Dialog>I see. The 10 series...
+there are other kinds too,
+right？</Dialog>
+          <Dialog>That's right. Even just the
+ones in service, there are
+lots. The popular 300
+series, the 1000 series, the
+2000 series...</Dialog>
+          <Dialog>(She's hooked, all right...
+▲高嶺＊＊▲...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -640,27 +634,26 @@ have the popular 300-type,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Finally, we've arrived to 
-Enoshima...</Dialog>
+          <Dialog>Phew, we made it～ So this
+is Enoshima...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm, the weather's good... 
-The weather is so nice for 
-our first time at 
-Enoshima.</Dialog>
-          <Dialog>That's right... 
-Huh？ Where is the true 
-Enoshima？</Dialog>
-          <Dialog>It seems that you can see 
-it from Katase-Enoshima 
-station, but you can't see 
-it from Enoshima station.</Dialog>
-          <Dialog>I see. Well, let's go to 
-the sea...</Dialog>
-          <Dialog>From here, a 3-minute 
-straight walk on this 
-road. Shall we go？</Dialog>
-          <Dialog>As expected of you！ Let's 
-go, ▲Takane＊＊▲！</Dialog>
+          <Dialog>Yes. Nice weather... I'm
+glad it's sunny for our
+first trip to Enoshima.</Dialog>
+          <Dialog>Yeah... huh？ Where's
+Enoshima itself？</Dialog>
+          <Dialog>Apparently you can see it
+well from Katase-Enoshima
+Station, but not really from
+the Enoden's Enoshima
+Station.</Dialog>
+          <Dialog>I see. So to get to the
+sea...</Dialog>
+          <Dialog>This way. Straight down this
+road, a three-minute walk.
+Let's go？</Dialog>
+          <Dialog>As expected of
+▲高嶺＊＊▲！ Let's go！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -715,19 +708,17 @@ go, ▲Takane＊＊▲！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We arrived！</Dialog>
+          <Dialog>We're here！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup, and the weather is so 
-good today...</Dialog>
-          <Dialog>It's a 3-minute walk from 
-here, right？</Dialog>
-          <Dialog>Hehe, that's right. But 
-I want to take our time, 
-I'm sure there are things 
-I still don't know.</Dialog>
-          <Dialog>That's right, let's do 
-that.</Dialog>
-          <Dialog>Of course！</Dialog>
+          <Dialog>Yes, nice weather again
+today...</Dialog>
+          <Dialog>A three-minute walk, right？</Dialog>
+          <Dialog>Hehe, that's right. But I'd
+like to walk slowly. I'm
+sure there are lots of
+things we don't know yet.</Dialog>
+          <Dialog>Yeah. Shall we？</Dialog>
+          <Dialog>Yes！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -814,25 +805,26 @@ that.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Wow...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, Enoshima！</Dialog>
-          <Dialog>It looks a lot closer than 
-I imagined. From here, it 
-almost looks like a 
-picture of a postcard.</Dialog>
-          <Dialog>Yeah, it looks good...</Dialog>
-          <Dialog>Besides, it really looks 
-like the Dragon God really 
-lives here.</Dialog>
-          <Dialog>Dragon God？</Dialog>
-          <Dialog>Enoshima has been 
-worshiped since before 
-Prince Shotoku, and En no 
-Gyōja and Tokimasa Hojo 
-also came to visit.</Dialog>
-          <Dialog>En no―― I see, 
-I understand！</Dialog>
-          <Dialog>Do you want to continue？</Dialog>
-          <Dialog>(I didn't know that...)</Dialog>
+          <Dialog>Whoa, Enoshima！</Dialog>
+          <Dialog>It looks so much closer than
+I imagined... From here, it
+looks just like a picture
+postcard.</Dialog>
+          <Dialog>Yeah. You can see it so
+well...</Dialog>
+          <Dialog>And it really looks like a
+dragon god lives there.</Dialog>
+          <Dialog>A dragon god？</Dialog>
+          <Dialog>Enoshima has been a place of
+worship since before Prince
+Shotoku's time, and En no
+Gyoja and Hojo Tokimasa also
+came to pray to the island's
+dragon god.</Dialog>
+          <Dialog>En no―― huh, I see！</Dialog>
+          <Dialog>Let's go？</Dialog>
+          <Dialog>(Learn something new every
+day...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -887,19 +879,17 @@ I understand！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hah～！ Today you can 
-clearly see the island.</Dialog>
+          <Dialog>Haah～！ You can see the
+island so well today too.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, it's really 
-beautiful...</Dialog>
-          <Dialog>It really is...</Dialog>
-          <Dialog>When we came for the first 
-time, I didn't notice it 
-because I was just 
-reviewing what I had read 
-in my head.</Dialog>
-          <Dialog>It's really a nice view...</Dialog>
-          <Dialog>Alright, let's go！</Dialog>
+          <Dialog>Yes. It's so pretty...</Dialog>
+          <Dialog>It really is pretty...</Dialog>
+          <Dialog>The first time we came, I
+was so busy reviewing
+everything I'd studied in my
+head that I didn't notice.</Dialog>
+          <Dialog>Such a lovely view...</Dialog>
+          <Dialog>All right, let's go！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -981,26 +971,25 @@ in my head.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hey, aren't you hungry？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Actually, I've been 
-feeling hungry for a while 
-now...</Dialog>
-          <Dialog>Enoshima has a lot of 
-delicious foods, right？ 
-I wonder what we should 
-try...</Dialog>
-          <Dialog>Ah, don't tell me--！</Dialog>
-          <Dialog>Yeah, I brought a bento 
-with me.</Dialog>
-          <Dialog>I wanna eat it！</Dialog>
-          <Dialog>Aren't you overdoing it？ 
-If you want to eat an 
-Enoshima's specialty, you 
-can't eat from the bento.</Dialog>
-          <Dialog>I'll prepare another 
-stomach for that specialty.</Dialog>
-          <Dialog>Geez... Well then, let's 
-find a place where we can 
-have our bento, okay？</Dialog>
+          <Dialog>Actually, I've been starving
+for a while...</Dialog>
+          <Dialog>Enoshima has lots of
+delicious food, right？ I
+couldn't decide what to do,
+but...</Dialog>
+          <Dialog>Ah, could it be！</Dialog>
+          <Dialog>Yes, I made a bento.</Dialog>
+          <Dialog>I'll eat it, I'll eat it！</Dialog>
+          <Dialog>You're not forcing
+yourself？ If you want to
+try the local specialties, I
+can just take the bento
+home.</Dialog>
+          <Dialog>Local specialties go in a
+separate stomach.</Dialog>
+          <Dialog>Geez... then let's find
+somewhere we can spread out
+the bento？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1015,8 +1004,8 @@ have our bento, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now then, where are we 
-going...</Dialog>
+          <Dialog>Okay. Where should we go
+first...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1041,11 +1030,11 @@ going...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you mind going to the 
-▲スポット名＊＊＊＊＊＊▲？</Dialog>
+          <Dialog>Let's go to
+▲スポット名＊＊＊＊＊＊▲.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, that sounds good as 
-a first stop.</Dialog>
+          <Dialog>Yes. That's the place to
+start, after all？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1090,17 +1079,16 @@ a first stop.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Thank you for the food！</Dialog>
+          <Dialog>Thanks for the meal！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm glad you liked it. 
-You ate a lot this time.</Dialog>
-          <Dialog>Your bento is always so 
-good ▲Takane＊＊▲！</Dialog>
-          <Dialog>Geez... Hey, why don't we 
-go see Samuel Cocking 
-Garden next？</Dialog>
-          <Dialog>Oh, doesn't that sound 
-nice？ Let's go！</Dialog>
+          <Dialog>Yes. It was nothing special.
+I'm glad you ate it.</Dialog>
+          <Dialog>▲高嶺＊＊▲'s bento goes in
+a separate stomach too！</Dialog>
+          <Dialog>Geez... hey, want to see the
+Samuel Cocking Garden next
+door？</Dialog>
+          <Dialog>Yeah, sure？ Let's go！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1115,8 +1103,8 @@ nice？ Let's go！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well then, it's almost 
-time...</Dialog>
+          <Dialog>Okay, about time for that
+place...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1141,10 +1129,11 @@ time...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do you want to the 
-▲スポット名＊＊＊＊＊＊▲ next？</Dialog>
+          <Dialog>We're going to
+▲スポット名＊＊＊＊＊＊▲,
+right？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, I wanna go.</Dialog>
+          <Dialog>Yes, I want to go.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1159,8 +1148,7 @@ time...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Next, we have to go over 
-there...</Dialog>
+          <Dialog>Next has to be that place...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1185,8 +1173,8 @@ there...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Wanna go visit 
-▲スポット名＊＊＊＊＊＊▲ next？</Dialog>
+          <Dialog>Want to go to
+▲スポット名＊＊＊＊＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Yes, agreed！</Dialog>
         </Dialogs>
@@ -1258,35 +1246,41 @@ there...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You mentioned Ryujin-sama 
-before, but there are many 
-depictions of dragons with 
-many heads here, right？</Dialog>
+          <Dialog>Come to think of it, you
+mentioned a dragon god
+earlier. There are pictures
+of a dragon with lots of
+heads all over Enoshima,
+huh？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>One of the Shrine's 
-treasures is a scroll 
-depicting Enoshima Engi. 
-The Celestial Maiden and 
-the dragon.</Dialog>
-          <Dialog>Is the Celestial Maiden 
-disciplining the dragon？</Dialog>
-          <Dialog>Hehe, the correct answer 
-is that the dragon that 
-brings disaster falls in 
-love with the Celestial 
-Maiden.</Dialog>
-          <Dialog>The dragon repented and 
-became a protector, 
-forever united with the 
-Celestial Maiden.</Dialog>
-          <Dialog>Over there！ If I'm with 
-you, I won't need a guide, 
-right ▲Takane＊＊▲？</Dialog>
-          <Dialog>I don't think so... 
-I just did some research 
-before coming.</Dialog>
-          <Dialog>(What do you mean 
-▲Takane＊＊▲...？)</Dialog>
+          <Dialog>Among the treasures of
+Enoshima Shrine is a scroll
+recording the legend, called
+the Enoshima Engi. The
+heavenly maiden and the
+five-headed dragon in it are
+the motif.</Dialog>
+          <Dialog>Does the heavenly maiden
+punish the dragon or
+something？</Dialog>
+          <Dialog>Hehe, too bad. The answer
+is, the dragon that brought
+disasters fell in love with
+the heavenly maiden...</Dialog>
+          <Dialog>The dragon promised to
+repent, and from then on,
+wore itself down protecting
+people from disaster, and
+the dragon and the heavenly
+maiden lived happily ever
+after.</Dialog>
+          <Dialog>That's how it goes！ But
+really, with ▲高嶺＊＊▲
+around, who needs a tour
+guide？</Dialog>
+          <Dialog>Oh, no... I just looked a
+few things up.</Dialog>
+          <Dialog>(▲高嶺＊＊▲...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1366,32 +1360,29 @@ before coming.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, look... it's the crest 
-of "three scales" again.</Dialog>
+          <Dialog>Ah, look... the
+"Mitsu-Uroko" crest again.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Is Mitsuuroko a guy with 
-three triangles lined up？ 
-Is that used in many 
-places？</Dialog>
-          <Dialog>Probably because it is the 
-family crest of the Hojo 
-family, which is related 
-to the island.</Dialog>
-          <Dialog>It's based on the scales 
-of the three dragons that 
-Tokimasa Hojo received 
-when he visited the 
-Dragon God.</Dialog>
-          <Dialog>Hojo Tokimasa, huh... 
-Isn't that a story that 
-appears in history 
-textbooks ？</Dialog>
-          <Dialog>...Huh？</Dialog>
-          <Dialog>Didn't Tokimasa Hojo 
-appear in a textbook？</Dialog>
-          <Dialog>Yes, it really comes in a 
+          <Dialog>Mitsu-Uroko, the one with
+three triangles lined up？
+It's used all over, huh？</Dialog>
+          <Dialog>That's because it's the
+crest of the Hojo family,
+who are connected to the
+island.</Dialog>
+          <Dialog>It comes from three dragon
+scales Hojo Tokimasa
+received when he prayed to
+the island's dragon god.</Dialog>
+          <Dialog>Hojo Tokimasa, huh... sounds
+like something out of a
 history textbook.</Dialog>
-          <Dialog>(...▲Takane＊＊▲？)</Dialog>
+          <Dialog>...Huh？</Dialog>
+          <Dialog>Hojo Tokimasa, wasn't he in
+our textbook？</Dialog>
+          <Dialog>Yes. He was. ...I really am
+like a textbook.</Dialog>
+          <Dialog>(...▲高嶺＊＊▲？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1516,40 +1507,38 @@ history textbook.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hah... I need to stop 
-doing that.</Dialog>
+          <Dialog>Haah... I'm hopeless.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...What happened？</Dialog>
-          <Dialog>I've been looking into 
-some things, because we've 
-been coming so much... 
-Maybe that's what makes a 
-difference.</Dialog>
+          <Dialog>...What's wrong？</Dialog>
+          <Dialog>Since we were coming, I
+wanted to make the most of
+it, so I looked up all sorts
+of things... but maybe that
+was the wrong way to go
+about it.</Dialog>
           <Dialog>Why？</Dialog>
-          <Dialog>I get excited while 
-walking and smelling nice 
-things. However, I worry 
-about the Goddess 
-Benzaiten becoming mad.</Dialog>
-          <Dialog>Eh... isn't that a good 
-thing to do？</Dialog>
-          <Dialog>But, if we can travel 
-without checking anything, 
-get lost or wander 
-together, I'm sure it 
-will be fun...</Dialog>
-          <Dialog>I'm having fun, okay？ 
-Don't worry.</Dialog>
-          <Dialog>... Don't lie.</Dialog>
-          <Dialog>It's true, all these kinds 
-of things remind me of you, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Walking up the approach full
+of delicious smells, getting
+excited, worrying what we'd
+do if Benten got jealous...</Dialog>
+          <Dialog>Huh... it's fine, isn't it？</Dialog>
+          <Dialog>Yes. But if we'd come
+without looking anything up,
+getting lost together,
+wondering about things
+together... I'm sure it
+would've been more fun...</Dialog>
+          <Dialog>I'm having fun, you know？</Dialog>
+          <Dialog>...That's not true.</Dialog>
+          <Dialog>It is. And that side of you
+is very ▲高嶺＊＊▲, and I
+like it.</Dialog>
           <Dialog>...Thank you.</Dialog>
           <Dialog>...It's true.</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>Hmm... I like you because 
-you're so kind.</Dialog>
-          <Dialog>(I'm getting embarrassed.)</Dialog>
+          <Dialog>What？</Dialog>
+          <Dialog>No... I love you because
+you're kind.</Dialog>
+          <Dialog>(That's embarrassing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1599,20 +1588,18 @@ you're so kind.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>From here there are lots 
-of slopes and stairs... 
-Don't you get tired of 
-walking？</Dialog>
+          <Dialog>So many slopes and stairs...
+walking here never gets
+boring, does it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I can see that... 
-I'm getting a little tired.</Dialog>
-          <Dialog>But, it's a good training, 
-right？ Muscles you don't 
-normally use are trained.</Dialog>
+          <Dialog>True. ...It's a little
+tiring, though.</Dialog>
+          <Dialog>But it's good training,
+right？ It works the muscles
+you don't normally use.</Dialog>
           <Dialog>Hahaha...</Dialog>
-          <Dialog>Okay, raise your knees a 
-little more and do your 
-best▼</Dialog>
+          <Dialog>Okay, lift those knees
+higher, keep it up▼</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1687,34 +1674,32 @@ best▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's seems really busy 
-over here.</Dialog>
+          <Dialog>Whoa... it's so lively.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe！ Climbing through 
-this side, you'll find 
-the first Enoshima Shrine.</Dialog>
-          <Dialog>And a lot of souvenirs 
-shops and delicious 
-things！</Dialog>
-          <Dialog>Yes, it has been a popular 
-tourist destination since 
-the Edo period, for people 
-who visit Goddess 
-Benzaiten.</Dialog>
-          <Dialog>I see... 
-Is that the history 
-behind it？</Dialog>
-          <Dialog>There was a bronze Torii 
-Gate at the entrance, 
-right？ That was also built 
-in the 4th year of Bunsei.</Dialog>
-          <Dialog>Are you familiar with it？ 
-Did you look it up？</Dialog>
-          <Dialog>Yes, I did a little 
-research about it.</Dialog>
-          <Dialog>A little, huh... 
-As expected of you, 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>Hehe！ If you climb this
+approach, you reach the
+first shrine of Enoshima
+Shrine.</Dialog>
+          <Dialog>So many souvenir shops and
+tasty-looking stuff！</Dialog>
+          <Dialog>Yes. Apparently it's been
+bustling as a tourist spot
+since the Edo period, with
+people coming to pray to
+Benten.</Dialog>
+          <Dialog>Huh... it's got a lot of
+history, huh？</Dialog>
+          <Dialog>There was a bronze torii at
+the entrance of the
+approach, right？ That was
+built in the 4th year of
+Bunsei, too.</Dialog>
+          <Dialog>You sure know a lot. Could
+it be, that too...？</Dialog>
+          <Dialog>Yes, I looked it up a
+little.</Dialog>
+          <Dialog>A little, huh... as expected
+of ▲高嶺＊＊▲！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1809,34 +1794,37 @@ As expected of you,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is Hetsumiya...</Dialog>
+          <Dialog>So this is Hetsunomiya...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's difficult to read... 
-Of course, did you check 
-it too？</Dialog>
+          <Dialog>The name's hard to read...
+of course you looked this
+one up too, right？</Dialog>
           <Dialog>Yes, a little.</Dialog>
-          <Dialog>Hetsumiya is one of the 
-three main shrines in 
-Enoshima. Also famous for 
-enshrining Myon Benzaiten.</Dialog>
-          <Dialog>Another Benzaiten？</Dialog>
-          <Dialog>Yes, it's also called 
-Naked Benzaiten. The 
-legend says that if a 
-couple comes, it separates 
-them...</Dialog>
-          <Dialog>What！？</Dialog>
-          <Dialog>It's okay, this place 
-blesses marriage. Do you 
-see that？ There are a lot 
-of pink votive tablets.</Dialog>
-          <Dialog>Oh, I see... 
-Couple votives. It has 
-written a lot of things. 
-Well, what does it say？</Dialog>
-          <Dialog>No, don't！ Geez... 
-it's bad to read them.</Dialog>
-          <Dialog>I'm sorry...</Dialog>
+          <Dialog>Hetsunomiya is one of the
+three shrine buildings of
+Enoshima Shrine, and it's
+famous for enshrining Myoon
+Benzaiten, one of the three
+great Benten of Japan.</Dialog>
+          <Dialog>Benten？</Dialog>
+          <Dialog>Yes, she's also called the
+Naked Benten. There's a
+legend that if married
+couples or lovers come, she
+gets jealous and breaks them
+up...</Dialog>
+          <Dialog>Huh!?</Dialog>
+          <Dialog>It's fine. This shrine is
+said to bless relationships.
+See all the pink ema plaques
+people have offered？</Dialog>
+          <Dialog>Huh... ema for couples. Oh,
+people wrote all kinds of
+stuff. Let's see, what does
+it say？</Dialog>
+          <Dialog>No！ Geez... it's rude to
+read them.</Dialog>
+          <Dialog>Sorry...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1931,32 +1919,32 @@ it's bad to read them.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Samuel Cocking Garden... 
-I see... it's a beautiful 
-place. Is Samuel Cocking's 
-house also there？</Dialog>
+          <Dialog>The Samuel Cocking Garden,
+huh. Wow... it's beautiful.
+Is this where Mr. Samuel
+Cocking lived or something？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That's not true. 
-Originally, it was a 
-botanical garden, but when 
-it was renovated in 2002 
-from an Irish trader--</Dialog>
+          <Dialog>That's not it. It was
+originally a botanical
+garden, but when it was
+renovated in 2002, the
+Meiji-era Irish trader――</Dialog>
           <Dialog>...What's wrong？</Dialog>
-          <Dialog>Hmm... Hey, why don't we 
-climb the lighthouse？</Dialog>
+          <Dialog>No... hey, want to climb the
+lighthouse？</Dialog>
           <Dialog>...？</Dialog>
           <Dialog>Amazing...</Dialog>
-          <Dialog>Oh... it's quite the view. 
-You can see it far away...</Dialog>
-          <Dialog>It really is, the sea and 
-the city are beautiful... 
-Besides, the sea breeze 
-feels good.</Dialog>
-          <Dialog>I've noticed this 
-wonderful place before.</Dialog>
-          <Dialog>I see... Are you glad we 
-come here？</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>Whoa... it's pretty high.
+You can see so far...</Dialog>
+          <Dialog>Really, the sea and the town
+are so pretty... And the sea
+breeze feels so nice.</Dialog>
+          <Dialog>You know, I'm only just now
+realizing what a wonderful
+place this is.</Dialog>
+          <Dialog>I see... I'm glad we came,
+huh？</Dialog>
+          <Dialog>Yes...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2036,31 +2024,26 @@ come here？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Isn't this lively somehow？ 
-It feels like we're in a 
-festival.</Dialog>
+          <Dialog>It's always so lively here,
+isn't it？ Like a festival.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>And whenever we come, it 
-smells delicious, doesn't 
-it？ Want to grab something 
-to eat？</Dialog>
-          <Dialog>But, eating while 
-walking...</Dialog>
-          <Dialog>...Can't we？</Dialog>
-          <Dialog>Hmm... Since we're in 
-Enoshima, we can make an 
+          <Dialog>And whenever we come, it
+always smells so good, huh？
+Want to eat something？</Dialog>
+          <Dialog>But eating while walking...</Dialog>
+          <Dialog>...Not allowed？</Dialog>
+          <Dialog>Hmm... Enoshima is a special
 exception. Hehe！</Dialog>
-          <Dialog>Alright！ What should we 
-buy？</Dialog>
-          <Dialog>Then we should buy some 
-sazae, roasted rice 
-crakers, shirasu rice 
-crackers, and then...</Dialog>
-          <Dialog>Wait... Is it okay to eat 
+          <Dialog>All right！ What should we
+get？</Dialog>
+          <Dialog>Then, turban shell,
+whole-octopus crackers, oh,
+and whitebait crackers, and
+then...</Dialog>
+          <Dialog>Wait... are you okay eating
 that much？</Dialog>
-          <Dialog>We can split it in half, 
-that's why it's fine. 
-Isn't that a nice plan？</Dialog>
+          <Dialog>We'll split them. So it's
+fine. Okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2140,23 +2123,22 @@ Isn't that a nice plan？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Benzaiten-sama has a pure 
+          <Dialog>Benten has such a pure
 white, beautiful face.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You're right.</Dialog>
-          <Dialog>Yes！ I've never seen such 
-a beautiful Goddess.</Dialog>
-          <Dialog>...Isn't that something 
-strange for you to say 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Say it's beautiful.</Dialog>
-          <Dialog>...Who？</Dialog>
-          <Dialog>Benzaiten-sama...</Dialog>
-          <Dialog>Perhaps you believe in 
-the legend about 
-Benzaiten's envy？</Dialog>
-          <Dialog>Not really... But, I'm 
-still worried.</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>Right！ I've never seen such
+a beautiful goddess.</Dialog>
+          <Dialog>...▲高嶺＊＊▲, you're
+acting kind of weird？</Dialog>
+          <Dialog>Say "beautiful."</Dialog>
+          <Dialog>...To who？</Dialog>
+          <Dialog>To Benten...</Dialog>
+          <Dialog>Could it be you believe the
+legend about Benten getting
+jealous？</Dialog>
+          <Dialog>Not really... but it still
+bothers me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2226,25 +2208,25 @@ still worried.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, we're climbing the 
-lighthouse next, right？</Dialog>
+          <Dialog>Hey, we're climbing the
+lighthouse, right？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right. Let's go！</Dialog>
-          <Dialog>It's very beautiful 
+          <Dialog>Yeah. Let's go！</Dialog>
+          <Dialog>It's so pretty again
 today...</Dialog>
-          <Dialog>You can see a panoramic 
-view of Shohan...</Dialog>
-          <Dialog>Izu Peninsula, Hakone, 
-Tanzawa Mountains. Is that 
-Yougahama？ Inamuragasaki. 
-Oh, the Boso Peninsula！</Dialog>
-          <Dialog>As expected, you did look 
-into the scenery around.</Dialog>
-          <Dialog>Huh？ I did nothing 
-special...</Dialog>
-          <Dialog>(Yes. You seem like someone 
-who can do everything, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>You can see all of Shonan...</Dialog>
+          <Dialog>Izu, Hakone, the Tanzawa
+range... That's Yuigahama,
+right？ And Inamuragasaki,
+Miura... ah, I can even see
+Boso！</Dialog>
+          <Dialog>As expected. You even looked
+up the view.</Dialog>
+          <Dialog>Huh？ I didn't look up
+anything in particular...</Dialog>
+          <Dialog>(Right. ▲高嶺＊＊▲ was
+always a natural at this
+stuff...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2324,23 +2306,23 @@ who can do everything,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, we arrived at Ryugu.</Dialog>
+          <Dialog>Ah, the Wadatsumi-no-miya.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's written like dragon, 
-and it's read like 
-"wadatsumi".</Dialog>
-          <Dialog>Wadatsumi is an ancient 
-word for the god of the 
-sea. It has a charming 
-little face, right？</Dialog>
-          <Dialog>Ah, do you want to be 
-punished？</Dialog>
-          <Dialog>I'm sorry, Dragon God.</Dialog>
-          <Dialog>Say it more like... 
-Teehee▼ okay？</Dialog>
+          <Dialog>It's written with "dragon,"
+but read "wadatsumi,"
+right？</Dialog>
+          <Dialog>"Wadatsumi" is an old word
+for the god of the sea. But
+his face is kind of cute,
+isn't it？</Dialog>
+          <Dialog>Hey, you'll get punished？</Dialog>
+          <Dialog>Oh, right. I'm sorry, Dragon
+God.</Dialog>
+          <Dialog>More like... tee-hee▼, you
+know？</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>I'm sorry, Dragon God. 
-Teehee▼</Dialog>
+          <Dialog>I'm sorry, Dragon God.
+Tee-hee▼</Dialog>
           <Dialog>...You're forgiven.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2411,25 +2393,26 @@ Teehee▼</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see... There are quite 
-a lot of stairs...</Dialog>
+          <Dialog>Haah... we went down a lot
+of stairs...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, we're almost at 
-Iwaya！</Dialog>
-          <Dialog>It's really cool, after 
-all...</Dialog>
-          <Dialog>Yeah... Now it's a tourist 
-facility, but--</Dialog>
-          <Dialog>When it was still a natural 
-cave, it must have been a 
-more strict place...</Dialog>
-          <Dialog>It used to be a place where 
-people came to pray.</Dialog>
-          <Dialog>Yes. When Kobo Daishi 
-visited, Benzaiten-sama 
-appeared before him.</Dialog>
-          <Dialog>Maybe it's not gone after 
-all...</Dialog>
+          <Dialog>Hehe, look, it's not much
+farther to the caves！</Dialog>
+          <Dialog>It's cool in here, as I
+thought...</Dialog>
+          <Dialog>Yes... now it's a tourist
+attraction like this, but...</Dialog>
+          <Dialog>...when it was still just a
+natural cave, it must have
+been an even more solemn
+place...</Dialog>
+          <Dialog>People used to come here for
+ascetic training, right？</Dialog>
+          <Dialog>Yes. When Kobo Daishi
+visited, Benten is said to
+have appeared.</Dialog>
+          <Dialog>I guess it's not
+impossible...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2489,24 +2472,23 @@ all...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hah... We finally arrived.</Dialog>
+          <Dialog>Haah... finally made it.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Look at those interesting 
-rock formations.</Dialog>
+          <Dialog>Look, interesting rock
+layers.</Dialog>
           <Dialog>Interesting？</Dialog>
-          <Dialog>Of course, different layers 
-are formed due to the sea 
-bed influence and the 
-erosion of waves... Hehe♪</Dialog>
-          <Dialog>Yes, that sounds like 
-fun... So far, we've gone 
-down a lot of stairs.</Dialog>
-          <Dialog>Do you want to compete 
-about who can climb back 
-first？ Let's go！</Dialog>
-          <Dialog>(Sometimes I can't match 
-your energy levels 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Yes, uplift of the seabed
+and erosion from the waves
+made layers run in all
+directions... hehe♪</Dialog>
+          <Dialog>Glad you're having fun... we
+went down a lot of stairs to
+get here.</Dialog>
+          <Dialog>Yes. On the way up, shall we
+race to see who reaches the
+top first？ Let's go！</Dialog>
+          <Dialog>(▲高嶺＊＊▲... sometimes I
+can't keep up...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2545,13 +2527,12 @@ your energy levels
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, this area may be good 
-to take photos, 
-▲主人公＊▲...</Dialog>
+          <Dialog>▲主人公＊▲. Ah, this spot
+might be good for
+pictures...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You're right, then let's 
-take some.</Dialog>
-          <Dialog>Yes！</Dialog>
+          <Dialog>Yeah, let's take some, then.</Dialog>
+          <Dialog>Okay！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2586,11 +2567,11 @@ take some.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, this area feels like 
-Enoshima.</Dialog>
+          <Dialog>Ah, here. It really feels
+like Enoshima.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Okay, let's take a picture.</Dialog>
-          <Dialog>Yup.</Dialog>
+          <Dialog>Then let's take a picture.</Dialog>
+          <Dialog>Yes.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2615,11 +2596,10 @@ Enoshima.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, why don't we take 
-some photos for today's 
-memories？</Dialog>
+          <Dialog>Hey, want to take a picture
+to remember today？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, sure.</Dialog>
+          <Dialog>Yeah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2689,25 +2669,23 @@ memories？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh, what is this？</Dialog>
+          <Dialog>Huh, what's this？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>This feels so mysterious. 
-Why？</Dialog>
-          <Dialog>I don't know, but the 
-position of the sun and 
-the refraction of the 
-lens may cause some weird 
-effects...</Dialog>
-          <Dialog>But, it's really nice...</Dialog>
-          <Dialog>Ah... Maybe it's the 
-wonderful thing your 
-mother told you about, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Ah！！ Well then, I'm sure 
-we'll... We'll treasure 
-this forever, right？</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>How strange... why？</Dialog>
+          <Dialog>I don't know, but it's
+probably a trick of the
+light from the sun's
+position and the lens...</Dialog>
+          <Dialog>But it's so lovely...</Dialog>
+          <Dialog>Ah... could it be, the
+wonderful thing
+▲高嶺＊＊▲'s mom was
+talking about...</Dialog>
+          <Dialog>!! Then we'll surely...
+Let's treasure this forever,
+okay？</Dialog>
+          <Dialog>Yeah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2777,19 +2755,18 @@ this forever, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？</Dialog>
+          <Dialog>Hm？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh, what's wrong？</Dialog>
-          <Dialog>I think this may be...</Dialog>
-          <Dialog>It's amazing... A photo 
-of Hagoromo...</Dialog>
-          <Dialog>Yes, you look like the 
-Celestial Maiden...</Dialog>
-          <Dialog>It can't be... But, that 
-makes me happy.</Dialog>
-          <Dialog>This is a secret only both 
-of us share.</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>What, what's wrong？</Dialog>
+          <Dialog>This might be...</Dialog>
+          <Dialog>Amazing... another hagoromo
+picture...</Dialog>
+          <Dialog>Yeah, you look like the
+heavenly maiden...</Dialog>
+          <Dialog>Oh, stop... but I'm happy.</Dialog>
+          <Dialog>This is a secret just
+between us too, right？</Dialog>
+          <Dialog>Yes...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2864,21 +2841,21 @@ of us share.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now then... it's almost 
-time for the sun to set.</Dialog>
+          <Dialog>Okay... the sun's starting
+to set.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... We have to go back 
-home soon.</Dialog>
+          <Dialog>Yes... we have to go home
+soon.</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>Hmm. There is something 
-I'm curious about... 
-Ah, it's over there.</Dialog>
+          <Dialog>No... there's just something
+I'm curious about... ah,
+over there.</Dialog>
           <Dialog>What's that？</Dialog>
-          <Dialog>"Ryuren Bell of Love"...</Dialog>
-          <Dialog>"Ryuren Bell of Love"？</Dialog>
-          <Dialog>To end our day, can we 
-stop by a little？</Dialog>
-          <Dialog>Alright, let's go.</Dialog>
+          <Dialog>"The Bell of Dragon Love"...</Dialog>
+          <Dialog>"The Bell of Dragon Love"？</Dialog>
+          <Dialog>Before we go, can we stop by
+for a bit？</Dialog>
+          <Dialog>All right, let's go see.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2918,15 +2895,15 @@ stop by a little？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... isn't the sunset 
-beautiful today？</Dialog>
+          <Dialog>Hey... will the sunset be
+pretty today too？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, it really is.</Dialog>
-          <Dialog>I want to go there again 
-before we go home... 
-Okay？</Dialog>
-          <Dialog>Yes, I want to go too. 
-Alright, let's go！</Dialog>
+          <Dialog>Yeah, it'll be pretty, I
+bet？</Dialog>
+          <Dialog>Before we go home, I want to
+go there again. ...Okay？</Dialog>
+          <Dialog>Ah, right. All right, let's
+go！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2966,18 +2943,18 @@ Alright, let's go！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The sunset is amazing... 
-Isn't that the Bell of 
-Ryuren？</Dialog>
+          <Dialog>What a sunset... is that the
+Bell of Dragon Love？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That is the Bell of 
-Promise, according to the 
-legend, lovers will be 
-tied forever when the 
-bell is rang.</Dialog>
-          <Dialog>And look over there. 
-Lots of keys.</Dialog>
-          <Dialog>That's true.</Dialog>
+          <Dialog>Yes... that bell is called
+the Bell of Promise.
+Inspired by the legend of
+the heavenly maiden and the
+dragon, they say lovers who
+ring it will be bound
+together forever.</Dialog>
+          <Dialog>And look. So many padlocks.</Dialog>
+          <Dialog>You're right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3012,13 +2989,15 @@ Lots of keys.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Do you remember？ We went 
-there together...</Dialog>
+          <Dialog>Doesn't it remind you of
+something？ Before, the two
+of us...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes... It's Cape Aijo. 
-Maybe it's because we're 
-in Enoshima？</Dialog>
-          <Dialog>Hmm, it might be that...</Dialog>
+          <Dialog>Oh... Aijo Point. Could it
+be that's why you wanted to
+come to Enoshima？</Dialog>
+          <Dialog>Yes, that's part of it,
+but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3199,58 +3178,53 @@ in Enoshima？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wanted to come to 
-Enoshima because Mama 
-told me.</Dialog>
+          <Dialog>The reason I wanted to come
+to Enoshima is because Mama
+told me to.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Your mother did, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Enoshima is the place 
-where Papa and Mama dated 
-back when they were 
-students.</Dialog>
-          <Dialog>She said to me, "Manaka, 
-you should look into it, 
-you're a little blunt, so 
-dress up cutely and go".</Dialog>
-          <Dialog>That kind of thing to say 
-to you――</Dialog>
-          <Dialog>Because, even though we 
-came all this way today, 
-we're just studying 
-history...</Dialog>
-          <Dialog>That's also a good point 
-of yours, isn't it 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Thank you... 
-Yeah, this is enough.</Dialog>
+          <Dialog>▲高嶺＊＊▲'s mom did？</Dialog>
+          <Dialog>Enoshima is where Mama and
+Papa often went on dates
+when they were students.</Dialog>
+          <Dialog>She said, "Manaka, all you
+do is study, and you're a
+little blunt, so dress up
+properly and go."</Dialog>
+          <Dialog>That's not――</Dialog>
+          <Dialog>But look, even today, we
+came all this way, and I'm
+treating it like a history
+lesson...</Dialog>
+          <Dialog>That's one of ▲高嶺＊＊▲'s
+good points too, isn't it？</Dialog>
+          <Dialog>Thank you... yes, that's
+enough now.</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Mama said that maybe 
-something really strange 
-and wonderful would happen 
-in Enoshima...</Dialog>
-          <Dialog>Something strange and 
-wonderful...</Dialog>
-          <Dialog>She didn't tell me what 
-it was... But, I think 
-that's okay.</Dialog>
-          <Dialog>Two people who met in 
-this wide world walked in 
-a place they didn't know, 
-and felt each other's 
-feelings...</Dialog>
-          <Dialog>That's not strange nor 
-wonderful... 
-Or so I thought.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>That is why, I want to 
-ring the bell with you.</Dialog>
-          <Dialog>Yes...</Dialog>
+          <Dialog>Mama said that maybe
+something really strange and
+wonderful would happen at
+Enoshima...</Dialog>
+          <Dialog>Something strange and
+wonderful, huh...</Dialog>
+          <Dialog>She wouldn't tell me what it
+was... but it's fine now.</Dialog>
+          <Dialog>Two people who found each
+other in this big world,
+walking through a place they
+don't know, feeling each
+other's hearts...</Dialog>
+          <Dialog>There's nothing more strange
+and wonderful than that...
+That's what I realized.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>So I want to ring the bell
+with you.</Dialog>
+          <Dialog>Yeah...</Dialog>
           <Dialog>Hey...</Dialog>
-          <Dialog>The Dragon and the 
-Celestial Maiden were 
-happily tied together... 
-I'm kidding.</Dialog>
+          <Dialog>And the dragon and the
+heavenly maiden lived
+happily ever after... Just
+kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3300,20 +3274,21 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The sunset is amazing... 
-Is that the Bell of 
-Ryuren？</Dialog>
+          <Dialog>What a sunset... is that the
+Bell of Dragon Love？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That is the Bell of 
-Promise, according to the 
-legend, lovers will be 
-tied forever when the 
-bell is rang.</Dialog>
-          <Dialog>And look over there. 
-There are lot of keys.</Dialog>
-          <Dialog>Ah, truly.</Dialog>
-          <Dialog>All those keys are from 
-the lovers' sad feelings.</Dialog>
+          <Dialog>Yes... that bell is called
+the Bell of Promise.
+Inspired by the legend of
+the heavenly maiden and the
+dragon, they say lovers who
+ring it will be bound
+together forever.</Dialog>
+          <Dialog>And look. So many padlocks.</Dialog>
+          <Dialog>You're right.</Dialog>
+          <Dialog>Every one of these padlocks
+is a couple's heartfelt
+wish...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3348,13 +3323,15 @@ the lovers' sad feelings.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, do you remember it？ 
-We we're here before...</Dialog>
+          <Dialog>Hey, doesn't it remind you
+of something？ We did it
+too, before...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes... 
-It's Cape Aijo. Maybe it's 
-because we're in Enoshima？</Dialog>
-          <Dialog>Hmm, that might be it...</Dialog>
+          <Dialog>Oh... Aijo Point. Could it
+be that's why you wanted to
+come to Enoshima？</Dialog>
+          <Dialog>Yes, that's part of it,
+but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3520,43 +3497,45 @@ because we're in Enoshima？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The other day, Mama told 
-me something.</Dialog>
-          <Dialog>Enoshima is the place 
-where Papa and Mama dated 
+          <Dialog>The other day, Mama told me
+something.</Dialog>
+          <Dialog>Enoshima is where Mama and
+Papa often went on dates
 when they were students.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see. Is it that good of 
-a place？</Dialog>
-          <Dialog>Yes, and then...</Dialog>
-          <Dialog>Mama thought a mysterious 
-and strange thing would 
-occur, so she would be 
-with him someday...</Dialog>
-          <Dialog>A mysterious and wonderful 
-thing？</Dialog>
-          <Dialog>Yes, however, she couldn't 
-just tell me what it 
-was...</Dialog>
-          <Dialog>When we came here 
-together, I thought maybe 
-I might understand.</Dialog>
-          <Dialog>I see....</Dialog>
-          <Dialog>But, it's okay. Because...</Dialog>
-          <Dialog>Today, we came here 
-together; and I love you 
-after all...</Dialog>
-          <Dialog>And I thought I wanted to 
-walk with you, forever.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>So, I want to ring the 
-bell with you.</Dialog>
-          <Dialog>Yes...</Dialog>
+          <Dialog>I see. It's a nice place,
+after all.</Dialog>
+          <Dialog>Yes, and...</Dialog>
+          <Dialog>Something really strange and
+wonderful happened, and from
+that moment, Mama thought
+she'd end up with Papa
+someday...</Dialog>
+          <Dialog>Something strange and
+wonderful？</Dialog>
+          <Dialog>Yes. She just wouldn't tell
+me what it was, though...</Dialog>
+          <Dialog>I thought maybe if we came
+together, I might figure it
+out.</Dialog>
+          <Dialog>I see...</Dialog>
+          <Dialog>But it's fine now.
+Because...</Dialog>
+          <Dialog>Coming here with you today,
+I realized I really do love
+you...</Dialog>
+          <Dialog>...and that I want to keep
+walking with you like this,
+forever.</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>So I'd like to ring the bell
+with you.</Dialog>
+          <Dialog>Yeah...</Dialog>
           <Dialog>I love you...</Dialog>
-          <Dialog>The Dragon and the 
-Celestial Maiden are 
-always together, right？</Dialog>
-          <Dialog>Yeah, forever...</Dialog>
+          <Dialog>The dragon and the heavenly
+maiden are together forever,
+right？</Dialog>
+          <Dialog>Yeah. Forever...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3596,18 +3575,18 @@ always together, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The sunset is amazing... 
-Is that the Bell of 
-Ryuren？</Dialog>
+          <Dialog>What a sunset... is that the
+Bell of Dragon Love？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>That is the Bell of 
-Promise, according to the 
-legend, lovers will be 
-tied forever when the 
-bell is rang.</Dialog>
-          <Dialog>And look over there. 
-Lots of keys.</Dialog>
-          <Dialog>Ah, it's true.</Dialog>
+          <Dialog>Yes... that bell is called
+the Bell of Promise.
+Inspired by the legend of
+the heavenly maiden and the
+dragon, they say lovers who
+ring it will be bound
+together forever.</Dialog>
+          <Dialog>And look. So many padlocks.</Dialog>
+          <Dialog>You're right.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3642,14 +3621,15 @@ Lots of keys.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, don't you remember 
-it？ Before, in Atami――</Dialog>
+          <Dialog>Geez, you still don't
+remember？ Before, at
+Atami――</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes... That's Cape Aijo. 
-Maybe it's because we're 
-in Enoshima？</Dialog>
-          <Dialog>Hmm, I think that was 
-it...</Dialog>
+          <Dialog>Oh... Aijo Point. Could it
+be that's why you wanted to
+come to Enoshima？</Dialog>
+          <Dialog>Yes, that's part of it,
+but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3815,54 +3795,50 @@ it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You know... Mama told me 
-something.</Dialog>
+          <Dialog>Actually... Mama said
+something to me.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You mom？ What did she say, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>She said "Manaka, you're 
-a little tomboyish, so 
-I'm worried. Do your best 
-to look cute in front of 
-him".</Dialog>
-          <Dialog>Your mother said that！.. 
-But why Enoshima？</Dialog>
-          <Dialog>Enoshima is the place 
-where Papa and Mama used 
-to date when they were 
-students. So, I asked him 
-in secret...</Dialog>
-          <Dialog>A very strange and 
-wonderful thing happened, 
-and my always serious 
-Papa kissed Mama for the 
-first time...</Dialog>
-          <Dialog>So that was it... 
-But what's so strange and 
-wonderful？</Dialog>
-          <Dialog>He didn't tell me.</Dialog>
-          <Dialog>But I wonder if Enoshima 
-has some secret that 
-makes girls more 
-attractive than usual, 
-so...</Dialog>
-          <Dialog>A secret... 
-Is it something like 
-that？</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲'s mom？ What
+did she say？</Dialog>
+          <Dialog>She said, "Manaka, you're a
+bit of a tomboy, so I'm
+worried. Try harder so he
+thinks you're cute."</Dialog>
+          <Dialog>Your mom... but why
+Enoshima？</Dialog>
+          <Dialog>Enoshima is where Mama and
+Papa often went on dates
+when they were students. She
+told me in secret, without
+Papa knowing...</Dialog>
+          <Dialog>Something really strange and
+wonderful happened, and my
+always-serious Papa kissed
+Mama for the first time,
+right here...</Dialog>
+          <Dialog>So that's it... but what was
+the strange and wonderful
+thing？</Dialog>
+          <Dialog>She just wouldn't tell me.</Dialog>
+          <Dialog>But I wondered if Enoshima
+has some secret that makes
+girls more charming than
+usual, and so...</Dialog>
+          <Dialog>A secret... did it work？</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
           <Dialog>I love you...</Dialog>
-          <Dialog>I love you too.</Dialog>
-          <Dialog>Hey, why don't we ring 
-the bell too？</Dialog>
-          <Dialog>Of course！</Dialog>
-          <Dialog>It seems a little 
-different from what I 
-imagined.</Dialog>
-          <Dialog>Surprisingly, it's kind 
-of a bitter sound, right？</Dialog>
-          <Dialog>Yes. But it's always the 
-same. Like the Dragon and 
-the Celestial Maiden.</Dialog>
+          <Dialog>Me too.</Dialog>
+          <Dialog>Hey, shall we ring the bell
+too？</Dialog>
+          <Dialog>All right！</Dialog>
+          <Dialog>It seems a little different
+from what I imagined.</Dialog>
+          <Dialog>It's a surprisingly mellow
+sound, huh？</Dialog>
+          <Dialog>Yes. But now we'll be
+together forever. Like the
+dragon and the heavenly
+maiden.</Dialog>
           <Dialog>That's right.</Dialog>
         </Dialogs>
       </SDL2>
@@ -3988,32 +3964,31 @@ the Celestial Maiden.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, hey, I want to ring 
+          <Dialog>Hehe, hey, I want to ring
 the bell again.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's ring it then.</Dialog>
-          <Dialog>Maybe I've gotten a little 
-used to the sound, from the 
-first time we've heard it.</Dialog>
-          <Dialog>I get you, me too.</Dialog>
-          <Dialog>It was fun today as well. 
-The sunset is also very 
-beautiful...</Dialog>
-          <Dialog>Did your mom also see the 
-sunset before going home, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>Yes, I'm sure. Even thought 
-Papa puts a bothered face, 
-I'm sure it was very 
+          <Dialog>Let's ring it.</Dialog>
+          <Dialog>Maybe I'm a little more used
+to it than the first time.</Dialog>
+          <Dialog>Yeah.</Dialog>
+          <Dialog>Today was fun too. The
+sunset is so pretty...</Dialog>
+          <Dialog>Do you think ▲高嶺＊＊▲'s
+parents always watched the
+sunset before going home
+too？</Dialog>
+          <Dialog>Yes, I'm sure. Papa always
+has such a stern face, but
+he's actually really
 romantic.</Dialog>
-          <Dialog>I'm sure it was...</Dialog>
-          <Dialog>I'm sure they always saw 
+          <Dialog>Is that so...</Dialog>
+          <Dialog>I'm sure they always watched
 the sunset, and then...</Dialog>
           <Dialog>And then？</Dialog>
           <Dialog>You know what... Meanie.</Dialog>
-          <Dialog>▲Takane＊＊▲...</Dialog>
-          <Dialog>See, you knew...</Dialog>
-          <Dialog>Yes...</Dialog>
+          <Dialog>▲高嶺＊＊▲...</Dialog>
+          <Dialog>See, you did know...</Dialog>
+          <Dialog>Yeah...</Dialog>
           <Dialog>Let's come again, okay？</Dialog>
         </Dialogs>
       </SDL2>
@@ -4124,37 +4099,32 @@ the sunset, and then...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It was really fun... 
-But, it's almost time to 
-go back home today. 
-Can we come again？</Dialog>
+          <Dialog>That was fun... but we have
+to go home today. Let's come
+again？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes. When you get home, 
-will you show the photos 
-to your mom？</Dialog>
-          <Dialog>Yes... 
-But I'm sure Mama still 
+          <Dialog>Yeah. When you get home, you
+have to tell your mom about
+the pictures, huh？</Dialog>
+          <Dialog>Yes... but I'm sure Mama
 won't tell me.</Dialog>
-          <Dialog>I think it's a memory for 
-them too. I'm sure they'd 
-like it to remain a 
-secret...</Dialog>
+          <Dialog>I think it's a secret memory
+just between her and Papa.
+And because they kept it
+secret, I'm sure they...</Dialog>
           <Dialog>I'm sure...</Dialog>
-          <Dialog>Oh！ I found a good one！ 
-Wait a minute！</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>Look at this strap！</Dialog>
-          <Dialog>Maybe it's the Celestial 
-Maiden？</Dialog>
-          <Dialog>Yes, it's an Enoden！ 
-So cute～▼</Dialog>
-          <Dialog>Hey...</Dialog>
-          <Dialog>Ah, it seems like our 
-transport is here. 
-Let's go！</Dialog>
-          <Dialog>(It seems this will be a 
-good memory too, 
-▲Takane＊＊▲...)</Dialog>
+          <Dialog>Ah！ I found something
+great！ Wait a sec！</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>Look！ This strap！</Dialog>
+          <Dialog>Is it the heavenly maiden？</Dialog>
+          <Dialog>No, the Enoden！ So cute～▼</Dialog>
+          <Dialog>That one, huh...</Dialog>
+          <Dialog>Ah, looks like it's here. I
+wonder what series this one
+is... let's go！</Dialog>
+          <Dialog>(Looks like ▲高嶺＊＊▲
+made a good memory...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4219,20 +4189,19 @@ good memory too,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hah... We arrived at the 
+          <Dialog>Haah... we reached the
 station.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you reluctant to go？</Dialog>
-          <Dialog>Yes. I know we will come 
-again, so I wonder why I 
-feel like this...</Dialog>
-          <Dialog>Ah, the train has arrived. 
+          <Dialog>Sad to leave？</Dialog>
+          <Dialog>Yes. I know we can just come
+again, so why...</Dialog>
+          <Dialog>Look, the train's here.
 Shall we go？</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>Ah look, it's a 20-type！ 
-Let's go inside quickly.</Dialog>
-          <Dialog>(I'm getting jealous of 
-the Enoden...)</Dialog>
+          <Dialog>Ah, look, a 20 series！
+Let's hurry？</Dialog>
+          <Dialog>(I'm a little jealous of the
+Enoden...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
