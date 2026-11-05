@@ -17,7 +17,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, I'm ready.</Dialog>
+          <Dialog>Okay, I'm ready.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -37,8 +37,8 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How are you going to take 
-the photo today？</Dialog>
+          <Dialog>How are you going to shoot
+today？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -78,8 +78,8 @@ the photo today？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Am I right like this？ 
-Please teach me properly.</Dialog>
+          <Dialog>Am I doing this right？ Tell
+me properly, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -119,8 +119,8 @@ Please teach me properly.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Should I not be looking 
-at the camera？</Dialog>
+          <Dialog>Should I try not to notice
+the camera？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -145,12 +145,11 @@ at the camera？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Good work. Did you take 
-a lot？</Dialog>
+          <Dialog>Good work. You took a lot,
+huh？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right, I tried to 
-take good photos of you, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>Yeah, good work to you too,
+▲高嶺＊＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -175,12 +174,11 @@ take good photos of you,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, you were taking 
-pictures with enthusiasm.</Dialog>
+          <Dialog>Hehe, you were so absorbed
+in it.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I took quite a lot of 
-pictures without even 
-realizing it...</Dialog>
+          <Dialog>I took a lot without even
+noticing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -205,10 +203,9 @@ realizing it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is this the end？</Dialog>
+          <Dialog>Is that it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right. I took a 
-lot of photos today...</Dialog>
+          <Dialog>Yeah. I took a lot today...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -235,9 +232,8 @@ lot of photos today...</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Did you take a lot？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I want to keep a lot of 
-your photos, 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>I want to keep lots of
+photos of ▲高嶺＊＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -262,10 +258,10 @@ your photos,
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm sorry, is it over？</Dialog>
+          <Dialog>Aww, all done？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I got a lot of photos, 
-and I'm happy.</Dialog>
+          <Dialog>I got a lot, so I'm
+satisfied.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -290,11 +286,10 @@ and I'm happy.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You took a lot of photos. 
-I was surprised.</Dialog>
+          <Dialog>You took so many. I was
+surprised.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, that's all for 
-today.</Dialog>
+          <Dialog>Well, that's it for today.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -319,12 +314,10 @@ today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You took a lot of photos, 
-why don't we finish for 
-today？</Dialog>
+          <Dialog>You took plenty, so shall we
+wrap it up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm, right. Let's finish 
-for today.</Dialog>
+          <Dialog>Mm, right. Let's do that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -349,12 +342,11 @@ for today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Didn't you take a little 
-too much？</Dialog>
+          <Dialog>Didn't you take a few too
+many？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, I guess I'm getting 
-on with it a little bit, 
-right？</Dialog>
+          <Dialog>Ah, maybe I got a little
+carried away？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -379,10 +371,10 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>That's all for today.</Dialog>
+          <Dialog>Okay, that's all for today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Uh... It's been a long 
-time today.</Dialog>
+          <Dialog>Ahh... that went on pretty
+long.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -407,11 +399,10 @@ time today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you done？</Dialog>
+          <Dialog>All done？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes... It seems a took a 
-lot of photos without 
-realizing it.</Dialog>
+          <Dialog>Yeah... I took a lot before
+I knew it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -436,10 +427,10 @@ realizing it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You did your best.</Dialog>
+          <Dialog>You worked hard taking
+those.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I wish I could take good 
-photos.</Dialog>
+          <Dialog>I hope I got some good ones.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -464,10 +455,11 @@ photos.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you get a good photo？</Dialog>
+          <Dialog>Did you get some good
+pictures？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's just a pleasure to 
-take them.</Dialog>
+          <Dialog>That's something to look
+forward to later.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -492,9 +484,9 @@ take them.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Maybe it's no use...</Dialog>
+          <Dialog>I don't think I can go on...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry, let's finish it.</Dialog>
+          <Dialog>Sorry, let's stop here.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -521,7 +513,7 @@ take them.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>I'm a little tired...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah... I'm sorry, I didn't 
+          <Dialog>Ah... sorry, I didn't
 notice.</Dialog>
         </Dialogs>
       </SDL2>
@@ -547,11 +539,9 @@ notice.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it time to take a 
-break？</Dialog>
+          <Dialog>Can we take a break soon？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, are you tired？ I'm 
-sorry.</Dialog>
+          <Dialog>Oh, tired？ Sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -576,11 +566,11 @@ sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I think you took a lot of 
-pictures today.</Dialog>
+          <Dialog>I think you took a lot
+today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I was so absorbed in it 
-before I knew it.</Dialog>
+          <Dialog>I got really into it before
+I knew it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -605,11 +595,11 @@ before I knew it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Whew, did I try hard 
-today？</Dialog>
+          <Dialog>Phew, I worked hard today
+too, didn't I？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Haha, you pushed it to 
-the limit.</Dialog>
+          <Dialog>Haha, I took photos right up
+to the limit.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -634,10 +624,11 @@ the limit.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Couldn't you take a good 
-photo？</Dialog>
+          <Dialog>I bet you got some good
+pictures？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, I took this much.</Dialog>
+          <Dialog>Yeah, after taking this
+many.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -662,11 +653,10 @@ photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it okay if you turn 
-the camera off...</Dialog>
+          <Dialog>Can you put the camera away
+now...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>That's right... I 
-understand.</Dialog>
+          <Dialog>Right... okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -691,8 +681,8 @@ understand.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If it's only a photo, 
-it's a little lonely...</Dialog>
+          <Dialog>If it's only pictures, it's
+a little lonely...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry, sorry.</Dialog>
         </Dialogs>
@@ -719,11 +709,11 @@ it's a little lonely...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The pictures are good, 
-but I want you to listen 
-to me more.</Dialog>
+          <Dialog>Pictures are nice, but I
+want you to listen to me
+more too.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, sorry...</Dialog>
+          <Dialog>Ah, sorry...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -748,9 +738,10 @@ to me more.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Isn't it good for today？</Dialog>
+          <Dialog>Isn't that enough for
+today？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Uh... yes.</Dialog>
+          <Dialog>Ugh... okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -777,8 +768,7 @@ to me more.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>I'm a little tired...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm taking too much, I'm 
-sorry.</Dialog>
+          <Dialog>I took too many, sorry.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -803,10 +793,9 @@ sorry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You've already taken too 
-many photos.</Dialog>
+          <Dialog>Geez, that's way too many.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sorry. I'm over.</Dialog>
+          <Dialog>Sorry. I'll put it away now.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -826,7 +815,7 @@ many photos.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What a cute photo, I'm 
+          <Dialog>Make me look cute... Just
 kidding.</Dialog>
         </Dialogs>
       </SDL2>
@@ -847,7 +836,8 @@ kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Where should I take it？</Dialog>
+          <Dialog>Where should you shoot
+from？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -867,8 +857,8 @@ kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about it？ Isn't it a 
-beautiful picture？</Dialog>
+          <Dialog>Well？ Will it come out
+pretty？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -888,9 +878,8 @@ beautiful picture？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If I leave it to you, 
-you'll take a beautiful 
-picture for me, right？</Dialog>
+          <Dialog>If I leave it to you, you'll
+make me look pretty, right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -910,9 +899,8 @@ picture for me, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm looking forward to 
-seeing the finished 
-photos. Hehe.</Dialog>
+          <Dialog>I can't wait to see how the
+photos turn out. Hehe.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -932,8 +920,8 @@ photos. Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What kind of picture is 
-this？</Dialog>
+          <Dialog>I wonder how the pictures
+will turn out？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -953,8 +941,8 @@ this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to keep this place 
-in the photograph.</Dialog>
+          <Dialog>I want to keep a photo of
+this place too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -974,8 +962,8 @@ in the photograph.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This is also a page of 
-youth... I'm kidding.</Dialog>
+          <Dialog>Another page of our youth...
+Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -995,9 +983,8 @@ youth... I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Where I'm changing... I 
-want you to keep 
-everything.</Dialog>
+          <Dialog>Every way I change... I want
+you to capture it all.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1017,9 +1004,9 @@ everything.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Take a lot of pictures of 
-me. And I will always be 
-with...</Dialog>
+          <Dialog>Take lots of pictures of me,
+okay？ From now on,
+always...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1039,7 +1026,8 @@ with...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Will we miss this someday？</Dialog>
+          <Dialog>I wonder if someday we'll
+look back on this fondly？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1059,8 +1047,8 @@ with...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Take a picture of this 
-moment.</Dialog>
+          <Dialog>We're capturing this moment
+in a photo.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1080,8 +1068,7 @@ moment.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>If it's no longer good, 
-stop.</Dialog>
+          <Dialog>Geez, I said no.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1101,8 +1088,7 @@ stop.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm going to get angry if 
-you continue.</Dialog>
+          <Dialog>Any more and I'll get mad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1122,7 +1108,8 @@ you continue.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, don't bother me okay？</Dialog>
+          <Dialog>Hey, don't put me on the
+spot？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1142,8 +1129,8 @@ you continue.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'd be happy if you could 
-take a beautiful picture.</Dialog>
+          <Dialog>I'll be happy if you make me
+look pretty.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1163,8 +1150,8 @@ take a beautiful picture.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Now that we're here, 
-let's take a good photo.</Dialog>
+          <Dialog>Since we're at it, let's
+make it a good picture.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1184,7 +1171,7 @@ let's take a good photo.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey... What should I do？</Dialog>
+          <Dialog>Hey... what should I do？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1204,7 +1191,7 @@ let's take a good photo.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did I do it properly？</Dialog>
+          <Dialog>Am I doing okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1224,8 +1211,8 @@ let's take a good photo.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Will the next one be in 
-the album？</Dialog>
+          <Dialog>Will the next one make it
+into the album？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1245,8 +1232,8 @@ the album？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Let's see the photos 
-later.</Dialog>
+          <Dialog>Let's look at the pictures
+together later.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1266,9 +1253,8 @@ later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Take a lot of pictures 
-and have a lot of 
-memories.</Dialog>
+          <Dialog>Let's take lots of pictures
+and keep lots of memories.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1288,8 +1274,8 @@ memories.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm wondering what kind 
-of photo it will be...</Dialog>
+          <Dialog>I'm curious how the picture
+will turn out...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1309,8 +1295,8 @@ of photo it will be...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Let's cherish our memories 
-one by one.</Dialog>
+          <Dialog>Let's treasure each and
+every memory.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1330,10 +1316,9 @@ one by one.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The sight of you, holding 
-the camera is also one of 
-my memories... 
-I'm kidding.</Dialog>
+          <Dialog>You holding the camera is
+one of my memories too...
+Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1353,7 +1338,7 @@ I'm kidding.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to keep a lot of 
+          <Dialog>I want to keep lots of
 memories.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1374,8 +1359,8 @@ memories.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is this also a memory of 
-us？</Dialog>
+          <Dialog>This is one of our memories
+too, right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1395,7 +1380,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Was that... intentional？</Dialog>
+          <Dialog>Was that... on purpose？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1415,7 +1400,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, stop.</Dialog>
+          <Dialog>Okay, stop.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1435,7 +1420,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Where are you shooting？</Dialog>
+          <Dialog>Where are you aiming that？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1455,7 +1440,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Isn't my face red？</Dialog>
+          <Dialog>Is my face red？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1475,7 +1460,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm nervous...</Dialog>
+          <Dialog>I'm getting nervous...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1495,7 +1480,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, please...</Dialog>
+          <Dialog>Okay, go ahead...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1515,7 +1500,7 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm... I wonder...</Dialog>
+          <Dialog>Um... how is... this...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1535,7 +1520,8 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's embarrassing...</Dialog>
+          <Dialog>It's a little
+embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1555,8 +1541,8 @@ us？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>This pose... 
-I can't seem to do it...</Dialog>
+          <Dialog>I'm not good at... posing,
+but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1576,8 +1562,8 @@ I can't seem to do it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't look too much... 
-It's impossible to say 
+          <Dialog>Don't look so much... that's
+impossible to ask, isn't
 it...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1598,9 +1584,8 @@ it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want you to take 
-beautiful pictures... 
-but...</Dialog>
+          <Dialog>I want you to make me look
+pretty... but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1620,8 +1605,8 @@ but...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is this fine？ Is this 
-good？</Dialog>
+          <Dialog>Is this okay？ It's okay,
+right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1641,8 +1626,8 @@ good？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm, excuse me, shouldn't 
-I move？</Dialog>
+          <Dialog>Huh, um, should I hold
+still？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1662,7 +1647,7 @@ I move？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh, isn't that funny？</Dialog>
+          <Dialog>Huh, do I look weird？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1682,7 +1667,7 @@ I move？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Wow, emm... you know.</Dialog>
+          <Dialog>Whoa, um... well.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1762,8 +1747,8 @@ I move？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa. Did you take that 
-now？</Dialog>
+          <Dialog>Kyah. Did you just take
+one？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1783,8 +1768,8 @@ now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Don't take a photo so 
-suddenly... Geez.</Dialog>
+          <Dialog>Don't take one so
+suddenly... geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1804,7 +1789,7 @@ suddenly... Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Huh！？</Dialog>
+          <Dialog>Huh!?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1824,7 +1809,7 @@ suddenly... Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, I'm ready.</Dialog>
+          <Dialog>Ah, I wasn't ready.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1844,9 +1829,8 @@ suddenly... Geez.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa... 
-Why don't you take the 
-photo slowly？</Dialog>
+          <Dialog>Kyah... let's take them a
+bit slower？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1861,7 +1845,7 @@ photo slowly？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>There, there, like this...</Dialog>
+          <Dialog>Good, good, keep it up...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1876,8 +1860,8 @@ photo slowly？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I see you got on board 
-▲Takane＊＊▲.</Dialog>
+          <Dialog>▲高嶺＊＊▲ seems to be
+getting into it too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1892,8 +1876,7 @@ photo slowly？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I wonder if this is 
-okay...</Dialog>
+          <Dialog>Like this, maybe...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1908,7 +1891,7 @@ okay...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yes, that's not bad.</Dialog>
+          <Dialog>Yeah, this isn't bad either.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1923,9 +1906,8 @@ okay...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I have to keep my eyes 
-open, so I don't miss a 
-photo opportunity.</Dialog>
+          <Dialog>I have to stay sharp so I
+don't miss a shot.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1955,9 +1937,9 @@ photo opportunity.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You really have gotten used 
-to have your photos taken 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>▲高嶺＊＊▲'s gotten pretty
+used to being
+photographed...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1972,8 +1954,8 @@ to have your photos taken
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Alright, I'll make it a 
-good one！</Dialog>
+          <Dialog>All right, let's make this a
+great shot！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1988,8 +1970,7 @@ good one！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Alright, I'll give my 
-best！</Dialog>
+          <Dialog>All right, here goes！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2004,8 +1985,8 @@ best！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Maybe I'm getting a 
-little used to the camera.</Dialog>
+          <Dialog>Maybe I'm getting used to
+the camera.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2020,9 +2001,9 @@ little used to the camera.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I have to match your hard 
-work everyday 
-▲Takane＊＊▲...</Dialog>
+          <Dialog>I have to live up to how
+hard ▲高嶺＊＊▲'s
+trying...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2037,8 +2018,7 @@ work everyday
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>With this... 
-Is this right？</Dialog>
+          <Dialog>Is this... right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2053,8 +2033,8 @@ Is this right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I want to take a good 
-look...</Dialog>
+          <Dialog>I want to capture a nice
+expression...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2069,8 +2049,8 @@ look...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's cute no matter where 
-you look！</Dialog>
+          <Dialog>My girlfriend is cute from
+every angle！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2085,8 +2065,7 @@ you look！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Photography is so 
-profound...</Dialog>
+          <Dialog>Photography is deep...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2101,7 +2080,7 @@ profound...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's getting more fun...</Dialog>
+          <Dialog>This is getting fun...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2116,7 +2095,8 @@ profound...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm a little nervous...</Dialog>
+          <Dialog>Now I'm getting nervous
+too...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2131,7 +2111,8 @@ profound...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I have to relax somehow.</Dialog>
+          <Dialog>I have to help her relax
+somehow.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2146,8 +2127,7 @@ profound...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Managing the camera is 
-hard.</Dialog>
+          <Dialog>Cameras are hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2162,9 +2142,7 @@ hard.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I wonder if this is all 
-right... 
-How's this？</Dialog>
+          <Dialog>Is this right... I wonder？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2194,9 +2172,8 @@ How's this？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you take a lot of 
-photos, one good picture 
-will come！</Dialog>
+          <Dialog>If I take a lot, at least
+one will be good！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2211,9 +2188,8 @@ will come！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Looking through the lens, 
-it looks like a different 
-landscape...</Dialog>
+          <Dialog>Looking through the lens,
+things look different...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2228,7 +2204,8 @@ landscape...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I should give it a try...</Dialog>
+          <Dialog>Let's try all sorts of
+things...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2268,8 +2245,7 @@ landscape...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Can I be in an easy 
-position？</Dialog>
+          <Dialog>Can I get comfortable？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2289,7 +2265,7 @@ position？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... picture taken.</Dialog>
+          <Dialog>Mm... there.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2309,7 +2285,7 @@ position？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Did you feel a little too 
+          <Dialog>Maybe I got a little too
 relaxed？</Dialog>
         </Dialogs>
       </SDL2>
@@ -2350,7 +2326,7 @@ relaxed？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Somehow, I feel good.</Dialog>
+          <Dialog>I feel kind of good.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2370,7 +2346,7 @@ relaxed？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>You can take a lot of 
+          <Dialog>You can take lots of
 pictures♪</Dialog>
         </Dialogs>
       </SDL2>
@@ -2391,7 +2367,7 @@ pictures♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's fun.</Dialog>
+          <Dialog>This is fun.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2411,7 +2387,8 @@ pictures♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Let's take a good photo♪</Dialog>
+          <Dialog>Let's take some good
+pictures♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2431,7 +2408,7 @@ pictures♪</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if it's a little 
+          <Dialog>It's a little
 embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
@@ -2452,8 +2429,7 @@ embarrassing...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's difficult to make it 
-natural.</Dialog>
+          <Dialog>Acting natural is hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2473,8 +2449,7 @@ natural.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder what should I 
-do...</Dialog>
+          <Dialog>What should I do...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2494,7 +2469,7 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Should I stop？</Dialog>
+          <Dialog>Can we stop？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2514,7 +2489,7 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...No！ Geez...</Dialog>
+          <Dialog>...Eek！ Geez...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2534,8 +2509,8 @@ do...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！ Emm... I'm worried 
-about the wind...</Dialog>
+          <Dialog>Ah！ Um... the wind was
+bothering me...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2555,7 +2530,7 @@ about the wind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No... What？</Dialog>
+          <Dialog>Eek... what？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2575,7 +2550,7 @@ about the wind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Excuse me...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2595,7 +2570,7 @@ about the wind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Stop it...</Dialog>
+          <Dialog>Geez, stop...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2635,8 +2610,8 @@ about the wind...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No... don't look at me 
-so weird.</Dialog>
+          <Dialog>Eek... don't look at weird
+places.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2656,7 +2631,7 @@ so weird.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, what are you looking 
+          <Dialog>Geez, what are you looking
 at？</Dialog>
         </Dialogs>
       </SDL2>
@@ -2697,8 +2672,8 @@ at？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Stop it. Geez... 
-I'll get angry okay？</Dialog>
+          <Dialog>I said no. Geez... I'll get
+mad, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2718,8 +2693,8 @@ I'll get angry okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, you're looking at 
-me...</Dialog>
+          <Dialog>Geez, you keep looking at
+weird places...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2739,7 +2714,7 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, oh you.</Dialog>
+          <Dialog>Hehe, honestly.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2759,7 +2734,7 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？ Hehe... it's weird♪</Dialog>
+          <Dialog>Hm？ Hehe... you're funny♪</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2779,7 +2754,7 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What？</Dialog>
+          <Dialog>What is it？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2819,9 +2794,9 @@ me...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No... It's embarrassing 
-to be seen from behind, 
-isn't it？</Dialog>
+          <Dialog>Eek... being looked at from
+behind is embarrassing, you
+know？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2841,7 +2816,8 @@ isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez... that's too much.</Dialog>
+          <Dialog>Geez... I don't really like
+that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2881,8 +2857,8 @@ isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Are you trying to take a 
-funny photo？</Dialog>
+          <Dialog>You're not trying to take a
+weird picture, are you？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2902,7 +2878,7 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Stop it... geez.</Dialog>
+          <Dialog>I said no... geez.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2922,7 +2898,7 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm, what's wrong？</Dialog>
+          <Dialog>Huh, what's wrong？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2962,7 +2938,7 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah... yes.</Dialog>
+          <Dialog>Ah... okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2982,7 +2958,8 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, do you care？</Dialog>
+          <Dialog>Hehe, you were worried about
+me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3022,7 +2999,7 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
+          <Dialog>Okaaay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3042,7 +3019,7 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa！ It was sudden...</Dialog>
+          <Dialog>Kyah！ That was sudden...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3062,8 +3039,8 @@ funny photo？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！.. Wow... I was 
-surprised.</Dialog>
+          <Dialog>Ah！ ...Phew... that
+surprised me.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3083,7 +3060,7 @@ surprised.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yah... Huh？ Where did the 
+          <Dialog>Eek... huh？ Where did that
 wind come from？</Dialog>
         </Dialogs>
       </SDL2>
@@ -3104,8 +3081,8 @@ wind come from？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, right now... You're 
-not shooting, right？</Dialog>
+          <Dialog>Ah, just now... you didn't
+take one, right？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3125,7 +3102,7 @@ not shooting, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！ I don't like it now.</Dialog>
+          <Dialog>Ah！ That one doesn't count.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3145,8 +3122,8 @@ not shooting, right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I don't want to shoot 
-that kind of thing.</Dialog>
+          <Dialog>Geez, taking a picture like
+that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3166,8 +3143,8 @@ that kind of thing.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No... what you're taking 
-photos of？</Dialog>
+          <Dialog>Eek... what are you taking
+pictures of？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3187,8 +3164,8 @@ photos of？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm... geez. You can't do 
-that next time, okay？</Dialog>
+          <Dialog>Huh... geez. Not next time,
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3208,8 +3185,8 @@ that next time, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, I'm going to take a 
-picture of that.</Dialog>
+          <Dialog>Ah, so you're going to take
+that kind of picture.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3229,8 +3206,8 @@ picture of that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Why do you want to take 
-pictures of that？</Dialog>
+          <Dialog>Why do you want to take
+pictures like that？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3250,8 +3227,8 @@ pictures of that？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what are you 
-shooting now？</Dialog>
+          <Dialog>Hey, what were you shooting
+just now？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3271,7 +3248,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3371,7 +3348,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3431,7 +3408,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3471,7 +3448,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Somehow, it's a little...</Dialog>
+          <Dialog>Somehow, this is a little...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3511,7 +3488,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What...</Dialog>
+          <Dialog>Haah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3531,7 +3508,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3571,7 +3548,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There are few people.</Dialog>
+          <Dialog>There aren't many people.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3591,7 +3568,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Hmmm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3611,7 +3588,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3631,7 +3608,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm</Dialog>
+          <Dialog>Haah～.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3651,8 +3628,7 @@ shooting now？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder what I should 
-do.</Dialog>
+          <Dialog>What should I do...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3692,7 +3668,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, it's fun.</Dialog>
+          <Dialog>Haah, this is fun.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3712,7 +3688,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hehe, it's nothing.</Dialog>
+          <Dialog>Hehe, never mind.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3752,7 +3728,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm</Dialog>
+          <Dialog>Hmm～.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3772,7 +3748,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3792,7 +3768,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm.</Dialog>
+          <Dialog>Hmmm.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3812,7 +3788,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup.</Dialog>
+          <Dialog>Mm-hm.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3832,7 +3808,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>The wind, is strong...</Dialog>
+          <Dialog>The wind's strong...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3872,7 +3848,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's raining...</Dialog>
+          <Dialog>Rain, huh...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3912,7 +3888,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3952,7 +3928,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah.</Dialog>
+          <Dialog>Ahh.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3992,7 +3968,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh！</Dialog>
+          <Dialog>Huh.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4032,7 +4008,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No...</Dialog>
+          <Dialog>Eek...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4052,7 +4028,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Just...</Dialog>
+          <Dialog>Hey...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4072,7 +4048,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>...Still？</Dialog>
+          <Dialog>...Again？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4132,7 +4108,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>W-what？</Dialog>
+          <Dialog>Mm, what？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4192,7 +4168,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hah...</Dialog>
+          <Dialog>Haah...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4212,7 +4188,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>How about it？</Dialog>
+          <Dialog>Well？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4232,7 +4208,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it good？</Dialog>
+          <Dialog>Does this look good？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4252,7 +4228,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ahhh.</Dialog>
+          <Dialog>Ahaha.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4312,7 +4288,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4332,7 +4308,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez, no...</Dialog>
+          <Dialog>Geez, stop...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4352,7 +4328,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Still...</Dialog>
+          <Dialog>Again...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4372,7 +4348,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's okay...</Dialog>
+          <Dialog>It's fine, but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4392,7 +4368,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's embarrassing...</Dialog>
+          <Dialog>But it's embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4412,7 +4388,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm？</Dialog>
+          <Dialog>Hm？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4432,7 +4408,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What's wrong？</Dialog>
+          <Dialog>What？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4452,7 +4428,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？</Dialog>
+          <Dialog>Huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4472,7 +4448,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa.</Dialog>
+          <Dialog>Kyah.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4492,7 +4468,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh.</Dialog>
+          <Dialog>Huh.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4512,7 +4488,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What's wrong？</Dialog>
+          <Dialog>What？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4552,7 +4528,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm, did you call me？</Dialog>
+          <Dialog>Mm, did you call me？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4592,7 +4568,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm, yes...</Dialog>
+          <Dialog>Um, okay...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4612,7 +4588,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup.</Dialog>
+          <Dialog>Mm-hm.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4632,7 +4608,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, please.</Dialog>
+          <Dialog>Okay, go ahead.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4652,7 +4628,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
+          <Dialog>Okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4692,7 +4668,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>No good...</Dialog>
+          <Dialog>Don't...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4712,7 +4688,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Just...</Dialog>
+          <Dialog>Hey...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4752,7 +4728,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Geez.... Yes, me too...</Dialog>
+          <Dialog>Geez... yes, me too...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4792,7 +4768,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Emm...</Dialog>
+          <Dialog>Um...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4832,7 +4808,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4852,7 +4828,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Kyaa！？</Dialog>
+          <Dialog>Kyah!?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4872,7 +4848,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh！？</Dialog>
+          <Dialog>Huh!?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4932,7 +4908,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
+          <Dialog>Okaaay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4952,7 +4928,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I understand...</Dialog>
+          <Dialog>Okay...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4972,7 +4948,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Is it like this？</Dialog>
+          <Dialog>Like this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4992,7 +4968,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Bui！.. I'm kidding.</Dialog>
+          <Dialog>Peace！ ...Just kidding.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5012,7 +4988,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes.</Dialog>
+          <Dialog>Okay.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5032,7 +5008,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hi.</Dialog>
+          <Dialog>Cheese.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5052,7 +5028,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh？</Dialog>
+          <Dialog>Huh？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5072,7 +5048,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Impossible...</Dialog>
+          <Dialog>I can't...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5092,7 +5068,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>It's embarrassing...</Dialog>
+          <Dialog>Because it's embarrassing...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5132,7 +5108,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, I understand.</Dialog>
+          <Dialog>Okay, got it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5152,7 +5128,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Even if you say it...</Dialog>
+          <Dialog>Even if you say that...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5172,7 +5148,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yup...</Dialog>
+          <Dialog>Mm...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5212,7 +5188,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, I understand.</Dialog>
+          <Dialog>Okay, got it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5232,7 +5208,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm not confident...</Dialog>
+          <Dialog>I'm not confident, but...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5252,7 +5228,7 @@ do.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Maybe not...</Dialog>
+          <Dialog>I don't think I can...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
