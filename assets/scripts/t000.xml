@@ -187,77 +187,69 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me. I came to turn 
-in my club enrollment form. 
-Is Suzuki-sensei of the 
-tennis club here？</Dialog>
+          <Dialog>Excuse me, I came to hand in
+my club form. Is
+Suzuki-sensei from the
+tennis club...</Dialog>
           <Dialog>Teacher</Dialog>
-          <Dialog>Suzuki-sensei just left. 
-Why don't you go directly 
-to the tennis club？</Dialog>
+          <Dialog>Suzuki-sensei's out on a
+work trip today. Why not
+take it to the tennis club
+yourself？</Dialog>
           <Dialog>I see. Okay then...</Dialog>
-          <Dialog>(Hmm... They have such 
-wonderful tennis courts 
-here...)</Dialog>
-          <Dialog>(Eh？ Classes are already 
-over, so why is no one 
-here？)</Dialog>
-          <Dialog>(Ah, there is someone！)</Dialog>
+          <Dialog>(Huh... These are pretty
+nice tennis courts...)</Dialog>
+          <Dialog>(Huh？ ...Why isn't anyone
+practicing after school？)</Dialog>
+          <Dialog>(Oh, there's someone！)</Dialog>
           <Dialog>Um, excuse me！</Dialog>
           <Dialog>？？？</Dialog>
           <Dialog>Yes！</Dialog>
-          <Dialog>Yes. Is there something I 
-can help you with？</Dialog>
-          <Dialog>(Whoa... Such a pretty 
-girl...)</Dialog>
+          <Dialog>Yes, can I help you with
+something？</Dialog>
+          <Dialog>(Whoa... She's pretty...)</Dialog>
           <Dialog>Um, is there something...？</Dialog>
-          <Dialog>Ah, I'm a second year, 
-▲苗字▲　▲名前▲. 
-I just transferred in and 
-I was thinking of joining 
-the tennis club today...</Dialog>
-          <Dialog>Then you must be the new 
-member that Suzuki-sensei 
+          <Dialog>Oh, right. I'm ▲苗字▲
+▲名前▲, a second-year. I
+just transferred in, and I
+want to join today. I
+brought my form, but...</Dialog>
+          <Dialog>Then you must be the new
+member Suzuki-sensei
 mentioned...</Dialog>
-          <Dialog>I guess that's right.</Dialog>
+          <Dialog>Probably me.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I am a member of the 
-girls' tennis club and a 
-second year, 
-Takane Manaka.</Dialog>
-          <Dialog>So we're in the same 
-grade. Nice to meet you！</Dialog>
-          <Dialog>By the way. Does the club 
-have the day off today？ 
-It seems like you are the 
-only person here, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Today's special. All the 
-male and female members 
-went to a social 
-gathering.</Dialog>
-          <Dialog>I see. I have the 
-enrollment form with me, 
-but seems like no one's 
-here-- ...What！？</Dialog>
-          <Dialog>Is it really okay that you 
-didn't join them, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>I... I just have something 
-to do here.</Dialog>
+          <Dialog>I'm Manaka Takane, a
+second-year in the girls'
+tennis club.</Dialog>
+          <Dialog>Same year, then. Nice to
+meet you！</Dialog>
+          <Dialog>By the way... is practice
+off today？ It looks like
+it's just you,
+▲高嶺＊＊▲...</Dialog>
+          <Dialog>Today's special. The boys'
+and girls' teams have a
+get-together, so everyone's
+gone.</Dialog>
+          <Dialog>I see. I brought my form,
+but if nobody's here...
+Huh？</Dialog>
+          <Dialog>Don't you have to go,
+▲高嶺＊＊▲？</Dialog>
+          <Dialog>I'm... sort of watching the
+place.</Dialog>
           <Dialog>？</Dialog>
-          <Dialog>How about I take care of 
-the enrollment form for 
-you then？ I'll pass it on 
-to the club captain.</Dialog>
-          <Dialog>But, aren't you in the 
-middle of practicing？</Dialog>
-          <Dialog>It's fine. Always help out 
-one another when in 
-trouble, right？</Dialog>
-          <Dialog>(▲Takane＊＊▲, huh？ 
-I bet my life here will be 
-great！)</Dialog>
+          <Dialog>Should I hold on to your
+form？ I can give it to the
+captain.</Dialog>
+          <Dialog>But aren't you in the middle
+of practice？</Dialog>
+          <Dialog>It's fine. We all need a
+hand sometimes. Right？</Dialog>
+          <Dialog>(▲高嶺＊＊▲, huh...
+My new life's off to a good
+start！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -485,80 +477,76 @@ great！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me. I came to turn 
-in my club enrollment form. 
-Is Suzuki-sensei of the 
-tennis club here？</Dialog>
+          <Dialog>Excuse me, I came to hand in
+my club form. Is
+Suzuki-sensei from the
+tennis club...</Dialog>
           <Dialog>Teacher</Dialog>
-          <Dialog>Suzuki-sensei just left. 
-Why don't you try looking 
-around the tennis courts？</Dialog>
+          <Dialog>Suzuki-sensei just stepped
+out. Why not try the tennis
+courts？</Dialog>
           <Dialog>I see. Okay then...</Dialog>
-          <Dialog>(Seems like no one's here. 
-Plus, it's so hot out...)</Dialog>
+          <Dialog>(Nobody's around... And man,
+it's hot！)</Dialog>
           <Dialog>？？？</Dialog>
-          <Dialog>Hmm... All right...</Dialog>
-          <Dialog>(A girl carrying a huge 
-teapot...？ Ah, is she the 
+          <Dialog>Mm... Hup...</Dialog>
+          <Dialog>(A girl carrying a huge
+kettle... Oh, is she the
 manager？)</Dialog>
           <Dialog>Excuse me！</Dialog>
-          <Dialog>Yes！</Dialog>
-          <Dialog>Yes. Is there something I 
-can help you with？</Dialog>
-          <Dialog>(Whoa... What a cute 
+          <Dialog>Coming！</Dialog>
+          <Dialog>Yes, can I help you with
+something？</Dialog>
+          <Dialog>(Whoa... What a pretty
 manager...)</Dialog>
           <Dialog>Um, is there something...？</Dialog>
-          <Dialog>Ah, I'm a second year, 
-▲苗字▲　▲名前▲. 
-I just transferred in and 
-I'm here to submit my club 
-enrollment form...</Dialog>
-          <Dialog>Then you must be the new 
-member that Suzuki-sensei 
+          <Dialog>I'm ▲苗字▲ ▲名前▲, a
+second-year. I transferred
+in and start today, so I
+brought my form, but I can't
+find the advisor...</Dialog>
+          <Dialog>Then you must be the new
+member Suzuki-sensei
 mentioned...</Dialog>
-          <Dialog>I guess so. Are you the 
+          <Dialog>Probably me. Are you the
 tennis club's manager？</Dialog>
           <Dialog>Hehe...</Dialog>
           <Dialog>？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm a second year in the 
-girls' tennis club, Takane 
-Manaka. I'm a team member 
-though.</Dialog>
-          <Dialog>Team member？ But you're 
-carrying that huge teapot 
-so I thought...</Dialog>
-          <Dialog>This？ I just brewed some 
+          <Dialog>I'm Manaka Takane, a
+second-year in the girls'
+tennis club. I'm actually a
+player.</Dialog>
+          <Dialog>A player？ You were carrying
+that huge kettle, so I
+figured...</Dialog>
+          <Dialog>This？ I was boiling barley
 tea for everyone.</Dialog>
-          <Dialog>You had to brew tea in 
-this hot weather...？ 
-Are you being punished or 
-something？</Dialog>
-          <Dialog>Haha, no. If I didn't brew 
-it early, it wouldn't cool 
-down in time for the club 
+          <Dialog>In this heat？ Rough... Some
+tennis club punishment
+tradition？</Dialog>
+          <Dialog>Hehe, of course not. If I
+don't make it now, it won't
+cool down in time for
 practice.</Dialog>
-          <Dialog>Well, you're right... 
-Ah, do you know where 
+          <Dialog>Well, I guess... Oh, right,
+do you know where
 Suzuki-sensei is？</Dialog>
-          <Dialog>He said he had to go out 
-in the afternoon. Shall I 
-take your enrollment form 
-to the club captain then？</Dialog>
-          <Dialog>Sorry to bother you. 
-You already have to carry 
-that teapot...</Dialog>
-          <Dialog>Always help out one 
-another when in trouble, 
-right？</Dialog>
-          <Dialog>I'll help you carry that 
-teapot then.</Dialog>
-          <Dialog>Hehe. Thanks. Shall we go？</Dialog>
-          <Dialog>(▲Takane＊＊▲, huh？ 
-I bet my life here will be 
-great！)</Dialog>
-          <Dialog>(There's no one around... 
-Oh, is this the clubroom？)</Dialog>
+          <Dialog>He said he'd be out this
+afternoon... Should I give
+your form to the captain？</Dialog>
+          <Dialog>Sorry, when you've already
+got the tea to deal with...</Dialog>
+          <Dialog>We all need a hand
+sometimes. Right？</Dialog>
+          <Dialog>Then I'll help with the tea.</Dialog>
+          <Dialog>Hehe, thanks. Shall we go,
+then？</Dialog>
+          <Dialog>(▲高嶺＊＊▲, huh...
+My new life's off to a good
+start！)</Dialog>
+          <Dialog>(Nobody... Oh, is that the
+clubroom over there？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -762,73 +750,68 @@ Oh, is this the clubroom？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me. I came to turn 
-in my club enrollment form. 
-Is Suzuki-sensei of the 
-tennis club here？</Dialog>
+          <Dialog>Excuse me, I came to hand in
+my club form. Is
+Suzuki-sensei from the
+tennis club...</Dialog>
           <Dialog>Teacher</Dialog>
-          <Dialog>Suzuki-sensei just left. 
-Why don't you try looking 
-around the tennis courts？</Dialog>
-          <Dialog>Is that so？ Okay, then.</Dialog>
-          <Dialog>(Wow, they have such nice 
-tennis courts ...Hm？)</Dialog>
-          <Dialog>Even though it's lunchtime, 
-there is someone cleaning 
-the courts.</Dialog>
+          <Dialog>Suzuki-sensei just stepped
+out. Why not try the tennis
+courts？</Dialog>
+          <Dialog>Oh. Okay, then...</Dialog>
+          <Dialog>(Wow, these are nice
+courts... Hm？)</Dialog>
+          <Dialog>Someone's cleaning the
+courts during lunch break...</Dialog>
           <Dialog>？？？</Dialog>
           <Dialog>Phew... This should do it！</Dialog>
           <Dialog>Excuse me！</Dialog>
-          <Dialog>Eh？ Ah, yes！</Dialog>
-          <Dialog>Yes. Is there something I 
-can help you with？</Dialog>
-          <Dialog>(Wow, what a beautiful 
-girl...)</Dialog>
+          <Dialog>Huh？ Oh, yes！</Dialog>
+          <Dialog>Yes, can I help you with
+something？</Dialog>
+          <Dialog>(Whoa... She's pretty...)</Dialog>
           <Dialog>Um, is there something...？</Dialog>
-          <Dialog>Ah, um, well..</Dialog>
-          <Dialog>I am a second year, 
-▲苗字▲ ▲名前▲. 
-I just transferred in and 
-I'm here to join the 
-tennis club today...</Dialog>
-          <Dialog>Then you're the one our 
-advisor Suzuki-sensei 
+          <Dialog>Oh, right！ Um...</Dialog>
+          <Dialog>I'm ▲苗字▲ ▲名前▲, a
+second-year. I just
+transferred in and I'm
+joining the tennis club
+today...</Dialog>
+          <Dialog>Then you're the one our
+advisor, Suzuki-sensei,
 mentioned...</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm a second year in the 
-girls' tennis club, 
-Takane Manaka. Let's get 
-along, okay？</Dialog>
-          <Dialog>(Wow, her smile is also 
-cute...)</Dialog>
-          <Dialog>So then, what is it that 
-you need？</Dialog>
-          <Dialog>Ah, that's right！I'm 
-looking for Suzuki-sensei. 
-He wasn't in the staff 
-room. Do you know where 
-he is？</Dialog>
-          <Dialog>Suzuki-sensei always takes 
-a nap on the roof during 
-lunchtime. So surely...</Dialog>
-          <Dialog>I got it. The roof？ 
-How do I get to the roof？</Dialog>
-          <Dialog>Hehe... Then I'll take you 
-there.</Dialog>
-          <Dialog>What about the cleaning？ 
+          <Dialog>I'm a second-year in the
+girls' tennis club too.
+Manaka Takane. Nice to meet
+you.</Dialog>
+          <Dialog>(Whoa, she's even cuter when
+she smiles...)</Dialog>
+          <Dialog>So, um... what did you
+need？</Dialog>
+          <Dialog>Oh, right！ I'm looking for
+Suzuki-sensei, but he's not
+in the staff room. Do you
+know where he is？</Dialog>
+          <Dialog>Suzuki-sensei always naps on
+the roof at lunch, so I'm
+sure...</Dialog>
+          <Dialog>Got it, the roof？ ...How do
+you get up to the roof
+again？</Dialog>
+          <Dialog>Hehe... Then I'll show you.</Dialog>
+          <Dialog>What about the cleaning？
 Aren't you on duty？</Dialog>
-          <Dialog>It's dangerous to play 
-with leaves on the court, 
-so I was just cleaning it 
+          <Dialog>Leaves on the court are
+dangerous during practice,
+so I was just sweeping them
 on my own.</Dialog>
-          <Dialog>I see. Then, if you don't 
-mind.</Dialog>
-          <Dialog>Always help out one 
-another when in trouble, 
-right？</Dialog>
-          <Dialog>(▲Takane＊＊▲, huh？ 
-I'm sure my new life will 
-have good things！)</Dialog>
+          <Dialog>I see. Then, sorry to ask.</Dialog>
+          <Dialog>We all need a hand
+sometimes. Right？</Dialog>
+          <Dialog>(▲高嶺＊＊▲, huh...
+My new life's off to a good
+start！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1012,69 +995,64 @@ have good things！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Excuse me. I came to turn 
-in my club enrollment 
-form. Is Suzuki-sensei of 
-the tennis club here？</Dialog>
+          <Dialog>Excuse me, I came to hand in
+my club form. Is
+Suzuki-sensei from the
+tennis club...</Dialog>
           <Dialog>Teacher</Dialog>
-          <Dialog>Suzuki-sensei just left. 
-Why don't you try looking 
-around the tennis courts？</Dialog>
-          <Dialog>Is that so？ Okay, then.</Dialog>
-          <Dialog>(There's no one here... 
-It's so cold！)</Dialog>
-          <Dialog>(I'll head for the 
+          <Dialog>Suzuki-sensei just stepped
+out. Why not try the tennis
+courts？</Dialog>
+          <Dialog>Oh. Okay, then...</Dialog>
+          <Dialog>(Nobody here... It's
+freezing！)</Dialog>
+          <Dialog>(Guess I'll try the
 clubroom...)</Dialog>
-          <Dialog>(Even out in this cold, 
-there's someone cleaning 
-the clubroom？)</Dialog>
+          <Dialog>(In this cold... Is someone
+cleaning the clubroom？)</Dialog>
           <Dialog>Um, excuse me！</Dialog>
           <Dialog>？？？</Dialog>
-          <Dialog>Yes！</Dialog>
-          <Dialog>Yes. Is there something I 
-can help you with？</Dialog>
-          <Dialog>(Wow, what a beautiful 
-girl... I wonder if she 
-is the manager...)</Dialog>
+          <Dialog>Coming！</Dialog>
+          <Dialog>Yes, can I help you with
+something？</Dialog>
+          <Dialog>(Whoa... She's pretty... Is
+she the manager？)</Dialog>
           <Dialog>Um, is there something...？</Dialog>
-          <Dialog>Ah, I am a second year, 
-▲苗字▲　▲名前▲. 
-I just transferred in. 
-I came to turn in my club 
-enrollment form, but I 
-can't find the advisor...</Dialog>
-          <Dialog>Then you must be the new 
-member that Suzuki-sensei 
+          <Dialog>I'm ▲苗字▲ ▲名前▲, a
+second-year. I transferred
+in and start today, so I
+brought my form, but I can't
+find the advisor...</Dialog>
+          <Dialog>Then you must be the new
+member Suzuki-sensei
 mentioned...</Dialog>
-          <Dialog>That's probably me, 
-I guess. Can I give you 
-my club enrollment form, 
-Manager？</Dialog>
+          <Dialog>Probably me. Um, can I ask
+you to take my form,
+manager？</Dialog>
           <Dialog>Hehe...</Dialog>
           <Dialog>？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I'm a second year in the 
-girls' tennis club, Takane 
-Manaka. I'm a team member 
-though.</Dialog>
-          <Dialog>Team member？ Since you 
-were cleaning the clubroom 
-by yourself, I thought...</Dialog>
-          <Dialog>I wanted to clean the 
-room before the new member 
-arrived. I just finished.</Dialog>
-          <Dialog>Is that so？ Thank you.</Dialog>
-          <Dialog>You're welcome. I'll turn 
-in the club enrollment 
-form to Suzuki-sensei, 
-okay？</Dialog>
-          <Dialog>Sorry to trouble you.</Dialog>
-          <Dialog>Always help out one 
-another when in trouble, 
-right？</Dialog>
-          <Dialog>(▲Takane＊＊▲, huh？ 
-I'm sure my new life will 
-have good things！)</Dialog>
+          <Dialog>I'm Manaka Takane, a
+second-year in the girls'
+tennis club. I'm actually a
+player.</Dialog>
+          <Dialog>A player？ You were cleaning
+the clubroom by yourself, so
+I figured...</Dialog>
+          <Dialog>I wanted to clean before the
+new person came. I just
+finished.</Dialog>
+          <Dialog>Oh, really？ Thanks.</Dialog>
+          <Dialog>You're welcome. Should I
+give the form to
+Suzuki-sensei？</Dialog>
+          <Dialog>Sorry, you're doing
+everything for me.</Dialog>
+          <Dialog>We all need a hand
+sometimes. Right？</Dialog>
+          <Dialog>(▲高嶺＊＊▲, huh...
+My new life's off to a good
+start！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
