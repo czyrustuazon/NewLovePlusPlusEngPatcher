@@ -92,32 +92,29 @@
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, lately, have you found 
-anything interesting on TV？</Dialog>
+          <Dialog>Hey, any interesting TV
+shows lately？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ But do you watch TV 
-at your house, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Yeah, the channels that I 
-can watch have already been 
-decided.</Dialog>
-          <Dialog>But if there's any program 
-you find interesting, I 
-might ask for permission 
-from my parents so that I 
-can watch it, too.</Dialog>
+          <Dialog>Hm？ I thought
+▲高嶺＊＊▲
+had TV rules...</Dialog>
+          <Dialog>Yes, the shows I can watch
+are set, but...</Dialog>
+          <Dialog>If there's a show you think
+is interesting, I thought
+I'd ask if I could watch
+just that one.</Dialog>
           <Dialog>I see.</Dialog>
-          <Dialog>But, it would be better if 
-it's not variety show...</Dialog>
-          <Dialog>Ah, romance drama isn't 
-good either...</Dialog>
-          <Dialog>If it's an intellectual 
-quiz show or cooking show, 
-it might be easier to ask 
-them.</Dialog>
+          <Dialog>But it'd help if you left
+out variety shows...</Dialog>
+          <Dialog>Oh, and romance dramas are a
+bit...</Dialog>
+          <Dialog>A serious quiz show, or a
+cooking show, might be
+easier to ask for.</Dialog>
           <Dialog>What do you think？</Dialog>
-          <Dialog>(Honestly, this is just a 
-little too difficult...)</Dialog>
+          <Dialog>(Honestly, that's pretty
+tough...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -221,37 +218,33 @@ little too difficult...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Earlier, I asked you 
-whether you knew any 
-interesting TV program. 
-Did you remember？</Dialog>
+          <Dialog>Remember when you told me
+about some interesting TV
+shows？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I remembered. Why？</Dialog>
-          <Dialog>Well, I asked Mama to help 
-me talk to Papa about it. 
-She did, but...</Dialog>
-          <Dialog>They started to quarrel 
-because of that.</Dialog>
-          <Dialog>Ah, so it's really 
-difficult to persuade your 
-father, huh？</Dialog>
-          <Dialog>No, Papa isn't as strict as 
-you might think he is.</Dialog>
-          <Dialog>Then why？</Dialog>
-          <Dialog>Now Mama, who usually has 
-a smile on her face, seems 
-to be very upset but she 
-didn't tell me why...</Dialog>
-          <Dialog>I already apologized to her 
-because it was my fault 
-asking her to talk with 
-Papa about the TV program.</Dialog>
-          <Dialog>But I don't think the TV 
-program is the problem 
-here. I really don't know 
-what to do...</Dialog>
-          <Dialog>(Somehow, it turned into a 
-family problem...)</Dialog>
+          <Dialog>Yeah, I remember. How'd it
+go？</Dialog>
+          <Dialog>I asked Mama first, and she
+asked Papa for me, but...</Dialog>
+          <Dialog>That started a fight.</Dialog>
+          <Dialog>Uh-oh. Your dad's hard to
+convince, huh.</Dialog>
+          <Dialog>No, actually, Papa ended up
+with bigger problems.</Dialog>
+          <Dialog>How come？</Dialog>
+          <Dialog>Mama, who's always smiling,
+stopped talking to him, and
+he got really depressed...</Dialog>
+          <Dialog>It was my fault to begin
+with, so I apologized and
+told Mama, "Forget about the
+TV."</Dialog>
+          <Dialog>But she said that's not the
+issue anymore. And Papa
+comes to me for advice too.
+What should I do...</Dialog>
+          <Dialog>(This has gone somewhere
+crazy...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -354,33 +347,33 @@ family problem...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Say, have your parents 
-reconciled yet？</Dialog>
+          <Dialog>Hey, have your parents made
+up since then？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No... not yet.</Dialog>
+          <Dialog>Hmm... Not completely yet.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>Ah, but they said okay to 
-the cooking show. Only once 
-per week, but that's good 
-enough.</Dialog>
-          <Dialog>Wow, you did it ！</Dialog>
-          <Dialog>Hehe, thanks. It's thanks 
-to your cooperation.</Dialog>
-          <Dialog>But how come your parents 
-still haven't reconciled？</Dialog>
-          <Dialog>Papa didn't had a clue why 
-Mama was so angry.</Dialog>
-          <Dialog>Papa told me that he might 
-have said something that 
-he shouldn't have said... 
-but he had no idea what it 
-was.</Dialog>
-          <Dialog>Mama only said, "I don't 
-know why men are always 
-like this", and continued 
-being angry with Papa.</Dialog>
-          <Dialog>(I have to be careful about 
-this...)</Dialog>
+          <Dialog>Oh, but they said okay to
+the cooking show. It's only
+once a week, so they figured
+it's fine.</Dialog>
+          <Dialog>Hey, you did it！</Dialog>
+          <Dialog>Hehe, thanks. It's thanks to
+your help.</Dialog>
+          <Dialog>But why haven't they made
+up？</Dialog>
+          <Dialog>Because Papa doesn't
+understand why Mama got mad,
+she says.</Dialog>
+          <Dialog>Apparently Papa said
+something he shouldn't
+have... but he has no idea
+what.</Dialog>
+          <Dialog>Mama and I keep saying, "Why
+are men like that？" Looks
+like it'll go on a while
+longer.</Dialog>
+          <Dialog>(I'd better be careful
+too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -479,33 +472,32 @@ this...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Has peace returned to the 
-Takanes yet？</Dialog>
+          <Dialog>Is there peace in the Takane
+house？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, finally. Thanks for 
-asking.</Dialog>
-          <Dialog>Did your parents find the 
-cause of their argument？</Dialog>
-          <Dialog>I guess so... Mama didn't 
-tell me, though.</Dialog>
-          <Dialog>Why？</Dialog>
-          <Dialog>It seems that it's a secret 
-between my parents.</Dialog>
-          <Dialog>It was the first time I saw 
-them quarrel, so I didn't 
-know what to do. But they 
-said that I shouldn't be 
-worried.</Dialog>
+          <Dialog>Yes, finally. Sorry for all
+the fuss.</Dialog>
+          <Dialog>So, did they figure out the
+cause？</Dialog>
+          <Dialog>Seems like it... but Mama
+won't tell me.</Dialog>
+          <Dialog>Why not？</Dialog>
+          <Dialog>She says it's their secret.
+She was gushing about it.</Dialog>
+          <Dialog>This was the first time, so
+I panicked... but they said
+it's nice once in a while,
+so maybe I worried for
+nothing.</Dialog>
           <Dialog>Haha, I see. But it's good 
 that they reconciled.</Dialog>
-          <Dialog>Yeah. Now they've become 
-so lovey-dovey and I start 
-to think that quarrelling 
-wasn't totally a bad thing.</Dialog>
-          <Dialog>Y-You mean...</Dialog>
-          <Dialog>Hehe. Just kidding. We'll 
-always be nice to each 
-other, yeah？</Dialog>
+          <Dialog>Yes. Seeing how lovey-dovey
+they are now, I've started
+thinking fights might be
+nice too？</Dialog>
+          <Dialog>W-Wait...</Dialog>
+          <Dialog>Hehe, kidding. Let's always
+get along, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -590,28 +582,27 @@ other, yeah？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, how much do you know 
-about cell phones？</Dialog>
+          <Dialog>Hey, do you know much about
+cell phones？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Eh？ Why？</Dialog>
-          <Dialog>Papa asked me how to change 
-the ring tone, but...</Dialog>
-          <Dialog>I didn't know how to do 
-that.</Dialog>
-          <Dialog>Did you read the manual？</Dialog>
-          <Dialog>We tried to find it but we 
-couldn't. Papa probably 
-threw it away after he 
-finished using it.</Dialog>
-          <Dialog>I couldn't even change a 
-single ring tone and he 
-asked me to personalize 
-each ring tone for each 
-caller.</Dialog>
-          <Dialog>Hah... I'll have to try 
-and find the manual...</Dialog>
-          <Dialog>(This seems like a 
-difficult job for her...)</Dialog>
+          <Dialog>Papa wants to change his
+ringtone, and he asked me,
+but...</Dialog>
+          <Dialog>I don't know much either, so
+I couldn't figure it out.</Dialog>
+          <Dialog>What about the manual？</Dialog>
+          <Dialog>We can't find it anywhere.
+It should be stored
+somewhere with everything
+else.</Dialog>
+          <Dialog>He can't even change it the
+normal way, and he wants a
+different ringtone for each
+person？</Dialog>
+          <Dialog>Sigh. Maybe I'll look for
+the manual a bit more...</Dialog>
+          <Dialog>(Sounds like a high bar...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -696,33 +687,30 @@ difficult job for her...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>By the way, did you find 
-the cell phone's manual？</Dialog>
+          <Dialog>By the way, did you find the
+phone manual？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No. But, I finally managed 
-to change the default ring 
-tone to something else.</Dialog>
-          <Dialog>How did you do that？</Dialog>
-          <Dialog>Papa and I were trying 
-different settings until it 
-worked, but it's still 
-difficult to assign ring 
-tones for each caller.</Dialog>
+          <Dialog>No. But we managed to change
+it to one of the ringtones
+already on the phone.</Dialog>
+          <Dialog>How？</Dialog>
+          <Dialog>We fiddled with it together.
+But setting one for each
+person was still impossible.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>I suggested that he should 
-take it to the store, but 
-he didn't want to.</Dialog>
-          <Dialog>...He'd be ashamed, right？</Dialog>
-          <Dialog>You know a lot, huh？ I 
-think Papa won't give up 
-until he can change it by 
-himself.</Dialog>
-          <Dialog>He's such a stubborn 
-person, so it can't be 
-helped, huh？</Dialog>
-          <Dialog>(Your unyielding spirit is 
-probably hereditary 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>I said, why not take it to
+the store？ But he doesn't
+want to.</Dialog>
+          <Dialog>...Because it'd mean
+losing？</Dialog>
+          <Dialog>How did you know？ He
+insists he'll do it himself
+no matter what.</Dialog>
+          <Dialog>There's no point being
+stubborn about that. Right？</Dialog>
+          <Dialog>(Is
+▲高嶺＊＊▲'s
+competitiveness genetic？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -811,28 +799,24 @@ probably hereditary
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you figure out how to 
-change the ring tone？</Dialog>
+          <Dialog>How's the phone conquest
+going？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>I finally did.</Dialog>
-          <Dialog>Oh, as I expected. Now your 
-dad can feel at ease now, 
-right？</Dialog>
-          <Dialog>That's...</Dialog>
+          <Dialog>I managed it.</Dialog>
+          <Dialog>Oh, as expected. Now your
+dad can relax.</Dialog>
+          <Dialog>Well...</Dialog>
           <Dialog>...Eh？</Dialog>
-          <Dialog>He has become even more 
-stubborn.</Dialog>
-          <Dialog>Ah...</Dialog>
-          <Dialog>I kind of understand him so 
-I didn't say anything.</Dialog>
-          <Dialog>Even if he finds the 
-manual, he probably won't 
-use it. I wonder if he's 
-still fumbling with it 
-now...</Dialog>
-          <Dialog>(In the end, things became 
-even more complicated for 
-him, huh...？)</Dialog>
+          <Dialog>He got even more stubborn.</Dialog>
+          <Dialog>Ahh...</Dialog>
+          <Dialog>I understand how he feels,
+so I couldn't push him.</Dialog>
+          <Dialog>Even if he finds the manual,
+I bet he'll never look at it
+now. I wonder if he's
+sulking today too...</Dialog>
+          <Dialog>(The bar just got even
+higher... Tough.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -930,40 +914,35 @@ him, huh...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How was your dad after the 
-issue with the cell phone？</Dialog>
+          <Dialog>How's your dad doing since
+then？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well... Mama ended up 
-changing the ring tone for 
-him.</Dialog>
-          <Dialog>Eh！？</Dialog>
-          <Dialog>And, while Papa was still 
-shocked to speak, Mama just 
-explained to him how to 
-change it.</Dialog>
-          <Dialog>He didn't get mad at all？</Dialog>
-          <Dialog>No. He just said "Okay" 
-and obediently took the 
-cell phone from Mama. He 
-even thanked her properly.</Dialog>
-          <Dialog>Hmm...？ Compared to what 
-you told me about him 
-earlier, I'd say that this 
-is very unexpected.</Dialog>
-          <Dialog>Mama said that for a person 
-like Papa, he had to take 
-it the hard way. She told 
-me it was called "Shock 
-Therapy."</Dialog>
-          <Dialog>Your mom really knows how 
-to handle him.</Dialog>
-          <Dialog>It seemed like she found 
-the manual and learned how 
-to do it. Now everything is 
-settled, I think.</Dialog>
-          <Dialog>(When I have a chance to 
-meet her mom, I'd better 
-learn something from her.)</Dialog>
+          <Dialog>Actually, Mama changed it
+without saying anything.</Dialog>
+          <Dialog>Eh!?</Dialog>
+          <Dialog>And while Papa was
+surprised, she quickly
+explained how, and that was
+that.</Dialog>
+          <Dialog>...He didn't blow up？</Dialog>
+          <Dialog>No. She handed him the
+phone, "Here," and he said
+thank you, like a good boy.</Dialog>
+          <Dialog>Huh... From everything
+you've said, that's kind of
+surprising.</Dialog>
+          <Dialog>Mama says, "In cases like
+this, you just hit them
+hard." She called it shock
+therapy, and maybe she's
+right.</Dialog>
+          <Dialog>So your mom knew how？</Dialog>
+          <Dialog>She found the manual a few
+days ago and memorized it.
+Anyway, case closed, I
+guess？</Dialog>
+          <Dialog>(Could I learn from how her
+mom handled it？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1057,36 +1036,28 @@ learn something from her.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah, right. I have to return 
-a recipe book to Miki-chan.</Dialog>
+          <Dialog>Oh, right. I need to return
+the recipe book to Miki.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Miki-chan？</Dialog>
-          <Dialog>Yeah. I haven't told you 
+          <Dialog>Miki？</Dialog>
+          <Dialog>Yes. Haven't I told you
 about her？</Dialog>
-          <Dialog>This is the first time I've 
-heard you mentioned this 
-name.</Dialog>
-          <Dialog>I see. Well, she's been my 
-friend since grade school. 
-We go to different high 
-schools, but we still keep 
-in touch.</Dialog>
-          <Dialog>She said that she has never 
-read this book after she 
-bought it, and she lent it 
-to me.</Dialog>
-          <Dialog>She has never read it...？ 
-That means it's like a 
-brand new book？</Dialog>
-          <Dialog>Yeah, she felt satisfied 
-just to have the book.</Dialog>
-          <Dialog>That's the feeling I can 
-never understand. She is 
-very different from me but 
-that makes it really fun to 
-talk with her. Hehe.</Dialog>
-          <Dialog>(So she's like the exact 
-opposite of you, huh？)</Dialog>
+          <Dialog>Nope, first I've heard.</Dialog>
+          <Dialog>I see. She's a friend from
+grade school. We went to
+different high schools, but
+we still keep in touch.</Dialog>
+          <Dialog>She said she had a recipe
+book she bought and never
+looked at, so I borrowed it.</Dialog>
+          <Dialog>Never looked at... So it's
+basically new？</Dialog>
+          <Dialog>Yes. She says she's
+satisfied just owning it.</Dialog>
+          <Dialog>I don't get that feeling.
+We're so different, it's fun
+to talk. Hehe.</Dialog>
+          <Dialog>(Total opposites, huh？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1180,35 +1151,29 @@ opposite of you, huh？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I met up with Miki-chan
-earlier.</Dialog>
+          <Dialog>The other day, I met up with
+Miki.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, the girl who's like the 
-exact opposite of 
-▲Takane＊＊▲, right？</Dialog>
-          <Dialog>Hehe. Right. I went to 
-return the book to her but 
-ended up borrowing another 
-recipe book from her.</Dialog>
-          <Dialog>Eh？ Is it another brand 
-new book that she has never 
-read？</Dialog>
-          <Dialog>No, she tried the recipes 
-in this book so many times 
-but her attempts always 
-failed.</Dialog>
-          <Dialog>She asked me to be her 
-coach, so I'll have to try 
-these recipes by myself 
-first.</Dialog>
-          <Dialog>Be her coach？</Dialog>
-          <Dialog>Yeah. She wants to make 
-pudding for the guy she 
-likes. I'll try my best to 
-help her. Hehe.</Dialog>
-          <Dialog>I see. I hope it comes out 
-nicely. Do your best, 
-coach.</Dialog>
+          <Dialog>Ah, the friend who's
+▲高嶺＊＊▲'s
+total opposite.</Dialog>
+          <Dialog>Hehe, yes. I went to return
+the book, and she brought a
+different recipe book.</Dialog>
+          <Dialog>Huh. Don't tell me, brand
+new again？</Dialog>
+          <Dialog>No, she tried it a few
+times. But she failed every
+time.</Dialog>
+          <Dialog>So she asked me to coach
+her. So I'm going to try
+making it myself first.</Dialog>
+          <Dialog>Coach？</Dialog>
+          <Dialog>Yes. She wants to make
+pudding for someone she
+likes. So I'm helping. Hehe.</Dialog>
+          <Dialog>I see. Hope it works out.
+Good luck, coach.</Dialog>
           <Dialog>Okay, I'll do my best▼</Dialog>
         </Dialogs>
       </SDL2>
@@ -1283,25 +1248,23 @@ coach.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you successfully teach 
-your friend how to make 
-pudding？</Dialog>
+          <Dialog>Did the pudding lesson go
+okay？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>Eh？ It failed？</Dialog>
-          <Dialog>I know that she hasn't been 
-very good at cooking since 
-a long time ago, but...</Dialog>
-          <Dialog>I think it has gone beyond 
-my imagination...</Dialog>
+          <Dialog>Huh？ Failed？</Dialog>
+          <Dialog>I knew she'd always been bad
+at cooking, but...</Dialog>
+          <Dialog>It was a little beyond what
+I imagined... I think？</Dialog>
           <Dialog>W-What happened？</Dialog>
-          <Dialog>I wonder why things turned 
-out like this. If only I 
-could find out the 
-reason...！</Dialog>
-          <Dialog>(This girl must really be 
-the exact opposite of 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>How did it turn out like
+that？ If I can just find
+the cause, I'm sure I can
+fix it...！</Dialog>
+          <Dialog>(She really is
+▲高嶺＊＊▲'s
+total opposite...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1410,36 +1373,32 @@ the exact opposite of
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you find the cause of 
-failure for the pudding 
-last time？</Dialog>
+          <Dialog>Did you find out what caused
+the pudding disaster？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No, I still have no clue. 
-I've tried eating so many 
-puddings that I think I 
-can't possibly eat them 
-anymore.</Dialog>
-          <Dialog>You've eaten so many of 
-them...？ Well, how was the 
-result of her latest 
-attempt then？</Dialog>
-          <Dialog>Right on the passing line. 
-I think she's going to give 
-it to the guy today.</Dialog>
-          <Dialog>I see. So you've done a 
-great job.</Dialog>
-          <Dialog>Hehe. Thanks. Hey, will you 
-celebrate this with me？</Dialog>
-          <Dialog>Ah, okay. Where shall we 
-go for the celebration？</Dialog>
-          <Dialog>I want to eat cake▼</Dialog>
-          <Dialog>Eh！Hmm, I thought you'd be 
-fed up with sweets by now.</Dialog>
-          <Dialog>That was pudding. Cake is 
-a completely different 
-thing, isn't it？</Dialog>
-          <Dialog>Is that so...？</Dialog>
-          <Dialog>That is so. Hehe, let's go！</Dialog>
+          <Dialog>No, not at all. Thinking
+didn't help, so we just made
+batch after batch... I don't
+want pudding for a while.</Dialog>
+          <Dialog>You ate that much... So how
+did it turn out in the end？</Dialog>
+          <Dialog>Yes, we got it to a passing
+level？ She's probably
+giving it to him about now.</Dialog>
+          <Dialog>I see. Well, good work.</Dialog>
+          <Dialog>Hehe, thank you. Hey, will
+you throw me a good-work
+party？</Dialog>
+          <Dialog>Sure. Anywhere you want to
+go？</Dialog>
+          <Dialog>I want cake▼</Dialog>
+          <Dialog>What！ Weren't you done with
+sweets for a while？</Dialog>
+          <Dialog>That was pudding. Cake is
+different？</Dialog>
+          <Dialog>Is that right...</Dialog>
+          <Dialog>That's right. Hehe, let's
+go！</Dialog>
           <Dialog>(Girls are amazing...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -1519,26 +1478,27 @@ thing, isn't it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>My neighbor's dog just 
-gave birth to puppies.</Dialog>
+          <Dialog>My neighbor's dog had
+puppies a little while ago.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, how many of them？</Dialog>
-          <Dialog>Five, I guess. I'm going 
-to visit them soon.</Dialog>
-          <Dialog>It must be fun.</Dialog>
-          <Dialog>Yeah. I can picture them 
-rolling around. They must 
-be so cute that I could 
-eat them！ Just imagining 
-though.</Dialog>
-          <Dialog>Thinking of them that I 
+          <Dialog>Oh, how many？</Dialog>
+          <Dialog>Five, I think？ And they
+said they'll let me meet
+them soon.</Dialog>
+          <Dialog>That's something to look
+forward to.</Dialog>
+          <Dialog>Yes, so much. They said
+they're round and roly-poly,
+so cute you could eat them
+up！</Dialog>
+          <Dialog>Yesterday I was imagining
+all sorts of things and
 couldn't sleep.</Dialog>
-          <Dialog>I didn't have enough sleep 
-but I'm not feeling tired 
-at all！ It's just so 
-amazing.</Dialog>
-          <Dialog>(You'll get very sleepy 
-later tonight for sure.)</Dialog>
+          <Dialog>But even though I didn't
+sleep, I'm not sleepy！ It's
+so strange.</Dialog>
+          <Dialog>(I bet it'll catch up with
+her tonight.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1656,42 +1616,39 @@ later tonight for sure.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I can't wait to see the 
-puppies...</Dialog>
+          <Dialog>I can't wait for the day to
+come...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You still haven't seen 
-those puppies yet？</Dialog>
-          <Dialog>Not yet. I've got a lot to 
-do that I don't have time 
-to visit them.</Dialog>
-          <Dialog>I see. By the way, On the 
-day that we talked about 
-this, were you okay after 
+          <Dialog>You still haven't met the
+puppies？</Dialog>
+          <Dialog>No. It's still a delicate
+time. They can't leave the
+house yet.</Dialog>
+          <Dialog>I see. By the way,
+▲高嶺＊＊▲,
+were you okay that day we
+talked about this？</Dialog>
+          <Dialog>Huh, what do you mean？</Dialog>
+          <Dialog>Remember, you said you
+didn't sleep but weren't
+sleepy？ What happened after
 that？</Dialog>
-          <Dialog>Eh？ What do you mean？</Dialog>
-          <Dialog>You said that you didn't 
-have enough sleep but you 
-weren't tired. How was it 
-after all？</Dialog>
-          <Dialog>...Well. I was so sleepy 
-after I got home. I tried 
-my best to stay awake 
-until dinnertime, but...</Dialog>
-          <Dialog>I fell asleep while I was 
-having dinner, just like a 
-kid.</Dialog>
-          <Dialog>And Papa even recorded that 
-on a video. I tried to 
-delete it but he hid his 
-camcorder somewhere.</Dialog>
-          <Dialog>Papa and Mama said that I 
-was cute, but it's really 
-embarrassing.</Dialog>
-          <Dialog>I have to look for it when 
-I get home.</Dialog>
-          <Dialog>(I'm more interested in 
-this video than the 
-puppies...)</Dialog>
+          <Dialog>...Well. I was so sleepy
+when I got home, and I held
+out until dinner somehow...</Dialog>
+          <Dialog>But I ran out of steam
+partway through and fell
+asleep. Like a little kid.</Dialog>
+          <Dialog>And Papa even recorded it on
+video... I want to delete
+it, but he hid it.</Dialog>
+          <Dialog>Papa and Mama said it was
+cute, but it's embarrassing,
+right？</Dialog>
+          <Dialog>I have to look for it again
+when I get home.</Dialog>
+          <Dialog>(I'd rather see that than
+the puppies...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1771,28 +1728,30 @@ puppies...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>By the way, have you seen 
-the puppies yet？</Dialog>
+          <Dialog>By the way, when do you get
+to meet the puppies？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Not yet. But I got a chance 
-to talk to my neighbor 
-yesterday...</Dialog>
-          <Dialog>"They're very healthy and 
-naughty. It must be hard 
-for Manaka-chan," she said.</Dialog>
-          <Dialog>She showed me their photos 
-too！ They're just really 
-cute！ And then...</Dialog>
-          <Dialog>That night, you couldn't 
-sleep, right, 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>...How did you know！？</Dialog>
-          <Dialog>I just knew it...</Dialog>
-          <Dialog>...I was so excited about 
-them. I couldn’t help it.</Dialog>
-          <Dialog>(I wonder what will happen 
-to her when she meets the 
-puppies.)</Dialog>
+          <Dialog>I still haven't met them.
+But yesterday I talked with
+my neighbor a bit...</Dialog>
+          <Dialog>She said, "They're so
+healthy and rambunctious
+now, it might be tough for
+you, Manaka！"</Dialog>
+          <Dialog>She showed me pictures too！
+They're so roly-poly！ And
+then...</Dialog>
+          <Dialog>▲高嶺＊＊▲, you didn't
+sleep last night either, did
+you？</Dialog>
+          <Dialog>！ ...How did you know？</Dialog>
+          <Dialog>Well, you know... I can
+tell.</Dialog>
+          <Dialog>...I'm just looking forward
+to it so much. I can't help
+it.</Dialog>
+          <Dialog>(What's going to happen when
+she actually meets them？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1896,37 +1855,32 @@ puppies.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How about the puppies？</Dialog>
+          <Dialog>How were the puppies？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, I played with them 
-all day long. And by the 
-time I realized it, it was 
-already dawn.</Dialog>
-          <Dialog>Eh？！</Dialog>
-          <Dialog>I guess I played with them 
-too much that I ended up 
-falling asleep.</Dialog>
-          <Dialog>The mother dog even came 
-and slept next to me.</Dialog>
-          <Dialog>My neighbor saw it and 
-didn't want to wake me, so 
-she asked my Mama to let 
-me spend the night there.</Dialog>
-          <Dialog>During that time, she even 
-took a picture of me.</Dialog>
+          <Dialog>Well. I played all day, and
+before I knew it, it was
+morning.</Dialog>
+          <Dialog>What!?</Dialog>
+          <Dialog>I played so much... and then
+I fell asleep with them, I
+guess.</Dialog>
+          <Dialog>The mother dog lay down next
+to me too, she said.</Dialog>
+          <Dialog>She didn't have the heart to
+wake me, so she called
+Mama... and I stayed over.</Dialog>
+          <Dialog>And she even took a picture.</Dialog>
           <Dialog>I want to see！</Dialog>
-          <Dialog>No. I was sleeping like a 
-little kid. That was so 
+          <Dialog>No. I was sleeping with a
+face like a little kid. It's
 embarrassing.</Dialog>
-          <Dialog>But it was really fun. 
-My neighbor said that I 
-should visit them again. 
-I think I soon will.</Dialog>
-          <Dialog>(You are getting very 
-excited about them. I guess 
-you'll visit them again 
-very soon, right 
-▲Takane＊＊▲...？)</Dialog>
+          <Dialog>But it was fun. She said to
+come see them again, so
+maybe I'll go after a while.</Dialog>
+          <Dialog>(Guess that's the last I'll
+see of
+▲高嶺＊＊▲'s
+hyper mode for a while...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2025,35 +1979,30 @@ very soon, right
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I was wondering if you know 
-any Russian cuisine.</Dialog>
+          <Dialog>Do you know any Russian
+dishes？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Russian cuisine...？ Such as 
-pierogi？ Why do you ask？</Dialog>
-          <Dialog>Lately, I've been into 
-foreign foods. Now it's 
-Russian cuisine.</Dialog>
-          <Dialog>Hmm. Have you tried cooking 
-some dishes？</Dialog>
-          <Dialog>Yeah. I tried the boiled 
-dumpling called pelmeni. 
-It's stuffed with minced 
-meat, onions, and potatoes.</Dialog>
-          <Dialog>Dumpling with potatoes 
-filling？ Sounds like a 
-croquette.</Dialog>
-          <Dialog>Hehe. But this one is 
-boiled and you can eat it 
-with sour cream sauce on 
-top.</Dialog>
-          <Dialog>Sounds yummy...</Dialog>
-          <Dialog>It was delicious. Papa even 
-asked for another serving 
-of it.</Dialog>
-          <Dialog>I want to eat it, too...</Dialog>
-          <Dialog>Hehe, someday, okay？ Now I 
-have to think what I'll 
-make next.</Dialog>
+          <Dialog>Russian... Like piroshki？
+Why？</Dialog>
+          <Dialog>Lately I've been into
+foreign cooking. And right
+now it's Russian.</Dialog>
+          <Dialog>Huh, did you make anything？</Dialog>
+          <Dialog>Yes. Boiled dumplings called
+pelmeni. The filling has
+ground meat, onion, and
+potato.</Dialog>
+          <Dialog>Potato in dumplings？ Sounds
+kind of like a croquette.</Dialog>
+          <Dialog>Hehe. You boil them, pour a
+sour cream sauce on top, and
+done.</Dialog>
+          <Dialog>Sounds good...</Dialog>
+          <Dialog>It was delicious？ Papa even
+had seconds.</Dialog>
+          <Dialog>I want some too...</Dialog>
+          <Dialog>Hehe, someday, okay？ What
+should I make next...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2158,33 +2107,26 @@ make next.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have you heard of Janssons 
-frestelse？</Dialog>
+          <Dialog>Do you know "Jansson's
+Temptation"？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？ What's that？</Dialog>
-          <Dialog>Hehe. It's the name of a 
+          <Dialog>Hehe, it's the name of a
 dish.</Dialog>
-          <Dialog>Ah, you're still obsessed 
-with foreign foods, huh？</Dialog>
-          <Dialog>That's right. This time 
-it's Swedish food.</Dialog>
-          <Dialog>Hmm？ What kind of dish is 
-it？</Dialog>
-          <Dialog>To make it easy for you to 
-understand, it's quite 
-like gratin.</Dialog>
-          <Dialog>It has sauteed potatoes, 
-onions, and anchovies 
-mixed with fresh cream and 
-milk. Then it's baked in an 
-oven.</Dialog>
-          <Dialog>...Sounds yummy.</Dialog>
-          <Dialog>Hehe. It was very 
-delicious▼</Dialog>
-          <Dialog>I wonder what other 
-country's food I should 
-make next.</Dialog>
-          <Dialog>(I want to try someー！)</Dialog>
+          <Dialog>Oh, the foreign food boom's
+still going.</Dialog>
+          <Dialog>Ding-ding. It's Swedish.</Dialog>
+          <Dialog>Huh, what kind of dish？</Dialog>
+          <Dialog>To put it simply, a gratin？</Dialog>
+          <Dialog>You layer potatoes, sauteed
+onions, and anchovies, pour
+on cream and milk, then into
+the oven.</Dialog>
+          <Dialog>...Sounds good.</Dialog>
+          <Dialog>Hehe, it was delicious▼</Dialog>
+          <Dialog>Where should I cook from
+next？</Dialog>
+          <Dialog>(Lucky！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2274,38 +2216,33 @@ make next.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Are you still obsessed with 
-foreign cuisine？</Dialog>
+          <Dialog>Is the foreign food boom
+still going？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. Last time, I 
-challenged myself with a 
-French dish.</Dialog>
-          <Dialog>It's called pomme souffle. 
-It's usually served with 
-the main dish, so it's more 
-like a side dish, but I 
-find it interesting.</Dialog>
-          <Dialog>Oh, what kind of dish is 
-it？</Dialog>
-          <Dialog>It's made from potatoes 
-and it's fried until it 
-puffs out. I had fun making 
-it, but it was quite 
-difficult...</Dialog>
-          <Dialog>The way I sliced and 
-stirred the ingredients and 
-the oil's temperature. 
-Missing any of these and 
-it could fail.</Dialog>
-          <Dialog>It's made from potatoes？</Dialog>
-          <Dialog>Yeah. It was impossible to 
-make it perfectly but I 
-was quite satisfied with 
-the result.</Dialog>
-          <Dialog>It's about time to look for 
-a new recipe.</Dialog>
-          <Dialog>(Hmm... She's very into 
-it...)</Dialog>
+          <Dialog>Yes. Right now I'm trying
+French.</Dialog>
+          <Dialog>It's called pommes
+soufflees, a fried side
+served with the main course.
+It's fun？</Dialog>
+          <Dialog>Whoa. Sounds fancy.</Dialog>
+          <Dialog>The potato puffs up like a
+balloon, so it's fun to
+watch, but it's really
+hard...</Dialog>
+          <Dialog>If you don't watch the cut,
+the oil temperature, and how
+you stir it while frying, it
+fails right away.</Dialog>
+          <Dialog>Potato？</Dialog>
+          <Dialog>Yes. I can't get it 100%,
+but it works pretty often
+now, so I'm satisfied for
+now.</Dialog>
+          <Dialog>Time to look for the next
+recipe.</Dialog>
+          <Dialog>(Hmm, something's bugging
+me...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2413,44 +2350,35 @@ it...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, how's your cooking 
-going？</Dialog>
+          <Dialog>How's the cooking going？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, it's going nicely. 
-Last time, I tried making 
-gnocchi. It was made with 
-wheat flour and potatoes...</Dialog>
-          <Dialog>Hey, I've been concerned 
-about it for a while. Why 
-did you only cook potato 
-dishes？</Dialog>
+          <Dialog>It's settled down？ I
+finished with gnocchi. Flour
+and potato...</Dialog>
+          <Dialog>Hey, something's been
+bugging me. Why is it always
+potatoes？</Dialog>
           <Dialog>...You noticed？</Dialog>
-          <Dialog>Yeah, ever since you 
-mentioned that souffle 
-dish.</Dialog>
-          <Dialog>Actually, my aunt sent a 
-big package of potatoes to 
-my house. We've been giving 
-them out but there are 
-still a lot left.</Dialog>
-          <Dialog>So you tried cooking 
-something out of them？</Dialog>
-          <Dialog>Yeah, I'm glad I could try 
-making various dishes 
-although I ended up eating 
-them by myself.</Dialog>
-          <Dialog>You ate them by yourself？</Dialog>
-          <Dialog>Papa and Mama said they 
-could only eat them every 
-once in a while. So, I ate 
-the gnocchi I made 
-yesterday all by myself.</Dialog>
-          <Dialog>It was delicious. Too bad 
-my parents couldn't eat it.</Dialog>
-          <Dialog>(No matter how delicious 
-potatoes are, eating them 
-for a whole month is a 
-little...)</Dialog>
+          <Dialog>Yeah, around the
+something-souffle, kind of.</Dialog>
+          <Dialog>Actually, my aunt sent us a
+huge amount. We shared some,
+but there's still tons.</Dialog>
+          <Dialog>So you tried making all
+kinds of dishes.</Dialog>
+          <Dialog>Right. But my repertoire
+grew, and I like potatoes
+anyway, so it was good for
+me.</Dialog>
+          <Dialog>"For you"？</Dialog>
+          <Dialog>Papa and Mama said they've
+had enough for a while. So I
+ate yesterday's gnocchi
+mostly by myself.</Dialog>
+          <Dialog>It was delicious, too. Too
+bad.</Dialog>
+          <Dialog>(Potatoes for almost a
+month, so yeah...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2543,34 +2471,30 @@ little...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Earlier, I went to Papa's 
-hospital and ran into an 
-old lady who was Papa's 
-patient. We had a long chat.</Dialog>
+          <Dialog>The other day, I ran into an
+old lady from our clinic,
+and we ended up talking for
+ages.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？ With your dad's 
-patient？</Dialog>
-          <Dialog>Yeah, and while we were 
-talking, more people joined 
-us... In the end, there 
-were as many as 7 people.</Dialog>
-          <Dialog>All of them were your 
-dad's patients, eh？</Dialog>
-          <Dialog>I think they were.</Dialog>
-          <Dialog>That's why they all knew 
-me... They mentioned some 
-embarrassing stuff I did 
-when I was a child.</Dialog>
-          <Dialog>Later, they even brought 
-up the topic about my 
-future husband.</Dialog>
-          <Dialog>They said if Mama still 
-didn't have anyone on her 
-mind, they'd help her find 
-a match for me. They were 
-so enthusiastic.</Dialog>
-          <Dialog>(I can picture how the 
-scene would look like...)</Dialog>
+          <Dialog>Huh, a patient.</Dialog>
+          <Dialog>And as we talked, more
+people gathered... until
+there were about seven.</Dialog>
+          <Dialog>All patients at
+▲高嶺＊＊▲'s
+clinic？</Dialog>
+          <Dialog>Most of them, I think？</Dialog>
+          <Dialog>So they all knew me... It
+was embarrassing, they told
+stories from when I was
+little.</Dialog>
+          <Dialog>And then it turned into talk
+about my future husband.</Dialog>
+          <Dialog>If Mama hadn't come looking
+for me, I think we'd still
+be talking. They had so much
+energy.</Dialog>
+          <Dialog>(I can picture it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2664,30 +2588,27 @@ scene would look like...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Lately, I told you about 
-the old lady who really 
-likes to chat, right？</Dialog>
+          <Dialog>Remember I told you about
+the chatty old ladies？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, I remembered. Don't 
-tell me you got caught up 
-with her again.</Dialog>
-          <Dialog>Geez, I wouldn't get caught 
-up that easily. I was able 
-to leave her much earlier 
-than last time.</Dialog>
-          <Dialog>Haha, okay. But why do you 
-look so troubled now？</Dialog>
-          <Dialog>Um... About that...</Dialog>
-          <Dialog>She asked me to become her 
-grandson's bride...</Dialog>
-          <Dialog>What！？</Dialog>
-          <Dialog>Of course, I took it as a 
-joke and refused, but she 
-was pressing me on meeting 
-him at least once.</Dialog>
-          <Dialog>Hah, now I'm in trouble...</Dialog>
-          <Dialog>(The one in trouble right 
-now is me！)</Dialog>
+          <Dialog>Yeah, I remember. Don't tell
+me they caught you again？</Dialog>
+          <Dialog>Geez, "caught." I got home
+earlier than last time？</Dialog>
+          <Dialog>Haha, I see. You look kind
+of down, though.</Dialog>
+          <Dialog>Yes... About that...</Dialog>
+          <Dialog>She told me, "Come marry my
+grandson"...</Dialog>
+          <Dialog>What!?</Dialog>
+          <Dialog>Of course I think it was a
+joke, and I said no right
+away. But she was really
+pushy about meeting him
+once.</Dialog>
+          <Dialog>Sigh. What do I do...</Dialog>
+          <Dialog>(That's a problem for me
+too！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2772,23 +2693,22 @@ now is me！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Earlier？ Ah！</Dialog>
+          <Dialog>...So, what happened with
+that？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Earlier？ Oh, you mean...</Dialog>
-          <Dialog>...I ended up promising 
-that lady that I would go 
-visit her home.</Dialog>
-          <Dialog>Whaaaat！？</Dialog>
-          <Dialog>I'll go with Mama to visit 
-that lady and her grandson.</Dialog>
-          <Dialog>...But then, about you 
-being his bride...</Dialog>
-          <Dialog>That's not a problem... I 
-guess.</Dialog>
-          <Dialog>You guess！？</Dialog>
-          <Dialog>Yeah, Mama will go with me, 
-so you can rest assured.</Dialog>
-          <Dialog>(Whaaaat~！？)</Dialog>
+          <Dialog>With what？ Oh！</Dialog>
+          <Dialog>...I'm going to visit her
+house, just once.</Dialog>
+          <Dialog>What!?</Dialog>
+          <Dialog>Mama and I are going to go
+meet the grandson.</Dialog>
+          <Dialog>...But, the marriage
+thing...</Dialog>
+          <Dialog>That's fine. ...I think？</Dialog>
+          <Dialog>You think!?</Dialog>
+          <Dialog>Yes, Mama will be there. So
+don't worry？</Dialog>
+          <Dialog>(Whaaat!?)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2887,34 +2807,30 @@ so you can rest assured.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Speaking of which, how did 
-it go with that lady's 
-grandson 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲... By the way,
+what happened with that
+grandson？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Ah！ Oh, I'm sorry. I really 
-haven't told you, right？</Dialog>
-          <Dialog>Now I understand why the 
-old lady insisted that I 
-should meet her grandson.</Dialog>
+          <Dialog>Oh！ Right, sorry. I haven't
+told you yet.</Dialog>
+          <Dialog>I found out why she pushed
+so hard？</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>He really liked me... When 
-I was about to leave, he 
-didn't want to let go of 
-my hand.</Dialog>
+          <Dialog>He really took to me... When
+he wouldn't let go of my
+hand, I didn't know what to
+do.</Dialog>
           <Dialog>Your hand...</Dialog>
-          <Dialog>Hehe, he's a baby boy, so 
-that couldn't be helped.</Dialog>
-          <Dialog>Huh？ A baby？</Dialog>
-          <Dialog>Yeah, her grandson was 
-very cute. That's why she 
-insisted that I should 
-meet him.</Dialog>
-          <Dialog>So, that's about it. I'm 
-sorry I made you worried.</Dialog>
-          <Dialog>(...But that lady might be 
-serious about the bride 
-thing, huh？)</Dialog>
+          <Dialog>Hehe, he's a baby, so it
+can't be helped.</Dialog>
+          <Dialog>Huh... A baby？</Dialog>
+          <Dialog>Yes. Her grandson is so
+cute, she wanted me to come
+see him.</Dialog>
+          <Dialog>So, it's all settled. Sorry
+for worrying you.</Dialog>
+          <Dialog>(...Was that lady maybe a
+little serious, though？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3004,36 +2920,32 @@ thing, huh？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>There are so many different 
-types of magazines, right？</Dialog>
+          <Dialog>Magazines really come in all
+kinds, don't they？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah. If you go to a large 
-bookstore, you can see a 
-lot of magazines sorted by 
-categories.</Dialog>
-          <Dialog>Right. Even fashion 
-magazines have different 
-targeted ages... It's 
-troublesome when you can't 
-tell them apart.</Dialog>
-          <Dialog>Ah, they're grouped for 
-ages 10+, 20+, and 30+. 
-Something like that, right？</Dialog>
-          <Dialog>Right. And I've notice a 
-new vocab "Around 4" 
-lately.</Dialog>
+          <Dialog>At a big bookstore they've
+even got ones that make you
+go, "Seriously？"</Dialog>
+          <Dialog>Yes. Fashion magazines are
+even split by age... I can't
+tell from the titles, so
+it's confusing.</Dialog>
+          <Dialog>Ah, like teens, twenties,
+thirties.</Dialog>
+          <Dialog>Right. And the other day I
+saw the term "around-40" for
+the first time.</Dialog>
           <Dialog>...What does that mean？</Dialog>
-          <Dialog>It means people around the 
-age of 40. Hehe, it's such 
-a strange word.</Dialog>
-          <Dialog>But I feel like I should 
-start learning some of 
-these new vocabs.</Dialog>
-          <Dialog>If I learn something new, 
-I'll teach you. Let's 
-study together.</Dialog>
-          <Dialog>(Do I have to study 
-something like this too？)</Dialog>
+          <Dialog>It means people around
+forty. Hehe, strange term,
+isn't it？</Dialog>
+          <Dialog>But maybe I'll try learning
+a bunch while I'm at it？</Dialog>
+          <Dialog>Once I learn them, I'll quiz
+you too. Let's study
+together？</Dialog>
+          <Dialog>(Does this count as
+studying？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3138,34 +3050,27 @@ something like this too？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Quiz time.</Dialog>
+          <Dialog>Here's a question.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hmm？ Ah, about the fashion 
-terms？ Okay then.</Dialog>
-          <Dialog>"Around 3."</Dialog>
-          <Dialog>If "Around 4" means people 
-around the age of 40 then 
-"Around 3" must be people 
-around the age of 30, 
+          <Dialog>Hm？ Oh, fashion terms？
+Okay, bring it.</Dialog>
+          <Dialog>"Around-30."</Dialog>
+          <Dialog>Around-40 was around
+forty... so around thirty？</Dialog>
+          <Dialog>Ding-ding！ Next. "B-style."</Dialog>
+          <Dialog>B-style...？ Not blood type,
 right？</Dialog>
-          <Dialog>Correct！ Then the next one, 
-"B-Type."</Dialog>
-          <Dialog>B-Type？ Doesn't it mean 
-blood type B？</Dialog>
-          <Dialog>Boo！ Then how about 
-"conserver"？</Dialog>
-          <Dialog>...A console game server？</Dialog>
-          <Dialog>Hehe, nice guess, but 
-wrong！</Dialog>
-          <Dialog>For the correct answers, 
-"B-Type" means hip hop 
-culture, and "conserver" 
-is conservative fashion.</Dialog>
-          <Dialog>That's all. Too bad some 
-of your answers were wrong. 
-Hehe.</Dialog>
-          <Dialog>(You studied really hard 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Bzzt！ Then, "consa."</Dialog>
+          <Dialog>...Consomme for dinner
+tonight？</Dialog>
+          <Dialog>Hehe, that sounds nice！</Dialog>
+          <Dialog>The answers: B-style is
+hip-hop fashion, and consa
+is conservative, elegant
+fashion. Or so they say.</Dialog>
+          <Dialog>So, too bad. Hehe.</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+is really studying hard.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3250,36 +3155,32 @@ Hehe.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you learn any new 
-vocabs？</Dialog>
+          <Dialog>Did you master the new
+terms？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. But I only read a 
-few magazines, so I didn't 
-learn much.</Dialog>
-          <Dialog>Hmm？ So earlier, did you 
-just buy some random 
-magazines and read them？</Dialog>
-          <Dialog>Yeah, because I didn't 
-really know which one I 
-should read.</Dialog>
-          <Dialog>Wasn't that difficult？ 
-Fashion magazines aren't 
-that cheap.</Dialog>
-          <Dialog>That's not a problem, since 
-I found out that our 
-library also carries 
-fashion magazines for 
-studying purpose.</Dialog>
-          <Dialog>Huh？ There are magazines 
-at the library too？</Dialog>
-          <Dialog>I was also surprised when 
-I found out. They even have 
-comics, too.</Dialog>
-          <Dialog>Next time, I might secretly 
-borrow some comics...</Dialog>
-          <Dialog>(Your parents forbid you 
-from reading comics too, 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>Yes. But I narrowed down the
+magazines I read, so I don't
+need them as much now.</Dialog>
+          <Dialog>Hm？ So before, you were
+reading everything you could
+find？</Dialog>
+          <Dialog>Yes. Because I didn't know
+which ones to look at.</Dialog>
+          <Dialog>Wasn't that tough？ Fashion
+magazines aren't that cheap.</Dialog>
+          <Dialog>That part was fine. I
+borrowed all my study
+magazines from the library.</Dialog>
+          <Dialog>Huh, the library has those？</Dialog>
+          <Dialog>I was surprised at first
+too, but they even have
+manga, you know？</Dialog>
+          <Dialog>Maybe next time I'll
+secretly borrow some
+manga...</Dialog>
+          <Dialog>(Is manga banned at
+▲高嶺＊＊▲'s
+house too？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3364,31 +3265,30 @@ from reading comics too,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Well, do you still keep 
-reading the fashion 
-magazines？</Dialog>
+          <Dialog>So, how's the fashion thing
+going lately？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah, I've read a lot of 
-them, so I've learned many 
-things about fashion.</Dialog>
-          <Dialog>But I haven't really put it 
-into practice. There are 
-clothes that I want, but 
-my pocket money is limited.</Dialog>
-          <Dialog>I've been thinking about 
-getting a part-time job, 
-but that's a bit too much.</Dialog>
+          <Dialog>Yes, I've looked at so many
+that at least my eye's
+gotten better？</Dialog>
+          <Dialog>Putting it into practice is
+hard. There are things I
+want, but my allowance only
+goes so far.</Dialog>
+          <Dialog>If I could get a part-time
+job, maybe, but that's not
+really possible.</Dialog>
           <Dialog>I see.</Dialog>
-          <Dialog>Lately, I'm enjoying 
-reading columns about 
-cosmetics as well.</Dialog>
-          <Dialog>I've never had interest in 
-such things before...</Dialog>
-          <Dialog>Since I've met you, it's 
-like my world has 
-broadened. Thank you.</Dialog>
-          <Dialog>(That's something I should 
-say to her, too...)</Dialog>
+          <Dialog>Lately, it's fun looking at
+cosmetics features too, not
+just clothes.</Dialog>
+          <Dialog>Before, I really wasn't
+interested...</Dialog>
+          <Dialog>I feel like my world's
+gotten bigger since I met
+you. Thank you.</Dialog>
+          <Dialog>(Maybe I could say the
+same...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3483,35 +3383,29 @@ say to her, too...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Have you ever gotten caught 
-up when you did some 
-cleaning？</Dialog>
+          <Dialog>When you're cleaning, don't
+you always end up stopping？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, did you find some old 
-photo albums？</Dialog>
-          <Dialog>Hehe. How did you know？ 
-Were you watching me？</Dialog>
-          <Dialog>Bull's eyes, huh...？</Dialog>
-          <Dialog>I got lots of stuff, so I 
-was thinking about sorting 
-them out. Then I found my 
-childhood albums and I 
-stopped cleaning.</Dialog>
-          <Dialog>Okay okay, I understand.</Dialog>
-          <Dialog>When I realized it, it was 
-already dark. I didn't get 
-much done, so I'd have to 
-do the cleaning again 
-later.</Dialog>
-          <Dialog>Do you think you'll get 
-caught up with something 
-else next time？</Dialog>
-          <Dialog>Come on, don't imagine 
-weird things.</Dialog>
-          <Dialog>Hey, don't jinx me like 
-that... But I feel like 
-it'll happen.</Dialog>
-          <Dialog>(I think so too...)</Dialog>
+          <Dialog>Ah, like looking through
+photo albums.</Dialog>
+          <Dialog>Hehe. Were you watching me？</Dialog>
+          <Dialog>Bull's-eye, huh...</Dialog>
+          <Dialog>I had too much stuff, so I
+was organizing, and then my
+childhood albums came out...
+and I just stopped.</Dialog>
+          <Dialog>I get it, I get it.</Dialog>
+          <Dialog>By the time I shook off the
+temptation it was late, so I
+barely got anything done.
+I'll try again another day.</Dialog>
+          <Dialog>Won't you get hooked on
+something else next time？</Dialog>
+          <Dialog>Geez, don't predict weird
+things.</Dialog>
+          <Dialog>...Because I feel like it'll
+come true.</Dialog>
+          <Dialog>(Oh, it will...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3591,25 +3485,21 @@ it'll happen.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How was it？ Did you 
-continue on with the 
-cleaning？</Dialog>
+          <Dialog>So？ How's the cleaning
+coming？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...It's all your fault.</Dialog>
-          <Dialog>W-What？</Dialog>
-          <Dialog>I found my diary when I 
-was in grade school.</Dialog>
-          <Dialog>And then my penmanship 
-practice book, and my 
-ballet shoes... A lot of 
-things.</Dialog>
-          <Dialog>Everything was so tempting, 
-right？</Dialog>
-          <Dialog>Yeah, but I packed them 
-all up and put them in 
-another room. So I'll be 
-okay next time！</Dialog>
-          <Dialog>...I guess. Yeah.</Dialog>
+          <Dialog>...It's your fault.</Dialog>
+          <Dialog>W-What is？</Dialog>
+          <Dialog>I found the diary I kept in
+grade school.</Dialog>
+          <Dialog>And my calligraphy pieces,
+my ballet shoes... all sorts
+of things.</Dialog>
+          <Dialog>So it was all temptation.</Dialog>
+          <Dialog>Yes. But I took them all to
+a different room, so next
+time it'll be fine！</Dialog>
+          <Dialog>...Probably. Yes.</Dialog>
           <Dialog>(I wonder...)</Dialog>
         </Dialogs>
       </SDL2>
@@ -3710,34 +3600,29 @@ okay next time！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Did you finish cleaning？</Dialog>
+          <Dialog>Done tidying？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>No, not yet.</Dialog>
-          <Dialog>Eh？ What could possibly get 
-you occupied this time？</Dialog>
-          <Dialog>I was rearranging a lot of 
-stuff and Mama came to see 
-how it was going. And then 
-we were deep in talk.</Dialog>
+          <Dialog>Uh-oh. What tempted you this
+time？</Dialog>
+          <Dialog>While I was moving things
+around, Mama came to check
+on me, and we got to
+talking.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>But it was fun. We talked 
-about a lot of things.</Dialog>
-          <Dialog>...It was like women's 
-private talk. There were 
-things we couldn't say if 
-Papa was with us.</Dialog>
-          <Dialog>That means, there were also 
-things that you couldn't 
-talk about if I was with 
-you？</Dialog>
-          <Dialog>Of course. Girls always 
-have many things to talk 
-about.</Dialog>
-          <Dialog>...Could it be something 
-about me？</Dialog>
-          <Dialog>Well, who knows？ It's a 
+          <Dialog>But it was fun. We talked
+about lots of things.</Dialog>
+          <Dialog>...Girl talk we can't do in
+front of Papa, too.</Dialog>
+          <Dialog>So, stuff you can't talk
+about in front of me
+either？</Dialog>
+          <Dialog>Of course. Girls have lots
+of things.</Dialog>
+          <Dialog>...Could it be about me？</Dialog>
+          <Dialog>Hmm, who knows？ It's a
 secret▼</Dialog>
-          <Dialog>(Now I'm concerned...)</Dialog>
+          <Dialog>(Now I'm curious...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3824,23 +3709,21 @@ secret▼</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>How's the cleaning going？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, it's finally done. 
-My room is pretty tidy now.</Dialog>
-          <Dialog>I see. Good job.</Dialog>
-          <Dialog>Thank you. Now, it looks 
-so different.</Dialog>
-          <Dialog>Anything else you're 
-planning to do？</Dialog>
-          <Dialog>Yeah, from now on, I'll 
-gradually fill up the space 
-that I just made available.</Dialog>
+          <Dialog>Yes. I'm almost done. It's
+much tidier now.</Dialog>
+          <Dialog>I see, good work.</Dialog>
+          <Dialog>Thanks. Now there's room for
+more stuff.</Dialog>
+          <Dialog>Got plans for something？</Dialog>
+          <Dialog>Yes, little by little from
+now on. I wanted to make
+space for it.</Dialog>
           <Dialog>Hmm？</Dialog>
-          <Dialog>That's because there are 
-many more things that will 
-fill my memories with you.</Dialog>
-          <Dialog>Eh？ Will we have that many 
-memories together...？</Dialog>
-          <Dialog>We'll have many！ Hehe！</Dialog>
+          <Dialog>Because things with memories
+of you will keep piling up.</Dialog>
+          <Dialog>Huh？ Do we have that
+many...？</Dialog>
+          <Dialog>I do！ Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3939,35 +3822,31 @@ memories together...？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you usually do 
-before you go to bed 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Does
+▲高嶺＊＊▲
+do anything before bed？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Before I go to bed...？ I 
-do some light stretches.</Dialog>
-          <Dialog>Stretches？ Why？</Dialog>
-          <Dialog>Why？ It's what I've been 
-doing since a long time ago.</Dialog>
-          <Dialog>When I stretch, it makes 
-me feel sleepy.</Dialog>
-          <Dialog>Even if you don't do that, 
-you always fall asleep 
-easily anyway 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>...It feels different when 
-I stretch, and when I 
-don't. Just a little 
-different though.</Dialog>
-          <Dialog>How's that？</Dialog>
-          <Dialog>That's... You know... Ah, 
-the most important thing 
-is that I can wake up 
-feeling refreshed！</Dialog>
-          <Dialog>So yeah... you should try 
-it. You'll feel better in 
-the morning too, okay？</Dialog>
-          <Dialog>(So she doesn't really 
-know the difference, huh？)</Dialog>
+          <Dialog>Before bed... I do some
+light stretching, I guess？</Dialog>
+          <Dialog>Stretching？ Why？</Dialog>
+          <Dialog>Why, I wonder？ I've always
+done it, since forever.</Dialog>
+          <Dialog>I feel like it helps me
+sleep.</Dialog>
+          <Dialog>Doesn't ▲高嶺＊＊▲ fall
+asleep fast without that？</Dialog>
+          <Dialog>...It's different whether I
+do it or not？ Just a
+little.</Dialog>
+          <Dialog>How so？</Dialog>
+          <Dialog>Well, you know... Oh, if
+anything, I wake up feeling
+good... I think！</Dialog>
+          <Dialog>Yes, that's it. So it's
+better to do it. You should
+do it too？ Definitely.</Dialog>
+          <Dialog>(So it doesn't really do
+much？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4057,31 +3936,26 @@ know the difference, huh？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>After the last time we 
-talked, I stopped 
-stretching before I went 
-to bed.</Dialog>
+          <Dialog>Since you said that, I tried
+skipping my stretches before
+bed, you know？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Eh？ So you stopped 
-stretching？</Dialog>
-          <Dialog>Yeah. But I think there was 
-something different.</Dialog>
-          <Dialog>Well, I felt quite uneasy 
-and it took me longer 
-until I could sleep.</Dialog>
-          <Dialog>I had been stretching ever 
-since I was in grade 
-school. I think it helps 
-me feel at ease...</Dialog>
-          <Dialog>That means there is a 
-difference, right？</Dialog>
-          <Dialog>...Ah, right.</Dialog>
-          <Dialog>Eh？</Dialog>
-          <Dialog>！ Well, um... Right！ This 
-is the difference we talked 
-about earlier, right？</Dialog>
-          <Dialog>(You've just realized it 
-now...？)</Dialog>
+          <Dialog>Huh, you stopped？</Dialog>
+          <Dialog>Yes. Because I was curious
+if it works.</Dialog>
+          <Dialog>Well, I got restless and it
+took a long time to fall
+asleep.</Dialog>
+          <Dialog>It's been my habit since
+grade school, so I couldn't
+settle down...</Dialog>
+          <Dialog>So it does work.</Dialog>
+          <Dialog>...Oh, right.</Dialog>
+          <Dialog>Huh？</Dialog>
+          <Dialog>！ Um, yes, that's right！
+Now you see that it works,
+right？ Right？</Dialog>
+          <Dialog>(She only just noticed...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4161,30 +4035,28 @@ now...？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I haven't read any novel 
-for a long time, but I 
-read one last night.</Dialog>
+          <Dialog>Last night I read a novel
+for the first time in ages.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, before bedtime？</Dialog>
-          <Dialog>Yeah. Somehow I really 
-fell asleep, and I slept 
-even deeper than when I 
-did the stretching.</Dialog>
-          <Dialog>An immediate effect, huh？</Dialog>
-          <Dialog>But, I didn't feel 
-refreshed when I woke up 
-in the morning.</Dialog>
-          <Dialog>Haha, then for you, 
-stretching is the best 
-option ▲Takane＊＊▲.</Dialog>
-          <Dialog>I wonder. Maybe I shouldn't 
-change my routines...</Dialog>
-          <Dialog>It's good to follow your 
-habits, but sometimes a 
-little change is good, 
-too, right？</Dialog>
-          <Dialog>You think so？ ...Hmm, maybe 
-that's true.</Dialog>
+          <Dialog>Ah, before bed.</Dialog>
+          <Dialog>Yes. Somehow, I just drifted
+off. Maybe faster than with
+stretching.</Dialog>
+          <Dialog>Works like a charm.</Dialog>
+          <Dialog>But this morning I didn't
+wake up feeling great.</Dialog>
+          <Dialog>Haha, then stretching is
+best for
+▲高嶺＊＊▲.</Dialog>
+          <Dialog>Maybe so. Maybe doing
+something different is the
+problem...</Dialog>
+          <Dialog>Habits are a thing, sure,
+but trying different stuff
+is good too, right？ A
+little, at least.</Dialog>
+          <Dialog>You think？ ...Okay, maybe
+I'll try that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4278,36 +4150,28 @@ that's true.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Last night when I was 
-alone, I gazed at the 
-stars.</Dialog>
+          <Dialog>Last night, I was looking at
+the stars by myself.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Before your bedtime？</Dialog>
-          <Dialog>Yeah, they were really 
-beautiful. I was thinking 
-about calling you last 
-night, but it was already 
-late.</Dialog>
-          <Dialog>Really？ It would've been 
-nice if you and I had 
-looked at them at the same 
-time.</Dialog>
-          <Dialog>I was trying to call you by 
-telepathy, didn't you get 
-it？</Dialog>
-          <Dialog>Too bad I didn't.</Dialog>
-          <Dialog>Hehe, then we should 
-practice so that we could 
-communicate by telepathy 
-next time.</Dialog>
-          <Dialog>What do you mean？</Dialog>
-          <Dialog>Before you go to bed, you 
-must think about me. How's 
-that...？</Dialog>
-          <Dialog>With such nice weather, 
-we'll be able to see 
-beautiful stars. Let's 
-watch them together tonight.</Dialog>
+          <Dialog>Before bed？</Dialog>
+          <Dialog>Yes. They were so pretty. I
+wanted to tell you, but it
+was late.</Dialog>
+          <Dialog>I see. I wish I'd looked
+too.</Dialog>
+          <Dialog>I sent you telepathy. Didn't
+it reach you？</Dialog>
+          <Dialog>Sadly, no.</Dialog>
+          <Dialog>Hehe. Then practice so you
+can receive it next time？</Dialog>
+          <Dialog>How？</Dialog>
+          <Dialog>Like, thinking about me
+before you go to sleep？
+Just kidding...</Dialog>
+          <Dialog>With weather like this, the
+stars should be pretty
+tonight too. Let's look
+together tonight, okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4381,27 +4245,27 @@ watch them together tonight.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What do you do for fun 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>What does
+▲高嶺＊＊▲
+do to blow off steam？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>For fun？ Hmm... Like 
-baking？</Dialog>
-          <Dialog>Baking？</Dialog>
-          <Dialog>Yeah. It's really 
-refreshing. The kneading 
-part is really fun. 
-"Bamm！" I can hit the 
-bread as hard as I want.</Dialog>
-          <Dialog>When I do that, even Papa 
-and Mama try their best to 
-stay away from the kitchen. 
+          <Dialog>Blow off steam？ Hmm... Bake
+bread, I guess？</Dialog>
+          <Dialog>Bread？</Dialog>
+          <Dialog>Yes. It's really
+refreshing？ When you punch
+the air out, you can go
+WHAM！ as hard as you want.</Dialog>
+          <Dialog>When I'm doing that, Papa
+and Mama never come near.
 Hehe.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>I haven't baked for a 
-while. I'll have you taste 
-some when I do, okay？</Dialog>
-          <Dialog>(I wonder how her bread is 
-going to come out...)</Dialog>
+          <Dialog>Now I want to make some,
+it's been a while. I'll
+bring you some when I bake
+it？</Dialog>
+          <Dialog>(What kind of face does she
+make while doing it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4491,32 +4355,28 @@ going to come out...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Thanks for the bread the 
+          <Dialog>Thanks for the bread the
 other day.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No problem. Thanks to you, 
-I felt completely refreshed.</Dialog>
-          <Dialog>Does that mean... you had 
-fun kneading the bread？ 
-Doing that "Bamm！" thing？</Dialog>
-          <Dialog>Hehe, I guess so. Because 
-no one dared to enter the 
-kitchen.</Dialog>
-          <Dialog>O-Oh, I see...</Dialog>
-          <Dialog>I once asked Mama why she 
-didn't join me in the 
-kitchen.</Dialog>
+          <Dialog>You're welcome. Thanks to
+you, I really got it out of
+my system.</Dialog>
+          <Dialog>So... a lot of WHAM？</Dialog>
+          <Dialog>Hehe, maybe. Nobody came
+into the kitchen.</Dialog>
+          <Dialog>O-Oh...</Dialog>
+          <Dialog>I asked Mama once, "Why
+don't you ever come in？"</Dialog>
           <Dialog>And what did she say？</Dialog>
-          <Dialog>She was scared. Because I 
-hit the bread so hard, like 
-"Bamm！" but my face was 
-expressionless.</Dialog>
+          <Dialog>She said I'm scary. I go
+WHAM！ with a totally blank
+face, apparently.</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>But isn't that how I look 
-when I'm getting serious 
-with something？ What do 
-you think？</Dialog>
-          <Dialog>(Um... What should I say？)</Dialog>
+          <Dialog>But doesn't everyone look
+like that when they're
+serious about something？
+What do you think？</Dialog>
+          <Dialog>(Hmm, I wonder...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4619,36 +4479,32 @@ you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, yeah. Hey, I'm thinking 
-of baking again. Do you 
-have any requests？</Dialog>
+          <Dialog>Oh, right. Hey, I'm thinking
+of baking bread again. Any
+requests？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh？</Dialog>
-          <Dialog>Hmm？</Dialog>
-          <Dialog>No... Just wondered if you 
-needed some refreshing 
-time again.</Dialog>
-          <Dialog>Hehe, wrong. Mama bought 
-some natural yeast so we 
-planned to bake some bread 
-together.</Dialog>
+          <Dialog>Huh.</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>No... Just wondering if
+you're blowing off steam
+again.</Dialog>
+          <Dialog>Hehe, nope. Mama bought a
+natural yeast starter, so
+we're making it together.</Dialog>
           <Dialog>Natural yeast？</Dialog>
-          <Dialog>Yeah. Yeast is necessary 
-for baking, but I like 
-using natural yeast the 
-most.</Dialog>
-          <Dialog>Hmm... There really are a 
-lot of varieties, huh？</Dialog>
-          <Dialog>Yeah, so many that I feel 
-troubled. But once I'm 
-obsessed, I totally can't 
-stop.</Dialog>
-          <Dialog>Maybe making something 
-delicious is my current 
-obsession, I guess.</Dialog>
-          <Dialog>(You're easily obsessed 
-with things like this, 
-▲Takane＊＊▲.)</Dialog>
+          <Dialog>Yes. It's what makes the
+bread rise, and I love bread
+made with natural yeast.</Dialog>
+          <Dialog>Huh... There's a lot to it.</Dialog>
+          <Dialog>Yes, so much it's hard. But
+once you get picky about
+ingredients, there's no end.</Dialog>
+          <Dialog>Making something reasonably
+delicious is my rule, I
+guess？</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+is so sensible about that
+stuff.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4738,27 +4594,24 @@ with things like this,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How did it go when you were 
-baking with your mom？</Dialog>
+          <Dialog>How was baking bread with
+your mom？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well... Now I understand 
-what Mama said about my 
-expressionless face.</Dialog>
+          <Dialog>Well？ I totally understood
+what Mama meant by a blank
+face.</Dialog>
           <Dialog>Eh？</Dialog>
-          <Dialog>Hehe. You see...</Dialog>
-          <Dialog>Mama's face was also 
-expressionless when she did 
-that "Bamm！" thing！</Dialog>
-          <Dialog>When I saw that, I was like 
-"Ah, that's it." I also 
-thought that she looked 
-scary.</Dialog>
-          <Dialog>Scary？</Dialog>
-          <Dialog>Yes. That's why I'll never 
-make any more bread for you 
-in my whole life.</Dialog>
+          <Dialog>Hehe. Because...</Dialog>
+          <Dialog>Mama had a blank face too！
+When she went WHAM！</Dialog>
+          <Dialog>The moment I saw it, I
+thought, oh, that's it. It
+really is kind of scary.</Dialog>
+          <Dialog>That much？</Dialog>
+          <Dialog>Yes. So I can never make
+bread for you, ever...</Dialog>
           <Dialog>R-Really？</Dialog>
-          <Dialog>I'm kidding▼ Hehe！</Dialog>
+          <Dialog>Kidding▼ Hehe！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4857,31 +4710,29 @@ in my whole life.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>What time can you stay up 
-until at night？</Dialog>
+          <Dialog>What's the latest you've
+ever stayed up？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm not sure... Why？</Dialog>
-          <Dialog>Well, I'm thinking about 
-challenging myself for my 
-time limit.</Dialog>
+          <Dialog>Hmm, I wonder... Why？</Dialog>
+          <Dialog>Well. I thought I'd try
+testing my limit.</Dialog>
           <Dialog>What for？</Dialog>
-          <Dialog>...Well, just in case.</Dialog>
-          <Dialog>Just in case that we had 
-to stay up all night, it 
-wouldn't be good if I fell 
-asleep first, right？</Dialog>
-          <Dialog>Ah, I see. But it's not 
-good to overdo it.</Dialog>
-          <Dialog>And I know you're not good 
-at staying up late, 
-▲Takane＊＊▲.</Dialog>
-          <Dialog>...That's why I need some 
-practice.</Dialog>
-          <Dialog>Do you have any trick that 
-you can teach me？ If so, I 
-think I can do it. Do you？</Dialog>
-          <Dialog>(Trick？ Is there any trick 
-for something like this？)</Dialog>
+          <Dialog>...If, just if, okay？</Dialog>
+          <Dialog>Someday, when we can stay
+out all night, it'd be bad
+if I couldn't stay awake,
+right？</Dialog>
+          <Dialog>Ah, I see... But forcing it
+won't do any good, will it？</Dialog>
+          <Dialog>Besides, ▲高嶺＊＊▲ can't
+really stay up late, can
+she？</Dialog>
+          <Dialog>...That's why I'm practicing
+now.</Dialog>
+          <Dialog>Could you teach me some
+tricks？ Then I'm sure I can
+manage. So, please？</Dialog>
+          <Dialog>(Tricks？ Are there any？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4965,29 +4816,25 @@ for something like this？)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, I still wasn't able to 
-stay up late at night...</Dialog>
+          <Dialog>Hey, I can't stay up at
+night...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You've tried this for like 
-a whole week now. It's 
-probably impossible.</Dialog>
-          <Dialog>Hah...</Dialog>
-          <Dialog>...Ah！ Hey, how about I 
-exercise at night？ I'll 
-feel refreshed and I can 
-stay up, right？</Dialog>
-          <Dialog>I think it'll be the 
-opposite. You'll feel 
-tired and fall asleep.</Dialog>
-          <Dialog>...Really？</Dialog>
-          <Dialog>Yes. For something like 
-this, you have to get used 
-to it little by little.</Dialog>
-          <Dialog>I see... Okay, I'll do my 
+          <Dialog>Well, you can't do it in
+just a week or so.</Dialog>
+          <Dialog>Sigh...</Dialog>
+          <Dialog>...Ah！ Hey, what if I
+exercise？ I'd be wide awake
+and could stay up, right？</Dialog>
+          <Dialog>I think it'd backfire. You'd
+get tired and sleepy.</Dialog>
+          <Dialog>...You think？</Dialog>
+          <Dialog>Yeah. You just have to
+stretch it out bit by bit.</Dialog>
+          <Dialog>Right. ...Okay, I'll do my
 best.</Dialog>
-          <Dialog>(You're really putting your 
-efforts into this, right 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>(▲高嶺＊＊▲
+never spares any effort, no
+matter what it's for.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5067,25 +4914,23 @@ efforts into this, right
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hey, did you succeed in 
-extending your bedtime？</Dialog>
+          <Dialog>So？ Can you stay up longer
+now？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>A little bit！ One hour for 
-now！</Dialog>
-          <Dialog>Oh, that's great.</Dialog>
-          <Dialog>Hehe. But I still feel 
-sleepy at my usual time.</Dialog>
-          <Dialog>Eh？ Really？</Dialog>
-          <Dialog>Yeah. I have to endure it 
-more from now on.</Dialog>
-          <Dialog>I even dozed off and hit 
-my head on my desk. That 
-was quite shocking...</Dialog>
-          <Dialog>But I could set a new 
-record. Hehe！</Dialog>
-          <Dialog>(If you dozed off, that 
-means you fell asleep. So 
-it wasn't a record...)</Dialog>
+          <Dialog>A little longer！ One hour！</Dialog>
+          <Dialog>Oh, nice, nice.</Dialog>
+          <Dialog>Hehe. I still get sleepy at
+the same time, though.</Dialog>
+          <Dialog>Huh. Really？</Dialog>
+          <Dialog>Yes. I just learned to hold
+out from there.</Dialog>
+          <Dialog>I nod off and sometimes bump
+my head on the desk and
+startle myself, though...</Dialog>
+          <Dialog>But it's a new record.
+Hehe！</Dialog>
+          <Dialog>(I don't think that counts
+as staying up...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5198,40 +5043,34 @@ it wasn't a record...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>After all that, did you try 
-to stay up late again 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>▲高嶺＊＊▲, how's it
+going？ Can you stay up
+later？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um... I think I should 
-stop. I don't think it's 
-good for me.</Dialog>
+          <Dialog>Mm... I think I'll stop. It
+doesn't seem to suit me.</Dialog>
           <Dialog>Did something happen？</Dialog>
-          <Dialog>...I told you once that I 
-dozed off and hit my head 
-on my desk, right？</Dialog>
+          <Dialog>...Remember I told you I nod
+off and bump my head？</Dialog>
           <Dialog>Yeah, you did.</Dialog>
-          <Dialog>And this time it was so 
-loud that Papa and Mama 
-panicked and ran to my 
-room.</Dialog>
-          <Dialog>After that, I got scolded. 
-They told me there wasn't 
-anything good about 
-staying up late, and that 
-I had to stop.</Dialog>
-          <Dialog>It was exactly the same as 
-what you told me.</Dialog>
-          <Dialog>Yeah, and a lack of sleep 
-isn't good for your skin. 
-Your beautiful skin might 
-become rough...</Dialog>
-          <Dialog>...Haha. Yeah, that's why 
-I try to get enough sleep 
-now.</Dialog>
-          <Dialog>I'll try my best not to 
-keep playing throughout 
-the night. You must cheer 
-for me.</Dialog>
+          <Dialog>I did it again yesterday...
+and the noise startled Papa
+and Mama so much they came
+rushing into my room.</Dialog>
+          <Dialog>And I got scolded. They said
+forcing yourself to stay up
+does no good, so stop.</Dialog>
+          <Dialog>You said that at the start
+too, didn't you？</Dialog>
+          <Dialog>Yeah. And lack of sleep is
+bad for your skin. If
+▲高嶺＊＊▲'s
+beautiful skin got rough...</Dialog>
+          <Dialog>...Hehe. Yes, so I'll sleep
+properly.</Dialog>
+          <Dialog>When we can stay out all
+night, I'll try my best
+then. Cheer me on then？</Dialog>
           <Dialog>Of course！</Dialog>
         </Dialogs>
       </SDL2>
@@ -5335,37 +5174,34 @@ for me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hey, what I'm going to tell 
-you must be kept a secret, 
-okay？</Dialog>
+          <Dialog>Hey, what I'm about to tell
+you is a secret from
+everyone, okay？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>O-Okay. What is it？</Dialog>
-          <Dialog>You see, well... I... have 
-begun reading comics.</Dialog>
-          <Dialog>Huh？ But comics weren't 
-allowed at your home, right 
-▲Takane＊＊▲？</Dialog>
-          <Dialog>It has not been clearly 
-said but I think they're 
-not allowed, so I secretly 
-read them in the library.</Dialog>
-          <Dialog>I see... By the way, what 
-do you read？</Dialog>
-          <Dialog>A comic about a female 
-tennis player. It seems to 
-be quite old but it's very 
-interesting.</Dialog>
-          <Dialog>One time, I couldn't stop 
-reading... I forgot about 
+          <Dialog>S-Sure. What？</Dialog>
+          <Dialog>Well？ I've started reading
+manga.</Dialog>
+          <Dialog>Huh, isn't manga banned at
+▲高嶺＊＊▲'s
+house too？</Dialog>
+          <Dialog>No one's said it outright,
+but I think it is. So I read
+it secretly at the library.</Dialog>
+          <Dialog>I see... What are you
+reading？</Dialog>
+          <Dialog>A tennis manga with a girl
+as the heroine. It's pretty
+old, but it's so good.</Dialog>
+          <Dialog>Once I started, I couldn't
+stop... I forgot to eat
 dinner.</Dialog>
-          <Dialog>A glutton like you did！？ 
-That's really amazing 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Right？ Yeah, I really 
-wanted to read the next 
-volume.</Dialog>
-          <Dialog>(For a glutton... that's 
-amazing... Comic Power！)</Dialog>
+          <Dialog>The glutton
+▲高嶺＊＊▲？
+That's amazing...</Dialog>
+          <Dialog>Right？ Ah, I want to read
+the rest soon.</Dialog>
+          <Dialog>(No reaction to "glutton"...
+Manga power is amazing...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5450,30 +5286,30 @@ amazing... Comic Power！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Have you continued reading 
-the comic？</Dialog>
+          <Dialog>Did you get further in the
+manga？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Oh, that？ Someone borrowed 
-the comic and I haven't 
-been able to read more.</Dialog>
-          <Dialog>Is that so？ By the way, 
-what's the story about？</Dialog>
-          <Dialog>About a super strict coach 
-and the intensive training 
-he gives to this girl.</Dialog>
-          <Dialog>Coach, I can't do it！</Dialog>
-          <Dialog>...If you keep crying like 
-this, we don't need you in 
-our tennis club anymore. 
-Go home！</Dialog>
-          <Dialog>No... For me, tennis is 
-everything I have...</Dialog>
-          <Dialog>Say, it's interesting, 
-isn't it？</Dialog>
-          <Dialog>(You even did a monologue？ 
-Don't underestimate the 
-power of comic books, huh, 
-▲Takane＊＊▲？)</Dialog>
+          <Dialog>Well？ Someone seems to have
+borrowed it, so I haven't
+been able to read it yet.</Dialog>
+          <Dialog>I see. So what's happening
+in it now？</Dialog>
+          <Dialog>The heroine is getting
+special training from a
+really strict coach.</Dialog>
+          <Dialog>"Coach, I can't do it
+anymore！"</Dialog>
+          <Dialog>"...Anyone who whines has no
+place in my tennis club. Go
+home！"</Dialog>
+          <Dialog>"But... tennis is all I
+have..."</Dialog>
+          <Dialog>That's where it stopped.
+Hey, don't you want to know
+what happens？</Dialog>
+          <Dialog>(It even has ▲高嶺＊＊▲
+doing a one-woman show...
+Manga power is terrifying.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5573,30 +5409,29 @@ power of comic books, huh,
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Have you returned the 
-comic？</Dialog>
+          <Dialog>Is the manga back？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes. It has been returned...</Dialog>
-          <Dialog>And？</Dialog>
-          <Dialog>I don't want to continue 
-reading it.</Dialog>
-          <Dialog>W-Why？ You were really 
-enjoying that comic.</Dialog>
-          <Dialog>At the pace I'm reading, 
-there's only a bit more to 
-go...</Dialog>
-          <Dialog>In the story, the coach and 
-heroine separated.</Dialog>
-          <Dialog>After I finish reading this 
-comic, I'm never reading 
-another one...</Dialog>
-          <Dialog>Had I known that the story 
-was going to be this sad, 
-I wouldn't have started 
-reading.</Dialog>
-          <Dialog>Hah...</Dialog>
-          <Dialog>(She was so into it. I 
-kinda want to read it, too.)</Dialog>
+          <Dialog>Yes. It came back, but...</Dialog>
+          <Dialog>Hm？</Dialog>
+          <Dialog>I don't really want to read
+the rest.</Dialog>
+          <Dialog>Huh, why？ You were looking
+forward to it so much.</Dialog>
+          <Dialog>If I keep reading at this
+pace, it'll be over soon...</Dialog>
+          <Dialog>In the manga, the coach and
+the heroine look like
+they're going to be
+separated, too.</Dialog>
+          <Dialog>When I finish, I'll be
+saying goodbye to the manga
+too...</Dialog>
+          <Dialog>If I'd known it'd feel this
+sad, I wouldn't have
+started.</Dialog>
+          <Dialog>Sigh...</Dialog>
+          <Dialog>(She's so hooked... I kind
+of want to read it.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -5699,35 +5534,32 @@ kinda want to read it, too.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>How was the comic？ Did you 
-finish reading it？</Dialog>
+          <Dialog>How's the manga？ Did you
+keep reading？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yeah. I couldn't resist.</Dialog>
-          <Dialog>How was the ending？</Dialog>
-          <Dialog>Happy ending. The coach 
-returns from abroad and 
-comes back to the heroine.</Dialog>
-          <Dialog>I was deeply moved and I 
-wept quietly in the 
-library. Hehe.</Dialog>
-          <Dialog>The author who could think 
-up such story is great. I 
-don't think I'd be able to 
-do that.</Dialog>
-          <Dialog>Do you want to read 
-another comic？</Dialog>
-          <Dialog>If there are other good 
-ones. Do you know any？</Dialog>
-          <Dialog>Hmm, it had better be 
-something that won't make 
-you cry.</Dialog>
-          <Dialog>Then next time... Ah, but 
-don't tell anyone about 
-this. Also, don't tell 
-anyone that I cried, okay？</Dialog>
-          <Dialog>(So this is like I'm 
-holding one of your 
-weaknesses？)</Dialog>
+          <Dialog>Yes. I couldn't hold back
+after all.</Dialog>
+          <Dialog>How did it end？</Dialog>
+          <Dialog>Happy ending. The coach who
+went abroad comes back to
+the heroine...</Dialog>
+          <Dialog>I was so moved I cried
+quietly in the library.
+Hehe.</Dialog>
+          <Dialog>People who can come up with
+stories like that are
+amazing, aren't they？ I
+couldn't.</Dialog>
+          <Dialog>Want to read another manga？</Dialog>
+          <Dialog>Hmm. If there's a good one.
+Do you know any？</Dialog>
+          <Dialog>Hmm, maybe a few？</Dialog>
+          <Dialog>Then next time... Oh, but
+it's a secret from everyone,
+okay？ And that I cried too.
+Okay？</Dialog>
+          <Dialog>(In a way, I've got
+something on her now？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
