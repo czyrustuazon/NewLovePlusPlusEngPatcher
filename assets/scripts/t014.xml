@@ -51,9 +51,9 @@ See you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want to stay like this. 
-...Guess I can't. See you 
-later.</Dialog>
+          <Dialog>I want to stay like this a
+little longer... I can't,
+right？ Bye, then？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay, see you.</Dialog>
         </Dialogs>
@@ -109,8 +109,8 @@ later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Thank you for walking me 
-home. You are so kind...</Dialog>
+          <Dialog>Thank you for walking me
+home. ...You're so sweet.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay, see you.</Dialog>
         </Dialogs>
@@ -165,9 +165,8 @@ home. See you later.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Sorry that you have to 
-walk me home... 
-See you later.</Dialog>
+          <Dialog>Sorry for making you walk me
+home. ...See you？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay, bye.</Dialog>
         </Dialogs>
@@ -306,7 +305,7 @@ home. See you later.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay, see you.</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Um, bye.</Dialog>
+          <Dialog>Yeah, bye.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -472,8 +471,8 @@ home. See you later.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What's wrong？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>...Um, well. I forgot
-something.</Dialog>
+          <Dialog>...Yeah, just something. I
+forgot something.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -552,8 +551,8 @@ something.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>I'm okay now... Love you.</Dialog>
         </Dialogs>
@@ -580,10 +579,11 @@ anything else？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No, thanks... Love you.</Dialog>
+          <Dialog>Nope, thank you. ...Love
+you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -608,11 +608,11 @@ anything else？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, I've found what I 
-forgot... Love you.</Dialog>
+          <Dialog>Yeah. I think it got
+through... Love you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -637,10 +637,10 @@ forgot... Love you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Well, I got enough.</Dialog>
+          <Dialog>Yeah, that was plenty.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -665,10 +665,10 @@ anything else？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No... I think.</Dialog>
+          <Dialog>Yeah... probably.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -693,10 +693,10 @@ anything else？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now, have you forgotten 
-anything else？</Dialog>
+          <Dialog>Did you forget anything
+else？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>No, I'm okay now.</Dialog>
+          <Dialog>Yeah. I'm fine.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
