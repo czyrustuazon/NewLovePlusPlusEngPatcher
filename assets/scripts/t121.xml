@@ -52,23 +52,22 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Say, are you studying to 
-become a doctor 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Hey, are you studying to
+become a doctor,
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yes, there are some things 
-I understand, but... some 
-things I don't get. I think 
-I'll speak with Papa.</Dialog>
-          <Dialog>I see... Then I'm not going 
-to get an electric shock. 
+          <Dialog>Sort of... but nothing very
+specific. Just hearing about
+it from Papa, I guess.</Dialog>
+          <Dialog>I see... so you don't do
+electric shocks or anything.
 Haha.</Dialog>
-          <Dialog>Why an electric shock？ 
-Can I do that？</Dialog>
-          <Dialog>Eh, you can！？ Stop it！ 
-Forgive me！</Dialog>
-          <Dialog>... Hey, hey, why are you 
-so scared？</Dialog>
+          <Dialog>Why electric shocks？ I can,
+you know？</Dialog>
+          <Dialog>Wha, you can!? Stop！ Have
+mercy！</Dialog>
+          <Dialog>...H-hey, why are you
+scared？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -126,17 +125,16 @@ so scared？</Dialog>
           <Dialog>Ah...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>No, it's nothing. It felt 
-like I had something on my 
-butt...</Dialog>
-          <Dialog>You butt！？　Show me！ 
-Show me your butt, 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>No, nothing. I thought there
+was something on my butt...</Dialog>
+          <Dialog>Your butt!? Let me see！
+Show me ▲高嶺＊＊▲'s
+butt！</Dialog>
           <Dialog>...Idiot！</Dialog>
-          <Dialog>Ah！ It wasn't like that, 
-it was just the volleyball 
-sign！ 
-▲Takane＊＊▲！</Dialog>
+          <Dialog>Ah, ▲高嶺＊＊▲！ You've
+got it wrong, I just meant
+the volleyball hand
+signals！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -186,18 +184,17 @@ sign！
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I want it...</Dialog>
+          <Dialog>I wish I had it...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Huh, what is that！？　
-Is it something from 
-this era？</Dialog>
-          <Dialog>Era？ I believe you can 
-get it, yes...</Dialog>
-          <Dialog>Then, leave it to me！ 
-I'll get it for you, 
-Princess Kaguya！</Dialog>
-          <Dialog>...Okay, let's leave it 
-like that. This is getting 
+          <Dialog>Huh, what!? Something you
+can get in this day and
+age？</Dialog>
+          <Dialog>D-day and age？ I think you
+can get it, but...</Dialog>
+          <Dialog>Then leave it to me！ I'll
+get you anything, Princess
+Kaguya！</Dialog>
+          <Dialog>...Never mind, it's kind of
 scary.</Dialog>
         </Dialogs>
       </SDL2>
@@ -248,18 +245,17 @@ scary.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>Hmm... *cough*.</Dialog>
+          <Dialog>Mm... *cough*.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What's wrong？ Did you 
-catch a cold？</Dialog>
-          <Dialog>No, I just felt something 
-in my throat...</Dialog>
-          <Dialog>No way, it was the medicine 
-to become a human. You 
-really are a mermaid, 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>What's with the mermaid 
-tale？ Hehe, you think 
+          <Dialog>What's wrong, a cold？</Dialog>
+          <Dialog>No, my throat just feels a
+little off...</Dialog>
+          <Dialog>No way, ▲高嶺＊＊▲, did
+you take a potion to turn
+from a mermaid into a
+human...</Dialog>
+          <Dialog>What's that, the Little
+Mermaid？ Hehe, you think of
 such cute things.</Dialog>
         </Dialogs>
       </SDL2>
@@ -315,22 +311,21 @@ such cute things.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Do they talk about 
-matchmaking in your house, 
-▲Takane＊＊▲？</Dialog>
+          <Dialog>Does your family ever get
+arranged-marriage offers,
+▲高嶺＊＊▲？</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Eh！？ I don't think so... 
-I'm a high school student, 
-and...</Dialog>
+          <Dialog>Huh!? Nothing like that...
+I'm in high school, and
+besides...</Dialog>
           <Dialog>And？</Dialog>
-          <Dialog>I don't need to, because I 
-have you.</Dialog>
-          <Dialog>Haha, that's right！ 
-I don't want to plead to 
-your father and say 
-"Please let me date her！"</Dialog>
-          <Dialog>To Papa？ I don't think 
-that will happen...</Dialog>
+          <Dialog>I have you, so there's no
+need, right？</Dialog>
+          <Dialog>Haha, right！ Plus your dad
+would throw a tantrum, like
+"Noooo！"</Dialog>
+          <Dialog>Papa？ I don't think he'd do
+that...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -380,16 +375,16 @@ that will happen...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I wonder if there is any 
-wonderful legend about 
-Towano High School...</Dialog>
+          <Dialog>I wonder if Towano High has
+any lovely legends...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We don't need such things！</Dialog>
+          <Dialog>There are none！</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>There's no need for that！ 
-We will become the legends！</Dialog>
-          <Dialog>Um... I don't get it, but 
-that might be nice.</Dialog>
+          <Dialog>I mean, we don't need one！
+We'll become the legend！</Dialog>
+          <Dialog>Um... yes, I don't really
+get it, but that might be
+nice.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -439,18 +434,17 @@ that might be nice.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Takane</Dialog>
-          <Dialog>I played volleyball with 
-my friends during the 
-last break...</Dialog>
+          <Dialog>The other day I played
+volleyball with my friends
+during break, and...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I see, you should have 
-called me to be the coach.</Dialog>
+          <Dialog>I see, then you will call me
+Coach.</Dialog>
           <Dialog>Huh, you？</Dialog>
-          <Dialog>Don't say it like that！ 
-Call me coach, 
-▲Takane＊＊▲！</Dialog>
-          <Dialog>Wha- yes！ Coach！... 
-Like that？</Dialog>
+          <Dialog>Not 'you'！ It's Coach,
+Takane！</Dialog>
+          <Dialog>Y-yes！ Coach！ ...Like
+this？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -505,15 +499,15 @@ Like that？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yo, ▲Takane＊＊▲. 
-Yaffu！</Dialog>
+          <Dialog>Yo, ▲高嶺＊＊▲. Yaffi！</Dialog>
           <Dialog>Takane</Dialog>
-          <Dialog>Yo, yaffu？</Dialog>
-          <Dialog>Yaffu.</Dialog>
-          <Dialog>Um... Wait for a bit, okay？</Dialog>
+          <Dialog>Y-yaffi？</Dialog>
+          <Dialog>Yaffi！</Dialog>
+          <Dialog>Um... wait a moment？</Dialog>
           <Dialog>Huh？</Dialog>
-          <Dialog>Yo, like ya-ho, it's like 
-a greeting, right？ Yaffu！</Dialog>
+          <Dialog>It's a greeting, like "hey"
+or "yoo-hoo," right？
+Yaffi！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -568,14 +562,14 @@ a greeting, right？ Yaffu！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Almost.</Dialog>
+          <Dialog>......Whoa.</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>What's wrong？</Dialog>
-          <Dialog>Haha, I almost fell asleep. 
-Aren't you sleepy？</Dialog>
-          <Dialog>Hehe, did I wake you up？</Dialog>
-          <Dialog>Ba bu, I woke up♪</Dialog>
-          <Dialog>...You're still asleep... 
+          <Dialog>Haha, I almost dozed off.
+Guess I'm sleepy.</Dialog>
+          <Dialog>Hehe, is someone awake now？</Dialog>
+          <Dialog>Goo goo, I'm all awake now♪</Dialog>
+          <Dialog>...You're half asleep...
 right？</Dialog>
         </Dialogs>
       </SDL2>
@@ -628,14 +622,14 @@ right？</Dialog>
           <Dialog>Takane</Dialog>
           <Dialog>Hmm...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You look like a goddess 
-▲Takane＊＊▲...</Dialog>
-          <Dialog>Huh？ What was that...？</Dialog>
-          <Dialog>Ah... hahaha, it's 
-nothing！ I said nothing！ 
-I was kidding！</Dialog>
-          <Dialog>Huh？ Somehow, it seems 
-like you're having fun.</Dialog>
+          <Dialog>▲高嶺＊＊▲ is like a
+goddess...</Dialog>
+          <Dialog>Huh？ What was that...</Dialog>
+          <Dialog>Ah... hahaha, nothing！
+Nope, I didn't say
+anything！ ...Just kidding！</Dialog>
+          <Dialog>？　You seem to be having
+fun？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
