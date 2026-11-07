@@ -112,14 +112,15 @@ def test_mdc_dictionary_xml_errors(tmp_path):
 wb = load_module("export_workbench_gemini", TOOLS / "export_workbench_gemini.py")
 
 
-def test_workbench_sms_map_skips_bad_entries(tmp_path):
+def test_workbench_sms_entries_keep_record_order(tmp_path):
     path = tmp_path / "m.xml"
     path.write_text(
         "<Dictionary><Entry/><Entry><JapaneseText>no key</JapaneseText></Entry>"
-        "<Entry><JapaneseText hex='AB'>ok</JapaneseText></Entry></Dictionary>",
+        "<Entry><JapaneseText hex='AB'>ok</JapaneseText></Entry>"
+        "<Entry><JapaneseText hex='AB'>later</JapaneseText></Entry></Dictionary>",
         encoding="utf-8",
     )
-    assert wb.sms_map(path) == {"ab": "ok"}
+    assert wb.sms_entries(path) == [("", ""), ("", "no key"), ("ab", "ok"), ("ab", "later")]
 
 
 def test_workbench_embed_errors():

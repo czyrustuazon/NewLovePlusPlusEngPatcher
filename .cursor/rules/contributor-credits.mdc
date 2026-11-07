@@ -1,0 +1,29 @@
+---
+description: Credit a new contributor on every public surface, including the workbench screen
+alwaysApply: true
+---
+
+# Contributor credits
+
+A name in a README is not credit. When someone is added for a script, proofread, UI, or other contribution, update every surface below in the same change. Use the same name and the same one-line description (script stem included when there is one).
+
+| Surface | Where |
+|---|---|
+| Patcher README | `README.md` Credits → **EngPatcher contributors** |
+| Fansite | `../NLPP-EngPatcher-Site/src/pages/credits.astro`, in the matching section (Proofreading, QA, and so on) |
+| Workbench screen | `../nlpp-localization-workbench/kit/NLPP_Translate.html` |
+| Workbench docs | `../nlpp-localization-workbench/README.md` and `kit/README.md` |
+
+## Workbench screen
+
+`README.md` in the workbench repo does not show on the page translators have open.
+
+For a finished script, add `stem: "Name"` to `REVIEWED_BY` in `kit/NLPP_Translate.html`. That map is what draws:
+
+- the name on the script-list row
+- `proofread by Name` next to the route badge
+- **Proofread by Name. This script is finished.** under the script buttons
+
+Then bump the Scripts iframe query in `index.html` (`data-src="kit/NLPP_Translate.html?v=..."`) so a reload picks up the kit. The HTML file is large; edit it with a script, not a partial write that can truncate it.
+
+Do not stop after the two workbench READMEs. Those were the miss for Lyud on `a000`.

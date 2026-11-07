@@ -1889,9 +1889,8 @@ really suit you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I was just thinking that 
-necklace is perfect for you, 
-▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>I just thought that necklace 
+is perfect for ▲姉ヶ崎＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2063,9 +2062,8 @@ be the best on you.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Those glasses you have on... 
-don't really seem like you, 
-▲姉ヶ崎＊▲.</Dialog>
+          <Dialog>Those glasses you're wearing... 
+don't really feel like ▲姉ヶ崎＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3747,7 +3745,7 @@ about the color？</Dialog>
           <Dialog>Hair color really changes
 your whole look, huh.</Dialog>
           <Dialog>Will you help me pick？</Dialog>
-          <Dialog>Yeah, of course.</Dialog>
+          <Dialog>No, I won't.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

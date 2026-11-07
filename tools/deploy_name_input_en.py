@@ -17,6 +17,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
   7b. patch_input_call_romaji               # romaji Called matcher + suggestions
   8. patch_message_speed                   # Options 5/3/2/0 + TalkWindow 10/20/35/60 ms + voice/script cap + sample EN
+  8b. patch_mail_reply_width               # send-phrase rows lay out at 180 px, not 128
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
   9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
@@ -122,6 +123,10 @@ from patch_input_call_romaji import (  # noqa: E402
 from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
     is_fully_patched as message_speed_already,
+)
+from patch_mail_reply_width import (  # noqa: E402
+    apply_patch as apply_mail_reply_width,
+    is_patched as mail_reply_width_already,
 )
 from patch_spotpass_skip import (  # noqa: E402
     apply_patch as apply_spotpass_skip,
@@ -309,6 +314,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] message_speed already applied")
     else:
         apply_message_speed(data)
+        steps += 1
+
+    if mail_reply_width_already(data):
+        print("[skip] mail_reply_width already applied")
+    else:
+        apply_mail_reply_width(data)
         steps += 1
 
     if patch_cesa_logo_white_native_size(data):
