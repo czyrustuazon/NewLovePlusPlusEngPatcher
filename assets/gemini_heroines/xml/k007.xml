@@ -36,7 +36,7 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I see...</Dialog>
           <Dialog>Yeah, that looks good</Dialog>
-          <Dialog>This doesn't look right</Dialog>
+          <Dialog>This doesn't look right...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1328,7 +1328,7 @@ you think？</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>Perfect！</Dialog>
           <Dialog>Did you overdo it？</Dialog>
-          <Dialog>It's the matter of taste</Dialog>
+          <Dialog>It's the matter of taste？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2230,7 +2230,7 @@ outfit？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>About your outfit...？</Dialog>
           <Dialog>It suits you</Dialog>
-          <Dialog>Try something else</Dialog>
+          <Dialog>Try something else？</Dialog>
           <Dialog>I'm not really sure.</Dialog>
         </Dialogs>
       </SDL2>

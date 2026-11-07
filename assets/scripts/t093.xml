@@ -168,7 +168,7 @@ it semi-long. I'd like to
 hear your thoughts.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
-          <Dialog>It's nice</Dialog>
+          <Dialog>It's nice！</Dialog>
           <Dialog>I don't like it much</Dialog>
         </Dialogs>
       </SDL2>
@@ -2124,7 +2124,7 @@ neatly. What do you think？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
           <Dialog>I think it's okay</Dialog>
-          <Dialog>I want different clothes</Dialog>
+          <Dialog>I want different clothes...</Dialog>
           <Dialog>I don't think so</Dialog>
         </Dialogs>
       </SDL2>
