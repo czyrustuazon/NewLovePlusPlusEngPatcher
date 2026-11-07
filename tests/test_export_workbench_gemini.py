@@ -134,3 +134,12 @@ def test_stamp_bumps_the_build_every_page_compares(tmp_path: Path):
     for rel in export.PAGES:
         text = (workbench / rel).read_text(encoding="utf-8")
         assert 'name="nlpp-workbench-build" content="2"' in text
+
+
+def test_a_changed_sms_key_drops_the_old_gemini_line(tmp_path: Path):
+    (tmp_path / "maildic_n.en.xml").write_text(SMS_XML, encoding="utf-8")
+    item = {"kind": "sms", "heroine": "nene", "index": 0, "key": "0xdead", "gemini": "stale"}
+    data = {"items": [item]}
+    assert export.attach_sms(data, tmp_path) == {"sms": 0}
+    assert "gemini" not in item
+    assert data["stats"]["gemini_sms"] == 0

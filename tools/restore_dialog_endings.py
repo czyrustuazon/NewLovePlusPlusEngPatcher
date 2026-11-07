@@ -89,8 +89,6 @@ def restored_ending(jp: str, en: str) -> str | None:
         return None
     if len(re.findall(r"[A-Za-z]", body)) < 2:
         return None
-    if SFX_RE.search(body) or body.endswith(("～", "〜", "--", "-", "_", "\\n")):
-        return None
     # A comma inside quotes is part of the quote. Only a final comma can
     # become the Japanese full stop.
     stripped = en.rstrip()

@@ -2268,6 +2268,7 @@ def test_cia_extract_helpers(monkeypatch, tmp_path: Path, capsys):
     tree = patch_cia.ensure_romfs_dir(parts["romfs"], work / "romfs", reuse=None)
     assert (tree / "script" / "bin" / "script").is_dir()
     assert patch_cia.ensure_romfs_dir(parts["romfs"], work / "romfs", reuse=tree) == tree
+    monkeypatch.setattr("script_inject.CONTRIB_DBIN", tmp_path / "no_contrib")
     dbin = _dbin_root(tmp_path / "dbin")
     assert patch_cia.inject_dbin2(tree, dbin) == 0
     empty = tmp_path / "empty_dbin"
@@ -3392,3 +3393,26 @@ def test_smoke_posix_breaks(monkeypatch, tmp_path: Path):
     monkeypatch.setattr(smoke.subprocess, "Popen", Boot)
     result, _text = smoke.run(ns)
     assert result.exited is None
+
+
+def test_summary_has_no_contributor_line_without_the_folder(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(patch_cia, "CONTRIB_DBIN", tmp_path / "gone")
+    summary = patch_cia.build_patch_summary(
+        out_cia=None,
+        packed_img=None,
+        layered_img=None,
+        layeredfs_out=None,
+        romfs_overlay=None,
+        args=_ns(
+            include_gemini_nene=True,
+            no_images=True,
+            with_images=False,
+            patch_code=True,
+            skip_cia_meta=False,
+            cia_region="nope",
+        ),
+        layeredfs_only=True,
+        elapsed="1s",
+        started_at="t",
+    )
+    assert not any("Contributor dialogue" in line for line in summary)

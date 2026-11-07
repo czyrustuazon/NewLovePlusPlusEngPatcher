@@ -23,6 +23,7 @@ def test_layeredfs_inject_creates_dirs_and_skips_japanese(tmp_path: Path, monkey
     _write(eng, "script/t002.dbin2", b"manaka-script")
     _write(eng, "script/a900.dbin2", b"community")
     _write(eng, "script/a901.dbin2", b"still-jp")
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", tmp_path / "no_contrib")
     monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900"})
     monkeypatch.delenv("NLPP_INCLUDE_GEMINI_NENE", raising=False)
 
@@ -55,6 +56,7 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     _write(gem, "script/a901.dbin2", b"gemini-a901")
     _write(gem, "NLP_01/a901.dbin2", b"gemini-a901-nlp01")
 
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", tmp_path / "no_contrib")
     monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900", "k001"})
     monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"a900", "a901"})
     monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)

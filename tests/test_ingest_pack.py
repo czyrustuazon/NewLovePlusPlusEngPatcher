@@ -365,3 +365,54 @@ def test_gemini_proofread_applies_onto_the_machine_pass(tmp_path: Path, capsys):
     assert merged[1] == "Hi ●▲苗字▲"
     assert merged[2] == "stay & put"
     assert xml.read_bytes() == machine_xml.encode("utf-8")
+
+
+DROPS_TOKEN = ["○○○○○○○○", "Hello", "stay & put"]
+
+
+def _plan_edit(
+    tmp_path: Path, scripts: Path, dbin_root: Path, dialogs: list[str], *, machine: bool = False
+):
+    gemini = tmp_path / "gemini"
+    gemini.mkdir(exist_ok=True)
+    (gemini / "stems.json").write_text(
+        json.dumps({"stems": ["p001"] if machine else []}), encoding="utf-8"
+    )
+    return ingest.plan_item(
+        _pack(BASE, dialogs)["items"][0],
+        scripts_dir=scripts,
+        dbin_root=dbin_root,
+        force=False,
+        contrib_root=tmp_path / "script_contrib",
+        gemini_root=gemini,
+    )
+
+
+def test_a_pack_with_the_wrong_line_count_is_rejected(tmp_path: Path):
+    scripts, dbin_root, _xml = _layout(tmp_path)
+    plan = _plan_edit(tmp_path, scripts, dbin_root, BASE[:2])
+    assert plan.errors == ["dialog count 2 != baseline 3"]
+
+
+def test_a_token_drop_is_rejected_on_a_dbin_only_stem(tmp_path: Path):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    xml.unlink()
+    assert _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN).errors
+
+
+def test_a_token_drop_is_rejected_on_a_new_contributor_file(tmp_path: Path):
+    scripts, dbin_root, _xml = _layout(tmp_path)
+    plan = _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN, machine=True)
+    assert plan.separate and plan.errors
+    assert not (tmp_path / "script_contrib").exists()
+
+
+def test_a_token_drop_is_rejected_on_an_existing_contributor_file(tmp_path: Path):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    contrib = tmp_path / "script_contrib" / "xml" / "p001.xml"
+    contrib.parent.mkdir(parents=True)
+    contrib.write_bytes(xml.read_bytes())
+    before = contrib.read_bytes()
+    plan = _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN, machine=True)
+    assert plan.separate and plan.errors
+    assert contrib.read_bytes() == before

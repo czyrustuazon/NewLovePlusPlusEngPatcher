@@ -124,6 +124,34 @@ def test_a_contributor_review_wins_over_the_gemini_pass(tmp_path):
     assert item["jp_dialogs"] == 0
 
 
+def test_a_machine_line_under_a_contributor_file_still_needs_review():
+    item = {"kind": "script", "stem": "k007"}
+    sync.fill_script_item(
+        item,
+        vanilla=["髪", "服"],
+        working=["Rinko's hairstyle", "That's too much."],
+        gemini=["this hairstyle", "No, this is terrible"],
+        layer="contrib",
+        unreviewed=[1],
+    )
+    assert item["gemini_dialogs"][1] == "No, this is terrible"
+    assert item["unreviewed"] == [1]
+    assert item["jp_dialogs"] == 1
+
+
+def test_a_line_still_equal_to_gemini_needs_review():
+    item = {"kind": "script", "stem": "k007"}
+    sync.fill_script_item(
+        item,
+        vanilla=["髪", "服"],
+        working=["Rinko's hairstyle", "No, this is terrible"],
+        gemini=["this hairstyle", "No, this is terrible"],
+        layer="contrib",
+    )
+    assert item["jp_dialogs"] == 1
+    assert "unreviewed" not in item
+
+
 def test_two_shipped_wordings_do_not_overwrite_the_phrase_map(tmp_path):
     from patch_names import DbinEntry, SDL2Data, build_dbin2
 

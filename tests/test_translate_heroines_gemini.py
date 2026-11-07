@@ -148,3 +148,48 @@ def test_save_json_retries_a_locked_target(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(th.os, "replace", lambda s, d: (_ for _ in ()).throw(OSError(22, "x")))
     with pytest.raises(OSError):
         th.save_json(target, {}, attempts=2)
+
+
+def test_address_lines_are_spoken_lines_that_name_her_as_she():
+    pick = th.names_heroine_to_her_face
+    assert pick("I'm sure ▲Anegasaki＊▲ will look great in it.")
+    assert pick("Really？ I'm happy. ▲小早川＊▲'s special lunch, eh？")
+    assert pick("I want to go with\n▲姉ヶ崎＊▲.")
+    assert not pick("(What's up with ▲姉ヶ崎＊▲？ Is she mad at me？)")  # inner monologue
+    assert not pick("Hey, ▲小早川＊▲, you look great.")  # direct address is fine
+    assert not pick("▲小早川＊▲ is late.")  # no sign of a spoken line
+    assert pick("What about ▲小早川＊▲？")  # ▲小早川＊▲は？ = "And you?"
+    assert not pick("What about you, ▲小早川＊▲？")
+    assert not pick("(Right, what about ▲高嶺＊＊▲...？)")  # thinking of someone else
+
+
+def test_fix_address_lets_the_heroine_name_go(tmp_path: Path, monkeypatch, capsys):
+    jp = ["▲小早川＊▲、ショートが一番いいよ。", "そうなんだ。"]
+    en = ["I think ▲小早川＊▲ looks best with short hair.", "I see."]
+    vanilla, out = _setup(tmp_path, jp, en)
+    seen: dict = {}
+
+    def fake_translate(client, model, items, **kwargs):
+        seen.update(kwargs)
+        return [
+            th.TranslateResult(
+                it.index, it.source, "You look best with short hair." if it.need else it.source
+            )
+            for it in items
+        ]
+
+    monkeypatch.setattr(th, "translate_prepared", fake_translate)
+    monkeypatch.setattr(th, "make_gemini_client", lambda key: None)
+    monkeypatch.setattr(th, "load_gemini_api_key", lambda key=None: "k")
+    args = th.build_parser().parse_args(
+        ["fix-address", "--out", str(out), "--vanilla-script", str(vanilla)]
+    )
+    assert args.func(args) == 0
+    assert seen["optional_markers"] == th.HEROINE_MARKERS
+    assert 'English says "you"' in seen["context"]
+    _k, _u, entries = th.xml_to_entries(out / "xml" / "k093.xml")
+    assert entries[0].sdl2.dialogs == ["You look best with short hair.", "I see."]
+    assert "spoken lines that name the heroine in the third person: 1 in 1 scripts" in (
+        capsys.readouterr().out
+    )
+    assert json.loads((out / "address_rejected.json").read_text(encoding="utf-8")) == []

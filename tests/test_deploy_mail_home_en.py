@@ -2,30 +2,38 @@
 
 from __future__ import annotations
 
+import struct
+
+import pytest
+
 from conftest import TOOLS, load_module
 
 deploy = load_module("deploy_mail_home_en", TOOLS / "deploy_mail_home_en.py")
 
 
-def _reply_layout(width: float, x: float) -> bytes:
-    import struct
-
-    header_size = 0x14
+def _pane(name: bytes, width: float, x: float) -> bytes:
     sec = bytearray(80)
     sec[0:4] = b"pan1"
     struct.pack_into("<I", sec, 4, len(sec))
-    sec[12:27] = b"Tex_Reply_Text"
+    sec[12 : 12 + len(name)] = name
     struct.pack_into("<f", sec, 0x24, x)
     struct.pack_into("<f", sec, 68, width)
-    total = header_size + len(sec)
+    return bytes(sec)
+
+
+def _clyt(*sections: bytes) -> bytes:
+    header_size = 0x14
+    total = header_size + sum(len(sec) for sec in sections)
     head = bytearray(header_size)
-    struct.pack_into("<4sHHIII", head, 0, b"CLYT", 0xFEFF, header_size, 0, total, 1)
-    return bytes(head) + bytes(sec)
+    struct.pack_into("<4sHHIII", head, 0, b"CLYT", 0xFEFF, header_size, 0, total, len(sections))
+    return bytes(head) + b"".join(sections)
+
+
+def _reply_layout(width: float, x: float) -> bytes:
+    return _clyt(_pane(b"Tex_Reply_Text", width, x))
 
 
 def test_reply_text_pane_uses_the_rest_of_the_pill():
-    import struct
-
     widened = deploy.widen_reply_text(_reply_layout(146.0, -16.0))
     x, w = struct.unpack_from("<ff", widened, 0x14 + 0x24)[0], struct.unpack_from(
         "<f", widened, 0x14 + 68
@@ -106,3 +114,31 @@ def test_gap_pad_and_exact_empty_blocks():
     hit = next(n for n in range(base, base + 10) if deploy.compress_exact_empty_blocks(blob, n))
     assert zlib.decompress(deploy.compress_exact_empty_blocks(blob, hit)) == blob
     assert deploy.compress_exact_empty_blocks(blob, 4) is None
+
+
+def test_only_the_reply_pane_moves():
+    other_tag = b"txl1" + struct.pack("<I", 8)
+    other_pane = _pane(b"Tex_Other", 146.0, -16.0)
+    reply = _pane(b"Tex_Reply_Text", 146.0, -16.0)
+    original = _clyt(other_tag, other_pane, reply)
+    widened = deploy.widen_reply_text(original)
+    start = 0x14 + len(other_tag) + len(other_pane)
+    assert widened[:start] == original[:start]
+    assert struct.unpack_from("<f", widened, start + 68)[0] == deploy.REPLY_W
+
+
+@pytest.mark.parametrize(
+    ("layout", "message"),
+    [
+        (b"FLYT" + bytes(0x20), "not CLYT"),
+        (_reply_layout(100.0, -16.0), "geometry"),
+        (_clyt(_pane(b"Tex_Other", 146.0, -16.0)), "found 0 times"),
+        (
+            _clyt(_pane(b"Tex_Reply_Text", 146.0, -16.0), _pane(b"Tex_Reply_Text", 146.0, -16.0)),
+            "found 2 times",
+        ),
+    ],
+)
+def test_an_unexpected_layout_stops_the_deploy(layout, message):
+    with pytest.raises(SystemExit, match=message):
+        deploy.widen_reply_text(layout)

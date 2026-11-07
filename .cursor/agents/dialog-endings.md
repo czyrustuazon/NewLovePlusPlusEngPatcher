@@ -47,7 +47,12 @@ python tools/restore_dialog_endings.py --apply
 python tools/sync_workbench.py
 ```
 
-5. Say which lines changed and the new workbench build number. Do not commit
+5. If a changed line was the Gemini machine pass, add its dialog index to
+   `assets/script_contrib/unreviewed.json` under that stem. An agent rewrite
+   is not a proofread. Skip a stem listed in
+   `assets/gemini_heroines/proofread.json`. See `.cursor/agents/script-review.md`.
+
+6. Say which lines changed and the new workbench build number. Do not commit
    either repo unless the user asks. Do not deploy LayeredFS or launch Azahar
    unless the user asks.
 
