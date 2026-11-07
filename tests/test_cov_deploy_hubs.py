@@ -1884,6 +1884,7 @@ _ALREADY = (
     "chunk_walk_already",
     "call_romaji_already",
     "message_speed_already",
+    "mail_reply_width_already",
     "spotpass_skip_already",
     "spotpass_embed_already",
     "password_uribo_already",
@@ -1915,6 +1916,7 @@ _APPLIES = (
     "apply_chunk_walk",
     "apply_call_romaji",
     "apply_message_speed",
+    "apply_mail_reply_width",
     "apply_spotpass_skip",
     "apply_spotpass_embed",
     "apply_info_menu",
@@ -1986,7 +1988,7 @@ def test_name_input_stack_branches(monkeypatch):
     _stub_stack(monkeypatch, already=True)
     assert name_input.apply_name_input_stack(_name_buf(True)) == 2
     _stub_stack(monkeypatch, already=False)
-    assert name_input.apply_name_input_stack(_name_buf(False)) == 33
+    assert name_input.apply_name_input_stack(_name_buf(False)) == 34
     _stub_stack(monkeypatch, already=False, romaji_ok=False)
     with pytest.raises(SystemExit, match="romaji patch failed"):
         name_input.apply_name_input_stack(_name_buf(False))

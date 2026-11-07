@@ -17,11 +17,11 @@ Drop in a **decrypted** dump (`.cia` or `.3ds` / `.cci`) and it will:
 1. **Verify** the dump (SHA-1) before touching anything  
 2. **Wipe `out/`, `release/`, and `cache/`** completely, then recreate them empty. That deletes the previous CIA, logs, `out/extdata_backup/`, gold bake, TRB overlay, name-input `code.bin`, the vanilla RomFS extract, and the PNG pack cache. The A/B Azahar copies in `ab_test/azahar_instances/` are left in place. `python src/patch_cia.py` on its own does not do this wipe  
 3. **Reject encrypted dumps** — decrypt yourself first (GodMode9, Batch CIA 3DS Decryptor, etc.)  
-4. **Inject English scripts** — layered: contributor reviews in `assets/script_contrib/` (always, when present), Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. Drop asks after the gold-bake question whether to also include the optional Gemini machine-pass Nene route (`assets/gemini_heroines/`; unreviewed; `NLPP_INCLUDE_GEMINI_NENE=1`). A contributor file for a stem wins over that Gemini copy.  
+4. **Inject English scripts** — layered: contributor reviews in `assets/script_contrib/` (always, when present), Manaka `t*` + common `p*` from `rebuild_dbin2/`, plus community ~28% Rinko/Nene stems (ex-NLPPATCH, also in `rebuild_dbin2/script/`; see `assets/nlppatch/`) via `src/script_inject.py`. After the gold-bake question, Drop asks **Include Gemini Nene, Rinko, and SMS?** The default is no, which keeps the community Nene and Rinko layer and Japanese phone messages. Answering yes sets `NLPP_INCLUDE_GEMINI_NENE=1` and injects the unreviewed machine pass for both routes, plus SMS, from `assets/gemini_heroines/`. A contributor file for a stem wins over that Gemini copy.  
 
 5. **English heroine names** — rewrite dialog tokens (`▲高嶺＊＊▲` → `Takane`, etc.) and patch UI name tables in `textresource_resident_jpn.trb` / `img.bin`  
 6. **Inject Profile name-input `code.bin`** from `release/name_input_code.bin` when present (romaji keyboard, Called-name list, Message Speed, US date order, AM/PM on the home clock, title-loop guard, My Camera Restore Default, Communication Settings StreetPass). Older single-pane `--patch-code` is still available and is **not** this stack  
-7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + English mini-game screens + CESA + SMS/day-counter)  
+7. **Inject gold UI** from `release/bake_img.bin` when present (PNG pack + menu chrome + English mini-game screens + CESA + day-counter). Phone-message bodies in that bake stay Japanese. The Gemini yes above splices English SMS into a copy of `img.bin` instead of replacing the published bake.  
 8. **Apply TRB overlay** from `release/romfs_overlay/` when present  
 9. **Rebuild** a decrypted **CIA** for FBI / Azahar / Citra (even when the input was `.3ds`) at `out/NewLovePlusPlus-EN.cia`. A Luma LayeredFS folder is **not** built (see [LayeredFS does not work on hardware](#layeredfs-does-not-work-on-hardware))
 10. **Clean** `out/` to the CIA + `log.txt` (SpotPass Watcher #28 is baked into `code.bin`)
@@ -106,14 +106,9 @@ Full guide: [`ab_test/README.md`](ab_test/README.md). Paths: an Azahar checkout 
 
 ### Companion site progress bar
 
-Script-text % on [newloveplus.loc.moe](https://newloveplus.loc.moe) is computed by
-`src/report_progress.py` (EN TRB vs vanilla JP). It auto-POSTs after a TRB
-`rebuild`, after a successful Drop CIA run, and from **nlpp-gold-maker** CI — when
-`NLPP_PROGRESS_ENDPOINT` + `NLPP_PROGRESS_TOKEN` are set (local `.env` or
-nlpp-gold-maker Actions secrets). Graphics/menus stay manual in the site admin —
-use **564** (chrome) or **1765** (all mapped UI masters) from the table above.
-See [`infra/README.md`](infra/README.md). Manual: `.\ab_test\make.ps1 progress`.
-Recount: `python tools/export_progress_metrics.py` (`images_ui.ui_png_masters_total` is the chrome subset).
+The bars on [newloveplus.loc.moe](https://newloveplus.loc.moe) are the committed file `src/data/progress.json` in the site repo. Recount here with `python tools/export_progress_metrics.py`, then run `node scripts/import-progress.mjs` in the site repo and commit the result. The site does not read a live progress endpoint, and the old admin panel is gone. `src/report_progress.py` and `.\ab_test\make.ps1 progress` still know the old POST; that route is no longer on the site.
+
+Use **564** (chrome) or **1765** (all mapped UI masters) from the table above. `images_ui.ui_png_masters_total` in the export is the chrome subset.
 
 ### Gold bake (every Drop CIA)
 
@@ -361,10 +356,11 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
 | **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **Lieutenant Dan** | Proofreading |
+| **Lyud** | Proofread Nene's first day at Dixie's (`a000`) |
 | **i need help here...** | Knowledge sharing |
 | **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
 
-**Nene / Rinko coverage (2026-10-23):** the reviewed community layer is still **48 / 174** scripts each (**27.6%**), the early-story NLPPATCH files. A Gemini machine pass now covers every other script that has dialogue, **146 / 174 (83.9%)** per route. The other **28** files on each route are empty retail stubs with no lines. The fansite dialogue bar draws those **56** files as their own segment, so the bar fills to **100%**. **522 / 578 (90.3%)** is the count of files that actually contain lines. Spoken text plus phone messages is **2,344 / 2,400 (97.7%)** entries that contain text. The same **56** empty script files are the stone segment on that bar, so it fills to **100%** as well. Nene’s pass, including post-game (`a900`, `a912`, `a970`, `a999`, and the other contentful `a9*`), is optional at Drop time. Rinko’s pass, including post-game (`k912`, `k970`, `k999`, and the rest), is in `assets/gemini_heroines/xml/` and is not injected yet. Phone messages for all three heroines are translated in `assets/gemini_heroines/sms/` (**1822 / 1822**, unreviewed) and stay out of the gold bake until `--include-sms`.
+**Nene / Rinko coverage (2026-10-23):** the reviewed community layer is still **48 / 174** scripts each (**27.6%**), the early-story NLPPATCH files. A Gemini machine pass now covers every other script that has dialogue, **146 / 174 (83.9%)** per route. The other **28** files on each route are empty retail stubs with no lines. The fansite dialogue bar draws those **56** files as their own segment, so the bar fills to **100%**. **522 / 578 (90.3%)** is the count of files that actually contain lines. Spoken text plus phone messages is **2,344 / 2,400 (97.7%)** entries that contain text. The same **56** empty script files are the stone segment on that bar, so it fills to **100%** as well. Phone messages for all three heroines are translated in `assets/gemini_heroines/sms/` (**1822 / 1822**, unreviewed). Drop asks **Include Gemini Nene, Rinko, and SMS?** The default is no, so a default CIA keeps the community layer and Japanese SMS. Answering yes injects both machine passes, including post-game (`a900`, `a912`, `a970`, `a999`, `k912`, `k970`, `k999`, and the rest), and splices those messages into a copy of `img.bin`. The published gold bake stays Japanese. `--include-sms` is the older maintainer path.
 
 **System text (2026-10-23):** `textresource_jpn.trb` is **25,333 / 25,346 (99.9%)**. The last **13** slots stay Japanese on purpose. They are single kanji a study quiz asks you to read (`胤`, `欧`, `戟`, `原`, `哉`, `諏`, `成`, `替`, `鉄`, `乍`, `蜂`, `憂`, `梨`). An English quiz prompt that quotes a Japanese word keeps that quotation. The player-name token, the middle dot `・`, and the long-vowel mark `ー` are already English, so the counter skips them.
 
@@ -451,7 +447,7 @@ tools/
   nlpp-tools/                vendored img.bin helpers (kiwiz/nlpp-tools)
   cia/                       3dstool / ctrtool / makerom / seeddb (see CREDITS.md)
 rebuild_dbin2/               finished English .dbin2 scripts
-assets/gemini_heroines/      optional Gemini Nene machine-pass XML + dbin2 (Drop asks; NLPP_INCLUDE_GEMINI_NENE=1)
+assets/gemini_heroines/      optional Gemini Nene, Rinko, and SMS (Drop asks; default no; NLPP_INCLUDE_GEMINI_NENE=1)
 release/                     gold bake + TRB overlay; Drop CIA deletes this folder before each build (binaries gitignored; docs/technical.md §15.5)
 cache/                       PNG scratch + vanilla_from_rom (gitignored; Drop CIA deletes this folder on every from-scratch build)
 out/                         Drop CIA deletes this folder before each build; the run then writes the CIA and log.txt (gitignored)
@@ -467,17 +463,16 @@ A browser workbench so translators can help **without Python**: [czyrustuazon/nl
 
 ### For volunteers
 
-1. Clone / unzip the workbench folder (keep `kit/NLPP_Translate_Images/media/` next to its `index.html`).
+1. Clone / unzip the workbench folder.
 2. Open **`index.html`** → tabs:
-   - **Scripts** — leftover dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`** (not Manaka-only)
-   - **Strings** — leftover **SMS** (all three heroines) + **TRB** / menu strings still JP
-   - **Images** — **full UI PNG audit** (**1765** unique masters in **101 / 101** `IMAGE_MAP` folders: softkeys, menus, headers, mail, date-edit, camera, title, popups, …). Intro111/203/304 are sparse, not empty.
-3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json`, `nlpp-strings-….json`, or `nlpp-images-….json` with optional `png_b64`).
+   - **Scripts** — dialogue for **Nene `a*`**, **Rinko `k*`**, **Manaka `t*`**, **common `p*`**. The Japanese line is vanilla. The edit box is the text the patcher currently ships (Gemini for Nene/Rinko stems that have a machine pass; Manaka, common, and community English otherwise).
+   - **Strings** — **SMS** for all three heroines, plus any TRB line whose exact Japanese is not already in `translations.json`.
+3. Edit → **Save progress** → download JSON (`nlpp-contrib-….json` or `nlpp-strings-….json`).
 4. Post the JSON in Discord **[#translated-work-to-review](https://discord.com/channels/1536915629787840572/1545180296343715891)**.
 
-Keep nickname tokens (`▲高嶺＊＊▲`), `※`, and `▼` unchanged. Translate `●`: it is the player's "I" (the game shows 俺 or 僕 there), so write I / me / my. Image replacements must match original width × height.
+Keep nickname tokens (`▲高嶺＊＊▲`), `※`, and `▼` unchanged. Translate `●`: it is the player's "I" (the game shows 俺 or 僕 there), so write I / me / my.
 
-**What’s in each tab (sources):** see **`docs/technical.md` §20.2** — Scripts = `assets/scripts/` XML + dump/NLPPATCH `.dbin2` (JP when dump is Japanese); Strings = `img.bin` SMS pkg 92 + TRB leftovers; Images = all `IMAGE_MAP` PNGs under `assets/images/` (prefer `.check` / `_eng`). Former `scripts_deferred/` ML/EN stash removed. Volunteer-facing summary: workbench `kit/README.md`. Fansite copy prompts: `docs/VOLUNTEER_WORKBENCH_PAGE_PROMPT.md` (contribute pages), `docs/FANSITE_PROGRESS_NUMBERS_PROMPT.md` (progress numbers).
+**What’s in each tab (sources):** see **`docs/technical.md` §20.2**. Rebuild the kits with `python tools/sync_workbench.py`. The images tab was removed; UI masters stay in `assets/images/`.
 
 ### For maintainers
 
@@ -492,7 +487,7 @@ The first command only reports. `--apply` writes a line only when the volunteer 
 
 Writes land in `assets/scripts/<stem>.xml` and the matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated is left alone: the review is written under `assets/script_contrib/` instead, and Drop CIA includes that file on its own, ahead of the Gemini machine pass. A stem that exists only as `.dbin2` also gains an XML file. Review the diff, then run Drop CIA. This command does not bake.
 
-Strings packs, image packs, and the HTML templates under `tools/localization_workbench/` are not built yet. Pack schema and the rest of the rules: **`docs/technical.md` §20**.
+Strings packs are not applied by `ingest_pack.py`. The HTML templates under `tools/localization_workbench/` are not built yet. Pack schema and the rest of the rules: **`docs/technical.md` §20**.
 
 
 

@@ -178,6 +178,31 @@ def test_token_drop_and_locked_line_and_mark_drop_reject(tmp_path: Path, capsys)
     assert "nothing written" in out
 
 
+def test_a_line_the_patcher_already_ships_keeps_its_tokens(tmp_path: Path, capsys):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    shipped = ["○○○○○○○○", "Hello ▲Anegasaki＊▲", "stay & put"]
+    ingest._write_xml_dialogs(xml, shipped)
+    key, unknown, entries = rebuild.xml_to_entries(xml)
+    dbin = dbin_root / "script" / "p001.dbin2"
+    dbin.write_bytes(rebuild.build_dbin2(key, unknown, entries))
+    before = dbin.read_bytes()
+    pack = _write_pack(tmp_path, _pack(BASE, shipped))
+    code = ingest.main(
+        [str(pack), "--apply", "--scripts", str(scripts), "--dbin-root", str(dbin_root)]
+    )
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "token" not in out
+    assert dbin.read_bytes() == before
+
+    edited = ["○○○○○○○○", "Hello", "stay & put"]
+    pack = _write_pack(tmp_path, _pack(BASE, edited))
+    assert ingest.main(
+        [str(pack), "--apply", "--scripts", str(scripts), "--dbin-root", str(dbin_root)]
+    ) == 1
+    assert dbin.read_bytes() == before
+
+
 def test_pronoun_translated_away_applies_without_a_warning(tmp_path: Path, capsys):
     scripts, dbin_root, _xml = _layout(tmp_path)
     dialogs = ["○○○○○○○○", "Hello ▲苗字▲", "stay & put"]

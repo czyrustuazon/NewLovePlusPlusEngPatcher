@@ -1,0 +1,43 @@
+---
+description: How to judge Rinko (k-script) lines against Gemini and a contributor pack
+alwaysApply: true
+---
+
+# Rinko dialogue audits
+
+When a contributor line and the Gemini line disagree, show that line as:
+
+```
+Gemini:
+Contributor:
+Verdict:
+```
+
+Rinko is hardcore and independent, with a tsundere side. She sometimes calls herself Rinko. That third person is her voice. Flag it when one line mixes "I" with "her." Do not make her say "feminine." Talk wraps at 30 columns, choice buttons at 28. `●` is the player's I / me / my (a kept `●` draws 俺 or 僕). Use a straight apostrophe (`'`). The dialog font has no curly `’`.
+
+k007 settled lines:
+
+- 31 and 73: keep the contributor's "Rinko's hairstyle" / "Rinko's new hairstyle."
+- 45: contributor "What do I think?" (`感想？`).
+- 47: contributor "That's not like you." (`らしくない`). Gemini's "It's not very good" drops it.
+- 49: "Do I look like a girl?" (`女の子っぽい？`). Not "feminine," and not "cute" — `可愛い` is the boy's yes button. Line 52 "You're the cutest" oversells `可愛いよ`.
+- 59: contributor "Rinko's charm has gone up another notch."
+- 109: "Hey, hey. Rinko tried changing her look." The contributor mixes "Rinko," "I," and "her."
+- 120, 127, 134: contributor "It's a bit much" (`さすがに引く`).
+- 21: "I see..." (`そうみたいだな`, same as line 3). "It seems that way" agrees with a claim she did not make.
+- 132: "W-well..." (`そ、そうだな`). Keep her question "doesn't something seem a bit off?" Gemini rewrote that question. "Y-yeah, I guess so" picks a button, then the other button is "It's the best!!"
+- 138: "So I figured I'd change Rinko's image." `ようかなって思って` is a decision she has already made. Both sides ask "it has changed, right?"
+- 142: keep "I tried going for a more mature look… Do you think it suits me?"
+- 146: contributor "It doesn't really suit you."
+- 149: she wore the understated clothes because she thought he would like them. Lowercase "so" and shorten it (about 99 columns).
+
+Gemini half of k007 that the pack copied through, still wrong:
+
+- 160 `キャラが違うよ`: "That's not your character." Gemini says "This doesn't suit you."
+- 189 `それなりだと思うぞ`: "It's decent." Gemini says "Nothing is different..."
+- 209 `ヤバイ`: "That's too much." Gemini says "this is terrible."
+- 216 `少し落ち着け`: "Tone it down." Gemini says "It's not quite good."
+- 261 and 289 `違う服も似合うかも`: "A different outfit might suit you too." Gemini says "This doesn't suit you."
+- 283 `●に言われても`: "Why ask me?" Gemini says "It doesn't matter."
+- 306 `どこかおかしくない？`: "Isn't something off?" Gemini says "Do I look different today?" The button `別に変じゃない` only answers the Japanese.
+- 319 `そうかもなーとは思ってた`: "I figured you might not like it." Gemini says "I thought you would, though."

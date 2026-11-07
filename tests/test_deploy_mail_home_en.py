@@ -7,6 +7,38 @@ from conftest import TOOLS, load_module
 deploy = load_module("deploy_mail_home_en", TOOLS / "deploy_mail_home_en.py")
 
 
+def _reply_layout(width: float, x: float) -> bytes:
+    import struct
+
+    header_size = 0x14
+    sec = bytearray(80)
+    sec[0:4] = b"pan1"
+    struct.pack_into("<I", sec, 4, len(sec))
+    sec[12:27] = b"Tex_Reply_Text"
+    struct.pack_into("<f", sec, 0x24, x)
+    struct.pack_into("<f", sec, 68, width)
+    total = header_size + len(sec)
+    head = bytearray(header_size)
+    struct.pack_into("<4sHHIII", head, 0, b"CLYT", 0xFEFF, header_size, 0, total, 1)
+    return bytes(head) + bytes(sec)
+
+
+def test_reply_text_pane_uses_the_rest_of_the_pill():
+    import struct
+
+    widened = deploy.widen_reply_text(_reply_layout(146.0, -16.0))
+    x, w = struct.unpack_from("<ff", widened, 0x14 + 0x24)[0], struct.unpack_from(
+        "<f", widened, 0x14 + 68
+    )[0]
+    assert w == deploy.REPLY_W
+    assert x == deploy.REPLY_X
+    # left edge stays put, right edge stays inside the 200 px pill
+    assert abs((x - w / 2) - (-89.0)) < 0.01
+    assert (x + w / 2) < 100
+    again = deploy.widen_reply_text(widened)
+    assert again == widened
+
+
 def test_mail_home_play_buttons():
     assert deploy.BUTTON_PKG == 5207
     paths = [p for p, _en in deploy.BUTTON_LABELS]

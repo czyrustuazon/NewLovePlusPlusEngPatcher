@@ -1,6 +1,6 @@
 {
   "description": "Gemini machine-pass Nene a* and Rinko k* scripts (unreviewed). Optional Drop CIA inject via NLPP_INCLUDE_GEMINI_NENE=1, together with SMS.",
-  "count": 251,
+  "count": 252,
   "stems": [
     "a000",
     "a001",
@@ -139,6 +139,7 @@
     "a900",
     "a912",
     "a913",
+    "a936",
     "a938",
     "a940",
     "a942",
