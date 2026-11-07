@@ -1341,7 +1341,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5.2`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5.3`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1466,7 +1466,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5.2`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **7**.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5.3`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **8**.
 
 #### What git contains vs what a patched CIA needs
 
@@ -2097,7 +2097,8 @@ The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) 
 | `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
 | `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then the Called typed-name fallback after it |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
-| `@0x0068FF50` | My Camera Restore Default softkey (`patch_camera_restore_default.py`, 0x58). `0x0068FFA8`–`0x0068FFCC` is the last free run in the page |
+| `@0x0068FEE4` | Talk-window space break (`patch_dialog_break.py`, 0x38). Leaves `0x0068FF1C`–`0x0068FF50` |
+| `@0x0068FF50` | My Camera Restore Default softkey (`patch_camera_restore_default.py`, 0x58). `0x0068FFA8`–`0x0068FFCC` is free before the Communication Settings header |
 | `@0x000EA968` | My Camera Restore Default confirm + reset (`patch_camera_defaults_reset.py`, 0xF4, owns to `0x000EAA60`), in the dead body of `FUN_000ea964` (entry stubbed by `patch_spotpass_skip`) |
 | `@0x000EAA60` | Main Menu Eng Patch badge tap + press tracking (`patch_title_engpatch_info.py`, 0xFC), rest of the same dead body to `0x000EAB80` |
 | `@0x0063253C` | Eng Patch INFORMATION box open/poll, hub-enter clear, hub touch-down guard (`patch_title_engpatch_info.py`, 0xC0), dead body of `CecCheckEula` (entry stubbed by `patch_eula_agreed`) to `0x00632604` |
@@ -2809,7 +2810,9 @@ The talk window and the choice buttons wrap their text in `FUN_005bf750` (file `
 
 **Choice detection.** An SDL2 command whose `value0` is `0x0001NNNN` with an empty value list names dialog NNNN as a choice option (k142 `まあいいか` / `自分でやれって` are `0x10007` / `0x10008`). Talk commands (`0x24000`/`0x24002`) carry the index as `N << 16` instead. On vanilla this finds ~13,800 options, almost all one line of ≤28 columns; the few longer hits are debug strings (`【DEBUG】…`, `※未使用`).
 
-**Fix:** `src/dialog_wrap.py`, called from `script_inject._copy_script` for every shipped `.dbin2` (CIA and LayeredFS). A dialog the game would cut (a line past its width) is re-flowed at spaces: 28 for choice options, 30 for talk. Name marks count at a budget (`NAME_COLUMNS` 8; month 9, day 4, weekday 9, time 8; other marks 16), so a name longer than 8 can still be cut. Hand hyphenation (`spring- \ntime`) joins back to `spring-time`. Dialogs with kana or kanji are left to the game's kinsoku. Unchanged files keep their bytes; source XML / `rebuild_dbin2` are not edited.
+**Fix:** `src/dialog_wrap.py`, called from `script_inject._copy_script` for every shipped `.dbin2` (CIA and LayeredFS). A dialog the game would cut (a line past its width) is re-flowed at spaces: 28 for choice options, 30 for talk. Name marks count at a budget (`NAME_COLUMNS` 10, Kobayakawa; month 9, day 4, weekday 9, time 8; other marks 16). Hand hyphenation (`spring- \ntime`) joins back to `spring-time`. Dialogs with kana or kanji are left to the game's kinsoku. Unchanged files keep their bytes; source XML / `rebuild_dbin2` are not edited.
+
+A nickname longer than that budget, or a line this pre-wrap did not see, still reaches `FUN_005bf750`. `src/patch_dialog_break.py` (in `deploy_name_input_en.py`) makes the overflow walk back to the previous ASCII space and break there. Japanese lines have no ASCII space, so they keep kinsoku. The cave is `0x0068FEE4`, in the RX pad after the strcat-raw cave (`0x0068FDB4`–`0x0068FEE4`) and before the camera-defaults cave.
 
 Checked on the Gemini-on A deploy: 434,213 talk lines and 12,685 choice buttons, zero words cut.
 
@@ -2884,5 +2887,5 @@ LayeredFS copies of the main TRB and config (Azahar A, Azahar B, and `%AppData%\
 
 ---
 
-*Last updated 2026-11-06 — generated-choice needles `▲生成選択肢Ｎ▲` stay Japanese (§24.10). 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.2` / CIA title version 7. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
+*Last updated 2026-11-06 — generated-choice needles `▲生成選択肢Ｎ▲` stay Japanese (§24.10). 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.3` / CIA title version 8. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
 
