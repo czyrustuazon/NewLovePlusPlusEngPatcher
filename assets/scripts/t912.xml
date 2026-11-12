@@ -1610,13 +1610,14 @@ different.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Skinship at any time</Dialog>
-          <Dialog>Face-to-face (date,normal)</Dialog>
+          <Dialog>Anytime Skinship</Dialog>
+          <Dialog>Face-to-face (date, normal)</Dialog>
           <Dialog>Sitting (face-to-face)</Dialog>
           <Dialog>Side by side (moving)</Dialog>
           <Dialog>Side by side (sitting)</Dialog>
-          <Dialog>One more time</Dialog>
-          <Dialog>Stop</Dialog>
+          <Dialog>Restart from the beginning</Dialog>
+          <Dialog>Carry over and try again</Dialog>
+          <Dialog>Quit</Dialog>
           <Dialog>Next</Dialog>
         </Dialogs>
       </SDL2>
