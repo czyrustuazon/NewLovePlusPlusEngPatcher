@@ -124,13 +124,14 @@ recommended by the Library
 Committee, for the whole 
 school to see.</Dialog>
           <Dialog>So... can I read any book？</Dialog>
-          <Dialog>Well, you... All right, 
-since this is important, 
-make sure it's something 
-that makes sense for you 
-to read！</Dialog>
-          <Dialog>Something that I want to 
-read...</Dialog>
+          <Dialog>Well, you... All right,
+since you're at it, make it
+something that means
+something for you kids to
+read right now！</Dialog>
+          <Dialog>Something that means
+something for us to read
+now...</Dialog>
           <Dialog>"Ah, back in my youth！"　
 Look for a book that can 
 make you say something like 
@@ -138,8 +139,9 @@ that. You can do it！</Dialog>
           <Dialog>Hah...</Dialog>
           <Dialog>(A book recommended by the 
 Library Committee, huh...)</Dialog>
-          <Dialog>(I'll talk to you later 
-▲彼女＊＊▲...)</Dialog>
+          <Dialog>(Maybe I'll ask
+▲彼女＊＊▲ about
+it later...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -181,8 +183,7 @@ I'll continue next time</Dialog>
 until the end？)</Dialog>
           <Dialog>I really finished reading 
 it</Dialog>
-          <Dialog>Actually, I'm still ways 
-off...</Dialog>
+          <Dialog>Actually, not yet...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
