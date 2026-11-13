@@ -64,24 +64,24 @@ about a prize！</Dialog>
           <Dialog>Come to think of it, I 
 think I applied. Could it 
 be another trip to Atami？</Dialog>
-          <Dialog>A field trip invitation for 
-couples to a 2 days 1 night 
-stay at the Nikko Kinugawa 
-hot springs.</Dialog>
-          <Dialog>Visit with a friend to 
-relive the memories of your 
-student days and relieve 
-stress in our hot springs 
-and theme park！</Dialog>
+          <Dialog>A grown-up school trip:
+Nikko and Kinugawa Onsen,
+two days and one night. For
+two...</Dialog>
+          <Dialog>"Go back to your school days
+with a friend and blow off
+steam at a theme park and
+hot springs！"</Dialog>
           <Dialog>I wonder if high school 
 students are allowed to 
 go...</Dialog>
           <Dialog>Seems there are no age 
 restrictions so it should 
 be fine.</Dialog>
-          <Dialog>(2 days and 1 night in
-Kinugawa. Should I go with 
-▲彼女＊＊▲？)</Dialog>
+          <Dialog>(Two days, one night in
+Kinugawa... Could I go with
+▲彼女＊＊▲
+again...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -150,15 +150,16 @@ Kinugawa. Should I go with
           <Dialog>Oh, it seems I won a prize！</Dialog>
           <Dialog>Could this be...</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>A field trip invitation for 
-couples to a 2 days 1 night 
-stay at the Nikko Kinugawa 
-hot springs.</Dialog>
-          <Dialog>I really won again...  
-Maybe I'm super lucky？</Dialog>
-          <Dialog>(Should I go with her？ 
-Should I try inviting you 
-▲彼女＊＊▲？)</Dialog>
+          <Dialog>A grown-up school trip:
+Nikko and Kinugawa Onsen,
+two days and one night. For
+two...</Dialog>
+          <Dialog>I knew it... I won again. Am
+I super lucky or what？</Dialog>
+          <Dialog>(Could I go with
+▲彼女＊＊▲
+again... What should I
+do...)</Dialog>
           <Dialog>I want to go！</Dialog>
           <Dialog>I guess I'll go next time</Dialog>
           <Dialog>I can't miss this chance, 
@@ -240,9 +241,9 @@ don't make her wait.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Announcement</Dialog>
-          <Dialog>We apologise for the delay. 
-This bus goes to Nishisando 
-via the Chuzenji springs.</Dialog>
+          <Dialog>Thank you for waiting. This
+bus goes via Nishi-Sando and
+Chuzenji Onsen...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -262,8 +263,7 @@ via the Chuzenji springs.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Announcement</Dialog>
-          <Dialog>This is the 
-Kagennotakiiriguchi station.</Dialog>
+          <Dialog>Kegon Falls Entrance.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -283,8 +283,7 @@ Kagennotakiiriguchi station.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Announcement</Dialog>
-          <Dialog>This is the Chuzenji Onsen 
-station.</Dialog>
+          <Dialog>Chuzenji Onsen.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -304,7 +303,7 @@ station.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Announcement</Dialog>
-          <Dialog>This is the Shinkyo station.</Dialog>
+          <Dialog>Shinkyo Bridge.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -326,7 +325,8 @@ station.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Come to think of it, today 
 is our Anniversary.</Dialog>
-          <Dialog>What should I give her？</Dialog>
+          <Dialog>What was I going to give her
+again？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
