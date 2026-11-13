@@ -94,33 +94,30 @@ I'm sure my life will
 change somehow.</Dialog>
           <Dialog>What do I do now？</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>Should I take a look at how 
-I'll spend my life from now 
-on？</Dialog>
-          <Dialog>I'm anxious to examine it</Dialog>
-          <Dialog>That's not necessary</Dialog>
+          <Dialog>Should I go over how things
+work from here on？</Dialog>
+          <Dialog>Check, just to be safe</Dialog>
+          <Dialog>No need, I've got it</Dialog>
           <Dialog>All right. I'd better take 
 a look. This will be like 
 practice.</Dialog>
-          <Dialog>I get to hang out with her 
-normally, but this time it 
-will be an actual date.</Dialog>
-          <Dialog>If she's in a good mood, 
-I can try touching her, 
-too...</Dialog>
+          <Dialog>Going out means dates, of
+course.</Dialog>
+          <Dialog>When the mood's right, I can
+get close to her...</Dialog>
           <Dialog>If things go well, I might 
 even get to kiss her！</Dialog>
           <Dialog>But of course, I probably 
 won't master it on the 
 first try.</Dialog>
-          <Dialog>First off, if I don't fix 
-myself up, I can't possibly 
-ask her out on a date.</Dialog>
-          <Dialog>In that case, I'll have to 
-carefully choose my 
-activities each day.</Dialog>
-          <Dialog>f course, I already know 
-how to manage it.</Dialog>
+          <Dialog>If I don't work on myself
+first, I'll probably go on a
+date and not manage
+anything.</Dialog>
+          <Dialog>So first, I'll decide on
+today's plans...</Dialog>
+          <Dialog>No need. I've already got it
+figured out.</Dialog>
           <Dialog>Now then, I need to decide 
 what I'll do today.</Dialog>
         </Dialogs>
@@ -167,16 +164,15 @@ what I'll do today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>On the day that she 
-confessed to me...</Dialog>
-          <Dialog>I promised her that I'd go 
-on a date with her. I would 
-better decide on the 
-location.</Dialog>
-          <Dialog>Okay. I'll call and ask her 
-out.</Dialog>
-          <Dialog>It's a good idea to ask her 
-out on a holiday...</Dialog>
+          <Dialog>Come to think of it, on the
+way home the day she
+confessed...</Dialog>
+          <Dialog>We promised to go on a date,
+but we never decided where.</Dialog>
+          <Dialog>Okay, this time I'll
+properly ask her out myself.</Dialog>
+          <Dialog>If we're going out, a day
+off would be best...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -209,12 +205,12 @@ out on a holiday...</Dialog>
           <Dialog>Speaking of which, I have 
 not discussed the date with 
 her yet...</Dialog>
-          <Dialog>I told her I'd schedule a 
-date, right...？</Dialog>
+          <Dialog>I did say I'd be the one to
+ask next time...</Dialog>
           <Dialog>All right. I'll invite her 
 out on a date.</Dialog>
-          <Dialog>It's a good idea to ask her 
-out on a holiday...</Dialog>
+          <Dialog>If we're going out, a day
+off would be best...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -229,9 +225,9 @@ out on a holiday...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's unreasonable to call 
-at this hour. I'll make the 
-call later.</Dialog>
+          <Dialog>But I can't call at this
+hour. I'll do it another
+time.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -262,7 +258,7 @@ her now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I should call you now 
+          <Dialog>Guess I'll call
 ▲彼女＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
@@ -338,7 +334,7 @@ to try calling her.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I should call you now 
+          <Dialog>Guess I'll call
 ▲彼女＊＊▲...</Dialog>
         </Dialogs>
       </SDL2>
@@ -359,9 +355,9 @@ to try calling her.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Phew, it feels great.</Dialog>
-          <Dialog>A mail from 
-▲彼女＊＊▲？</Dialog>
+          <Dialog>Phew, that was fun.</Dialog>
+          <Dialog>A mail from
+▲彼女＊＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -426,8 +422,8 @@ date spots on the map.
 Sometimes, I may exchange 
 gifts with her, so I'd 
 better check my items.</Dialog>
-          <Dialog>It's not easy to be a 
-girl's boyfriend, eh？</Dialog>
+          <Dialog>Starting out as a boyfriend
+is hard work.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
