@@ -39,9 +39,8 @@ from before.</Dialog>
           <Dialog>What should I do from now 
 on？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Let's see how we can spend 
-the rest of our time after 
-this, shall we？</Dialog>
+          <Dialog>Should I go over how things
+work from here on？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -64,10 +63,10 @@ this, shall we？</Dialog>
           <Dialog>Since I started dating my 
 girlfriend, we've come a 
 long way...</Dialog>
-          <Dialog>Now that we changed our 
-pace, should we make sure 
-we know how to spend our 
-time from now on？</Dialog>
+          <Dialog>Things have changed, so
+maybe I should go over how
+to spend my time from here
+on？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -86,10 +85,8 @@ time from now on？</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>I'm a little worried, let's 
-check</Dialog>
-          <Dialog>I already know, no need to 
-double check</Dialog>
+          <Dialog>Check, just to be safe</Dialog>
+          <Dialog>No need, I've got it</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -111,8 +108,8 @@ double check</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I don't need to check, 
 I already know what I'll do.</Dialog>
-          <Dialog>Okay, let's decide what 
-we're going to do today.</Dialog>
+          <Dialog>Okay, I'll decide on today's
+plans.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -144,14 +141,13 @@ we're going to do today.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Okay. Then let's check it 
 out. It'll be like practice.</Dialog>
-          <Dialog>When it comes to going out, 
-this is still a date.</Dialog>
-          <Dialog>If I don't prepare do 
-something beforehand, I'll 
-end up with nothing to do 
-on our date.</Dialog>
-          <Dialog>So I need to make a good 
-schedule, and work it out.</Dialog>
+          <Dialog>Going out means dates, of
+course.</Dialog>
+          <Dialog>If I don't prepare properly,
+I'll probably go on a date
+and not manage anything.</Dialog>
+          <Dialog>So I need to plan things out
+and work on myself.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -171,9 +167,9 @@ schedule, and work it out.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If we're going on a date, 
-we have to know the dating 
-spots.</Dialog>
+          <Dialog>If I'm going on dates, I
+need to know the date spots
+well.</Dialog>
           <Dialog>Now I need to decide on a 
 date and time to invite her.</Dialog>
         </Dialogs>
@@ -190,9 +186,9 @@ date and time to invite her.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>There are other things to 
-do besides dating, so let's 
-make sure we do those too.</Dialog>
+          <Dialog>There's more to do than
+dates, so I'll keep on top
+of that too.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -207,9 +203,10 @@ make sure we do those too.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I also need to think about 
-Rich. We're going to need a 
-lot of things from now on.</Dialog>
+          <Dialog>I also need to think about
+my Rich. I'm going to need
+plenty of things from now
+on.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -241,8 +238,8 @@ little.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Well, let's decide what 
-to do today.</Dialog>
+          <Dialog>...Now, I'll decide on
+today's plans.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -267,14 +264,15 @@ to do today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>By the way, I was on my way 
-home the day she confessed 
-to me...</Dialog>
-          <Dialog>We agreed to go on a date, 
-but we didn't decide where. 
-I'll have ask her out again.</Dialog>
-          <Dialog>...Now, let's decide what 
-to do today.</Dialog>
+          <Dialog>Come to think of it, on the
+way home the day she
+confessed...</Dialog>
+          <Dialog>We promised to go on a date,
+but we never decided where.
+I need to ask her out
+properly.</Dialog>
+          <Dialog>...Now, I'll decide on
+today's plans.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -299,13 +297,14 @@ to do today.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>By the way, I haven't asked 
-her on a date...</Dialog>
-          <Dialog>I said I'd ask you out 
-soon... I have to ask you 
-out properly.</Dialog>
-          <Dialog>...Okay, let's decide what 
-we're gonna do today.</Dialog>
+          <Dialog>Come to think of it, we
+still haven't made plans for
+a date...</Dialog>
+          <Dialog>I said I'd be the one to ask
+next time... I need to ask
+her properly.</Dialog>
+          <Dialog>...Now, I'll decide on
+today's plans.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -460,8 +459,9 @@ sleepy...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Huh, where am I？　
-I can't see a thing.</Dialog>
+          <Dialog>...Huh, where am I？
+Everything in front of me is
+white.</Dialog>
           <Dialog>....</Dialog>
           <Dialog>...It's starting to clear 
 up a bit.</Dialog>
@@ -499,15 +499,16 @@ up a bit.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What！！　
-▲彼女＊＊▲！？</Dialog>
+          <Dialog>What!!　
+▲彼女＊＊▲!?</Dialog>
           <Dialog>Why is she here... 
 Oh right, this is a dream.</Dialog>
-          <Dialog>...If it's a dream, would 
-you get angry if I touched 
-you？</Dialog>
+          <Dialog>...If it's a dream, she
+won't get mad if I touch
+her, right？</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Alright, let's try it out.</Dialog>
+          <Dialog>Okay, let's try touching
+her.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -522,7 +523,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...I'd better stop.</Dialog>
+          <Dialog>...I'd better not touch
+there.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -590,8 +592,8 @@ like I'm pranking her.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Will you angry if I tickle 
-you？</Dialog>
+          <Dialog>Would she get mad if I
+tickled her？</Dialog>
           <Dialog>...Let's give it a try.</Dialog>
         </Dialogs>
       </SDL2>
@@ -622,8 +624,8 @@ you？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I should not touch my 
-girlfriend like this...</Dialog>
+          <Dialog>I shouldn't treat my
+girlfriend roughly...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -638,8 +640,8 @@ girlfriend like this...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I should tickle her a 
-little.</Dialog>
+          <Dialog>This time, I'll try touching
+her like I'm tickling her.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -676,7 +678,8 @@ get annoyed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...It's just a prank.</Dialog>
+          <Dialog>...But pranks all the time
+isn't great, either.</Dialog>
           <Dialog>I've to treat my girlfriend 
 gently.</Dialog>
         </Dialogs>
@@ -693,7 +696,7 @@ gently.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...It's no good here.</Dialog>
+          <Dialog>...Not there.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -740,8 +743,7 @@ almost caressing her.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>This place feels kind of 
-ticklish.</Dialog>
+          <Dialog>Looks like it tickles.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -766,10 +768,10 @@ ticklish.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, the basis of skinship 
-is to be gently.</Dialog>
+          <Dialog>Yeah, the basics of skinship
+is being gentle.</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Hmm, something like...</Dialog>
+          <Dialog>Hm, something's different...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -853,10 +855,9 @@ on around me...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I don't think this is 
 enough...</Dialog>
-          <Dialog>...After all, when it comes 
-to do skinship with you 
-girlfriend, you must also 
-kiss...</Dialog>
+          <Dialog>...When it comes to skinship
+with your girlfriend, it's
+got to be a kiss...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -871,7 +872,7 @@ kiss...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Not like this.</Dialog>
+          <Dialog>...Not like that.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -901,9 +902,8 @@ kiss...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Now that sounds like she 
-pushed me off. I think it's 
-a rejection.</Dialog>
+          <Dialog>That felt like pushing her
+away. That's a rejection.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -933,9 +933,9 @@ a rejection.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>If you draw her like this, 
-all you can do is kiss 
-her...</Dialog>
+          <Dialog>If I pull her close like
+this, all that's left is a
+kiss...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1006,9 +1006,9 @@ hers for a while...</Dialog>
           <Dialog>Huh, the world is getting 
 covered in white again... 
 Is it over？</Dialog>
-          <Dialog>Just a little more... 
-She's waiting for me. No, 
-▲彼女＊＊▲！</Dialog>
+          <Dialog>Just a little more...
+▲彼女＊＊▲, wait
+for meee！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1044,8 +1044,8 @@ Still, it was a vivid dream.</Dialog>
           <Dialog>But I shouldn't be 
 satisfied with just my 
 dreams.</Dialog>
-          <Dialog>Okay, let's get this show 
-on the road！</Dialog>
+          <Dialog>All right, I'll do it
+properly for real too！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1173,7 +1173,8 @@ to learn how to use it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let's see, other than that...</Dialog>
+          <Dialog>Let's see, other than
+that...</Dialog>
           <Dialog>Snapshot</Dialog>
           <Dialog>Spot Shooting</Dialog>
           <Dialog>Camera Parts</Dialog>
