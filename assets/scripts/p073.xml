@@ -302,20 +302,19 @@
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Phys.Ed.Teacher</Dialog>
+          <Dialog>P.E. Teacher</Dialog>
           <Dialog>We will conduct a physical 
 fitness test next week.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Physical fitness test, 
 huh...)</Dialog>
           <Dialog>All right, time to train！</Dialog>
-          <Dialog>Whatever, what will be will 
-be</Dialog>
-          <Dialog>I see you're motivated. 
-Look forward for the tests.</Dialog>
-          <Dialog>So you're going to take it 
-easy. Are you sure you will 
-be okay？</Dialog>
+          <Dialog>Eh, it'll work out</Dialog>
+          <Dialog>Fired up, huh？ I'm
+expecting great things.</Dialog>
+          <Dialog>What, that confident？ Are
+you really going to be
+okay？</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -334,7 +333,7 @@ be okay？</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Phys.Ed.Teacher</Dialog>
+          <Dialog>P.E. Teacher</Dialog>
           <Dialog>All right. Let the physical 
 fitness test begin！</Dialog>
         </Dialogs>
@@ -430,8 +429,8 @@ next week.</Dialog>
           <Dialog>(A quiz, huh...)</Dialog>
           <Dialog>All right, time to study！</Dialog>
           <Dialog>Whatever, I'll be fine</Dialog>
-          <Dialog>That's a nice mindset. Make 
-sure you study properly.</Dialog>
+          <Dialog>Yes, make sure you study
+properly.</Dialog>
           <Dialog>...Don't be taking any 
 shortcuts just because it's 
 a quiz.</Dialog>
@@ -454,8 +453,8 @@ a quiz.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Homeroom Teacher</Dialog>
-          <Dialog>Well then, let's star with 
-the quiz.</Dialog>
+          <Dialog>Well then, let's start the
+quiz.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -542,15 +541,13 @@ well in the quiz...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Music Teacher</Dialog>
-          <Dialog>For the next week, you'll 
-have to present a song as 
-an assignment.</Dialog>
+          <Dialog>Next week, I'll have each of
+you perform the assigned
+piece.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Present a song for an 
-assignment, huh...)</Dialog>
+          <Dialog>(A performance, huh...)</Dialog>
           <Dialog>Okay, let's practice！</Dialog>
-          <Dialog>Nah, I don't think I need 
-to practice</Dialog>
+          <Dialog>I'll be fine without it</Dialog>
           <Dialog>Very well, then make sure 
 to practice hard.</Dialog>
           <Dialog>Are you really sure it's 
@@ -574,8 +571,8 @@ gonna be okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Music Teacher</Dialog>
-          <Dialog>Very well, today you will 
-present your song.</Dialog>
+          <Dialog>All right, today you'll be
+performing for us.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -590,8 +587,8 @@ present your song.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(All right！　I aced my song 
-presentation！)</Dialog>
+          <Dialog>(All right！ My music
+performance went great！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -606,8 +603,8 @@ presentation！)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hah... I failed to deliver 
-my song...)</Dialog>
+          <Dialog>(Sigh... My music
+performance was a flop...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -662,16 +659,16 @@ my song...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Art Teacher</Dialog>
-          <Dialog>Emm, you have until next 
-week to submit your work.</Dialog>
+          <Dialog>Um, next week I'll have you
+hand in your work.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Submit my work, huh...)</Dialog>
           <Dialog>I'll do my best！</Dialog>
-          <Dialog>Nah, I'll manage somehow</Dialog>
-          <Dialog>Make sure it's a good piece 
-for work.</Dialog>
-          <Dialog>Haha... I'm looking forward 
-to it.</Dialog>
+          <Dialog>I'll just wing it</Dialog>
+          <Dialog>Make sure you finish it
+properly.</Dialog>
+          <Dialog>Sigh... I'll be looking
+forward to it.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -784,7 +781,7 @@ practice match next week.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(A practice match, huh...)</Dialog>
           <Dialog>Let's practice！</Dialog>
-          <Dialog>Meh, good luck with that</Dialog>
+          <Dialog>I'll do what I can</Dialog>
           <Dialog>You're really fired up, 
 I'm counting on you.</Dialog>
           <Dialog>Very well, just take it at 
@@ -996,12 +993,12 @@ test...)</Dialog>
           <Dialog>(It's my turn to write the 
 Library Newsletter...)</Dialog>
           <Dialog>Okay, let's go for it！</Dialog>
-          <Dialog>I'll take my time</Dialog>
+          <Dialog>I'll just wing it</Dialog>
           <Dialog>(I'll give it my all！　
 Since it's my turn, I'll 
 make a good newsletter！)</Dialog>
-          <Dialog>(Well, I think it'll be 
-fine if I take my time...)</Dialog>
+          <Dialog>(Well, I can just wing
+it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1016,8 +1013,8 @@ fine if I take my time...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Ah, it's the Library 
-Newsletter...)</Dialog>
+          <Dialog>(As for this issue of the
+library newsletter...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1032,8 +1029,8 @@ Newsletter...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Great！　I managed to do it 
-flawlessly！)</Dialog>
+          <Dialog>(All right！ It's getting
+great reviews！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1109,9 +1106,9 @@ the next fair...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(A fair, huh...)</Dialog>
           <Dialog>I'll do my best to prepare！</Dialog>
-          <Dialog>Let's take our time</Dialog>
+          <Dialog>I'll just wing it</Dialog>
           <Dialog>Yeah, do your best</Dialog>
-          <Dialog>Hey, hey, come one...</Dialog>
+          <Dialog>Hey, hey, come on...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1131,8 +1128,8 @@ the next fair...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Store Manager</Dialog>
-          <Dialog>The results of the fair 
-just arrived...</Dialog>
+          <Dialog>About the results of this
+fair...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1147,8 +1144,8 @@ just arrived...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Nice！　The fair went 
-perfect！)</Dialog>
+          <Dialog>(Nice！ The fair went
+perfectly！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1222,15 +1219,16 @@ so well...)</Dialog>
           <Dialog>Yo, you got a minute？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What's up？</Dialog>
-          <Dialog>I'm sorry to ask, but... 
-Can we go back？</Dialog>
+          <Dialog>Hey, sorry about this...
+Could you help me out
+again？</Dialog>
           <Dialog>What, you need something 
 else？</Dialog>
           <Dialog>You are a life saver, 
 I owe you one！</Dialog>
-          <Dialog>(This took a really long 
-time... Can I keep doing 
-this？)</Dialog>
+          <Dialog>(That took longer than I
+expected... I can't fit
+anything else in now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1295,9 +1293,9 @@ lend me a hand again？</Dialog>
 with？</Dialog>
           <Dialog>Thank you！　You've saved 
 me a lot of trouble.</Dialog>
-          <Dialog>(This took a really long 
-time... Can I keep doing 
-this？)</Dialog>
+          <Dialog>(That took longer than I
+expected... I can't fit
+anything else in now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1356,17 +1354,15 @@ this？)</Dialog>
 I have a moment？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Of course, how can I help？</Dialog>
-          <Dialog>Ah, just like that. I'm 
-sorry to ask, but... Can 
-I have a few more minutes？</Dialog>
-          <Dialog>Let's see... What else 
-needs to be done？</Dialog>
-          <Dialog>Thank you for helping me. 
-Sorry for taking to much 
-of you time.</Dialog>
-          <Dialog>(This took a really long 
-time... Can I keep doing 
-this？)</Dialog>
+          <Dialog>Ah, there you are. Sorry,
+but... could I borrow you
+again？</Dialog>
+          <Dialog>Um... What is it？</Dialog>
+          <Dialog>Thanks, you're a big help.
+Sorry about this.</Dialog>
+          <Dialog>(That took longer than I
+expected... I can't fit
+anything else in now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1420,20 +1416,18 @@ this？)</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Grade Chief</Dialog>
-          <Dialog>Ah, please wait a minute.</Dialog>
+          <Dialog>Head of Year</Dialog>
+          <Dialog>Ah, hold on a sec.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh, me？</Dialog>
-          <Dialog>Yes, you're happened to 
-appear in the right place. 
-May I have a moment？</Dialog>
+          <Dialog>Ah, it's you. Good timing.
+Got a minute？</Dialog>
           <Dialog>Emm... How can I help？</Dialog>
-          <Dialog>That was perfect, you saved 
-me. Sorry for asking you 
-out of the blue.</Dialog>
-          <Dialog>(This took a really long 
-time... Can I keep doing 
-this？)</Dialog>
+          <Dialog>You really helped me out.
+Sorry about that.</Dialog>
+          <Dialog>(That took longer than I
+expected... I can't fit
+anything else in now.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1495,7 +1489,7 @@ together.</Dialog>
           <Dialog>Oh, sure...</Dialog>
           <Dialog>What, are you alone again？　
 Come on, let's go</Dialog>
-          <Dialog>Emm, lemme think...</Dialog>
+          <Dialog>Um...</Dialog>
           <Dialog>Well then, let's take it 
 easy for the rest of the 
 day.</Dialog>
@@ -1580,8 +1574,7 @@ school together...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Miyoshi</Dialog>
-          <Dialog>Ah-yo, you've just arrived
-in time.</Dialog>
+          <Dialog>Ah, good timing.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh？　Me？</Dialog>
           <Dialog>I'm sorry for asking you, 
@@ -1598,7 +1591,7 @@ ask you to open the club
 room again...</Dialog>
           <Dialog>Yeah, I understand.</Dialog>
           <Dialog>(I should hurry up then...)</Dialog>
-          <Dialog>(...This is fine.)</Dialog>
+          <Dialog>(...There, that's done.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1688,17 +1681,16 @@ room again...</Dialog>
           <Dialog>Oh, Otori-san. Are you 
 working part-time？　What 
 are you doing here？</Dialog>
-          <Dialog>Great！ Sorry to bother you 
-on your day off, but I was 
-wondering if you can help 
-me out. The manager asked 
-me for help, but I'm not 
-sure if I can do it alone.</Dialog>
+          <Dialog>Oh, good！ Sorry to bother
+you on your day off, but
+could you help me a bit？
+The manager sent me on an
+errand, and I'm nervous
+doing it alone.</Dialog>
           <Dialog>Sure, it's okay...</Dialog>
           <Dialog>Ah... What a relief.</Dialog>
-          <Dialog>Ah, Otori-san. What's 
-wrong...？ Were you asked 
-for help again？</Dialog>
+          <Dialog>Ah, Otori-san. What's up...
+Another errand？</Dialog>
           <Dialog>Yeah. So I'm sorry to ask 
 you again...</Dialog>
           <Dialog>I'll help you, don't worry.</Dialog>
@@ -1900,15 +1892,15 @@ hard...)</Dialog>
           <Dialog>You got lost, huh... Okay, 
 let's search for her 
 together.</Dialog>
-          <Dialog>Yes, onii-chan.</Dialog>
+          <Dialog>Ah, Onii-chan！</Dialog>
           <Dialog>Huh... again. What's going 
 on？ Don't tell me that...</Dialog>
           <Dialog>My mom is gone again...</Dialog>
           <Dialog>I have no choice. Let's 
 look for her together.</Dialog>
           <Dialog>Thank you, onii-chan.</Dialog>
-          <Dialog>(I'm really glad we found 
-your mom...)</Dialog>
+          <Dialog>(Good thing we found her
+mom...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2049,9 +2041,8 @@ shop...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I couldn't find the Donut 
-shop. I guess I'll give 
-up now...)</Dialog>
+          <Dialog>(I never did find the donut
+shop. Guess I'll give up...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2165,8 +2156,8 @@ I'll give up now...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I can't find the shop 
-selling baked potatoes...)</Dialog>
+          <Dialog>(I can't find the baked
+sweet potato shop...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2181,9 +2172,9 @@ selling baked potatoes...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I couldn't find the shop 
-selling baked potatoes. 
-I guess I'll give up now...)</Dialog>
+          <Dialog>(I never did find the baked
+sweet potato shop. Guess
+I'll give up...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2318,9 +2309,9 @@ I guess I'll give up now...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(The Castle at night... 
-I've come this far, but 
-this atmosphere...)</Dialog>
+          <Dialog>(The castle at night... I
+came all the way out here,
+but it sure has atmosphere.)</Dialog>
           <Dialog>It's really quiet...</Dialog>
           <Dialog>Huh？</Dialog>
           <Dialog>...</Dialog>
@@ -2489,8 +2480,8 @@ off evil".)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I brought a charm, so I 
-think this will be okay...)</Dialog>
+          <Dialog>(I brought the charm, but
+will it be okay...)</Dialog>
           <Dialog>Ugh...</Dialog>
           <Dialog>(It's fine, I should get a 
 little closer...)</Dialog>
@@ -2521,9 +2512,9 @@ it if you want.</Dialog>
           <Dialog>Are you sure？ Thank you 
 very much. Now I can sing 
 again. See you！</Dialog>
-          <Dialog>(If you feel better after 
-having a charm... Maybe you 
-really are cursed...)</Dialog>
+          <Dialog>(A charm made her feel
+better... She wasn't
+actually cursed, was she...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2544,8 +2535,7 @@ really are cursed...)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>...</Dialog>
-          <Dialog>(I don't really know if I 
-can stay here...)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2605,11 +2595,11 @@ can stay here...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I'm here once again, but 
-the sound I heard before... 
-I wonder if is related to 
-the rumored "Legend of 
-Dracula's Mansion"...)</Dialog>
+          <Dialog>(I came back... I wonder if
+the sound I heard last time
+has anything to do with the
+rumored "Dracula of the
+Mansion"...)</Dialog>
           <Dialog>!!</Dialog>
           <Dialog>(I heard that sound 
 again... What was that？)</Dialog>
@@ -2618,10 +2608,9 @@ again... What was that？)</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>(It was a cook？)</Dialog>
           <Dialog>Excuse me...</Dialog>
-          <Dialog>(And there he goes... 
-It seems like he was 
-preoccupied with other 
-things...)</Dialog>
+          <Dialog>(He's gone... It was like he
+was possessed by
+something...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2655,8 +2644,9 @@ things...)</Dialog>
 something interesting 
 here...)</Dialog>
           <Dialog>(Is this... garlic？)</Dialog>
-          <Dialog>(I wonder if this works in 
-Dracula's Mansion...)</Dialog>
+          <Dialog>(I wonder if this works on
+the Dracula of the
+mansion...)</Dialog>
           <Dialog>(I got "garlic".)</Dialog>
         </Dialogs>
       </SDL2>
@@ -2733,9 +2723,8 @@ works...)</Dialog>
           <Dialog>(Oh, there he is...)</Dialog>
           <Dialog>Cook</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>Curse you garlic！</Dialog>
-          <Dialog>(I knew it was a bad 
-idea...)</Dialog>
+          <Dialog>Have some garlic！</Dialog>
+          <Dialog>(Figures it didn't work...)</Dialog>
           <Dialog>...Huh？</Dialog>
           <Dialog>Ah.</Dialog>
           <Dialog>What am I doing in a place 
@@ -2762,9 +2751,7 @@ really Dracula's curse？)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(There's nothing around... 
-But I can't help but being 
-here.)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2826,12 +2813,12 @@ mountains".)</Dialog>
           <Dialog>....</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>Hmm... Is that？</Dialog>
-          <Dialog>(Did I just lost my mind...)</Dialog>
+          <Dialog>(Did I... pass out？)</Dialog>
           <Dialog>...Huh？</Dialog>
           <Dialog>(It's a footprint... 
 So this is Bigfoot's...)</Dialog>
-          <Dialog>(I don't think so... 
-I better go back home.)</Dialog>
+          <Dialog>(No way... I'd better head
+home.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2852,9 +2839,7 @@ I better go back home.)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(There's nothing around... 
-But I can't help but being 
-here.)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2898,9 +2883,7 @@ Valley" appears...)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(There's nothing around... 
-But I can't help but being 
-here.)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2938,12 +2921,12 @@ here.)</Dialog>
           <Dialog>(I wonder if there is 
 something interesting 
 here...)</Dialog>
-          <Dialog>Hmm... Ah！　It's an UFO...</Dialog>
+          <Dialog>Hm... Ah！ It's a UFO...</Dialog>
           <Dialog>....</Dialog>
           <Dialog>Lemme see, where did I put 
 my camera！</Dialog>
-          <Dialog>(I got it... I did it, 
-I got a picture of an UFO！)</Dialog>
+          <Dialog>(Got it... Yes, I got a
+picture of a UFO！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2964,9 +2947,7 @@ I got a picture of an UFO！)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(There's nothing around... 
-But I can't help but being 
-here.)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3005,7 +2986,7 @@ here.)</Dialog>
 something interesting 
 here...)</Dialog>
           <Dialog>Hmm... Oh！　Is that... 
-Towassy！？</Dialog>
+Towassy!?</Dialog>
           <Dialog>....</Dialog>
           <Dialog>Lemme see, where did I put 
 my camera！</Dialog>
@@ -3032,9 +3013,7 @@ Towassy！)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(There's nothing around... 
-But I can't help but being 
-here.)</Dialog>
+          <Dialog>(No point staying here...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6259,16 +6238,16 @@ here.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Today I'll write my bamboo 
-strip. I promised you, 
-▲彼女＊＊▲.)</Dialog>
+          <Dialog>(I promised
+▲彼女＊＊▲, so
+I'll write my Tanabata
+wish.)</Dialog>
           <Dialog>(What should I wish for...)</Dialog>
-          <Dialog>I want to be with you 
-▲彼女＊＊▲</Dialog>
+          <Dialog>Stay with
+▲彼女＊＊▲ forever</Dialog>
           <Dialog>I want to be rich</Dialog>
           <Dialog>World domination</Dialog>
-          <Dialog>...Okay, I've written 
-something</Dialog>
+          <Dialog>...Okay, done.</Dialog>
           <Dialog>(I'm really looking forward 
 to Tanabata.)</Dialog>
         </Dialogs>
@@ -6291,9 +6270,9 @@ to Tanabata.)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Ah, this place...)</Dialog>
-          <Dialog>(We can watch the fireworks 
-from here. Maybe it's a 
-secret place...)</Dialog>
+          <Dialog>(Looks like you can see the
+fireworks from here. Could
+be a hidden gem...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6375,7 +6354,7 @@ the Sports Festival.)</Dialog>
           <Dialog>(I'll run for the time 
 being！)</Dialog>
           <Dialog>Hah, hah...</Dialog>
-          <Dialog>(Yes, just like this...)</Dialog>
+          <Dialog>(That should do it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6410,7 +6389,7 @@ the Sports Festival.)</Dialog>
           <Dialog>(I'll do some muscle 
 training today！)</Dialog>
           <Dialog>Hah, hah...</Dialog>
-          <Dialog>(Yes, just like this...)</Dialog>
+          <Dialog>(That should do it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6442,9 +6421,9 @@ training today！)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Okay, time to practice for 
 the Sports Festival.)</Dialog>
-          <Dialog>(We'll be doing a Calvary 
-battle... I'd like to work 
-on my balance.)</Dialog>
+          <Dialog>(It's a cavalry battle...
+Working on my balance would
+be smart.)</Dialog>
           <Dialog>Hah, hah...</Dialog>
           <Dialog>(Okay... At this rate I 
 think we're going to make 
@@ -6490,18 +6469,17 @@ it！)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Alright, time to get ready 
 for the Culture Festival.)</Dialog>
-          <Dialog>(And I'll help prepare for 
-the festival... As a member 
-of the Tennis Club...)</Dialog>
-          <Dialog>(And I'll help prepare for 
-the festival... As a member 
-of the Library Committee...)</Dialog>
-          <Dialog>(And I'll help prepare for 
-the festival... Helping 
-around my class with their 
-coffee shop...)</Dialog>
+          <Dialog>(Festival committee, huh...
+I wonder how the tennis
+club's doing...)</Dialog>
+          <Dialog>(Festival committee, huh...
+Does the library committee
+do anything for it？)</Dialog>
+          <Dialog>(Festival committee, huh...
+and my class is running a
+cafe on top of that...)</Dialog>
           <Dialog>*Phew*...</Dialog>
-          <Dialog>(Yeah, just like this...)</Dialog>
+          <Dialog>(That should do it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6555,7 +6533,7 @@ I've got to get the
 tableware and the store 
 set up. Gotta get ready...)</Dialog>
           <Dialog>*Phew*...</Dialog>
-          <Dialog>(Yeah, just like this...)</Dialog>
+          <Dialog>(That should do it...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6607,8 +6585,8 @@ shop... We still have to
 organize the shifts for 
 customer serving...)</Dialog>
           <Dialog>*Phew*...</Dialog>
-          <Dialog>(Okay... At his rate, 
-I think we can do it！)</Dialog>
+          <Dialog>(Okay... At this rate, I
+think I can pull it off！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6691,9 +6669,8 @@ about a gift...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Your birthday is coming 
-up soon, I really should 
-get a gift for you 
+          <Dialog>(I need to get a birthday
+present for
 ▲彼女＊＊▲.)</Dialog>
           <Dialog>Let's go shopping.</Dialog>
           <Dialog>I should speak with someone 
@@ -6722,9 +6699,8 @@ about a gift...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I already got a present 
-for you, but... I wonder 
-if it's going to be okay.)</Dialog>
+          <Dialog>(I got a present, but... is
+this really okay？)</Dialog>
           <Dialog>I should buy another.</Dialog>
           <Dialog>I should ask someone 
 about a gift...</Dialog>
@@ -6856,7 +6832,7 @@ the Clothing Store.)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(Who do I talk to...？)</Dialog>
           <Dialog>Classmate</Dialog>
-          <Dialog>Someone on the Tennis Club</Dialog>
+          <Dialog>Someone in the tennis club</Dialog>
           <Dialog>Someone from the Library 
 Committee</Dialog>
           <Dialog>Someone at my part-time 
@@ -6883,8 +6859,7 @@ mail...)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(The tests are over～...)</Dialog>
-          <Dialog>(I feel like I'll get great 
-results this time！)</Dialog>
+          <Dialog>(It went well this time！)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6905,8 +6880,7 @@ results this time！)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(The tests are over～...)</Dialog>
-          <Dialog>(I feel I did pretty good 
-this time.)</Dialog>
+          <Dialog>(It went okay this time.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
