@@ -44,12 +44,13 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>It's my graduation ceremony 
 today...</Dialog>
-          <Dialog>It hasn't been a very long 
-nor a short time since I've 
-transferred to Towano High.</Dialog>
-          <Dialog>I joined a club, did some 
-volunteer work, and got a 
-part-time job...</Dialog>
+          <Dialog>Since I transferred to
+Towano High, it feels like
+it's been both long and
+short.</Dialog>
+          <Dialog>I joined a club, served on a
+committee, got a part-time
+job...</Dialog>
           <Dialog>I guess I did make the most 
 out of my high school life.</Dialog>
           <Dialog>......</Dialog>
@@ -99,10 +100,9 @@ girlfriend...)</Dialog>
           <Dialog>Never mind a girlfriend, I 
 didn't even make any female 
 friends.</Dialog>
-          <Dialog>No matter how many girls I 
-met. In the end, I didn't 
-get the feeling that I was 
-close to any of them.</Dialog>
+          <Dialog>I got to know a few of them,
+but we never got past being
+acquaintances.</Dialog>
           <Dialog>......</Dialog>
           <Dialog>Hah...</Dialog>
           <Dialog>I wish I could redo 
@@ -141,15 +141,15 @@ everything...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Even if I confessed to 
-them, they would have just 
-turned me down.</Dialog>
-          <Dialog>...I'm such a failure.</Dialog>
-          <Dialog>If only they could have 
-confessed to me...</Dialog>
+          <Dialog>Some of them confessed to
+me, but I turned them all
+down.</Dialog>
+          <Dialog>...Maybe that was a waste,
+after all.</Dialog>
+          <Dialog>If those girls confessed to
+me again...</Dialog>
           <Dialog>......</Dialog>
-          <Dialog>I wonder what kind of reply 
-I'd have given...</Dialog>
+          <Dialog>...how would I answer...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
