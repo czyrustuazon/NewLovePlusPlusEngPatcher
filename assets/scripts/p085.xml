@@ -146,8 +146,8 @@ for the Ramen Shop.)</Dialog>
 quite a bit...</Dialog>
           <Dialog>I got a discount coupon... 
 I'll come back soon.</Dialog>
-          <Dialog>(I got a discount coupon 
-for the Yakiniku Restr.)</Dialog>
+          <Dialog>(I got a discount coupon for
+the yakiniku restaurant.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -176,8 +176,8 @@ for the Yakiniku Restr.)</Dialog>
 quite a bit...</Dialog>
           <Dialog>I got a discount coupon... 
 I'll come back soon.</Dialog>
-          <Dialog>(I got a discount coupon 
-for the Sushi Restr.)</Dialog>
+          <Dialog>(I got a discount coupon for
+the sushi restaurant.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -424,15 +424,16 @@ What do you think？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Abbot</Dialog>
-          <Dialog>Excuse me. I'm looking for 
-something... Can listen to 
-my request？</Dialog>
+          <Dialog>Excuse me. I'm actually
+looking for something...
+Could I tell you about it？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yes？</Dialog>
           <Dialog>It's some kind of Buddha 
 statue...</Dialog>
           <Dialog>Ah, in that case, I have it.</Dialog>
-          <Dialog>Really？　Can I have your 
+          <Dialog>Really？ Would you be
+willing to part with that
 Buddha statue？</Dialog>
           <Dialog>Let me think...</Dialog>
           <Dialog>Then instead... I'll give 
@@ -501,12 +502,12 @@ evil".)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I just come to buy some 
-juice...</Dialog>
-          <Dialog>Oh, now that's what I call 
-a nice bonus.</Dialog>
-          <Dialog>(I got a "Figure in a 
-plastic bottle".)</Dialog>
+          <Dialog>Guess I'll buy something to
+drink...</Dialog>
+          <Dialog>Oh, it comes with a freebie
+right now.</Dialog>
+          <Dialog>(I got a "Bonus Bottle
+Figure".)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -561,11 +562,11 @@ Popular Artist".)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I been to Dixie's as 
-costumer a lot...</Dialog>
-          <Dialog>I got a discount coupon... 
-Even though I work part- 
-time here.</Dialog>
+          <Dialog>I've been to Dixie's a lot
+as a customer, too...</Dialog>
+          <Dialog>I got a discount coupon... I
+work here, though. Is that
+okay？</Dialog>
           <Dialog>(I got a "Dixie's discount 
 coupon")</Dialog>
         </Dialogs>
@@ -596,8 +597,8 @@ coupon")</Dialog>
 quite a bit...</Dialog>
           <Dialog>I got a discount coupon... 
 I'll come back soon.</Dialog>
-          <Dialog>(I got a discount coupon 
-for the Aisha's Dining.)</Dialog>
+          <Dialog>(I got a discount coupon for
+Aisha's Dining.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -629,8 +630,8 @@ for the Aisha's Dining.)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see what's good 
 here...</Dialog>
-          <Dialog>Headphones, huh... I'll try 
-them on.</Dialog>
+          <Dialog>Headphones, huh... Maybe
+I'll give them a listen.</Dialog>
           <Dialog>I like them！　Okay...</Dialog>
           <Dialog>(I purchased some "High-end 
 headphones".)</Dialog>
@@ -695,10 +696,11 @@ Software".)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'll if there's something 
-of use...</Dialog>
-          <Dialog>A keyboard, huh... This is 
-nice.</Dialog>
+          <Dialog>Let's see if there's
+anything useful...</Dialog>
+          <Dialog>A keyboard, huh... This is
+something worth being picky
+about.</Dialog>
           <Dialog>(I've got a "Gadgeteer's 
 Keyboard".)</Dialog>
         </Dialogs>
@@ -729,7 +731,7 @@ Keyboard".)</Dialog>
 quite a bit...</Dialog>
           <Dialog>Oh, they sell toys for 
 cats...</Dialog>
-          <Dialog>(I got a "Toy Catnip".)</Dialog>
+          <Dialog>(I got a "Cat Teaser Toy".)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -803,13 +805,11 @@ cats...</Dialog>
 play any instruments？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Me？　Well...</Dialog>
-          <Dialog>Actually, I'm looking for 
-someone to give this 
-guitar. Would you be 
-interested in taking it？</Dialog>
-          <Dialog>What？　It's fine by me, 
-if you're sure you want to 
-get rid of it...</Dialog>
+          <Dialog>Actually, I'm looking for
+someone who'll play this
+guitar. Would you take it？</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
           <Dialog>Yeah. You've been coming 
 here a lot, so you must 
 like musical instruments, 
@@ -817,7 +817,8 @@ right？　Then, it's in safe
 hands...</Dialog>
           <Dialog>In that case... Thank you 
 so much.</Dialog>
-          <Dialog>See you. Nice to meet you.</Dialog>
+          <Dialog>See you. Take good care of
+it.</Dialog>
           <Dialog>(Got an "Acoustic Guitar".)</Dialog>
         </Dialogs>
       </SDL2>
@@ -858,7 +859,8 @@ map of this place...</Dialog>
           <Dialog>Let's give it a try and see 
 what I can find.</Dialog>
           <Dialog>Should be around here...</Dialog>
-          <Dialog>Oh, there it is！　This is...</Dialog>
+          <Dialog>Oh, there it is！　This
+is...</Dialog>
           <Dialog>(I got a "Buddha Statue".)</Dialog>
         </Dialogs>
       </SDL2>
@@ -943,7 +945,7 @@ what I can find.</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Clerk</Dialog>
+          <Dialog>Shopkeeper</Dialog>
           <Dialog>Excuse me. I'm actually 
 looking for something... 
 Can I have a moment？</Dialog>
@@ -952,8 +954,9 @@ Can I have a moment？</Dialog>
           <Dialog>I'm looking for a map like 
 this...</Dialog>
           <Dialog>Ah, in that case, I have it.</Dialog>
-          <Dialog>Oh, really？　I wonder if 
-you could give me that map.</Dialog>
+          <Dialog>Oh, really？ Could you
+possibly let me have that
+map？</Dialog>
           <Dialog>Let me think...</Dialog>
           <Dialog>Instead... I'll give you 
 this precious book. What do 
@@ -1033,14 +1036,13 @@ you say？</Dialog>
           <Dialog>You're here a lot, Onii-san.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Me？　Well...</Dialog>
-          <Dialog>We met here by chance so, 
-do you want this fishing 
+          <Dialog>Must be fate that we met
+here. Want this fishing
 rod？</Dialog>
-          <Dialog>What？　I'm okay with that, 
-if you're sure about it...</Dialog>
-          <Dialog>It just doesn't suit me. 
-You should give it a try 
-though.</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
+          <Dialog>It just doesn't suit me. Go
+ahead and give it a try.</Dialog>
           <Dialog>Then... Thank you.</Dialog>
           <Dialog>See you.</Dialog>
           <Dialog>(I got a "Fishing Rod".)</Dialog>
@@ -1116,19 +1118,18 @@ though.</Dialog>
           <Dialog>Onii-san, onii-san.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Me？　Emm...</Dialog>
-          <Dialog>I feel bad you're always 
-here... I know, I found something, do you 
-want to take it？</Dialog>
-          <Dialog>What？　I'd feel bad to 
-receive it, but if you're 
-sure...</Dialog>
-          <Dialog>It's fine, don't worry. 
-Consider it a "thank you 
-gift". My brother never 
-used to play with these 
-toys anyway.</Dialog>
+          <Dialog>Sorry you always come all
+this way... Oh, I found
+something interesting. Would
+you take it？</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
+          <Dialog>It's fine, it's fine. A
+thank-you for always coming.
+They might be toys you've
+never played with, though.</Dialog>
           <Dialog>Then... Thank you very much.</Dialog>
-          <Dialog>Keep up the good work.</Dialog>
+          <Dialog>Hope to see you again.</Dialog>
           <Dialog>(I got a "Nostalgic Toy 
 Set".)</Dialog>
         </Dialogs>
@@ -1203,17 +1204,16 @@ Set".)</Dialog>
           <Dialog>Um, you come here a lot.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Me？　Well...</Dialog>
-          <Dialog>Here, it's just jam but, 
-you can have it if you 
-want？</Dialog>
-          <Dialog>What？　I mean yeah, I can 
-take it if you want...</Dialog>
+          <Dialog>This is jam. Would you like
+some？</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
           <Dialog>Yes. Thank you for always 
 coming. Here you go.</Dialog>
           <Dialog>Then... Thank you so much.</Dialog>
           <Dialog>Thank you very much for 
 your continued support.</Dialog>
-          <Dialog>(I got a "Jam".)</Dialog>
+          <Dialog>(I got "Jam".)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1275,9 +1275,9 @@ for an Italian Restaurant.)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I'm wondering if there is 
 anything of use here...</Dialog>
-          <Dialog>Oh, the latest model of my 
-racket. Let me give it a 
-try.</Dialog>
+          <Dialog>Oh, the latest model racket.
+I'll ask if I can try it
+out.</Dialog>
           <Dialog>Yeah, I like it！　
 Okay then...</Dialog>
           <Dialog>(I got the "Latest Model 
@@ -1365,7 +1365,7 @@ of a Tennis Racket".)</Dialog>
           </Entry>
         </Unknown>
         <Dialogs>
-          <Dialog>Clerk</Dialog>
+          <Dialog>Shopkeeper</Dialog>
           <Dialog>Um, can I have a word？ 
 I'm actually looking for 
 something.</Dialog>
@@ -1374,8 +1374,8 @@ something.</Dialog>
           <Dialog>I'm looking for a pocket 
 watch, like this one...</Dialog>
           <Dialog>Ah, in that case, I have it.</Dialog>
-          <Dialog>What？　...Can you give me 
-that watch, please？</Dialog>
+          <Dialog>Huh？ ...Could you possibly
+let me have that watch？</Dialog>
           <Dialog>Let me think...</Dialog>
           <Dialog>Instead... I'll give you 
 this map.</Dialog>
@@ -1488,8 +1488,8 @@ nii-chan.</Dialog>
           <Dialog>Me？　Well...</Dialog>
           <Dialog>Do you like fish？　
 Then, I'll give you this.</Dialog>
-          <Dialog>What？　I mean, I don't mind 
-it but are you sure...</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
           <Dialog>No problem.</Dialog>
           <Dialog>Then... Thank you.</Dialog>
           <Dialog>No problem, see you.</Dialog>
@@ -1570,9 +1570,8 @@ here a lot.</Dialog>
           <Dialog>Me？　Well...</Dialog>
           <Dialog>Do you like boats？　
 Then I'll give you this.</Dialog>
-          <Dialog>What？　I'm okay with that, 
-if you're sure you want 
-to...</Dialog>
+          <Dialog>What？ Are you sure it's
+okay for me to have it...？</Dialog>
           <Dialog>No problem. Take it.</Dialog>
           <Dialog>Then... Thank you.</Dialog>
           <Dialog>Well, see you around.</Dialog>
@@ -1763,9 +1762,10 @@ Cookware".)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Let me see if there is 
-interesting here...</Dialog>
-          <Dialog>...Huh, something fell down.</Dialog>
+          <Dialog>(Anything interesting around
+here...)</Dialog>
+          <Dialog>...Huh, something's lying on
+the ground.</Dialog>
           <Dialog>(I got the "Treasure Map".)</Dialog>
         </Dialogs>
       </SDL2>
