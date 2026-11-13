@@ -20,9 +20,10 @@
           <Dialog>What's this？ Did somebody 
 get the wrong e-mail 
 address？</Dialog>
-          <Dialog>But, worrying about your 
-girlfriend... It fits me 
-pretty well.</Dialog>
+          <Dialog>But it's about girlfriend
+troubles... That might be
+exactly what I need right
+now.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -92,8 +93,8 @@ out. Thank you, Mr. X.</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What's this？ An e-zine？</Dialog>
-          <Dialog>Somebody must have gotten 
-their e-mail address wrong.</Dialog>
+          <Dialog>I must have been signed up
+by mistake.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -115,9 +116,9 @@ their e-mail address wrong.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Another one. Looks like a 
 mistake...</Dialog>
-          <Dialog>But it looks kind of 
-interesting. Maybe I'll 
-read it a little.</Dialog>
+          <Dialog>But it looks kind of
+interesting. I'll leave it
+as is.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
