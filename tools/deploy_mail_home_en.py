@@ -109,6 +109,18 @@ ZHOUMARU_ONLY = [
 ZHOUMARU_ONLY_STEMS = frozenset(Path(p).stem for p, _en in ZHOUMARU_ONLY)
 
 # Prefer Zhoumaru masters for these stems (home buttons + Play pill chrome).
+# Send-phrase rows (おはよう / おやすみ / 何してる？ …). The pill is 200 px;
+# vanilla text stops at 128 px (code) inside a 146 px pane, so English
+# ellipsizes with room left in the pill. 180 keeps the same left edge
+# and ends ~9 px inside the art. ``patch_mail_reply_width`` matches this.
+REPLY_LAYOUT = "blyt/Pts_Mail_Btn02.bclyt"
+REPLY_PANE = "Tex_Reply_Text"
+REPLY_W_VANILLA = 146.0
+REPLY_X_VANILLA = -16.0
+REPLY_W = 180.0
+REPLY_X = 1.0  # left edge stays at -89
+
+
 ZHOUMARU_BUTTONS = frozenset(
     {
         "mail_tex_jyusin_RGBA4",
@@ -298,6 +310,41 @@ def replace_labels(
         print(f"OK {path} -> {en!r} ({src})", flush=True)
 
 
+def widen_reply_text(lyt: bytes) -> bytes:
+    """Stretch ``Tex_Reply_Text`` to ``REPLY_W`` without moving its left edge."""
+    if lyt[:4] != b"CLYT":
+        raise SystemExit("Pts_Mail_Btn02 is not CLYT")
+    out = bytearray(lyt)
+    _magic, _bom, header_size, _rev, _file_size, count = struct.unpack_from(
+        "<4sHHIII", out, 0
+    )
+    off = header_size
+    hits = 0
+    for _ in range(count):
+        tag = bytes(out[off : off + 4])
+        size = struct.unpack_from("<I", out, off + 4)[0]
+        if tag == b"pan1" and size >= 76:
+            name = bytes(out[off + 12 : off + 28]).split(b"\x00", 1)[0].decode("ascii")
+            if name == REPLY_PANE:
+                x = struct.unpack_from("<f", out, off + 0x24)[0]
+                w = struct.unpack_from("<f", out, off + 68)[0]
+                if abs(w - REPLY_W) < 0.01 and abs(x - REPLY_X) < 0.01:
+                    hits += 1
+                elif abs(w - REPLY_W_VANILLA) < 0.01 and abs(x - REPLY_X_VANILLA) < 0.01:
+                    struct.pack_into("<f", out, off + 0x24, REPLY_X)
+                    struct.pack_into("<f", out, off + 68, REPLY_W)
+                    hits += 1
+                else:
+                    raise SystemExit(
+                        f"{REPLY_PANE} geometry x={x} w={w}, expected "
+                        f"{REPLY_X_VANILLA}/{REPLY_W_VANILLA}"
+                    )
+        off += size
+    if hits != 1:
+        raise SystemExit(f"{REPLY_PANE} found {hits} times")
+    return bytes(out)
+
+
 def patch_package(
     pkg_id: int,
     labels: list[tuple[str, str]],
@@ -325,6 +372,11 @@ def patch_package(
     tmp.mkdir(parents=True, exist_ok=True)
     darc = DarcArchive(bytearray(arc_elem.parsed()))
     replace_labels(darc, labels, tmp, fmt=fmt)
+    reply = darc.find(REPLY_LAYOUT)
+    if reply is not None:
+        widened = widen_reply_text(darc.extract_file(reply))
+        darc.replace_same_size(reply, widened)
+        print(f"OK {REPLY_PANE} {REPLY_W_VANILLA:.0f} -> {REPLY_W:.0f} px", flush=True)
     patched = bytes(darc.data)
 
     if use_zopfli:

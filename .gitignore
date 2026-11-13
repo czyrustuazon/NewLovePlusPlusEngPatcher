@@ -66,6 +66,7 @@ tools/*
 !tools/rebuild_dbin2_from_xml.py
 !tools/ingest_pack.py
 !tools/export_workbench_gemini.py
+!tools/sync_workbench.py
 !tools/translate_heroines_gemini.py
 !tools/verify_nickname_tokens.py
 !tools/fetch_nlppatch_release.py

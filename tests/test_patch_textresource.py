@@ -77,6 +77,11 @@ def test_translation_values_keep_japanese_control_tokens():
     assert mapping["▲小早川＊▲"] == "▲Kobayaka＊▲"
     assert mapping["▲彼女＊＊▲"] == "▲彼女＊＊▲"
     assert mapping["▲高嶺＊＊▲"] == "▲Takane＊＊▲"
+    # Choice needles. ▲Raw does not occur in scripts, so the dish / nickname
+    # fill never matches and the line draws as ▲生成選択肢Ｎ▲.
+    for n in "１２３４５６":
+        token = f"▲生成選択肢{n}▲"
+        assert mapping[token] == token
 
 
 def test_rebuild_trb_keeps_when_key_is_truncated():

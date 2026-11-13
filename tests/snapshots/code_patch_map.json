@@ -1,6 +1,6 @@
 {
  "vanilla_sha256": "a83d349d0a000a127f93f743c038921903a2aae111b4b9005aadd446324ab890",
- "final_sha256": "6ff1fcfce62f7f22b3761834288967d4c54eca43af3c6ef5d1a29f29d9ee41f4",
+ "final_sha256": "8d45fcc5713e31b3b8d6c3a2bb189a4544081bf4b6401dacb1638f9aed8f1a57",
  "steps": [
   {
    "name": "apply_name_pane_patches",
@@ -174,6 +174,13 @@
     "0x5d1e34-0x5d1e38",
     "0x68f800-0x68f828",
     "0x6e3024-0x6e3038"
+   ]
+  },
+  {
+   "name": "apply_mail_reply_width",
+   "written_sha256": "b32459a47e9c2b5a272763d24ac90f7ddd9246f88186b9aa5ed39e55fd72b5e6",
+   "ranges": [
+    "0x1acdb8-0x1acdbc"
    ]
   },
   {
