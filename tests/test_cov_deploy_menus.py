@@ -2023,3 +2023,31 @@ def test_multiwin_late_errors(tmp_path, monkeypatch):
     monkeypatch.setattr(multi, "exact_slot", slot)
     with pytest.raises(SystemExit, match="ARC mismatch"):
         multi.main()
+
+
+def test_mail_home_widens_the_reply_row_in_the_package(tmp_path, monkeypatch):
+    from darcutil import DarcArchive
+
+    sec = bytearray(80)
+    sec[0:4] = b"pan1"
+    struct.pack_into("<I", sec, 4, len(sec))
+    sec[12:26] = mail_home.REPLY_PANE.encode("ascii")
+    struct.pack_into("<f", sec, 0x24, mail_home.REPLY_X_VANILLA)
+    struct.pack_into("<f", sec, 68, mail_home.REPLY_W_VANILLA)
+    head = bytearray(0x14)
+    struct.pack_into("<4sHHIII", head, 0, b"CLYT", 0xFEFF, 0x14, 0, 0x14 + len(sec), 1)
+    files = {
+        "timg/Hello.bclim": noise_bclim(64, 16, 8, seed=3),
+        mail_home.REPLY_LAYOUT: bytes(head) + bytes(sec),
+    }
+    img = tmp_path / "img.bin"
+    write_img(img, {mail_home.BUTTON_PKG: file_sized(arc_package(files))})
+    bind(monkeypatch, tmp_path, mail_home, img)
+    monkeypatch.setattr(mail_home, "find_ui_png", lambda *a, **k: None)
+    monkeypatch.setattr(mail_home, "VANILLA", tmp_path / "no-vanilla.bin")
+    mail_home.patch_package(mail_home.BUTTON_PKG, [("timg/Hello.bclim", "Hello")], fmt=8, use_zopfli=False)
+    arc = fi.read_element(fi.read_package(img, mail_home.BUTTON_PKG), "Data.arc", tmp_path)
+    darc = DarcArchive(bytearray(arc))
+    patched = darc.extract_file(darc.find(mail_home.REPLY_LAYOUT))
+    assert struct.unpack_from("<f", patched, 0x14 + 68)[0] == mail_home.REPLY_W
+    assert struct.unpack_from("<f", patched, 0x14 + 0x24)[0] == mail_home.REPLY_X

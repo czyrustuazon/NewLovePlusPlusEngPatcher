@@ -14,7 +14,9 @@ files or onto ``rebuild_dbin2``. The merged script goes to
   python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 
 Nickname tokens (``▲…▲``, including an unclosed ``▲``) must keep the same
-multiset as the baseline. A drop in ``※`` or ``▼`` is rejected. ``●`` is the
+multiset as the baseline. A line that already equals the patcher file is not
+a new edit, so a token the patcher already changed does not fail the pack.
+A drop in ``※`` or ``▼`` on a line the volunteer changed is rejected. ``●`` is the
 player's "I" (shown as 俺/僕), so a translated line that still has it is a
 warning. Circle and punctuation placeholders are locked.
 """
@@ -165,7 +167,31 @@ def _dbin_paths(dbin_root: Path, stem: str) -> list[Path]:
     return found
 
 
-def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str], list[str]]:
+def _checked_proposed(
+    baseline: list[str], proposed: list[str], live: list[str] | None
+) -> list[str]:
+    """Lines that already match the patcher file are not a new token edit.
+
+    The workbench baseline stays the Japanese line. The shipped English may
+    already have moved a nickname token. Saving that shipped line again must
+    not fail the token check. A line the volunteer actually changed still does.
+    """
+    if live is None or len(live) != len(proposed):
+        return proposed
+    checked: list[str] = []
+    for old, new, cur in zip(baseline, proposed, live):
+        if new == cur and new != old:
+            checked.append(old)
+        else:
+            checked.append(new)
+    return checked
+
+
+def _validate_pair(
+    baseline: list[str],
+    proposed: list[str],
+    live: list[str] | None = None,
+) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     if len(baseline) != len(proposed):
@@ -173,8 +199,9 @@ def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str],
             f"dialog count {len(proposed)} != baseline {len(baseline)}"
         )
         return errors, warnings
+    checked = _checked_proposed(baseline, proposed, live)
     base_tokens = _tokens(baseline)
-    new_tokens = _tokens(proposed)
+    new_tokens = _tokens(checked)
     if base_tokens != new_tokens:
         missing = base_tokens - new_tokens
         extra = new_tokens - base_tokens
@@ -185,16 +212,20 @@ def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str],
         )
     for mark in ("※", "▼"):
         old = _mark_count(baseline, mark)
-        new = _mark_count(proposed, mark)
+        new = _mark_count(checked, mark)
         if new < old:
             errors.append(f"{mark} count dropped {old} -> {new}")
         elif new > old:
             warnings.append(f"{mark} count rose {old} -> {new}")
     # ● is the player's "I" (the game shows 俺/僕), so a translated line drops it.
-    kept = [i for i, (old, new) in enumerate(zip(baseline, proposed)) if old != new and "●" in new]
+    kept = [
+        i
+        for i, (old, new) in enumerate(zip(baseline, checked))
+        if old != new and "●" in new
+    ]
     if kept:
         warnings.append(f"● left in translated line(s) {kept[:8]}: shows as 俺/僕; write I / me / my")
-    for index, (old, new) in enumerate(zip(baseline, proposed)):
+    for index, (old, new) in enumerate(zip(baseline, checked)):
         if old != new and LOCKED_RE.fullmatch(old):
             errors.append(f"line {index} is a locked placeholder")
     return errors, warnings
@@ -278,6 +309,19 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
         )
 
 
+def _reject_edits(
+    plan: ItemPlan, baseline: list[str], proposed: list[str], current: list[str]
+) -> bool:
+    """Record token and mark errors. True when the item must not be written."""
+    if len(current) == len(baseline):
+        errors, warnings = _validate_pair(baseline, proposed, live=current)
+    else:
+        errors, warnings = _validate_pair(baseline, proposed)
+    plan.errors.extend(errors)
+    plan.warnings.extend(warnings)
+    return bool(plan.errors)
+
+
 def plan_item(
     item: object,
     *,
@@ -309,10 +353,10 @@ def plan_item(
         plan.errors.append(str(exc))
         return plan
 
-    errors, warnings = _validate_pair(baseline, proposed)
-    plan.errors.extend(errors)
-    plan.warnings.extend(warnings)
-    if plan.errors:
+    if len(baseline) != len(proposed):
+        plan.errors.append(
+            f"dialog count {len(proposed)} != baseline {len(baseline)}"
+        )
         return plan
 
     xml_path = scripts_dir / f"{stem}.xml"
@@ -341,6 +385,8 @@ def plan_item(
             return plan
         if existing is not None:
             current, xml_used, match, bad = existing
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
             _note_mismatch(plan, bad, xml_used)
             if plan.errors:
                 return plan
@@ -353,6 +399,8 @@ def plan_item(
                 )
                 return plan
             current, xml_used, match, bad = branched
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
             _note_mismatch(plan, bad, xml_used)
             if plan.errors:
                 return plan
@@ -377,11 +425,15 @@ def plan_item(
             except IngestError as exc:
                 plan.errors.append(str(exc))
                 return plan
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
         elif dbins:
             try:
                 current = _dbin_dialogs(dbins[0])
             except IngestError as exc:
                 plan.errors.append(str(exc))
+                return plan
+            if _reject_edits(plan, baseline, proposed, current):
                 return plan
         else:
             plan.errors.append(f"no {xml_path.name} and no {stem}.dbin2 under {dbin_root}")

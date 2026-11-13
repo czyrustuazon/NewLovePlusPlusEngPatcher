@@ -682,7 +682,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Puzzle-dama high score `ハイスコア更新！` / course badges `初級` `上級` | pkg **119** `Result`: `004` 256×64 RGBA4444 banner, `000` / `001` 32×32 ETC1A4 badges. pkg **118** `Ranking` `181` / `182` are byte-identical badge copies | **EN** (`NEW HIGH SCORE!`, `EASY` / `HARD`). `tools/cut_minigame_highscore_en.py`: the banner is the mockup lettering keyed by its reds, shadow turned into semi-transparent black, palette-quantized to 32 colours for the 5332-byte slot (raw ~9.3 KB). The mockup only shows EASY, so both badges are rendered (vanilla badge, kanji painted out per row, white two-line Arial Rounded MT Bold squeezed to the badge width); HARD fits its 383-byte slot by 3 bytes. Anchor for the mockup: the unchanged TOTAL SCORE panel `016`. |
 | Schedule header `予定入力` | ETC1A4 `scd_toptex_RBGA4` @ MyroomHeader **5575** | Deployed (`Schedule`) — `tools/deploy_schedule_header_en.py` (live-package splice) |
 | Mail home | ETC1A4 `mail_toptex_RBGA4` @ **5575** + RGBA4444 `mail_tex_{jyusin,shinki,chak}` + `C_Btn_Play_{Off,On}` + `Sel_Tex_ma02_01..05` @ **5207** | Deployed (`Mail` / `Inbox` / `New Message` / **Ringtone Settings** / **Play** / Girlfriend·Friend·Contact·Info·**Mystery** Mail) — `tools/deploy_mail_home_en.py`. Inbox / New Message / `chak` + Play are Zhoumaru (gray, like vanilla); inbox categories are rendered with `render_menu_label` (§ Menu-row lettering) (Zhoumaru left 01 JP and called 05 Apology). |
-| Mail compose / phone / emoji chrome `挨拶` `愛の言葉` `気分送信` `特殊`, `絵文字選択`, `着信履歴`…, emoji names, `確認` / `返信`, OK | RGBA4444 / ETC1A4 `Mail_SendType_T01..04`, `Mail_PopTxt03`, `Sel_Tex_na01..03`, `Sel_Tex_te01..11`, `Tel_PlayBtn_*`, `Emoji_Name_01..24`, `C_Com_icon_{Confirm,Repry1}`, `C_Com_Win01_Btn02_Ok_*` @ Mail **5207** | Deployed from Zhoumaru `Mail.check` via `ZHOUMARU_ONLY` in `tools/deploy_mail_home_en.py`. That script rebuilds Mail.arc from vanilla, so these shipped JP until listed. `C_Com_icon_Repry2` (送信 Send) stays JP: Zhoumaru labeled it Reply. The Mail header is owned by `deploy_schedule_header_en.py` |
+| Mail compose / phone / emoji chrome `挨拶` `愛の言葉` `気分送信` `特殊`, `絵文字選択`, `着信履歴`…, emoji names, `確認` / `返信`, OK | RGBA4444 / ETC1A4 `Mail_SendType_T01..04`, `Mail_PopTxt03`, `Sel_Tex_na01..03`, `Sel_Tex_te01..11`, `Tel_PlayBtn_*`, `Emoji_Name_01..24`, `C_Com_icon_{Confirm,Repry1}`, `C_Com_Win01_Btn02_Ok_*` @ Mail **5207** | Deployed from Zhoumaru `Mail.check` via `ZHOUMARU_ONLY` in `tools/deploy_mail_home_en.py`. That script rebuilds Mail.arc from vanilla, so these shipped JP until listed. Phrase rows (`Tex_Reply_Text` on `Pts_Mail_Btn02`) were clipped at 128 px inside the 200 px pill (`Good nigh…`); the pane and `FUN_001acc64` now lay the line out at 180 px (`patch_mail_reply_width.py`). `C_Com_icon_Repry2` (送信 Send) stays JP: Zhoumaru labeled it Reply. The Mail header is owned by `deploy_schedule_header_en.py` |
 | My Data home | ETC1A4 `mydata_toptex_RGBA4` @ **5575** + `mcmn_tex_{todo,status,item,camera}` @ **5380** | Deployed (`My Data` / `To-Do List` / `Status` / `Item List` / `My Camera`). All four buttons are Zhoumaru `Myroom.check` masters — `tools/deploy_mydata_en.py`. `tools/deploy_schedule_header_en.py` (the 5575 last writer) packs the gray Zhoumaru `MyroomHeader.check` masters for Schedule Entry / Mail / Phone / To-Do / Status / Item List / My Camera. `My Data` is rendered to match them, because the Zhoumaru `mydata_toptex_RGBA4` master is letter-spaced |
 | Album `アルバム` / `検索` / `実行` / export + search popups / wallpaper picker | ETC1A4 `album_top_tex` @ **5575** + every `Album.check` master (RGBA4444/ETC1A4) @ Album **4149** | Deployed. The header is rendered gray `Album` by `tools/deploy_schedule_header_en.py` (the Zhoumaru master is a letter-spaced `inbox`). `tools/deploy_ui_buttons_en.py` rebuilds 4149 from vanilla, so its Album group lists every Zhoumaru master (Search / Execute / Bulk Export / popups / Wall_*); before that, only Delete shipped EN |
 | WEB header `W E B` | ETC1A4 `web_toptex_RGBA4` @ MyroomHeader **5575** | Deployed (Zhoumaru gray `WEB`) — `tools/deploy_schedule_header_en.py`. `tests/test_zhoumaru_coverage.py` caught it: no 5575 writer listed it |
@@ -2378,19 +2378,20 @@ Or set `NLPP_ENG_PATCHER` / `NLPP_WORKBENCH`.
 
 | Kit | Built output | Content | Save → Discord JSON |
 |-----|--------------|---------|---------------------|
-| **Scripts** | `kit/NLPP_Translate.html` | Dialogue still needing EN (dialogs only in embed; ~6 MB) | `nlpp-contrib-….json` (`kind: nlpp-contrib`) |
-| **Strings** | `kit/NLPP_Translate_Strings.html` | SMS (`maildic_*`) + TRB leftovers still JP | `nlpp-strings-….json` (`kind: nlpp-strings-contrib`) |
-| **Images** | `kit/NLPP_Translate_Images/` | All UI PNG masters (**1765** across **101 / 101** `IMAGE_MAP` folders) | `nlpp-images-….json` (`kind: nlpp-images-contrib`, optional `png_b64`) |
+| **Scripts** | `kit/NLPP_Translate.html` | All contentful dialogue. Japanese baseline is vanilla. The edit box is the text the patcher ships | `nlpp-contrib-….json` (`kind: nlpp-contrib`) |
+| **Strings** | `kit/NLPP_Translate_Strings.html` | SMS for all three heroines. TRB rows only while that exact vanilla string is still missing from `translations.json` | `nlpp-strings-….json` (`kind: nlpp-strings-contrib`) |
+
+The images tab was removed from the volunteer workbench. UI PNG masters stay in `assets/images/` and the bake.
 
 Hub tabs lazy-load iframes; unsaved edits warn via `postMessage` `{type:'nlpp-unsaved', tool, dirty}`.
 
 **Volunteer loop:** open hub → edit → **Save progress** → post JSON in Discord `#translated-work-to-review`.
 
-Snapshot sizes fluctuate as EN lands; regenerate kits before sharing. Example post-export counts (2026-09-20 scripts/strings, 2026-10-20 images): Scripts ~342 / ~10k JP lines; Strings ~1822 SMS + leftover TRB; Images **1765** PNGs / **101 of 101** folders (`intro111` / `intro203` / `intro304` are sparse, not empty). Chrome-only subset for the fansite bar is **564** in 25 folders (`tools/export_progress_metrics.py`). Dialogue scripts are **522 / 578 (90.3%)** with the Gemini machine pass (community layer alone remains 326 / 578).
+Snapshot sizes fluctuate as EN lands. Rebuild with `python tools/sync_workbench.py` before sharing. Chrome-only subset for the fansite bar is **564** in 25 folders (`tools/export_progress_metrics.py`). Dialogue scripts are **522 / 578 (90.3%)** with the Gemini machine pass (community layer alone remains 326 / 578).
 
 #### Scripts kit — routes and sources (`export_workkit.py`)
 
-Includes stems for **all routes**, but the sidebar **Needs translation** filter only lists scripts that still have real JP after token/punct stripping. That is why a “needs work” list can look **Manaka-only** (`t*`) even though Nene (`a*`) / Rinko (`k*`) are present under **All scripts**.
+Includes stems for **all routes**. **Needs translation** lists a script when the edit box still has Japanese, or when that box is still the unreviewed Gemini pass. Finished Manaka, common, and community scripts show the current `rebuild_dbin2` text and drop out of that filter.
 
 | Prefix | Route |
 |--------|-------|
@@ -2399,7 +2400,7 @@ Includes stems for **all routes**, but the sidebar **Needs translation** filter 
 | `t*` | Manaka |
 | `p*` | Common |
 
-**Source priority (volunteer baselines):**
+**Source priority** for `python tools/sync_workbench.py` is the patcher: vanilla Japanese as the reference when the line count matches, Gemini `dbin2/script` as the edit box for `a*` / `k*` that have a machine pass, and `rebuild_dbin2` otherwise. The September export order below is only history:
 
 1. **Post-game** (`a`/`k`/`t`/`p` id ≥ **800**, incl. **Manaka `t8xx`/`t9xx`**): JP `.dbin2` first (CIA cache → NLPPATCH → dump), then `assets/scripts/`
 2. **Early-game:** `assets/scripts/*.xml` first (Manaka/common WIP), then the same `.dbin2` search order
@@ -2420,33 +2421,18 @@ Former `assets/scripts_deferred/` (machine/community EN) was **deleted** 2026-09
 
 Jump: `a042`, `k100`, `a970`, `k970`, `t151 - #775`. Filter: All / Needs JP / Done / Edited (no route dropdown).
 
-`python tools/export_workbench_gemini.py` writes `gemini_dialogs` (scripts) and `gemini` (SMS) into the sibling workbench kits from `assets/gemini_heroines`. It does not replace `baseline_dialogs` / `baseline`. Save progress still exports that Japanese baseline plus the edit box. `ingest_pack.py` applies a Gemini-stem proofread onto the machine pass (a line left as Japanese is skipped; a line that still equals the machine pass is already applied). The same command bumps `version.json` `build` and the `nlpp-workbench-build` meta. `kit/update.js` compares that build with GitHub on load, on a timer, and from **Check for updates**. A newer build locks the open page until refresh.
+`python tools/sync_workbench.py` rebuilds both kits from the patcher. The Japanese baseline is the current vanilla script when it has the same line count as the shipped text. The edit box is Gemini `dbin2/script` for an `a*` / `k*` stem that has one, and `rebuild_dbin2` otherwise. The same command rewrites a Gemini XML that lagged its `dbin2`, and points a Gemini phrase-map entry at that shipped English when every script agrees. `python tools/export_workbench_gemini.py` only refreshes the Gemini columns, and it reads `dbin2/script` ahead of the XML.
 
 #### Strings kit — SMS + TRB (`export_strings.py`)
 
 | Kind | What | Source | Notes |
 |------|------|--------|-------|
 | **SMS** | Phone texts for Manaka / Nene / Rinko | `img.bin` package **92** `maildic_{m,n,r}.mdc` (vanilla or bake) | Optional overlay `assets/sms_en/*.en.xml` if present; only lines still JP after overlay |
-| **TRB** | Main table leftovers | `textresource_jpn.trb` + `assets/textresource/translations.json` | Only STRI entries whose **working** text still has JP (already-mapped EN omitted) |
+| **TRB** | Main table leftovers | `textresource_jpn.trb` + `assets/textresource/translations.json` | A row stays only when the full vanilla string is not a `translations.json` key and still has Japanese. `sync_workbench.py` drops the rest |
 
 Heroine SMS stems: Manaka `maildic_m`, Nene `maildic_n`, Rinko `maildic_r`. Jump: `sms/manaka#12`, `trb#2837`. SMS max ~254 UTF-8 bytes. Keep `※` / `▼` / `▲…＊…▲`.
 
-#### Images kit — UI PNG audit (`export_images.py`)
-
-**Goal:** community review of **every** EngPatcher UI PNG master mapped in `src/image_map.py` (menus, softkeys, headers, mail, date-edit, camera, title, syspopup, …) — not dialogue scripts.
-
-| Piece | Path / rule |
-|-------|-------------|
-| Masters root | `EngPatcher/assets/images/` |
-| Folder pick | `prefer_asset_folders`: prefer `*.check` dumps, then plain folders, over `*.arc` trees |
-| Files | All PNGs under each mapped folder via `iter_asset_pngs` (prefer `*_eng` / `timg/`; skip copies / `_jpn` / `(2)`) |
-| Share layout | `kit/NLPP_Translate_Images/index.html` + `media/<folder_key>/…` + `catalog.json` (+ `.zip`) |
-| Volunteer actions | Unchecked → **OK** / **Needs fix** / **Upload PNG** (same W×H) → Save → JSON may embed `png_b64` |
-| Preview | Background toggle (light checker default) — view only |
-
-**Not included:** non-`IMAGE_MAP` folders, `Images-Done` archives as a separate tree (EN masters already preferred via `.check` / `_eng`), fonts, scripts XML, TRB binaries. Large chrome packages appear as folder keys such as `ncommonicon`, `ncommonmsel*`, `title`, `myroomheader`, `syspopup`, `dateedit*`, `mail`, `option*`, etc. Full mapped export is **101 of 101** keys / **1765** PNGs (`intro111` / `intro203` / `intro304` are sparse dumps). Do not quote the old ~68 / ~1210, **1727 / 92 of 95**, or **1745 / 95 of 95** snapshots.
-
-Ingest: `ingest_images.py --apply` writes replacements back under `assets/images/` for later `pack_images` / bake.
+The images kit is not part of the workbench. UI review uses the PNG masters under `assets/images/`.
 
 ### 20.3 Maintainer export / ingest
 
@@ -2457,52 +2443,41 @@ python tools/ingest_pack.py path/to/nlpp-contrib.json
 python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 ```
 
-Dry-run is the default. `--apply` writes a changed line only when that repo dialog is still the Japanese baseline. A line that already has other text (shipped English) is a conflict and is left alone. `--force` replaces conflicts. A nickname-token multiset change, a drop in `※` or `▼`, or an edit to a circle / punctuation placeholder rejects the item and writes nothing. A `●` count change warns and still applies.
+Dry-run is the default. `--apply` writes a changed line only when that repo dialog is still the Japanese baseline. A line that already has other text (shipped English) is a conflict and is left alone. `--force` replaces conflicts. A nickname-token multiset change on a line the volunteer changed, a drop in `※` or `▼`, or an edit to a circle / punctuation placeholder rejects the item and writes nothing. A line that already equals the shipped file is not a new token edit. A `●` count change warns and still applies.
 
 Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated (Nene `a*` or Rinko `k*`) is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake. SMS proofreads are not part of this pack; a reviewed `assets/sms_contrib/maildic_*.en.xml` is only read at SMS splice time.
 
-Export, strings ingest, and images ingest are still the planned parser flow:
+Rebuild the kits from the patcher, then bump the workbench build:
 
 ```bash
-cd nlpp-localization-workbench-parser
-python export_workkit.py
-python export_strings.py
-python export_images.py
-python sync_hub.py
-
-python ingest_strings.py path/to/nlpp-strings.json --apply
-python ingest_images.py path/to/nlpp-images.json --apply
+python tools/sync_workbench.py
 ```
 
-- Export reads templates from `tools/localization_workbench/` via `paths.templates_dir()`.
-- Export writes under `workbench/kit/` (and hub `index.html`).
-- Strings / images ingest applies into EngPatcher `assets/` (`translations.json` / SMS, UI PNGs) — review before bake/CIA.
+`export_workbench_gemini.py` only refreshes Gemini columns onto an existing kit. Strings ingest is not built. The images tab was removed from the volunteer hub.
 
-Pack **schema `1`**. Edit UI behavior in EngPatcher templates, then re-export (do not hand-edit the giant embedded kit HTML).
+Pack **schema `1`**. Edit UI behavior in the kit HTML, then rebuild with `sync_workbench.py` (do not hand-edit the embedded JSON).
 
 ### 20.4 Validation / UX rules (kit + ingest)
 
 | Rule | Behavior |
 |------|----------|
-| Nickname tokens `▲…＊…▲` (incl. unclosed forms) | Warn / confirm on save; ingest errors if multiset changes |
+| Nickname tokens `▲…＊…▲` (incl. unclosed forms) | Warn / confirm on save; ingest errors if a volunteer edit changes the multiset. A line that already equals the shipped file is left as-is |
 | Control marks `※`, `▼` | **Hard block** save if count drops vs baseline; ingest rejects |
 | `●` (player's "I", shown as 俺/僕) | Translate as I / me / my; ingest warns if a translated line keeps it |
 | Lone `ー` / `・` | Not counted as “needs JP” (katakana block false positive) |
 | Punct-only / circle placeholders `○○○` | Locked / skip “needs work” |
 | SMS UTF-8 length | Cap 254 bytes (+NUL slot); Strings kit blocks oversize |
-| Image replace | Must match catalog width × height; `png_b64` in JSON |
-| Script list badge | `N left · total` (remaining JP dialogs, not “done / total”) |
-| Images preview bg | Toggle light/dark/white/black/magenta checker (view only; PNG unchanged) |
+| Script list badge | `N left · total` (lines still needing work, including an unedited Gemini pass) |
 
-Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `folder / stem`); Last spot + `localStorage`.
+Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`); Last spot + `localStorage`.
 
 ### 20.5 What not to confuse
 
 - Volunteer **built** kits ≠ EngPatcher **templates** — only templates are edited for UI changes.
-- `tools/localization_workbench/` templates, strings ingest, and images ingest are not built yet. Script ingest is `tools/ingest_pack.py`.
+- `tools/localization_workbench/` templates and strings ingest are not built yet. Script ingest is `tools/ingest_pack.py`. Kits are refreshed with `tools/sync_workbench.py`. The images tab was removed.
 - Parser repo must stay **Python-only** (HTML removed 2026-09-03).
 - `contrib/` in EngPatcher is a pointer README only (old in-tree workbench moved out).
-- Workbench kits are for **leftover** JP / UI audit — finished shipping assets remain under EngPatcher `assets/` + `rebuild_dbin2/`.
+- Workbench kits show vanilla Japanese beside the text the patcher ships. Finished UI PNGs stay under EngPatcher `assets/images/`.
 
 ### 20.6 Open follow-ups
 
@@ -2510,7 +2485,7 @@ Nav: Prev/Next paginate; jump (`t151 - #775`, `sms/manaka#12`, `trb#2837`, `fold
 |------|-------|
 | Private vs public parser GitHub | Parser has local paths via `paths.local.json` only; safe to publish if desired |
 | Large kit HTML on Git | Volunteer repo may ship full `kit/` (~tens of MB); Drive/zip OK as alternate |
-| Discord size limits | Large `png_b64` JSON may need zip-of-PNGs later; ingest still expects `png_b64` today |
+| Discord size limits | Script and string JSON is the volunteer upload. There is no image pack |
 | Bake after ingest | Always re-run bake / deploy / CIA after applying contrib packs |
 
 ---
@@ -2897,7 +2872,17 @@ Detail in §12.4 ("BONUS! Riches amounts in ASCII", beside the Web weather notes
 - Edit `assets/textresource/translations.json` with its own format (1-space indent, CRLF) or the diff rewrites every line.
 - Shell heredocs mangle `\b`, `\n` and `\s` in inline Python; write edits with a file or an editor.
 
+### 24.10 Generated-choice needles `▲生成選択肢Ｎ▲`
+
+A talk line that is only `▲生成選択肢１▲。` (a142: the player calls out a generated form of address; the same key is the dish on date menus) was still drawing the placeholder.
+
+Vanilla main TRB STRI **389–394** are those six needles, 24 bytes each, in the control-token dictionary with `▲デート場所▲` and `▲メニュー▲` (indices 370–408). `code.bin` does not contain the bytes. Scripts keep the Japanese needle, and the game replaces a match with the choice it just generated. `translations.json` had mapped each needle to `▲Raw`, so the rebuilt slots were flag 1 and 6 bytes. The dialog still contains `▲生成選択肢１▲`, the lookup misses, and the placeholder is spoken.
+
+The values are the keys again. `test_translation_values_keep_japanese_control_tokens` locks all six. The rebuilt main TRB is **1115556** bytes; slots 389–394 are flag 1, length 24, the Japanese token, and `textresource_config.trb` SIZE matches. The resident copy (28-byte stride at file `0x1378`: 24-byte token, NUL, 3 pad) was already the Japanese needle and was left alone.
+
+LayeredFS copies of the main TRB and config (Azahar A, Azahar B, and `%AppData%\Azahar`) were updated from that rebuild. Fully quit Azahar so it reloads. A CIA already installed keeps the old table until the next Drop. Do not translate these six keys, and do not replace a script line that is the token with English words.
+
 ---
 
-*Last updated 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.2` / CIA title version 7. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
+*Last updated 2026-11-06 — generated-choice needles `▲生成選択肢Ｎ▲` stay Japanese (§24.10). 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.2` / CIA title version 7. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
 
