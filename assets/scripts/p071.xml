@@ -70,7 +70,7 @@ Ah, it's Naruto.</Dialog>
 You haven't been coming to 
 club activities lately, 
 what's wrong？</Dialog>
-          <Dialog>That's not the case...</Dialog>
+          <Dialog>It's not like that, but...</Dialog>
           <Dialog>I see, well, show up once 
 in a while.</Dialog>
           <Dialog>Sure...</Dialog>
@@ -146,10 +146,10 @@ A member of the Library
 Committee...</Dialog>
           <Dialog>Hello.</Dialog>
           <Dialog>Library Member</Dialog>
-          <Dialog>Hello. You haven't been 
-coming to committee meeting 
+          <Dialog>Hello. You haven't been
+coming to committee meetings
 lately. Is something wrong？</Dialog>
-          <Dialog>That's not the case...</Dialog>
+          <Dialog>It's not like that, but...</Dialog>
           <Dialog>Then join us once in a 
 while.</Dialog>
           <Dialog>Sure...</Dialog>
@@ -227,10 +227,10 @@ Ah, Otori-san？</Dialog>
           <Dialog>Hello, this is Otori. 
 You haven't come to work 
 lately, is something wrong？</Dialog>
-          <Dialog>That's not the case...</Dialog>
+          <Dialog>It's not like that, but...</Dialog>
           <Dialog>Komari</Dialog>
-          <Dialog>Then get a shift, I'm doing 
-overwork here～.</Dialog>
+          <Dialog>Then take some shifts. We're
+in a bind here～.</Dialog>
           <Dialog>Huh, Komari-san？</Dialog>
           <Dialog>Wait, Mayu... Well, that's 
 how it is, so think about 
@@ -382,9 +382,9 @@ a date...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I can't afford it right 
-now. I better not invite 
-her on a date now...)</Dialog>
+          <Dialog>(I'm stretched thin right
+now. I won't ask her out on
+a date...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -427,7 +427,7 @@ later, I better not.)</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(What should I do...)</Dialog>
           <Dialog>Make the call</Dialog>
-          <Dialog>Better next time</Dialog>
+          <Dialog>Not now</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -442,7 +442,7 @@ later, I better not.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(...This is good.)</Dialog>
+          <Dialog>(...That'll do.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -457,10 +457,9 @@ later, I better not.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It would be bad if I had 
-to change the date more 
-than once, I should not 
-do it more.)</Dialog>
+          <Dialog>(It'd be rude to keep
+changing our plans, so I'll
+leave it at this.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
