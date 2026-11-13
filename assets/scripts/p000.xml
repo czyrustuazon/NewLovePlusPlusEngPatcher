@@ -253,7 +253,8 @@ time of year. I should go.</Dialog>
           <Dialog>The place where I'll be
 staying should be somewhere
 around here...</Dialog>
-          <Dialog>Let's see. My new room was...</Dialog>
+          <Dialog>Let's see. My new room
+was...</Dialog>
           <Dialog>A simple student-like
 room</Dialog>
           <Dialog>A fashionable adult-like
@@ -290,8 +291,8 @@ soon...</Dialog>
 second year, and the 
 admission exam was pretty 
 difficult...</Dialog>
-          <Dialog>I managed to pass it. 
-I wonder if I did well...</Dialog>
+          <Dialog>I hope I can keep up,
+though.</Dialog>
           <Dialog>All right, I've arrived.</Dialog>
           <Dialog>Towano Private High School. 
 This is the school I'll be 
@@ -343,19 +344,18 @@ future high school life！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>The transfer procedures 
 went smoothly.</Dialog>
-          <Dialog>The tennis coach who 
-happened to be in the staff 
-room overpowered me by 
-persistently asking me to 
-join his club.</Dialog>
+          <Dialog>The tennis club captain
+happened to be in the staff
+room and kept pushing me to
+join until I gave in.</Dialog>
           <Dialog>I planned on entering a 
 club anyway, so why not？</Dialog>
-          <Dialog>This school's athletics 
-department doesn't seem to 
-be overly strict, so it 
+          <Dialog>The sports clubs here aren't
+very competitive, so it
 might actually be fun.</Dialog>
-          <Dialog>It might make me popular 
-with the girls too, hmm...</Dialog>
+          <Dialog>Maybe it'll even make me
+popular with the girls. Just
+kidding.</Dialog>
           <Dialog>All right, I'll go and tell 
 them that I'll join！</Dialog>
         </Dialogs>
@@ -519,7 +519,7 @@ I should try it out.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I wonder why the sensei 
+          <Dialog>I wonder why my teacher
 suddenly called for me.</Dialog>
           <Dialog>Guess I'll head to the 
 staff room...</Dialog>
@@ -597,10 +597,9 @@ notices...</Dialog>
 wanted ads.</Dialog>
           <Dialog>A family restaurant... 
 "Dixie's", huh？</Dialog>
-          <Dialog>They accept high school 
-students, and apparently 
-they treat employees with 
-respect. I've decided on 
+          <Dialog>They take high school
+students, and the conditions
+look good. I've decided on
 this one！</Dialog>
           <Dialog>I'll call right away...</Dialog>
         </Dialogs>
@@ -695,10 +694,9 @@ this one！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My new life has only just 
-begun, and I already got to 
-know some interesting 
-girls. I'm pretty lucky.</Dialog>
+          <Dialog>My new life has only just
+begun, and I've already met
+a girl. I'm pretty lucky.</Dialog>
           <Dialog>She was so cute. I would be 
 happy to have a girlfriend 
 like her.</Dialog>
@@ -726,8 +724,7 @@ girlfriend！</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>The girl I met today was 
 cute...</Dialog>
-          <Dialog>Somehow, it makes me feel 
-energetic！</Dialog>
+          <Dialog>I'm getting fired up！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -747,9 +744,9 @@ energetic！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I was fortunate enough to 
-meet three great girls. 
-Isn't it wonderful？</Dialog>
+          <Dialog>Meeting three girls one
+after another... Am I on a
+lucky streak or what？</Dialog>
           <Dialog>I have a feeling that my 
 new life will be full of 
 excitement！</Dialog>
