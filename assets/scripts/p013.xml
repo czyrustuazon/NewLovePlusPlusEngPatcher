@@ -17,8 +17,9 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going out with
-Takane.</Dialog>
+          <Dialog>Today ▲高嶺＊＊▲ and I are
+checking out a spot for an
+outing.</Dialog>
           <Dialog>We are going to the zoo. 
 I'd better leave now.</Dialog>
         </Dialogs>
@@ -40,8 +41,9 @@ I'd better leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going out with
-Takane.</Dialog>
+          <Dialog>Today ▲高嶺＊＊▲ and I are
+checking out a spot for an
+outing.</Dialog>
           <Dialog>We're going to visit the 
 aquarium. I'd better leave 
 now.</Dialog>
@@ -64,8 +66,9 @@ now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going out with
-Takane.</Dialog>
+          <Dialog>Today ▲高嶺＊＊▲ and I are
+checking out a spot for an
+outing.</Dialog>
           <Dialog>We are going to Mt. Towano 
 for maple leaves viewing. 
 I'd better leave now.</Dialog>
@@ -88,8 +91,9 @@ I'd better leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going out with
-Takane.</Dialog>
+          <Dialog>Today ▲高嶺＊＊▲ and I are
+checking out a spot for an
+outing.</Dialog>
           <Dialog>We are going skating at the 
 sports center. I'd better 
 leave now.</Dialog>
@@ -112,12 +116,11 @@ leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Takane. 
-As her escort to help her 
-practice how to date.</Dialog>
-          <Dialog>We are going to the harbor 
-park.</Dialog>
+          <Dialog>Today I'm going on a date
+with ▲高嶺＊＊▲... I mean,
+practicing being her escort.</Dialog>
+          <Dialog>I'll head to Harbour Hill
+Park.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -137,14 +140,12 @@ park.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Rinko. 
-For a date... Well, no. 
-It's just normal hanging 
-out.</Dialog>
-          <Dialog>We are going to the 
-fountain park. I'd better 
-leave now.</Dialog>
+          <Dialog>Today I'm going on a da...
+No, not a date.
+▲小早川＊▲ and I
+just made plans to hang out.</Dialog>
+          <Dialog>We're meeting at Fountain
+Park. I'd better get going.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -164,13 +165,13 @@ leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Rinko. 
-For a date... Well, no. 
-It's just normal hanging 
-out.</Dialog>
-          <Dialog>We are going to the harbor 
-park. I'd better leave now.</Dialog>
+          <Dialog>Today I'm going on a da...
+No, not a date.
+▲小早川＊▲ and I
+just made plans to hang out.</Dialog>
+          <Dialog>We're meeting at Harbour
+Hill Park. I'd better get
+going.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -190,10 +191,10 @@ park. I'd better leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Rinko. 
-For a date. No, not a date. 
-Just a normal hanging out.</Dialog>
+          <Dialog>Today I'm going on a da...
+No, not a date.
+▲小早川＊▲ and I
+just made plans to hang out.</Dialog>
           <Dialog>We are going to the zoo. 
 I'd better leave now.</Dialog>
         </Dialogs>
@@ -215,11 +216,10 @@ I'd better leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Rinko. 
-For a date... No, not a 
-date. It's just normal 
-hanging out.</Dialog>
+          <Dialog>Today I'm going on a da...
+No, not a date.
+▲小早川＊▲ and I
+just made plans to hang out.</Dialog>
           <Dialog>We are going to the beach. 
 I'd better leave now.</Dialog>
         </Dialogs>
@@ -241,10 +241,9 @@ I'd better leave now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today I'm going out with 
-Rinko. 
-For a da... No, not a date. 
-Just normal hanging out...</Dialog>
+          <Dialog>Today ▲小早川＊▲
+and I... just made plans to
+hang out.</Dialog>
           <Dialog>Okay, I'm going to the
 amusement park now.</Dialog>
         </Dialogs>
@@ -266,12 +265,10 @@ amusement park now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going to 
-investigate the dessert 
-shop to find something for 
-our new menu. She'll tag 
-along to help me, right 
-Nene？</Dialog>
+          <Dialog>Today ▲姉ヶ崎＊▲ and I
+are going to the sweets shop
+in Towanosakaue to research
+the new menu.</Dialog>
           <Dialog>I'd better leave now.</Dialog>
         </Dialogs>
       </SDL2>
@@ -292,12 +289,10 @@ Nene？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going to 
-investigate the noodles 
-shop to find something for 
-our new menu. She'll tag 
-along to help me, right 
-Nene？</Dialog>
+          <Dialog>Today ▲姉ヶ崎＊▲ and I
+are going to the ramen shop
+in Towano to research the
+new menu.</Dialog>
           <Dialog>I'd better leave now.</Dialog>
         </Dialogs>
       </SDL2>
@@ -318,12 +313,10 @@ Nene？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going to 
-investigate the lakeside 
-restaurant to find food for 
-our new menu. She'll tag 
-along to help me, right 
-Nene？</Dialog>
+          <Dialog>Today ▲姉ヶ崎＊▲ and I
+are going to the restaurant
+by Seaside Station to
+research the new menu.</Dialog>
           <Dialog>I'd better leave now.</Dialog>
         </Dialogs>
       </SDL2>
@@ -344,12 +337,10 @@ Nene？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'm going to 
-investigate a restaurant 
-to find something for our 
-new menu. She'll tag along 
-to help me, right 
-Nene？</Dialog>
+          <Dialog>Today ▲姉ヶ崎＊▲ and I
+are going to the restaurant
+in Okutowano to research the
+new menu.</Dialog>
           <Dialog>I'd better leave now.</Dialog>
         </Dialogs>
       </SDL2>
@@ -370,9 +361,8 @@ Nene？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Today, I'll be watching a 
-movie together with 
-Nene.</Dialog>
+          <Dialog>Today ▲姉ヶ崎＊▲ and I
+are going to see a movie.</Dialog>
           <Dialog>Okay, I'll leave now.</Dialog>
         </Dialogs>
       </SDL2>
