@@ -12,10 +12,9 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(I think she's not feeling 
-well and may be sleeping. 
-I'll send you a mail later, 
-▲彼女＊＊▲.)</Dialog>
+          <Dialog>(▲彼女＊＊▲ might
+be in bed sick. I won't send
+a mail.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -37,9 +36,9 @@ I'll send you a mail later,
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Incredible, I won it 
 again...</Dialog>
-          <Dialog>(Should I ask you next time 
-if you want to go again, 
-▲彼女＊＊▲...？)</Dialog>
+          <Dialog>(Could I go with
+▲彼女＊＊▲ again
+next time...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
