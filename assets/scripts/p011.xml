@@ -84,9 +84,9 @@ form！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I thought that the law of 
-conservation of mass was 
-always right. Guess I was 
+          <Dialog>People generally think the
+law of conservation of mass
+is absolute, but that's
 wrong.</Dialog>
           <Dialog>In the special theory of 
 relativity, mass can be 
@@ -114,10 +114,11 @@ of energy can fluctuate.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>There was a mathematician 
 named Evariste Galois.</Dialog>
-          <Dialog>He was able to solve many 
-difficult math problems in 
-his teens. Unfortunately, 
-he died at the age of 20.</Dialog>
+          <Dialog>He was a prodigy who died
+young and was never
+recognized in his lifetime.
+Political activism, a
+duel... a turbulent life.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -148,8 +149,8 @@ recite the value of pi...</Dialog>
           <Dialog>3.1415926535897932384626433
 832795028841971693993751058
 209749445923078164...</Dialog>
-          <Dialog>Not good. I'm falling 
-asleep.</Dialog>
+          <Dialog>No good, that's making me
+even sleepier.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -174,19 +175,18 @@ asleep.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>There are 3 laws of motion 
-in mechanics. The law of 
-inertia, the law of motion 
-and the law of cause and 
-effect.</Dialog>
+          <Dialog>The three laws of motion in
+classical mechanics: the law
+of inertia, the equation of
+motion, and action and
+reaction.</Dialog>
           <Dialog>When I fall asleep and hit 
 my head on the desk, my 
 head accelerates and then 
 there is an impact the 
 moment it hits the desk...</Dialog>
-          <Dialog>Done. I believe I have 
-proved my "falling asleep 
-in class" theory.</Dialog>
+          <Dialog>And that concludes my proof
+of dozing off in class.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -206,12 +206,14 @@ in class" theory.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Although "perpetual motion" 
-is said to violate thermo- 
-dynamics laws...</Dialog>
-          <Dialog>...there are still people 
-who keep looking for the 
-"infinite energy."</Dialog>
+          <Dialog>A perpetual motion machine
+that ignores the laws of
+thermodynamics can't exist,
+even in theory.</Dialog>
+          <Dialog>And yet the fantasy of
+"infinite energy" out of
+nothing never seems to go
+away.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -259,8 +261,9 @@ makes me sleepy...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I got praised for my work！ 
-I'm in top form！</Dialog>
+          <Dialog>Sensei praised my
+interpretation of the text！
+I'm on a roll！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -275,9 +278,9 @@ I'm in top form！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I got praised for knowing 
-a lot about art history. 
-I'm in perfect form！</Dialog>
+          <Dialog>Sensei praised me for
+understanding the historical
+background. I'm on a roll！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -323,13 +326,13 @@ well."</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The traditional Chinese 
-naming system consists of 
-family name, generation 
-name, and given name.</Dialog>
-          <Dialog>Sometimes there are unusual 
-names like Zhuge Liang - 
-Kong Ming.</Dialog>
+          <Dialog>In China, a person has a
+surname, a given name and a
+courtesy name, but
+apparently you never say all
+three together.</Dialog>
+          <Dialog>Yet we all say "Zhuge Liang
+Kongming" anyway.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -353,10 +356,9 @@ Kong Ming.</Dialog>
 "What we cannot speak 
 about, we must pass over 
 in silence."</Dialog>
-          <Dialog>I means that if I can't 
-answer a question, I should 
-try passing it over in 
-silence...</Dialog>
+          <Dialog>So when I don't know the
+answer, I'll just stay
+silent...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -376,14 +378,14 @@ silence...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Shogun is a military rank 
-and historical title for 
-the hereditary military 
-dictator of Japan.</Dialog>
-          <Dialog>The shogunate system was 
-established under the 
-Kamakura shogunate by 
-Minamoto no Yoritomo.</Dialog>
+          <Dialog>In Japan, "shogun" means the
+Seii Taishogun, but the
+first to open a shogunate
+was the sixth one, Minamoto
+no Yoritomo.</Dialog>
+          <Dialog>Before that, it just meant
+the generals sent out to the
+eastern provinces.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -407,8 +409,10 @@ Minamoto no Yoritomo.</Dialog>
 be the Roman Republic, the 
 Roman Empire, or the Holy 
 Roman Empire, etc.</Dialog>
-          <Dialog>This is quite interesting, 
-I guess.</Dialog>
+          <Dialog>A republic, an empire and a
+confederation of states.
+Totally different countries,
+which is interesting.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -440,8 +444,8 @@ easily.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I feel terrible today... 
-I'd better fix my art piece.</Dialog>
+          <Dialog>I'm off today. Maybe I
+should start over...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -456,8 +460,9 @@ I'd better fix my art piece.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The sensei praised my 
-drawing. I did really well.</Dialog>
+          <Dialog>Sensei praised the picture
+I'm working on！ I'm on a
+roll！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -472,9 +477,8 @@ drawing. I did really well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>My art piece was praised by 
-the sensei！ I did really 
-well.</Dialog>
+          <Dialog>Sensei praised the piece I'm
+working on！ I'm on a roll！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -489,10 +493,10 @@ well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>High quality paintbrushes 
-are made of sable or badger 
-fur, but mine is just made 
-of synthetic fiber...</Dialog>
+          <Dialog>Some fancy brushes are made
+from weasel or marten hair,
+but mine is... synthetic
+fiber.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -536,9 +540,8 @@ though.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>We have a myriad of 
-categories of art such as 
-fine arts, pure arts, etc.</Dialog>
+          <Dialog>Among the arts, pure art is
+what they call fine art.</Dialog>
           <Dialog>I wonder what kind of art 
 it is we are learning at 
 school...</Dialog>
@@ -566,8 +569,8 @@ colors can be categorized
 as inorganic if they are 
 from metal, and organic if 
 they are from plants.</Dialog>
-          <Dialog>Arts and sciences are 
-sometimes inseparable, huh？</Dialog>
+          <Dialog>They say art is a science.
+Maybe that's true.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -582,11 +585,11 @@ sometimes inseparable, huh？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The techniques for wood 
-carving such as intaglio, 
-relief printing, etc., are 
-the same as in printmaking, 
-I believe.</Dialog>
+          <Dialog>Prints come in relief,
+intaglio, planographic and
+stencil. It's the same
+breakdown as printing
+methods.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -618,8 +621,9 @@ very well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm in bad shape. I can't 
-remember the notes at all.</Dialog>
+          <Dialog>I'm off today. Maybe I
+should relearn how to even
+play a note...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -672,11 +676,13 @@ great！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>For music, the rhythm, 
-melody, and harmony are 
-very important.</Dialog>
-          <Dialog>I know the theory but it is 
-still very difficult for me.</Dialog>
+          <Dialog>Say music is made of rhythm,
+melody and harmony, and it
+makes sense.</Dialog>
+          <Dialog>But call it "temporal pulse,
+tonal line and vertical
+sonority," and it suddenly
+sounds hard.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -696,12 +702,14 @@ still very difficult for me.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>In musical tuning, there 
-are different systems of 
-tunings.</Dialog>
-          <Dialog>Most instruments in modern 
-Western music are tuned in 
-equal temperament system.</Dialog>
+          <Dialog>The two main tuning systems
+for scales are just
+intonation and equal
+temperament. Both have pros
+and cons.</Dialog>
+          <Dialog>But nearly all the music we
+hear day to day is in equal
+temperament.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -721,11 +729,13 @@ equal temperament system.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A body of singers who 
-perform together as a group 
-is called a choir or chorus.</Dialog>
-          <Dialog>It's not easy and requires 
-a lot of practice.</Dialog>
+          <Dialog>Everyone singing the same
+part is unison. Splitting
+into parts is a chorus.</Dialog>
+          <Dialog>So if every event suddenly
+called for "The national
+anthem, in four parts！",
+we'd be in trouble.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -740,11 +750,11 @@ a lot of practice.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Any string instrument that 
-is bowed may informally be 
-called a fiddle, including 
-violins. Sometimes I get 
-confused.</Dialog>
+          <Dialog>There's a folk string
+instrument called the
+fiddle, but people also use
+the word for the violin.
+Confusing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -759,11 +769,12 @@ confused.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Classical music sounds 
-boring to some people, 
-whereas modern music sounds 
-exciting to them. It really 
-depends on preferences.</Dialog>
+          <Dialog>Classical music has a boring
+image, but modern and
+contemporary pieces can be
+pretty intense. Probably all
+the odd meters and
+dissonance.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -870,9 +881,10 @@ to the venues.</Dialog>
           <Dialog>When we say football, it 
 can mean soccer, rugby, or 
 American football...</Dialog>
-          <Dialog>They are all different. 
-I only play soccer at 
-school though.</Dialog>
+          <Dialog>And each one splits into
+even finer categories. In
+class we only ever play
+soccer, though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -887,9 +899,10 @@ school though.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's very important to 
-properly stretch before 
-exercising.</Dialog>
+          <Dialog>Apparently drinking vinegar
+to get more flexible is a
+myth. Steady stretching is
+the way to go.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -904,9 +917,10 @@ exercising.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Sometimes we refer to 
-physical education as gym 
-class, P.E., or Phys. Ed.</Dialog>
+          <Dialog>That knees-hugged way of
+sitting in gym class has
+different names depending on
+where you're from.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -921,10 +935,11 @@ class, P.E., or Phys. Ed.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Rather than the decathlon, 
-the more common event that 
-high school students take 
-part in is the octathlon.</Dialog>
+          <Dialog>The ten-event decathlon is
+well known, but the
+eight-event one high school
+boys do is apparently called
+an octathlon.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -939,8 +954,8 @@ part in is the octathlon.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm in a good mood today. 
-I'll be doing my best！</Dialog>
+          <Dialog>I'm in good form today.
+Let's keep it going！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -955,9 +970,8 @@ I'll be doing my best！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm in a crummy mood. 
-I don't feel like doing 
-anything.</Dialog>
+          <Dialog>I'm off today. I could
+barely return anything...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1065,10 +1079,9 @@ pronounce "deuce" as
 in tennis terms. I guess 
 the word "tennis" itself is 
 French, too.</Dialog>
-          <Dialog>The French word "tenir," 
-means "to take heed." It is 
-a warning from the server 
-to the receiver.</Dialog>
+          <Dialog>It comes from the French
+"tenez," meaning "here, take
+it," I think.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1154,9 +1167,9 @@ my best！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Things didn't go well 
-today. Maybe it'll take a 
-while before I can go home.</Dialog>
+          <Dialog>Work isn't going anywhere
+today. No chance of leaving
+early...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1226,14 +1239,12 @@ Information Science.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>A library classification 
-system is a way of coding 
-and organizing library 
-materials according to 
-their subject.</Dialog>
-          <Dialog>There are also classes and 
-subcategories that I still 
-can't remember.</Dialog>
+          <Dialog>Book classification is set
+by a library association.</Dialog>
+          <Dialog>I remember the top level,
+from class 0 (General Works)
+to class 9 (Literature), but
+not the finer divisions.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1295,10 +1306,12 @@ real librarian. Usually.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Libraries do not only store 
-books and reading materials.</Dialog>
-          <Dialog>There are map collections 
-in the libraries as well.</Dialog>
+          <Dialog>In "tosho," the Japanese
+word for library books,
+"sho" is books, and "to"
+actually means maps.</Dialog>
+          <Dialog>So a library is a place for
+keeping maps and books.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1377,10 +1390,11 @@ nicely. I'm feeling good.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The word "restaurant" comes 
-from the French word "la 
-restauration," meaning 
-"restoration."</Dialog>
+          <Dialog>Working part-time at a
+restaurant. "Restaurant" is
+French, and "arubaito," our
+word for a part-time job, is
+German.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1400,10 +1414,10 @@ restauration," meaning
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>In Japan, there is a 1.03 
-million yen ceiling system 
-that affects the income tax 
-payment and deduction.</Dialog>
+          <Dialog>Earn over 1.03 million yen a
+year, and you have to pay
+income tax and lose the
+dependent deduction.</Dialog>
           <Dialog>Most people here seem to 
 be working just for fun 
 though. I don't think they 
@@ -1422,11 +1436,10 @@ worry much about that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The major rivals for a 
-family restaurant are fast 
-food chains, but there are 
-other kinds of restaurants 
-as well.</Dialog>
+          <Dialog>Family restaurants compete
+with fast food, but there's
+also "fast casual,"
+somewhere in between.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1441,11 +1454,11 @@ as well.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Dixie's is a franchise, so 
-it has its own brand 
-awareness. Anyway, seems 
-like the manager has to 
-work really hard.</Dialog>
+          <Dialog>Dixie's is a franchise with
+a known brand, so it does
+okay, but watching the
+manager, dealing with head
+office looks rough.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1460,11 +1473,12 @@ work really hard.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Dixie's is in the food 
-service industry, but we 
-are different from pizza 
-delivery places or lunch 
-vendors.</Dialog>
+          <Dialog>Dixie's is in the dining-out
+business, while takeout
+places like bento shops and
+pizza delivery are called
+"nakashoku." Not a word you
+hear much.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1555,9 +1569,8 @@ problem. It felt great！</Dialog>
 regular heptadecagon with 
 just a compass and a ruler. 
 Let's try it！</Dialog>
-          <Dialog>What a pain... But somehow 
-I have a feeling of 
-achievement...</Dialog>
+          <Dialog>I'm beat... but I kind of
+feel accomplished.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1577,11 +1590,11 @@ achievement...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I think I might be able to 
-get help with my homework 
-on the net...</Dialog>
-          <Dialog>No, no. I had better try 
-to do it by myself.</Dialog>
+          <Dialog>Come to think of it, there
+are services that'll do your
+homework for you...</Dialog>
+          <Dialog>No, no. It's pointless
+unless I do it myself.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1601,10 +1614,12 @@ to do it by myself.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I just have to keep 
-studying and practicing.</Dialog>
-          <Dialog>That's how I can be a good 
-student.</Dialog>
+          <Dialog>Practice workbooks are
+called drills, from the
+English for an exercise.</Dialog>
+          <Dialog>I can't help picturing the
+thing that bores holes,
+though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1751,11 +1766,14 @@ watch it！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I can keep training my body 
-to grow more muscle.</Dialog>
-          <Dialog>If I keep it up, maybe I 
-will be a muscular man some 
-day.</Dialog>
+          <Dialog>Put a heavy load on a
+muscle, and once it recovers
+from the damage, it grows
+back stronger than before.</Dialog>
+          <Dialog>If I time my training around
+that supercompensation,
+maybe I'll build more
+muscle.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1770,8 +1788,10 @@ day.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I can use iron dumbbells 
-for muscle training, too.</Dialog>
+          <Dialog>Turns out dumbbells are
+named after bells with no
+clapper. I always thought it
+was just a funny name.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1795,10 +1815,9 @@ for muscle training, too.</Dialog>
 push-ups. They target 
 different muscles, so I 
 have to be careful.</Dialog>
-          <Dialog>To train arm muscles, you 
-have to focus on different 
-areas such as the biceps, 
-triceps, or the pecs.</Dialog>
+          <Dialog>Spread your arms and it's
+the pecs, bring them in and
+it's the triceps.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1938,9 +1957,10 @@ Couture...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Fashion and music sometimes 
 can't be separated.</Dialog>
-          <Dialog>Rock, punk, grunge, hip- 
-hop, etc. The type of music 
-can affect fashion styles.</Dialog>
+          <Dialog>Rockers, mods, punk, grunge,
+hip-hop. When a kind of
+music catches on, so does
+its fashion.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1955,10 +1975,9 @@ can affect fashion styles.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>In the past, people really 
-had to go through a lot of 
-troubles to get their hair 
-perm...</Dialog>
+          <Dialog>Apparently they used to call
+a perm "electric hair." I
+kind of get it...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1978,10 +1997,10 @@ perm...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It's important to choose 
-shampoo and conditioner 
-that match your hair 
-condition.</Dialog>
+          <Dialog>The difference between
+conditioner and a treatment
+is whether it soaks into the
+inside of the hair.</Dialog>
           <Dialog>When using hair treatment 
 products, you have to leave 
 them on for a while before 
@@ -2083,10 +2102,11 @@ Everything is going well！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Free publications are nice, 
-since newspapers sections 
-for advertisement are 
-limited.</Dialog>
+          <Dialog>Free papers are handy. By
+law, newspapers are limited
+in how many ads they carry,
+but these are nothing but
+ads.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2126,10 +2146,10 @@ bundled up together.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>It is said that young 
-people these days are more 
-illiterate. Maybe I should 
-spend more time reading.</Dialog>
+          <Dialog>People say young people
+don't read anymore, but
+taking my own time to read a
+book like this isn't bad.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2144,9 +2164,11 @@ spend more time reading.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The ABCs of Japanese is 
-called "Iroha," which is a 
-Japanese poem.</Dialog>
+          <Dialog>TV, which I watch without a
+second thought... The first
+image ever shown on Japanese
+TV was the katakana "I" from
+the Iroha.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2224,8 +2246,8 @@ designed for military use.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>All right！ I'll do my best 
-for this event！</Dialog>
+          <Dialog>All right！ I really shone
+in that event！</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2271,9 +2293,9 @@ all.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>The program was very 
-interesting！ So was the 
-culture festival.</Dialog>
+          <Dialog>That show was really fun！
+That's what a culture
+festival should be.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
