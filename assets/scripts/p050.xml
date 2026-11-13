@@ -22,12 +22,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I remember now. On my 
-way home today, I exchanged 
-e-mail addresses with 
-Takane.</Dialog>
-          <Dialog>Oh, it's an e-mail from 
-Takane.</Dialog>
+          <Dialog>Come to think of it, I
+swapped email addresses with
+▲高嶺＊＊▲ on the way home
+today.</Dialog>
+          <Dialog>Oh, a mail from ▲高嶺＊＊▲
+already.</Dialog>
           <Dialog>Maybe I'll send her an 
 e-mail sometime...</Dialog>
         </Dialogs>
@@ -54,12 +54,13 @@ e-mail sometime...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I remember now. On my 
-way home today, I exchanged 
-e-mail addresses with 
-Rinko.</Dialog>
-          <Dialog>Oh, it's an e-mail from 
-Rinko.</Dialog>
+          <Dialog>Come to think of it, I
+swapped email addresses with
+▲小早川＊▲ on the
+way home today.</Dialog>
+          <Dialog>Oh, a mail from
+▲小早川＊▲
+already.</Dialog>
           <Dialog>Maybe I'll send her an 
 e-mail sometime...</Dialog>
         </Dialogs>
@@ -86,12 +87,12 @@ e-mail sometime...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Ah, I remember now. On my 
-way home today, I exchanged 
-e-mail addresses with 
-Nene.</Dialog>
-          <Dialog>Oh, it's an e-mail from 
-Nene.</Dialog>
+          <Dialog>Come to think of it, I
+swapped email addresses with
+▲姉ヶ崎＊▲ on the way
+home today.</Dialog>
+          <Dialog>Oh, a mail from
+▲姉ヶ崎＊▲ already.</Dialog>
           <Dialog>Maybe I'll send her an 
 e-mail sometime...</Dialog>
         </Dialogs>
@@ -173,8 +174,8 @@ today.</Dialog>
           <Dialog>I'll get ready and leave 
 soon...</Dialog>
           <Dialog>I wonder who will show up...</Dialog>
-          <Dialog>Hopefully you will be there 
-▲彼女＊＊▲...</Dialog>
+          <Dialog>▲彼女＊＊▲ will be
+there for sure...</Dialog>
           <Dialog>The party is being held at 
 the gym. I'd better head 
 over there now.</Dialog>
@@ -192,8 +193,8 @@ over there now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It was fun going home with 
-Takane.)</Dialog>
+          <Dialog>(Walked home with
+▲高嶺＊＊▲. That was fun.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -208,8 +209,9 @@ Takane.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It was fun going home with 
-Rinko.)</Dialog>
+          <Dialog>(Walked home with
+▲小早川＊▲. That
+was fun.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -224,8 +226,9 @@ Rinko.)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(It was fun going home with 
-Nene.)</Dialog>
+          <Dialog>(Walked home with
+▲姉ヶ崎＊▲. That was
+fun.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
