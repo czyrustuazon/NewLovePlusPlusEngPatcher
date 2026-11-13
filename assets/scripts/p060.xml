@@ -52,17 +52,15 @@
 I don't remember applying 
 for this one...</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>If I recall, I've been 
-browsing a WEB magazine. 
-But, I don't remember there 
-being such a thing.</Dialog>
-          <Dialog>A trip for a two days and 
-one night stay at Atami. 
-Pairs are invited...</Dialog>
+          <Dialog>Oh, right. There was
+something like that in a web
+magazine.</Dialog>
+          <Dialog>A two-day, one-night trip to
+Atami. For two...</Dialog>
           <Dialog>Oh, amazing.</Dialog>
-          <Dialog>(A two days and one night 
-stay at Atami, huh... 
-I wonder what should I do.)</Dialog>
+          <Dialog>(Two days, one night in
+Atami... Hmm, what should I
+do？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -131,22 +129,19 @@ I wonder what should I do.)</Dialog>
           <Dialog>What's this, a sweepstakes？</Dialog>
           <Dialog>Don't tell me this is...</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>A couples invitation to a 
-trip for a two days and one 
-night stay at Atami...</Dialog>
+          <Dialog>A two-day, one-night trip to
+Atami. For two...</Dialog>
           <Dialog>I knew it... I won it once 
 more. Am I lucky or what？</Dialog>
-          <Dialog>(I wonder if you'd like to 
-go again on a trip with me, 
-▲彼女＊＊▲...
-What should I do...？)</Dialog>
+          <Dialog>(Could I go with
+▲彼女＊＊▲
+again... What should I
+do...)</Dialog>
           <Dialog>I really want to go on a 
 trip！</Dialog>
-          <Dialog>Just how ofter we're able 
-to go on a trip, anyway.</Dialog>
-          <Dialog>I guess I can't miss this 
-chance. I should invite her 
-next time.</Dialog>
+          <Dialog>I'll save it for later</Dialog>
+          <Dialog>I can't pass up a trip. I'll
+ask her.</Dialog>
           <Dialog>(Seems like a waste. 
 I'm sure this won't be the 
 only time we'll get the 
@@ -265,15 +260,16 @@ Hah, what a waste...)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(You're so close to me 
-▲彼女＊＊▲...)</Dialog>
-          <Dialog>(I want to touch your face 
-tenderly.)</Dialog>
-          <Dialog>(I wanna have a lot of 
-skinship with you...)</Dialog>
-          <Dialog>(Or maybe I'll just watch 
-you sleep, so you can 
-rest？)</Dialog>
+          <Dialog>(▲彼女＊＊▲ is so
+close...)</Dialog>
+          <Dialog>(A light touch, a stroke,
+keeping my hand in one
+spot...)</Dialog>
+          <Dialog>(I wonder what kinds of
+skinship I could try...)</Dialog>
+          <Dialog>(Or if I leave her be, maybe
+I'll get to see her sleeping
+face？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -294,9 +290,9 @@ rest？)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(And she's asleep... 
-I wonder if she'll wake up 
-if whisper her name.)</Dialog>
+          <Dialog>(She's asleep... I wonder if
+she'd wake up if I said
+something.)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -317,10 +313,10 @@ if whisper her name.)</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>....</Dialog>
-          <Dialog>(I better go to sleep... 
-I don't think you're waking 
-up anytime soon 
-▲彼女＊＊▲.)</Dialog>
+          <Dialog>(▲彼女＊＊▲
+doesn't look like she'll
+wake up, so I'll go to sleep
+too...)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
