@@ -528,6 +528,12 @@
       "blob": "621be50e3005616c550038c3360e1968842f27ef",
       "commit": "42e842f",
       "reason": "\"Anywhere Date\" plate: RGB flattened to its (51,51,51) ink (hidden texels were black) and alpha cut to 6 levels so NCommonMSel.arc zopflis into pkg 5243's 2323-byte slot; the d201351 master was 435 bytes over and shipped Japanese. No visible change at 4x."
+    },
+    {
+      "path": "CmdJudge.check/timg/Scd_Acticon_L_15_01.png",
+      "blob": "14ef2cd2231ee7fe6a8319fa206c38e06d12b111",
+      "commit": "af2b89fe",
+      "reason": "New: the outing-decided door icon read 決定; redrawn as SET (Zhoumaru had no master, so it shipped Japanese)."
     }
   ]
 }
