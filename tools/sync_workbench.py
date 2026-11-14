@@ -12,6 +12,10 @@ The patcher is the source of truth.
   on lines that match the Gemini pass, and on indexes in
   ``assets/script_contrib/unreviewed.json`` (an agent rewrote the machine
   line; that is not a proofread).
+* Each line card says where its shipped English came from, from
+  ``assets/script_contrib/line_credits.json`` (``tools/line_credits.py``):
+  the credited contributor, Gemini, or the community layer, and whether
+  review edited it.
 * Gemini XML is rewritten to that same ``dbin2`` when the line counts match,
   and the Gemini translation map is updated for those lines.
 * TRB rows whose Japanese is already a key in ``translations.json`` are
@@ -166,6 +170,7 @@ def fill_script_item(
     gemini: list[str] | None,
     layer: str,
     unreviewed: list[int] | None = None,
+    line_credit: dict | None = None,
 ) -> dict:
     """Point one kit script at the patcher.
 
@@ -199,6 +204,11 @@ def fill_script_item(
         item["unreviewed"] = sorted(held)
     else:
         item.pop("unreviewed", None)
+    lines = line_credit.get("lines") if isinstance(line_credit, dict) else None
+    if isinstance(lines, list) and len(lines) == len(working) and line_credit.get("name"):
+        item["line_credit"] = {"name": str(line_credit["name"]), "lines": [str(c) for c in lines]}
+    else:
+        item.pop("line_credit", None)
     needs = 0
     gemini_lines = item.get("gemini_dialogs")
     for index, line in enumerate(working):
@@ -461,6 +471,16 @@ def _unreviewed_map() -> dict[str, list[int]]:
     return out
 
 
+def _line_credit_map() -> dict[str, dict]:
+    """Per-line sources for contributor scripts (``tools/line_credits.py``)."""
+    path = ROOT / "assets" / "script_contrib" / "line_credits.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return {}
+    return {str(k): v for k, v in data.items() if isinstance(v, dict)} if isinstance(data, dict) else {}
+
+
 def _gemini_script(gemini_root: Path, stem: str) -> list[str] | None:
     path = gemini_root / "dbin2" / "script" / f"{stem}.dbin2"
     if not path.is_file():
@@ -492,6 +512,7 @@ def sync_script_embed(
     needs_scripts = 0
     proofread = _proofread_stems()
     unreviewed_map = _unreviewed_map()
+    credit_map = _line_credit_map()
     for item in items:
         if not isinstance(item, dict) or item.get("kind") != "script":
             continue
@@ -524,6 +545,7 @@ def sync_script_embed(
             gemini=gemini,
             layer=layer,
             unreviewed=pending,
+            line_credit=credit_map.get(stem) if layer == "contrib" else None,
         )
         if "dialogs" in item:
             embedded += 1

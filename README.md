@@ -356,7 +356,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
 | **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **Lieutenant Dan** | Proofreading |
-| **Lyud** | Proofread Nene's first day at Dixie's (`a000`) |
+| **Armando Esteban Quito** | Translated Nene's first day at Dixie's (`a000`) and lines in her confession and date scenes (`a002`, `a004`, `a005`) |
+| **Dnnz.Cstr** | Translated Rinko's hair and outfit reactions (`k007`) |
 | **i need help here...** | Knowledge sharing |
 | **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
 

@@ -2448,6 +2448,16 @@ Dry-run is the default. `--apply` writes a changed line only when that repo dial
 
 Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated (Nene `a*` or Rinko `k*`) is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake. SMS proofreads are not part of this pack; a reviewed `assets/sms_contrib/maildic_*.en.xml` is only read at SMS splice time.
 
+**Every pack copy.** A stem with no contributor file yet branches from `rebuild_dbin2`, which may hold only `script/`. When Gemini ships that stem in `NLP_01` / `NLP_02` too (`a002`–`a005` do), copy the new `script/<stem>.dbin2` into those folders (the three Gemini copies are byte-identical). `script_inject` takes a contributor file only for the pack folder it is in; the other packs would keep the old text.
+
+**Line credits (2026-11-14).** After a pack lands, record where each shipped line came from, so the workbench credits only the lines whose wording ships:
+
+```bash
+python tools/line_credits.py a002 --name "Armando Esteban Quito" --pack path/to/nlpp-contrib.json
+```
+
+It writes `assets/script_contrib/line_credits.json`, one code per dialog: `c` the contributor's wording, `c+` theirs edited in review, `g` / `g+` Gemini (improved), `n` / `n+` the community NLPPATCH line Gemini kept (improved), `""` nameplates and `○` placeholders. Only wording counts; punctuation and line breaks keep the source's code. `--pack` repeats for several packs by one person; `--edited` forces `c+` where an agent changed a contributor line and the pack is gone; `--reviewed` forces `g+` / `n+` where review dropped the contributor's wording and rewrote the line from the Japanese. Early Nene and Rinko scripts are mostly community text: Gemini `a000` equals `rebuild_dbin2` on all 141 lines, `a002` on 312 / 333, `k007` on 293 / 330. `sync_workbench.py` embeds the codes as `line_credit`, and each card shows "English in patch: <who>".
+
 Rebuild the kits from the patcher, then bump the workbench build:
 
 ```bash
@@ -2863,7 +2873,7 @@ Gemini edits go to the XML, to every pack slot, and to `assets/gemini_heroines/t
 
 ### 24.7 Badge credits
 
-`src/patch_title_engpatch_info.py` `CREDITS`: `[Developers]` (was Software Engineers); `[QA & Proofreading]` adds Lieutenant Dan (README contributors table: Proofreading); Pioneer Legacy roles merged into `[Translation & Editing]` (+ Proofreading, Text & Strings, New Script, Later Passes), `[Hacking & Tools]` (+ Script Integration) and `[Graphics]`. The box is 51 of `MAX_BOX_LINES` 64. A role costs 3 lines (blank, heading, names at `LINE_WIDTH` 26).
+`src/patch_title_engpatch_info.py` `CREDITS`: `[Developers]` (was Software Engineers); `[Translation]` (2026-11-14) is Armando Esteban Quito (`a000`) and Dnnz.Cstr (`k007`); `[QA & Proofreading]` adds Lieutenant Dan (README contributors table: Proofreading); Pioneer Legacy roles merged into `[Translation & Editing]` (+ Proofreading, Text & Strings, New Script, Later Passes), `[Hacking & Tools]` (+ Script Integration) and `[Graphics]`. The box is 55 of `MAX_BOX_LINES` 64. A role costs 3 lines (blank, heading, names at `LINE_WIDTH` 26).
 
 ### 24.8 BONUS! Riches digits
 

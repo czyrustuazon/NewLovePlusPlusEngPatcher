@@ -128,6 +128,8 @@ CREDITS: tuple[tuple[str, tuple[str, ...] | None], ...] = (
     (" ", None),
     ("[UI Texture Overhaul]", ("Zhoumaru",)),
     (" ", None),
+    ("[Translation]", ("Armando Esteban Quito", "Dnnz.Cstr")),
+    (" ", None),
     ("[QA & Proofreading]", ("Dragios", "D.", "THE DRIZZLE", "Lieutenant Dan")),
     (" ", None),
     ("[Special Thanks]", ("anon","lolipop221", "i need help here...", "2Soulz the sheep", "gamebrew.org", "LovePlusProject", "gbatemp.net")),
