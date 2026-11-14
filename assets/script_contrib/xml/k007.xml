@@ -36,7 +36,7 @@
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I see...</Dialog>
           <Dialog>Yeah, it suits you.</Dialog>
-          <Dialog>Maybe that's not quite right...</Dialog>
+          <Dialog>Not quite right, maybe...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -71,7 +71,9 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I got my hair cut... Well? Don't you have anything to say?</Dialog>
+          <Dialog>I got my hair cut... Well?
+Don't you have anything to
+say?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah. Well...</Dialog>
           <Dialog>It really suits you!</Dialog>
@@ -110,11 +112,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hey. I tried cutting my hair short, what do you think?</Dialog>
+          <Dialog>Hey. I tried cutting my hair
+short, what do you think?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well, let's see...</Dialog>
-          <Dialog>Yeah, this looks good!</Dialog>
-          <Dialog>Not really it...</Dialog>
+          <Dialog>Short hair's nice too!</Dialog>
+          <Dialog>Not really...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -149,7 +152,8 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I decided to go for a semi-long hairstyle, but...</Dialog>
+          <Dialog>I decided to go for a
+semi-long hairstyle, but...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I see...</Dialog>
           <Dialog>It suits you very well!</Dialog>
@@ -188,10 +192,11 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I tried getting my hair cut to a medium length. Do you have anything to say?</Dialog>
+          <Dialog>I went with medium-length
+hair... Got anything to say?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
-          <Dialog>It looks good. It suits you well!</Dialog>
+          <Dialog>Nice, it really suits you!</Dialog>
           <Dialog>It's not quite my taste...</Dialog>
         </Dialogs>
       </SDL2>
@@ -227,11 +232,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hey, hey. What do you think of Rinko's hairstyle？</Dialog>
+          <Dialog>Hey, hey. What do you think of
+Rinko's hairstyle?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
           <Dialog>Yeah, it looks good on you!</Dialog>
-          <Dialog>It's not really my type...</Dialog>
+          <Dialog>Not really my taste...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -266,7 +272,8 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Rinko's hair has gotten quite long, hasn't it?</Dialog>
+          <Dialog>Rinko's hair has gotten quite
+long, hasn't it?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah...</Dialog>
           <Dialog>It suits you really well!</Dialog>
@@ -305,11 +312,12 @@
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I tried growing my hair out. What do you think?</Dialog>
+          <Dialog>I tried growing my hair out.
+What do you think?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What do I think?</Dialog>
           <Dialog>I think it's good!</Dialog>
-          <Dialog>That's not like you. </Dialog>
+          <Dialog>That's not like you.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -347,9 +355,9 @@
           <Dialog>Hey, my hair is longer now. Do
 I look like a girl?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>You know...</Dialog>
+          <Dialog>Umm...</Dialog>
           <Dialog>You're cute</Dialog>
-          <Dialog>It's a bit too childish</Dialog>
+          <Dialog>Too childish, maybe...?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -369,7 +377,8 @@ I look like a girl?</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Okay. I see, you like this then.</Dialog>
+          <Dialog>I see. So you're into this
+style after all... huh.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -389,9 +398,10 @@ I look like a girl?</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Really？! Hehe. Well, if you
-said you didn't like it,
-I would have kicked you！</Dialog>
+          <Dialog>I see. Hehe. Well, if you'd
+said you didn't like it, I
+would've given you a little
+kick!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -411,7 +421,9 @@ I would have kicked you！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hehe. That's great! Now Rinko's charm has gone up another notch!</Dialog>
+          <Dialog>Hehe. That's great! Now
+Rinko's charm has gone up
+another notch!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -431,8 +443,7 @@ I would have kicked you！</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Eh！？ This is soo difficult.
-Hah...</Dialog>
+          <Dialog>Huh? Geez, this is hard...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -452,8 +463,8 @@ Hah...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Really?! I thought you would
-like it...</Dialog>
+          <Dialog>No way... I really thought
+you'd like this look...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -473,8 +484,8 @@ like it...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I see... I won't do this style
-anymore.</Dialog>
+          <Dialog>Alright. Guess I'll just give
+up on it, then...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -509,11 +520,12 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Here's the new hairstyle... Evaluation time!</Dialog>
+          <Dialog>Here's the new hairstyle...
+Evaluation time!</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Well, let's see...</Dialog>
           <Dialog>This is nice, I like it!</Dialog>
-          <Dialog>Maybe it's not a good idea...</Dialog>
+          <Dialog>Maybe not so good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -548,11 +560,12 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>What do you think of Rinko's new hairstyle? </Dialog>
+          <Dialog>What do you think of Rinko's
+new hairstyle?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
           <Dialog>This is nice!</Dialog>
-          <Dialog>Maybe it's not a good idea... </Dialog>
+          <Dialog>Maybe not so good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -587,11 +600,13 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hey, I changed my hairstyle. What do you think? Does it look weird?</Dialog>
+          <Dialog>Hey, I changed my hairstyle.
+What do you think? Does it
+look weird?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let's see...</Dialog>
           <Dialog>This is good! I like it.</Dialog>
-          <Dialog>Maybe it's not a good idea...</Dialog>
+          <Dialog>Maybe not so good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -611,7 +626,9 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Got it, I'll keep that in mind! I think I'll go with this for a while.</Dialog>
+          <Dialog>Got it, I'll keep that in
+mind! I think I'll go with
+this for a while.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -631,7 +648,8 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Heh. I see... So you're into this kind of thing.</Dialog>
+          <Dialog>Heh. I see... So you're into
+this kind of thing.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -651,7 +669,7 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Yay! Hehe, I'm so Happy!</Dialog>
+          <Dialog>Yay! Hehe. I'm happy!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -691,7 +709,7 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>...Fine then.!</Dialog>
+          <Dialog>...Fine then!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -711,7 +729,7 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Really？ Yeah, I guess...</Dialog>
+          <Dialog>Really? Yeah, I guess...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -746,7 +764,8 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I tried changing the vibe a little, but…</Dialog>
+          <Dialog>I decided to change up the
+vibe a bit...</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Ah... your hair color...</Dialog>
           <Dialog>It looks good!</Dialog>
@@ -785,7 +804,9 @@ anymore.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>What do you think of this kind of image? Come on, tell me what you think.</Dialog>
+          <Dialog>What do you think of this kind
+of image? Come on, tell me
+what you think.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>I see, that hair color...</Dialog>
           <Dialog>Nice!!</Dialog>
@@ -828,8 +849,8 @@ anymore.</Dialog>
 changing her look.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah, that hair color...</Dialog>
-          <Dialog>Its nice!!</Dialog>
-          <Dialog>It's not so good... </Dialog>
+          <Dialog>It's nice!!</Dialog>
+          <Dialog>It's not so good...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -869,12 +890,13 @@ changing her look.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Kobayaka＊▲！？
+          <Dialog>▲Kobayaka＊▲!?
 You changed your hair color...</Dialog>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I tried changing the vibe a little…</Dialog>
+          <Dialog>I tried changing the vibe a
+little...</Dialog>
           <Dialog>W-well, I suppose so...</Dialog>
-          <Dialog>It's the best !!</Dialog>
+          <Dialog>It's the best!!</Dialog>
           <Dialog>It's a bit much...</Dialog>
         </Dialogs>
       </SDL2>
@@ -915,10 +937,11 @@ You changed your hair color...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Kobayaka＊▲！！
+          <Dialog>▲Kobayaka＊▲!!
 You changed your hair color...</Dialog>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Well, do you have any thoughts?</Dialog>
+          <Dialog>Well, do you have any
+thoughts?</Dialog>
           <Dialog>W-well...</Dialog>
           <Dialog>This is amazing!!</Dialog>
           <Dialog>It's a bit much, honestly...</Dialog>
@@ -961,10 +984,11 @@ You changed your hair color...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲Kobayaka＊▲！！
+          <Dialog>▲Kobayaka＊▲!!
 You changed your hair color...</Dialog>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hey, hey, doesn't something seem a bit off?</Dialog>
+          <Dialog>Hey, hey, doesn't something
+seem a bit off?</Dialog>
           <Dialog>W-well...</Dialog>
           <Dialog>It's the best!!</Dialog>
           <Dialog>It's a bit much...</Dialog>
@@ -987,7 +1011,8 @@ You changed your hair color...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I decided to change up the vibe a bit...</Dialog>
+          <Dialog>I decided to change up the
+vibe a bit...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1028,7 +1053,8 @@ Rinko's image.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hey, hey!! Rinko tried changing up her look!</Dialog>
+          <Dialog>Hey, hey!! Rinko tried
+changing up her look!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1068,11 +1094,13 @@ Rinko's image.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>I tried going for a more mature look… Do you think it suits me?</Dialog>
+          <Dialog>I tried going for a more
+mature look... Do you think it
+suits me?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Oh, let's see...</Dialog>
-          <Dialog>Looks good!! It suits you. </Dialog>
-          <Dialog>It doesn't really suit you... </Dialog>
+          <Dialog>Looks good!! It suits you.</Dialog>
+          <Dialog>It doesn't really suit you</Dialog>
           <Dialog>Suppose it's not too bad.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1162,7 +1190,7 @@ how is it?</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What do you think about this
 neat, lady-like look for
-Rinko？</Dialog>
+Rinko?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>You look good</Dialog>
@@ -1208,7 +1236,7 @@ Rinko？</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I tried this cute outfit. Does
-it suit me？</Dialog>
+it suit me?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm...</Dialog>
           <Dialog>I think this is good</Dialog>
@@ -1253,12 +1281,12 @@ it suit me？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Do you like my new image？
+          <Dialog>Do you like my new image?
 Hey, tell me what you think.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>You look cute like this</Dialog>
-          <Dialog>Aren't you embarrassed？</Dialog>
+          <Dialog>Aren't you embarrassed?</Dialog>
           <Dialog>Well, I guess it's okay</Dialog>
         </Dialogs>
       </SDL2>
@@ -1300,11 +1328,11 @@ Hey, tell me what you think.</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I tried to look cute. What do
-you think？</Dialog>
+you think?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
-          <Dialog>Perfect！</Dialog>
-          <Dialog>Did you overdo it？</Dialog>
+          <Dialog>Perfect!</Dialog>
+          <Dialog>Did you overdo it?</Dialog>
           <Dialog>It's the matter of taste</Dialog>
         </Dialogs>
       </SDL2>
@@ -1391,7 +1419,7 @@ you think？</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Do you like this style of
-clothing？</Dialog>
+clothing?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>This suits you well</Dialog>
@@ -1437,11 +1465,11 @@ clothing？</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hey, look. I tried this casual
-outfit. How do I look？</Dialog>
+outfit. How do I look?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>Good, you look good</Dialog>
-          <Dialog>Eh？ Something's not right</Dialog>
+          <Dialog>Eh? Something's not right</Dialog>
           <Dialog>Well, you look okay</Dialog>
         </Dialogs>
       </SDL2>
@@ -1484,10 +1512,10 @@ outfit. How do I look？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Occasionally, it's good to
 wear something like this,
-huh...？</Dialog>
+huh...?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Whoa...</Dialog>
-          <Dialog>Yes！ This is great！</Dialog>
+          <Dialog>Yes! This is great!</Dialog>
           <Dialog>That's too much.</Dialog>
           <Dialog>Wear whatever you want</Dialog>
         </Dialogs>
@@ -1531,10 +1559,10 @@ huh...？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I tried this style of
 clothing... Hey, do you have
-anything to say？</Dialog>
+anything to say?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm, well...</Dialog>
-          <Dialog>Nice！ I love it</Dialog>
+          <Dialog>Nice! I love it</Dialog>
           <Dialog>Tone it down.</Dialog>
           <Dialog>If you like it, it's fine</Dialog>
         </Dialogs>
@@ -1576,11 +1604,11 @@ anything to say？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>What do you think？ I tried
+          <Dialog>What do you think? I tried
 this sexy outfit this time.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Hmm... Let me see...</Dialog>
-          <Dialog>Good！ Really good！</Dialog>
+          <Dialog>Good! Really good!</Dialog>
           <Dialog>Don't overdo it</Dialog>
           <Dialog>Just wear what you want</Dialog>
         </Dialogs>
@@ -1688,7 +1716,7 @@ wearing this...</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>...Really！？ Hah... I don't
+          <Dialog>...Really!? Hah... I don't
 quite understand...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1710,7 +1738,7 @@ quite understand...</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I chose this because I thought
-you would like it....This is a
+you would like it...This is a
 shock.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1731,7 +1759,7 @@ shock.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>...What's with that reaction？</Dialog>
+          <Dialog>...What's with that reaction?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1751,9 +1779,9 @@ shock.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>What？ If you don't say what
+          <Dialog>What? If you don't say what
 you think clearly, how can I
-know？</Dialog>
+know?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1816,8 +1844,8 @@ then.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Are you ignoring me...？ Fine,
-then！</Dialog>
+          <Dialog>Are you ignoring me...? Fine,
+then!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1878,13 +1906,13 @@ then！</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What do you think about my
-outfit today？</Dialog>
+outfit today?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hmm？ It's the same as what
-she usually wears, isn't it？)</Dialog>
+          <Dialog>(Hmm? It's the same as what
+she usually wears, isn't it?)</Dialog>
           <Dialog>This suits you well</Dialog>
           <Dialog>You should try new styles</Dialog>
-          <Dialog>Isn't it okay like this？</Dialog>
+          <Dialog>Isn't it okay like this?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1925,14 +1953,13 @@ she usually wears, isn't it？)</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What do you think about my
-outfit today？</Dialog>
+outfit today?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>(Hmm？ This is similar to what
+          <Dialog>(Hmm? This is similar to what
 she usually wears...)</Dialog>
           <Dialog>This style is good</Dialog>
-          <Dialog>A different outfit might
-suit you too.</Dialog>
-          <Dialog>Isn't it okay like this？</Dialog>
+          <Dialog>Other outfits might suit you</Dialog>
+          <Dialog>Isn't it okay like this?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1973,12 +2000,12 @@ suit you too.</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hey, do you like this
-neat-and-tidy clothing style？</Dialog>
+neat-and-tidy clothing style?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>...Let me see.</Dialog>
           <Dialog>Yeah, I like it</Dialog>
           <Dialog>You should try new styles</Dialog>
-          <Dialog>It doesn't matter, right？</Dialog>
+          <Dialog>It doesn't matter, right?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2019,12 +2046,12 @@ neat-and-tidy clothing style？</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Do you think this outfit suits
-Rinko？</Dialog>
+Rinko?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>Of course, it suits you</Dialog>
           <Dialog>You should try new styles</Dialog>
-          <Dialog>Eh？ Isn't it good？</Dialog>
+          <Dialog>Eh? Isn't it good?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2065,7 +2092,7 @@ Rinko？</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I tried this outfit today.
-...What do you think？</Dialog>
+...What do you think?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(This is the cute style that
 she usually wears.)</Dialog>
@@ -2112,13 +2139,12 @@ she usually wears.)</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What do you think about my
-fashion today？</Dialog>
+fashion today?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>(She's wearing a cute outfit
 today.)</Dialog>
           <Dialog>You look cute in it</Dialog>
-          <Dialog>A different outfit might
-suit you too.</Dialog>
+          <Dialog>Other outfits might suit you</Dialog>
           <Dialog>No comment</Dialog>
         </Dialogs>
       </SDL2>
@@ -2160,7 +2186,7 @@ suit you too.</Dialog>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What do you think about this
-outfit？</Dialog>
+outfit?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Let me see...</Dialog>
           <Dialog>This looks good</Dialog>
@@ -2205,9 +2231,9 @@ outfit？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Well, what's your opinion？</Dialog>
+          <Dialog>Well, what's your opinion?</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>About your outfit...？</Dialog>
+          <Dialog>About your outfit...?</Dialog>
           <Dialog>It suits you</Dialog>
           <Dialog>Try something else</Dialog>
           <Dialog>I'm not really sure.</Dialog>
@@ -2315,7 +2341,7 @@ outfit？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Hehe, right？ I already
+          <Dialog>Hehe, right? I already
 thought you'd say that.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2357,7 +2383,7 @@ I figured you might not.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>Eh？ I chose this because I
+          <Dialog>Eh? I chose this because I
 thought you would like it.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2399,7 +2425,7 @@ next time.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>That's it？ Well, that's fine,
+          <Dialog>That's it? Well, that's fine,
 though.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2420,9 +2446,9 @@ though.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>What's with that answer？
+          <Dialog>What's with that answer?
 Can't you just honestly say
-that you like it？</Dialog>
+that you like it?</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -2442,8 +2468,8 @@ that you like it？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Kobayakawa</Dialog>
-          <Dialog>That's not what I asked you！
-Ah, this is enough！</Dialog>
+          <Dialog>That's not what I asked you!
+Ah, this is enough!</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
