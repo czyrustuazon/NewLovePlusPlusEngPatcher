@@ -46,6 +46,19 @@ def test_refuses_a_moved_site_or_a_dirty_cave():
         patch.apply_patch(data)
 
 
+def test_refuses_a_patched_site_with_a_different_cave():
+    data = _buf()
+    patch.apply_patch(data)
+    data[patch.CAVE] ^= 0xFF
+    with pytest.raises(ValueError, match="cave bytes differ"):
+        patch.apply_patch(data)
+
+
+def test_a_cave_past_its_limit_is_refused():
+    with pytest.raises(ValueError, match="past"):
+        patch.build_cave(patch.DIALOG_BREAK_CAVE_LIMIT)
+
+
 def break_at_space(text: str, width: int) -> str:
     """The patched breaker: overflow walks back to the previous ASCII space."""
     out: list[str] = []
