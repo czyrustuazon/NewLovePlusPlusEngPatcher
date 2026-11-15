@@ -974,6 +974,15 @@ def test_clock_main_errors(tmp_path, monkeypatch):
         with pytest.raises(SystemExit, match=match):
             clock.main()
 
+    write_img(img, {clock.PKG: packed(_clock_files())})
+    _stage_root(monkeypatch, clock, tmp_path)
+    bind(monkeypatch, tmp_path, clock, img)
+    real_decode = clock.decode_bclim_to_image
+    monkeypatch.setattr(clock, "decode_bclim_to_image", lambda b: None)
+    with pytest.raises(SystemExit, match="cannot decode"):
+        clock.main()
+    monkeypatch.setattr(clock, "decode_bclim_to_image", real_decode)
+
     files = _clock_files()
     del files[clock.WIN_LYT]
     write_img(img, {clock.PKG: packed(files)})
