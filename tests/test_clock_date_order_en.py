@@ -4,10 +4,14 @@ from __future__ import annotations
 
 import re
 import struct
+from typing import TYPE_CHECKING
 
 import pytest
 
 from conftest import TOOLS, load_module
+
+if TYPE_CHECKING:
+    from PIL import Image
 
 clock = load_module("deploy_clock_date_order_en", TOOLS / "deploy_clock_date_order_en.py")
 
@@ -170,7 +174,7 @@ def test_date_row_centers_on_time_row():
     assert abs((month0 + paren_end) / 2 - (hour0 + ampm_end) / 2) <= 2
 
 
-def paren_window() -> "Image.Image":
+def paren_window() -> Image.Image:
     """222x162 window art with vanilla-placed "( )" and a cross outside the box."""
     from PIL import Image
 
