@@ -67,8 +67,8 @@ def test_render_cesa_companion_en():
             teals += 1
     assert blacks > 200
     assert teals > 200
-    # 3-step ramp: white / black / teal plus two AA midtones (fits pkg 90).
-    assert len(colors) >= 5
+    # Same ramp as the CESA warning (smooth AA, not the old jagged 3-step).
+    assert len(colors) > 8
 
     import sys
     import zlib
@@ -77,9 +77,11 @@ def test_render_cesa_companion_en():
     src = Path(__file__).resolve().parents[1] / "src"
     if str(src) not in sys.path:
         sys.path.insert(0, str(src))
-    from patch_cesa import encode_cesa_companion_tex
+    from patch_cesa import compress_tex_best, encode_cesa_companion_tex, encode_cesa_tex
 
-    # Compressed extra TEX must fit the 29232 PACK. Idx-table dec_len must
+    # CESA + companion share what Konami/ProductionLogo/stub leave of the
+    # 29232 PACK: ~15.7k of zopfli after alignment. Idx-table dec_len must
     # grow with the PACK header or boot heap-smashes (test_patch_cesa_idx).
-    compressed = len(zlib.compress(encode_cesa_companion_tex(im), 9))
-    assert compressed <= 5500, compressed
+    cesa = len(compress_tex_best(encode_cesa_tex(render.render_cesa_en())))
+    companion = len(compress_tex_best(encode_cesa_companion_tex(im)))
+    assert cesa + companion <= 15700, (cesa, companion)

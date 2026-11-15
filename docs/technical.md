@@ -1140,15 +1140,15 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 3. Composite onto white: black coverage darkens RGB; red coverage then lerps toward `(255,0,0)`. Where red coverage > 0, **zero the black coverage** so red AA is only red↔white (pink), never red mixed with black.
 
-4. Quantize each coverage to **12 ramp steps** (`RAMP_STEPS`). That keeps visible AA but few unique colors.
+4. Quantize each coverage to **8 ramp steps** (`RAMP_STEPS`, shared with the companion blurb). That keeps visible AA but few unique colors.
 
 `deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. The 400×400 skip lives in `name_input_code.bin` (bake rebuild / Drop CIA). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`, `tests/test_patch_cesa_logo_scale.py`. A/B: `.\ab_test\make.ps1 cesa-ab` then `launch-a` (thank-you) / `launch-b` (CESA EN, white stub).
 
 #### Companion blurb (`logo_white` — 2026-09-15)
 
-`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/logo_white.png` (**240×320** portrait, same 240-wide column as CESA; spliced into `logo_white.texi`). Same Heisei W9/W5 index 1, **no red**: two-line title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
+`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/logo_white.png` (**240×320** portrait, same 240-wide column as CESA; spliced into `logo_white.texi`). Same Heisei W9/W5 index 1, **no red**: two-line title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks and the **same 8-step ramp** as CESA (`COMPANION_RAMP_STEPS = RAMP_STEPS`, 2026-11-14) so both panes look equally smooth; the old 3-step blurb looked jagged next to the 12-step warning. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
 
-Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Fill `logo_white` **by filename**. Always extract pkg 90 from vanilla before the PACK rebuild.
+Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + 16×16 stub: CESA + companion share ~15.7k of the 29232 PACK. Measured zopfli: 8/8 = 9370 + 5553 (end 28368, ~860 spare); 9/9 fits with ~160 spare; 12/6 overflows by 64; 12/3 was the old jagged split. Fill `logo_white` **by filename**. Always extract pkg 90 from vanilla before the PACK rebuild.
 
 #### Compression (why not “just keep full AA”)
 
@@ -1158,8 +1158,9 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | Early EngPatcher MPLUS1p EN | ~3k | Thin, not gothic |
 | Full AA Heisei on one RGB canvas | ~17–19k | Smooth, but **over** the slot |
 | Hard 3-color snap (white / `#FF0000` / black) | ~5k | Fits, but **grainy**; dark red AA → black fringe that reads as a **drop-shadow** |
-| 2× masks + 12-step ramps (CESA warning) | ~12k (zopfli ~10934; no longer padded to 13667 once the PACK is rebuilt) | Smooth gothic, no red shadow |
-| 2× masks + 3-step ramps (logo_white blurb) | zopfli ~4k | Teal highlights; extra TEX fits the PACK |
+| 2× masks + 12-step ramps (CESA warning, until 2026-11-14) | zopfli ~10934 | Smooth gothic, no red shadow; left only room for a 3-step blurb |
+| 2× masks + 3-step ramps (logo_white blurb, until 2026-11-14) | zopfli ~3.5k | Fits, but jagged next to the warning |
+| 2× masks + 8-step ramps (both panes, current) | zopfli 9370 + 5553 | Both smooth and matching; ~860 bytes spare |
 
 `compress_zlib_exact` can **pad a short** stream (SYNC_FLUSH empty stored blocks, `unused_data == 0`). It **cannot** shrink a stream that already exceeds 13667. Zopfli of a too-fat TEX is still over; do not NUL-pad or shrink `cmp_len` (CESA white boot — same class as §12.5).
 
