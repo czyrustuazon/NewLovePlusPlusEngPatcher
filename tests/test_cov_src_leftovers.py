@@ -125,7 +125,7 @@ def test_python_deps_present_and_requirements_fallback(tmp_path, monkeypatch, ca
     calls = []
     monkeypatch.setattr("builtins.__import__", no_yaml)
     monkeypatch.setattr(
-        setup_tools.subprocess, "run", lambda cmd, check=False: calls.append(cmd) or types.SimpleNamespace(returncode=0)
+        setup_tools.subprocess, "run", lambda cmd, check=False, env=None: calls.append(cmd) or types.SimpleNamespace(returncode=0)
     )
     with pytest.raises(SystemExit, match="still missing: PyYAML"):
         setup_tools.ensure_python_deps()  # pip "ran" but yaml is still gone

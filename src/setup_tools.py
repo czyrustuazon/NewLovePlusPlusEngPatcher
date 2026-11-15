@@ -132,6 +132,16 @@ def ensure_extract_romfs() -> None:
         print("note: extract_romfs.py not found (optional; 3dstool is used instead)")
 
 
+def pip_env() -> dict[str, str]:
+    """Environment for ``pip install -r requirements.txt``.
+
+    On a Python newer than PyYAML's wheels, pip builds it from source and its
+    C extension build fails without a compiler. ``PYYAML_FORCE_LIBYAML=0``
+    builds the pure-Python wheel instead; prebuilt wheels ignore it.
+    """
+    return {**os.environ, "PYYAML_FORCE_LIBYAML": "0"}
+
+
 def ensure_python_deps() -> None:
     missing: list[str] = []
     for mod, pip_name in (
@@ -156,6 +166,7 @@ def ensure_python_deps() -> None:
         proc = subprocess.run(
             [sys.executable, "-m", "pip", "install", "-r", str(req)],
             check=False,
+            env=pip_env(),
         )
         if proc.returncode != 0:
             raise SystemExit("pip install failed")
