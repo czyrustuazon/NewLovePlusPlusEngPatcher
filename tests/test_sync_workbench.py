@@ -184,3 +184,25 @@ def test_two_shipped_wordings_do_not_overwrite_the_phrase_map(tmp_path):
     assert saved["translations"][jp] == kept
     assert report["map_keys"] == 0
     assert report["map_conflicts"] == 1
+
+
+def test_line_credits_ride_along_only_when_the_line_count_matches():
+    item = {"kind": "script", "stem": "k007"}
+    sync.fill_script_item(
+        item,
+        vanilla=["小早川", "髪"],
+        working=["Kobayakawa", "Rinko's hairstyle"],
+        gemini=["Kobayakawa", "this hairstyle"],
+        layer="contrib",
+        line_credit={"name": "Dnnz.Cstr", "lines": ["", "c"]},
+    )
+    assert item["line_credit"] == {"name": "Dnnz.Cstr", "lines": ["", "c"]}
+    sync.fill_script_item(
+        item,
+        vanilla=["小早川", "髪"],
+        working=["Kobayakawa", "Rinko's hairstyle"],
+        gemini=None,
+        layer="contrib",
+        line_credit={"name": "Dnnz.Cstr", "lines": ["c"]},
+    )
+    assert "line_credit" not in item

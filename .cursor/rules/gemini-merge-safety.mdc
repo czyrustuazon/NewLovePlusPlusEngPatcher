@@ -1,0 +1,18 @@
+---
+description: Never resolve a dialogue merge conflict by taking one side
+alwaysApply: true
+---
+
+# Dialogue merges keep both sides
+
+Git cannot merge a `.dbin2`. A conflict under `assets/gemini_heroines`, `assets/script_contrib`, `assets/scripts`, or `rebuild_dbin2` looks harmless and passes every test. Merge `1bd0b64` took one side of 153 files and lost 164 lines of dialogue.
+
+Do not finish such a merge with `--ours`, `--theirs`, `-X ours`, or `-s ours` alone. For Gemini text, follow the steps at the top of `tools/merge_gemini_lines.py`:
+
+1. `git checkout --ours -- assets/gemini_heroines`
+2. Dry-run `tools/merge_gemini_lines.py --base <merge-base> --theirs MERGE_HEAD`, then read any line it reports.
+3. Run it again with `--apply`, then `git add` the folder.
+
+Other dialogue folders have no tool yet. Compare them per line by hand.
+
+`dev/check_merges.py` runs from the pre-push hook and refuses a merge that dropped one side. `tests/test_gemini_dialogue_regressions.py` holds the fixes that must not come back. Do not raise `ADDRESS_LINES_LEFT` to get past it. Only list a merge in `REPAIRED` after a later commit has restored its text.

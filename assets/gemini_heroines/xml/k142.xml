@@ -4157,12 +4157,12 @@ Maybe I'll talk to her.）</Dialog>
 Oh, it's just ▲小早川＊▲.</Dialog>
           <Dialog>What's "just" supposed
 to mean？</Dialog>
-          <Dialog>I need to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I need to see ▲小早川＊▲</Dialog>
+          <Dialog>I needed to see ▲高嶺＊＊▲</Dialog>
+          <Dialog>I needed to see you, ▲小早川＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>（It's ▲姉ヶ崎＊▲...
 Maybe I'll talk to her.）</Dialog>
-          <Dialog>I need to see ▲姉ヶ崎＊▲</Dialog>
+          <Dialog>I needed to see ▲姉ヶ崎＊▲</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4233,13 +4233,13 @@ Not that I care...</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Sorry, I was just about to
-go talk to ▲高嶺＊＊▲.</Dialog>
+talk to ▲高嶺＊＊▲.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hmm... Guess I'm in the way,
 then. Whatever...</Dialog>
           <Dialog>Sorry. See you later!</Dialog>
           <Dialog>Sorry, I was just about to
-go talk to ▲姉ヶ崎＊▲.</Dialog>
+talk to ▲姉ヶ崎＊▲.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4507,7 +4507,7 @@ Maybe I'll say hi.）</Dialog>
           <Dialog>What's with that reaction...？
 Way to kill the mood.</Dialog>
           <Dialog>I need to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I need to see ▲小早川＊▲</Dialog>
+          <Dialog>I need to see you, ▲小早川＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>（Oh, there's ▲姉ヶ崎＊▲...
 Maybe I'll say hi.）</Dialog>
@@ -4581,14 +4581,14 @@ in the way. Bye.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Actually, I needed to see
-▲高嶺＊＊▲ about something...</Dialog>
+          <Dialog>Um, I actually needed
+to see ▲高嶺＊＊▲...</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>So it's not me you need...
 Sorry to bother you. Bye.</Dialog>
           <Dialog>（……？）</Dialog>
-          <Dialog>Actually, I needed to see
-▲姉ヶ崎＊▲ about something...</Dialog>
+          <Dialog>Um, I actually needed
+to see ▲姉ヶ崎＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -4643,8 +4643,7 @@ Sorry to bother you. Bye.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, good timing. I had
-something to ask ▲小早川＊▲.</Dialog>
+          <Dialog>Oh, good timing. I wanted to ask you something, ▲小早川＊▲.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Really？ Well, I suppose I can hear you out.</Dialog>
           <Dialog>I see... I can always count on you, ▲小早川＊▲.</Dialog>
@@ -4848,7 +4847,7 @@ something to ask ▲小早川＊▲.</Dialog>
           <Dialog>Whoa!? ▲小早川＊▲. What's up？</Dialog>
           <Dialog>Not really...</Dialog>
           <Dialog>I need to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I need to see ▲小早川＊▲</Dialog>
+          <Dialog>I need to see you, ▲小早川＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>(There's ▲姉ヶ崎＊▲... Should I go talk to her？)</Dialog>
           <Dialog>I need to see ▲姉ヶ崎＊▲</Dialog>
@@ -5176,7 +5175,7 @@ something to ask ▲小早川＊▲.</Dialog>
           <Dialog>Whoa, you startled me... You were here, ▲小早川＊▲？</Dialog>
           <Dialog>I've been here this whole time...</Dialog>
           <Dialog>I need to see ▲高嶺＊＊▲</Dialog>
-          <Dialog>I need to see ▲小早川＊▲</Dialog>
+          <Dialog>I need to see you, ▲小早川＊▲</Dialog>
           <Dialog>Leave</Dialog>
           <Dialog>(I wonder what ▲姉ヶ崎＊▲ is doing？)</Dialog>
           <Dialog>I need to see ▲姉ヶ崎＊▲</Dialog>
@@ -5749,7 +5748,7 @@ I'm in a hurry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What about ▲小早川＊▲？</Dialog>
+          <Dialog>What about you, ▲小早川＊▲？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>I don't know.</Dialog>
           <Dialog>(...Why'd she stop me, then？)</Dialog>
@@ -5797,7 +5796,7 @@ I'm in a hurry.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>What about ▲小早川＊▲？</Dialog>
+          <Dialog>What about you, ▲小早川＊▲？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Never mind about me.</Dialog>
           <Dialog>What's that supposed to mean？</Dialog>
@@ -10922,7 +10921,7 @@ even mean...</Dialog>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Yeah. Today I'll do my best as
-a library committee！</Dialog>
+a library committee member！</Dialog>
           <Dialog>(▲小早川＊▲'s absent, huh... I hope
 nothing happened to her.)</Dialog>
           <Dialog>▲小早川＊▲! What're you doing here
@@ -11267,7 +11266,7 @@ Rinko</Dialog>
 Gold canned mackerel？
 Rinko</Dialog>
           <Dialog>Again...? Why go out of her way to text me this late...?</Dialog>
-          <Dialog>I have a feeling ▲小早川＊▲'s at the convenience store...</Dialog>
+          <Dialog>I feel like ▲小早川＊▲'s at the convenience store...</Dialog>
           <Dialog>Probably nothing important, I'll go to sleep</Dialog>
           <Dialog>It's probably no big deal. I'll just reply and go to sleep.</Dialog>
           <Dialog>Goodnight...</Dialog>

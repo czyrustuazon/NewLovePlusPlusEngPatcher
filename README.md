@@ -112,7 +112,7 @@ Use **564** (chrome) or **1765** (all mapped UI masters) from the table above. `
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc5.2`** on main. `CIA_TITLE_VERSION` is **7**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc5.4`** on main. `CIA_TITLE_VERSION` is **9**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 
@@ -356,7 +356,8 @@ New work on **this** patcher. Not the 2016–17 NLPPATCH / tooling lineage in th
 | **[Cetaceaqua](https://github.com/Cetaceaqua/)** | [NLPP Toolchain](https://github.com/Cetaceaqua/) — EngPatcher and [nlpp-texture-tool](https://github.com/czyrustuazon/nlpp-texture-tool) borrow from it to fix packing / BCLIM issues; also SpotPass dump + RGB8/RGBA8 byte order (below) |
 | **Dragios** & **D.** | QA testing — the “does this menu still say 決定?” crew |
 | **Lieutenant Dan** | Proofreading |
-| **Lyud** | Proofread Nene's first day at Dixie's (`a000`) |
+| **Armando Esteban Quito** | Translated Nene's first day at Dixie's (`a000`) and lines in her confession and date scenes (`a002`, `a004`, `a005`) |
+| **Dnnz.Cstr** | Translated Rinko's hair and outfit reactions (`k007`) |
 | **i need help here...** | Knowledge sharing |
 | **( ˘ ᵕ˘(˘ᵕ ˘ )** | Shared save files that unlocked quicker access to post-game context |
 
