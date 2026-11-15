@@ -184,3 +184,26 @@ def test_two_shipped_wordings_do_not_overwrite_the_phrase_map(tmp_path):
     assert saved["translations"][jp] == kept
     assert report["map_keys"] == 0
     assert report["map_conflicts"] == 1
+
+
+def test_choice_buttons_are_named_by_kit_index_across_entries(tmp_path):
+    import patch_names as names
+
+    def entry(dialogs, choices):
+        cmds = [names.UnknownEntry([], 0x24002, 1 << 16)]
+        cmds += [names.UnknownEntry([], 0x10000 | i, 0x24002) for i in choices]
+        return names.DbinEntry(0, 0, names.SDL2Data(2, cmds, dialogs))
+
+    path = tmp_path / "k142.dbin2"
+    path.write_bytes(
+        names.build_dbin2(
+            1,
+            0,
+            [
+                entry(["小早川", "どうする？"], []),
+                entry(["小早川", "どうする？", "まあいいか", "自分でやれって"], [2, 3]),
+            ],
+        )
+    )
+    # The second entry starts at kit index 2, so its buttons are 4 and 5.
+    assert sync.choice_indexes(path) == [4, 5]

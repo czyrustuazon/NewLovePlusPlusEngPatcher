@@ -155,3 +155,14 @@ def test_choice_buttons_wrap_at_28_and_talk_at_30():
         "I think that's a good idea,\nok",  # button: 30 > 28
         fits_talk,  # talk: 30 fits
     ]
+
+
+def test_over_width_counts_columns_the_game_way():
+    # ？ is two columns, so 29 letters + ？ is 31.
+    assert dw.over_width("a" * 29 + "？") == [(1, 31)]
+    assert dw.over_width("a" * 28 + "？") == []
+    # A name marker is budgeted at 8 whatever its spelling.
+    assert dw.over_width("▲高嶺＊＊▲" + "a" * 22) == []
+    assert dw.over_width("ok\n" + "b" * 29, dw.CHOICE_COLUMNS) == [(2, 29)]
+    # Japanese is left to the game's kinsoku wrap.
+    assert dw.over_width("あ" * 40) == []

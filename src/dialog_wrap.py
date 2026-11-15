@@ -108,6 +108,23 @@ def game_would_break(text: str, width: int = TALK_COLUMNS) -> bool:
     return any(columns(line) > width for line in text.split("\n"))
 
 
+def over_width(text: str, width: int = TALK_COLUMNS) -> list[tuple[int, int]]:
+    """``(line number, columns)`` for each line of ``text`` wider than ``width``.
+
+    Measured on what is drawn (after ``fit_font``). A dialog with kana or
+    kanji is left to the game's kinsoku wrap and reports nothing.
+    """
+    text = fit_font(text)
+    if _JAPANESE_RE.search(_MARKER_RE.sub("", text)):
+        return []
+    out: list[tuple[int, int]] = []
+    for number, line in enumerate(text.split("\n"), 1):
+        cols = columns(line.rstrip())
+        if cols > width:
+            out.append((number, cols))
+    return out
+
+
 def choice_dialogs(sdl2: SDL2Data) -> set[int]:
     """Dialog indexes this entry shows as choice buttons."""
     return {

@@ -59,6 +59,7 @@ List is alphabetical (`a…` then `k…` then `p…` then `t…`). A script whos
 - Keep nickname / player-name tokens exactly: e.g. `▲高嶺＊＊▲`, `▲主人公＊▲`.
 - Keep control marks **`※`** and **`▼`** — removing them blocks Save.
 - Translate **`●`** as I / me / my. It is the player's word for "I"; left in, the game shows 俺 or 僕.
+- Every English script line must fit **30 columns** (talk window) or **28** (choice button). Letters, digits, spaces, and ASCII marks count 1; `？`, `…`, `！` and other wide marks count 2; a name token like `▲高嶺＊＊▲` counts 8. Press Enter to break a long line. Save is blocked while an edited line is too wide.
 - Leave placeholder-only lines (`○○○`) and punctuation-only lines alone.
 - Scripts badge **`N left · total`** = lines still needing work (not “N done”).
 

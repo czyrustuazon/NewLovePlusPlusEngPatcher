@@ -17,6 +17,11 @@ The patcher is the source of truth.
 * TRB rows whose Japanese is already a key in ``translations.json`` are
   removed. A truncated workbench string is replaced with the full vanilla
   STRI text. SMS rows stay; their Gemini text is already the patcher file.
+* Each aligned script lists its choice-button lines (``choices``, kit
+  indexes from the vanilla SDL2 commands). The kit holds those to 28
+  columns and every other English line to 30, counted as
+  ``dialog_wrap.columns`` counts them, and blocks Save on an edited line
+  that does not fit.
 * The images kit stays removed.
 
   python tools/sync_workbench.py
@@ -50,6 +55,7 @@ from ingest_pack import (  # noqa: E402
     _xml_dialogs,
 )
 from nlpp_paths import find_vanilla_main_trb, find_vanilla_script_dir  # noqa: E402
+from dialog_wrap import choice_dialogs  # noqa: E402
 from patch_names import parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml  # noqa: E402
 from script_inject import DEFAULT_ENG_DBIN, resolve_script_source  # noqa: E402
@@ -477,6 +483,22 @@ def _vanilla_dialogs(vanilla_dir: Path | None, stem: str) -> list[str] | None:
     return _dbin_dialogs(path)
 
 
+def choice_indexes(path: Path) -> list[int]:
+    """Kit dialog indexes (flat across entries) the game shows as choice buttons.
+
+    The kit holds those lines to ``CHOICE_COLUMNS`` and every other line to
+    ``TALK_COLUMNS``, as ``dialog_wrap`` does at inject.
+    """
+    _, _, entries = parse_dbin2(path.read_bytes())
+    out: list[int] = []
+    base = 0
+    for entry in entries:
+        count = len(entry.sdl2.dialogs)
+        out.extend(base + i for i in sorted(choice_dialogs(entry.sdl2)) if i < count)
+        base += count
+    return out
+
+
 def sync_script_embed(
     data: dict,
     *,
@@ -525,6 +547,15 @@ def sync_script_embed(
             layer=layer,
             unreviewed=pending,
         )
+        # Choice buttons come from the vanilla SDL2 commands. Only an aligned
+        # file can name them by kit index.
+        choices: list[int] = []
+        if vanilla_dir is not None and vanilla is not None and len(vanilla) == len(working):
+            choices = choice_indexes(vanilla_dir / f"{stem}.dbin2")
+        if choices:
+            item["choices"] = choices
+        else:
+            item.pop("choices", None)
         if "dialogs" in item:
             embedded += 1
         layers[layer] = layers.get(layer, 0) + 1
