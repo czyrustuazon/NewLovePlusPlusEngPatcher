@@ -143,6 +143,28 @@ def test_choice_buttons_are_found_from_their_commands():
     assert dw.choice_dialogs(sdl2) == {2, 3}
 
 
+def test_kobayakawa_still_fits_the_photographed_k142_lines():
+    # The photos cut "absen / t," and "agai / n..." after the 10-letter
+    # surname. The marker is budgeted at that surname, so both lines break
+    # at spaces and stay inside 30 once the name is filled in.
+    absent = "(▲Kobayaka＊▲'s absent, huh... I hope nothing happened to her.)"
+    again = "（Don't tell me that's about ▲Kobayaka＊▲ again...）"
+    shown = [
+        dw.wrap_dialog(absent).replace("▲Kobayaka＊▲", "Kobayakawa"),
+        dw.wrap_dialog(again).replace("▲Kobayaka＊▲", "Kobayakawa"),
+    ]
+    assert shown[0] == (
+        "(Kobayakawa's absent, huh... I\nhope nothing happened to her.)"
+    )
+    assert shown[1] == (
+        "（Don't tell me that's about\nKobayakawa again...）"
+    )
+    for text in shown:
+        assert "absen\n" not in text and "agai\n" not in text
+        for line in text.split("\n"):
+            assert sum(1 if ord(c) < 0x80 else 2 for c in line) <= dw.TALK_COLUMNS
+
+
 def test_choice_buttons_wrap_at_28_and_talk_at_30():
     photo = "Got it. Guess I have no choice."  # 31: past both widths
     fits_talk = "I think that's a good idea, ok"  # 30
@@ -161,8 +183,9 @@ def test_over_width_counts_columns_the_game_way():
     # ？ is two columns, so 29 letters + ？ is 31.
     assert dw.over_width("a" * 29 + "？") == [(1, 31)]
     assert dw.over_width("a" * 28 + "？") == []
-    # A name marker is budgeted at 8 whatever its spelling.
-    assert dw.over_width("▲高嶺＊＊▲" + "a" * 22) == []
+    # A name marker is budgeted at NAME_COLUMNS (10) whatever its spelling.
+    assert dw.over_width("▲高嶺＊＊▲" + "a" * 20) == []
+    assert dw.over_width("▲高嶺＊＊▲" + "a" * 21) == [(1, 31)]
     assert dw.over_width("ok\n" + "b" * 29, dw.CHOICE_COLUMNS) == [(2, 29)]
     # Japanese is left to the game's kinsoku wrap.
     assert dw.over_width("あ" * 40) == []

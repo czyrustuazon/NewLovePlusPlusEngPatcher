@@ -28,7 +28,7 @@ k007 settled lines:
 - 132: "W-well..." (`そ、そうだな`). Keep her question "doesn't something seem a bit off?" Gemini rewrote that question. "Y-yeah, I guess so" picks a button, then the other button is "It's the best!!"
 - 138: "So I figured I'd change Rinko's image." `ようかなって思って` is a decision she has already made. Both sides ask "it has changed, right?"
 - 142: keep "I tried going for a more mature look… Do you think it suits me?"
-- 146: contributor "It doesn't really suit you."
+- 146: "It doesn't really suit you" (choice button: no period, fits 28 columns).
 - 149: she wore the understated clothes because she thought he would like them. Lowercase "so" and shorten it (about 99 columns).
 
 Gemini half of k007 that the pack copied through, still wrong:
@@ -37,7 +37,7 @@ Gemini half of k007 that the pack copied through, still wrong:
 - 189 `それなりだと思うぞ`: "It's decent." Gemini says "Nothing is different..."
 - 209 `ヤバイ`: "That's too much." Gemini says "this is terrible."
 - 216 `少し落ち着け`: "Tone it down." Gemini says "It's not quite good."
-- 261 and 289 `違う服も似合うかも`: "A different outfit might suit you too." Gemini says "This doesn't suit you."
+- 261 and 289 `違う服も似合うかも`: "Other outfits might suit you" (fits the 28-column button; "A different outfit might suit you too." wrapped). Gemini says "This doesn't suit you."
 - 283 `●に言われても`: "Why ask me?" Gemini says "It doesn't matter."
 - 306 `どこかおかしくない？`: "Isn't something off?" Gemini says "Do I look different today?" The button `別に変じゃない` only answers the Japanese.
 - 319 `そうかもなーとは思ってた`: "I figured you might not like it." Gemini says "I thought you would, though."

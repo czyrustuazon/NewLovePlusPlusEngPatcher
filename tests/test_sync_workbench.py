@@ -207,3 +207,25 @@ def test_choice_buttons_are_named_by_kit_index_across_entries(tmp_path):
     )
     # The second entry starts at kit index 2, so its buttons are 4 and 5.
     assert sync.choice_indexes(path) == [4, 5]
+
+
+def test_line_credits_ride_along_only_when_the_line_count_matches():
+    item = {"kind": "script", "stem": "k007"}
+    sync.fill_script_item(
+        item,
+        vanilla=["小早川", "髪"],
+        working=["Kobayakawa", "Rinko's hairstyle"],
+        gemini=["Kobayakawa", "this hairstyle"],
+        layer="contrib",
+        line_credit={"name": "Dnnz.Cstr", "lines": ["", "c"]},
+    )
+    assert item["line_credit"] == {"name": "Dnnz.Cstr", "lines": ["", "c"]}
+    sync.fill_script_item(
+        item,
+        vanilla=["小早川", "髪"],
+        working=["Kobayakawa", "Rinko's hairstyle"],
+        gemini=None,
+        layer="contrib",
+        line_credit={"name": "Dnnz.Cstr", "lines": ["c"]},
+    )
+    assert "line_credit" not in item

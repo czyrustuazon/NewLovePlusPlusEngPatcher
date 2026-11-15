@@ -16,7 +16,7 @@ Details: `AGENTS.md`, `.cursor/rules/deploy-a-launch.mdc`.
 The game cuts talk text at 30 columns and choice buttons at 28, mid-word
 (`FUN_005bf750`, see `src/dialog_wrap.py`). Count columns the game's way:
 ASCII = 1, anything else = 2 (`？`, `…`, `！`), name markers at their
-`dialog_wrap.MARKER_COLUMNS` budget (`▲高嶺＊＊▲` = 8).
+`dialog_wrap.MARKER_COLUMNS` budget (`▲高嶺＊＊▲` = 10).
 
 - The Scripts kit (`../nlpp-localization-workbench/kit/NLPP_Translate.html`)
   warns on every over-width line and blocks Save on any edited line that

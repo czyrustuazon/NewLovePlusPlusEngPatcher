@@ -335,6 +335,22 @@ def test_unreviewed_manifest(tmp_path: Path, monkeypatch, raw, expected):
     assert sync._unreviewed_map() == expected
 
 
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (None, {}),
+        ("{broken", {}),
+        ("[]", {}),
+        ('{"k007": {"name": "D", "lines": ["c"]}, "a000": "x"}', {"k007": {"name": "D", "lines": ["c"]}}),
+    ],
+)
+def test_line_credit_manifest(tmp_path: Path, monkeypatch, raw, expected):
+    monkeypatch.setattr(sync, "ROOT", tmp_path)
+    if raw is not None:
+        _write(tmp_path / "assets" / "script_contrib" / "line_credits.json", raw.encode("utf-8"))
+    assert sync._line_credit_map() == expected
+
+
 def _kit_project(tmp_path: Path, monkeypatch) -> dict[str, Path]:
     def rebuilt(_pack: str, stem: str, root: Path) -> tuple[Path | None, str]:
         path = root / "script" / f"{stem}.dbin2"

@@ -69,6 +69,7 @@ tools/*
 !tools/sync_workbench.py
 !tools/audit_dialog_width.py
 !tools/merge_gemini_lines.py
+!tools/line_credits.py
 !tools/translate_heroines_gemini.py
 !tools/verify_nickname_tokens.py
 !tools/fetch_nlppatch_release.py
