@@ -1203,6 +1203,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + 16×16
 | `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 | `src/dialog_wrap.py` | At script inject: swap glyphs the dialog font lacks, then break English lines at spaces before the game's 30/28-column wrapper cuts a word (**§24.1–24.2**) |
 | `src/patch_bonus_digits.py` | BONUS! popup Riches amounts in ASCII digits (name-input step 25, **§24.8**) |
+| `src/patch_profile_caret.py` | Profile name caret sits after the centered text: `center + 3.5 × (cells + 2)` (name-input step 26, **§17.10**) |
 | `tools/translate_heroines_gemini.py fix-pronoun` / `fix-address` | Redo Gemini lines that kept `●` or name the heroine where English says "you" (**§24.3–24.4**) |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -2230,6 +2231,14 @@ The glyph is blanked in the texture (`bclimutil.blank_texels_left_of`, x<48 → 
 **Hidden panes.** Both copies of the input layouts (`Input.arc` in pkg **5190**, `Profile.arc` in pkg **5252**) clear the visible bit on `Lyt_Prf_Btn_ML` `Pos_Btn_C01_01`–`_04` (Kanji, Kana 1, Kana 2, S. Kana) and `Lyt_Prf_Btn_Change` `Pos_Btn_Change` (the whole tab), via `hide_input_panes` in `deploy_input_keyboard_en.py` (also called by `deploy_profile_en.py`). The `Pts_Prf_Btn_C01` / `Btn_Change` animations only drive `Nul_`/`Bod_`/`Pic_` children, never the `Pos_*` parents, so the hide sticks. ABC, Symbols and Delete keep their vanilla positions (gap above them).
 
 Tests: `tests/test_name_input_caves.py` (`test_force_ml_is_inplace_kit_open`, `test_force_ml_on_vanilla`). `tests/test_input_panes_hidden.py` locks the hide list, checks that the hide writers are the last scripts to touch pkg 5190 / 5252 in the bake, and (local_data) checks that both copies in `release/bake_img.bin` are hidden and the pencil blanked. On 2026-10-17 a bake from before this change reached Azahar A through `deploy-a`, and both screens showed the buttons again.
+
+### 17.10 Profile text caret follows ASCII width (2026-11-14)
+
+The Profile form (`Lyt_Prf_Info_Profile`, `Tex_Profile%02d`, class around `0x247xxx`) draws Last/First Name **centered** on the field in DrawText's 7 px cells (`GetCharWidthCells`: ASCII 1, anything else 2). Its blinking turquoise caret (`Pts_Prf_Cur_Moji` under `Pos_Cur01`) comes from the glyph count `n` that the setter `FUN_0024842c(obj, row, str)` stores at `obj+0x4c+row*4`, clamped to 4. The caret is `FUN_00247d98` (rows 0/1 only), plus an inlined copy in the focus refresh `FUN_00248124` (`0x2482bc`, `0x248330`). Both compute `x = fieldCenter + 14 + (n−1)·7`, minus 14 once `n >= 4` (`fieldCenter` = `obj+0x64+row*12`). That is half a caret past centered fullwidth text (right edge `center + 7n`). ASCII is half as wide, so "AAA" left a 17 px gap, and an 8-letter name (clamped to 4) put the caret on the last two letters. Measured from screenshots: caret center +28.6 for "AAA"/"DDD", +21 for "DDDccccc", text right edges +10 / +27.
+
+`src/patch_profile_caret.py` (name-input step 26) stores the **cell count** in that slot and uses `x = center + 3.5·(cells + 2)` at both caret sites. The setter's caret block (`0x2484d0`) runs `MeasureText` `FUN_005c0760` on the MakeStr char* at `[sp+0xc]` straight into `obj+0x4c+row*4`. `FUN_00247d98` and the refresh read cells from there. Their 14.0 / 7.0 pool words (`0x247e80`, `0x248388`) become 3.5. Kana give the vanilla position (cells = 2n), and there is no back-step when full. Nothing else reads the slot; the ctor zeroes it at `0x24855c`. All edits are in place.
+
+Do not confuse this with `FUN_0023c040` (the class with `Tex_Check%02d`, `Lyt_Prf_Info_Check`). That is the confirm sheet's caret: row 4 is Username, edited live from `0x34ee50`. It uses `rowLeft + 14n` and is left as vanilla. A first attempt (2026-11-14) rewrote it by mistake and the Profile caret did not move. Other `Pts_Prf_Cur_Moji` users: Called lists `0x244144` / `0x244ac4`. Tests: `tests/test_patch_profile_caret.py`.
 
 ---
 

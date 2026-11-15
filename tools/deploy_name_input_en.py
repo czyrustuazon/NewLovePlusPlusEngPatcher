@@ -37,6 +37,7 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
   24. patch_syspopup_scroll_bar            # message box scroll ends at the last line; bar spans the text
   25. patch_bonus_digits                   # BONUS! popup Riches amounts in ASCII digits (50, not ５ ０)
+  26. patch_profile_caret                  # Profile name caret sits after the text (7 px per ASCII cell)
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -194,6 +195,10 @@ from patch_bonus_digits import (  # noqa: E402
 from patch_syspopup_tall_text import (  # noqa: E402
     apply_patch as apply_syspopup_tall,
     is_patched as syspopup_tall_already,
+)
+from patch_profile_caret import (  # noqa: E402
+    apply_patch as apply_profile_caret,
+    is_patched as profile_caret_already,
 )
 from patch_title_engpatch_info import (  # noqa: E402
     apply_patch as apply_engpatch_info,
@@ -436,6 +441,12 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] bonus_digits already applied")
     else:
         apply_bonus_digits(data)
+        steps += 1
+
+    if profile_caret_already(data):
+        print("[skip] profile_caret already applied")
+    else:
+        apply_profile_caret(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is
