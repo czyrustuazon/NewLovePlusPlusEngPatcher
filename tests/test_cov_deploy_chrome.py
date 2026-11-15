@@ -847,7 +847,11 @@ def _mat(name: str, tex_idx: int, maps: int = 1) -> bytes:
 
 
 def _vanilla_anchor() -> bytes:
-    return clyt([_clock_pane(b"pan1", n, v) for n, (v, _t) in clock.ANCHOR_X.items()])
+    panes = [_clock_pane(b"pan1", n, v) for n, (v, _t) in clock.ANCHOR_X.items()]
+    panes += [
+        pane(b"pic1", n, 1, size=0x4C, **{"0x44": w}) for n, (w, _t) in clock.ARROW_W.items()
+    ]
+    return clyt(panes)
 
 
 def _vanilla_win() -> bytes:
@@ -867,9 +871,18 @@ def _vanilla_win() -> bytes:
     return clyt([txl, _mat("Pic_Opt_Win_tex3", 2), *panes])
 
 
+def _clock_window_bclim() -> bytes:
+    from bclimutil import encode_rgba4444_pixels
+
+    from test_clock_date_order_en import paren_window
+
+    return fi.bclim(222, 162, 8, pixels=encode_rgba4444_pixels(paren_window(), 256, 256))
+
+
 def _clock_files() -> dict[str, bytes]:
     return {
         clock.SLASH_BCLIM: noise_bclim(16, 16, 0xD, seed=15),
+        clock.WIN_BCLIM: _clock_window_bclim(),
         clock.ANCHOR_LYT: _vanilla_anchor(),
         clock.WIN_LYT: _vanilla_win(),
     }
@@ -948,6 +961,18 @@ def test_clock_main_errors(tmp_path, monkeypatch):
     bind(monkeypatch, tmp_path, clock, img)
     with pytest.raises(SystemExit, match="Opt_Time_tex2"):
         clock.main()
+
+    for broken, match in ((None, "Opt_Time_Win1_img"), (fi.bclim(222, 162, 8), "no weekday")):
+        files = _clock_files()
+        if broken is None:
+            del files[clock.WIN_BCLIM]
+        else:
+            files[clock.WIN_BCLIM] = broken
+        write_img(img, {clock.PKG: packed(files)})
+        _stage_root(monkeypatch, clock, tmp_path)
+        bind(monkeypatch, tmp_path, clock, img)
+        with pytest.raises(SystemExit, match=match):
+            clock.main()
 
     files = _clock_files()
     del files[clock.WIN_LYT]
