@@ -66,6 +66,9 @@ set "NLPP_SOURCE_RC="
 if /i "%NLPP_PY_DEPS%"=="1" goto :deps_ready
 echo.
 echo Installing Python packages ^(py -3 -m pip install -r requirements.txt^) ...
+REM A Python newer than PyYAML's wheels makes pip build it from source, and
+REM its C extension build dies without a compiler. Pure Python is enough here.
+set "PYYAML_FORCE_LIBYAML=0"
 "%PYTHON%" -m pip install -r "%~dp0requirements.txt"
 if errorlevel 1 (
   echo [!] pip install failed. Try: %PYTHON% -m pip install -r requirements.txt

@@ -16,6 +16,7 @@ A line is machine text when it comes from `assets/gemini_heroines/` and no human
 - When you change a machine line, add its dialog index to `assets/script_contrib/unreviewed.json` under the stem, then run `python tools/sync_workbench.py`.
 - A line that still equals the Gemini pass also stays in the queue. `tools/sync_workbench.py` does that for a contributor stem that is not in `assets/gemini_heroines/proofread.json`.
 - A stem in `proofread.json` is signed off. Do not put it back in the queue.
+- When a stem goes into the patcher (pack ingest, a review, `proofread.json`), run `python tools/audit_dialog_width.py <stem>` and re-break or shorten each line it lists to 30 columns (28 on a choice button). Keep the person's wording. Re-breaking a machine line changes it, so add its index to `unreviewed.json` like any other agent edit.
 
 ## Don't
 

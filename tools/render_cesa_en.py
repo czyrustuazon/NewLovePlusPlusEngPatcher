@@ -11,7 +11,8 @@ Vanilla pkg 90 (240x400) composition we copy:
 
 Red and black are drawn on separate coverage masks (2x) so red AA is only
 red↔white (no black fringe / fake drop-shadow). Coverage is quantized to a
-short ramp so zlib still fits the 13667-byte TEX slot.
+short ramp so both TEXs (CESA + logo_white blurb) zopfli into the 29232-byte
+pkg 90 PACK.
 """
 from __future__ import annotations
 
@@ -44,9 +45,11 @@ TITLE_Y = 82 * SCALE
 TITLE_AFTER_LINE = 6 * SCALE
 TITLE_TO_BODY = 18 * SCALE
 BODY_LEADING = 23 * SCALE
-RAMP_STEPS = 12
-# Companion uses a short ramp so the extra TEX still fits pkg 90.
-COMPANION_RAMP_STEPS = 3
+# One ramp for both panes so the warning and the thank-you blurb look alike.
+# 8 steps: CESA ~9370 + companion ~5553 zopfli, ~860 bytes spare in pkg 90.
+# 12/3 left the blurb jagged; 9/9 fits with only ~160 bytes spare.
+RAMP_STEPS = 8
+COMPANION_RAMP_STEPS = RAMP_STEPS
 
 # Same 240-wide portrait column as CESA (CesaLogo second pane, not 320×240).
 COMPANION_W, COMPANION_H = 240, 320

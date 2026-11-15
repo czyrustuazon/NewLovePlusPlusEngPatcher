@@ -335,6 +335,22 @@ def test_unreviewed_manifest(tmp_path: Path, monkeypatch, raw, expected):
     assert sync._unreviewed_map() == expected
 
 
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (None, {}),
+        ("{broken", {}),
+        ("[]", {}),
+        ('{"k007": {"name": "D", "lines": ["c"]}, "a000": "x"}', {"k007": {"name": "D", "lines": ["c"]}}),
+    ],
+)
+def test_line_credit_manifest(tmp_path: Path, monkeypatch, raw, expected):
+    monkeypatch.setattr(sync, "ROOT", tmp_path)
+    if raw is not None:
+        _write(tmp_path / "assets" / "script_contrib" / "line_credits.json", raw.encode("utf-8"))
+    assert sync._line_credit_map() == expected
+
+
 def _kit_project(tmp_path: Path, monkeypatch) -> dict[str, Path]:
     def rebuilt(_pack: str, stem: str, root: Path) -> tuple[Path | None, str]:
         path = root / "script" / f"{stem}.dbin2"
@@ -528,3 +544,14 @@ def test_main_bumps_the_build_each_run(tmp_path: Path, monkeypatch, capsys):
     assert sync.main([*argv, "--no-align-xml"]) == 0
     assert json.loads((workbench / "version.json").read_text(encoding="utf-8"))["build"] == 2
     assert "[workbench] synced build=2" in capsys.readouterr().out
+
+
+def test_script_embed_lists_choice_buttons_for_an_aligned_script(tmp_path: Path, monkeypatch):
+    paths = _kit_project(tmp_path, monkeypatch)
+    monkeypatch.setattr(sync, "choice_indexes", lambda path: [0])
+    data = {"items": [{"kind": "script", "stem": "a002"}, {"kind": "script", "stem": "t002", "choices": [9]}]}
+    sync.sync_script_embed(
+        data, vanilla_dir=paths["vanilla"], eng_root=paths["eng"], gemini_root=paths["gemini"]
+    )
+    assert data["items"][0]["choices"] == [0]
+    assert "choices" not in data["items"][1]  # not aligned, so a stale list goes

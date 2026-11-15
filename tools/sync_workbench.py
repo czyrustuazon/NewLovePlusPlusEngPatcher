@@ -12,11 +12,20 @@ The patcher is the source of truth.
   on lines that match the Gemini pass, and on indexes in
   ``assets/script_contrib/unreviewed.json`` (an agent rewrote the machine
   line; that is not a proofread).
+* Each line card says where its shipped English came from, from
+  ``assets/script_contrib/line_credits.json`` (``tools/line_credits.py``):
+  the credited contributor, Gemini, or the community layer, and whether
+  review edited it.
 * Gemini XML is rewritten to that same ``dbin2`` when the line counts match,
   and the Gemini translation map is updated for those lines.
 * TRB rows whose Japanese is already a key in ``translations.json`` are
   removed. A truncated workbench string is replaced with the full vanilla
   STRI text. SMS rows stay; their Gemini text is already the patcher file.
+* Each aligned script lists its choice-button lines (``choices``, kit
+  indexes from the vanilla SDL2 commands). The kit holds those to 28
+  columns and every other English line to 30, counted as
+  ``dialog_wrap.columns`` counts them, and blocks Save on an edited line
+  that does not fit.
 * The images kit stays removed.
 
   python tools/sync_workbench.py
@@ -50,6 +59,7 @@ from ingest_pack import (  # noqa: E402
     _xml_dialogs,
 )
 from nlpp_paths import find_vanilla_main_trb, find_vanilla_script_dir  # noqa: E402
+from dialog_wrap import choice_dialogs  # noqa: E402
 from patch_names import parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml  # noqa: E402
 from script_inject import DEFAULT_ENG_DBIN, resolve_script_source  # noqa: E402
@@ -166,6 +176,7 @@ def fill_script_item(
     gemini: list[str] | None,
     layer: str,
     unreviewed: list[int] | None = None,
+    line_credit: dict | None = None,
 ) -> dict:
     """Point one kit script at the patcher.
 
@@ -199,6 +210,11 @@ def fill_script_item(
         item["unreviewed"] = sorted(held)
     else:
         item.pop("unreviewed", None)
+    lines = line_credit.get("lines") if isinstance(line_credit, dict) else None
+    if isinstance(lines, list) and len(lines) == len(working) and line_credit.get("name"):
+        item["line_credit"] = {"name": str(line_credit["name"]), "lines": [str(c) for c in lines]}
+    else:
+        item.pop("line_credit", None)
     needs = 0
     gemini_lines = item.get("gemini_dialogs")
     for index, line in enumerate(working):
@@ -461,6 +477,16 @@ def _unreviewed_map() -> dict[str, list[int]]:
     return out
 
 
+def _line_credit_map() -> dict[str, dict]:
+    """Per-line sources for contributor scripts (``tools/line_credits.py``)."""
+    path = ROOT / "assets" / "script_contrib" / "line_credits.json"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return {}
+    return {str(k): v for k, v in data.items() if isinstance(v, dict)} if isinstance(data, dict) else {}
+
+
 def _gemini_script(gemini_root: Path, stem: str) -> list[str] | None:
     path = gemini_root / "dbin2" / "script" / f"{stem}.dbin2"
     if not path.is_file():
@@ -475,6 +501,22 @@ def _vanilla_dialogs(vanilla_dir: Path | None, stem: str) -> list[str] | None:
     if not path.is_file():
         return None
     return _dbin_dialogs(path)
+
+
+def choice_indexes(path: Path) -> list[int]:
+    """Kit dialog indexes (flat across entries) the game shows as choice buttons.
+
+    The kit holds those lines to ``CHOICE_COLUMNS`` and every other line to
+    ``TALK_COLUMNS``, as ``dialog_wrap`` does at inject.
+    """
+    _, _, entries = parse_dbin2(path.read_bytes())
+    out: list[int] = []
+    base = 0
+    for entry in entries:
+        count = len(entry.sdl2.dialogs)
+        out.extend(base + i for i in sorted(choice_dialogs(entry.sdl2)) if i < count)
+        base += count
+    return out
 
 
 def sync_script_embed(
@@ -492,6 +534,7 @@ def sync_script_embed(
     needs_scripts = 0
     proofread = _proofread_stems()
     unreviewed_map = _unreviewed_map()
+    credit_map = _line_credit_map()
     for item in items:
         if not isinstance(item, dict) or item.get("kind") != "script":
             continue
@@ -524,7 +567,17 @@ def sync_script_embed(
             gemini=gemini,
             layer=layer,
             unreviewed=pending,
+            line_credit=credit_map.get(stem) if layer == "contrib" else None,
         )
+        # Choice buttons come from the vanilla SDL2 commands. Only an aligned
+        # file can name them by kit index.
+        choices: list[int] = []
+        if vanilla_dir is not None and vanilla is not None and len(vanilla) == len(working):
+            choices = choice_indexes(vanilla_dir / f"{stem}.dbin2")
+        if choices:
+            item["choices"] = choices
+        else:
+            item.pop("choices", None)
         if "dialogs" in item:
             embedded += 1
         layers[layer] = layers.get(layer, 0) + 1

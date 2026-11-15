@@ -34,6 +34,10 @@ COMMU_HEADER_CAVE_LEN = TEXT_PAGE_END - ADDR_COMMU_HEADER_CAVE
 # 0x68FF50..0x68FFCC after the chunk-walk caves, before ADDR_FILLCAND_TAIL.
 ADDR_CAMERA_DEFAULTS_CAVE = 0x0068FF50
 CAMERA_DEFAULTS_CAVE_LEN = 0x0068FFCC - ADDR_CAMERA_DEFAULTS_CAVE
+# Talk-window English break. strcat-raw owns 0x68FDB4..0x68FEE4; the row
+# check owns 0x68FDA8..0x68FDB4. This is the zero run before the camera cave.
+ADDR_DIALOG_BREAK_CAVE = 0x0068FEE4
+DIALOG_BREAK_CAVE_LIMIT = ADDR_CAMERA_DEFAULTS_CAVE
 # TalkWindow delay cap (min vs table). Cand nullguard starts at +0x40.
 # +0x28 attach-null (lyt); +0xA0 FindPaneByName null vtable (was candmode_reset).
 ADDR_TALK_CAP_CAVE = ADDR_SHARED_PAD

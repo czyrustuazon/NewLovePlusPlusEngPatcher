@@ -416,3 +416,25 @@ def test_a_token_drop_is_rejected_on_an_existing_contributor_file(tmp_path: Path
     plan = _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN, machine=True)
     assert plan.separate and plan.errors
     assert contrib.read_bytes() == before
+
+
+def test_a_changed_line_too_wide_for_the_talk_window_is_flagged(tmp_path: Path, capsys):
+    scripts, dbin_root, _ = _layout(tmp_path)
+    wide = "Stay right there and put it down on the table."
+    pack = _write_pack(tmp_path, _pack(BASE, ["○○○○○○○○", BASE[1], wide]))
+    code = ingest.main([str(pack), "--scripts", str(scripts), "--dbin-root", str(dbin_root)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "too wide for talk (30 columns): line 1 is 46" in out
+    assert "audit_dialog_width.py p001" in out
+
+    fits = "Stay right there and put it\ndown on the table."
+    pack = _write_pack(tmp_path, _pack(BASE, ["○○○○○○○○", BASE[1], fits]))
+    ingest.main([str(pack), "--scripts", str(scripts), "--dbin-root", str(dbin_root)])
+    assert "too wide" not in capsys.readouterr().out
+
+
+def test_choice_lines_skip_a_pack_that_cannot_be_read(tmp_path: Path):
+    bad = tmp_path / "bad.dbin2"
+    bad.write_bytes(b"not a script")
+    assert ingest._choice_lines([tmp_path / "missing.dbin2", bad]) == set()

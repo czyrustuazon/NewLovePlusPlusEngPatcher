@@ -311,8 +311,21 @@ def _zip_inner_root(extract_dir: Path) -> Path:
     return extract_dir
 
 
+# cmd.exe misparses batch files with bare LF endings: ``goto``/``call :label``
+# land mid-line and run fragments as commands ("'nstall' is not recognized").
+CRLF_SUFFIXES = (".bat", ".cmd")
+
+
+def to_crlf(data: bytes) -> bytes:
+    """Every line ending as CRLF (bare LF and existing CRLF alike)."""
+    return data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+
+
 def overlay_tree(src_root: Path, dst_root: Path, *, dry_run: bool) -> list[str]:
-    """Copy files from extracted zip root onto dst. Returns rel paths written."""
+    """Copy files from extracted zip root onto dst. Returns rel paths written.
+
+    Batch files are written with CRLF endings whatever the zip holds.
+    """
     written: list[str] = []
     for path in src_root.rglob("*"):
         if not path.is_file():
@@ -325,7 +338,11 @@ def overlay_tree(src_root: Path, dst_root: Path, *, dry_run: bool) -> list[str]:
             continue
         dest = dst_root / Path(*rel.split("/"))
         dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(path, dest)
+        if rel.lower().endswith(CRLF_SUFFIXES):
+            dest.write_bytes(to_crlf(path.read_bytes()))
+            shutil.copystat(path, dest)
+        else:
+            shutil.copy2(path, dest)
     return written
 
 
@@ -514,7 +531,7 @@ def try_fetch_main_tree(
             for rel in removed:
                 print(f"[fetch] removed (not on {ref}): {rel}", flush=True)
             _write_manifest(
-                root, {rel: _sha256(inner / Path(*rel.split("/"))) for rel in written}
+                root, {rel: _sha256(root / Path(*rel.split("/"))) for rel in written}
             )
             _write_stamp(root, sha)
             note = f", removed {len(removed)}" if removed else ""

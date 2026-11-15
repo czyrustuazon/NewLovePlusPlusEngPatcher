@@ -5,8 +5,9 @@ The talk window and the choice buttons run their text through
 It walks the string by codepoint: below U+0080 is one column, anything else
 is two (``？``, ``…``, ``「``), and ``\\n`` resets the count. When a line
 passes the width it puts a ``\\n`` in front of the character that crossed
-it. The only look-back is the Japanese kinsoku table, so English is cut
-wherever the column lands: "for exa\\nmple".
+it. Vanilla's only look-back is the Japanese kinsoku table, so English is cut
+wherever the column lands ("for exa\\nmple"). ``patch_dialog_break`` makes
+that breaker walk back to the previous ASCII space first.
 
     caller        width   text
     0x0013BC40    30      talk window (also 0x0013E7F4)
@@ -20,7 +21,9 @@ held to 28 columns and everything else to 30. A dialog whose lines already
 fit is left alone.
 
 Markers are filled in at run time, so they are budgeted at a fixed width.
-Names use ``NAME_COLUMNS``; a longer name than that can still be cut.
+Names use ``NAME_COLUMNS`` (Kobayakawa, the longest surname this patch
+prints). A nickname longer than that still reaches the game, which breaks
+at the previous space (``patch_dialog_break``).
 Dialogs with kana or kanji are left to the game's own kinsoku wrap.
 
 Before the wrap, ``fit_font`` swaps characters the dialog font cannot draw.
@@ -41,7 +44,8 @@ from patch_names import DbinEntry, SDL2Data, build_dbin2, parse_dbin2
 TALK_COLUMNS = 30
 CHOICE_COLUMNS = 28
 
-NAME_COLUMNS = 8
+# Kobayaka is the 8-byte slot key. The name on screen is Kobayakawa (10).
+NAME_COLUMNS = 10
 OTHER_MARKER_COLUMNS = 16
 MARKER_COLUMNS: dict[str, int] = {
     "●": NAME_COLUMNS,
@@ -106,6 +110,23 @@ def columns(text: str) -> int:
 
 def game_would_break(text: str, width: int = TALK_COLUMNS) -> bool:
     return any(columns(line) > width for line in text.split("\n"))
+
+
+def over_width(text: str, width: int = TALK_COLUMNS) -> list[tuple[int, int]]:
+    """``(line number, columns)`` for each line of ``text`` wider than ``width``.
+
+    Measured on what is drawn (after ``fit_font``). A dialog with kana or
+    kanji is left to the game's kinsoku wrap and reports nothing.
+    """
+    text = fit_font(text)
+    if _JAPANESE_RE.search(_MARKER_RE.sub("", text)):
+        return []
+    out: list[tuple[int, int]] = []
+    for number, line in enumerate(text.split("\n"), 1):
+        cols = columns(line.rstrip())
+        if cols > width:
+            out.append((number, cols))
+    return out
 
 
 def choice_dialogs(sdl2: SDL2Data) -> set[int]:

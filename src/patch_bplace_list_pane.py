@@ -8,8 +8,10 @@ Vanilla is sized for 3–4 kanji. Latin names clip at 8 letters because:
    patch.
 2. List DrawTextToPane in FUN_0023cf24 passes maxGlyphs=8 (four switch cases).
    That is the ``Fukushim`` / ``Yamanash`` cut. Raise to 16.
-3. FUN_0023c040 then sizes the visible region from glyph count, clamping
-   ``len > 7`` to 8. Raise that clamp to 12.
+3. The callers of FUN_0023c040 clamp ``len > 7`` to 8; this raises it to 12.
+   FUN_0023c040 places the confirm sheet's caret (``Pts_Prf_Cur_Moji`` on
+   ``Lyt_Prf_Info_Check``), not a visible region. The Profile form's caret is
+   a different function (see ``patch_profile_caret``).
 
 Applied from tools/deploy_name_input_en.py.
 """

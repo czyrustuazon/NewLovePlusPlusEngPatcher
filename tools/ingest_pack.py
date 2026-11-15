@@ -19,6 +19,10 @@ a new edit, so a token the patcher already changed does not fail the pack.
 A drop in ``※`` or ``▼`` on a line the volunteer changed is rejected. ``●`` is the
 player's "I" (shown as 俺/僕), so a translated line that still has it is a
 warning. Circle and punctuation placeholders are locked.
+
+A changed line wider than the game draws (30 columns of talk, 28 on a choice
+button, see ``dialog_wrap``) is a warning. Re-break those lines in the merged
+script before committing; ``tools/audit_dialog_width.py <stem>`` lists them.
 """
 from __future__ import annotations
 
@@ -39,6 +43,7 @@ if str(SRC) not in sys.path:
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
+from dialog_wrap import CHOICE_COLUMNS, TALK_COLUMNS, choice_dialogs, over_width  # noqa: E402
 from patch_names import build_dbin2, parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml, xml_to_entries  # noqa: E402
 
@@ -284,6 +289,31 @@ def _note_mismatch(plan: ItemPlan, bad: list[Path], xml_used: Path | None) -> No
         )
 
 
+def _choice_lines(paths: list[Path]) -> set[int]:
+    """Flat dialog indexes the game shows as choice buttons (first readable dbin2)."""
+    for path in paths:
+        try:
+            _, _, entries = parse_dbin2(path.read_bytes())
+        except (OSError, ValueError):
+            continue
+        out: set[int] = set()
+        base = 0
+        for entry in entries:
+            out.update(base + i for i in choice_dialogs(entry.sdl2))
+            base += len(entry.sdl2.dialogs)
+        return out
+    return set()
+
+
+def _width_warnings(text: str, width: int) -> list[str]:
+    over = over_width(text, width)
+    if not over:
+        return []
+    kind = "choice" if width == CHOICE_COLUMNS else "talk"
+    cols = ", ".join(f"line {n} is {c}" for n, c in over)
+    return [f"too wide for {kind} ({width} columns): {cols}; re-break or shorten it"]
+
+
 def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: list[str], *, force: bool) -> None:
     if len(current) != len(baseline):
         plan.errors.append(
@@ -292,10 +322,18 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
         return
     plan.current = current
     plan.proposed = proposed
+    choices = _choice_lines(plan.dbin_paths or plan.shells)
+    wide: list[int] = []
     for index, (old, new, live) in enumerate(zip(baseline, proposed, current)):
         if old == new:
             continue
         warnings = _line_warnings(old, new)
+        width = CHOICE_COLUMNS if index in choices else TALK_COLUMNS
+        if new != live:
+            line_width = _width_warnings(new, width)
+            if line_width:
+                wide.append(index + 1)
+            warnings += line_width
         if live == new:
             action = "already"
         elif live == old or force or plan.separate:
@@ -306,6 +344,12 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
             action = "conflict"
         plan.decisions.append(
             LineDecision(index, action, old, live, new, warnings)
+        )
+    if wide:
+        plan.warnings.append(
+            f"{len(wide)} changed line(s) too wide for the game {wide[:8]}"
+            f"{' ...' if len(wide) > 8 else ''}: after --apply run "
+            f"tools/audit_dialog_width.py {plan.stem} and re-break them"
         )
 
 

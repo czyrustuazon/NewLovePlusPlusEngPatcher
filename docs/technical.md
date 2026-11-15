@@ -461,7 +461,7 @@ Dump folder:
 
 `%AppData%\Azahar\dump\textures\00040000000F4E00\`
 
-**Option06 note:** in `Pts_Opt_Time_Win`, the `月`/`日` unit panes (`Pic_Opt_Win_tex3`/`tex4`) bind the weekday textures Week01/Week07 (Mon/Sun), so no glyph pair can serve both rows. `tools/deploy_clock_date_order_en.py` makes the rows US `MM / DD / YYYY (Sa)` and `HH : MM PM`: it moves the code-attached `Pos_Opt_Num_*` / `Pos_Opt_Btn_{T,U}_*` anchors in `Lyt_Opt_Time` and the field frames, paints `Opt_Time_tex2` as `/`, rebinds `tex3` to it, and hides `tex4`. AM/PM (`Pos_Opt_ampm`, `window_05`) moves after the minutes; hour, colon (`tex1`) and minutes shift left. Weekday glyphs are untouched. The `( )` around the weekday are baked into `Opt_Time_Win1_img` (x≈61..86), so `Pos_Opt_week` stays at 74.
+**Option06 note:** in `Pts_Opt_Time_Win`, the `月`/`日` unit panes (`Pic_Opt_Win_tex3`/`tex4`) bind the weekday textures Week01/Week07 (Mon/Sun), so no glyph pair can serve both rows. `tools/deploy_clock_date_order_en.py` makes the rows US `MM / DD / YYYY (Sa)` and `HH : MM PM`: it moves the code-attached `Pos_Opt_Num_*` / `Pos_Opt_Btn_{T,U}_*` anchors in `Lyt_Opt_Time` and the field frames, paints `Opt_Time_tex2` as `/`, rebinds `tex3` to it, and hides `tex4`. AM/PM (`Pos_Opt_ampm`, `window_05`) moves after the minutes and the time row is centered. The spinner arrows (`Pic_Opt_Btn_{Up,D}0N`) draw at their texture's own 32px width instead of vanilla's 48px stretch, so fields pack to English spacing; each `/` and `:` sits outside the neighbouring white field frames (drawn over the part's pictures). Weekday glyphs are untouched. The `( )` around the weekday are baked into `Opt_Time_Win1_img` (RGBA4444, world x≈61..88); the US row is shorter, so the deploy repaints that texture with the brackets 24px left (only changed texels are rewritten; the repo encoder would turn transparent white texels grey) and moves `Pos_Opt_week` 74 → 50 with the date fields, centering the date under the time.
 
 ---
 
@@ -640,7 +640,7 @@ Texture dump (`Utility_DumpTextures`) floods `Texture size (1x1) is not multiple
 | Extra-data recreate warning `作成には時間がかかるので…` | DrawText / TRB STRI **4429** (`Lyt_C_Com_Win01` `Tex_Sentence`; SysPopup). Not `Com_Win_Warning` BCLIM (that is empty chrome). | **EN** — `translations.json`. Sibling create/start strings STRI 4431–4434. |
 | Anywhere Date empty list `デートデータがありません。「デートの編集」から…` | DrawText / TRB STRI **25183** on `Lyt_De0200` Opt_Win (no body BCLIM; DateEdit `De_*_Txt` are short labels). | **EN** — full JP key in `translations.json`. A truncated key ending `デートを作` never matched, so LayeredFS kept JP. |
 | Options help line | DrawText / TRB | Already EN |
-| 年 / 月 / 日 | Option06 A4 @ 5248 (`Lyt_Opt_Time` + `Pts_Opt_Time_Win`) | US `MM / DD / YYYY` — `tools/deploy_clock_date_order_en.py` |
+| 年 / 月 / 日 | Option06 A4 @ 5248 (`Lyt_Opt_Time` + `Pts_Opt_Time_Win`) | US `MM / DD / YYYY (Sa)` centered under `HH : MM PM` (baked `( )` repainted 24px left, native-width spinner arrows) — `tools/deploy_clock_date_order_en.py` |
 | Gallery home | ETC1A4 Text02 @ **5244** | Deployed (`Gallery` / Event / Illustration / Options). `deploy_msel_menus_en.py` keeps Zhoumaru masters in vanilla ETC1A4 (RGB flattened to the master ink) for **5240** / **5241** / **5242** / **5244**; A8 dropped the gray ink. Font-rendered labels there stay A8 |
 | Event Gallery rows | ETC1A4 `Com_M_Sel_Btn_Text02_01_01..04` @ **5244** | Zhoumaru `NCommonMSel(4).check`: Memory / Dream After / Trip Memory / Drama Gallery |
 | Event Gallery girl-list headers `告白までの思い出` / `旅の思い出` / `青春の１ページ` | ETC1A4 MultiWin `Text02_01_01..04` @ **5237** + A8 plates @ **5244** | Plates **Memory Gallery** / **After the Dream** / **Trip Memory Gallery** / **Drama Gallery**. Dream list header is **Dream Gallery**. Illustration row **Special** is **Special Gallery**. MultiWin `01_01` PNG is Friend's Memory — do not use |
@@ -1140,15 +1140,15 @@ Layout copies vanilla: two red title lines with **per-line** underlines, five bl
 
 3. Composite onto white: black coverage darkens RGB; red coverage then lerps toward `(255,0,0)`. Where red coverage > 0, **zero the black coverage** so red AA is only red↔white (pink), never red mixed with black.
 
-4. Quantize each coverage to **12 ramp steps** (`RAMP_STEPS`). That keeps visible AA but few unique colors.
+4. Quantize each coverage to **8 ramp steps** (`RAMP_STEPS`, shared with the companion blurb). That keeps visible AA but few unique colors.
 
 `deploy_cesa_en.py` re-runs both renders, then `rebuild_pkg90_with_companion` (zopfli, same 29232-byte PACK) into live bake (and Azahar when present), and **syncs img.bin idx-table `dec_len`** to the new PACK header. The 400×400 skip lives in `name_input_code.bin` (bake rebuild / Drop CIA). Rollback: `bake_img.bin.bak_pre_cesa`. Tests: `tests/test_render_cesa_en.py`, `tests/test_patch_cesa_idx.py`, `tests/test_patch_cesa_logo_scale.py`. A/B: `.\ab_test\make.ps1 cesa-ab` then `launch-a` (thank-you) / `launch-b` (CESA EN, white stub).
 
 #### Companion blurb (`logo_white` — 2026-09-15)
 
-`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/logo_white.png` (**240×320** portrait, same 240-wide column as CESA; spliced into `logo_white.texi`). Same Heisei W9/W5 index 1, **no red**: two-line title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks like CESA, but **3 ramp steps** (`COMPANION_RAMP_STEPS`) so zopfli stays under the PACK budget. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
+`tools/render_cesa_en.py` `render_cesa_companion_en()` → `assets/images/cesa/logo_white.png` (**240×320** portrait, same 240-wide column as CESA; spliced into `logo_white.texi`). Same Heisei W9/W5 index 1, **no red**: two-line title + highlights in dark teal `(16,96,112)` (`free`, `never be sold`, `scammed`, `official release`). 2× masks and the **same 8-step ramp** as CESA (`COMPANION_RAMP_STEPS = RAMP_STEPS`, 2026-11-14) so both panes look equally smooth; the old 3-step blurb looked jagged next to the 12-step warning. White TEX padding (not black) so Morton tiles at the 240×320 crop stay poster-white.
 
-Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA EN (~10934) + 16×16 stub: ~4.8k left in the 29232 PACK. 8-step companion was ~7.2k (overflow). Fill `logo_white` **by filename**. Always extract pkg 90 from vanilla before the PACK rebuild.
+Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + 16×16 stub: CESA + companion share ~15.7k of the 29232 PACK. Measured zopfli: 8/8 = 9370 + 5553 (end 28368, ~860 spare); 9/9 fits with ~160 spare; 12/6 overflows by 64; 12/3 was the old jagged split. Fill `logo_white` **by filename**. Always extract pkg 90 from vanilla before the PACK rebuild.
 
 #### Compression (why not “just keep full AA”)
 
@@ -1158,8 +1158,9 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | Early EngPatcher MPLUS1p EN | ~3k | Thin, not gothic |
 | Full AA Heisei on one RGB canvas | ~17–19k | Smooth, but **over** the slot |
 | Hard 3-color snap (white / `#FF0000` / black) | ~5k | Fits, but **grainy**; dark red AA → black fringe that reads as a **drop-shadow** |
-| 2× masks + 12-step ramps (CESA warning) | ~12k (zopfli ~10934; no longer padded to 13667 once the PACK is rebuilt) | Smooth gothic, no red shadow |
-| 2× masks + 3-step ramps (logo_white blurb) | zopfli ~4k | Teal highlights; extra TEX fits the PACK |
+| 2× masks + 12-step ramps (CESA warning, until 2026-11-14) | zopfli ~10934 | Smooth gothic, no red shadow; left only room for a 3-step blurb |
+| 2× masks + 3-step ramps (logo_white blurb, until 2026-11-14) | zopfli ~3.5k | Fits, but jagged next to the warning |
+| 2× masks + 8-step ramps (both panes, current) | zopfli 9370 + 5553 | Both smooth and matching; ~860 bytes spare |
 
 `compress_zlib_exact` can **pad a short** stream (SYNC_FLUSH empty stored blocks, `unused_data == 0`). It **cannot** shrink a stream that already exceeds 13667. Zopfli of a too-fat TEX is still over; do not NUL-pad or shrink `cmp_len` (CESA white boot — same class as §12.5).
 
@@ -1202,6 +1203,7 @@ Budget after lossless zopfli of Konami (~2875) + ProductionLogo (~8021) + CESA E
 | `tools/render_cesa_en.py` | EN CESA 240×400 + companion 240×320 PNG: NLPPPATCH Heisei Gothic (**§12.7**) |
 | `src/dialog_wrap.py` | At script inject: swap glyphs the dialog font lacks, then break English lines at spaces before the game's 30/28-column wrapper cuts a word (**§24.1–24.2**) |
 | `src/patch_bonus_digits.py` | BONUS! popup Riches amounts in ASCII digits (name-input step 25, **§24.8**) |
+| `src/patch_profile_caret.py` | Profile name caret sits after the centered text: `center + 3.5 × (cells + 2)` (name-input step 26, **§17.10**) |
 | `tools/translate_heroines_gemini.py fix-pronoun` / `fix-address` | Redo Gemini lines that kept `●` or name the heroine where English says "you" (**§24.3–24.4**) |
 | `tools/deploy_msel_options_en.py` | Options + clock-title A8 → exact zlib pkg **5245** (splice into **live** MOD) |
 | `tools/deploy_optionpassword_en.py` | Password window `パスワード` → `Password` ETC1A4 `Pass_Win01` @ **5251** |
@@ -1341,7 +1343,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5.2`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5.4`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1466,7 +1468,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5.2`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **7**.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5.4`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **9**.
 
 #### What git contains vs what a patched CIA needs
 
@@ -2097,7 +2099,8 @@ The `+0x24 = 0` candidate-mode reset (once `src/patch_input_candmode_reset.py`) 
 | `@0x0068F800` | Shared nullguard / fillflag caves (do not collide offsets below) |
 | `@0x0068F900` | Romaji DrawCell blob (Hepburn tables + code; strings still built on stack); strcat-raw then the Called typed-name fallback after it |
 | `@0x1fb070` | Kana-direct = **single NOP** (no cave) |
-| `@0x0068FF50` | My Camera Restore Default softkey (`patch_camera_restore_default.py`, 0x58). `0x0068FFA8`–`0x0068FFCC` is the last free run in the page |
+| `@0x0068FEE4` | Talk-window space break (`patch_dialog_break.py`, 0x38). Leaves `0x0068FF1C`–`0x0068FF50` |
+| `@0x0068FF50` | My Camera Restore Default softkey (`patch_camera_restore_default.py`, 0x58). `0x0068FFA8`–`0x0068FFCC` is free before the Communication Settings header |
 | `@0x000EA968` | My Camera Restore Default confirm + reset (`patch_camera_defaults_reset.py`, 0xF4, owns to `0x000EAA60`), in the dead body of `FUN_000ea964` (entry stubbed by `patch_spotpass_skip`) |
 | `@0x000EAA60` | Main Menu Eng Patch badge tap + press tracking (`patch_title_engpatch_info.py`, 0xFC), rest of the same dead body to `0x000EAB80` |
 | `@0x0063253C` | Eng Patch INFORMATION box open/poll, hub-enter clear, hub touch-down guard (`patch_title_engpatch_info.py`, 0xC0), dead body of `CecCheckEula` (entry stubbed by `patch_eula_agreed`) to `0x00632604` |
@@ -2229,6 +2232,14 @@ The glyph is blanked in the texture (`bclimutil.blank_texels_left_of`, x<48 → 
 **Hidden panes.** Both copies of the input layouts (`Input.arc` in pkg **5190**, `Profile.arc` in pkg **5252**) clear the visible bit on `Lyt_Prf_Btn_ML` `Pos_Btn_C01_01`–`_04` (Kanji, Kana 1, Kana 2, S. Kana) and `Lyt_Prf_Btn_Change` `Pos_Btn_Change` (the whole tab), via `hide_input_panes` in `deploy_input_keyboard_en.py` (also called by `deploy_profile_en.py`). The `Pts_Prf_Btn_C01` / `Btn_Change` animations only drive `Nul_`/`Bod_`/`Pic_` children, never the `Pos_*` parents, so the hide sticks. ABC, Symbols and Delete keep their vanilla positions (gap above them).
 
 Tests: `tests/test_name_input_caves.py` (`test_force_ml_is_inplace_kit_open`, `test_force_ml_on_vanilla`). `tests/test_input_panes_hidden.py` locks the hide list, checks that the hide writers are the last scripts to touch pkg 5190 / 5252 in the bake, and (local_data) checks that both copies in `release/bake_img.bin` are hidden and the pencil blanked. On 2026-10-17 a bake from before this change reached Azahar A through `deploy-a`, and both screens showed the buttons again.
+
+### 17.10 Profile text caret follows ASCII width (2026-11-14)
+
+The Profile form (`Lyt_Prf_Info_Profile`, `Tex_Profile%02d`, class around `0x247xxx`) draws Last/First Name **centered** on the field in DrawText's 7 px cells (`GetCharWidthCells`: ASCII 1, anything else 2). Its blinking turquoise caret (`Pts_Prf_Cur_Moji` under `Pos_Cur01`) comes from the glyph count `n` that the setter `FUN_0024842c(obj, row, str)` stores at `obj+0x4c+row*4`, clamped to 4. The caret is `FUN_00247d98` (rows 0/1 only), plus an inlined copy in the focus refresh `FUN_00248124` (`0x2482bc`, `0x248330`). Both compute `x = fieldCenter + 14 + (n−1)·7`, minus 14 once `n >= 4` (`fieldCenter` = `obj+0x64+row*12`). That is half a caret past centered fullwidth text (right edge `center + 7n`). ASCII is half as wide, so "AAA" left a 17 px gap, and an 8-letter name (clamped to 4) put the caret on the last two letters. Measured from screenshots: caret center +28.6 for "AAA"/"DDD", +21 for "DDDccccc", text right edges +10 / +27.
+
+`src/patch_profile_caret.py` (name-input step 26) stores the **cell count** in that slot and uses `x = center + 3.5·(cells + 2)` at both caret sites. The setter's caret block (`0x2484d0`) runs `MeasureText` `FUN_005c0760` on the MakeStr char* at `[sp+0xc]` straight into `obj+0x4c+row*4`. `FUN_00247d98` and the refresh read cells from there. Their 14.0 / 7.0 pool words (`0x247e80`, `0x248388`) become 3.5. Kana give the vanilla position (cells = 2n), and there is no back-step when full. Nothing else reads the slot; the ctor zeroes it at `0x24855c`. All edits are in place.
+
+Do not confuse this with `FUN_0023c040` (the class with `Tex_Check%02d`, `Lyt_Prf_Info_Check`). That is the confirm sheet's caret: row 4 is Username, edited live from `0x34ee50`. It uses `rowLeft + 14n` and is left as vanilla. A first attempt (2026-11-14) rewrote it by mistake and the Profile caret did not move. Other `Pts_Prf_Cur_Moji` users: Called lists `0x244144` / `0x244ac4`. Tests: `tests/test_patch_profile_caret.py`.
 
 ---
 
@@ -2445,7 +2456,19 @@ python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 
 Dry-run is the default. `--apply` writes a changed line only when that repo dialog is still the Japanese baseline. A line that already has other text (shipped English) is a conflict and is left alone. `--force` replaces conflicts. A nickname-token multiset change on a line the volunteer changed, a drop in `※` or `▼`, or an edit to a circle / punctuation placeholder rejects the item and writes nothing. A line that already equals the shipped file is not a new token edit. A `●` count change warns and still applies.
 
+A changed line wider than the game draws warns and still applies: 30 columns in the talk window, 28 on a choice button, counted as `dialog_wrap.columns` counts them (ASCII 1, anything else 2, name markers at their budget). After `--apply`, run `python tools/audit_dialog_width.py <stem>` and re-break or shorten each listed line in the merged script before committing. The same audit runs when a review lands in `assets/script_contrib/` or a stem joins `proofread.json`. Older shipped text in stems nobody is adding is left alone; inject re-wraps it at spaces. The Scripts kit warns on every too-wide line and blocks Save only on lines the volunteer edited.
+
 Writes go to `assets/scripts/<stem>.xml` when that file exists, and to every matching `rebuild_dbin2/<pack>/<stem>.dbin2`. A stem Gemini already translated (Nene `a*` or Rinko `k*`) is not written back onto `assets/gemini_heroines/` or `rebuild_dbin2`. That review goes to `assets/script_contrib/` (`xml/<stem>.xml` and `dbin2/<pack>/<stem>.dbin2`). `script_inject.py` ships a contributor file whenever it is present, ahead of the optional Gemini pass and ahead of the community file. Review the diff, then bake / Drop CIA. This command does not bake. SMS proofreads are not part of this pack; a reviewed `assets/sms_contrib/maildic_*.en.xml` is only read at SMS splice time.
+
+**Every pack copy.** A stem with no contributor file yet branches from `rebuild_dbin2`, which may hold only `script/`. When Gemini ships that stem in `NLP_01` / `NLP_02` too (`a002`–`a005` do), copy the new `script/<stem>.dbin2` into those folders (the three Gemini copies are byte-identical). `script_inject` takes a contributor file only for the pack folder it is in; the other packs would keep the old text.
+
+**Line credits (2026-11-14).** After a pack lands, record where each shipped line came from, so the workbench credits only the lines whose wording ships:
+
+```bash
+python tools/line_credits.py a002 --name "Armando Esteban Quito" --pack path/to/nlpp-contrib.json
+```
+
+It writes `assets/script_contrib/line_credits.json`, one code per dialog: `c` the contributor's wording, `c+` theirs edited in review, `g` / `g+` Gemini (improved), `n` / `n+` the community NLPPATCH line Gemini kept (improved), `""` nameplates and `○` placeholders. Only wording counts; punctuation and line breaks keep the source's code. `--pack` repeats for several packs by one person; `--edited` forces `c+` where an agent changed a contributor line and the pack is gone; `--reviewed` forces `g+` / `n+` where review dropped the contributor's wording and rewrote the line from the Japanese. Early Nene and Rinko scripts are mostly community text: Gemini `a000` equals `rebuild_dbin2` on all 141 lines, `a002` on 312 / 333, `k007` on 293 / 330. `sync_workbench.py` embeds the codes as `line_credit`, and each card shows "English in patch: <who>".
 
 Rebuild the kits from the patcher, then bump the workbench build:
 
@@ -2809,7 +2832,9 @@ The talk window and the choice buttons wrap their text in `FUN_005bf750` (file `
 
 **Choice detection.** An SDL2 command whose `value0` is `0x0001NNNN` with an empty value list names dialog NNNN as a choice option (k142 `まあいいか` / `自分でやれって` are `0x10007` / `0x10008`). Talk commands (`0x24000`/`0x24002`) carry the index as `N << 16` instead. On vanilla this finds ~13,800 options, almost all one line of ≤28 columns; the few longer hits are debug strings (`【DEBUG】…`, `※未使用`).
 
-**Fix:** `src/dialog_wrap.py`, called from `script_inject._copy_script` for every shipped `.dbin2` (CIA and LayeredFS). A dialog the game would cut (a line past its width) is re-flowed at spaces: 28 for choice options, 30 for talk. Name marks count at a budget (`NAME_COLUMNS` 8; month 9, day 4, weekday 9, time 8; other marks 16), so a name longer than 8 can still be cut. Hand hyphenation (`spring- \ntime`) joins back to `spring-time`. Dialogs with kana or kanji are left to the game's kinsoku. Unchanged files keep their bytes; source XML / `rebuild_dbin2` are not edited.
+**Fix:** `src/dialog_wrap.py`, called from `script_inject._copy_script` for every shipped `.dbin2` (CIA and LayeredFS). A dialog the game would cut (a line past its width) is re-flowed at spaces: 28 for choice options, 30 for talk. Name marks count at a budget (`NAME_COLUMNS` 10, Kobayakawa; month 9, day 4, weekday 9, time 8; other marks 16). Hand hyphenation (`spring- \ntime`) joins back to `spring-time`. Dialogs with kana or kanji are left to the game's kinsoku. Unchanged files keep their bytes; source XML / `rebuild_dbin2` are not edited.
+
+A nickname longer than that budget, or a line this pre-wrap did not see, still reaches `FUN_005bf750`. `src/patch_dialog_break.py` (in `deploy_name_input_en.py`) makes the overflow walk back to the previous ASCII space and break there. Japanese lines have no ASCII space, so they keep kinsoku. The cave is `0x0068FEE4`, in the RX pad after the strcat-raw cave (`0x0068FDB4`–`0x0068FEE4`) and before the camera-defaults cave.
 
 Checked on the Gemini-on A deploy: 434,213 talk lines and 12,685 choice buttons, zero words cut.
 
@@ -2860,7 +2885,7 @@ Gemini edits go to the XML, to every pack slot, and to `assets/gemini_heroines/t
 
 ### 24.7 Badge credits
 
-`src/patch_title_engpatch_info.py` `CREDITS`: `[Developers]` (was Software Engineers); `[QA & Proofreading]` adds Lieutenant Dan (README contributors table: Proofreading); Pioneer Legacy roles merged into `[Translation & Editing]` (+ Proofreading, Text & Strings, New Script, Later Passes), `[Hacking & Tools]` (+ Script Integration) and `[Graphics]`. The box is 51 of `MAX_BOX_LINES` 64. A role costs 3 lines (blank, heading, names at `LINE_WIDTH` 26).
+`src/patch_title_engpatch_info.py` `CREDITS`: `[Developers]` (was Software Engineers); `[Translation]` (2026-11-14) is Armando Esteban Quito (`a000`) and Dnnz.Cstr (`k007`); `[QA & Proofreading]` adds Lieutenant Dan (README contributors table: Proofreading); Pioneer Legacy roles merged into `[Translation & Editing]` (+ Proofreading, Text & Strings, New Script, Later Passes), `[Hacking & Tools]` (+ Script Integration) and `[Graphics]`. The box is 55 of `MAX_BOX_LINES` 64. A role costs 3 lines (blank, heading, names at `LINE_WIDTH` 26).
 
 ### 24.8 BONUS! Riches digits
 
@@ -2884,5 +2909,5 @@ LayeredFS copies of the main TRB and config (Azahar A, Azahar B, and `%AppData%\
 
 ---
 
-*Last updated 2026-11-06 — generated-choice needles `▲生成選択肢Ｎ▲` stay Japanese (§24.10). 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.2` / CIA title version 7. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
+*Last updated 2026-11-06 — generated-choice needles `▲生成選択肢Ｎ▲` stay Japanese (§24.10). 2026-10-29 — dialogue fit, font glyphs, `●` and "you" Gemini passes, To-Do art/titles, credits, BONUS! digits, Dixie's (§24). 2026-10-23: Drop Gemini opt-in now covers Nene `a*`, Rinko `k*`, and SMS (§15.6, §19.1, §19.4). Contributor dialogue still wins and leaves `assets/gemini_heroines/` untouched. fmt 3 packs as LA8 (§5.1); English mini-game `.l2mgtex` screens (§12); My Camera Select tab and Restore Default with a Yes/No confirm; Communication Settings (StreetPass without the terms check, SpotPass row hidden); Called-name romaji lookup (§17.8); US date order and AM/PM on the home clock. Player marks `▲苗字▲` / `▲名前▲` still draw themselves (§23). Workbench ingest is still planned, not built (§20). Still `v1.0.0-rc5.4` / CIA title version 9. UI PNG masters **1765** mapped (**101 / 101** folders) / **564** chrome. Dialogue scripts **522 / 578 (90.3%)** with the Gemini machine pass; SMS machine pass **1822 / 1822**, off unless Drop opts in. The gold bake file stays Japanese.*
 

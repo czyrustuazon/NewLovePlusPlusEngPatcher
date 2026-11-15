@@ -11,6 +11,31 @@ instance-A refresh), run `.\ab_test\make.ps1 launch-a` and confirm
 `ab_test\azahar_instances\a\azahar.exe` is running. Same for B → `launch-b`.
 Details: `AGENTS.md`, `.cursor/rules/deploy-a-launch.mdc`.
 
+## HARD REQUIREMENT: workbench English fits 30 columns (choices 28)
+
+The game cuts talk text at 30 columns and choice buttons at 28, mid-word
+(`FUN_005bf750`, see `src/dialog_wrap.py`). Count columns the game's way:
+ASCII = 1, anything else = 2 (`？`, `…`, `！`), name markers at their
+`dialog_wrap.MARKER_COLUMNS` budget (`▲高嶺＊＊▲` = 10).
+
+- The Scripts kit (`../nlpp-localization-workbench/kit/NLPP_Translate.html`)
+  warns on every over-width line and blocks Save on any edited line that
+  does not fit. Do not remove or loosen that gate, or change its widths
+  without changing `dialog_wrap.py` to match.
+- `tools/sync_workbench.py` must keep writing `choices` per script, or
+  choice buttons fall back to the 30-column talk limit.
+- English you write for a script line (agent edits included) breaks with
+  `\n` so each line fits 30 (28 on a choice button).
+- Audit as a stem enters the patcher, not before. When a pack is ingested
+  (`tools/ingest_pack.py` warns on each too-wide changed line), a review
+  lands in `assets/script_contrib`, or a stem joins
+  `assets/gemini_heroines/proofread.json`, run
+  `python tools/audit_dialog_width.py <stem>` and re-break or shorten every
+  line it lists before committing. Keep the contributor's wording; move the
+  break, or trim only as much as fitting needs. Already-shipped lines in
+  stems nobody is adding stay as they are (the patcher re-wraps them at
+  spaces on inject); the kit only warns on those.
+
 ## HARD REQUIREMENT: hardware-accurate Azahar goes in azahar-3ds-accurate
 
 Any change that makes Azahar behave more like real 3DS hardware belongs in the

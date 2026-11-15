@@ -18,12 +18,14 @@ A name in a README is not credit. When someone is added for a script, proofread,
 
 `README.md` in the workbench repo does not show on the page translators have open.
 
-For a finished script, add `stem: "Name"` to `REVIEWED_BY` in `kit/NLPP_Translate.html`. That map is what draws:
+For a finished script, add `stem: "Name"` to `REVIEWED_BY` in `kit/NLPP_Translate.html` (proofread), or `stem: { name: "Name", role: "translated" }` for a translator. Add `finished: false` when the person did only part of the script; the notice then says "in part by" and that lines still need a pass. That map is what draws:
 
 - the name on the script-list row
 - `proofread by Name` next to the route badge
 - **Proofread by Name. This script is finished.** under the script buttons
 
+Each line card also says where its English came from. After ingesting a pack, run `python tools/line_credits.py <stem> --name "Name" --pack <pack.json>` (see `docs/technical.md` §20.3) and then `python tools/sync_workbench.py`. Credit only lines whose wording ships; a Gemini or community line stays labeled as such, and a line review rewrote says "improved in review".
+
 Then bump the Scripts iframe query in `index.html` (`data-src="kit/NLPP_Translate.html?v=..."`) so a reload picks up the kit. The HTML file is large; edit it with a script, not a partial write that can truncate it.
 
-Do not stop after the two workbench READMEs. Those were the miss for Lyud on `a000`.
+Do not stop after the two workbench READMEs. Those were the miss for Armando Esteban Quito on `a000`.

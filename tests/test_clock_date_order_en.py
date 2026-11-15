@@ -4,21 +4,26 @@ from __future__ import annotations
 
 import re
 import struct
+from typing import TYPE_CHECKING
 
 import pytest
 
 from conftest import TOOLS, load_module
 
+if TYPE_CHECKING:
+    from PIL import Image
+
 clock = load_module("deploy_clock_date_order_en", TOOLS / "deploy_clock_date_order_en.py")
 
 
-def _pane(tag: bytes, name: str, x: float, flags: int = 1) -> bytes:
+def _pane(tag: bytes, name: str, x: float, flags: int = 1, w: float = 16.0) -> bytes:
     sec = bytearray(0x4C)
     sec[0:4] = tag
     struct.pack_into("<I", sec, 4, len(sec))
     sec[8] = flags
     sec[12 : 12 + len(name)] = name.encode("ascii")
     struct.pack_into("<f", sec, clock.X_OFF, x)
+    struct.pack_into("<f", sec, clock.W_OFF, w)
     return bytes(sec)
 
 
@@ -56,8 +61,17 @@ def _x(layout: bytes, name: str) -> float:
     raise KeyError(name)
 
 
+def _w(layout: bytes, name: str) -> float:
+    for tag, off, _size in clock._sections(layout):
+        if tag in clock.PANE_TAGS and clock._pane_name(layout, off) == name:
+            return struct.unpack_from("<f", layout, off + clock.W_OFF)[0]
+    raise KeyError(name)
+
+
 def _vanilla_anchor() -> bytes:
-    return _clyt([_pane(b"pan1", n, v) for n, (v, _t) in clock.ANCHOR_X.items()])
+    panes = [_pane(b"pan1", n, v) for n, (v, _t) in clock.ANCHOR_X.items()]
+    panes += [_pane(b"pic1", n, 0.0, w=v) for n, (v, _t) in clock.ARROW_W.items()]
+    return _clyt(panes)
 
 
 def _vanilla_win() -> bytes:
@@ -69,15 +83,16 @@ def _vanilla_win() -> bytes:
 
 def test_fields_read_month_day_year_left_to_right():
     patched, changed = clock.patch_anchor_layout(_vanilla_anchor())
-    assert changed == len(clock.ANCHOR_X)
+    assert changed == len(clock.ANCHOR_X) + len(clock.ARROW_W)
     month = [_x(patched, f"Pos_Opt_Num_0{i}") for i in (4, 5)]
     day = [_x(patched, f"Pos_Opt_Num_0{i}") for i in (6, 7)]
     year = [_x(patched, f"Pos_Opt_Num_0{i}") for i in range(4)]
     assert month == sorted(month) and day == sorted(day) and year == sorted(year)
     # 8px digits on an 8px pitch; each field clears the next.
     assert max(month) + 8 < min(day) and max(day) + 8 < min(year)
-    # Weekday "(" is baked into the window art near x=61.
-    assert max(year) + 4 < 61
+    # Weekday "(" is baked into the window art; it moves left with the row.
+    assert max(year) + 4 < clock.PAREN_X
+    assert _x(patched, "Pos_Opt_week") == clock.WEEK_X
     for i, field in enumerate((clock.YEAR_X, clock.MONTH_X, clock.DAY_X)):
         assert _x(patched, f"Pos_Opt_Btn_T_0{i}") == field
         assert _x(patched, f"Pos_Opt_Btn_U_0{i}") == field
@@ -101,6 +116,39 @@ def test_time_reads_hour_colon_minute_then_ampm():
     assert _x(win, "window_05") - 2 == ampm - 2
 
 
+# Native-width arrow ink spans -14..+11 around the spinner center.
+ARROW_INK = (-14, 11)
+
+
+def test_spinner_arrows_are_native_width_and_clear_each_other():
+    patched, _ = clock.patch_anchor_layout(_vanilla_anchor())
+    for name in clock.ARROW_W:
+        assert _w(patched, name) == 32.0
+    for row in ((1, 2, 0), (3, 4)):
+        xs = [_x(patched, f"Pos_Opt_Btn_T_0{i}") for i in row]
+        for a, b in zip(xs, xs[1:]):
+            assert a + ARROW_INK[1] < b + ARROW_INK[0]
+
+
+def test_separators_clear_field_frames():
+    """White field frames (inset 4px, drawn over the part's pictures) must not hide / or :."""
+    win, _ = clock.patch_win_layout(_vanilla_win())
+
+    def frame(name: str, half: float) -> tuple[float, float]:
+        c = _x(win, name) - 2
+        return c - half, c + half
+
+    slash_ink = 3.4
+    s1 = _x(win, "Pic_Opt_Win_tex2") - 2
+    s2 = _x(win, "Pic_Opt_Win_tex3") - 2
+    assert frame("window_02", 12)[1] <= s1 - slash_ink
+    assert s1 + slash_ink <= frame("window_03", 12)[0]
+    assert frame("window_03", 12)[1] <= s2 - slash_ink
+    assert s2 + slash_ink <= frame("window_01", 20)[0]
+    colon = _x(win, "Pic_Opt_Win_tex1") - 2
+    assert frame("window_06", 12)[1] < colon - 1 < colon + 1 < frame("window_07", 12)[0]
+
+
 def test_slashes_sit_between_fields_and_day_unit_hides():
     patched, changed = clock.patch_win_layout(_vanilla_win())
     assert changed == len(clock.WIN_X) + 2
@@ -115,6 +163,77 @@ def test_slashes_sit_between_fields_and_day_unit_hides():
         if tag == b"mat1":
             mo = off + struct.unpack_from("<I", patched, off + 12)[0]
             assert struct.unpack_from("<H", patched, mo + 0x34)[0] == 1  # Opt_Time_tex2
+
+
+def test_date_row_centers_on_time_row():
+    anchor, _ = clock.patch_anchor_layout(_vanilla_anchor())
+    month0 = _x(anchor, "Pos_Opt_Num_04") - 4
+    paren_end = clock.WEEK_X + 14  # ")" ink ends 14 right of the weekday center
+    hour0 = _x(anchor, "Pos_Opt_Num_08") - 4
+    ampm_end = _x(anchor, "Pos_Opt_ampm") + 11
+    assert abs((month0 + paren_end) / 2 - (hour0 + ampm_end) / 2) <= 2
+
+
+def paren_window() -> Image.Image:
+    """222x162 window art with vanilla-placed "( )" and a cross outside the box."""
+    from PIL import Image
+
+    im = Image.new("RGBA", (222, 162), (255, 255, 255, 0))
+    px = im.load()
+    for y in range(45, 65):
+        for x in range(168, 222):
+            px[x, y] = (255, 255, 255, 255)  # opaque white block under "("
+        px[179, y] = (204, 204, 204, 255)  # anti-aliasing
+        px[180, y] = px[181, y] = (51, 51, 51, 255)
+        px[205, y] = px[206, y] = (51, 51, 51, 255)
+    px[140, 66] = (238, 238, 238, 255)  # background cross
+    return im
+
+
+def test_weekday_parens_shift_left_and_clean_up():
+    im = paren_window()
+    out = clock.shift_weekday_parens(im)
+    shift = int(clock.ROW_SHIFT)
+    for y in range(45, 65):
+        assert out.getpixel((180 - shift, y)) == (51, 51, 51, 255)
+        assert out.getpixel((206 - shift, y)) == (51, 51, 51, 255)
+        # Old ink erased to the white that surrounds it.
+        assert out.getpixel((179, y)) == (255, 255, 255, 255)
+        assert out.getpixel((180, y))[:3] == (255, 255, 255)
+        assert out.getpixel((206, y))[:3] == (255, 255, 255)
+    assert out.getpixel((140, 66)) == (238, 238, 238, 255)
+    assert clock.shift_weekday_parens(out).tobytes() == out.tobytes()
+
+
+def test_weekday_parens_unexpected_art_fails():
+    from PIL import Image
+
+    with pytest.raises(ValueError, match="no weekday parentheses"):
+        clock.shift_weekday_parens(Image.new("RGBA", (222, 162), (255, 255, 255, 0)))
+    im = paren_window()
+    im.putpixel((175, 50), (0, 0, 0, 255))
+    with pytest.raises(ValueError, match="start at x=175"):
+        clock.shift_weekday_parens(im)
+
+
+def test_rgba4444_patch_keeps_untouched_texels():
+    from bclimutil import decode_bclim_to_image, encode_rgba4444_pixels, parse_bclim
+
+    import fake_img as fi
+
+    im = paren_window()
+    raw = fi.bclim(222, 162, 8, pixels=encode_rgba4444_pixels(im, 256, 256))
+    old = decode_bclim_to_image(raw)
+    new = clock.shift_weekday_parens(old)
+    patched = clock.patch_rgba4444_texels(raw, old, new)
+    assert len(patched) == len(raw)
+    a, b = parse_bclim(raw)[0], parse_bclim(patched)[0]
+    changed = sum(a[i : i + 2] != b[i : i + 2] for i in range(0, len(a), 2))
+    diff = sum(old.getpixel((x, y)) != new.getpixel((x, y)) for x in range(222) for y in range(162))
+    assert changed == diff
+    assert decode_bclim_to_image(patched).tobytes() == new.tobytes()
+    with pytest.raises(ValueError, match="RGBA4444"):
+        clock.patch_rgba4444_texels(fi.bclim(16, 16, 0xD, pixels=bytes(128)), old, new)
 
 
 def test_patch_is_idempotent():
@@ -211,7 +330,7 @@ def test_vanilla_option06_layouts_patch():
     win = darc.extract_file(darc.find(clock.WIN_LYT))
     a2, moved = clock.patch_anchor_layout(anchor)
     w2, changed = clock.patch_win_layout(win)
-    assert moved == len(clock.ANCHOR_X)
+    assert moved == len(clock.ANCHOR_X) + len(clock.ARROW_W)
     assert changed == len(clock.WIN_X) + 2  # + rebind + hide
     assert len(a2) == len(anchor) and len(w2) == len(win)
     # Weekday pane keeps Week01 (rebind raises if it points anywhere else).
