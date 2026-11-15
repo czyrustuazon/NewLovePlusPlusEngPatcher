@@ -29,8 +29,15 @@ DIALOGUE = (
     "rebuild_dbin2",
 )
 
-# Flagged merges whose dropped text was restored by a later commit.
-REPAIRED = {"1bd0b64db19014e15fe402940a9d8acebd1f3686"}
+# Flagged merges whose dropped text was restored by a later commit, or that
+# were checked line by line and lost nothing that was meant to stay.
+REPAIRED = {
+    "1bd0b64db19014e15fe402940a9d8acebd1f3686",
+    # qa into HOTFIX-11142026: t001/t110 equal this branch, which already held
+    # every qa line. k007 equals qa; this branch had only re-broken the 21
+    # lines the second Rinko pack reworded.
+    "ebb710bc54c59aaba28ed11e285ebb8f82e63444",
+}
 
 
 def git(*args: str, check: bool = True) -> str:
