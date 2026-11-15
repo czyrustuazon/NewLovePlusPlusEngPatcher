@@ -432,3 +432,9 @@ def test_a_changed_line_too_wide_for_the_talk_window_is_flagged(tmp_path: Path, 
     pack = _write_pack(tmp_path, _pack(BASE, ["○○○○○○○○", BASE[1], fits]))
     ingest.main([str(pack), "--scripts", str(scripts), "--dbin-root", str(dbin_root)])
     assert "too wide" not in capsys.readouterr().out
+
+
+def test_choice_lines_skip_a_pack_that_cannot_be_read(tmp_path: Path):
+    bad = tmp_path / "bad.dbin2"
+    bad.write_bytes(b"not a script")
+    assert ingest._choice_lines([tmp_path / "missing.dbin2", bad]) == set()

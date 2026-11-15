@@ -528,3 +528,14 @@ def test_main_bumps_the_build_each_run(tmp_path: Path, monkeypatch, capsys):
     assert sync.main([*argv, "--no-align-xml"]) == 0
     assert json.loads((workbench / "version.json").read_text(encoding="utf-8"))["build"] == 2
     assert "[workbench] synced build=2" in capsys.readouterr().out
+
+
+def test_script_embed_lists_choice_buttons_for_an_aligned_script(tmp_path: Path, monkeypatch):
+    paths = _kit_project(tmp_path, monkeypatch)
+    monkeypatch.setattr(sync, "choice_indexes", lambda path: [0])
+    data = {"items": [{"kind": "script", "stem": "a002"}, {"kind": "script", "stem": "t002", "choices": [9]}]}
+    sync.sync_script_embed(
+        data, vanilla_dir=paths["vanilla"], eng_root=paths["eng"], gemini_root=paths["gemini"]
+    )
+    assert data["items"][0]["choices"] == [0]
+    assert "choices" not in data["items"][1]  # not aligned, so a stale list goes
