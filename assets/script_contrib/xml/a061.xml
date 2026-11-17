@@ -264,7 +264,7 @@ Let me think about it.</Dialog>
           <Dialog>O-Okay...</Dialog>
           <Dialog>(Did I mess up...？)</Dialog>
           <Dialog>Phew...</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>About that trip
 you mentioned earlier.</Dialog>
           <Dialog>Yes...</Dialog>
@@ -404,7 +404,7 @@ our first trip together...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲姉ヶ崎＊▲。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Hmm, what is it？</Dialog>
           <Dialog>I actually won a prize.
@@ -3001,7 +3001,7 @@ Wait here for me, okay？</Dialog>
           <Dialog>(Hmm. Even looking around,
 ▲姉ヶ崎＊▲ is definitely
 the best.)</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>Ah,
 ▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Hehe, sorry to keep
@@ -4216,7 +4216,7 @@ both staying in, right？</Dialog>
           <Dialog>I mean... we're on a trip
 together. I'd hate it if we
 were in separate rooms.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Let's stay together the
 whole time？</Dialog>
           <Dialog>Please enjoy your stay...</Dialog>
@@ -4385,7 +4385,7 @@ to tag along, right？</Dialog>
           <Dialog>No.</Dialog>
           <Dialog>But...</Dialog>
           <Dialog>It has to be together.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>No splitting up during the
 trip, okay？</Dialog>
           <Dialog>All right～</Dialog>
@@ -5891,7 +5891,7 @@ get out soon...)</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>Did you know they have a
@@ -6172,7 +6172,7 @@ hotel is gorgeous...</Dialog>
 are palm trees, they're 
 all lit up...</Dialog>
           <Dialog>Wow...</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>...Hmm？</Dialog>
           <Dialog>Thanks for... 
 the night walk.</Dialog>
@@ -6545,7 +6545,7 @@ like at night. Thanks for
 inviting me.</Dialog>
           <Dialog>Yeah... I wanted to see it
 with you.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>...Let's head back soon.</Dialog>
         </Dialogs>
       </SDL2>
@@ -6827,7 +6827,7 @@ the lights soon, okay？</Dialog>
           <Dialog>Even though we've been
 together all day... I still
 feel like it's not enough.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Well, I'm going to bed,
 okay？</Dialog>
           <Dialog>O-Okay...</Dialog>
@@ -8502,7 +8502,7 @@ memories with you are more
 important than a legend.</Dialog>
           <Dialog>I'm just happy that we could
 come here together.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>……。</Dialog>
           <Dialog>...Eh？</Dialog>
           <Dialog>What？</Dialog>
@@ -8799,12 +8799,12 @@ this is a secret.</Dialog>
           <Dialog>To make it come true, we
 have to swear our love.</Dialog>
           <Dialog>Yes...</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>I, Nene Anegasaki, swear to
 love you for all my life.</Dialog>
-          <Dialog>I, ▲苗字▲▲名前▲, swear
-to love Nene Anegasaki
-forever.</Dialog>
+          <Dialog>I, ▲苗字▲ ▲名前▲,
+swear to love Nene
+Anegasaki forever.</Dialog>
           <Dialog>They are beautiful...</Dialog>
           <Dialog>Yeah.</Dialog>
           <Dialog>I'm so glad we came. If we
@@ -8819,7 +8819,7 @@ more and more in love.</Dialog>
           <Dialog>To think I'll keep falling
 even deeper from now on...</Dialog>
           <Dialog>It's almost scary...</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>So hold me. Hold me again.</Dialog>
           <Dialog>Don't let me go, okay？</Dialog>
           <Dialog>I love you, and I'm going to
@@ -9131,12 +9131,13 @@ I？</Dialog>
 legend, right？</Dialog>
           <Dialog>We have to swear our love.</Dialog>
           <Dialog>Yeah.</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>I, Nene Anegasaki, will love
 you for all my life.</Dialog>
-          <Dialog>And I, ▲苗字▲▲名前▲,
-swear to love Nene Anegasaki
-forever.</Dialog>
+          <Dialog>And I,
+▲苗字▲ ▲名前▲,
+swear to love Nene
+Anegasaki forever.</Dialog>
           <Dialog>We have to head back soon...</Dialog>
           <Dialog>This is the first time we've
 been together this long,</Dialog>
@@ -9147,7 +9148,7 @@ want to stay longer.</Dialog>
 the exact same way,</Dialog>
           <Dialog>So why can't we have what we
 want？</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>Do something about it.</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>I don't want to go home.</Dialog>
@@ -9461,12 +9462,13 @@ our vow.</Dialog>
           <Dialog>...Yeah.</Dialog>
           <Dialog>Hehe, you're nervous.</Dialog>
           <Dialog>Well, yeah...</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>I, Nene Anegasaki, vow to
 love you for all my life.</Dialog>
-          <Dialog>And I, ▲苗字▲▲名前▲, vow
-to love Nene Anegasaki for
-all my life.</Dialog>
+          <Dialog>And I,
+▲苗字▲ ▲名前▲,
+vow to love Nene
+Anegasaki for all my life.</Dialog>
           <Dialog>We spent the whole day
 together again today.</Dialog>
           <Dialog>Yeah.</Dialog>
@@ -9483,7 +9485,7 @@ I'm always thinking of you.</Dialog>
           <Dialog>I love you so much, it's
 all I can think about.</Dialog>
           <Dialog>But it's still not enough...</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
           <Dialog>It's okay. We'll experience
 all sorts of things
 together...</Dialog>
@@ -9656,7 +9658,7 @@ will I love you...</Dialog>
           <Dialog>……。</Dialog>
           <Dialog>Is it okay if I fall
 even more in love with you？</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10497,7 +10499,7 @@ never end.</Dialog>
           <Dialog>Bye-bye for real this time.
 See you later, okay？</Dialog>
           <Dialog>Okay, see you.</Dialog>
-          <Dialog>▲姉ヶ崎＊▲……。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -10648,7 +10650,7 @@ See you later, okay？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲姉ヶ崎＊▲。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Eh？</Dialog>
           <Dialog>Eek. Geez, so sudden.</Dialog>
@@ -10744,7 +10746,7 @@ right？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>Anegasaki</Dialog>
-          <Dialog>▲主人公＊▲。</Dialog>
+          <Dialog>▲主人公＊▲.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>What？</Dialog>
           <Dialog>Whoa.</Dialog>
@@ -12292,7 +12294,7 @@ girlfriend, half mom？</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲姉ヶ崎＊▲。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Ah, what's up？</Dialog>
           <Dialog>Well, today's
@@ -12704,7 +12706,7 @@ it.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>▲姉ヶ崎＊▲。</Dialog>
+          <Dialog>▲姉ヶ崎＊▲.</Dialog>
           <Dialog>Anegasaki</Dialog>
           <Dialog>Ah, what's up？</Dialog>
           <Dialog>Yeah, well, today's
