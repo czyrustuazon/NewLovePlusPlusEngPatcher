@@ -110,7 +110,12 @@ def test_hide_writers_are_last_on_their_packages():
     scripts = rebuild.DEPLOY_SCRIPTS
     profile = scripts.index("deploy_profile_en.py")
     keyboard_idx = len(scripts) - 1 - scripts[::-1].index("deploy_input_keyboard_en.py")
+    # Injects into the bake's current ARC (never vanilla), so the hide survives;
+    # test_release_bake_hides_input_panes checks the result.
+    keeps_current = {"deploy_pack_survivors_en.py"}
     for i, name in enumerate(scripts):
+        if name in keeps_current:
+            continue
         text = (TOOLS / name).read_text(encoding="utf-8", errors="replace")
         if i > profile and name != "deploy_profile_en.py":
             assert not re.search(r"\b5252\b|Profile\.arc", text), f"{name} writes 5252 after Profile"

@@ -121,6 +121,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_trip_mes_en.py",  # 5792 trip date-picker message box (raw ETC1A4 TEX)
     "deploy_shop_titles_en.py",  # 5789 shop / restaurant title bars (raw ETC1A4 TEX)
     "deploy_photo_contest_en.py",  # 4090/4091 photo contest buttons + backgrounds (raw RGBA4 / RGB8 TEX)
+    "deploy_pack_survivors_en.py",  # re-apply PNG masters a deploy rebuilt away (after every UI deploy)
     "deploy_cesa_en.py",
 ]
 

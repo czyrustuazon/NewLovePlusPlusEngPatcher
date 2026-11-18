@@ -6,6 +6,10 @@ keep their gray ink, font renders go out as A8 like Options pkg 5245):
   5244 Text02 — Gallery home
   5241 Text04 — Communication home
   5242 Text05 — Data Management home
+  5240 Text04_02 — Business Card submenu
+
+The pack slot-skips these ARCs (all Zhoumaru masters at once do not fit), so
+every label that should ship English has to be listed here.
 """
 from __future__ import annotations
 
@@ -66,6 +70,24 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Plate_Text04_02_01.bclim", "Select Save Data"),
         ("Com_M_Sel_Plate_Text04_02_09.bclim", "StreetPass Settings"),
         ("Com_M_Sel_Plate_Text04_02_10.bclim", "Friends' Cards"),
+        # Business Card submenu rows / headers (pack slot-skips this ARC; added 2026-11-19)
+        ("Com_M_Sel_Btn_Text04_02_00.bclim", "Business Card"),
+        ("Com_M_Sel_Btn_Text04_02_04.bclim", "Edit Display (Back Side)"),
+        ("Com_M_Sel_Btn_Text04_02_05.bclim", "Edit Design (Front Side)"),
+        ("Com_M_Sel_Btn_Text04_02_06.bclim", "Attach Photo (Back Side)"),
+        ("Com_M_Sel_Btn_Text04_02_07.bclim", "Edit Message (Back Side)"),
+        ("Com_M_Sel_Btn_Text04_02_08.bclim", "Find Exchange Partner"),
+        ("Com_M_Sel_Btn_Text04_02_09.bclim", "Join Direct Exchange"),
+        ("Com_M_Sel_Btn_Text04_02_10.bclim", "Edit"),
+        ("Com_M_Sel_Btn_Text04_02_11.bclim", "Select Business Card"),
+        ("Com_M_Sel_Btn_Text04_02_12.bclim", "Apply Sticker"),
+        ("Com_M_Sel_Plate_Text04_02_02.bclim", "Edit Business Card"),
+        ("Com_M_Sel_Plate_Text04_02_03.bclim", "Edit Display (Back Side)"),
+        ("Com_M_Sel_Plate_Text04_02_04.bclim", "Edit Design (Front Side)"),
+        ("Com_M_Sel_Plate_Text04_02_05.bclim", "Select Business Card"),
+        ("Com_M_Sel_Plate_Text04_02_06.bclim", "Direct Card Exchange"),
+        ("Com_M_Sel_Plate_Text04_02_07.bclim", "Find Exchange Partner"),
+        ("Com_M_Sel_Plate_Text04_02_08.bclim", "Join Direct Exchange"),
     ],
     5244: [  # Gallery
         ("Com_M_Sel_Plate_Text02_00_00.bclim", "Gallery"),
@@ -117,6 +139,15 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Plate_Text04_01_02.bclim", "Girlfriend Introduction"),
         ("Com_M_Sel_Plate_Text04_01_03.bclim", "Double Date"),
         ("Com_M_Sel_Plate_Text04_03_00.bclim", "Communication Battle"),
+        # Communication Menu + Business Card rows (pack slot-skips this ARC; added 2026-11-19)
+        ("Com_M_Sel_Btn_Text04_01_00.bclim", "Communication Menu"),
+        ("Com_M_Sel_Btn_Text04_02_06.bclim", "Attach Photo (Back Side)"),
+        ("Com_M_Sel_Btn_Text04_02_07.bclim", "Edit Message (Back Side)"),
+        ("Com_M_Sel_Btn_Text04_02_08.bclim", "Find Exchange Partner"),
+        ("Com_M_Sel_Plate_Text04_02_00.bclim", "Business Card"),
+        ("Com_M_Sel_Plate_Text04_02_06.bclim", "Direct Card Exchange"),
+        ("Com_M_Sel_Plate_Text04_02_07.bclim", "Find Exchange Partner"),
+        ("Com_M_Sel_Plate_Text04_02_08.bclim", "Join Direct Exchange"),
     ],
     5242: [  # Data Management
         ("Com_M_Sel_Plate_Text05_00_00.bclim", "Data Management"),
@@ -124,6 +155,20 @@ PKG_LABELS: dict[int, list[tuple[str, str]]] = {
         ("Com_M_Sel_Btn_Text05_01_01.bclim", "Export Save Data"),
         # Delete submenu header (DataManageDataDelete → plate family 02)
         ("Com_M_Sel_Plate_Text05_02_00.bclim", "Delete Save Data"),
+        # Data Export / DLC / Data Transfer rows (hard-edged, see HARD_EDGE; added 2026-11-19)
+        ("Com_M_Sel_Btn_Text05_01_00.bclim", "Data Export"),
+        ("Com_M_Sel_Btn_Text05_01_02.bclim", "AR Data Export"),
+        ("Com_M_Sel_Btn_Text05_01_03.bclim", "Data Upload"),
+        ("Com_M_Sel_Btn_Text05_03_00.bclim", "DLC Management"),
+        ("Com_M_Sel_Btn_Text05_04_00.bclim", "Data Transfer"),
+        ("Com_M_Sel_Btn_Text05_05_00.bclim", "DLC Strap"),
+        ("Com_M_Sel_Plate_Text05_01_00.bclim", "Data Export"),
+        ("Com_M_Sel_Plate_Text05_01_01.bclim", "Save Data Export"),
+        ("Com_M_Sel_Plate_Text05_01_02.bclim", "Girlfriend Data Export"),
+        ("Com_M_Sel_Plate_Text05_01_03.bclim", "Data Upload"),
+        ("Com_M_Sel_Plate_Text05_03_00.bclim", "Download"),
+        ("Com_M_Sel_Plate_Text05_04_00.bclim", "Data Transfer"),
+        ("Com_M_Sel_Plate_Text05_05_00.bclim", "DLC Strap"),
     ],
 }
 
@@ -137,6 +182,23 @@ SKIP_UI_PNG = {"Com_M_Sel_Plate_Text04_01_01"}
 # Heisei W5 reads thin on this row; Heisei W7 goes darker than Name Card.
 # Geomanist Regular matches that pill's weight at gh 18 on 246×48.
 FONT_BTN_H = {"Com_M_Sel_Btn_Text04_01_01": 18}
+# Masters drawn with hard alpha so a crowded slot still fits soft edges on the
+# rest of the package (5242: Data Management submenu rows, added 2026-11-19).
+HARD_EDGE: set[str] = {
+    "Com_M_Sel_Btn_Text05_01_00",
+    "Com_M_Sel_Btn_Text05_01_02",
+    "Com_M_Sel_Btn_Text05_01_03",
+    "Com_M_Sel_Btn_Text05_03_00",
+    "Com_M_Sel_Btn_Text05_04_00",
+    "Com_M_Sel_Btn_Text05_05_00",
+    "Com_M_Sel_Plate_Text05_01_00",
+    "Com_M_Sel_Plate_Text05_01_01",
+    "Com_M_Sel_Plate_Text05_01_02",
+    "Com_M_Sel_Plate_Text05_01_03",
+    "Com_M_Sel_Plate_Text05_03_00",
+    "Com_M_Sel_Plate_Text05_04_00",
+    "Com_M_Sel_Plate_Text05_05_00",
+}
 ROW_FONT = ROOT / "assets" / "fonts" / "reference" / "nlppatch-2025" / "Geomanist-Regular.ttf"
 
 
@@ -245,7 +307,7 @@ def make_en_bclim(raw: bytes, en: str, tmp: Path, *, hard: bool, salt: float, st
         # tight 5244 slot unless quantized. Native-size Zhoumaru stays AA
         # unless a hard trial asked for it.
         fitted = "_ui_png_fit" in master.parts
-        if hard or fitted:
+        if hard or fitted or stem in HARD_EDGE:
             a = np.array(rgba.getchannel("A"))
             a = np.where(a >= 96, 255, 0).astype(np.uint8)
             rgba.putalpha(Image.fromarray(a, "L"))

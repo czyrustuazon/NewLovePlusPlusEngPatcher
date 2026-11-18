@@ -61,6 +61,12 @@ LABELS: list[tuple[str, str]] = [
     ("Com_M_Sel_Btn_Text03_05_00.bclim", "Password"),
     ("Com_M_Sel_Plate_Text03_06_00.bclim", "3DS System Clock"),
     ("Com_M_Sel_Plate_Text03_06_01.bclim", "3DS System Clock"),
+    # ソフト更新 / スタッフロール / ジャイロセンサー設定 (Zhoumaru masters miss the
+    # slot, as the pack's slot-skip of this ARC shows; added 2026-11-19)
+    ("Com_M_Sel_Btn_Text03_03_00.bclim", "Software Update"),
+    ("Com_M_Sel_Btn_Text03_04_00.bclim", "Staff Roll"),
+    ("Com_M_Sel_Plate_Text03_03_00.bclim", "Gyro Sensor Settings"),
+    ("Com_M_Sel_Plate_Text03_04_00.bclim", "Staff Roll"),
 ]
 
 
