@@ -46,6 +46,27 @@ def test_layeredfs_inject_creates_dirs_and_skips_japanese(tmp_path: Path, monkey
     assert not (romfs / "script/bin/script/a901.dbin2").exists()
 
 
+def test_community_pack_files_fill_nlp_packs(tmp_path: Path, monkeypatch):
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_01/k002.dbin2", b"community-nlp01")
+    _write(eng, "NLP_02/k002.dbin2", b"community-nlp02")
+    _write(eng, "NLP_02/k003.dbin2", b"not-community")
+    _write(eng, "script/k002.dbin2", b"community")
+    monkeypatch.setattr(script_inject, "community_stems", lambda: {"k002"})
+    monkeypatch.delenv("NLPP_INCLUDE_GEMINI_NENE", raising=False)
+
+    romfs = tmp_path / "romfs"
+    assert script_inject.inject_scripts(romfs, eng, create_dirs=True) == 4
+    assert (romfs / "script/bin/NLP_01/k002.dbin2").read_bytes() == b"community-nlp01"
+    assert (romfs / "script/bin/NLP_02/k002.dbin2").read_bytes() == b"community-nlp02"
+    assert not (romfs / "script/bin/NLP_02/k003.dbin2").exists()
+
+    # Pre-manifest checkouts treat every a*/k* file as community, as in the script pack.
+    monkeypatch.setattr(script_inject, "community_stems", lambda: set())
+    assert script_inject.resolve_script_source("NLP_02", "k003", eng) == (eng / "NLP_02/k003.dbin2", "nlppatch")
+
+
 def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     tmp_path: Path, monkeypatch
 ):

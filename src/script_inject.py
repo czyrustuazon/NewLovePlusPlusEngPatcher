@@ -23,8 +23,9 @@ Target patch composition (scripts only — img.bin / TRB unchanged):
    nameplate), and Rinko's to ▲Kobayaka＊▲ (an exact 小早川 nameplate
    becomes Kobayakawa).
 
-Community scripts never shipped ``NLP_01`` / ``NLP_02``; only Manaka and common
-apply there, plus a contributor file for that pack, and Gemini Nene when opted in.
+The community layer reaches ``NLP_01`` / ``NLP_02`` through
+``rebuild_dbin2/<pack>`` files that ``tools/build_community_packs.py`` maps
+onto each pack's own copy of the stem; Gemini and contributor files still win.
 """
 from __future__ import annotations
 
@@ -381,6 +382,12 @@ def resolve_script_source(
         if pref in ENG_PREFIXES and eng.is_file():
             tag = "manaka" if pref == MANAKA_PREFIX else "eng_p"
             return eng, tag
+        # Community a*/k* English mapped onto this pack's own file
+        # (tools/build_community_packs.py).
+        if pref in COMMUNITY_PREFIXES and eng.is_file():
+            allow = community_stems()
+            if not allow or stem in allow:
+                return eng, "nlppatch"
         return None, "jp"
 
     if pref == MANAKA_PREFIX and eng.is_file():
