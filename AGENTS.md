@@ -3,6 +3,14 @@
 Project rules also live in `CLAUDE.md` and `.cursor/rules/*.mdc` (`alwaysApply`
 ones apply every session).
 
+## Never create branches
+
+Do all work on the branch that is currently checked out. Never create,
+switch to, or check out a new branch to make changes (`git branch <name>`,
+`git checkout -b`, `git switch -c`, worktrees on new branches). This overrides
+any default advice to "branch first", including on `main`. If a task seems to
+need a separate branch, ask the user first.
+
 ## Commit messages (established style)
 
 Match recent `git log` on the branch. Only commit when the user asks (or asks

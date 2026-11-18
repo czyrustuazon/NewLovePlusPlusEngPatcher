@@ -30,6 +30,7 @@ def test_layeredfs_inject_creates_dirs_and_skips_japanese(tmp_path: Path, monkey
     _write(eng, "script/t002.dbin2", b"manaka-script")
     _write(eng, "script/a900.dbin2", b"community")
     _write(eng, "script/a901.dbin2", b"still-jp")
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", tmp_path / "no_contrib")
     monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900"})
     monkeypatch.delenv("NLPP_INCLUDE_GEMINI_NENE", raising=False)
 
@@ -62,6 +63,7 @@ def test_gemini_nene_opt_in_overrides_community_a_and_fills_packs(
     _write(gem, "script/a901.dbin2", b"gemini-a901")
     _write(gem, "NLP_01/a901.dbin2", b"gemini-a901-nlp01")
 
+    monkeypatch.setattr(script_inject, "CONTRIB_DBIN", tmp_path / "no_contrib")
     monkeypatch.setattr(script_inject, "community_stems", lambda: {"a900", "k001"})
     monkeypatch.setattr(script_inject, "gemini_nene_stems", lambda: {"a900", "a901"})
     monkeypatch.setattr(script_inject, "GEMINI_NENE_DBIN", gem)
@@ -186,6 +188,32 @@ def test_nene_speaker_becomes_anegasaki_on_every_stem(tmp_path: Path, monkeypatc
         "Hi ▲Kobayaka＊▲",
         "▲Takane＊＊▲",
         "Takane",
+    ]
+
+
+def test_inject_breaks_overlong_english_lines_at_spaces(tmp_path: Path, monkeypatch):
+    import patch_names as names
+
+    def _script(dialogs: list[str]) -> bytes:
+        sdl2 = names.SDL2Data(key=2, unknown=[], dialogs=dialogs)
+        return names.build_dbin2(1, 0, [names.DbinEntry(0, 0, sdl2)])
+
+    eng = tmp_path / "rebuild_dbin2"
+    _write(eng, "NLP_01/t001.dbin2", b"manaka")
+    _write(eng, "NLP_02/p010.dbin2", b"common")
+    (eng / "script").mkdir(parents=True)
+    (eng / "script" / "p061.dbin2").write_bytes(
+        _script(["Because you can be active, and become popular with girls."])
+    )
+    monkeypatch.setattr(script_inject, "community_stems", lambda: set())
+
+    romfs = tmp_path / "romfs"
+    script_inject.inject_scripts(romfs, eng, create_dirs=True)
+    _, _, entries = names.parse_dbin2(
+        (romfs / "script/bin/script/p061.dbin2").read_bytes()
+    )
+    assert entries[0].sdl2.dialogs == [
+        "Because you can be active, and\nbecome popular with girls."
     ]
 
 

@@ -8,6 +8,13 @@ cd "$(git rev-parse --show-toplevel)" || exit 1
 PY=python
 command -v "$PY" >/dev/null 2>&1 || PY=python3
 
+# A merge that dropped one side of the dialogue passes every test below.
+echo "[pre-push] dialogue merges (dev/check_merges.py)"
+"$PY" dev/check_merges.py || {
+    echo "[pre-push] a merge dropped dialogue; push aborted"
+    exit 1
+}
+
 # The CI steps on a clean clone of HEAD: no game dumps or untracked files,
 # so coverage matches GitHub (pip install -r dev/requirements-dev.txt).
 echo "[pre-push] CI checks (dev/ci_local.py)"

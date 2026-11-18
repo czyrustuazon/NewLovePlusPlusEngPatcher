@@ -1058,7 +1058,7 @@ Oh, is that ▲小早川＊▲？)</Dialog>
           <Dialog>Oh, ▲小早川＊▲.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Sorry for the wait. The weather's kind of dreary today, huh？ Though I actually like it this way.</Dialog>
-          <Dialog>I know, right! We really think alike, ●.</Dialog>
+          <Dialog>I know, right! Guess we really think alike.</Dialog>
           <Dialog>？</Dialog>
         </Dialogs>
       </SDL2>
@@ -1318,7 +1318,7 @@ Oh, is that ▲小早川＊▲？)</Dialog>
           <Dialog>I just got here. Anyway, did you notice that tiny snowman over there？</Dialog>
           <Dialog>Oh, you're right. It's tiny, but it's even got a face and arms. Someone did a neat job making it.</Dialog>
           <Dialog>I'm gonna go take a quick picture, so... stay!</Dialog>
-          <Dialog>(What am ●, a dog...？)</Dialog>
+          <Dialog>(What am I, a dog...？)</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3465,7 +3465,7 @@ the mood for that.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>You don't have an umbrella？ Guess I have no choice... Here.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Oh, thanks. Then ● will hold the umbrella.</Dialog>
+          <Dialog>Oh, thanks. I'll hold the umbrella, then.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -3571,7 +3571,7 @@ the mood for that.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Here, why don't you share ●'s umbrella？</Dialog>
+          <Dialog>Here, why don't you get under my umbrella？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>...Guess I have no choice. No getting too close, though.</Dialog>
         </Dialogs>
@@ -3626,8 +3626,7 @@ mine.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>No umbrella？ ● don't
-have one either...</Dialog>
+          <Dialog>You don't have an umbrella？ Neither do I...</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Come on, let's hurry.</Dialog>
         </Dialogs>
@@ -4378,7 +4377,7 @@ go somewhere else now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Then wanna come over to ●'s place？</Dialog>
+          <Dialog>Want to come over to my place, then？</Dialog>
           <Dialog>How about here？</Dialog>
         </Dialogs>
       </SDL2>
@@ -4488,7 +4487,7 @@ go somewhere else now.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Oh, your hair.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Hair？ ●'s？</Dialog>
+          <Dialog>Huh？ My hair？</Dialog>
           <Dialog>There's a piece of lint in it. Come on, bend down!</Dialog>
           <Dialog>Okay, okay. Go ahead.</Dialog>
         </Dialogs>
@@ -4622,7 +4621,7 @@ go somewhere else now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>...Achoo! ...Someone must be talking about ●.</Dialog>
+          <Dialog>...Achoo! ...Someone must be talking about me.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>What was that？ You sound like an old man.</Dialog>
           <Dialog>...I'm only a year older than you, you know.</Dialog>
@@ -5189,7 +5188,7 @@ go somewhere else now.</Dialog>
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Then want to stop by ●'s place？</Dialog>
+          <Dialog>Want to stop by my place, then？</Dialog>
           <Dialog>Go here？</Dialog>
         </Dialogs>
       </SDL2>
@@ -5979,7 +5978,7 @@ go somewhere else now.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
           <Dialog>Huh, it's not in your bag？ What about your pockets？</Dialog>
           <Dialog>My pockets？ Let's see... Oh, found it！ That scared me...</Dialog>
-          <Dialog>Haha, ● panicked there too. See ya.</Dialog>
+          <Dialog>Haha, you had me worried too. See ya.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -6195,7 +6194,7 @@ go somewhere else now.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Listen... I had fun today. And I'm sorry.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm glad. ● wasn't considerate enough last time either. Sorry about that.</Dialog>
+          <Dialog>I'm glad to hear that. I wasn't considerate enough last time either, so I'm sorry too.</Dialog>
           <Dialog>It's fine, I'm just happy we made up. Let's keep getting along.</Dialog>
           <Dialog>Yeah. See you later, then.</Dialog>
         </Dialogs>
@@ -6239,7 +6238,7 @@ go somewhere else now.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Um, about the other day... I'm sorry. Are we good again... after today's date？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, we're good. ● will try to be more careful from now on, too.</Dialog>
+          <Dialog>Yeah, we're good. I'll try to be more careful about things from now on, too.</Dialog>
           <Dialog>Hehe... Thanks. I'll be looking forward to our next date, then.</Dialog>
           <Dialog>Yeah, let's have another fun date soon. See you.</Dialog>
         </Dialogs>
@@ -6283,7 +6282,7 @@ go somewhere else now.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Um... I'm really sorry. Can you... forgive me now？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Don't worry about it. ● was at fault too.</Dialog>
+          <Dialog>Don't worry about it. It was my fault, too.</Dialog>
           <Dialog>Thank goodness! Let's go on another date soon, okay？ Thanks for today. Bye-bye.</Dialog>
           <Dialog>Yeah, see you later. Bye.</Dialog>
         </Dialogs>

@@ -1,0 +1,22 @@
+---
+description: How to judge Nene (a-script) lines against Gemini and a contributor pack
+alwaysApply: true
+---
+
+# Nene dialogue audits
+
+When a contributor line and the Gemini line disagree, show that line as:
+
+```
+Gemini:
+Contributor:
+Verdict:
+```
+
+Nene is the senpai, one year older, and the one who looks after him at Dixie's. Warm, teasing, a little motherly. She slips from polite to casual with her kouhai. She says 私. She does not call herself Nene the way Rinko calls herself Rinko.
+
+The speaker plate is the surname **Anegasaki**. A spoken `▲Anegasaki＊▲` / `▲姉ヶ崎＊▲` to her face is "you" (`docs/technical.md` §24.4). Keep the mark when he is talking about her to someone else. `着いた` is just arriving ("We're here"), not "I have arrived." The diner is **Dixie's**.
+
+`大人っぽい` can be "mature" for her. That word is the boy's read of Nene, not Rinko's `おとなしい` clothes line.
+
+Talk wraps at 30 columns, choice buttons at 28. `●` is the player's I / me / my (a kept `●` draws 俺 or 僕). Use a straight apostrophe (`'`). The dialog font has no curly `’`.

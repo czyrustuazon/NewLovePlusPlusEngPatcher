@@ -1,0 +1,4 @@
+# cmd.exe misparses batch files with LF-only endings (labels and goto land
+# mid-line). Ship them as CRLF in every checkout and GitHub zip download.
+*.bat text eol=crlf
+*.cmd text eol=crlf

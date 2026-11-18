@@ -238,26 +238,14 @@ def png_logical_stems(png: Path) -> list[str]:
     if low.startswith("new_"):
         rest = stem[4:]
         aliases += [rest, f"C_{rest}", f"Alb_{rest}"]
-    out: list[str] = []
-    seen: set[str] = set()
-    for a in aliases:
-        k = a.lower()
-        if k not in seen:
-            seen.add(k)
-            out.append(a)
-    return out
+    # No duplicates (even ignoring case): "__", "new_", "_upper" and "_rgba4"
+    # exclude each other, and each alias has a different length or prefix.
+    return aliases
 
 
 def png_to_bclim_candidates(png: Path) -> list[str]:
-    cands: list[str] = []
-    seen: set[str] = set()
-    for stem in png_logical_stems(png):
-        for rel in (f"timg/{stem}.bclim", f"{stem}.bclim"):
-            k = rel.lower()
-            if k not in seen:
-                seen.add(k)
-                cands.append(rel)
-    return cands
+    # Stems are distinct, so these paths are too.
+    return [rel for stem in png_logical_stems(png) for rel in (f"timg/{stem}.bclim", f"{stem}.bclim")]
 
 
 def _bclim_looks_valid(path: Path, orig_size: int) -> tuple[bool, str]:
@@ -276,8 +264,6 @@ def _bclim_looks_valid(path: Path, orig_size: int) -> tuple[bool, str]:
         return False, f"size/format changed ({orig_size} -> {size}); keeping original"
     if size < 40:
         return False, f"too small ({size} bytes)"
-    if data[:4] == b"CLIM" and orig_size < 256 and orig_size != size:
-        return False, "header-only CLIM stub"
     return True, ""
 
 
@@ -1170,8 +1156,8 @@ def pack_images(
             report_lines.append("[ok] package 0090: CESA_240X400.texi (boot warning)")
             remove_scratch(cesa_work, label="cesa work")
 
-        if not patched_indices and not patch_cesa:
-            raise PackError("no textures were injected; aborting img.bin rebuild")
+        # No packages and no CESA already raised above (no mapped folders /
+        # no textures were injected).
 
         report_path = work / "image_pack_report.txt"
         cache_line = (

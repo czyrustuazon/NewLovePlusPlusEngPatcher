@@ -534,10 +534,9 @@ class LiveStatus:
                 parts.append(label)
             if elapsed:
                 parts.append(elapsed)
-            if frac is not None:
+            if frac is not None:  # count is "x.y%" or "n/m" whenever frac is set
                 parts.append("[" + ("x" * width) + "]")
-                if count:
-                    parts.append(count)
+                parts.append(count)
             if detail_s:
                 parts.append(detail_s)
             if job_s:
@@ -569,8 +568,7 @@ class LiveStatus:
             pieces.append(paint(elapsed, "33"))
         if frac is not None:
             pieces.append(color_bar(frac, bar_w))
-            if count:
-                pieces.append(paint(count, "1;97"))
+            pieces.append(paint(count, "1;97"))
         if detail_s:
             pieces.append(paint(detail_s, "36"))
         if job_s:

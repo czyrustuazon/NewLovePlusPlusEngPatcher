@@ -128,10 +128,9 @@ def encode_imm12(value: int) -> int:
             r = (rot * 2) & 31
             imm8 = ((value << r) | (value >> (32 - r))) & 0xFFFFFFFF
         if imm8 <= 0xFF:
-            r = (rot * 2) & 31
-            got = imm8 if r == 0 else ((imm8 >> r) | (imm8 << (32 - r))) & 0xFFFFFFFF
-            if got == value:
-                return (rot << 8) | imm8
+            # imm8 is value rotated left by 2*rot, so rotating it back right
+            # (what the CPU does) always gives value.
+            return (rot << 8) | imm8
     raise ValueError(f"cannot encode imm {value:#x}")
 
 

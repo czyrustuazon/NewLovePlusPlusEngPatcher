@@ -93,8 +93,10 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_mail_home_en.py",
     "deploy_mail_sort_en.py",  # 5207 after mail_home (Sort Method popup + Cancel)
     "deploy_mydata_en.py",
+    # 5575 headers + every Quest.check master on 5253. No deploy_todo_hist_en
+    # after it: that rebuilt 5253 from vanilla with three labels and dropped
+    # Deadline / Success Condition / "1d left" back to Japanese.
     "deploy_todo_en.py",
-    "deploy_todo_hist_en.py",
     "deploy_schedule_header_en.py",
     "deploy_day_counter_en.py",
     "deploy_datadelete_en.py",  # 4187 + 5237 Text05

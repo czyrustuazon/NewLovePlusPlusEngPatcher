@@ -294,7 +294,7 @@ for the tests？</Dialog>
           <Dialog>Study for the tests？ Right,
 we have tests coming up...</Dialog>
           <Dialog>Okay, I'd love to</Dialog>
-          <Dialog>Sorry, I can't go today</Dialog>
+          <Dialog>Sorry, I can't go today...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -337,7 +337,7 @@ my house？</Dialog>
           <Dialog>Right, it's almost exam time
 again...</Dialog>
           <Dialog>Okay, I'd love to</Dialog>
-          <Dialog>Sorry, I can't go today</Dialog>
+          <Dialog>Sorry, I can't go today...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -384,7 +384,7 @@ exams together. How's that？</Dialog>
           <Dialog>Right, the exams are coming
 up...</Dialog>
           <Dialog>Okay, I'd love to</Dialog>
-          <Dialog>Sorry, I can't go today</Dialog>
+          <Dialog>Sorry, I can't go today...</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>

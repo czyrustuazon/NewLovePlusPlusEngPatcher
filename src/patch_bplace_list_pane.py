@@ -8,8 +8,10 @@ Vanilla is sized for 3–4 kanji. Latin names clip at 8 letters because:
    patch.
 2. List DrawTextToPane in FUN_0023cf24 passes maxGlyphs=8 (four switch cases).
    That is the ``Fukushim`` / ``Yamanash`` cut. Raise to 16.
-3. FUN_0023c040 then sizes the visible region from glyph count, clamping
-   ``len > 7`` to 8. Raise that clamp to 12.
+3. The callers of FUN_0023c040 clamp ``len > 7`` to 8; this raises it to 12.
+   FUN_0023c040 places the confirm sheet's caret (``Pts_Prf_Cur_Moji`` on
+   ``Lyt_Prf_Info_Check``), not a visible region. The Profile form's caret is
+   a different function (see ``patch_profile_caret``).
 
 Applied from tools/deploy_name_input_en.py.
 """
@@ -74,8 +76,6 @@ def apply_patch(data: bytearray) -> bool:
         print("[bplace-pane] hometown list already 128px + DrawText 16 + cap 12")
         return False
 
-    changed = False
-
     pane = bytes(data[ADDR_PANE : ADDR_PANE + len(WIDE_PANE)])
     if pane != WIDE_PANE:
         if pane not in (ORIG_PANE, BAD_PANE):
@@ -83,7 +83,6 @@ def apply_patch(data: bytearray) -> bool:
                 f"unexpected BPlace CreateTextPane setup at {ADDR_PANE:#x}: {pane.hex()}"
             )
         data[ADDR_PANE : ADDR_PANE + len(WIDE_PANE)] = WIDE_PANE
-        changed = True
 
     for site in GLYPH_CAP_SITES:
         cap = bytes(data[site : site + len(ORIG_CAP)])
@@ -92,7 +91,6 @@ def apply_patch(data: bytearray) -> bool:
         if cap != ORIG_CAP:
             raise ValueError(f"unexpected BPlace glyph cap at {site:#x}: {cap.hex()}")
         data[site : site + len(WIDE_CAP)] = WIDE_CAP
-        changed = True
 
     for site in DRAW_SP0_SITES:
         blk = bytes(data[site : site + len(ORIG_DRAW_SP0)])
@@ -103,7 +101,6 @@ def apply_patch(data: bytearray) -> bool:
                 f"unexpected BPlace DrawText maxGlyphs at {site:#x}: {blk.hex()}"
             )
         data[site : site + len(WIDE_DRAW_SP0)] = WIDE_DRAW_SP0
-        changed = True
 
     sp4 = bytes(data[ADDR_DRAW_SP4 : ADDR_DRAW_SP4 + len(ORIG_DRAW_SP4)])
     if sp4 != WIDE_DRAW_SP4:
@@ -112,11 +109,10 @@ def apply_patch(data: bytearray) -> bool:
                 f"unexpected BPlace DrawText maxGlyphs at {ADDR_DRAW_SP4:#x}: {sp4.hex()}"
             )
         data[ADDR_DRAW_SP4 : ADDR_DRAW_SP4 + len(WIDE_DRAW_SP4)] = WIDE_DRAW_SP4
-        changed = True
 
-    if changed:
-        print(
-            "[bplace-pane] hometown list: pane 128x16, DrawText maxGlyphs 8->16, "
-            "FUN_0023c040 cap 8->12"
-        )
-    return changed
+    # Not is_wide above, so at least one site was rewritten.
+    print(
+        "[bplace-pane] hometown list: pane 128x16, DrawText maxGlyphs 8->16, "
+        "FUN_0023c040 cap 8->12"
+    )
+    return True

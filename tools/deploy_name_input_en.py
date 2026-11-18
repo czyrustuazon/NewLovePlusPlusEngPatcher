@@ -17,6 +17,8 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   7a. patch_chunk_walk_guard              # title mesh walk stops on a bad chunk
   7b. patch_input_call_romaji               # romaji Called matcher + suggestions
   8. patch_message_speed                   # Options 5/3/2/0 + TalkWindow 10/20/35/60 ms + voice/script cap + sample EN
+  8b. patch_mail_reply_width               # send-phrase rows lay out at 180 px, not 128
+  8c. patch_dialog_break                   # talk/choice wrap breaks at the previous space
   9. patch_cesa_logo_white_native_size      # CesaLogo skip 400×400 logo_white quad
   9b. patch_nintendo_logo_skip_thank_flash  # Nintendo beat does not bind logo_white
   10. patch_spotpass_skip                   # no boot “No SpotPass data found.” without BOSS
@@ -35,6 +37,8 @@ Verified stack (2026-08-31, name-pane draw 2026-09-12):
   22. patch_drawtext_64_lines              # DrawTextToPane lays out 64 lines (credits box), not 32
   23. patch_syspopup_tall_text             # message box scrolls the 1024-tall Tex_Sentence texture
   24. patch_syspopup_scroll_bar            # message box scroll ends at the last line; bar spans the text
+  25. patch_bonus_digits                   # BONUS! popup Riches amounts in ASCII digits (50, not ５ ０)
+  26. patch_profile_caret                  # Profile name caret sits after the text (7 px per ASCII cell)
 
   # Azahar LayeredFS (default)
   python tools/deploy_name_input_en.py
@@ -122,6 +126,14 @@ from patch_message_speed import (  # noqa: E402
     apply_patch as apply_message_speed,
     is_fully_patched as message_speed_already,
 )
+from patch_mail_reply_width import (  # noqa: E402
+    apply_patch as apply_mail_reply_width,
+    is_patched as mail_reply_width_already,
+)
+from patch_dialog_break import (  # noqa: E402
+    apply_patch as apply_dialog_break,
+    is_patched as dialog_break_already,
+)
 from patch_spotpass_skip import (  # noqa: E402
     apply_patch as apply_spotpass_skip,
     is_patched as spotpass_skip_already,
@@ -181,9 +193,17 @@ from patch_syspopup_scroll_bar import (  # noqa: E402
     apply_patch as apply_syspopup_scroll,
     is_patched as syspopup_scroll_already,
 )
+from patch_bonus_digits import (  # noqa: E402
+    apply_patch as apply_bonus_digits,
+    is_patched as bonus_digits_already,
+)
 from patch_syspopup_tall_text import (  # noqa: E402
     apply_patch as apply_syspopup_tall,
     is_patched as syspopup_tall_already,
+)
+from patch_profile_caret import (  # noqa: E402
+    apply_patch as apply_profile_caret,
+    is_patched as profile_caret_already,
 )
 from patch_title_engpatch_info import (  # noqa: E402
     apply_patch as apply_engpatch_info,
@@ -306,6 +326,18 @@ def apply_name_input_stack(data: bytearray) -> int:
         apply_message_speed(data)
         steps += 1
 
+    if mail_reply_width_already(data):
+        print("[skip] mail_reply_width already applied")
+    else:
+        apply_mail_reply_width(data)
+        steps += 1
+
+    if dialog_break_already(data):
+        print("[skip] dialog_break already applied")
+    else:
+        apply_dialog_break(data)
+        steps += 1
+
     if patch_cesa_logo_white_native_size(data):
         print("[cesa] logo_white quad uses TEXI size (skip 400x400 stub scale)")
         steps += 1
@@ -414,6 +446,18 @@ def apply_name_input_stack(data: bytearray) -> int:
         print("[skip] syspopup_scroll_bar already applied")
     else:
         apply_syspopup_scroll(data)
+        steps += 1
+
+    if bonus_digits_already(data):
+        print("[skip] bonus_digits already applied")
+    else:
+        apply_bonus_digits(data)
+        steps += 1
+
+    if profile_caret_already(data):
+        print("[skip] profile_caret already applied")
+    else:
+        apply_profile_caret(data)
         steps += 1
 
     # PACK table/alloc soft-fails black the boot when the archive heap is

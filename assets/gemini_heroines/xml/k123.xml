@@ -1150,7 +1150,7 @@
           <Dialog>You sure？ Don't push yourself too hard.</Dialog>
           <Dialog>Worried about me？ Even though you're the one who gave it to me... Hehe.</Dialog>
           <Dialog>I see...</Dialog>
-          <Dialog>Give it to ● again？</Dialog>
+          <Dialog>Give it to me again？</Dialog>
           <Dialog>I'm sorry</Dialog>
         </Dialogs>
       </SDL2>
@@ -1209,10 +1209,10 @@
           <Dialog>How are you feeling？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Not good, obviously... Just kidding. A day of sleep and I'll be fine in no time.</Dialog>
-          <Dialog>I hope so... Did ● give you that cold？</Dialog>
+          <Dialog>I hope so... Did I end up giving you that cold？</Dialog>
           <Dialog>Don't flatter yourself. Well... it probably is your cold, though.</Dialog>
           <Dialog>Yeah, true.</Dialog>
-          <Dialog>Pass it back to ●？</Dialog>
+          <Dialog>Want to give it back to me？</Dialog>
           <Dialog>I feel bad about that...</Dialog>
         </Dialogs>
       </SDL2>
@@ -1271,10 +1271,10 @@
           <Dialog>Not feeling well？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Not great, but I think I'll be fine if I rest for a day.</Dialog>
-          <Dialog>Take it easy and get plenty of rest. ● might've given you that cold, after all...</Dialog>
+          <Dialog>Take it easy and get some rest. I might be the one who gave you that cold...</Dialog>
           <Dialog>You think...？ If it's your cold, I might actually be kind of glad.</Dialog>
           <Dialog>Sorry.</Dialog>
-          <Dialog>Give it back to ●？</Dialog>
+          <Dialog>Want to pass it to me again？</Dialog>
           <Dialog>I should've been more careful.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1300,7 +1300,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Want to give it to ● again？ Maybe you'll get better faster.</Dialog>
+          <Dialog>Want to give it to me again？ You might get better faster that way.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>No way. If you catch a cold, nursing you back to health would be a pain.</Dialog>
         </Dialogs>
@@ -1327,7 +1327,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Want to pass it back to ●？ Don't hold back on my account.</Dialog>
+          <Dialog>Want to give it back to me？ You don't have to hold back.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Idiot. If I did that, I'd end up having to take care of you.</Dialog>
         </Dialogs>
@@ -1354,7 +1354,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Want to give it back to ●？ I'll take full responsibility and take it off your hands.</Dialog>
+          <Dialog>Want to pass it to me again？ I'll take responsibility and take it off your hands.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Hehe... That's sweet, but then we'd never be able to go on a date.</Dialog>
         </Dialogs>
@@ -1381,7 +1381,7 @@
         </Unknown>
         <Dialogs>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>I'm sorry. ● should've been more careful.</Dialog>
+          <Dialog>I'm sorry. I should've been more careful.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>You're worrying too much. I'll be back on my feet in no time.</Dialog>
         </Dialogs>
@@ -1645,7 +1645,7 @@
           <Dialog>Did you get over your cold？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yeah, I'm fine now! Sorry for making you worry.</Dialog>
-          <Dialog>● should be the one apologizing, since I didn't even come visit you... Sorry.</Dialog>
+          <Dialog>I'm the one who should apologize. I didn't even come check on you while you were sick... I'm sorry.</Dialog>
           <Dialog>It's fine. If you'd come over, my heart would've been racing too much to get any rest anyway.</Dialog>
           <Dialog>(...I still feel pretty bad about it.)</Dialog>
         </Dialogs>
@@ -1734,7 +1734,7 @@
           <Dialog>Are you over your cold already？</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Yeah. I think it cleared up faster than I expected.</Dialog>
-          <Dialog>Guess the kiss ● gave you worked.</Dialog>
+          <Dialog>Guess my kiss did the trick.</Dialog>
           <Dialog>Idiot! ...I can't believe you can just say stuff like that with a straight face.</Dialog>
         </Dialogs>
       </SDL2>
@@ -2348,9 +2348,9 @@ my turn.</Dialog>
           <Dialog>Kobayakawa</Dialog>
           <Dialog>Will that do？</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>● should be fine now.
-I just hope you don't catch
-it, ▲小早川＊▲.</Dialog>
+          <Dialog>I'm all good on my end.
+Now I just hope you don't
+catch it, ▲小早川＊▲.</Dialog>
           <Dialog>I wouldn't mind catching it.
 You'd be extra nice to me,
 wouldn't you？</Dialog>

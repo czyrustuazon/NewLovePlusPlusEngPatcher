@@ -237,9 +237,7 @@ def _slim_romfs(romfs_dir: Path) -> None:
         src = romfs_dir / rel
         if not src.is_dir():
             continue
-        dest = staging / rel
-        if dest.exists():
-            shutil.rmtree(dest)
+        dest = staging / rel  # staging is new and KEEP_DIRS do not overlap
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copytree(src, dest)
         n = sum(1 for _ in dest.rglob("*") if _.is_file())

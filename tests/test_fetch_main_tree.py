@@ -249,6 +249,37 @@ def test_current_when_stamp_and_files_match(patcher_root: Path, monkeypatch):
     assert "already at" in msg
 
 
+def test_batch_files_land_with_crlf(patcher_root: Path, monkeypatch):
+    """An LF-only bat makes cmd.exe run line fragments ('nstall' is not recognized)."""
+    monkeypatch.delenv("NLPP_SKIP_SOURCE_FETCH", raising=False)
+    files = {
+        "Drop CIA or 3DS Here to Patch.bat": b"@echo off\ngoto :x\r\n:x\necho ok\n",
+        "ab_test/Run Safety Checks.CMD": b"@echo off\n",
+        "src/drop_zone.ps1": b"# lf stays\n",
+    }
+    assert _sync(patcher_root, files, "crlf000000000001")[0] == "updated"
+
+    bat = (patcher_root / "Drop CIA or 3DS Here to Patch.bat").read_bytes()
+    assert bat == b"@echo off\r\ngoto :x\r\n:x\r\necho ok\r\n"
+    assert (patcher_root / "ab_test" / "Run Safety Checks.CMD").read_bytes() == b"@echo off\r\n"
+    assert (patcher_root / "src" / "drop_zone.ps1").read_bytes() == b"# lf stays\n"
+
+    # The manifest hashes what was written, so the converted bat is not drift.
+    assert _sync(patcher_root, files, "crlf000000000001")[0] == "current"
+
+
+def test_gitattributes_ships_batch_files_as_crlf():
+    """GitHub zip downloads honor ``eol=crlf``; without it the bat ships LF."""
+    root = Path(fetch_mod.__file__).resolve().parents[1]
+    rules = {
+        ln.split()[0]: ln.split()[1:]
+        for ln in (root / ".gitattributes").read_text(encoding="utf-8").splitlines()
+        if ln.strip() and not ln.startswith("#")
+    }
+    for pat in ("*.bat", "*.cmd"):
+        assert "eol=crlf" in rules.get(pat, []), pat
+
+
 def test_prunes_files_removed_from_main(patcher_root: Path, monkeypatch):
     monkeypatch.delenv("NLPP_SKIP_SOURCE_FETCH", raising=False)
     status, _ = _sync(

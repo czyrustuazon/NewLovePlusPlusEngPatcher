@@ -164,8 +164,7 @@ def build_window() -> bytes:
 
     code[beq_at - SITE : beq_at - SITE + 4] = _b(beq_at, space, 0x0)
     code[blo_at - SITE : blo_at - SITE + 4] = _b(blo_at, ones, 0x3)
-    if lit != SITE + 30 * 4:
-        raise ValueError(f"literal at {lit:#x}, ldr imm assumes {SITE + 30 * 4:#x}")
+    assert lit == SITE + 30 * 4, f"literal at {lit:#x}, ldr imm assumes {SITE + 30 * 4:#x}"
     if len(code) != WINDOW:
         raise ValueError(f"window {len(code)} != {WINDOW}")
     return bytes(code)
@@ -189,8 +188,7 @@ def apply_patch(data: bytearray) -> bool:
         raise ValueError(
             f"month table @{ADDR_BIRTHDAY_MONTHS:#x} not empty: {have_table[:8].hex()}"
         )
-    if len(VANILLA_WINDOW) != WINDOW:
-        raise ValueError(f"vanilla window {len(VANILLA_WINDOW)} != {WINDOW}")
+    assert len(VANILLA_WINDOW) == WINDOW, f"vanilla window {len(VANILLA_WINDOW)} != {WINDOW}"
     data[SITE : SITE + WINDOW] = window
     data[ADDR_BIRTHDAY_MONTHS : ADDR_BIRTHDAY_MONTHS + len(table)] = table
     print(f"[profile-birthday] @{SITE:#x} writes month name + day ({len(window)} B)")

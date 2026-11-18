@@ -44,16 +44,23 @@ def script_dialogs(path: Path) -> list[str]:
     return [_unescape_dialog(match.group(1)) for match in DIALOG_RE.finditer(text)]
 
 
-def sms_map(path: Path) -> dict[str, str]:
+def sms_entries(path: Path) -> list[tuple[str, str]]:
+    """Gemini SMS in MDC record order.
+
+    The ``hex`` attribute is a category key, not a record id. Manaka alone
+    repeats ``FFFFC6FDFFFFFF01`` on 16 different messages. Matching on the key
+    keeps only the last of those lines. The game and ``mdcutil`` install by
+    position, so the workbench index is the record number and the key is only
+    a check.
+    """
     tree = ET.parse(path)
-    out: dict[str, str] = {}
+    out: list[tuple[str, str]] = []
     for entry in tree.getroot().findall("Entry"):
         node = entry.find("JapaneseText")
         if node is None:
+            out.append(("", ""))
             continue
-        hex_key = (node.get("hex") or "").lower()
-        if hex_key:
-            out[hex_key] = node.text or ""
+        out.append(((node.get("hex") or "").lower(), node.text or ""))
     return out
 
 
@@ -76,18 +83,34 @@ def _dump(data: dict) -> str:
     return raw.replace("<", "\\u003c")
 
 
+def patcher_gemini_dialogs(xml_dir: Path, stem: str) -> list[str] | None:
+    """Dialogs Drop injects for this stem.
+
+    ``dbin2/script`` is the file the patcher ships. The XML is the authoring
+    copy and can lag that file. Fall back to the XML when no script pack exists.
+    """
+    dbin = xml_dir.parent / "dbin2" / "script" / f"{stem}.dbin2"
+    if dbin.is_file():
+        from ingest_pack import _dbin_dialogs
+
+        return _dbin_dialogs(dbin)
+    path = xml_dir / f"{stem}.xml"
+    if path.is_file():
+        return script_dialogs(path)
+    return None
+
+
 def attach_scripts(data: dict, xml_dir: Path) -> dict[str, int]:
     attached = skipped = 0
     for item in data.get("items") or []:
         if item.get("kind") != "script":
             continue
         baseline = item.get("baseline_dialogs")
-        path = xml_dir / f"{item.get('stem')}.xml"
-        if not isinstance(baseline, list) or not path.is_file():
+        gemini = patcher_gemini_dialogs(xml_dir, str(item.get("stem") or ""))
+        if not isinstance(baseline, list) or gemini is None:
             item.pop("gemini_dialogs", None)
             skipped += 1
             continue
-        gemini = script_dialogs(path)
         if len(gemini) != len(baseline):
             item.pop("gemini_dialogs", None)
             skipped += 1
@@ -102,8 +125,8 @@ def attach_scripts(data: dict, xml_dir: Path) -> dict[str, int]:
 
 
 def attach_sms(data: dict, sms_dir: Path) -> dict[str, int]:
-    maps = {
-        heroine: sms_map(sms_dir / name)
+    lists = {
+        heroine: sms_entries(sms_dir / name)
         for heroine, name in SMS_FILES.items()
         if (sms_dir / name).is_file()
     }
@@ -111,9 +134,17 @@ def attach_sms(data: dict, sms_dir: Path) -> dict[str, int]:
     for item in data.get("items") or []:
         if item.get("kind") != "sms":
             continue
+        rows = lists.get(item.get("heroine"))
+        try:
+            index = int(item.get("index"))
+        except (TypeError, ValueError):
+            index = -1
         key = str(item.get("key") or "").lower().removeprefix("0x")
-        gemini = maps.get(item.get("heroine"), {}).get(key)
-        if gemini is None:
+        if rows is None or index < 0 or index >= len(rows):
+            item.pop("gemini", None)
+            continue
+        hex_key, gemini = rows[index]
+        if not hex_key or key != hex_key:
             item.pop("gemini", None)
             continue
         item["gemini"] = gemini

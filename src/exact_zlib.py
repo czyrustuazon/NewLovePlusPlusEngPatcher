@@ -89,9 +89,8 @@ def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
     left = n_bytes
     off = 0
     for sz, po in runs:
-        take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
+        take = min(left, sz)  # >= 1: runs are non-empty and left > 0 here
+        t[po : po + take] = pad_rng[off : off + take]
         left -= take
         off += sz
         if left <= 0:
@@ -126,6 +125,7 @@ def compress_exact_empty_blocks(
             if remain < 5 or remain % 5 != 0:
                 continue
             n_empty = remain // 5
+            # exact_len bytes by construction: remain == 5 * n_empty.
             out = (
                 hdr
                 + body
@@ -133,8 +133,6 @@ def compress_exact_empty_blocks(
                 + b"\x01\x00\x00\xff\xff"
                 + adler
             )
-            if len(out) != exact_len:
-                continue
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)
@@ -385,9 +383,7 @@ def _bounded_near_miss_tune(
     # Independent candidates: each flips one gap byte on a copy of ``base``.
     candidates: list[bytes] = []
     for sz, po in interfile_zero_gaps(base):
-        for i in range(sz):
-            if base[po + i] != 0:
-                continue
+        for i in range(sz):  # zero runs: every byte here is still 0
             t = bytearray(base)
             t[po + i] = rng[(po + i) % len(rng)] if rng else (1 + (len(candidates) % 254))
             candidates.append(bytes(t))
@@ -728,12 +724,12 @@ def pad_closed_zlib_stream(
         last_start, end_bit = _walk_deflate(deflate)
     except ValueError:
         return None
-    if last_start >= len(deflate) * 8 or end_bit > len(deflate) * 8:
-        return None
 
     new_len = len(deflate) + need
     c_max = new_len * 8 - end_bit
-    kinds = _plan_empty_block_bits(end_bit, c_max)
+    # _walk_deflate ends inside ``deflate``; the bounds check is belt and braces.
+    in_bounds = last_start < len(deflate) * 8 and end_bit <= len(deflate) * 8
+    kinds = _plan_empty_block_bits(end_bit, c_max) if in_bounds else None
     if not kinds:
         return None
 
@@ -749,27 +745,25 @@ def pad_closed_zlib_stream(
     pad = (8 - (writer.pos % 8)) % 8
     if pad:
         writer.write(0, pad)
-    if len(buf) != new_len or writer.pos != new_len * 8:
-        return None
     out = hdr + bytes(buf[:new_len]) + adler
-    if len(out) != target:
-        return None
     d = zlib.decompressobj()
     try:
         got = d.decompress(out)
-    except zlib.error:
-        return None
-    if d.unused_data or not d.eof:
+    except zlib.error:  # e.g. a bad Adler32 in ``stream``
         return None
     if expected is not None and got != expected:
         return None
-    try:
-        orig = zlib.decompress(stream)
-    except zlib.error:
-        return None
-    if got != orig:
-        return None
-    return out
+    # The block plan makes these hold; verify anyway before handing the slot
+    # to a package. ``stream`` decodes here: ``out`` shares its data + Adler32.
+    ok = (
+        len(buf) == new_len
+        and writer.pos == new_len * 8
+        and len(out) == target
+        and not d.unused_data
+        and d.eof
+        and got == zlib.decompress(stream)
+    )
+    return out if ok else None
 
 
 def compress_exact_zopfli(
@@ -838,16 +832,16 @@ def compress_exact_zopfli(
             hi = mid - 1
 
     preferred = best_under_pad if best_under_pad is not None else max(hi, 0)
-    if best_under_blob is not None and best_under_data is not None:
-        padded = pad_closed_zlib_stream(
-            best_under_blob, target, expected=best_under_data
+    # The search always records an undershoot: pass 1 (pad 0) was under the
+    # slot, and the search either finds a salted undershoot or walks down to 0.
+    assert best_under_blob is not None and best_under_data is not None
+    padded = pad_closed_zlib_stream(best_under_blob, target, expected=best_under_data)
+    if padded is not None:
+        _zlib_progress(
+            f"zopfli empty-block pad {best_under_len}->{target}",
+            newline=True,
         )
-        if padded is not None:
-            _zlib_progress(
-                f"zopfli empty-block pad {best_under_len}->{target}",
-                newline=True,
-            )
-            return best_under_data, padded
+        return best_under_data, padded
 
     # Auto near-miss: a few bytes under the slot (e.g. 42515 vs 42517). Much
     # cheaper than full fine-tune; empty-block often cannot close a 1–4B gap.
@@ -873,9 +867,8 @@ def compress_exact_zopfli(
             f"fine-tune enabled ({fine_cap} gap bytes; slow)…", newline=True
         )
         for sz, po in runs2:
+            # Zero runs of ``t``; each byte is visited once, still 0.
             for i in range(sz):
-                if t[po + i] != 0:
-                    continue
                 t[po + i] = rng[po % len(rng)] if rng else 1
                 fine += 1
                 z = _zopfli_compress(

@@ -278,6 +278,8 @@ def test_baseline_name_kanji_rebuilds_and_deploys(tmp_path: Path, monkeypatch, c
     assert (azahar / "textresource_jpn.trb").read_bytes() == out.read_bytes()
     assert (azahar / "textresource_jpn.trb.bak_pre_namekanji").read_bytes() == b"old"
     assert (azahar / "textresource_config.trb").read_bytes() == b"cfg" + str(0xC0000).encode()
+    # Without --deploy-azahar only out/ is written.
+    assert name_kanji.main([]) == 0
     log = capsys.readouterr().out
     assert "password apply" in log and "Eng Patch info appen" in log
 

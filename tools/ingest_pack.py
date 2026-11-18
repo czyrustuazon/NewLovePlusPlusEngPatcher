@@ -14,8 +14,15 @@ files or onto ``rebuild_dbin2``. The merged script goes to
   python tools/ingest_pack.py path/to/nlpp-contrib.json --apply
 
 Nickname tokens (``▲…▲``, including an unclosed ``▲``) must keep the same
-multiset as the baseline. A drop in ``※`` or ``▼`` is rejected. A ``●`` count
-change is a warning. Circle and punctuation placeholders are locked.
+multiset as the baseline. A line that already equals the patcher file is not
+a new edit, so a token the patcher already changed does not fail the pack.
+A drop in ``※`` or ``▼`` on a line the volunteer changed is rejected. ``●`` is the
+player's "I" (shown as 俺/僕), so a translated line that still has it is a
+warning. Circle and punctuation placeholders are locked.
+
+A changed line wider than the game draws (30 columns of talk, 28 on a choice
+button, see ``dialog_wrap``) is a warning. Re-break those lines in the merged
+script before committing; ``tools/audit_dialog_width.py <stem>`` lists them.
 """
 from __future__ import annotations
 
@@ -36,6 +43,7 @@ if str(SRC) not in sys.path:
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
+from dialog_wrap import CHOICE_COLUMNS, TALK_COLUMNS, choice_dialogs, over_width  # noqa: E402
 from patch_names import build_dbin2, parse_dbin2  # noqa: E402
 from rebuild_dbin2_from_xml import entries_to_xml, xml_to_entries  # noqa: E402
 
@@ -164,7 +172,31 @@ def _dbin_paths(dbin_root: Path, stem: str) -> list[Path]:
     return found
 
 
-def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str], list[str]]:
+def _checked_proposed(
+    baseline: list[str], proposed: list[str], live: list[str] | None
+) -> list[str]:
+    """Lines that already match the patcher file are not a new token edit.
+
+    The workbench baseline stays the Japanese line. The shipped English may
+    already have moved a nickname token. Saving that shipped line again must
+    not fail the token check. A line the volunteer actually changed still does.
+    """
+    if live is None or len(live) != len(proposed):
+        return proposed
+    checked: list[str] = []
+    for old, new, cur in zip(baseline, proposed, live):
+        if new == cur and new != old:
+            checked.append(old)
+        else:
+            checked.append(new)
+    return checked
+
+
+def _validate_pair(
+    baseline: list[str],
+    proposed: list[str],
+    live: list[str] | None = None,
+) -> tuple[list[str], list[str]]:
     errors: list[str] = []
     warnings: list[str] = []
     if len(baseline) != len(proposed):
@@ -172,8 +204,9 @@ def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str],
             f"dialog count {len(proposed)} != baseline {len(baseline)}"
         )
         return errors, warnings
+    checked = _checked_proposed(baseline, proposed, live)
     base_tokens = _tokens(baseline)
-    new_tokens = _tokens(proposed)
+    new_tokens = _tokens(checked)
     if base_tokens != new_tokens:
         missing = base_tokens - new_tokens
         extra = new_tokens - base_tokens
@@ -184,16 +217,20 @@ def _validate_pair(baseline: list[str], proposed: list[str]) -> tuple[list[str],
         )
     for mark in ("※", "▼"):
         old = _mark_count(baseline, mark)
-        new = _mark_count(proposed, mark)
+        new = _mark_count(checked, mark)
         if new < old:
             errors.append(f"{mark} count dropped {old} -> {new}")
         elif new > old:
             warnings.append(f"{mark} count rose {old} -> {new}")
-    old_bullets = _mark_count(baseline, "●")
-    new_bullets = _mark_count(proposed, "●")
-    if old_bullets != new_bullets:
-        warnings.append(f"● count {old_bullets} -> {new_bullets}")
-    for index, (old, new) in enumerate(zip(baseline, proposed)):
+    # ● is the player's "I" (the game shows 俺/僕), so a translated line drops it.
+    kept = [
+        i
+        for i, (old, new) in enumerate(zip(baseline, checked))
+        if old != new and "●" in new
+    ]
+    if kept:
+        warnings.append(f"● left in translated line(s) {kept[:8]}: shows as 俺/僕; write I / me / my")
+    for index, (old, new) in enumerate(zip(baseline, checked)):
         if old != new and LOCKED_RE.fullmatch(old):
             errors.append(f"line {index} is a locked placeholder")
     return errors, warnings
@@ -252,6 +289,31 @@ def _note_mismatch(plan: ItemPlan, bad: list[Path], xml_used: Path | None) -> No
         )
 
 
+def _choice_lines(paths: list[Path]) -> set[int]:
+    """Flat dialog indexes the game shows as choice buttons (first readable dbin2)."""
+    for path in paths:
+        try:
+            _, _, entries = parse_dbin2(path.read_bytes())
+        except (OSError, ValueError):
+            continue
+        out: set[int] = set()
+        base = 0
+        for entry in entries:
+            out.update(base + i for i in choice_dialogs(entry.sdl2))
+            base += len(entry.sdl2.dialogs)
+        return out
+    return set()
+
+
+def _width_warnings(text: str, width: int) -> list[str]:
+    over = over_width(text, width)
+    if not over:
+        return []
+    kind = "choice" if width == CHOICE_COLUMNS else "talk"
+    cols = ", ".join(f"line {n} is {c}" for n, c in over)
+    return [f"too wide for {kind} ({width} columns): {cols}; re-break or shorten it"]
+
+
 def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: list[str], *, force: bool) -> None:
     if len(current) != len(baseline):
         plan.errors.append(
@@ -260,10 +322,18 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
         return
     plan.current = current
     plan.proposed = proposed
+    choices = _choice_lines(plan.dbin_paths or plan.shells)
+    wide: list[int] = []
     for index, (old, new, live) in enumerate(zip(baseline, proposed, current)):
         if old == new:
             continue
         warnings = _line_warnings(old, new)
+        width = CHOICE_COLUMNS if index in choices else TALK_COLUMNS
+        if new != live:
+            line_width = _width_warnings(new, width)
+            if line_width:
+                wide.append(index + 1)
+            warnings += line_width
         if live == new:
             action = "already"
         elif live == old or force or plan.separate:
@@ -275,6 +345,25 @@ def _decide(plan: ItemPlan, baseline: list[str], proposed: list[str], current: l
         plan.decisions.append(
             LineDecision(index, action, old, live, new, warnings)
         )
+    if wide:
+        plan.warnings.append(
+            f"{len(wide)} changed line(s) too wide for the game {wide[:8]}"
+            f"{' ...' if len(wide) > 8 else ''}: after --apply run "
+            f"tools/audit_dialog_width.py {plan.stem} and re-break them"
+        )
+
+
+def _reject_edits(
+    plan: ItemPlan, baseline: list[str], proposed: list[str], current: list[str]
+) -> bool:
+    """Record token and mark errors. True when the item must not be written."""
+    if len(current) == len(baseline):
+        errors, warnings = _validate_pair(baseline, proposed, live=current)
+    else:
+        errors, warnings = _validate_pair(baseline, proposed)
+    plan.errors.extend(errors)
+    plan.warnings.extend(warnings)
+    return bool(plan.errors)
 
 
 def plan_item(
@@ -308,10 +397,10 @@ def plan_item(
         plan.errors.append(str(exc))
         return plan
 
-    errors, warnings = _validate_pair(baseline, proposed)
-    plan.errors.extend(errors)
-    plan.warnings.extend(warnings)
-    if plan.errors:
+    if len(baseline) != len(proposed):
+        plan.errors.append(
+            f"dialog count {len(proposed)} != baseline {len(baseline)}"
+        )
         return plan
 
     xml_path = scripts_dir / f"{stem}.xml"
@@ -340,6 +429,8 @@ def plan_item(
             return plan
         if existing is not None:
             current, xml_used, match, bad = existing
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
             _note_mismatch(plan, bad, xml_used)
             if plan.errors:
                 return plan
@@ -352,6 +443,8 @@ def plan_item(
                 )
                 return plan
             current, xml_used, match, bad = branched
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
             _note_mismatch(plan, bad, xml_used)
             if plan.errors:
                 return plan
@@ -364,9 +457,8 @@ def plan_item(
                 return plan
             plan.shells = match
             plan.source_xml = xml_used if not match else None
-            if not match and xml_used is None:
-                plan.errors.append(f"no {stem} dialog shell to copy")
-                return plan
+            # Without an XML, the dialogs came from a dbin2, which matches itself.
+            assert match or xml_used is not None, f"no {stem} dialog shell to copy"
     else:
         plan.dest_scripts = scripts_dir
         plan.dest_dbin_root = dbin_root
@@ -377,11 +469,15 @@ def plan_item(
             except IngestError as exc:
                 plan.errors.append(str(exc))
                 return plan
+            if _reject_edits(plan, baseline, proposed, current):
+                return plan
         elif dbins:
             try:
                 current = _dbin_dialogs(dbins[0])
             except IngestError as exc:
                 plan.errors.append(str(exc))
+                return plan
+            if _reject_edits(plan, baseline, proposed, current):
                 return plan
         else:
             plan.errors.append(f"no {xml_path.name} and no {stem}.dbin2 under {dbin_root}")

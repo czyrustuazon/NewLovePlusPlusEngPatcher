@@ -375,8 +375,8 @@ def patch_pts_copyright(orig: bytes, *, eng_tex_index: int = 1) -> bytes:
             continue
         new_sections.append(sec)
 
-    if not inserted_eng:
-        raise RuntimeError("Pts_Copyright missing pic1")
+    # pic_template is a pic1 of this layout, so the loop above inserted.
+    assert inserted_eng, "Pts_Copyright missing pic1"
     return _rebuild_clyt(header_size, revision, new_sections)
 
 

@@ -295,16 +295,11 @@ def patch_header_arc(vanilla_arc: bytes, tmp: Path, *, slot_len: int = 0) -> byt
         if z <= budget:
             print(f"OK header Profile (hard={hard} salt={salt})", flush=True)
             return patched
+    # Every trial overshot (a fit returns above).
     assert best is not None
-    if best[0] > budget:
-        raise SystemExit(
-            f"header zopfli {best[0]} still exceeds slot {budget} (hard={best[2]})"
-        )
-    print(
-        f"OK header Profile best hard={best[2]} salt={best[3]} z={best[0]}",
-        flush=True,
+    raise SystemExit(
+        f"header zopfli {best[0]} still exceeds slot {budget} (hard={best[2]})"
     )
-    return best[1]
 
 
 # ---- RGB565 atlas (hard ink, no soft outline) --------------------------------
@@ -613,8 +608,7 @@ def apply_gap_pad(data: bytes, n_bytes: int, pad_rng: bytes) -> bytes:
     off = 0
     for sz, po in runs:
         take = min(left, sz)
-        if take:
-            t[po : po + take] = pad_rng[off : off + take]
+        t[po : po + take] = pad_rng[off : off + take]
         left -= take
         off += sz
         if left <= 0:
@@ -638,8 +632,6 @@ def compress_exact_empty_blocks(data: bytes, exact_len: int) -> bytes | None:
             extras = b"\x00\x00\x00\xff\xff" * (n_empty - 1)
             final = b"\x01\x00\x00\xff\xff"
             out = hdr + body + extras + final + adler
-            if len(out) != exact_len:
-                continue
             d = zlib.decompressobj()
             try:
                 got = d.decompress(out)

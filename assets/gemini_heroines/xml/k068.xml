@@ -122,7 +122,7 @@
           <Dialog>Yeah. For the regulars who come in a lot, I try to drop a hint and remind them, but...</Dialog>
           <Dialog>I see. At this rate, we're just going to keep losing books.</Dialog>
           <Dialog>Right! There's nothing more disappointing than going to borrow a book you want and finding out it's not there.</Dialog>
-          <Dialog>All right, ● will try to think of something we can do too.</Dialog>
+          <Dialog>Alright, I'll try to think of something we can do, too.</Dialog>
           <Dialog>Yeah. Thanks.</Dialog>
         </Dialogs>
       </SDL2>
@@ -363,7 +363,7 @@
           <Dialog>Yeah. But there's just no end to it.</Dialog>
           <Dialog>A lot of them probably forgot they even borrowed a book in the first place.</Dialog>
           <Dialog>They don't seem to realize that library books belong to everyone.</Dialog>
-          <Dialog>Well, to be fair, ● once borrowed a book and completely forgot about it too...</Dialog>
+          <Dialog>Well, I say that, but I once borrowed a book and completely forgot about it for ages...</Dialog>
           <Dialog>Ow.</Dialog>
           <Dialog>You're disqualified from the library committee.</Dialog>
           <Dialog>Then how about putting up posters or something as a reminder？ If the whole school sees them, some people should remember they still have books out, right？</Dialog>
@@ -492,7 +492,7 @@
           <Dialog>Hey, remember how you suggested making posters the other day？</Dialog>
           <Dialog>I talked it over with the upperclassmen, and we put up some simple ones in the hallway for now.</Dialog>
           <Dialog>○○○○○○○○</Dialog>
-          <Dialog>Yeah, ● saw it too. The one right by the library entrance, right？</Dialog>
+          <Dialog>Yeah, I saw them. The ones posted right by the library entrance, right？</Dialog>
           <Dialog>Right there.</Dialog>
           <Dialog>So, is it working...？</Dialog>
           <Dialog>Actually, it seems like even just that is making a big difference.</Dialog>
@@ -738,7 +738,7 @@
           <Dialog>Right？ Apparently they're going to her house after school soon to bake together.</Dialog>
           <Dialog>Apparently？ So you're not going, ▲小早川＊▲.</Dialog>
           <Dialog>...Yeah. That's just not really my thing, you know？</Dialog>
-          <Dialog>That's a shame. ● really wanted to try your cookies, ▲小早川＊▲.</Dialog>
+          <Dialog>That's a shame. I really wanted to try cookies you made, ▲小早川＊▲.</Dialog>
           <Dialog>...Oh. Okay.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1534,7 +1534,7 @@
           <Dialog>German literature, huh... What's that one about again？</Dialog>
           <Dialog>It's about a young man who falls into despair over his unrequited first love.</Dialog>
           <Dialog>I'll lend it to you when I'm done.</Dialog>
-          <Dialog>...●'d rather not fall into despair, though.</Dialog>
+          <Dialog>...I'd really rather not fall into despair, though.</Dialog>
         </Dialogs>
       </SDL2>
     </Entry>
@@ -1752,7 +1752,7 @@
           <Dialog>What if... I fell so deep into despair that I got sick of everything？ What would you do...？</Dialog>
           <Dialog>There's no way you'd fall into despair.</Dialog>
           <Dialog>You don't know that.</Dialog>
-          <Dialog>● promised to be on your side to the very end, remember？ You won't fall into despair.</Dialog>
+          <Dialog>I told you I'm on your side till the very end, didn't I？ You won't fall into despair.</Dialog>
           <Dialog>Quit trying to act cool... Hehe.</Dialog>
         </Dialogs>
       </SDL2>
@@ -1885,7 +1885,7 @@
           <Dialog>If you're curious, read it yourself.</Dialog>
           <Dialog>...Sounds like a tough read, though. Having to sit through endless tragedy sounds rough, too.</Dialog>
           <Dialog>The story uses that tragedy to ask the philosophical question of how to live.</Dialog>
-          <Dialog>Hmm. ● hope to go my whole life without ever understanding a philosophy like that.</Dialog>
+          <Dialog>Hmm. That's one philosophy I'd rather go my whole life without understanding.</Dialog>
           <Dialog>Well, normally, yeah. Nobody chooses to live a tragic life...</Dialog>
           <Dialog>Right, right. Love is way more fun and fulfilling when it actually works out.</Dialog>
           <Dialog>...What are you grinning to yourself about？ Idiot.</Dialog>
@@ -2791,8 +2791,7 @@
           <Dialog>A reading session？ Like everyone getting together to read books？</Dialog>
           <Dialog>Not quite. We're volunteering
 to read books to preschoolers.</Dialog>
-          <Dialog>● and the guys haven't
-heard about that, though？</Dialog>
+          <Dialog>Nobody told us about that？</Dialog>
           <Dialog>Yeah. It's just the girls
 for now.</Dialog>
           <Dialog>Huh. I didn't think you'd take

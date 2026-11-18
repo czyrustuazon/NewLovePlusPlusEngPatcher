@@ -178,7 +178,32 @@ def test_token_drop_and_locked_line_and_mark_drop_reject(tmp_path: Path, capsys)
     assert "nothing written" in out
 
 
-def test_bullet_change_warns_and_still_applies(tmp_path: Path, capsys):
+def test_a_line_the_patcher_already_ships_keeps_its_tokens(tmp_path: Path, capsys):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    shipped = ["○○○○○○○○", "Hello ▲Anegasaki＊▲", "stay & put"]
+    ingest._write_xml_dialogs(xml, shipped)
+    key, unknown, entries = rebuild.xml_to_entries(xml)
+    dbin = dbin_root / "script" / "p001.dbin2"
+    dbin.write_bytes(rebuild.build_dbin2(key, unknown, entries))
+    before = dbin.read_bytes()
+    pack = _write_pack(tmp_path, _pack(BASE, shipped))
+    code = ingest.main(
+        [str(pack), "--apply", "--scripts", str(scripts), "--dbin-root", str(dbin_root)]
+    )
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "token" not in out
+    assert dbin.read_bytes() == before
+
+    edited = ["○○○○○○○○", "Hello", "stay & put"]
+    pack = _write_pack(tmp_path, _pack(BASE, edited))
+    assert ingest.main(
+        [str(pack), "--apply", "--scripts", str(scripts), "--dbin-root", str(dbin_root)]
+    ) == 1
+    assert dbin.read_bytes() == before
+
+
+def test_pronoun_translated_away_applies_without_a_warning(tmp_path: Path, capsys):
     scripts, dbin_root, _xml = _layout(tmp_path)
     dialogs = ["○○○○○○○○", "Hello ▲苗字▲", "stay & put"]
     pack = _write_pack(tmp_path, _pack(BASE, dialogs))
@@ -187,8 +212,14 @@ def test_bullet_change_warns_and_still_applies(tmp_path: Path, capsys):
     )
     out = capsys.readouterr().out
     assert code == 0
-    assert "● count 1 -> 0" in out
+    assert "●" not in out
     assert ingest._dbin_dialogs(dbin_root / "script" / "p001.dbin2")[1] == "Hello ▲苗字▲"
+
+
+def test_pronoun_left_in_a_translated_line_warns():
+    errors, warnings = ingest._validate_pair(BASE, ["○○○○○○○○", "Hello ●▲苗字▲", "stay & put"])
+    assert not errors
+    assert warnings == ["● left in translated line(s) [1]: shows as 俺/僕; write I / me / my"]
 
 
 def test_dbin_only_stem_gains_an_xml_source(tmp_path: Path):
@@ -334,3 +365,76 @@ def test_gemini_proofread_applies_onto_the_machine_pass(tmp_path: Path, capsys):
     assert merged[1] == "Hi ●▲苗字▲"
     assert merged[2] == "stay & put"
     assert xml.read_bytes() == machine_xml.encode("utf-8")
+
+
+DROPS_TOKEN = ["○○○○○○○○", "Hello", "stay & put"]
+
+
+def _plan_edit(
+    tmp_path: Path, scripts: Path, dbin_root: Path, dialogs: list[str], *, machine: bool = False
+):
+    gemini = tmp_path / "gemini"
+    gemini.mkdir(exist_ok=True)
+    (gemini / "stems.json").write_text(
+        json.dumps({"stems": ["p001"] if machine else []}), encoding="utf-8"
+    )
+    return ingest.plan_item(
+        _pack(BASE, dialogs)["items"][0],
+        scripts_dir=scripts,
+        dbin_root=dbin_root,
+        force=False,
+        contrib_root=tmp_path / "script_contrib",
+        gemini_root=gemini,
+    )
+
+
+def test_a_pack_with_the_wrong_line_count_is_rejected(tmp_path: Path):
+    scripts, dbin_root, _xml = _layout(tmp_path)
+    plan = _plan_edit(tmp_path, scripts, dbin_root, BASE[:2])
+    assert plan.errors == ["dialog count 2 != baseline 3"]
+
+
+def test_a_token_drop_is_rejected_on_a_dbin_only_stem(tmp_path: Path):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    xml.unlink()
+    assert _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN).errors
+
+
+def test_a_token_drop_is_rejected_on_a_new_contributor_file(tmp_path: Path):
+    scripts, dbin_root, _xml = _layout(tmp_path)
+    plan = _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN, machine=True)
+    assert plan.separate and plan.errors
+    assert not (tmp_path / "script_contrib").exists()
+
+
+def test_a_token_drop_is_rejected_on_an_existing_contributor_file(tmp_path: Path):
+    scripts, dbin_root, xml = _layout(tmp_path)
+    contrib = tmp_path / "script_contrib" / "xml" / "p001.xml"
+    contrib.parent.mkdir(parents=True)
+    contrib.write_bytes(xml.read_bytes())
+    before = contrib.read_bytes()
+    plan = _plan_edit(tmp_path, scripts, dbin_root, DROPS_TOKEN, machine=True)
+    assert plan.separate and plan.errors
+    assert contrib.read_bytes() == before
+
+
+def test_a_changed_line_too_wide_for_the_talk_window_is_flagged(tmp_path: Path, capsys):
+    scripts, dbin_root, _ = _layout(tmp_path)
+    wide = "Stay right there and put it down on the table."
+    pack = _write_pack(tmp_path, _pack(BASE, ["○○○○○○○○", BASE[1], wide]))
+    code = ingest.main([str(pack), "--scripts", str(scripts), "--dbin-root", str(dbin_root)])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert "too wide for talk (30 columns): line 1 is 46" in out
+    assert "audit_dialog_width.py p001" in out
+
+    fits = "Stay right there and put it\ndown on the table."
+    pack = _write_pack(tmp_path, _pack(BASE, ["○○○○○○○○", BASE[1], fits]))
+    ingest.main([str(pack), "--scripts", str(scripts), "--dbin-root", str(dbin_root)])
+    assert "too wide" not in capsys.readouterr().out
+
+
+def test_choice_lines_skip_a_pack_that_cannot_be_read(tmp_path: Path):
+    bad = tmp_path / "bad.dbin2"
+    bad.write_bytes(b"not a script")
+    assert ingest._choice_lines([tmp_path / "missing.dbin2", bad]) == set()

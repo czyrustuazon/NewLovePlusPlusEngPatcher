@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from bclimutil import parse_bclim  # noqa: E402
-from image_map import IMAGE_MAP, normalize_folder_key, resolve_folder  # noqa: E402
+from image_map import normalize_folder_key, resolve_folder  # noqa: E402
 from pack_images import ASSETS_IMAGES, prefer_asset_folders  # noqa: E402
 
 NLPPCTR_TEX_API = (
@@ -204,12 +204,10 @@ def iter_asset_pngs() -> list[tuple[Path, str, str]]:
             folder_key = normalize_folder_key(parts[0])
         else:
             continue
-        if resolve_folder(folder_key) is None and folder_key not in IMAGE_MAP:
-            # Allow Title/, Option/ etc. under Images-Done/<ArcName>/
-            if len(parts) >= 2:
-                folder_key = normalize_folder_key(parts[1])
-            if resolve_folder(folder_key) is None:
-                continue
+        # Title/, Option/ etc. under Images-Done/<ArcName>/ resolve here too:
+        # resolve_folder normalizes (case, .check / .arc) itself.
+        if resolve_folder(folder_key) is None:
+            continue
         add_png(extra, folder_key)
 
     return out
