@@ -381,9 +381,9 @@
     },
     {
       "path": "TownGuide.check/timg/Mag_Tit08_Logo1.png",
-      "blob": "7d3cedbd765d95e837e3f4c230102cdb89b5369c",
-      "commit": "1082419",
-      "reason": "Fitted onto its BCLIM canvas / re-encoded so the gold bake ships it (Zhoumaru size or format did not fit)."
+      "blob": "ca4a1cd1e6aca19a897c75a4543d523bf775bdd1",
+      "commit": "rinko-review 2026-11-19",
+      "reason": "Redrawn from vanilla (work/render_magazine_titles.py): Zhoumaru master and its 1082419 fit had an opaque black box, garbled kanji tiles and lost \"Sur\"/\"En\" (\"vey notice / tries open\")."
     },
     {
       "path": "Web.check/timg/Web_Pnl_Wea.png",
