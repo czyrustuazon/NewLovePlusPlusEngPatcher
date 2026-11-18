@@ -94,6 +94,7 @@ IMAGE_MAP: dict[str, tuple[int, str]] = {
     "tutorialimg008": (5278, "TutorialImg008.arc"),
     "tutorialimg012": (5283, "TutorialImg012.arc"),
     "tutorialimg014": (5285, "TutorialImg014.arc"),
+    "tutorialimg016": (5287, "TutorialImg016.arc"),
     "tutorialimg017": (5288, "TutorialImg017.arc"),
     "tutorialimg025": (5297, "TutorialImg025.arc"),
     "tutorialimg031": (5303, "TutorialImg031.arc"),
