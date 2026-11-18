@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DBIN2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Key="532815585" Unknown="5">
+  <Entries>
+    <Entry Unknown0="3093158360" Unknown1="2092627867">
+      <SDL2 Key="2616717149">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>70034</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>84863</Value0>
+                <Value1>500</Value1>
+              </Entry>
+              <Entry>
+                <Value0>70035</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>This game runs in sync
+with your DS system clock.
+So, you have to make sure
+it's set right before
+you start playing.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="4181078295" Unknown1="1418868340">
+      <SDL2 Key="3410438072">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>70036</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>If the time is off,
+turn the power off and
+fix your DS system clock,
+okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3490640112" Unknown1="802230092">
+      <SDL2 Key="3410438072">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>70037</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>84863</Value0>
+                <Value1>500</Value1>
+              </Entry>
+              <Entry>
+                <Value0>70038</Value0>
+                <Value1>500</Value1>
+              </Entry>
+              <Entry>
+                <Value0>84863</Value0>
+                <Value1>500</Value1>
+              </Entry>
+              <Entry>
+                <Value0>70039</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Got it. Then, set the
+game time to match
+your daily schedule.
+No lying, okay？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="2823670216" Unknown1="1873471371">
+      <SDL2 Key="3410438072">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>70040</Value0>
+                <Value1>0</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Are you sure this
+is right？</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+    <Entry Unknown0="3911590151" Unknown1="1099048548">
+      <SDL2 Key="3410438072">
+        <Unknown>
+          <Entry>
+            <Values>
+              <Entry>
+                <Value0>70041</Value0>
+                <Value1>0</Value1>
+              </Entry>
+              <Entry>
+                <Value0>70042</Value0>
+                <Value1>500</Value1>
+              </Entry>
+            </Values>
+            <Value0>147456</Value0>
+            <Value1>65536</Value1>
+          </Entry>
+        </Unknown>
+        <Dialogs>
+          <Dialog>Anegasaki</Dialog>
+          <Dialog>Yep, that's all of it.
+Good job.</Dialog>
+        </Dialogs>
+      </SDL2>
+    </Entry>
+  </Entries>
+</DBIN2>
