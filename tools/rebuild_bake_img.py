@@ -117,6 +117,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_web_event_date_en.py",  # 5316 event-card date is MM/DD plus a smaller Update
     "deploy_camera_filters_en.py",  # 5322-5326 camera buttons + filter names (overflow pack_images' slots)
     "deploy_voice_keywords_en.py",  # 4073 Love Plus mode voice-hint bubbles in romaji
+    "deploy_trip_keywords_en.py",  # 5398/5438 trip-mode voice-hint bubbles in romaji
     "deploy_trip_mes_en.py",  # 5792 trip date-picker message box (raw ETC1A4 TEX)
     "deploy_cesa_en.py",
 ]
