@@ -120,6 +120,7 @@ DEPLOY_SCRIPTS: list[str] = [
     "deploy_trip_keywords_en.py",  # 5398/5438 trip-mode voice-hint bubbles in romaji
     "deploy_trip_mes_en.py",  # 5792 trip date-picker message box (raw ETC1A4 TEX)
     "deploy_shop_titles_en.py",  # 5789 shop / restaurant title bars (raw ETC1A4 TEX)
+    "deploy_photo_contest_en.py",  # 4090/4091 photo contest buttons + backgrounds (raw RGBA4 / RGB8 TEX)
     "deploy_cesa_en.py",
 ]
 
