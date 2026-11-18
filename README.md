@@ -1,5 +1,15 @@
 # New Love Plus+ English Patch (2026)
 
+> **About this fork.** This is our best attempt at a comprehensive New Love Plus+ translation. It is a fork of [czyrustuazon/NewLovePlusPlusEngPatcher](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher), with the scripts reviewed and edited line by line against the Japanese by Claude Opus 5.5, plus a set of additional translation and display fixes:
+>
+> - Every Rinko, Manaka and Nene script and all 55 shared scripts reviewed and corrected.
+> - Consistent place names and currency ("Riches") across the scripts and system text.
+> - Popups that no longer overflow their boxes, and lines that fit the 30-column text box.
+> - The quit-without-saving voice checks prompt the Japanese phrase in romaji, with its English meaning. Speaking the romaji as printed is accepted in-game.
+> - The trip date-picker message and the outing SET icon translated.
+>
+> It should be a solid, complete, playable experience in its own right. The review hasn't been human-proofread yet, so please report anything that reads wrong. For the original project, its contributors and its own releases, see the [original repository](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher).
+
 One-click English patcher for **New Love Plus+** (New Love Plus Plus) on the Nintendo 3DS. This is the current patch. The 2017 [NLPPATCH](https://github.com/LovePlusProject/NLPPATCH) repo is the old 28% release, not this build.
 
 Project site: [New Love Plus+ English patch](https://newloveplus.loc.moe)
