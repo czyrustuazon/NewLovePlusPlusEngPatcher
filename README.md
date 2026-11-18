@@ -1,6 +1,6 @@
 # New Love Plus+ English Patch (2026)
 
-> **About this fork.** This is our best attempt at a comprehensive New Love Plus+ translation. It is a fork of [czyrustuazon/NewLovePlusPlusEngPatcher](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher), with the scripts reviewed and edited line by line against the Japanese by Claude Opus 5.5, plus a set of additional translation and display fixes:
+> **About this fork.** This is my best attempt at a comprehensive New Love Plus+ translation. It is a fork of [czyrustuazon/NewLovePlusPlusEngPatcher](https://github.com/czyrustuazon/NewLovePlusPlusEngPatcher), with the scripts reviewed and edited line by line against the Japanese by Claude Opus 5.5, plus a set of additional translation and display fixes:
 >
 > - Every Rinko, Manaka and Nene script and all 55 shared scripts reviewed and corrected.
 > - Consistent place names and currency ("Riches") across the scripts and system text.
