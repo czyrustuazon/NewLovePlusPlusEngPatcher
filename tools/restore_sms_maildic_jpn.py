@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Restore Japanese SMS maildic (package 92) from vanilla img.bin.
+"""Restore Japanese SMS maildic and worddic (package 92) from vanilla img.bin.
 
 Use after removing English SMS translation to audit nickname placeholders
 (▲高嶺＊＊▲ etc.) in in-game text messages.
@@ -24,7 +24,8 @@ from deploy_common import (  # noqa: E402
 )
 
 PKG = 92
-STEMS = ("maildic_m", "maildic_n", "maildic_r")
+# worddic too: the English deploy swaps its words, which the JP templates use.
+STEMS = ("maildic_m", "maildic_n", "maildic_r", "worddic_m", "worddic_n", "worddic_r")
 BAK_NAME = "img.bin.bak_pre_sms_restore_jpn"
 
 

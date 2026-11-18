@@ -721,7 +721,7 @@ def test_restore_sms_maildic(tmp_path, monkeypatch, capsys):
     target = tmp_path / "live.img.bin"
     _sms_img(vanilla, b"JP!!")
     _sms_img(target, b"EN!!")
-    assert restore_sms.restore_maildic(vanilla, target) == 3
+    assert restore_sms.restore_maildic(vanilla, target) == 6
     assert b"JP!!" in target.read_bytes()
 
     def run_main(argv: list[str]) -> int:

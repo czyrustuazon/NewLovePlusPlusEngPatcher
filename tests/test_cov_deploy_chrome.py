@@ -1620,6 +1620,12 @@ def _sms_mdc() -> bytes:
     return pad_to_size(packed_mdc, 256)
 
 
+def _sms_words() -> bytes:
+    from mdcutil import WordEntry, pack_worddic, pad_to_size
+
+    return pad_to_size(pack_worddic([WordEntry(bytes(15), "春")]), 64)
+
+
 def _sms_pkg(blob: bytes | None = None) -> bytes:
     data = blob if blob is not None else _sms_mdc()
     return fi.package(
@@ -1627,7 +1633,8 @@ def _sms_pkg(blob: bytes | None = None) -> bytes:
             ("maildic_m.mdc", data, b"MDC ", False),
             ("maildic_n.mdc", data, b"MDC ", False),
             ("maildic_r.mdc", data, b"MDC ", False),
-            ("worddic_m.mdc", b"word" + b"\xff" * 60, b"MDC ", False),
+            ("worddic_m.mdc", _sms_words(), b"MDC ", False),
+            ("readme.txt", b"left alone", b"TXT ", False),
         ]
     )
 

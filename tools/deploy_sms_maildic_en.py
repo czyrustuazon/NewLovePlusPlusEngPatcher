@@ -8,11 +8,16 @@ Game storage (NOT romfs/dictionary/all2_u.bin — that is an IME font dict):
 
   img.bin package index **92** (uncompressed PACK, 142080 bytes)
     maildic_m.mdc  / maildic_n.mdc  / maildic_r.mdc   (MDC type)
-    worddic_m.mdc  / worddic_n.mdc  / worddic_r.mdc   (left alone)
+    worddic_m.mdc  / worddic_n.mdc  / worddic_r.mdc   (words for [NN] slots)
 
 EN sources: ``--en-dir`` (default assets/sms_en/). The Gemini Drop option
 passes assets/gemini_heroines/sms and does not modify those files. A matching
 file under assets/sms_contrib/ replaces that heroine's Gemini dictionary.
+
+The templates keep the game's ``[NN]`` slots (``[24]`` season, ``[19]``
+weather, ``[32]`` sentence ending ...), which the game fills from worddic. Each
+worddic word is swapped for its English in assets/sms_contrib/worddic.en.json
+(same records, heads and order), so the slots read English too.
 
 Same-size: each MDC is rebuilt then padded with 0xFF back to the original
 element length, then spliced in-place into the live LayeredFS img.bin.
@@ -21,6 +26,7 @@ No package rebuild / no zlib (elements are uncompressed).
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -32,10 +38,13 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from img import Image as ImgBin  # noqa: E402
 from mdcutil import (  # noqa: E402
+    WordEntry,
     apply_texts,
     pack_mdc,
+    pack_worddic,
     pad_to_size,
     parse_mdc,
+    parse_worddic,
     texts_from_dictionary_xml,
 )
 from deploy_common import (  # noqa: E402
@@ -47,9 +56,11 @@ from deploy_common import (  # noqa: E402
 
 PKG = 92
 STEMS = ("maildic_m", "maildic_n", "maildic_r")
+WORD_STEMS = ("worddic_m", "worddic_n", "worddic_r")
 EN_DIR = ROOT / "assets" / "sms_en"
 GEMINI_SMS_DIR = ROOT / "assets" / "gemini_heroines" / "sms"
 CONTRIB_SMS_DIR = ROOT / "assets" / "sms_contrib"
+WORDS_JSON = CONTRIB_SMS_DIR / "worddic.en.json"
 OUT = ROOT / "out" / "sms_mdc_en"
 BAK_NAME = "img.bin.bak_pre_sms_maildic"
 
@@ -100,6 +111,28 @@ def build_en_mdcs(pak, en_dir: Path | None = None) -> dict[str, bytes]:
             f"{fn}: jp={len(jp_blob)} en_raw={len(packed)} "
             f"padded={len(padded)} records={len(base)}"
         )
+    return built
+
+
+def build_en_worddics(pak) -> dict[str, bytes]:
+    """English worddic for every worddic_* element in ``pak``, padded to its slot."""
+    words = json.loads(WORDS_JSON.read_text(encoding="utf-8"))
+    built: dict[str, bytes] = {}
+    for elem in pak.entries:
+        if elem.fn[: -len(".mdc")] not in WORD_STEMS:
+            continue
+        base = parse_worddic(elem.read())
+        # A word already in English (re-run over a patched img.bin) stays.
+        english = set(words.values())
+        missing = [e.text for e in base if e.text not in words and e.text not in english]
+        if missing:
+            raise SystemExit(f"{elem.fn}: no English in {WORDS_JSON.name} for {missing}")
+        packed = pack_worddic([WordEntry(e.head, words.get(e.text, e.text)) for e in base])
+        try:
+            built[elem.fn] = pad_to_size(packed, elem.fw.wlen, b"\xff")
+        except ValueError as exc:
+            raise SystemExit(f"{elem.fn}: {exc}") from exc
+        print(f"{elem.fn}: {len(base)} words, {len(packed)}/{elem.fw.wlen} bytes")
     return built
 
 
@@ -163,6 +196,7 @@ def main() -> None:
     _im, pak = load_pkg92(src_for_parse)
     en_dir = args.en_dir.resolve() if args.en_dir else EN_DIR
     built = build_en_mdcs(pak, en_dir)
+    built.update(build_en_worddics(pak))
 
     if args.dry_run:
         print("dry-run: not writing img.bin")

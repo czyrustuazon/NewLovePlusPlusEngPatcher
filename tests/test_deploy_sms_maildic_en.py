@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import xml.etree.ElementTree as ET
 from types import SimpleNamespace
 
@@ -76,3 +77,86 @@ def test_shipped_gemini_sms_builds_an_mdc(stem, tmp_path, monkeypatch):
     records = mdcutil.parse_mdc(built[f"{stem}.mdc"])
     assert [r.key for r in records] == keys
     assert len(built[f"{stem}.mdc"]) == slot
+
+
+def _words(*rows):
+    return mdcutil.pack_worddic([mdcutil.WordEntry(bytes([n]) * 15, w) for n, w in rows])
+
+
+def _word_elem(fn, blob, slot):
+    return SimpleNamespace(fn=fn, read=lambda: blob, fw=SimpleNamespace(wlen=slot))
+
+
+def test_worddic_codec_round_trips_and_rejects_bad_records():
+    blob = _words((1, "春"), (2, "。"))
+    entries = mdcutil.parse_worddic(blob)
+    assert [(e.head, e.text) for e in entries] == [(b"\x01" * 15, "春"), (b"\x02" * 15, "。")]
+    assert mdcutil.pack_worddic(entries) == blob
+    with pytest.raises(ValueError, match="too small"):
+        mdcutil.parse_worddic(b"\x01")
+    with pytest.raises(ValueError, match="truncated"):
+        mdcutil.parse_worddic(blob[:10])
+    with pytest.raises(ValueError, match="bad text"):
+        mdcutil.parse_worddic(blob[:-1])
+    with pytest.raises(ValueError, match="bad worddic record"):
+        mdcutil.pack_worddic([mdcutil.WordEntry(b"\x00" * 7, "x")])
+
+
+def test_build_en_worddics_swaps_words_and_keeps_heads(tmp_path, monkeypatch):
+    words = tmp_path / "worddic.en.json"
+    words.write_text('{"春": "spring", "。": "."}', encoding="utf-8")
+    monkeypatch.setattr(deploy, "WORDS_JSON", words)
+    jp = _words((1, "春"), (2, "。"))
+    pak = SimpleNamespace(entries=[_word_elem("worddic_m.mdc", jp, len(jp) + 4), _word_elem("maildic_m.mdc", b"", 0)])
+    built = deploy.build_en_worddics(pak)
+    assert list(built) == ["worddic_m.mdc"]
+    blob = built["worddic_m.mdc"]
+    assert len(blob) == len(jp) + 4
+    entries = mdcutil.parse_worddic(blob)
+    assert [(e.head, e.text) for e in entries] == [(b"\x01" * 15, "spring"), (b"\x02" * 15, ".")]
+    assert blob.endswith(b"\xff")
+
+    words.write_text('{"春": "spring and then some more", "。": "."}', encoding="utf-8")
+    with pytest.raises(SystemExit, match="grew past slot"):
+        deploy.build_en_worddics(pak)
+    # A re-run over English output keeps the English words.
+    words.write_text('{"春": "spring", "。": "."}', encoding="utf-8")
+    again = SimpleNamespace(entries=[_word_elem("worddic_m.mdc", blob, len(blob))])
+    assert deploy.build_en_worddics(again)["worddic_m.mdc"] == blob
+    words.write_text('{"春": "spring"}', encoding="utf-8")
+    with pytest.raises(SystemExit, match="no English in worddic.en.json"):
+        deploy.build_en_worddics(pak)
+
+
+CONTRIB_SMS = ROOT / "assets" / "sms_contrib"
+# Slot words that are lower-case English (season, weather, illness).
+LOWER_SLOTS = ("[19]", "[22]", "[24]")
+
+
+@pytest.mark.parametrize("stem", deploy.STEMS)
+def test_contrib_templates_read_with_english_slot_words(stem):
+    import re
+
+    texts = [
+        jt.text or ""
+        for jt in ET.parse(CONTRIB_SMS / f"{stem}.en.xml").getroot().iter("JapaneseText")
+    ]
+    for text in texts:
+        # [32] adds ".", "▼" or "...": never right after other punctuation.
+        assert not re.search(r"[.!?！？~～]\[32\]", text), text
+        for slot in LOWER_SLOTS:
+            assert not re.search(r"(^|(?<!\.)[.!?！？] )" + re.escape(slot), text), text
+
+
+@pytest.mark.local_data
+def test_vanilla_worddics_all_have_english_that_fits():
+    from nlpp_paths import find_vanilla_img
+
+    vanilla = find_vanilla_img()
+    if vanilla is None:
+        pytest.skip("no vanilla img.bin")
+    _im, pak = deploy.load_pkg92(vanilla)
+    built = deploy.build_en_worddics(pak)
+    assert sorted(built) == [f"{s}.mdc" for s in deploy.WORD_STEMS]
+    for blob in built.values():
+        assert not any(re.search(r"[぀-ヿ一-鿿]", e.text) for e in mdcutil.parse_worddic(blob))

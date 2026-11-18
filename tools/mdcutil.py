@@ -9,6 +9,17 @@ On-disk layout (exact round-trip verified against vanilla maildic_{m,n,r}.mdc):
     u8     strlen        # includes trailing NUL
     utf-8 bytes + 0x00
 
+worddic_{m,n,r}.mdc (the words SMS templates pull into ``[NN]`` slots) use a
+15-byte record head instead of key + meta:
+
+  u16le  count
+  repeat count times:
+    7 bytes   condition mask (same scheme as a maildic key)
+    8 bytes   slot bits: bit 8*byte + n (byte 0 first, n from the LSB) set
+              means the word can fill ``[8*byte+n]``
+    u8        strlen (includes trailing NUL)
+    utf-8 bytes + 0x00
+
 Not related to romfs/dictionary/all2_u.bin (NintendoWare IME dict).
 Not the experimental NLPMAIL1 container in nlp_loc.sms_pack.
 """
@@ -63,6 +74,44 @@ def pack_mdc(entries: list[MdcEntry]) -> bytes:
         out += e.meta.to_bytes(8, "big")
         out += bytes([len(payload)])
         out += payload
+    return bytes(out)
+
+
+@dataclass
+class WordEntry:
+    head: bytes  # 7-byte condition mask + 8 slot-bit bytes
+    text: str
+
+
+WORD_HEAD = 15
+
+
+def parse_worddic(data: bytes) -> list[WordEntry]:
+    if len(data) < 2:
+        raise ValueError("worddic too small")
+    (count,) = struct.unpack_from("<H", data, 0)
+    out: list[WordEntry] = []
+    i = 2
+    for n in range(count):
+        if i + WORD_HEAD + 1 > len(data):
+            raise ValueError(f"truncated worddic record {n} off={i}")
+        strlen = data[i + WORD_HEAD]
+        end = i + WORD_HEAD + 1 + strlen
+        text_b = data[i + WORD_HEAD + 1 : end]
+        if end > len(data) or not text_b.endswith(b"\x00"):
+            raise ValueError(f"worddic record {n}: bad text (strlen={strlen})")
+        out.append(WordEntry(data[i : i + WORD_HEAD], text_b[:-1].decode("utf-8")))
+        i = end
+    return out
+
+
+def pack_worddic(entries: list[WordEntry]) -> bytes:
+    out = bytearray(struct.pack("<H", len(entries)))
+    for e in entries:
+        payload = e.text.encode("utf-8") + b"\x00"
+        if len(e.head) != WORD_HEAD or len(payload) > 255:
+            raise ValueError(f"bad worddic record {e.text!r}")
+        out += e.head + bytes([len(payload)]) + payload
     return bytes(out)
 
 
