@@ -122,7 +122,7 @@ Use **564** (chrome) or **1765** (all mapped UI masters) from the table above. `
 
 ### Gold bake (every Drop CIA)
 
-**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.0.0-rc5.4`** on main. `CIA_TITLE_VERSION` is **9**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
+**Drop CIA wipes `out/`, `release/`, and `cache/` first,** then downloads the published GitHub gold bake. If that Release is missing or GitHub cannot be reached, it packs from this tree and re-extracts a full RomFS (`Plus/` included) from the dropped ROM. `PATCHER_RELEASE` is **`v1.1.0`** on this fork. `CIA_TITLE_VERSION` is **10**. `NLPP_USE_PACK_CACHE` does not survive that wipe. `set NLPP_SKIP_GOLD_FETCH=1` skips the download and packs locally. `set NLPP_REUSE_BAKE=1` skips the stamp check on a leftover local bake. `rebuild_bake_img.py --skip-pack` does **not** refresh the PNG fingerprint when PNGs changed, and it does not wipe `out/`, `release/`, or `cache/`.
 
 The drop bat then runs:
 

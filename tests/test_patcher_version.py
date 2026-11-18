@@ -13,9 +13,11 @@ from patcher_version import (
 )
 
 
-def test_patcher_release_is_rc():
-    assert PATCHER_RELEASE.startswith("v")
-    assert "rc" in PATCHER_RELEASE.lower()
+def test_patcher_release_is_a_version():
+    """vMAJOR.MINOR.PATCH, optionally an RC (v1.0.0-rc5.4); this fork ships v1.1.0."""
+    import re
+
+    assert re.fullmatch(r"v\d+\.\d+\.\d+(-rc\d+(\.\d+)?)?", PATCHER_RELEASE)
 
 
 def test_cia_title_version_is_pinned_int():
