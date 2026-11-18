@@ -153,7 +153,7 @@ def test_shipped_survivor_list_resolves():
     """Every listed master exists and maps to a package (no game data needed)."""
     plan = sv.plan()
     assert {pkg for pkg in plan} == {5153, 5207, 5237, 5252}
-    assert sum(len(m) for jobs in plan.values() for *_x, m in jobs) == 31
+    assert sum(len(m) for jobs in plan.values() for *_x, m in jobs) == 43
 
 
 def test_bake_runs_survivors_after_ui_deploys_before_cesa():

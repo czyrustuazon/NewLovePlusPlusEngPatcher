@@ -8,7 +8,7 @@ on NCommon 5237, ``deploy_profile_en`` 5252, ``deploy_mail_*`` 5207).
 NCommonMSel 5240-5245, which the pack slot-skips, get their rows from
 deploy_msel_menus_en / deploy_msel_options_en instead (masters do not fit). The masters below were reviewed against vanilla (2026-11-19): each
 is an English version of a Japanese texture that still shipped Japanese
-(ロック/解除, 拡大/縮小, はい, 登録中, クリア ...).
+(ロック/解除, 拡大/縮小, はい, 登録中, クリア, 氏名/名前/あだな, プロフィール ...).
 
 For each listed master whose BCLIM is still byte-identical to vanilla in the
 bake, this encodes it at the vanilla size/format and injects it into the ARC as
@@ -58,8 +58,13 @@ SURVIVORS: dict[str, list[str]] = {
         *[f"Com_MultiWin_W01_Text05_{n:02d}_00" for n in (0, 2, 3, 4, 5)],
         "Com_MultiWin_W01_Text06_00_00",
     ],
-    # Profile's RGB565 labels (yellow chroma key) are left to deploy_profile_en.
-    "Profile.check": ["Profile_Btn_Clear_Off", "Profile_Btn_Clear_On"],
+    # Format-3 labels are LA8 (white text, soft shadow); bclimutil encodes fmt 3 as LA8.
+    "Profile.check": [
+        "Profile_Btn_Clear_Off", "Profile_Btn_Clear_On",
+        *[f"Profile_Btn_Com01_Text{n:02d}" for n in range(1, 8)],
+        "Profile_Btn_Com02_Text09", "Profile_Btn_Com02_Text10", "Profile_Btn_Com02_Text11",
+        "Profile_Btn_Com03_Text01", "Profile_Plate_Text01",
+    ],
 }
 
 
