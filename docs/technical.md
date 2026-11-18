@@ -906,7 +906,7 @@ The setter at `0x001ff868` also sets each text object's per-glyph spacing (`+0x1
 
 #### 12.4.5 Save-card name labels vs the two-bar plate (2026-09-22)
 
-`B_Card04_txt01` / `txt06` @ Card **4152** are the card field list (名前 / カノジョの名前, 128×28 RGBA4444). Heisei **Name** / **Girlfriend's Name** is spliced there (`tools/deploy_card_name_labels_en.py`). The field row itself is `Lyt_B_Card04_btn`: `Vis_White_Base` and `Vis_com_btn_m_00`–`_08` are stored with pane flag bit 0 clear. That flag is set by the card deploy, and it is not the folder page.
+`B_Card04_txt01` / `txt06` @ Card **4152** are the card field list (名前 / カノジョの名前, 128×28 RGBA4444). Heisei **Name** / **Girlfriend's Name** is spliced there (`tools/deploy_card_name_labels_en.py`). The field row itself is `Lyt_B_Card04_btn`: `Vis_White_Base` and `Vis_com_btn_m_00`–`_08` are stored with pane flag bit 0 clear, and stay that way: Edit Display draws its rows from the attached `Pts_B_Card04_btn` part (label at x −49 vs the layout's −46). Setting the bit (as the card deploy once did) drew every label twice, 3px apart, and showed ON selected on every row regardless of the setting (rig check 2026-11-19). It is not the folder page.
 
 FileSelect **5152** has two `Pic_Dsel_data` panes. `Pts_Dsel_Data` is the live one: `MenuDSelData.dmst` plays `Pts_Dsel_Data_Tag_Act00..02` and swaps the BCLIM:
 
@@ -1343,7 +1343,7 @@ First successful **self-contained** gold bake on a clean clone (no sibling `New 
 
 | Piece | Role |
 |-------|------|
-| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.0.0-rc5.4`** on main); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
+| `timg/Eng_Patch.bclim` | Separate ETC1A4 strip (`Eng Patch {PATCHER_RELEASE}` + newloveplus.loc.moe; currently **`v1.1.0`** on this fork); **Konami copyright style**: Heisei Gothic W5 half-width 12px, dark gray ink + white halo (`render_copyright_line`) |
 | `timg/Copyright.bclim` | **Vanilla Konami only** — never overwrite with Eng text |
 | `blyt/Pts_Copyright.bclyt` | `Pic_EngPatch` under `Nul_Copyright` (`ENG_PANE_TY=20`, `NUL_H=56`); DMST path, not `Lyt_Copyright` pics |
 | Deploy | `tools/deploy_title_engpatch_en.py` (hub labels + Eng insert); bake list last-writer for **5261** |
@@ -1468,7 +1468,7 @@ Working recipe: Pts wire + standalone BCLIM (Aug 2026 confirm). Soft white-only 
 
 ### 15.5 Gold bake acquisition workflow (Drop CIA — 2026-09-01)
 
-Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This tree on **main** is still stamped **`v1.0.0-rc5.4`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **9**.
+Design goal: **self-contained clone** — everything needed to *build* the bake is in git; the bake binary itself is not. Optional **nlpp-gold-maker** CI can publish a pre-built bake to skip the first local pack (typically about 40 minutes to 2 hours, depending on hardware; historically ~16h sequential zopfli) when that infra exists. This fork is stamped **`v1.1.0`** (`PATCHER_RELEASE` / Eng Patch badge). `CIA_TITLE_VERSION` is **10**.
 
 #### What git contains vs what a patched CIA needs
 

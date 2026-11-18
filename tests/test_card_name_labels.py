@@ -1,4 +1,4 @@
-"""Card field-row visibility is safe to apply twice (gold --skip-pack)."""
+"""Card field rows stay hidden as in vanilla, and hiding is safe to apply twice."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ def _pane(name: str, flag: int) -> bytes:
 
 
 def _clyt(flags: dict[str, int]) -> bytes:
-    chunks = [_pane(name, flags[name]) for name in sorted(card.SHOW_PANES)]
+    chunks = [_pane(name, flags[name]) for name in sorted(card.ROW_PANES)]
     payload = b"".join(chunks)
     header = struct.pack("<4sHHIII", b"CLYT", 0xFEFF, 20, 0, 20 + len(payload), len(chunks))
     return header + payload
@@ -44,25 +44,24 @@ def _visible_names(layout: bytes) -> set[str]:
     return shown
 
 
-def test_show_field_row_sets_hidden_panes():
-    layout = _clyt({name: 0 for name in card.SHOW_PANES})
-    out = card.show_field_row(layout)
+def test_hide_field_row_clears_visible_panes():
+    layout = _clyt({name: 0x03 for name in card.ROW_PANES})
+    out = card.hide_field_row(layout)
     assert len(out) == len(layout)
-    assert _visible_names(out) == set(card.SHOW_PANES)
+    assert _visible_names(out) == set()
 
 
-def test_show_field_row_is_idempotent_when_already_visible():
-    layout = _clyt({name: 0x03 for name in card.SHOW_PANES})
-    out = card.show_field_row(layout)
+def test_hide_field_row_is_idempotent_on_vanilla_flags():
+    layout = _clyt({name: 0x02 for name in card.ROW_PANES})
+    out = card.hide_field_row(layout)
     assert out == layout
-    again = card.show_field_row(out)
-    assert again == layout
+    assert card.hide_field_row(out) == layout
 
 
-def test_show_field_row_still_errors_when_a_pane_is_absent():
-    names = [name for name in sorted(card.SHOW_PANES) if name != "Vis_White_Base"]
+def test_hide_field_row_still_errors_when_a_pane_is_absent():
+    names = [name for name in sorted(card.ROW_PANES) if name != "Vis_White_Base"]
     chunks = [_pane(name, 1) for name in names]
     payload = b"".join(chunks)
     header = struct.pack("<4sHHIII", b"CLYT", 0xFEFF, 20, 0, 20 + len(payload), len(chunks))
     with pytest.raises(RuntimeError, match="Vis_White_Base"):
-        card.show_field_row(header + payload)
+        card.hide_field_row(header + payload)

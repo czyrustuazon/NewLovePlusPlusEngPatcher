@@ -10,6 +10,14 @@ ink (68,68,68), left-aligned on a 16px strip at the top of the sheet.
 Live Card.arc first so Flist Received Date and any packed card EN stay.
 Runs after deploy_card_flist_en.py.
 
+The field rows in ``Lyt_B_Card04_btn`` (``Vis_White_Base``,
+``Vis_com_btn_m_00``-``08``) stay hidden, as vanilla stores them: the game
+draws Edit Display from the attached ``Pts_B_Card04_btn`` part. An earlier
+version set them visible, which drew every label twice 3px apart and showed
+ON selected on every row whatever the setting (checked in the rig
+2026-11-19). ``hide_field_row`` puts the vanilla bits back on a bake that
+still has them set.
+
   python tools/deploy_card_name_labels_en.py
 """
 from __future__ import annotations
@@ -53,10 +61,8 @@ LABELS = [
     ("timg/B_Card04_txt01.bclim", "Name"),
     ("timg/B_Card04_txt06.bclim", "Girlfriend's Name"),
 ]
-# Lyt_B_Card04_btn field row. Vanilla stores these with pane flag bit 0
-# clear. A later --skip-pack on a bake that already set the bit must still
-# find them; only a missing name is an error.
-SHOW_PANES = {
+# Lyt_B_Card04_btn's own field rows; vanilla stores them hidden (flag bit 0 clear).
+ROW_PANES = {
     "Vis_White_Base",
     *(f"Vis_com_btn_m_{i:02d}" for i in range(9)),
 }
@@ -74,12 +80,9 @@ def _deploy_targets() -> list[Path]:
     return targets
 
 
-def show_field_row(layout: bytes) -> bytes:
-    """Set the visible bit on the card field-row panes. Same file length.
-
-    Idempotent. ``--skip-pack`` re-runs this on a bake whose bits are already
-    set; counting only a hidden-to-visible flip aborts the gold rebuild.
-    """
+def hide_field_row(layout: bytes) -> bytes:
+    """Clear the visible bit on the layout's own field-row panes (vanilla).
+    Same file length; idempotent."""
     import struct
 
     data = bytearray(layout)
@@ -89,18 +92,18 @@ def show_field_row(layout: bytes) -> bytes:
     if magic != b"CLYT" or file_size != len(data):
         raise RuntimeError("bad card field layout")
     off = header_size
-    shown = []
+    seen = []
     for _ in range(section_count):
         tag = bytes(data[off : off + 4])
         size = struct.unpack_from("<I", data, off + 4)[0]
         if tag in (b"pan1", b"pic1"):
             name = bytes(data[off + 12 : off + 36]).split(b"\x00", 1)[0].decode("ascii")
-            if name in SHOW_PANES:
-                data[off + 8] = data[off + 8] | 1
-                shown.append(name)
+            if name in ROW_PANES:
+                data[off + 8] = data[off + 8] & ~1 & 0xFF
+                seen.append(name)
         off += size
-    if set(shown) != SHOW_PANES:
-        raise RuntimeError(f"field-row panes missing: {sorted(SHOW_PANES - set(shown))}")
+    if set(seen) != ROW_PANES:
+        raise RuntimeError(f"field-row panes missing: {sorted(ROW_PANES - set(seen))}")
     return bytes(data)
 
 
@@ -188,8 +191,8 @@ def main() -> int:
     lyt_entry = darc.find(lyt_path)
     if lyt_entry is None:
         raise SystemExit(f"missing {lyt_path}")
-    darc.replace_same_size(lyt_entry, show_field_row(darc.extract_file(lyt_entry)))
-    print("OK field row visible", flush=True)
+    darc.replace_same_size(lyt_entry, hide_field_row(darc.extract_file(lyt_entry)))
+    print("OK field rows hidden (vanilla; Edit Display draws the Pts part)", flush=True)
 
     patched = bytes(darc.data)
     fast = try_fast_exact_slot(patched, cmp_len)

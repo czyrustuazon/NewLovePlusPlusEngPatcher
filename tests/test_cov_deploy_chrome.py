@@ -694,7 +694,7 @@ def test_dsel_main_errors(tmp_path, monkeypatch):
 
 
 def _card_layout() -> bytes:
-    sections = [pane(b"pan1", name, 0) for name in sorted(card.SHOW_PANES)]
+    sections = [pane(b"pan1", name, 0) for name in sorted(card.ROW_PANES)]
     sections.append(pane(b"pan1", "SkipMe", 0))
     sections.append(pane(b"grp1", "G", 0, size=32))
     return clyt(sections)
@@ -717,11 +717,11 @@ def test_card_label_edges_and_main(tmp_path, monkeypatch):
     with pytest.raises(RuntimeError, match="cannot fit"):
         card.render_tab_label(16, 8, "Girlfriend's Name")
     with pytest.raises(RuntimeError, match="bad card field"):
-        card.show_field_row(b"XXXX" + bytes(32))
+        card.hide_field_row(b"XXXX" + bytes(32))
     bad_len = bytearray(clyt([pane(b"pan1", "Vis_White_Base", 1)]))
     struct.pack_into("<I", bad_len, 0x0C, 3)
     with pytest.raises(RuntimeError, match="bad card field"):
-        card.show_field_row(bytes(bad_len))
+        card.hide_field_row(bytes(bad_len))
 
     img = tmp_path / "img.bin"
     write_img(img, {card.PKG: packed(_card_files())})
