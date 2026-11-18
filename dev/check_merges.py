@@ -39,8 +39,9 @@ REPAIRED = {
     "ebb710bc54c59aaba28ed11e285ebb8f82e63444",
     # main into rinko-review: by the reviewer's choice, k007, a000, a002-a005,
     # p073 and the Manaka t* stems keep rinko-review's line wherever both sides
-    # edited the same line (main's non-overlapping edits were kept; t001 and
-    # t142 mix both). The .dbin2 files were rebuilt from that XML.
+    # edited the same line. The merge itself also dropped main's edits to
+    # neighbouring lines; 54905952 restored those 33 lines line by line.
+    # The .dbin2 files were rebuilt from the XML.
     "50ecfb3db8a07224588add0d1a3d853fe86faea3",
 }
 
